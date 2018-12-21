@@ -7,10 +7,30 @@ table { border-collapse:collapse; border-spacing:0; }
 html,body{height: 100%;}
 html{
 	font-size: 100px;
+	font-family: PingFangSC-Semibold;
+	/* --testColor:pink;
+	--testColor2:wheat; */
+
+	--navigationBgColor:#0064D9;
+	--whiteColor:#FFF;
+	/*字体大小*/
+	--fontSize1:0.12rem;
+	--fontSize2:0.14rem;
+	--fontSize3:0.16rem;
+	--fontSize4:0.18rem;
+	--fontSize5:0.2rem;
+	--fontSize6:0.22rem;
+	--fontSize7:0.24rem;
+	--fontSize8:0.26rem;
+	--fontSize9:0.28rem;
+	/*颜色*/
+	--color1:#3F3F3F;
+	--color2:#005CC7;
 	
-	--testColor:pink;
-	--testColor2:wheat;
+	/*背景颜色*/
+	--bgColoor1:#fbfdfd;
+	--bgColor2:#FF0000;
 }
 body{
-	font-size: 0.2rem;
+	font-size: 0.14rem;
 }

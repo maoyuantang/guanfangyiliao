@@ -1,26 +1,32 @@
 <template>
   <div class="index">
-  	<top></top>
-    <middle></middle>
-  	
-  	
-  	
-  	
-    <!--<p @click="asyncCommit" v-cloak>{{userCount}}</p>
-    <p @click="testAdd" v-cloak>{{testCount}}</p>
-    <p class="golbal-css-test" @click="gotoTest">goto test</p>
-    <p class="golbal-css-test" @click="gotoTestb">goto testb</p>
-    <el-button type="primary" disabled>主要按钮</el-button>-->
+		<div class="index-left">
+			<navigation></navigation>
+		</div>
+		<div class="index-right">
+			<div class="content-top">
+				<top></top>
+			</div>
+			<div class="content-body">
+				<router-view/>
+			</div>
+
+		</div>
+
+
+
+  	<!-- <top></top> -->
+    <!-- <middle></middle> -->
   </div>
 </template>
 
 <script>
 	import { mapState ,mapMutations  } from 'vuex'
-	import axios from '../plugs/axios'
+	// import axios from '../plugs/axios'
 	
 	import top from '@/components/top.vue'
 	import middle from '@/components/middle.vue'
-	
+	import navigation from '@/components/navigation.vue'
 	
 export default {
   name: 'index',
@@ -48,16 +54,17 @@ export default {
   },
   components:{
   	top,
-  	middle
+		middle,
+		navigation
   },
   computed:{
-  	...mapState({
-  		userCount: state => state.user.count,
-  		testCount: state => state.test.count,
-  	})
+  	// ...mapState({
+  	// 	userCount: state => state.user.count,
+  	// 	testCount: state => state.test.count,
+  	// })
   },
   created(){
-  	console.log(axios)
+  	// console.log(axios)
   }
 }
 </script>
@@ -67,6 +74,30 @@ export default {
 	.index{
 		height: 100%;
 		display: flex;
-		flex-direction: column;
+		/* flex-direction: column; */
+	}
+	.index-left{
+		min-height: 100%;
+		width: 2.08rem;
+		background-color: var(--navigationBgColor);
+	}
+	.index-right{
+		flex: 1;
+		min-height: 100%;
+		/* display: flex;
+		flex-direction: column; */
+		overflow: auto;
+		
+	}
+	.content-top{
+		height: 0.6rem;
+	}
+	.content-body{
+		background-color: var(--bgColoor1);
+		padding-top: 0.25rem;
+		padding-left: 0.37rem;
+		flex: 1;
+		overflow-y: auto;
+		/* height: 0; */
 	}
 </style>
