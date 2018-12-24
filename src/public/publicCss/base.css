@@ -26,10 +26,18 @@ html{
 	/*颜色*/
 	--color1:#3F3F3F;
 	--color2:#005CC7;
+	--color3:#5E6875;
+	--color4: #195ADD;
+	--color5:#e5edf3;
 	
 	/*背景颜色*/
 	--bgColoor1:#fbfdfd;
 	--bgColor2:#FF0000;
+	--bgColor3:#EBB763;
+	/*字体*/
+	--fontFamily1:PingFangSC-Semibold;
+	--fontFamily2:Helvetica;
+	--fontFamily3:PingFangSC-Regular;
 }
 body{
 	font-size: 0.14rem;
