@@ -5,6 +5,7 @@ a:hover { text-decoration:underline; }
 fieldset, img { border:0; }
 table { border-collapse:collapse; border-spacing:0; }
 html,body{height: 100%;}
+
 html{
 	font-size: 100px;
 	font-family: PingFangSC-Semibold;
@@ -29,6 +30,7 @@ html{
 	--color3:#5E6875;
 	--color4: #195ADD;
 	--color5:#e5edf3;
+	--color6: #0067FF;
 	
 	/*背景颜色*/
 	--bgColoor1:#fbfdfd;
