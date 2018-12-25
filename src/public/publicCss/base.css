@@ -29,11 +29,13 @@ html{
 	--color3:#5E6875;
 	--color4: #195ADD;
 	--color5:#e5edf3;
-	
+	--color6:#DCE0E6;
+	--color7:#323C47;
 	/*背景颜色*/
 	--bgColoor1:#fbfdfd;
 	--bgColor2:#FF0000;
 	--bgColor3:#EBB763;
+	--bgColor4:#252631;
 	/*字体*/
 	--fontFamily1:PingFangSC-Semibold;
 	--fontFamily2:Helvetica;

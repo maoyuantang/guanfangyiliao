@@ -34,15 +34,15 @@
 
 <style scoped>
 	.normal-tab{
-		clear: both;
-    }
+		display: flex;
+	}
 	.tab-item{
 		width: 2.45rem;
 		height: 0.84rem;
 		background-color: var(--whiteColor);
 		box-shadow: 0 0.06rem 36rem 0 rgba(0,62,100,0.04);
 		border-radius: 0.04rem;
-		float: left;
+		
 		border: 1px solid var(--color5);
 		display: flex;
 		flex-direction: column;
@@ -107,11 +107,12 @@
 			</div>
 		</template>
 		<script>
+			import normalTab from '../xxx/normalTab.vue'//第一步：引入
 			export default {
 				data(){
 					return{
-						setData:{
-							i:1,
+						setData:{//准备好传入的数据
+							i:1,//默认选中第几个，注意：从0开始算
 							list:[
 								{
 									en:'STATISTICS',//选项英文，类型 string
@@ -133,8 +134,11 @@
 						}
 					}
 				},
+				components:{
+					normalTab//注册组件
+				},
 				methods:{
-					getData(res){
+					getData(res){//接收返回值
 						console.log(`当前点击的是第${res.i}个选项`);
 					}
 				}
