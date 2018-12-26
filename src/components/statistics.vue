@@ -1,7 +1,22 @@
 <template>
 	<div class="statistics">
 		默认首页
-		<div class="mark">
+		<el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
+
+		<el-dialog
+			title="提示"
+			:visible.sync="dialogVisible"
+			width="30%"
+			:before-close="handleClose">
+			<span>这是一段信息</span>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="dialogVisible = false">取 消</el-button>
+				<el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+			</span>
+		</el-dialog>
+
+
+		<!-- <div class="mark">
 			<div class="mark-inner">
 				<div class="mark-content">
 					<div class="mark-add" v-if="isAdd">
@@ -38,44 +53,7 @@
 											</el-option>
 										</el-select>
 							</div>
-							<!-- <div class="module-layer">
-								<div class="input-part">
-									<span class="input-name">姓名:</span>
-									<el-input v-model="input" placeholder="请输入内容" size="mini"></el-input>
-									<span><i class="iconfont suffix-icon">&#xe64d;</i></span>
-								</div>
-								<div class="input-part">
-									<span class="input-name">姓名:</span>
-									<el-input v-model="input" placeholder="请输入内容" size="mini"></el-input>
-									<span><i class="iconfont suffix-icon">&nbsp&nbsp&nbsp&nbsp</i></span>
-								</div>
-							</div>
-							<div class="module-layer">
-								<div class="input-part">
-									<span class="input-name">姓名:</span>
-									<el-input v-model="input" placeholder="请输入内容" size="mini"></el-input>
-									<span><i class="iconfont suffix-icon">&#xe64d;</i></span>
-								</div>
-								<div class="input-part">
-									<span class="input-name">姓名:</span>
-									<el-input v-model="input" placeholder="请输入内容" size="mini"></el-input>
-									<span><i class="iconfont suffix-icon">&#xe64d;</i></span>
-								</div>
-							</div>
-							<div class="module-layer">
-								
-									<span class="input-name">姓名:</span>
-									<el-select v-model="value" placeholder="请选择" size="mini">
-										<el-option
-											v-for="item in departmentlist"
-											:key="item.name"
-											:label="item.name"
-											:value="item.name">
-											</el-option>
-										</el-select>
-									<span><i class="iconfont suffix-icon">&#xe64d;</i></span>
-								
-							</div> -->
+
 						</div>	
 						<div></div>	
 						<div></div>	
@@ -86,7 +64,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<div>
 			<normalTab v-model="some" @reBack="reData"></normalTab>
 		</div>
@@ -151,6 +129,7 @@ import testb from './testb.vue'
 		},
 		data () {
 			return {
+				dialogVisible: false,
 				isAdd:true,//新增还是邀请协作，默认新增
 				departmentlist:[//科室列表
 					{name:'第一科'},
@@ -230,6 +209,13 @@ import testb from './testb.vue'
 			},
 			getTime(msg){
 				console.log(msg)
+			},
+			handleClose(done) {
+				this.$confirm('确认关闭？')
+				.then(_ => {
+					done();
+				})
+				.catch(_ => {});
 			}
 		},
 		components:{
