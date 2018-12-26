@@ -30,12 +30,18 @@ html{
 	--color3:#5E6875;
 	--color4: #195ADD;
 	--color5:#e5edf3;
+<<<<<<< HEAD
+	--color6:#DCE0E6;
+	--color7:#323C47;
+=======
 	--color6: #0067FF;
 	
+>>>>>>> 5fbcb611459d698a2fc42ce14c4c6c7c75499034
 	/*背景颜色*/
 	--bgColoor1:#fbfdfd;
 	--bgColor2:#FF0000;
 	--bgColor3:#EBB763;
+	--bgColor4:#252631;
 	/*字体*/
 	--fontFamily1:PingFangSC-Semibold;
 	--fontFamily2:Helvetica;
