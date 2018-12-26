@@ -10,7 +10,7 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button v-for="(text,index) in tableBtn" type="text" size="small">
+                    <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method('d','dd')" type="text" size="small">
                         {{text.name}}
                     </el-button>
                 </template>
@@ -31,9 +31,9 @@ export default {
         }
     },
     props: {
-        tableData: Array,
-        columns: Array,
-        tableBtn: Array
+        tableData: Array,//父组件传来的 列表 数据
+        columns: Array,//父组件传来的 列表标题 数据
+        tableBtn: Array//父组件传来的 列表按钮 数据
     },
     model: {
         prop: ["tableData", "columns","tableBtn"],
@@ -58,76 +58,3 @@ export default {
     letter-spacing: 0;
 }
 </style>
-<!-- 
-	使用先知：
-		-该组件是一个类似选项卡的组件，因为用的较多抽象成一个公共组件
-		-传入参数为一个对象
-		-传参结构(已经处理过，可以直接v-model绑定)：{
-			i:0,//选中的是第几项，类型为int(注意：从0开始计数)
-			list:[//选项列表，类型Array
-				{
-					en:'STATISTICS',//选项英文，类型 string
-					zh:'统计'//选项中文，类型string
-				},
-				{
-					en:'STATISTICS',
-					zh:'统计'
-				},
-			]
-		}
-		-点击时返回用reBack接收
-		-返回结构：{
-			i:0,//选中的是第几项，类型为int
-			list:[//选项列表，类型Array
-				{
-					en:'STATISTICS',//选项英文，类型 string
-					zh:'统计'//选项中文，类型string
-				},
-				{
-					en:'STATISTICS',
-					zh:'统计'
-				},
-			]
-		}
-		-实例：
-		父组件 :
-		<template>
-			<div class="father">
-				<normalTab v-model="setData" @reBack="getData"></normalTab>
-			</div>
-		</template>
-		<script>
-			export default {
-				data(){
-					return{
-						setData:{
-							i:1,
-							list:[
-								{
-									en:'STATISTICS',//选项英文，类型 string
-									zh:'统计'//选项中文，类型string
-								},
-								{
-									en:'STATISTICS',
-									zh:'统计'
-								},
-								{
-									en:'STATISTICS',//选项英文，类型 string
-									zh:'统计'//选项中文，类型string
-								},
-								{
-									en:'STATISTICS',
-									zh:'统计'
-								},
-							]
-						}
-					}
-				},
-				methods:{
-					getData(res){
-						console.log(`当前点击的是第${res.i}个选项`);
-					}
-				}
-			}
-		</script>
- -->
