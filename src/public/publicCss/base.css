@@ -30,23 +30,46 @@ html{
 	--color3:#5E6875;
 	--color4: #195ADD;
 	--color5:#e5edf3;
-<<<<<<< HEAD
-	--color6:#DCE0E6;
-	--color7:#323C47;
-=======
-	--color6: #0067FF;
+
 	
->>>>>>> 5fbcb611459d698a2fc42ce14c4c6c7c75499034
+	--color7:#323C47;
+
+	--color6: #0067FF;
+	--color8:#DCE0E6;/*命名冲突，由color6改为color8*/
+	--color9:#95a0ad;
+
 	/*背景颜色*/
 	--bgColoor1:#fbfdfd;
 	--bgColor2:#FF0000;
 	--bgColor3:#EBB763;
 	--bgColor4:#252631;
+	--bgColor5:#F8FAFB;
+	--bgColor6:#FE5578;
+	--bgColor7:#2EBD41;
 	/*字体*/
 	--fontFamily1:PingFangSC-Semibold;
 	--fontFamily2:Helvetica;
 	--fontFamily3:PingFangSC-Regular;
+	/*border-color*/
+	--borderColor1:#E6EAEE;
 }
 body{
 	font-size: 0.14rem;
+}
+.mark{
+	position:fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+}
+.mark-inner{
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background: rgba(37,38,49,.6);
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
