@@ -5,7 +5,10 @@
 		<el-button type="text" @click="evaluateVisible = true">评价</el-button>
 		<el-button type="text" @click="departVisible = true">接收科室</el-button>
 		<el-button type="text" @click="doctorVisible = true">医生详情</el-button>
-		<!-- 发起会诊弹窗 --> 
+		<el-button type="text" @click="groupVisible = true">会诊评价</el-button>
+		<el-button type="text" @click="recordVisible = true">查看记录</el-button>
+		会诊评价
+		<!-- 发起会诊弹窗 -->
 		<el-dialog class="startGroup" title="发起会诊" :visible.sync="centerDialogVisible" width="602px" hight="607px" center>
 			<el-form ref="form" :model="form" label-width="80px">
 				<el-form-item label="类型">
@@ -39,30 +42,30 @@
 					<el-input v-model="form.name"></el-input>
 				</el-form-item>
 				<el-form-item class="confirmBtnBox">
-					<el-button class="confirmBtn" type="primary" >确认</el-button>
+					<el-button class="confirmBtn" type="primary">确认</el-button>
 				</el-form-item>
 			</el-form>
 		</el-dialog>
-		<!-- 打开评价 --> 
-		<el-dialog class="evaluateBox"   title=" " :visible.sync="evaluateVisible" width="602px" hight="356px" center>
+		<!-- 打开评价 -->
+		<el-dialog class="evaluateBox" title=" " :visible.sync="evaluateVisible" width="602px" hight="356px" center>
 			<el-form ref="form" :model="form" label-width="80px">
-				<el-form-item class="evaluateMargin evaluateMargin1"  >
-					 <el-input class="evaluateInput" type="textarea" v-model="form.desc" placeholder="请选择活动区域"></el-input>
+				<el-form-item class="evaluateMargin evaluateMargin1">
+					<el-input class="evaluateInput" type="textarea" v-model="form.desc" placeholder="请选择活动区域"></el-input>
 				</el-form-item>
-				
-				<el-form-item  class="evaluateMargin" >
-					<el-button class="confirmBtn" type="primary" >确认</el-button>
+
+				<el-form-item class="evaluateMargin">
+					<el-button class="confirmBtn" type="primary">确认</el-button>
 				</el-form-item>
 			</el-form>
 		</el-dialog>
-		<!-- 接收科室 --> 
-		<el-dialog class="evaluateBox"   title=" 接收科室" :visible.sync="departVisible" width="602px" hight="356px" center>
+		<!-- 接收科室 -->
+		<el-dialog class="evaluateBox" title=" 接收科室" :visible.sync="departVisible" width="602px" hight="356px" center>
 			<ul>
 				<li>
 					<div>
 						<img src="" />
 					</div>
-					<div class="">
+					<div class="evaluateCont">
 						<h5>西南医院第三附属医院</h5>
 						<div>神经内科</div>
 					</div>
@@ -71,21 +74,21 @@
 					<div>
 						<img src="" />
 					</div>
-					<div class="">
+					<div class="evaluateCont">
 						<h5>西南医院第三附属医院</h5>
 						<div>神经内科</div>
 					</div>
 				</li>
 			</ul>
 		</el-dialog>
-		<!-- 医生详情 --> 
-		<el-dialog class="evaluateBox"   title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
+		<!-- 医生详情 -->
+		<el-dialog class="evaluateBox evaluateBox2" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
 			<ul>
 				<li>
 					<div>
 						<img src="" />
 					</div>
-					<div class="">
+					<div class="evaluateCont">
 						<h5>西南医院第三附属医院</h5>
 						<div>神经内科</div>
 					</div>
@@ -97,10 +100,79 @@
 					<div>
 						<img src="" />
 					</div>
-					<div class="">
+					<div class="evaluateCont">
 						<h5>西南医院第三附属医院</h5>
 						<div>神经内科</div>
 					</div>
+					<div>
+						文字
+					</div>
+				</li>
+			</ul>
+		</el-dialog>
+		<!-- 会诊评价 -->
+		<el-dialog class="evaluateBox evaluateBox2" title=" 会诊评价" :visible.sync="groupVisible" width="602px" hight="356px" center>
+			<ul>
+				<li>
+					<div>
+						<img src="" />
+					</div>
+					<div class="evaluateCont">
+						<h5>西南医院第三附属医院</h5>
+						<div>神经内科</div>
+					</div>
+					<div>
+						文字
+					</div>
+				</li>
+				<li>
+					<div>
+						<img src="" />
+					</div>
+					<div class="evaluateCont">
+						<h5>西南医院第三附属医院</h5>
+						<div>神经内科</div>
+					</div>
+					<div>
+						文字
+					</div>
+				</li>
+			</ul>
+		</el-dialog>
+		<!-- 查看记录 -->
+		<el-dialog class="  " title="  " :visible.sync="recordVisible" width="602px" hight="356px" center>
+			<ul>
+				<li class="ohisList">
+					<h3>2018年4月4日</h3>
+					<ul>
+						<li class="ohisListMain">
+							<div>
+								<img src="../assets/a-6.png" />
+							</div>
+							<div class="ohisListRg">
+								<div>张某人
+									<span> 17:54:34</span>
+								</div>
+								<div>那就等带节后再说吧。</div>
+							</div>
+						</li>
+					</ul>
+				</li>
+				<li class="ohisList">
+					<h3>2018年4月4日</h3>
+					<ul>
+						<li class="ohisListMain">
+							<div>
+								<img src="../assets/a-6.png" />
+							</div>
+							<div class="ohisListRg">
+								<div>张某人
+									<span> 17:54:34</span>
+								</div>
+								<div>那就等带节后再说吧。</div>
+							</div>
+						</li>
+					</ul>
 				</li>
 			</ul>
 		</el-dialog>
@@ -111,10 +183,12 @@
 export default {
     data() {
         return {
-			centerDialogVisible: false, //是否发起会诊
-			evaluateVisible:false,//是否打开评价
-			departVisible:false,//是否接收科室
-			doctorVisible:false,//医生详情
+            centerDialogVisible: false, //是否发起会诊
+            evaluateVisible: false, //是否打开评价
+            departVisible: false, //是否接收科室
+            doctorVisible: false, //医生详情
+            groupVisible: false, //会诊评价
+            recordVisible: false, //查看记录
             form: ""
         };
     },
@@ -126,33 +200,93 @@ export default {
 <style>
 .consultation {
 }
-.startGroup input{
-	width:162px;
-	height: 28px;
+.startGroup input {
+    width: 162px;
+    height: 28px;
 }
-.confirmBtn{
-	width:100%;
-	height: 39px;
-	background: #4DA1FF;
-border-radius: 4px;
-color:white;
-font-size: 12px;
-line-height: 21px
+.confirmBtn {
+    width: 100%;
+    height: 39px;
+    background: #4da1ff;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    line-height: 21px;
 }
-.confirmBtnBox>div{
-	margin-left:0
+.confirmBtnBox > div {
+    margin-left: 0;
 }
-.evaluateInput>textarea{
-	width:478px;
-	height: 177px;
+.evaluateInput > textarea {
+    width: 478px;
+    height: 177px;
 }
-.evaluateMargin1{
-	margin-bottom: 68px;
+.evaluateMargin1 {
+    margin-bottom: 68px;
 }
-.evaluateMargin>div{
-	margin-left: 0px !important
+.evaluateMargin > div {
+    margin-left: 0px !important;
 }
-.evaluateBox .el-dialog__body{
-	padding: 25px 60px;
+.evaluateBox .el-dialog__body {
+    padding: 25px 60px;
+}
+.evaluateCont {
+    width: 90%;
+}
+.evaluateCont > h5 {
+    font-family: Helvetica;
+    font-size: 0.14rem;
+    color: #252631;
+}
+.evaluateCont > div {
+    font-family: PingFangSC-Regular;
+    font-size: 0.12rem;
+    color: #98a9bc;
+    line-height: 21px;
+}
+.evaluateBox2 li {
+    margin-bottom: 18px;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
+}
+/* 查看记录 */
+.hisMain {
+    padding: 10px 28px;
+}
+.ohisList {
+    margin-bottom: 25px;
+}
+.ohisList > h3 {
+    margin-bottom: 15px;
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    color: #000000;
+    letter-spacing: -0.4px;
+	font-weight: normal
+}
+.ohisListMain {
+    display: flex;
+    display: -webkit-flex;
+    margin-bottom: 15px;
+}
+.ohisListMain > div:first-child {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+.ohisListMain > div:first-child > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.ohisListRg > div {
+    font-size: 0.14rem;
+    font-family: PingFangSC-Regular;
+    color: #323c47;
+}
+.ohisListRg > div:first-child {
+    color: #939eab;
+    font-size: 0.12rem;
 }
 </style>

@@ -13,7 +13,9 @@ import iView from './plugs/iview'
 import 'element-ui/lib/theme-chalk/index.css'
 import './icons/baseIcon.css'
 import 'iview/dist/styles/iview.css'
-
+import echarts from 'echarts'
+ 
+Vue.prototype.$echarts = echarts 
 
 Vue.use(elementUi);
 Vue.use(iView);
