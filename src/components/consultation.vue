@@ -1,7 +1,8 @@
 <template>
+	<!-- 远程会诊系统 -->
 	<div class="consultation">
 		远程会诊系统
-		<el-button type="text" @click="centerDialogVisible = true">发起会诊</el-button>
+
 		<el-button type="text" @click="evaluateVisible = true">评价</el-button>
 		<el-button type="text" @click="departVisible = true">接收科室</el-button>
 		<el-button type="text" @click="doctorVisible = true">医生详情</el-button>
@@ -176,28 +177,235 @@
 				</li>
 			</ul>
 		</el-dialog>
+		<!-- 医生端 -->
+		<div class="consultation" v-if="oVisable">
+			<div class="doc-title">
+				<selftag :inData="oTab"></selftag>
+				<el-button type="text" @click="centerDialogVisible = true">发起会诊</el-button>
+			</div>
+			<div>
+				<tableList :tableData="tableData" :columns="columns" :tableBtn="tableBtn"> </tableList>
+			</div>
+
+		</div>
+		<!-- 管理端 -->
+		<div class="consultation" v-else>
+			<div class="Admin-title">
+				<normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
+			</div>
+			<div class="admin-oMain">
+				<!-- 会诊管理 -->
+				<div v-if="oconsulVisable">
+					<div>
+						<selftag :inData="oTab"></selftag>
+						<selftag :inData="oTab"></selftag>
+						<selftag :inData="oTab"></selftag>
+						<selftag :inData="oTab"></selftag>
+						<search @searchValue="searchChange"></search>
+					</div>
+					<div>
+						<tableList :tableData="tableData" :columns="columns" :tableBtn="tableBtn"> </tableList>
+					</div>
+				</div>
+				<!-- 统计 -->
+				<div v-else>
+					<div>
+						<selftag :inData="oTab"></selftag>
+					</div>
+					<div>
+						<normalColumnChart :inData="drawData"> </normalColumnChart>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
-
 <script>
+import echarts from "../plugs/echarts.js";
+import tableList from "../public/publicComponents/publicList.vue";
+import selftag from "../public/publicComponents/selftag.vue";
+import normalTab from "../public/publicComponents/normalTab.vue";
+import normalColumnChart from "../public/publicComponents/normalColumnChart.vue";
+
 export default {
+    components: {
+        selftag,
+        tableList,
+        normalTab,
+        normalColumnChart
+    },
     data() {
         return {
+            oVisable: false,
+            oconsulVisable: true, //切换会诊管理和统计的显示
             centerDialogVisible: false, //是否发起会诊
             evaluateVisible: false, //是否打开评价
             departVisible: false, //是否接收科室
             doctorVisible: false, //医生详情
             groupVisible: false, //会诊评价
             recordVisible: false, //查看记录
-            form: ""
+            form: "",
+            oTab: {
+                more: true,
+                title: "日期",
+                list: [
+                    {
+                        text: "全部"
+                    },
+                    {
+                        text: "今日"
+                    }
+                ]
+            }, //医生端tab
+            columns: [
+                {
+                    prop: "name",
+                    label: "姓名"
+                },
+                {
+                    prop: "age",
+                    label: "年龄"
+                }
+            ],
+            tableData: [
+                {
+                    id: "91F0B9D25A474B6FA0CDBAC872035984",
+                    age: "1545649424290",
+                    name: "冠方医院"
+                },
+                {
+                    id: "120BAE29C23C470E9E73DED3D8C071BF",
+                    age: "1545618639429",
+                    name: "测试医院"
+                }
+            ],
+            tableBtn: [
+                {
+                    name: "评价",
+                    oclass: "evaluateBtn",
+                    method: (index, row) => {
+                        this.evaluateFun(index, row);
+                    }
+                },
+                {
+                    name: "查看记录",
+                    oclass: "recordBtn",
+                    method: (index, row) => {
+                        this.recordFun(index, row);
+                    }
+                }
+            ],
+            oAdminTab: {
+                i: 0, //选中的是第几项，类型为int(注意：从0开始计数)
+                list: [
+                    //选项列表，类型Array
+                    {
+                        en: "CONSULTATION", //选项英文，类型 string
+                        zh: "会诊管理" //选项中文，类型string
+                    },
+                    {
+                        en: "STATISTICS",
+                        zh: "统计"
+                    }
+                ]
+            },
+            //统计图
+            drawData: {
+                dataAxis: [
+                    "点",
+                    "击",
+                    "柱",
+                    "子",
+                    "点",
+                    "击",
+                    "柱",
+                    "子",
+                    "点",
+                    "击",
+                    "柱",
+                    "子"
+                ], //每个柱子代表的类名
+                data: [
+                    220,
+                    182,
+                    191,
+                    234,
+                    220,
+                    182,
+                    191,
+                    234,
+                    220,
+                    182,
+                    191,
+                    234
+                ], //具体数值
+                title: "测试测试,修改修改" //图表标题
+            }
         };
     },
-    methods: {},
+    methods: {
+        //医生端事件
+        //评价
+        evaluateFun(oid) {
+            // alert(oid);
+            this.evaluateVisible = true;
+        },
+        //查看记录
+        recordFun() {},
+        searchChange() {},
+        //管理端事件
+        getConsulTabData(res) {
+            if (res.i == 0) {
+                this.oconsulVisable = true;
+            } else if (res.i == 1) {
+                this.oconsulVisable = false;
+            }
+        }
+    },
     async created() {}
 };
 </script>
 
 <style>
+/* 医生端样式 */
+.consultation .doc-title {
+    display: flex;
+    display: -webkit-flex;
+}
+.evaluateBtn {
+    width: 57px;
+    height: 20px;
+    background: rgba(119, 140, 162, 0.1);
+    border: 1px solid rgba(119, 140, 162, 0.6);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #778ca2;
+    line-height: 3px;
+}
+/* 管理端端样式 */
+.consultation .Admin-title {
+    margin-bottom: 42px;
+}
+.consultation .admin-oMain {
+    padding: 30px 38px;
+    background: #ffffff;
+    border: 1px solid #e5edf3;
+    box-shadow: 0 6px 36px 0 rgba(0, 62, 100, 0.04);
+    border-radius: 4px;
+}
+
+.recordBtn {
+    width: 57px;
+    height: 20px;
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid rgba(66, 133, 244, 0.6);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #4d7cfe;
+    line-height: 3px;
+}
 .consultation {
 }
 .startGroup input {
@@ -262,7 +470,7 @@ export default {
     font-size: 14px;
     color: #000000;
     letter-spacing: -0.4px;
-	font-weight: normal
+    font-weight: normal;
 }
 .ohisListMain {
     display: flex;

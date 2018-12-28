@@ -10,7 +10,7 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method(scope.row.id,'dd')" type="text" size="small">
+                    <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method(scope.row.id,'dd')" :class="[text.oclass]" type="text" size="small">
                         {{text.name}}
                     </el-button>
                 </template>
@@ -23,7 +23,9 @@
 <script>
 export default {
     data() {
-        return {};
+        return {
+            otrue:true
+        };
     },
     methods: {
         reBackFn(index) {
@@ -92,15 +94,17 @@ export default {
             //列表按钮数据格式
             tableBtn: [
                 {
-                    name: "新增",
+					name: "评价",
+					oclass:"evaluateBtn",
                     method: (index, row) => {
-                        this.handleDel(index, row);
+                        this.evaluateFun(index, row);
                     }
                 },
                 {
-                    name: "编辑",
+					name: "查看记录",
+					oclass:"recordBtn",
                     method: (index, row) => {
-                        this.handleDel(index, row);
+                        this.recordFun(index, row);
                     }
                 }
             ]
@@ -108,6 +112,7 @@ export default {
 
 注意：列表标题的prop对应的字符串要和列表数据列表的字段相对应
       列表按钮里面的method是每个按钮对应触发的事件
+     列表按钮的oclass是给每个按钮赋值的class名字
 
   */
 </style>
