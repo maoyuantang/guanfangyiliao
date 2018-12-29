@@ -84,13 +84,27 @@ body{
 	align-items: center;
 	justify-content: center;
 }
-/* @media screen and (min-width:1366px) and (max-width:1650px){
-	html{
-		font-size: 80px;
-	}
+
+
+
+.Admin-title {
+    margin-bottom: 42px;
 }
-@media screen and (min-width:600px) and (max-width:1366px){
-	html{
-		font-size: 60px;
-	}
-} */
+.admin-oMain {
+    padding: 30px 38px;
+    background: #ffffff;
+    border: 1px solid #e5edf3;
+    box-shadow: 0 6px 36px 0 rgba(0, 62, 100, 0.04);
+    border-radius: 4px;
+}
+.admin-oMain>div{
+	position: relative;
+}
+.mainTab{
+	display: flex;
+	display: -webkit-flex
+}
+.mainTab>div:first-child{
+	width:100%
+}
+
