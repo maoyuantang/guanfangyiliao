@@ -6,16 +6,19 @@
         <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
         </el-pagination>
         <div id="myChart" :style="{width: '100%', height: '300px'}"></div>
+
+        <search @searchValue="searchChange"></search>
     </div>
 </template>
 
 <script>
 import echarts from "../plugs/echarts.js";
 import tableList from "../public/publicComponents/publicList.vue";
-
+import search from "../public/publicComponents/search.vue";
 export default {
     components: {
-        tableList
+        tableList,
+        search
     },
     data() {
         return {
@@ -101,12 +104,10 @@ export default {
             ],
             tableDataList: [
                 {
-                    id: "91F0B9D25A474B6FA0CDBAC872035984",
                     age: "1545649424290",
                     name: "冠方医院",
                 },
                 {
-                    id: "120BAE29C23C470E9E73DED3D8C071BF",
                     age: "1545618639429",
                     name: "测试医院",
                 },
@@ -114,21 +115,18 @@ export default {
             tableBtn: [
                 {
                     name: "查看记录",
-                    address: "上海市普陀区金沙江路 1518 弄",
                     method: (index, row) => {
                         this.handleDel(index, row);
                     }
                 },
                 {
                     name: "查看记录",
-                    address: "上海市普陀区金沙江路 1518 弄",
                     method: (index, row) => {
                         this.handleDel(index, row);
                     }
                 },
                 {
                     name: "查看记录",
-                    address: "上海市普陀区金沙江路 1518 弄",
                     method: (index, row) => {
                         this.handleDel(index, row);
                     }
@@ -160,6 +158,10 @@ export default {
             //         label: data[key]
             //     });
             // });
+        },
+        //搜索框
+        searchChange(data){
+            alert(data)
         },
         drawLine() {
             var myChart = echarts.init(document.getElementById("myChart"));
