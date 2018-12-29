@@ -18,11 +18,11 @@
 			
 		},
 		async created(){
-            // console.log(testC)
-            // testC()
-            // .then(res=>console.log(res))
-             testA()
+            console.log(testC)
+            testC()
             .then(res=>console.log(res))
+            //  testA()
+            // .then(res=>console.log(res))
 
 
 

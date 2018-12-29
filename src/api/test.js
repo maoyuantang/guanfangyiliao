@@ -2,11 +2,11 @@ import axios from '../plugs/axios.js'
 
 export const testA = data=>axios({
 	method:'get',
-	url:'/api/testGet',
+	url:'/testGet',
 })
 export const testC = data=>axios({
 	method:'get',
-	url:'/proxy/m/v1/api/login/sendCaptcha',
+	url:'/m/v1/api/login/sendCaptcha',
 	params:{phone:'17302332851'}
 })
 // export default {

@@ -28,7 +28,7 @@ Vue.use(Router)
 
 
 const router = new Router({
-	mode: 'history',
+	mode: 'hash',
   routes: [
 		
     {
@@ -138,16 +138,6 @@ const router = new Router({
       meta: {
         title: '首页'
       },
-      // children:[
-      // 	{
-      // 		path: '/index',
-		  //     name: 'test',
-		  //     component: test,
-		  //     meta: {
-		  //       title: '测试'
-		  //     }
-      // 	}
-      // ]
     },
 //  {
 //    path: '/test',
