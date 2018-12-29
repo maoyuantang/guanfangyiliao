@@ -1,0 +1,5 @@
+/**
+ * 生成并暴露出uuid
+ */
+import uuid  from 'uuid'
+export default () => uuid.v1().replace(/-/g, "")

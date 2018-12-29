@@ -174,13 +174,17 @@ const router = new Router({
   ]
 })
 
-router.beforeEach((to, from, next) => {//路由跳转，设置title，后期加上权健
-	console.log(this.a.app)
+/**
+ * 作用：路由跳转，设置title，未登录重定向
+ */
+router.beforeEach((to, from, next) => {
 	console.log(store.state.user.count)
-  /* 路由发生变化修改页面title */
-  if (to.meta.title) {
-    document.title = to.meta.title
-  }
+	// if(!store.state.user.userInfo.isLogin&&to.path!=='/login'){//未登录,重定向到登录页(暂时关闭，方便开发)
+	// 	next({path:'/login'})
+	// 	return;
+	// }
+	/* 路由发生变化修改页面title */
+	document.title = to.meta.title?to.meta.title:null;
   next()
 })
 export default router
