@@ -2,7 +2,7 @@
 <div class="statistics-table">
     <div class="statistics-table-option">
         <div class="statistics-table-option-left">
-            <selftag @reBack="gitIndex" v-model="test"></selftag>
+            <selftag @reback="gitIndex" v-model="test"></selftag>
         </div>
         <div class="statistics-table-option-right">
             <statisticsWay @reBack='getTime'></statisticsWay>
@@ -87,7 +87,7 @@
         },
         methods:{
             gitIndex(index){
-
+                console.log(index)
             },
             getTime(time){
 

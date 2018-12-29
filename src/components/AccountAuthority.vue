@@ -10,7 +10,7 @@
            <div class="left-model" v-show="tabPosition==='left'">
                <div class="left-model-head">
                     <div class="left-model-head-flag">
-                        <selftag @reBack="gitIndex" v-model="leftListDepartment"></selftag>
+                        <selftag v-model="leftListDepartment" @reback="console.log('i is fish')"></selftag>
                     </div>
                     <div class="left-model-head-operating">
                         <el-input
@@ -21,7 +21,7 @@
                     </div>
                </div>
                <div class="left-model-body">
-                    这个位置放张表，明天弄
+                    <publicList :tableData="newModules.tableData" :columns="newModules.columns" :tableBtn="newModules.tableBtn"></publicList>
                </div>
            </div>
            <div class="right-model" v-show="tabPosition==='right'">
@@ -40,12 +40,16 @@
                         <el-button type="primary" @click="alertStatus(2)">邀请协作</el-button>
                     </div>
                </div>
+              <div class="left-model-body">
+                    <publicList :tableData="inviteModules.tableData" :columns="inviteModules.columns" :tableBtn="inviteModules.tableBtn"></publicList>
+               </div>
            </div>
         </el-tabs>
-        <markLayer v-if="isAdd===1||isAdd===2" @click="alertStatus(0)">
-           <div class="mark-content">
+        <el-dialog class="startGroup" title="新增" :visible.sync="otrue" width="602px" hight="607px" center>
+        <!-- <markLayer v-if="isAdd===1||isAdd===2"> -->
+           <!-- <div class="mark-content"  @click.native="alertStatus(0)"> -->
                 <div class="mark-add" v-if="isAdd===1">
-                    <p class="mark-add-title">新增<p>
+                    <!-- <p class="mark-add-title">新增<p> -->
                     <div class="add-module">
                         <div class="input-layer">
                             <div class="leyer-item">
@@ -104,7 +108,7 @@
                             </div>	
                         </div>
                     </div>	
-                    <div class="sub-add"><el-button type="primary" size="mini">确定</el-button></div>	
+                    <div class="sub-add"><el-button type="primary" size="mini"  @click.native="addSub">确定</el-button></div>	
                 </div>
                 <div class="mark-invite" v-else-if="isAdd===2">
                     <p class="mark-add-title">邀请协作</p>
@@ -136,8 +140,9 @@
                     </div>
                     <div class="mark-invite-sub"><el-button type="primary" size="mini" @click="inviteSub">确定</el-button></div>
                 </div>
-            </div>
-        </markLayer>
+            <!-- </div> -->
+        <!-- </markLayer> -->
+        </el-dialog>
 		远程教育系统
 	</div>
 </template>
@@ -145,11 +150,20 @@
 <script>
     import selftag from '../public/publicComponents/selftag.vue'
     import markLayer from '../public/publicComponents/markLayer.vue'
+    import publicList from '../public/publicComponents/publicList.vue'
+    
 	export default {
+        watch:{
+            leftListDepartment(n,o){
+                console.log(n)
+            }
+        },
 		data () {
 			return {
+                otrue:false,
                 tabPosition: 'left',
                 leftListDepartment:{//本院人员的科室标签列表
+                    index:0,
                     more:true,
                     title:'科室',
                     list:[
@@ -221,7 +235,7 @@
                         },
                     ]
                 },
-                isAdd:0,//1是新增弹窗，2是邀请弹窗，其余隐藏弹窗，建议选0
+                isAdd:1,//1是新增弹窗，2是邀请弹窗，其余隐藏弹窗，建议选0
                 departmentlist:[//科室列表
 					{name:'第一科'},
 					{name:'第2科'},
@@ -403,7 +417,162 @@
 						select:false
 					}
                 ],
-                value:null
+                value:null,
+                newModules:{
+                    columns:[
+                        {
+                            prop:"department",
+                            label:"科室"
+                        },
+                        {
+                            prop:"name",
+                            label:"姓名"
+                        },
+                        {
+                            prop:"accountNumber",
+                            label:"账号"
+                        },
+                        {
+                            prop:"phone",
+                            label:"手机号"
+                        },
+                        {
+                            prop:"businessScope",
+                            label:"业务范围"
+                        },
+                        {
+                            prop:"registeredTime",
+                            label:"注册时间"
+                        },
+                        {
+                            prop:"departmentManagement",
+                            label:"科室管理"
+                        }
+                    ],
+                    tableData:[
+                        {
+                            id: "91F0B9D25A474B6FA0CDBAC872035984",
+                            department:'急诊科',
+                            name:'Verge',
+                            accountNumber:'201805261024526',
+                            phone:'一连串字符',
+                            businessScope:'10',
+                            registeredTime:'2018-03-22',
+                            departmentManagement:'有'
+                        },
+                        {
+                            id: "91F0B9D25A474B6FA0CDBAC872035984",
+                            department:'急诊科',
+                            name:'Verge',
+                            accountNumber:'201805261024526',
+                            phone:'一连串字符',
+                            businessScope:'10',
+                            registeredTime:'2018-03-22',
+                            departmentManagement:'有'
+                        },
+                    ],
+                    tableBtn: [
+                        {
+                            name: "新增",
+                            method: (index, row) => {
+                                console.log(index)
+                                console.log(row)
+                                // this.handleDel(index, row);
+                            }
+                        },
+                        {
+                            name: "编辑",
+                            method: (index, row) => {
+                                this.handleDel(index, row);
+                            }
+                        }
+                    ]
+                    
+                },
+                inviteModules:{
+                    columns: [
+                        {
+                            prop:"hospital",
+                            label:"医院"
+                        },
+                        {
+                            prop:"department",
+                            label:"科室"
+                        },
+                        {
+                            prop:"name",
+                            label:"姓名"
+                        },
+                        // {
+                        //     prop:"age",
+                        //     label:"年龄"
+                        // },
+                        {
+                            prop:"accountNumber",
+                            label:"账号"
+                        },
+                        {
+                            prop:"phone",
+                            label:"手机号"
+                        },
+                        {
+                            prop:"businessScope",
+                            label:"业务范围"
+                        },
+                        {
+                            prop:"enterTime",
+                            label:"入住时间"
+                        }
+                    ],
+                    tableData: [
+                        {
+                            id: "91F0B9D25A474B6FA0CDBAC872035984",
+                            hospital:'重庆冠方智慧医院',
+                            department:'急诊科',
+                            name:'Verge',
+                            accountNumber:'201805261024526',
+                            phone:'一连串字符',
+                            businessScope:'10',
+                            enterTime:'2018-03-22'
+                        },
+                         {
+                            id: "91F0B9D25A474B6FA0CDBAC872035984",
+                            hospital:'重庆冠方智慧医院',
+                            department:'急诊科',
+                            name:'Verge',
+                            accountNumber:'201805261024526',
+                            phone:'一连串字符',
+                            businessScope:'10',
+                            enterTime:'2018-03-22'
+                        },
+                         {
+                            id: "91F0B9D25A474B6FA0CDBAC872035984",
+                            hospital:'重庆冠方智慧医院',
+                            department:'急诊科',
+                            name:'Verge',
+                            accountNumber:'201805261024526',
+                            phone:'一连串字符',
+                            businessScope:'10',
+                            enterTime:'2018-03-22'
+                        },
+                    ],
+                    tableBtn: [
+                        {
+                            name: "新增",
+                            method: (index, row) => {
+                                console.log(index)
+                                console.log(row)
+                                // this.handleDel(index, row);
+                            }
+                        },
+                        {
+                            name: "编辑",
+                            method: (index, row) => {
+                                this.handleDel(index, row);
+                            }
+                        }
+                    ]
+                },
 			}
         },
         watch:{
@@ -412,16 +581,31 @@
             }
         },
 		methods:{
-            gitIndex(index){},
-            inviteSub(){},
+            gitIndex(index){
+                console.log(456)
+                console.log(index)
+            },
+            addSub(){
+                this.alertStatus(0);
+            },
+            inviteSub(){
+
+                this.alertStatus(0);
+            },
             alertStatus(num){//操作弹框状态，传入1个数字，1表示新增弹窗，2表示邀请弹窗，其余隐藏弹窗，建议选0
                 if(Object.prototype.toString.call(num)!=="[object Number]")return;
+                num===1||num===2?this.otrue=true:this.otrue=false;
                 this.isAdd = num;
             },
+            test111(){
+               
+                alert(45454)
+            }
         },
         components:{
             selftag,
-            markLayer
+            markLayer,
+            publicList
         },
 		async created(){
 

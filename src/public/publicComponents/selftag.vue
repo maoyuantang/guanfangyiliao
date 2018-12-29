@@ -1,77 +1,63 @@
 <template>
-	<div class="self-tag">
-        <span class="el-tag tag-title">{{inData.title}}:</span>
-        <el-tag :type="index===0?'warning':''" :class="index===0?'all':''" v-for="(item,index) in inData.list" :key="index" @click.native="reBackFn(index)">{{item.text}}</el-tag>
-        <el-tag @click.native="reBackFn(-1)" v-if="inData.more">更多…</el-tag>
-	</div>
+  <div class="self-tag">
+      <!-- <p>{{inData}}</p> -->
+    <!-- <span class="el-tag tag-title">{{inData.title}}:</span> -->
+      <!-- <span v-for="(item,index) in inData.list" :key="index" @click="reBackFn(index)" style="margin-left:20px">{{item.text}}</span>  -->
+    <el-tag :type="index===0?'warning':''" :class="index===0?'all':''" v-for="(item,index) in inData.list" :key="index" @click.native.prevent="reBackFn(index)">{{item.text}}</el-tag>
+
+
+    <el-tag @click.native="reBackFn(-1)" >更多…</el-tag>
+  </div>
 </template>
 
 <script>
-	export default {
-		data () {
-			return {
-				// test:{
-                //     more:true,
-                //     title:'测试456465',
-                //     list:[
-                //         {
-                //             text:'all'
-                //         },
-                //         {
-                //             text:'1st'
-                //         },
-                //         {
-                //             text:'2st'
-                //         },
-                //         {
-                //             text:'3st'
-                //         },
-                //         {
-                //             text:'4st'
-                //         },
-                //     ]
-                // }
-			}
-		},
-		methods:{
-			reBackFn(index){
-				// this.inData.i = index
-                // this.$emit('reBack',this.inData)
-                this.$emit('reBack',{index:index})
-			}
-		},
-		props: {
-			inData:Object
-		},
-		model:{
-			prop:['inData'],
-			event:'reBack'
-		},
-		async created(){
-		}
-	}
+export default {
+  data() {
+    return {};
+  },
+  methods:{
+    reBackFn(index) {
+        console.log(123123)
+        this.inData.index=index;
+        this.$emit("reback",Object.assign({},this.inData));
+    }
+  },
+//   props:[
+//       "inData"
+//   ],
+  props: {
+    inData: Object
+  },
+  model: {
+    prop: ["inData"],
+    event: "reback"
+  },
+   created() {
+      console.log(this.inData)
+  }
+};
 </script>
 
 <style scoped>
-	.self-tag{
-    }
-    .self-tag>.tag-title{
-        font-family: PingFangSC-Semibold;
-        font-size: 14px;
-        color: #646464 !important;
-        font-weight: bold;
-    }
-    .self-tag>.all{
-        color: #FBA800 !important;
-    }
-    .self-tag > .el-tag{
-        background-color:transparent;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        font-family: PingFangSC-Regular;
-        color: #0067FF;
-    }
+.self-tag {
+}
+.self-tag > .tag-title {
+  font-family: PingFangSC-Semibold;
+  font-size: 14px;
+  color: #646464 !important;
+  font-weight: bold;
+}
+.self-tag > .all {
+  color: #fba800 !important;
+}
+.self-tag > .el-tag {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  color: #0067ff;
+}
 </style>
 <!--
     使用先知：

@@ -96,7 +96,9 @@
                                 text: setData.total,//标题文字
                                 backgroundColor:'#FE5578',
                                 borderRadius: '4px',
-                                x:'right',
+                                // x:'right',
+                                right:'60px',
+                                // padding: 15,
                                 textStyle:{//标题样式
                                     color:'#fff',
                                     borderRadius: '4px',
@@ -106,66 +108,25 @@
                                     width:'1000px',
                                     height:32,
                                     verticalAlign:'middle',
-                                    // label: {
-                                    // // 在文本中，可以对部分文本采用 rich 中定义样式。
-                                    // // 这里需要在文本中使用标记符号：
-                                    // // `{styleName|text content text content}` 标记样式名。
-                                    // // 注意，换行仍是使用 '\n'。
-                                    //     formatter: [
-                                    //         '{a|这段文本采用样式a}',
-                                    //         '{b|这段文本采用样式b}这段用默认样式{x|这段用样式x}'
-                                    //     ].join('\n'),
-
-                                    //     rich: {
-                                    //         a: {
-                                    //             color: 'red',
-                                    //             lineHeight: 10
-                                    //         },
-                                    //         b: {
-                                    //             backgroundColor: {
-                                    //                 image: 'xxx/xxx.jpg'
-                                    //             },
-                                    //             height: 40
-                                    //         },
-                                    //         x: {
-                                    //             fontSize: 18,
-                                    //             fontFamily: 'Microsoft YaHei',
-                                    //             borderColor: '#449933',
-                                    //             borderRadius: 4
-                                    //         },
-                                            
-                                    //     }
-                                    // }
                                 },
                                
                             }
                             
                              
                         ],
-                        
-                        // title: {
-                        //     text: setData.title,//标题文字
-                        //     textStyle:{//标题样式
-                        //         color:'#000',
-                        //         fontFamily:'PingFangSC-Light',
-                        //         fontSize: '25',
-                        //         fontWeight:'normal'
-                        //     },
-                        //     subtext:'fubiaoti',//副标题
-                        //     subtextStyle:{//副标题样式
-                        //         width:100,
-                        //         height:32,
-                        //         textBorderColor:'blue',
-                        //         backgroundColor:'red',//标题背景色
-                        //         fontSize:'50px',
-                        //         align:'right',
-                        //         color:'red',
-                        //         x:'right'
-                        //     }
-                        // },
-                        
+                       
                         xAxis: {
-                            data: setData.dataAxis
+                            data: setData.dataAxis,
+                            axisTick: {
+                                show: false
+                            },
+                            
+                            axisLabel:{
+                                textStyle: {
+                                    color: '#8C8C8C',//坐标值得具体的颜色
+            
+                                }
+                            }
                         },
                         yAxis: {
                             axisLine: {
@@ -189,25 +150,33 @@
                             { // For shadow
                                 type: 'bar',
                                 itemStyle: {
-                                    normal: {color: 'rgba(0,0,0,0.05)'}
+                                    normal: {
+                                        color: 'rgba(172,195,226,0.1)',
+                                        // barBorderRadius:[10, 10, 10, 10],
+                                    },
                                 },
                                 barGap:'-100%',
                                 barCategoryGap:'40%',
                                 data: dataShadow,
-                                animation: false
+                                animation: false,
+                                barMaxWidth:14,
+                                
                             },
                             {
                                 type: 'bar',
+                                barMaxWidth:14,
                                 itemStyle: {
                                     normal: {
-                                        color: new echarts.graphic.LinearGradient(
-                                            0, 0, 0, 1,
-                                            [
-                                                {offset: 0, color: '#83bff6'},
-                                                {offset: 0.5, color: '#188df0'},
-                                                {offset: 1, color: '#188df0'}
-                                            ]
-                                        )
+                                        barBorderRadius:[5, 5, 5, 5],
+                                        color: '#59BCFB'
+                                        // color: new echarts.graphic.LinearGradient(
+                                        //     0, 0, 0, 1,
+                                        //     [
+                                        //         {offset: 0, color: '#83bff6'},
+                                        //         {offset: 0.5, color: '#188df0'},
+                                        //         {offset: 1, color: '#188df0'}
+                                        //     ]
+                                        // )
                                     },
                                     emphasis: {
                                         color: new echarts.graphic.LinearGradient(
@@ -240,7 +209,7 @@
                 dataAxis:this.inData.dataAxis,
                 data:this.inData.data,
                 title:this.inData.title,
-                total:this.inData.total
+                total:this.inData.total+'4544464'
             });
 		}
 	}

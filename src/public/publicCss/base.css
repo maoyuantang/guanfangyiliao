@@ -37,6 +37,14 @@ html{
 	--color6: #0067FF;
 	--color8:#DCE0E6;/*命名冲突，由color6改为color8*/
 	--color9:#95a0ad;
+	--color10:#778CA2;
+	--color11:#98a9bc;
+	--color12:#1B1E24;
+
+	--color13:#FFAB2B;/*橙黄色*/
+	--color14:#FE4D97;/*紫粉色*/
+	--color15:#4285f4;
+	--color16:#626262;
 
 	/*背景颜色*/
 	--bgColoor1:#fbfdfd;
@@ -52,6 +60,9 @@ html{
 	--fontFamily3:PingFangSC-Regular;
 	/*border-color*/
 	--borderColor1:#E6EAEE;
+	--borderColor2:#E8ECEF;
+	--borderColor3:#6DD230;
+	--borderColor4:#e4e8eb;
 }
 body{
 	font-size: 0.14rem;
@@ -73,3 +84,13 @@ body{
 	align-items: center;
 	justify-content: center;
 }
+/* @media screen and (min-width:1366px) and (max-width:1650px){
+	html{
+		font-size: 80px;
+	}
+}
+@media screen and (min-width:600px) and (max-width:1366px){
+	html{
+		font-size: 60px;
+	}
+} */

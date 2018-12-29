@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import store from '../vuex/index.js'
 import index from '@/components/index'//主页
 import statistics from '@/components/statistics'//首页统计
+import login from '@/components/login'//主页
 
 import consultation from '@/components/consultation'//远程会诊系统
 import cooperation from '@/components/cooperation'//远程协作系统
@@ -44,7 +45,8 @@ const router = new Router({
 		        title: '首页统计'
 		      }
         },
-        /**************************** */
+				/**************************** */
+				
         {
       		path: '/rounds',
 		      name: 'rounds',
@@ -161,7 +163,15 @@ const router = new Router({
 //      title: '测试'
 //    }
 //  },
-    {
+		{
+			path: '/login',
+			name: 'login',
+			component: login,
+			meta: {
+				title: 'denglu'
+			}
+		},
+		{
       path: '*',
       name: 'notFound',
       component: notFound,

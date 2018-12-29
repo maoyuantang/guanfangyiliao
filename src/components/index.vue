@@ -101,3 +101,10 @@ export default {
 		/* height: 0; */
 	}
 </style>
+<!--
+	这里是主要内容拼接的组件，暂时只有404页面不在这个组件之内，后期可能登录注册页面也不在这之内，其余内容基本都在这里拼接
+	<div class="index-left">是左侧导航栏
+	<div class="index-right">是右侧内容显示
+		<div class="content-top">是头部内容，
+		<div class="content-body">这块是灵活的，根据路由不同动态修改内容
+-->
