@@ -181,8 +181,14 @@
 		<div class="consultation" v-if="oVisable">
 			<div class="doc-title">
 				<selftag :inData="oTab"></selftag>
-				<el-button type="text" @click="centerDialogVisible = true">发起会诊</el-button>
+				<div class="statistics-way">
+					<span>时间段：</span>
+					<el-date-picker v-model="time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+					</el-date-picker>
+				</div>
+				<el-button class="startConsul" type="text" @click="centerDialogVisible = true">发起会诊</el-button>
 			</div>
+
 			<div>
 				<tableList :tableData="tableData" :columns="columns" :tableBtn="tableBtn"> </tableList>
 			</div>
@@ -196,11 +202,14 @@
 			<div class="admin-oMain">
 				<!-- 会诊管理 -->
 				<div v-if="oconsulVisable">
-					<div>
-						<selftag :inData="oTab"></selftag>
-						<selftag :inData="oTab"></selftag>
-						<selftag :inData="oTab"></selftag>
-						<selftag :inData="oTab"></selftag>
+					<div class="mainTab">
+						<div>
+							<selftag :inData="oTab"></selftag>
+							<selftag :inData="oTab"></selftag>
+							<selftag :inData="oTab"></selftag>
+							<selftag :inData="oTab"></selftag>
+						</div>
+
 						<search @searchValue="searchChange"></search>
 					</div>
 					<div>
@@ -209,8 +218,11 @@
 				</div>
 				<!-- 统计 -->
 				<div v-else>
-					<div>
-						<selftag :inData="oTab"></selftag>
+					<div class="mainTab">
+						<div>
+							<selftag :inData="oTab"></selftag>
+						</div>
+						<statisticsWay></statisticsWay>
 					</div>
 					<div>
 						<normalColumnChart :inData="drawData"> </normalColumnChart>
@@ -226,13 +238,18 @@ import tableList from "../public/publicComponents/publicList.vue";
 import selftag from "../public/publicComponents/selftag.vue";
 import normalTab from "../public/publicComponents/normalTab.vue";
 import normalColumnChart from "../public/publicComponents/normalColumnChart.vue";
+import search from "../public/publicComponents/search.vue";
+import statisticsWay from "../public/publicComponents/statisticsWay.vue";
+
 
 export default {
     components: {
         selftag,
         tableList,
         normalTab,
-        normalColumnChart
+        normalColumnChart,
+		search,
+		statisticsWay
     },
     data() {
         return {
@@ -254,7 +271,7 @@ export default {
                     },
                     {
                         text: "今日"
-                    }
+                    },
                 ]
             }, //医生端tab
             columns: [
@@ -340,7 +357,8 @@ export default {
                     234
                 ], //具体数值
                 title: "测试测试,修改修改" //图表标题
-            }
+			},
+		
         };
     },
     methods: {
@@ -367,10 +385,32 @@ export default {
 </script>
 
 <style>
+/* 公共样式 */
+.Admin-title {
+    margin-bottom: 42px;
+}
+.admin-oMain {
+    padding: 30px 38px;
+    background: #ffffff;
+    border: 1px solid #e5edf3;
+    box-shadow: 0 6px 36px 0 rgba(0, 62, 100, 0.04);
+    border-radius: 4px;
+}
+.admin-oMain>div{
+	position: relative;
+}
+.mainTab{
+	display: flex;
+	display: -webkit-flex
+}
+.mainTab>div:first-child{
+	width:100%
+}
 /* 医生端样式 */
 .consultation .doc-title {
     display: flex;
     display: -webkit-flex;
+    margin-bottom: 52px;
 }
 .evaluateBtn {
     width: 57px;
@@ -383,16 +423,22 @@ export default {
     color: #778ca2;
     line-height: 3px;
 }
-/* 管理端端样式 */
-.consultation .Admin-title {
-    margin-bottom: 42px;
-}
-.consultation .admin-oMain {
-    padding: 30px 38px;
-    background: #ffffff;
-    border: 1px solid #e5edf3;
-    box-shadow: 0 6px 36px 0 rgba(0, 62, 100, 0.04);
+.startConsul {
+    width: 196px;
+    height: 40px;
+    background: #4da1ff;
     border-radius: 4px;
+    font-family: PingFangSC-Semibold;
+    font-size: 22px;
+    color: #ffffff;
+    letter-spacing: 0.92px;
+    text-align: center;
+    line-height: 0px;
+}
+/* 管理端端样式 */
+
+.mainTab {
+    margin-bottom: 30px;
 }
 
 .recordBtn {

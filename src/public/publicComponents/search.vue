@@ -1,11 +1,9 @@
 <template>
-    <div>
-        <div class="search">
+    <div class="search">
             <el-input v-model="input" placeholder="Search by keywords…"></el-input>
             <span @click="searchBtn">
                 <img src="../../assets/search.png" alt="">
             </span>
-        </div>
 
     </div>
 </template>
@@ -33,6 +31,7 @@ export default {
     height: 38px;
     background: #ffffff;
     border: 1px solid #e5edf3;
+    -webkit-box-shadow: 0 6px 36px 0 rgba(0, 62, 100, 0.04);
     box-shadow: 0 6px 36px 0 rgba(0, 62, 100, 0.04);
     border-radius: 38px;
 }

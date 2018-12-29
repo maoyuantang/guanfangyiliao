@@ -1,27 +1,111 @@
 <template>
     <div class="files">
         健康档案系统
+        <!-- 管理端 -->
+        <div v-if="oVisable">
+            <div class="Admin-title">
+                <normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
+            </div>
 
-        <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
-        <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
-        </el-pagination>
-        <div id="myChart" :style="{width: '100%', height: '300px'}"></div>
+            <div class="admin-oMain">
+                <!-- 档案查询和推送 -->
+                <div v-if="oconsulVisable">
+                    <div class="mainTab">
+                        <div>
+                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab"></selftag>
+                        </div>
 
-        <search @searchValue="searchChange"></search>
+                        <search @searchValue="searchChange"></search>
+                    </div>
+                    <div>
+                        <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
+                        <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
+                        </el-pagination> -->
+                    </div>
+                </div>
+                <!-- 统计 -->
+                <div v-else>
+                    <div class="mainTab">
+                        <div>
+                            <selftag :inData="oTab"></selftag>
+                        </div>
+                        <statisticsWay></statisticsWay>
+                    </div>
+                    <div>
+                        <div id="myChart" :style="{width: '100%', height: '300px'}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 医生端 -->
+        <div v-else class="admin-oMain">
+            <div v-if="oconsulVisable">
+                <div class="mainTab">
+                    <div>
+                        <selftag :inData="oTab"></selftag>
+                        <selftag :inData="oTab"></selftag>
+                        <selftag :inData="oTab"></selftag>
+                        <selftag :inData="oTab"></selftag>
+                    </div>
+
+                    <search @searchValue="searchChange"></search>
+                </div>
+                <div>
+                    <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
+                    <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
+                        </el-pagination> -->
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import echarts from "../plugs/echarts.js";
+import normalTab from "../public/publicComponents/normalTab.vue";
 import tableList from "../public/publicComponents/publicList.vue";
 import search from "../public/publicComponents/search.vue";
+import selftag from "../public/publicComponents/selftag.vue";
+import statisticsWay from "../public/publicComponents/statisticsWay.vue";
 export default {
     components: {
         tableList,
-        search
+        search,
+        normalTab,
+        selftag,
+        statisticsWay
     },
     data() {
         return {
+            oVisable: false,
+            oconsulVisable: true,
+            oAdminTab: {
+                i: 0, //选中的是第几项，类型为int(注意：从0开始计数)
+                list: [
+                    //选项列表，类型Array
+                    {
+                        en: "ARCHIVES INQUIRY & DELIVERY", //选项英文，类型 string
+                        zh: "档案查询和推送" //选项中文，类型string
+                    },
+                    {
+                        en: "STATISTICS",
+                        zh: "统计"
+                    }
+                ]
+            },
+            oTab: {
+                more: true,
+                title: "日期",
+                list: [
+                    {
+                        text: "全部"
+                    },
+                    {
+                        text: "今日"
+                    }
+                ]
+            }, //管理端tab
             odata: 1,
             odata: {
                 header: {
@@ -94,23 +178,23 @@ export default {
             },
             columns: [
                 {
-                    prop:"name",
-                    label:"姓名"
+                    prop: "name",
+                    label: "姓名"
                 },
                 {
-                    prop:"age",
-                    label:"年龄"
+                    prop: "age",
+                    label: "年龄"
                 }
             ],
             tableDataList: [
                 {
                     age: "1545649424290",
-                    name: "冠方医院",
+                    name: "冠方医院"
                 },
                 {
                     age: "1545618639429",
-                    name: "测试医院",
-                },
+                    name: "测试医院"
+                }
             ],
             tableBtn: [
                 {
@@ -142,12 +226,17 @@ export default {
         this.drawLine();
     },
     methods: {
-        // 表格分页
-        seeCurrentChange(){
-
+        getConsulTabData(res) {
+            if (res.i == 0) {
+                this.oconsulVisable = true;
+            } else if (res.i == 1) {
+                this.oconsulVisable = false;
+            }
         },
+        // 表格分页
+        seeCurrentChange() {},
         handleDel(index, row) {
-            alert(index)
+            alert(index);
         },
         //处理标题数据好方便传入子组件
         circularData(data) {
@@ -160,8 +249,8 @@ export default {
             // });
         },
         //搜索框
-        searchChange(data){
-            alert(data)
+        searchChange(data) {
+            alert(data);
         },
         drawLine() {
             var myChart = echarts.init(document.getElementById("myChart"));
@@ -169,7 +258,7 @@ export default {
 
             var colors = ["#1875F0", "#1CD1A1 ", "#FE5578"];
 
-           var option = {
+            var option = {
                 color: colors,
 
                 tooltip: {
