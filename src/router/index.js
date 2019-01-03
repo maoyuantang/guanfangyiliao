@@ -178,11 +178,25 @@ const router = new Router({
  * 作用：路由跳转，设置title，未登录重定向
  */
 router.beforeEach((to, from, next) => {
+	console.log(store)
 	console.log(store.state.user.count)
-	// if(!store.state.user.userInfo.isLogin&&to.path!=='/login'){//未登录,重定向到登录页(暂时关闭，方便开发)
-	// 	next({path:'/login'})
-	// 	return;
-	// }
+	if(!store.state.user.userInfo.isLogin&&to.path!=='/login'){//未登录,重定向到登录页(暂时关闭，方便开发)
+		let userSession = sessionStorage.getItem('userInfo'); 
+
+		if(userSession){
+			try{
+				userSession = JSON.parse(userSession);
+			}catch(e){
+				next({path:'/login'})
+				return;
+			}
+			store.commit("user/SETUSERINFO",userSession);
+		}else{
+			next({path:'/login'})
+			return;
+		}
+		
+	}
 	/* 路由发生变化修改页面title */
 	document.title = to.meta.title?to.meta.title:null;
   next()

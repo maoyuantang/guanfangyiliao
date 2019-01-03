@@ -1,6 +1,12 @@
 <template>
 	<div class="outpatient">
 		远程门诊系统
+		<div class="view-curr">
+			<outPatientHospitalManagent></outPatientHospitalManagent>
+		</div>
+
+
+
 		<div class="mark" v-if="false">
 			<div class="mark-inner">
 				<div class="outpatient-alert">
@@ -17,6 +23,7 @@
 </template>
 
 <script>
+	import outPatientHospitalManagent from './outPatientHospitalManagent.vue'
 	export default {
 		data () {
 			return {
@@ -24,11 +31,15 @@
 					headImg:'',
 					name:'',
 
-				}
+				},
+				
 			}
 		},
 		methods:{
 			
+		},
+		components:{
+			outPatientHospitalManagent
 		},
 		async created(){
 

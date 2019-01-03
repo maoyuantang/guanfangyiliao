@@ -9,115 +9,79 @@
 				</infoBox>
 			</div>
 		</div>
-		<div class="doctor-table">
-			<div class="table-border">
-				<!-- <plantTable></plantTable> -->
-				<div class="table-head">
-					<span class="table-title">今日计划</span>
-					<el-button>查看历史计划</el-button>
-				</div>
-				<div class="table-list">
-					<ul class="table-list-ul">
-						<li class="table-list-item" v-for="(item,index) in platTableList" :key="index">
-							<div class="user-head-img-div">
-								<img class="user-head-img" src="../assets/logo.png" alt="" srcset="">
-							</div>
-							<span class="user-name">{{item.name}}</span>
-							<span class="user-phone"><i class="iconfont">&#xe61f;</i>{{item.phone}}</span>
-							<div class="doctors-index-table-itemmerge">
-								<span class="table-time">{{item.time}}</span>
-								<span class="table-introduction">{{item.introduction}}</span>
-							</div>
-							<div class="table-btn-div">
-								<el-button type="primary" plain>发消息</el-button>
-								<el-button type="primary" plain>看备注</el-button>
-								<el-button type="primary" plain>看档案</el-button>
-								<el-button type="primary" plain>录入档案</el-button>
-							</div>
-							<span class="item-status">
-								<el-button type="danger" plain>处理完成</el-button>
-							</span>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-
-		<div class="doctor-table">
-			<div class="table-border">
-				<!-- <plantTable></plantTable> -->
-				<div class="table-head">
-					<span class="table-title">今日计划</span>
-					<el-button>查看历史计划</el-button>
-				</div>
-				<div class="table-list">
-					<ul class="table-list-ul">
-						<li class="table-list-item" v-for="(item,index) in warmTableList" :key="index">
-							<div class="user-head-img-div">
-								<img class="user-head-img" src="../assets/logo.png" alt="" srcset="">
-							</div>
-							<span class="user-name">{{item.name}}</span>
-							<span class="user-phone"><i class="iconfont">&#xe61f;</i>{{item.phone}}</span>
-							<div class="doctors-index-table-itemmerge">
-								<!-- <span class="table-time">{{item.time}}</span> -->
-								<span class="table-introduction">{{item.introduction}}</span>
-							</div>
-							<div class="table-btn-div">
-								<el-button type="primary" plain>发消息</el-button>
-								<el-button type="primary" plain>看备注</el-button>
-								<el-button type="primary" plain>看档案</el-button>
-								<el-button type="primary" plain>录入档案</el-button>
-							</div>
-							<span class="item-status">
-								<el-button type="danger" plain>处理完成</el-button>
-							</span>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-
-		<div class="doctor-table">
-			<div class="table-border">
-				<!-- <plantTable></plantTable> -->
-				<div class="table-head">
-					<span class="table-title">今日计划</span>
-					<el-button>查看历史计划</el-button>
-				</div>
-				<div class="table-list">
-					<ul class="table-list-ul">
-						<li class="table-list-item" v-for="(item,index) in warmTableList" :key="index">
-							<div class="user-head-img-div">
-								<img class="user-head-img" src="../assets/logo.png" alt="" srcset="">
-							</div>
-							<span class="user-name">{{item.name}}</span>
-							<span class="user-phone"><i class="iconfont">&#xe61f;</i>{{item.phone}}</span>
-							<div class="doctors-index-table-itemmerge">
-								<!-- <span class="table-time">{{item.time}}</span> -->
-								<span class="table-introduction">{{item.introduction}}</span>
-								<div class="follow-up-task">
-									<div class="follow-up-classification">
-										<span class="follow-up-completed">已完成随访:</span>
-										<span class="follow-up-uncompleted">未完成随访:</span>
-									</div>
-									<el-button type="primary" plain>发消息</el-button>
-								</div>
-							</div>
-							<div class="table-btn-div">
-								<el-button type="primary" plain>发消息</el-button>
-								<el-button type="primary" plain>看备注</el-button>
-								<el-button type="primary" plain>看档案</el-button>
-								<el-button type="primary" plain>录入档案</el-button>
-							</div>
-							<span class="item-status">
-								<el-button type="danger" plain>处理完成</el-button>
-							</span>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
 		
+		<div class="doctor-table">
+			<div class="table-border">
+				<infoListHead :inData="testTitle" @reBack="letMeTest"></infoListHead>
+				<userInfoRow :inData="testBody" @reback="getClick">
+					<div class="slot-time-introduction">
+						<span class="user-info-table-time">拟定时间:2018-05.25</span>
+						<span class="user-info-table-introduction">拟定内容的内容有点多 自动换行并全部显示 打电话通知体检  检查尿酸值</span>
+					</div>
+				</userInfoRow>
+				<userInfoRow :inData="testBody" @reback="getClick">
+					<div class="slot-time-introduction">
+						<span class="user-info-table-time">拟定时间:2018-05.25</span>
+						<span class="user-info-table-introduction">拟定内容的内容有点多 自动换行并全部显示 打电话通知体检  检查尿酸值</span>
+					</div>
+				</userInfoRow>
+			</div>
+		</div>	
+		<div class="doctor-table">
+			<div class="table-border">
+				<infoListHead :inData="testTitle" @reBack="letMeTest"></infoListHead>
+				<userInfoRow :inData="testBody" @reback="getClick">
+					<div class="slot-item-info">
+						<span class="user-info-item-name">血压项</span>
+						<span class="user-info-item-info">收缩压>180mmHg</span>
+						<span class="user-info-item-info">舒张压>90mmHg</span>
+					</div>
+				</userInfoRow>
+				<userInfoRow :inData="testBody" @reback="getClick">
+					<div class="slot-item-info">
+						<span class="user-info-item-name">血压项</span>
+						<span class="user-info-item-info">收缩压>180mmHg</span>
+						<span class="user-info-item-info">舒张压>90mmHg</span>
+					</div>
+				</userInfoRow>
+			</div>
+		</div>	
+
+		<div class="doctor-table">
+			<div class="table-border">
+				<infoListHead :inData="testTitle" @reBack="letMeTest"></infoListHead>
+				<userInfoRow :inData="testBody" @reback="getClick">
+					<div class="solt-follow-up">
+						<div class="solt-follow-up-time">
+							<span class="solt-follow-up-time-item">随访制定时间: 2018-02-22</span>
+							<span class="solt-follow-up-time-item">近期随访时间: 2018-03-25</span>
+						</div>
+						<div class="solt-follow-up-status">
+							<span class="solt-follow-up-status-item">已完成随访: 2</span>
+							<span class="solt-follow-up-status-item undone">未完成随访: 8</span>
+						</div>
+						<div class="solt-follow-up-view">
+							<el-button>查看</el-button>
+						</div>
+					</div>
+				</userInfoRow>
+				<userInfoRow :inData="testBody" @reback="getClick">
+					<div class="solt-follow-up">
+						<div class="solt-follow-up-time">
+							<span class="solt-follow-up-time-item">随访制定时间: 2018-02-22</span>
+							<span class="solt-follow-up-time-item">近期随访时间: 2018-03-25</span>
+						</div>
+						<div class="solt-follow-up-status">
+							<span class="solt-follow-up-status-item">已完成随访: 2</span>
+							<span class="solt-follow-up-status-item undone">未完成随访: 8</span>
+						</div>
+						<div class="solt-follow-up-view">
+							<el-button>查看</el-button>
+						</div>
+					</div>
+				</userInfoRow>
+			</div>
+		</div>	
 		
 	</div>
 </template>
@@ -127,13 +91,23 @@
 	import infoEnter from '../public/publicComponents/infoEnter.vue'
 	import infoList from '../public/publicComponents/infoList.vue'
 	import plantTable from '../public/publicComponents/plantTable.vue'
-
+	import infoListHead from '../public/publicComponents/infoListHead.vue'
+	import userInfoRow from '../public/publicComponents/userInfoRow.vue'
 
 	
 	
 	export default {
 		data () {
 			return {
+				testTitle:{
+					name:"今日计划"
+				},
+				testBody:{
+					img:'',
+					name:'Amanda Reyes',
+					phone:'(499)-430-5810',
+					id:''
+				},
 				topInfo:[
 					{
 						title:'dag',
@@ -211,54 +185,8 @@
                         id:''
                     }
 				],
-				platTableList:[
-					{
-						headImg:'',
-						name:'Amanda Reyes',
-						phone:'(499)-430-5810',
-						time:'2018-05.25',
-						introduction:'拟定内容的内容有点多 自动换行并全部显示 打电话通知体检  检查尿酸值',
-						status:{
-							num:0,
-							text:'处理完成'
-						}
-					},
-					{
-						headImg:'',
-						name:'Amanda Reyes',
-						phone:'(499)-430-5810',
-						time:'2018-05.25',
-						introduction:'拟定内容的内容有点多 自动换行并全部显示 打电话通知体检  检查尿酸值',
-						status:{
-							num:0,
-							text:'处理完成'
-						}
-					}
-				],
-				warmTableList:[
-					{
-						headImg:'',
-						name:'Amanda Reyes',
-						phone:'(499)-430-5810',
-						// time:'2018-05.25',
-						introduction:'拟定内容的内容有点多 自动换行并全部显示 打电话通知体检  检查尿酸值',
-						status:{
-							num:0,
-							text:'处理完成'
-						}
-					},
-					{
-						headImg:'',
-						name:'Amanda Reyes',
-						phone:'(499)-430-5810',
-						// time:'2018-05.25',
-						introduction:'拟定内容的内容有点多 自动换行并全部显示 打电话通知体检  检查尿酸值',
-						status:{
-							num:0,
-							text:'处理完成'
-						}
-					}
-				]
+				
+				
 			}
 		},
 		methods:{
@@ -267,13 +195,21 @@
 			},
 			getInfoClick(item){
 				console.log(item)
+			},
+			letMeTest(data){
+				console.log(data)
+			},
+			getClick(data){
+				console.log(data)
 			}
 		},
 		components:{
 			infoBox,
 			infoEnter,
 			infoList,
-			plantTable
+			plantTable,
+			infoListHead,
+			userInfoRow
 		},
 		async created(){
 
@@ -287,11 +223,12 @@
 	}
 	.doctor-table{
 		padding-right: 0.61rem;
-		width: 100%;
-		min-width: 13.66rem
+		/* width: 100%; */
+		/* min-width: 13.66rem */
 	}
 	.doctors-index .top-info{
 		display: flex;
+		display: none;
 		/* justify-content: space-between; */
 
 	}
@@ -432,5 +369,46 @@
 		justify-content: center;
 		width: 100%;
 		height: 100%;
+	}
+	.slot-time-introduction{
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.user-info-item-name{
+		padding-right: 0.2rem;
+	}
+	.user-info-item-info{
+		color: var(--color17);
+		padding-right: 0.21rem;
+	}
+	.solt-follow-up{
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.solt-follow-up-time{
+		display: flex;
+		flex-direction: column;
+	}
+	.solt-follow-up-status{
+		display: flex;
+		flex-direction: column;
+	}
+	.solt-follow-up-view>.el-button{
+		width: 0.68rem;
+		height: 0.32rem;
+		padding: 0;
+	}
+	.solt-follow-up-view>.el-button>span{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--color15);
+		width: 100%;
+		height: 100%;
+	}
+	.undone{
+		color: var(--color17)
 	}
 </style>
