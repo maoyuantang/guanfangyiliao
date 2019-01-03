@@ -28,12 +28,12 @@ export default {
 .publicTime input {
     width: 109px !important;
     height: 35px !important;
-       border: 1px solid #E5EDF3 !important;
-border-radius: 4px;
-color:#0067FF !important;
+    border: 1px solid #E5EDF3 !important;
+    border-radius: 4px;
+    color:#0067FF !important;
 }
-.publicTime .el-date-edito{
-    border:none !important
+.publicTime .el-date-editor{
+    border:none !important;
 }
 /* 备注
 

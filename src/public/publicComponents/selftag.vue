@@ -1,12 +1,18 @@
 <template>
   <div class="self-tag">
       <!-- <p>{{inData}}</p> -->
-    <!-- <span class="el-tag tag-title">{{inData.title}}:</span> -->
+    <span class="el-tag tag-title">{{inData.title||''}}:</span>
       <!-- <span v-for="(item,index) in inData.list" :key="index" @click="reBackFn(index)" style="margin-left:20px">{{item.text}}</span>  -->
-    <el-tag :type="index===0?'warning':''" :class="index===0?'all':''" v-for="(item,index) in inData.list" :key="index" @click.native.prevent="reBackFn(index)">{{item.text}}</el-tag>
+    <el-tag :type="index===0?'warning':''" 
+        :class="[{'all':index===0},{'warning':item.warning}]"
+        v-for="(item,index) in inData.list" 
+        :key="index" 
+        @click.native.prevent="reBackFn(index)">
+            {{item.text||''}}
+    </el-tag>
 
 
-    <el-tag @click.native="reBackFn(-1)" >更多…</el-tag>
+    <el-tag @click.native="reBackFn(-1)" v-if="inData.more">更多…</el-tag>
   </div>
 </template>
 
@@ -17,9 +23,11 @@ export default {
   },
   methods:{
     reBackFn(index) {
-        console.log(123123)
+        // console.log(123123)
         this.inData.index=index;
         this.$emit("reback",Object.assign({},this.inData));
+        // :class="index===0?'all':''" 
+        // :class="item.warning?'warning':''"
     }
   },
 //   props:[
@@ -57,6 +65,9 @@ export default {
   font-size: 14px;
   font-family: PingFangSC-Regular;
   color: #0067ff;
+}
+.self-tag .warning{
+    color:red !important;
 }
 </style>
 <!--

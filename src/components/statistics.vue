@@ -1,8 +1,8 @@
 <template>
 	<div class="statistics">
 		<div>
-			<hospitalManagement></hospitalManagement>
-			<!-- <doctorsIndex></doctorsIndex> -->
+			<!-- <hospitalManagement></hospitalManagement> -->
+			<doctorsIndex></doctorsIndex>
 		</div>
 
 		<!-- <div>

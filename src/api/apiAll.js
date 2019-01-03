@@ -14,7 +14,8 @@ export const getLoginCode = data=>axios({//获取登录验证码
 export const login = data=>axios({//登录
 	method:'post',
     url:apiList.login,
-    data:qs.stringify(data)
+    data:data
+    // qs.stringify(data)
 })
 export const hospitalDepartmentManagementSubsystemList = data=>axios({//医院科室管理子系统列表
 	method:'get',

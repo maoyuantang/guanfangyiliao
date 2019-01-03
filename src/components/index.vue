@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-		<div class="index-left">
+		<div class="index-left" v-if="!userInfo.rooter">
 			<navigation></navigation>
 		</div>
 		<div class="index-right">
@@ -58,6 +58,9 @@ export default {
 		navigation
   },
   computed:{
+	...mapState({
+		userInfo:state => state.user.userInfo
+	})
   	// ...mapState({
   	// 	userCount: state => state.user.count,
   	// 	testCount: state => state.test.count,
