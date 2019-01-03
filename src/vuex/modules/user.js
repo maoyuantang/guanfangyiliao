@@ -21,7 +21,6 @@ export default {
 				// {"type": "1","authorityId": "10000"}
 			],
 			hospitalCode:'',//医院代码
-
 		}
 	},
 	mutations:{

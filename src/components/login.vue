@@ -4,7 +4,7 @@
             <p class="login-title">账号登录</p>
             <div class="login-input-div">
                 <span class="login-input-name">账号</span>
-                <input type="text" name="" placeholder="请输入手机号/账号" class="login-input" v-model="account.text" @blur="checkAccount"> 
+                <input type="text" name="" placeholder="请输入手机号/账号" class="login-input" v-model="account.text"> 
             </div>
             <div class="login-check-box-div">
                 <el-radio-group v-model="way">
@@ -20,7 +20,7 @@
             </div>
             <div class="login-input-div">
                 <span class="login-input-name">{{way?"密码":"验证码"}}</span>
-                <input type="password" name="" placeholder="请输入手机号/账号" class="login-input" v-model="passwd.text" @blur="checkPasswd">
+                <input type="password" name="" placeholder="请输入手机号/账号" class="login-input" v-model="passwd.text">
                 <span class="get-code" v-if="!way" @click="getCode">发送验证码</span>
             </div>
             <div class="login-btn-div">
@@ -47,11 +47,11 @@
 			return {
                 way:true,//登录方式，true为密码登录，false为验证码登录，默认true
                 account:{
-                    text:'',
+                    text:'gftechadmin',
                     ok:false
                 },//账号
                 passwd:{
-                    text:'',
+                    text:'111111',
                     ok:false
                 },//密码
                 checkBoxStatus:[true,false]
