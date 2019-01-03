@@ -1,6 +1,10 @@
 <template>
     <div class="files">
         健康档案系统
+        <button class="chatBtn">聊天</button>
+        <div v-show="chatVisable">
+            <chat></chat>
+        </div>
         <!-- 管理端 -->
         <div v-if="oVisable">
             <div class="Admin-title">
@@ -58,27 +62,30 @@
                 </div>
             </div>
         </div>
-        {{this.aa}}
     </div>
 </template>
 
 <script>
+import filesJs from "../common/files.js";
 import echarts from "../plugs/echarts.js";
 import normalTab from "../public/publicComponents/normalTab.vue";
 import tableList from "../public/publicComponents/publicList.vue";
 import search from "../public/publicComponents/search.vue";
 import selftag from "../public/publicComponents/selftag.vue";
 import statisticsWay from "../public/publicComponents/statisticsWay.vue";
+import chat from "../public/publicComponents/chat.vue";
 export default {
     components: {
         tableList,
         search,
         normalTab,
         selftag,
-        statisticsWay
+        statisticsWay,
+        chat
     },
     data() {
         return {
+            chatVisable:true,
             onum:3,
             oVisable: false,
             oconsulVisable: true,
@@ -228,7 +235,11 @@ export default {
         
     },
     mounted() {
+        console.log(filesJs)
+        filesJs.aaa(this.onum)
+        return;
         this.drawLine();
+         filesJs.aaa(this.onum)
     },
     methods: {
         getConsulTabData(res) {
