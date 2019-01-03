@@ -58,6 +58,7 @@
                 </div>
             </div>
         </div>
+        {{this.aa}}
     </div>
 </template>
 
@@ -78,6 +79,7 @@ export default {
     },
     data() {
         return {
+            onum:3,
             oVisable: false,
             oconsulVisable: true,
             oAdminTab: {
@@ -221,6 +223,9 @@ export default {
     async created() {
         this.circularData(this.odata["header"]);
         // this.drawLine();
+    },
+    computed:{
+        
     },
     mounted() {
         this.drawLine();
