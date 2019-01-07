@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 import websocket from "./common/websocket.js";
 import "./public/publicCss/base.css";
@@ -27,11 +27,16 @@ export default {
         })
     },
     created() {
-        this.lianjie();
+				const test = this.lianjie();
+				
     },
     methods: {
-        lianjie() {
-            websocket.initWebSocket(this.userState.token);
+        lianjie:function() {
+					//  websocket.close()
+					
+						window.websocket = websocket.initWebSocket(this.userState.token);
+					
+						console.log(window.websocket)
         }
     },
     watch: {
