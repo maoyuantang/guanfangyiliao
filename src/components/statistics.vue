@@ -57,11 +57,11 @@
 
 <script>
 
-import hospitalManagement from './hospitalManagement.vue'//医院管理员页面
-import doctorsIndex from './doctorsIndex.vue'//医生页面
-import superManagement from './superManagement.vue'//超级管理员页面
+import hospitalManagement from './statistics/hospitalManagement.vue'//医院管理员页面
+import doctorsIndex from './statistics/doctorsIndex.vue'//医生页面
+import superManagement from './statistics/superManagement.vue'//超级管理员页面
 
-import {initializeTheCreationOfHospital,userList} from '../api/apiAll.js'
+import {initializeTheCreationOfHospital,userList,settingsList} from '../api/apiAll.js'
 import test from './test.vue'//测试动态渲染组件
 import testb from './testb.vue'
 	export default {
@@ -91,6 +91,10 @@ import testb from './testb.vue'
 			doctorsIndex
 		},
 		async created(){
+			// console.log('test');
+			// const test = await settingsList({token:this.$store.state.user.userInfo.token});
+			
+			// console.log(test);
 			// const test = await userList()
 			// const test = await initializeTheCreationOfHospital({
 			// 	"name":"冠方医院001",

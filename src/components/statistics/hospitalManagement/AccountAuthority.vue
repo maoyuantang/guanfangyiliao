@@ -79,7 +79,7 @@
                                 <!-- <Select v-model="value" style="width:400px" size="small">
                                 <Option v-for="item in departmentlist" :value="item.name" :key="item.name">{{ item.name }}</Option>
                             </Select> -->
-                            <el-select v-model="value" placeholder="本账号范围内可多选" size="mini"  style="width:80%">
+                            <el-select v-model="addData.deptIds" placeholder="本账号范围内可多选" multiple size="mini"  style="width:80%">
                                 <el-option
                                     v-for="item in departmentlist"
                                     :key="item.name"
@@ -148,9 +148,9 @@
 </template>
 
 <script>
-    import selftag from '../public/publicComponents/selftag.vue'
-    import markLayer from '../public/publicComponents/markLayer.vue'
-    import publicList from '../public/publicComponents/publicList.vue'
+    import selftag from '../../../public/publicComponents/selftag.vue'
+    import markLayer from '../../../public/publicComponents/markLayer.vue'
+    import publicList from '../../../public/publicComponents/publicList.vue'
     
 	export default {
         watch:{
@@ -160,6 +160,18 @@
         },
 		data () {
 			return {
+                addData:{//新增时，收集信息
+                    name:'',//姓名
+                    phone:'',//电话
+                    account:'',//账号
+                    passwd:'',//密码 
+                    deptIds:[],//
+                },
+
+
+
+
+                /********************************** */
                 otrue:false,
                 tabPosition: 'left',
                 leftListDepartment:{//本院人员的科室标签列表
@@ -417,7 +429,6 @@
 						select:false
 					}
                 ],
-                value:null,
                 newModules:{
                     columns:[
                         {
@@ -586,11 +597,11 @@
                 console.log(index)
             },
             addSub(){
-                this.alertStatus(0);
+                console.log('新增')
             },
             inviteSub(){
 
-                this.alertStatus(0);
+                console.log('邀请')
             },
             alertStatus(num){//操作弹框状态，传入1个数字，1表示新增弹窗，2表示邀请弹窗，其余隐藏弹窗，建议选0
                 if(Object.prototype.toString.call(num)!=="[object Number]")return;

@@ -38,7 +38,7 @@
     import { mapState } from 'vuex'
     import {testA} from '../api/test.js'
     import {testC} from '../api/test.js'
-    import {getLoginCode,login} from '../api/apiAll.js'//api
+    import {getLoginCode,login,userInfo} from '../api/apiAll.js'//api
     import createUUID from '../public/publicJs/createUUID.js'
 	export default {
         watch:{
@@ -184,13 +184,36 @@
             },
 
             /**
+             * 获取用户信息(注意：这里用户登录和获取用户信息在后台是分开的，也就是说，登录成功不会返回某些用户信息，需要再调用这个接口)
+             */
+            async getUserInfo(){
+                if(!this.account.ok || !this.passwd.ok)return;
+                const options = {
+                   token:this.userState.token,
+                   userId:'',//等后台怎么说
+                };
+                const res = await userInfo(options);
+                console.log(res);
+                if(res.data.errCode === 0){//登录成功
+                    this.$store.commit("user/SETUSERSELFINFO",res.data.body);
+                    this.$router.push({path:'/'})
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: res.errMsg,
+                        type: 'error'
+                    });
+                }
+            },
+
+            /**
              * 登录
              */
             async loginMethod(){
                 console.log('enter')
                 console.log(this.account.ok)
                 console.log(this.passwd.ok)
-                if(!this.account.ok || !this.passwd.ok)return;
+                if(!this.account.ok || !this.passwd.ok)return;//账号信息是否有误
                 const options = {
                     account:this.account.text,
                     agreement:true,
@@ -198,7 +221,7 @@
                 };
                 this.way?options.passwd=this.passwd.text:options.captcha=this.passwd.text;
                 const res = await login(options);
-                console.log(res.data.body.sign);
+                console.log(res.data);
                 if(res.data&&res.data.errCode===0){//成功
                     res.data.body.isLogin = true;//添加个字段，方便前端操作
                     const sign = this.reverseStr(res.data.body.sign);//翻转sign
@@ -222,6 +245,7 @@
                     sessionStorage.setItem('userInfo',JSON.stringify(res.data.body));
                     // console.log(sessionStorage.getItem('userInfo'))
                     this.$router.push({path:'/'})
+                    // this.getUserInfo();
                     websocket.initWebSocket(this.userState.token)
                 }else{//失败
                     this.$notify.error({
@@ -232,7 +256,6 @@
             }
 		},
 		async created(){
-           
            
             return;
 
