@@ -1,7 +1,7 @@
 <template>
     <div class="files">
         健康档案系统
-        <button class="chatBtn">聊天</button>
+        <button class="chatBtn" @click="sendMessageFile()">聊天</button>
         <div v-show="chatVisable">
             <chat></chat>
         </div>
@@ -85,8 +85,8 @@ export default {
     },
     data() {
         return {
-            chatVisable:true,
-            onum:3,
+            chatVisable: true,
+            onum: 3,
             oVisable: false,
             oconsulVisable: true,
             oAdminTab: {
@@ -231,17 +231,37 @@ export default {
         this.circularData(this.odata["header"]);
         // this.drawLine();
     },
-    computed:{
-        
-    },
+    computed: {},
     mounted() {
-        console.log(filesJs)
-        filesJs.aaa(this.onum)
+        console.log(filesJs);
+        filesJs.aaa(this.onum);
         return;
         this.drawLine();
-         filesJs.aaa(this.onum)
+        filesJs.aaa(this.onum);
     },
     methods: {
+        sendMessageFile() {
+            var Iessage = {
+                RequestType: 4,
+                ticket: 0,
+                info: {
+                    messageType: 0, //消息
+                    childMessageType: "ddd", //文本
+                    from: "dd", //userid
+                    fromNickName: "dd", //昵称
+                    toNickName: "toNickName",
+                    to: "to", //发给谁，接收者的用户ID
+                    body: "body", //消息内容
+                    sequence: "dd", //消息发送序号。
+                    chatType: 2, //单聊  GROUP 群聊
+                    clientTime: "",
+                    serverTime: "",
+                    conferenceId: "conferenceNumber"
+                }
+            };
+            console.log(window.websocket)
+            window.websocket.send(Iessage);
+        },
         getConsulTabData(res) {
             if (res.i == 0) {
                 this.oconsulVisable = true;

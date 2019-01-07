@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import websocket from "../../common/websocket.js";
 import filesJs from "../../common/files.js";
 export default {
@@ -21,12 +22,17 @@ export default {
             input: ""
         };
     },
+     computed: {
+        ...mapState({
+            userState: state => state.user.userInfo
+        })
+    },
     methods: {
         sendMessage1() {
             let odata = {
                 RequestType: 1,
                 login: {
-                    token: token,
+                    token: this.userState.token,
                     timestamp: "",
                     systemType: "WEB",
                     deviceType: "WEB"

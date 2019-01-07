@@ -11,52 +11,69 @@ let ticket; //票据，登录即可返回
 let sequence; //序列号
 
 //初始化websocket
-function initWebSocket(otoken) {
-    console.log(otoken)
-    //封装自定义的消息协议
-    // protobuf.load('../common/imessage.json', (error, root) => {
-    let root = protobuf.Root.fromJSON(imessage);
-    //获取消息协议类型
-    IMessage = root.lookupType("IMessage");
-    console.log(IMessage)
-    //创建Message对象,进行Im登录
-    //getCookie('token'),
-    let message = loginIM(otoken)
-    console.log(message)
+// alert(this.$store.state.token)
+function initWebSocket(otoken) { 
+        console.log(otoken)
+        //封装自定义的消息协议
+        // protobuf.load('../common/imessage.json', (error, root) => {
+        let root = protobuf.Root.fromJSON(imessage);
+        //获取消息协议类型
+        IMessage = root.lookupType("IMessage");
+        console.log(IMessage)
+        //创建Message对象,进行Im登录
+        //getCookie('token'),
+        let message = loginIM(otoken)
+        console.log(message)
         // Encode a message to an Uint8Array (browser) or Buffer (node)
-    let buffer = IMessage.encode(message).finish();
+        let buffer = IMessage.encode(message).finish();
+    
+    
+        //ws地址
+        let wsUrl = 'wss://demo.chuntaoyisheng.com:10002/chat'
+        // let wsUrl = 'wss://echo.websocket.org'
+        console.log(wsUrl)
+        if(!window.webSocket){
+        
+            webSocket = new WebSocket(wsUrl);
+            window.webSocket=webSocket
+            console.log(window.webSocket)
+            
+        }
+           
 
 
-    //ws地址
-    let wsUrl = 'wss://demo.chuntaoyisheng.com:10002/chat'
-    // let wsUrl = 'wss://echo.websocket.org'
-    console.log(wsUrl)
-    webSocket = new WebSocket(wsUrl);
-    webSocket.binaryType="arraybuffer"
-    window.webSocket1=webSocket
-    //接受消息
-    webSocket.onmessage = function(e) {
-        console.log(e.data);
-        console.log(IMessage.decode(new Uint8Array(e.data)));
-        // let dataone=IMessage.decode(e.data);
-        // console.log(dataone)
-        //心跳
-        heartCheck.start();
-        // webSocketonmessage(e, IMessage);
-    }
-    webSocket.onclose = function(e) {
-        webSocketonclose(e);
-    }
-    webSocket.onopen = function() {
-        webSocketonopen(buffer);
-    }
+        
 
-    //连接发生错误的回调方法
-    webSocket.onerror = function() {
+
+        webSocket.binaryType = "arraybuffer" 
+        //接受消息
+        webSocket.onmessage = function (e) {
+            
+            console.log(IMessage.decode(new Uint8Array(e.data)));
+            let odata = IMessage.decode(new Uint8Array(e.data));
+    
+            webSocketonmessage(odata);
+            //心跳. 
+            
+    
+    
+        }
+        webSocket.onclose = function (e) {
+            webSocketonclose(e);
+        }
+        webSocket.onopen = function () {
+            webSocketonopen(buffer);
+        }
+    
+        //连接发生错误的回调方法
+        webSocket.onerror = function () {
             console.log("WebSocket连接发生错误");
-            // reconnect(otoken);
+            reconnect(otoken);
         }
         // })
+       
+   
+return webSocket
 }
 
 
@@ -67,20 +84,33 @@ function sendMessage(agentData) {
         websocketsend(agentData)
     } else if (webSocket.readyState === webSocket.CONNECTING) {
         // 若是 正在开启状态，则等待1s后重新调用
-        setTimeout(function() {
+        setTimeout(function () {
             sendMessage(agentData, callback);
         }, 1000);
     } else {
         // 若未开启 ，则等待1s后重新调用
-        setTimeout(function() {
+        setTimeout(function () {
             sendMessage(agentData, callback);
         }, 1000);
     }
 }
 
 //数据接收
-function webSocketonmessage(e, IMessage) {
-    console.log(e)
+function webSocketonmessage(odata) {
+    let RequestType = odata.RequestType;
+    if (RequestType == 101 && odata.status.state) {
+        console.log('登录成功')
+        ticket = odata.ticket
+        heartCheck.start()
+
+
+
+
+    }else if(RequestType==102){
+        alert('您在其他设备上进行了登录')
+    }else if(RequestType==0){//同步  
+
+    }  
     //global_callback(e.data, IMessage)
     //将接收到的数据进行处理
     // let data = IMessage.decode(new Uint8Array(e.data));
@@ -104,6 +134,8 @@ function webSocketonmessage(e, IMessage) {
 
 //数据发送
 function websocketsend(data) {
+
+
     //websock.send(JSON.stringify(agentData));
     // let Message = {
     //     RequestType: 4,
@@ -123,7 +155,9 @@ function websocketsend(data) {
     //         conferenceId: data.conferenceId
     //     }
     // }
-    let Message=data;
+
+    
+    let Message = data;
     console.log(Message);
     let msg = IMessage.encode(Message).finish();
     webSocket.send(msg);
@@ -132,13 +166,13 @@ function websocketsend(data) {
 //关闭
 function webSocketonclose(e) {
     console.log("connection closed (" + e.code + ")");
-    // reconnect();
+    reconnect();
 }
 
 function webSocketonopen(buffer) {
     if (webSocket.readyState === 1) {
         console.log("连接成功");
-        
+
         webSocket.send(buffer);
     } else {
         console.log("链接状态" + webSocket.readyState);
@@ -152,7 +186,7 @@ let heartCheck = {
     timeout: 20000,
     timeoutObj: null,
     serverTimeoutObj: null,
-    start: function() {
+    start: function () {
         // console.log('heart');
         let self = this;
         let data = {
@@ -161,7 +195,7 @@ let heartCheck = {
         };
         this.timeoutObj && clearTimeout(this.timeoutObj);
         this.serverTimeoutObj && clearTimeout(this.serverTimeoutObj);
-        this.timeoutObj = setTimeout(function() {
+        this.timeoutObj = setTimeout(function () {
             //这里发送一个心跳，后端收到后，返回一个心跳消息，
             let buffer = IMessage.encode(data).finish();
             webSocket.send(buffer); //心跳的内容需要根据实际情况进行自己定义
@@ -170,8 +204,12 @@ let heartCheck = {
     }
 }
 
+
+
+
 //重新连接IM
 function reconnect(otoken) {
+
     console.log(otoken)
     if (lockReconnect) {
         return;
@@ -179,7 +217,7 @@ function reconnect(otoken) {
     lockReconnect = true;
     //没连接上会一直重连，设置延迟避免请求过多
     tt && clearTimeout(tt);
-    tt = setTimeout(function() {
+    tt = setTimeout(function () {
         //每4s中进行一次连接IM
         initWebSocket(otoken);
         lockReconnect = false;
@@ -188,7 +226,7 @@ function reconnect(otoken) {
 
 function loginIM(token) {
     console.log(token)
-    var odata=new Date()
+    var odata = new Date()
     console.log(odata.getTime())
     //消息类型按照这样传递
     let message = IMessage.create({
