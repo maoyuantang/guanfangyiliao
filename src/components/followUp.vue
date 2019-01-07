@@ -1,106 +1,131 @@
 <template>
-	<div class="followUp">
-		<!-- 管理端 -->
-		<div v-if="oVisable">
-			<div class="Admin-title">
-				<normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
-			</div>
+    <div class="followUp">
+        <!-- 管理端 -->
+        <div v-if="oVisable">
+            <div class="Admin-title">
+                <normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
+            </div>
 
-			<div class="admin-oMain">
-				<!-- 随访管理 -->
-				<div v-show="0==oMainShow">
-					<div class="mainTab">
-						<div>
-							<selftag :inData="oTab"></selftag>
-							<selftag :inData="oTab"></selftag>
-							<selftag :inData="oTab"></selftag>
-							<selftag :inData="oTab"></selftag>
-						</div>
+            <div class="admin-oMain">
+                <!-- 随访管理 -->
+                <div v-show="0==oMainShow">
+                    <div class="mainTab">
+                        <div>
+                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab"></selftag>
+                        </div>
 
-						<search @searchValue="searchChange"></search>
-					</div>
-					<div>
-						<tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
-						<!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
+                        <search @searchValue="searchChange"></search>
+                    </div>
+                    <div>
+                        <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
+                        <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
                         </el-pagination> -->
-					</div>
-				</div>
-				<!-- 满意度调查 -->
-				<div  v-show="1==oMainShow">
-					<div style="display:flex;">
-						<ul class="followUp2-tab">
-							<li :class="{followUp2This:indexTab2==index}" v-for="(text,index) in followUpTab" :key="index" @click="followUp2Fun(index)">{{text.name}}</li>
-						</ul>
-						<search @searchValue="searchChange"></search>
-					</div>
+                    </div>
+                </div>
+                <!-- 满意度调查 -->
+                <div v-show="1==oMainShow">
+                    <div style="display:flex;">
+                        <ul class="followUp2-tab">
+                            <li :class="{followUp2This:indexTab2==index}" v-for="(text,index) in followUpTab" :key="index" @click="followUp2Fun(index)">{{text.name}}</li>
+                        </ul>
+                        <search @searchValue="searchChange"></search>
+                    </div>
 
-					<div class="mainTab">
-						<div>
-							<selftag :inData="oTab"></selftag>
-							<selftag :inData="oTab"></selftag>
-							<selftag :inData="oTab"></selftag>
-						</div>
+                    <div class="mainTab">
+                        <div>
+                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab"></selftag>
+                        </div>
 
-						<el-button class="startConsul" type="text" @click="centerDialogVisible = true">新增模板</el-button>
-					</div>
-					<div>
+                        <el-button class="startConsul" type="text" @click="centerDialogVisible = true">新增模板</el-button>
+                    </div>
+                    <div>
 
-					</div>
-					<div>
-						<tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
-					</div>
-				</div>
-				<!-- 家用设备检测 -->
-				<div v-show="2==oMainShow">
-					<div class="mainTab">
-						<div>
-							<selftag :inData="oTab"></selftag>
-							<selftag :inData="oTab"></selftag>
-						</div>
+                    </div>
+                    <div>
+                        <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
+                    </div>
+                </div>
+                <!-- 家用设备检测 -->
+                <div v-show="2==oMainShow">
+                    <div class="mainTab">
+                        <div>
+                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab"></selftag>
+                        </div>
 
-						<search @searchValue="searchChange"></search>
-					</div>
-					<div>
-						<tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
-						<!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
+                        <search @searchValue="searchChange"></search>
+                    </div>
+                    <div>
+                        <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
+                        <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
                         </el-pagination> -->
-					</div>
-				</div>
-				<!-- 统计 -->
-				<div v-show="3==oMainShow">
-					<div class="mainTab">
-						<div>
-							<selftag :inData="oTab"></selftag>
-						</div>
+                    </div>
+                </div>
+                <!-- 统计 -->
+                <div v-show="3==oMainShow">
+                    <div class="mainTab">
+                        <div>
+                            <selftag :inData="oTab"></selftag>
+                        </div>
 
-						<publicTime @timeValue="timeValueFun"></publicTime>
-					</div>
-					<div>
+                        <publicTime @timeValue="timeValueFun"></publicTime>
+                    </div>
+                    <div>
 
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- 医生端 -->
-		<div v-else class="admin-oMain">
-			<div v-if="oconsulVisable">
-				<div class="mainTab">
-					<div>
-						<selftag :inData="oTab"></selftag>
-						<selftag :inData="oTab"></selftag>
-						<selftag :inData="oTab"></selftag>
-						<selftag :inData="oTab"></selftag>
-					</div>
-					<search @searchValue="searchChange"></search>
-				</div>
-				<div>
-					<tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
-					<!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 医生端 -->
+        <div v-else class=" followDoc">
+            <div>
+                <ul class="titleTop">
+                    <li v-for="(text,index) in followDocTab" :class="{'title-this':index==oDocThis}" @click="docTab(index)">{{text.name}}</li>
+                </ul>
+            </div>
+            <div class="admin-oMain">
+                <!-- 我的随访 -->
+                <div v-show="odocVisable==0">
+                    <div class="mainTab">
+                        <div>
+                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab"></selftag>
+                        </div>
+                        <search @searchValue="searchChange"></search>
+                    </div>
+                    <div>
+                        <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
+                        <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
                         </el-pagination> -->
-				</div>
-			</div>
-		</div>
-	</div>
+                    </div>
+                </div>
+                <!-- 随访模板 -->
+                <div v-show="odocVisable==1">
+                    随访模板
+                </div>
+                <!-- 门诊模板 -->
+                <div v-show="odocVisable==2">
+                    门诊模板
+                </div>
+                <!-- 宣教文章 -->
+                <div v-show="odocVisable==3">
+                    宣教文章
+                </div>
+                <!-- 疾病风险评估 -->
+                <div v-show="odocVisable==4">
+                    疾病风险评估
+                </div>
+            </div>
+        </div>
+
+    </div>
 </template>
 
 <script>
@@ -117,15 +142,39 @@ export default {
         search,
         normalTab,
         selftag,
-		statisticsWay,
-		publicTime
+        statisticsWay,
+        publicTime
     },
     data() {
         return {
-			oMainShow:0,
+            odocVisable: 0, //医生端切换内容
+            oMainShow: 0,
             indexTab2: 0,
-            oVisable: true,
+            oDocThis: 0, //医生端tab切换
+            oVisable: false,
             oconsulVisable: true,
+            followDocTab: [
+                {
+                    name: "我的随访",
+                    value: ""
+                },
+                {
+                    name: "随访模板",
+                    value: ""
+                },
+                {
+                    name: "门诊模板",
+                    value: ""
+                },
+                {
+                    name: "宣教文章",
+                    value: ""
+                },
+                {
+                    name: "疾病风险评估模板",
+                    value: ""
+                }
+            ],
             followUpTab: [
                 {
                     name: "调查管理",
@@ -220,17 +269,20 @@ export default {
     async created() {
         this.circularData(this.odata["header"]);
     },
-    mounted() {
-    },
+    mounted() {},
     methods: {
-		timeValueFun(data){
-		},
+        //医生端tab切换
+        docTab(oindex) {
+            this.oDocThis = oindex;
+            this.odocVisable = oindex;
+        },
+        timeValueFun(data) {},
         // 满意度调查切换
         followUp2Fun(index) {
             this.indexTab2 = index;
         },
         getConsulTabData(res) {
-           this.oMainShow=res.i
+            this.oMainShow = res.i;
         },
         // 表格分页
         seeCurrentChange() {},
@@ -250,7 +302,7 @@ export default {
         //搜索框
         searchChange(data) {
             alert(data);
-        },
+        }
     }
 };
 </script>
@@ -280,7 +332,7 @@ export default {
     border-radius: 4px 0 0 4px;
 }
 .startConsul {
-	    margin-top: 21px;
+    margin-top: 21px;
     width: 196px;
     height: 40px;
     background: #4da1ff;
@@ -291,5 +343,26 @@ export default {
     letter-spacing: 0.92px;
     text-align: center;
     line-height: 0px;
+}
+
+/* 医生样式 */
+.followDoc .titleTop {
+    display: flex;
+    display: -webkit-flex;
+    margin-bottom: 45px;
+}
+.followDoc .titleTop > li {
+    width: 176px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #0064d9;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.followDoc .titleTop .title-this {
+    background: #0064d9;
+    color: #ffffff;
 }
 </style>
