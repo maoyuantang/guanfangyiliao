@@ -25,7 +25,9 @@ export default {
   		console.log(to)
   		console.log(from)
   	}
-  },
+	},
+	created(){
+	},
   beforeRouteUpdate(to, from, next){
   	if(this.$router.isBack){
   		

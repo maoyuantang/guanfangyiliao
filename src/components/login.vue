@@ -31,9 +31,10 @@
 </template>
 
 <script>
-     import sensitiveWordCheck from '../public/publicJs/sensitiveWordCheck.js'
+    import sensitiveWordCheck from '../public/publicJs/sensitiveWordCheck.js'
+    import { Base64 } from 'js-base64'
 
-
+    import jsonSort from '../public/publicJs/jsonSort.js'
     import { mapState } from 'vuex'
     import {testA} from '../api/test.js'
     import {testC} from '../api/test.js'
@@ -48,20 +49,19 @@
                 way:true,//登录方式，true为密码登录，false为验证码登录，默认true
                 account:{
                     text:'gftechadmin',
-                    ok:false
+                    ok:true
                 },//账号
                 passwd:{
                     text:'111111',
-                    ok:false
+                    ok:true
                 },//密码
                 checkBoxStatus:[true,false]
 			}
         },
         computed:{
-            	...mapState({
-                    userState: state => state.user.userInfo,
-                }),
-
+            ...mapState({
+                userState: state => state.user.userInfo,
+            }),
         },
 		methods:{
 			setUserInfo(data){
@@ -98,6 +98,23 @@
                 this.checkBoxStatus[1] = true;
                 this.way = false;
             },
+
+           /**
+            * 传入 字符串
+            * 输出 json 
+            * {
+            *   ok:boolean,//是否成功
+            *   msg:str//若成功，msg代指翻转后的字符串，；若失败则是失败信息
+            * }
+            */
+            reverseStr(str){
+                if(Object.prototype.toString.call(str)!=="[object String]")return{ok:false,msg:'参数类型必须是字符串'};
+                return {
+                    ok:true,
+                    msg:str.split("").reverse().join("") 
+                }
+            },
+
 
             /**
              * 检查帐号是否正确
@@ -181,12 +198,29 @@
                 };
                 this.way?options.passwd=this.passwd.text:options.captcha=this.passwd.text;
                 const res = await login(options);
-                console.log(res);
+                console.log(res.data.body.sign);
                 if(res.data&&res.data.errCode===0){//成功
-                    res.data.body.isLogin = true;
+                    res.data.body.isLogin = true;//添加个字段，方便前端操作
+                    const sign = this.reverseStr(res.data.body.sign);//翻转sign
+                    if(sign.ok){
+                        res.data.body.sign = sign.msg
+                    }else{
+                        this.$alert('sign翻转失败', 'sign翻转失败', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                this.$message({
+                                type: 'info',
+                                message: `action: ${ action }`
+                                });
+                            }
+                        });
+                    }
+                    console.log(res.data.body.sign);
+                    res.data.body.sign = Base64.decode(res.data.body.sign)
                     this.$store.commit("user/SETUSERINFO",res.data.body);
-                    sessionStorage.setItem('userInfo',JSON.stringify(res.data.body))
-                    console.log(sessionStorage.getItem('userInfo'))
+                    console.log(res.data.body.sign);
+                    sessionStorage.setItem('userInfo',JSON.stringify(res.data.body));
+                    // console.log(sessionStorage.getItem('userInfo'))
                     this.$router.push({path:'/'})
                 }else{//失败
                     this.$notify.error({
@@ -197,6 +231,26 @@
             }
 		},
 		async created(){
+            let json = {
+                "adc":"123",
+                "ccc":"234",
+                "mm":{
+                    "aa":"33333",
+                    "vv":"dd",
+                    "cc":{
+                        "ttt":'44',
+                        "nnn":"66"
+                    }
+                },
+                "bb":"444",
+                "zz":[
+                    '1','2','3'
+                ]
+                
+            }
+            const newJson = jsonSort(json)
+            console.log(newJson)
+
             // getLoginCode()
             // .then(res=>console.log(res))
         //    const user = await login({
@@ -290,3 +344,49 @@
         margin-bottom: 0.32rem;
     }
 </style>
+
+
+// const test = {
+//     z:45456,
+//     y:56564654,
+//     a:454545,
+//     w:4545454,
+//     wed:45415,
+//     aw:45,
+//     cg:45,
+//     jsh:{
+//         hdsj:5445,
+//         dush:797
+//     }
+// }
+// const cf = obj => {//json转数组
+//     const arr = [];
+//     const toarr = data =>{
+//         for(const i in data){
+//             const sjson = {};
+//             if(Object.prototype.toString.call(i) === "[object Object]"){
+//                 sjson.name = i;
+//                 sjson.value = toarr(data[i])
+//             }else{
+               
+//                 sjson.name = i;
+//                 sjson.value = obj[i]
+//             }
+//             return sjson
+//         }
+        
+//     }
+//     return toarr(arr)
+// }
+// const px = prop => {//数组排序
+//     return (a,b)=>{
+//         return a[prop] > b[prop] ? 1 : -1 
+//     }
+// }
+// const toJson = arr => {
+//     const newJson = {};
+//     for(let i of arr){
+//         newJson[i.name] = i.value
+//     }
+//     return newJson
+// }
