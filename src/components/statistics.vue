@@ -1,8 +1,8 @@
 <template>
 	<div class="statistics">
-		<div>
+		<div :is="viewCurrent.page">
 			<!-- <hospitalManagement></hospitalManagement> -->
-			<doctorsIndex></doctorsIndex>
+			<!-- <doctorsIndex></doctorsIndex> -->
 		</div>
 
 		<!-- <div>
@@ -57,9 +57,11 @@
 
 <script>
 
-import hospitalManagement from './hospitalManagement.vue'
-import doctorsIndex from './doctorsIndex.vue'
+import hospitalManagement from './statistics/hospitalManagement.vue'//医院管理员页面
+import doctorsIndex from './statistics/doctorsIndex.vue'//医生页面
+import superManagement from './statistics/superManagement.vue'//超级管理员页面
 
+import {initializeTheCreationOfHospital,userList,settingsList} from '../api/apiAll.js'
 import test from './test.vue'//测试动态渲染组件
 import testb from './testb.vue'
 	export default {
@@ -71,16 +73,36 @@ import testb from './testb.vue'
 				
 			}
 		},
+		computed:{
+			/**
+			 * 根据用户权限，动态渲染
+			 */
+			viewCurrent(){
+				if(this.$store.state.user.userInfo.rooter)return {page:'superManagement'};
+				if(this.$store.state.user.userInfo.manager)return {page:'hospitalManagement'};
+				return {page:'doctorsIndex'};
+			}
+		},
 		methods:{
-			
-			
 		},
 		components:{
+			superManagement,
 			hospitalManagement,
 			doctorsIndex
 		},
 		async created(){
+			// console.log('test');
+			// const test = await settingsList({token:this.$store.state.user.userInfo.token});
 			
+			// console.log(test);
+			// const test = await userList()
+			// const test = await initializeTheCreationOfHospital({
+			// 	"name":"冠方医院001",
+			// 	"account":"test01",
+			// 	"passwd":"111111"
+			// });
+			// console.log(test)
+
 		}
 	}
 </script>

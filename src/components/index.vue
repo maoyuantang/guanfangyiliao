@@ -24,9 +24,9 @@
 	import { mapState ,mapMutations  } from 'vuex'
 	// import axios from '../plugs/axios'
 	
-	import top from '@/components/top.vue'
-	import middle from '@/components/middle.vue'
-	import navigation from '@/components/navigation.vue'
+	import top from '@/components/index/top.vue'
+	// import middle from '@/components/middle.vue'
+	import navigation from '@/components/index/navigation.vue'
 	
 export default {
   name: 'index',
@@ -54,7 +54,7 @@ export default {
   },
   components:{
   	top,
-		middle,
+		// middle,
 		navigation
   },
   computed:{

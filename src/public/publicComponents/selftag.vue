@@ -41,7 +41,7 @@ export default {
     event: "reback"
   },
    created() {
-      console.log(this.inData)
+    //   console.log(this.inData)
   }
 };
 </script>

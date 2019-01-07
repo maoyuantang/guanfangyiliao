@@ -87,12 +87,12 @@
 </template>
 
 <script>
-	import infoBox from '../public/publicComponents/infoBox.vue'
-	import infoEnter from '../public/publicComponents/infoEnter.vue'
-	import infoList from '../public/publicComponents/infoList.vue'
-	import plantTable from '../public/publicComponents/plantTable.vue'
-	import infoListHead from '../public/publicComponents/infoListHead.vue'
-	import userInfoRow from '../public/publicComponents/userInfoRow.vue'
+	import infoBox from '../../public/publicComponents/infoBox.vue'
+	import infoEnter from '../../public/publicComponents/infoEnter.vue'
+	import infoList from '../../public/publicComponents/infoList.vue'
+	import plantTable from '../../public/publicComponents/plantTable.vue'
+	import infoListHead from '../../public/publicComponents/infoListHead.vue'
+	import userInfoRow from '../../public/publicComponents/userInfoRow.vue'
 
 	
 	
@@ -412,3 +412,6 @@
 		color: var(--color17)
 	}
 </style>
+<!--
+    医生界面
+-->

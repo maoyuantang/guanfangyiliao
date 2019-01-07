@@ -3,8 +3,8 @@
 		<div>
 			<normalTab v-model="some" @reBack="reData"></normalTab>
 		</div>
-		<div class="index-body">
-			<statisticsTable></statisticsTable>
+		<div class="index-body" :is="some.i===0?'statisticsTable':'AccountAuthority'">
+			<!-- <statisticsTable></statisticsTable> -->
 			<!-- <AccountAuthority></AccountAuthority> -->
 		</div>
 		
@@ -51,22 +51,30 @@
 </template>
 
 <script>
-import normalTab from '../public/publicComponents/normalTab.vue'
-import normalColumnChart from '../public/publicComponents/normalColumnChart.vue'
-import selftag from '../public/publicComponents/selftag.vue'
-import statisticsWay from '../public/publicComponents/statisticsWay.vue'
-import sensitiveWordCheck from '../public/publicJs/sensitiveWordCheck.js'//检查字符串是否包含敏感字
-import statisticsTable from './statisticsTable.vue'
-import AccountAuthority from './AccountAuthority.vue'
+import { mapState } from 'vuex'
+import normalTab from '../../public/publicComponents/normalTab.vue'
+import normalColumnChart from '../../public/publicComponents/normalColumnChart.vue'
+import selftag from '../../public/publicComponents/selftag.vue'
+import statisticsWay from '../../public/publicComponents/statisticsWay.vue'
+import sensitiveWordCheck from '../../public/publicJs/sensitiveWordCheck.js'//检查字符串是否包含敏感字
+import statisticsTable from './hospitalManagement/statisticsTable.vue'
+import AccountAuthority from './hospitalManagement/AccountAuthority.vue'
+// import {fetchHospitalDepts} from '../../api/apiAll.js'
 
-
-import test from './test.vue'//测试动态渲染组件
-import testb from './testb.vue'
+import postQueryHandle from '../../public/publicJs/postQueryHandle.js'
+import getQueryHandle from '../../public/publicJs/getQueryHandle.js'
+// import test from './test.vue'//测试动态渲染组件
+// import testb from './testb.vue'
 	export default {
 		watch:{
 			value6(n,o){
 				console.log(n)
 			}
+		},
+		computed:{
+			...mapState({
+				userInfo:state => state.user.userInfo
+			})
 		},
 		data () {
 			return {
@@ -258,8 +266,8 @@ import testb from './testb.vue'
 				},
 				/**************************************** */
 				changeCom:false,
-				some:{
-					i:1,
+				some:{//顶部导航
+					i:0,//当前页面
 					list:[
 						{
 							en:'STATISTICS',
@@ -268,11 +276,7 @@ import testb from './testb.vue'
 						{
 							en:'Account number & authority',
 							zh:'账号及权限'
-						},
-						{
-							en:'Dr. WEB',
-							zh:'医生端'
-						},
+						}
 					]
 				},
 				drawData:{
@@ -307,6 +311,13 @@ import testb from './testb.vue'
 			}
 		},
 		methods:{
+			
+
+
+
+
+
+			/********************* */
 			reData(data){
 				console.log(data);
 				console.log(this.some)
@@ -344,11 +355,34 @@ import testb from './testb.vue'
 			statisticsWay,
 			statisticsTable,
 			AccountAuthority,
-			test,
-			testb
+			// test,
+			// testb
 		},
 		async created(){
-			
+			// this.getDepartmentList();
+			// console.log('postQueryHandle')
+			// let testJson = {
+			// 	a:111,
+			// 	b:{
+			// 		c:222,
+			// 		d:333
+			// 	},
+			// 	c:[
+			// 		{
+			// 			e:444,
+			// 			f:{
+			// 				g:555
+			// 			}
+			// 		},
+			// 		{
+			// 			H:666
+			// 		}
+			// 	]
+			// }
+			// const testPost = postQueryHandle(testJson)
+			// const testGet = getQueryHandle(testJson)
+			// console.log(testPost)
+			// console.log(testGet)
 		}
 	}
 </script>
@@ -472,3 +506,6 @@ import testb from './testb.vue'
 		flex: 1;
 	}
 </style>
+<!--
+    医院管理员界面
+-->

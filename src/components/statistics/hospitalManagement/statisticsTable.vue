@@ -16,16 +16,23 @@
 </template>
 
 <script>
-    import selftag from '../public/publicComponents/selftag.vue'
-    import statisticsWay from '../public/publicComponents/statisticsWay.vue'
-    import normalColumnChart from '../public/publicComponents/normalColumnChart.vue'
+    import { mapState } from 'vuex'
+    import selftag from '../../../public/publicComponents/selftag.vue'
+    import statisticsWay from '../../../public/publicComponents/statisticsWay.vue'
+    import normalColumnChart from '../../../public/publicComponents/normalColumnChart.vue'
+    import {fetchHospitalDepts} from '../../../api/apiAll.js'
 	export default {
-		name : 'top',
+        name : 'top',
+        computed:{
+			...mapState({
+				userInfo:state => state.user.userInfo
+			})
+		},
 		data(){
 			return {
                 msg:'statisticsTable',
                 test:{
-                    more:true,
+                    more:false,
                     title:'科室',
                     list:[
                         {
@@ -86,12 +93,37 @@
 			}
         },
         methods:{
+            /**
+			 * 获取科室列表
+			 */
+			async getDepartmentList(){
+				const res = await fetchHospitalDepts({
+					// deptId:'',
+					orgCode:this.userInfo.hospitalCode
+				});
+				console.log(res)
+				if(res.data.errCode===0){//成功
+                    this.test.list =  res.body;
+				}else{//失败
+                    this.$message({
+                        showClose: true,
+                        message: res.errMsg,
+                        type: 'error'
+                    });
+				}
+			},
+
+
+            /********************** */
             gitIndex(index){
                 console.log(index)
             },
             getTime(time){
 
             }
+        },
+        async created(){
+            this.getDepartmentList();
         },
         components:{
             selftag,
