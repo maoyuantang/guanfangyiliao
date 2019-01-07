@@ -33,8 +33,8 @@
 <script>
     import sensitiveWordCheck from '../public/publicJs/sensitiveWordCheck.js'
     import { Base64 } from 'js-base64'
-
     import jsonSort from '../public/publicJs/jsonSort.js'
+    import websocket from "../common/websocket.js"
     import { mapState } from 'vuex'
     import {testA} from '../api/test.js'
     import {testC} from '../api/test.js'
@@ -222,6 +222,7 @@
                     sessionStorage.setItem('userInfo',JSON.stringify(res.data.body));
                     // console.log(sessionStorage.getItem('userInfo'))
                     this.$router.push({path:'/'})
+                    websocket.initWebSocket(this.userState.token)
                 }else{//失败
                     this.$notify.error({
                         title: '登录失败',
@@ -231,6 +232,11 @@
             }
 		},
 		async created(){
+           
+           
+            return;
+
+
             let json = {
                 "adc":"123",
                 "ccc":"234",

@@ -7,13 +7,13 @@
         <div>
             <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea">
             </el-input>
-            <button class="sendMessage">发送</button>
+            <button class="sendMessage" @click="sendMessage1()">发送</button>
         </div>
     </div>
 </template>
 
 <script>
-import websocked from "../../common/websocket.js";
+import websocket from "../../common/websocket.js";
 import filesJs from "../../common/files.js";
 export default {
     data() {
@@ -22,6 +22,18 @@ export default {
         };
     },
     methods: {
+        sendMessage1() {
+            let odata = {
+                RequestType: 1,
+                login: {
+                    token: token,
+                    timestamp: "",
+                    systemType: "WEB",
+                    deviceType: "WEB"
+                }
+            };
+            websocket.sendMessage(odata);
+        },
         searchBtn() {
             this.$emit("searchValue", this.input);
         }
