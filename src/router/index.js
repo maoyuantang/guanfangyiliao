@@ -181,16 +181,19 @@ router.beforeEach((to, from, next) => {
 	// console.log(store)
 	// console.log(store.state.user.count)
 	if(!store.state.user.userInfo.isLogin&&to.path!=='/login'){//未登录,重定向到登录页(暂时关闭，方便开发)
-		let userSession = sessionStorage.getItem('userInfo'); 
-
-		if(userSession){
+		let userInfoSession = sessionStorage.getItem('userInfo'); 
+		let userSelfInfoSession= sessionStorage.getItem('userSelfInfo'); 
+		
+		if(userInfoSession&&userSelfInfoSession){
 			try{
-				userSession = JSON.parse(userSession);
+				userInfoSession = JSON.parse(userInfoSession);
+				userSelfInfoSession = JSON.parse(userSelfInfoSession);
 			}catch(e){
 				next({path:'/login'})
 				return;
 			}
-			store.commit("user/SETUSERINFO",userSession);
+			store.commit("user/SETUSERINFO",userInfoSession);
+			store.commit("user/SETUSERSELFINFO",userSelfInfoSession);
 		}else{
 			next({path:'/login'})
 			return;
