@@ -118,19 +118,7 @@
                             </el-select>
                             <Icon type="md-star" />
                         </div>
-                        <!-- <el-select v-model="addData.deptIds" placeholder="请选择">
-                            <el-option-group
-                            v-for="(group,index) in groups"
-                            :key="index"
-                            :label="index">
-                            <el-option
-                                v-for="item in group"
-                                :key="item.name"
-                                :label="item.name"
-                                :value="item.name">
-                            </el-option>
-                            </el-option-group>
-                        </el-select> -->
+                        
                         <!-- <div class="check-div">
                             <p class="check-div-title">医生业务范围:<p>
                             <div class="check-div-content">
@@ -683,7 +671,7 @@
             publicList
         },
 		async created(){
-
+            console.log(this.$store.state.user)
 		}
 	}
 </script>

@@ -1,14 +1,33 @@
 export default {
 	namespaced: true,
 	state:{
-		count:0
+        socketObj:null,//socket对象
+        msgBox:{//消息盒子
+            a:{
+                msg:[
+                    {
+                        from:'',
+                        to:'',
+                        data:""
+                    }
+                ],
+                type:0
+            }
+        },
 	},
 	mutations:{
-		ADDCOUNT(state,data){
-			state.count += data;
+        /**
+         * 
+         * @param {*} state 
+         * @param {*} data 
+         */
+		SETSOCKET(state,data){
+			state.socketObj = data;
 		},
 	},
 	actions:{
-		
+		setSocket(context,data){
+			context.commit("SETSOCKET",data);
+		},
 	}
 }

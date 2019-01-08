@@ -1,5 +1,9 @@
 <template>
 	<div class="login">
+        <!-- <div class="test">
+            <selectTree v-model="data3" @reback='conRedata'></selectTree>
+        </div> -->
+
         <div class="login-content">
             <p class="login-title">账号登录</p>
             <div class="login-input-div">
@@ -41,9 +45,16 @@
     import {testC} from '../api/test.js'
     import {getLoginCode,login,userInfo} from '../api/apiAll.js'//api
     import createUUID from '../public/publicJs/createUUID.js'
+    /****************** */
+    import selectTree from '../public/publicComponents/selectTree.vue'
+import { setTimeout } from 'timers';
 	export default {
+        components:{
+            selectTree
+        },
         watch:{
-            way(n){console.log(n)}
+            way(n){console.log(n)},
+            data3(n){console.log(n)}
         },
 		data () {
 			return {
@@ -56,8 +67,45 @@
                     text:'111111',
                     ok:true
                 },//密码
-                checkBoxStatus:[true,false]
-			}
+                checkBoxStatus:[true,false],
+                /********************** */
+                data3: [{
+                    id: 1,
+                    label: '一级 24465',
+                    select:false,
+                    children: [{
+                        id: 3,
+                        label: '二级 2-1',
+                        select:false,
+                        children: [{
+                            id: 4456,
+                            label: '三级 3-1-1',
+                            select:false,
+                        }, {
+                            id: 5,
+                            label: '三级 3-1-2',
+                            select:false,
+                            // disabled: true
+                        }]
+                    }, {
+                        id: 2,
+                        label: '二级 2-2',
+                        select:false,
+                        // disabled: true,
+                        children: [{
+                            id: 6,
+                            label: '三级 3-2-1',
+                            select:false,
+                        }, {
+                            id: 7,
+                            label: '三级 3-2-2',
+                            select:false,
+                            // disabled: true
+                        }]
+                    }]
+                }],
+            }
+            
         },
         computed:{
             ...mapState({
@@ -199,7 +247,8 @@
                 console.log(res);
                 if(res.data.errCode === 0){//登录成功
                     this.$store.commit("user/SETUSERSELFINFO",res.data.body);
-                    this.$router.push({path:'/'})
+                    sessionStorage.setItem('userSelfInfo',JSON.stringify(res.data.body));
+                    // this.$router.push({path:'/'})
                 }else{
                     this.$message({
                         showClose: true,
@@ -207,6 +256,7 @@
                         type: 'error'
                     });
                 }
+                this.$router.push({path:'/'})
             },
 
             /**
@@ -257,10 +307,11 @@
                         message: res.data.errMsg
                     });
                 }
-            }
+            },
+            conRedata(data){console.log(data)}
 		},
 		async created(){
-           
+        //    setTimeout(()=>console.log(this.$refs.tree.getCheckedKeys()),10000)
             return;
 
 
