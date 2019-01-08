@@ -151,6 +151,7 @@
     import selftag from '../../../public/publicComponents/selftag.vue'
     import markLayer from '../../../public/publicComponents/markLayer.vue'
     import publicList from '../../../public/publicComponents/publicList.vue'
+    import {fetchHospitalDepts} from '../../../api/apiAll.js'
     
 	export default {
         watch:{
@@ -592,6 +593,10 @@
             }
         },
 		methods:{
+            
+
+
+            /******************** */
             gitIndex(index){
                 console.log(456)
                 console.log(index)

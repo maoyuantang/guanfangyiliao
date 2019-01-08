@@ -25,7 +25,7 @@
         name : 'top',
         computed:{
 			...mapState({
-				userInfo:state => state.user.userInfo
+                userInfo:state => state.user.userInfo,
 			})
 		},
 		data(){
@@ -111,7 +111,7 @@
                         type: 'error'
                     });
 				}
-			},
+            },
 
 
             /********************** */

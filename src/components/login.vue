@@ -190,7 +190,8 @@
                 if(!this.account.ok || !this.passwd.ok)return;
                 const options = {
                    token:this.userState.token,
-                   userId:'',//等后台怎么说
+                   oneself:true
+                //    userId:'',//等后台怎么说
                 };
                 const res = await userInfo(options);
                 console.log(res);
@@ -228,6 +229,7 @@
                     if(sign.ok){
                         res.data.body.sign = sign.msg
                     }else{
+                        console.log('duandian')
                         this.$alert('sign翻转失败', 'sign翻转失败', {
                             confirmButtonText: '确定',
                             callback: action => {
@@ -244,8 +246,8 @@
                     console.log(res.data.body.sign);
                     sessionStorage.setItem('userInfo',JSON.stringify(res.data.body));
                     // console.log(sessionStorage.getItem('userInfo'))
-                    this.$router.push({path:'/'})
-                    // this.getUserInfo();
+                    // this.$router.push({path:'/'})
+                    this.getUserInfo();
                     websocket.initWebSocket(this.userState.token)
                 }else{//失败
                     this.$notify.error({

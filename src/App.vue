@@ -27,16 +27,16 @@ export default {
         })
     },
     created() {
-				const test = this.lianjie();
+        const test = this.lianjie();
 				
     },
     methods: {
         lianjie:function() {
-					//  websocket.close()
-					
-						window.websocket = websocket.initWebSocket(this.userState.token);
-					
-						console.log(window.websocket)
+        //  websocket.close()
+        
+            window.websocket = websocket.initWebSocket(this.userState.token);
+        
+            console.log(window.websocket)
         }
     },
     watch: {
