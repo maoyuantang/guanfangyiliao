@@ -4,19 +4,11 @@
             和谭莹聊天
         </div>
         <div class="chatMessage">
-            <ul>
-                <li>
+            <ul class="chatRecord">
+                <li class="recordLf">
                     dfjdfj
                 </li>
-                <li>
-                    dfjdfj
-                </li>
-            </ul>
-            <ul>
-                <li>
-                    dfjdfj
-                </li>
-                <li>
+                <li class="recordRg">
                     dfjdfj
                 </li>
             </ul>
@@ -83,7 +75,6 @@ export default {
             childMessageType: "", //发送的消息类型
             messageBody: "", //发送的文字消息内容
             chatType: "", //单聊或群聊
-            userId: this.userSelfInfo.userId, //发送者ID
             to: "B43F34E1D4014D4F98ED57BA86B2239F", //接受者Id
             sessionId: "" //会话Id
         };
@@ -95,7 +86,6 @@ export default {
         })
     },
     created() {
-        console.log(this.userSelfInfo);
         this.getHisRecord();
     },
     methods: {
@@ -128,28 +118,33 @@ export default {
         },
         //发送
         sendMessageChat() {
-            let tab = "img"; //辨识图片
+            console.log(websocket.default)
+            console.log(websocket.default.getTicket())
+            console.log(websocket.default.getSequence())
+            
+            let timestamp = Date.parse(new Date());
+            let tag = "img"; //辨识图片
             if (this.messageBody.indexOf(tag) != -1) {
                 this.childMessageType = 5;
             } else {
-                childMessageType = 0;
+                this.childMessageType = 0;
             }
             let Iessage = {
                 RequestType: 4,
                 ticket: websocket.default.getTicket(),
                 info: {
                     messageType: 0, //消息
-                    childMessageType: childMessageType, //文本
-                    from: userId, //userid
-                    fromNickName: usernameP, //昵称
-                    toNickName: toNickName,
-                    to: to, //发给谁，接收者的用户ID
+                    childMessageType: this.childMessageType, //文本
+                    from: this.userSelfInfo.userId, //userid
+                    fromNickName: this.userSelfInfo.userName, //昵称
+                    toNickName: "管理员",
+                    to: "B43F34E1D4014D4F98ED57BA86B2239F", //发给谁，接收者的用户ID
                     body: this.messageBody, //消息内容
-                    groupId: to,
+                    groupId: "B43F34E1D4014D4F98ED57BA86B2239F",
                     sequence: websocket.default.getSequence(), //消息发送序号。
                     chatType: 2, //单聊  GROUP 群聊
                     clientTime: timestamp,
-                    serverTime: serverTime
+                    serverTime: websocket.default.getServerTime()
                 }
             };
             console.log(websocket);
@@ -198,6 +193,15 @@ export default {
     line-height: 20px;
     font-size: 8px;
     cursor: pointer;
+}
+.chatRecord>li{
+    width:100%
+}
+.recordLf{
+    text-align: left
+}
+.recordRg{
+    text-align: right
 }
 /* 备注
 

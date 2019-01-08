@@ -10,6 +10,7 @@ const port = '8080'
 let ticket; //票据，登录即可返回
 let sequence; //序列号
 let content;//消息内容
+let serverTime;//服务器时间
 //初始化websocket
 // alert(this.$store.state.token)
 function initWebSocket(otoken, ofun) {
@@ -102,7 +103,8 @@ function webSocketonmessage(odata) {
     if (RequestType == 101 && odata.status.state) {
         console.log('登录成功')
         ticket = odata.ticket;//票据
-        sequence = odata.status.ticket;//序列号
+        sequence = odata.status.sequence;//序列号
+        serverTime= odata.status.serverTime;//服务器时间
         heartCheck.start()
        
     } else if (RequestType == 102) {
@@ -933,8 +935,11 @@ function getContent(){
 function getTicket(){
     return ticket;
 }
+function getServerTime(){
+    return serverTime;
+}
 function getSequence(){
     return sequence;
 }
 
-export default { sendMessage, initWebSocket,getContent }
+export default { sendMessage, initWebSocket,getContent,getTicket,getServerTime,getSequence }
