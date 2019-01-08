@@ -930,4 +930,11 @@ function loginIM(token) {
 function getContent(){
     return content;
 }
+function getTicket(){
+    return ticket;
+}
+function getSequence(){
+    return sequence;
+}
+
 export default { sendMessage, initWebSocket,getContent }

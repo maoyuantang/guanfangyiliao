@@ -1,6 +1,7 @@
 <template>
 	<div class="outpatient">
 		远程门诊系统
+		<chat></chat>
 		<div class="view-curr">
 			<outPatientHospitalManagent></outPatientHospitalManagent>
 		</div>
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+import chat from '../public/publicComponents/chat.vue'
 	import outPatientHospitalManagent from './outPatientHospitalManagent.vue'
 	export default {
 		data () {
@@ -39,7 +41,8 @@
 			
 		},
 		components:{
-			outPatientHospitalManagent
+			outPatientHospitalManagent,
+			chat
 		},
 		async created(){
 
