@@ -79,7 +79,7 @@
                                 <!-- <Select v-model="value" style="width:400px" size="small">
                                 <Option v-for="item in departmentlist" :value="item.name" :key="item.name">{{ item.name }}</Option>
                             </Select> -->
-                            <el-select v-model="addData.deptIds" placeholder="本账号范围内可多选" multiple size="mini"  style="width:80%">
+                            <el-select v-model="addData.deptIds" placeholder="本账号范围内可多选" multiple size="mini"  style="flex:1">
                                 <el-option
                                     v-for="item in departmentlist"
                                     :key="item.name"
@@ -89,7 +89,49 @@
                             </el-select>
                             <Icon type="md-star" />
                         </div>
-                        <div class="check-div">
+                        <div class="select-layer">
+                            <span class="leyer-item-name">医生业务范围:</span>
+                            <el-select v-model="addData.deptIds" placeholder="本账号范围内可多选" multiple size="mini"  style="flex:1">
+                                <el-option
+                                    v-for="item in departmentlist"
+                                    :key="item.name"
+                                    :label="item.name"
+                                    :value="item.name">
+                                    <div class="test">
+                                        <span style="float: left">{{ item.name }}</span>
+                                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                                    </div>
+                                    
+                                </el-option>
+                            </el-select>
+                            <Icon type="md-star" />
+                        </div>
+                        <div class="select-layer">
+                            <span class="leyer-item-name">科室管理权限范围:</span>
+                            <el-select v-model="addData.deptIds" placeholder="本账号范围内可多选" multiple size="mini"  style="flex:1">
+                                <el-option
+                                    v-for="item in departmentlist"
+                                    :key="item.name"
+                                    :label="item.name"
+                                    :value="item.name">
+                                </el-option>
+                            </el-select>
+                            <Icon type="md-star" />
+                        </div>
+                        <!-- <el-select v-model="addData.deptIds" placeholder="请选择">
+                            <el-option-group
+                            v-for="(group,index) in groups"
+                            :key="index"
+                            :label="index">
+                            <el-option
+                                v-for="item in group"
+                                :key="item.name"
+                                :label="item.name"
+                                :value="item.name">
+                            </el-option>
+                            </el-option-group>
+                        </el-select> -->
+                        <!-- <div class="check-div">
                             <p class="check-div-title">医生业务范围:<p>
                             <div class="check-div-content">
                                 <div class="check-div-item" v-for="(item,index) in DoctorBusinessScope" :key="index" :class="item.border?'has-border':''">
@@ -106,7 +148,7 @@
                                         <el-checkbox :label="item2.name" v-for="(item2,index2) in item.list" :key="index2" v-model="item2.select"></el-checkbox>
                                 </div>
                             </div>	
-                        </div>
+                        </div> -->
                     </div>	
                     <div class="sub-add"><el-button type="primary" size="mini"  @click.native="addSub">确定</el-button></div>	
                 </div>
@@ -173,6 +215,23 @@
 
 
                 /********************************** */
+                groups:[
+                    [
+                        {name:1212},
+                        {name:'ghjds'},
+                        {name:'ujio'}
+                    ],
+                    [
+                        {name:1212},
+                        {name:'ghjds'},
+                        {name:'ujio'}
+                    ],
+                    [
+                        {name:1212},
+                        {name:'ghjds'},
+                        {name:'ujio'}
+                    ],
+                ],
                 otrue:false,
                 tabPosition: 'left',
                 leftListDepartment:{//本院人员的科室标签列表
@@ -744,6 +803,7 @@
 	.select-layer{
 		display: flex;
 		align-items: center;
+        padding-right: 0.52rem;
 	}
 	
 	.leyer-item{
