@@ -166,6 +166,29 @@ import websocket from "../common/websocket.js"
             },
 
             /**
+             * 获取用户信息(注意：这里用户登录和获取用户信息在后台是分开的，也就是说，登录成功不会返回某些用户信息，需要再调用这个接口)
+             */
+            async getUserInfo(){
+                if(!this.account.ok || !this.passwd.ok)return;
+                const options = {
+                   token:this.userState.token,
+                   oneself:true
+                };
+                const res = await userInfo(options);
+                console.log(res);
+                if(res.data.errCode === 0){//登录成功
+                    this.$store.commit("user/SETUSERSELFINFO",res.data.body);
+                    this.$router.push({path:'/'})
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: res.errMsg,
+                        type: 'error'
+                    });
+                }
+            },
+
+            /**
              * 登录
              */
             async loginMethod(){
@@ -185,8 +208,27 @@ import websocket from "../common/websocket.js"
                     res.data.body.isLogin = true;
                     this.$store.commit("user/SETUSERINFO",res.data.body);
                     sessionStorage.setItem('userInfo',JSON.stringify(res.data.body))
-                    console.log(sessionStorage.getItem('userInfo'))
-                    this.$router.push({path:'/'})
+                  
+                    res.data.body.isLogin = true;//添加个字段，方便前端操作
+                    const sign = this.reverseStr(res.data.body.sign);//翻转sign
+                    if(sign.ok){
+                        res.data.body.sign = sign.msg
+                    }else{
+                        this.$alert('sign翻转失败', 'sign翻转失败', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                this.$message({
+                                type: 'info',
+                                message: `action: ${ action }`
+                                });
+                            }
+                        });
+                    }
+                    res.data.body.sign = Base64.decode(res.data.body.sign)
+                    this.$store.commit("user/SETUSERINFO",res.data.body);
+                    console.log(res.data.body.sign);
+                    sessionStorage.setItem('userInfo',JSON.stringify(res.data.body));
+                    this.getUserInfo();
                     websocket.initWebSocket(this.userState.token)
                 }else{//失败
                     this.$notify.error({

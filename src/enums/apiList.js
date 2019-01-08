@@ -7,10 +7,10 @@ export default {
     initializeTheCreationOfHospital:'/m/v1/api/basics/hospital/init',//初始化创建医院
     userList:'/m/v1/api/user/list',//首页-账号及权限-用户列表
     fetchHospitalDepts:'/m/v1/api/basics/hospital/fetchHospitalDepts',//2.2.获取医院科室列表
-    createUser:'/m/v1/api/user/createUser',//3.3首页-账号及权限-创建用户
-    updateUser:'/m/v1/api/user/updateUser',//3.4首页-账号及权限-编辑用户
-    deleteUser:'/m/v1/api/user/deleteUser',//3.5首页-账号及权限-删除用户
-    userInfo:'/m/v1/api/user/userInfo',//3.8获取用户信息
+    createUser:'/m/v1/api/user/user/createUser',//3.3首页-账号及权限-创建用户
+    updateUser:'/m/v1/api/user/user/updateUser',//3.4首页-账号及权限-编辑用户
+    deleteUser:'/m/v1/api/user/user/deleteUser',//3.5首页-账号及权限-删除用户
+    userInfo:'/m/v1/api/user/user/userInfo',//3.8获取用户信息
     createQrInfo:'/m/v1/api/login/createQrInfo',//4.4.创建登录码（WEB）
     scanMonitor:'/m/v1/api/login/scanMonitor',//4.5.登录码扫码监听（WEB）
     updateHospital:'/m/v1/api/basics/hospital/updateHospital',//8.2.更新医院名称和密码
