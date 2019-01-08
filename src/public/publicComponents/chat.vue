@@ -9,22 +9,22 @@
         </div>
         <div class="sendIcon">
             <span title="发送图片">
-                 <input type="file" name="file" class="layui-upload-file"  id="test" lay-title=" " style='opacity:0;width:25px;'>图片
+                <input type="file" name="file" class="layui-upload-file" id="test" lay-title=" " style='opacity:0;width:25px;'>图片
             </span>
             <span title="发送视频">
-                 视频
+                视频
             </span>
             <span title="发送文章">
-                 文章
+                文章
             </span>
             <span title="发送随访">
-                 随访
+                随访
             </span>
             <span title="发送问诊">
-                 问诊
+                问诊
             </span>
             <span title="添加备注">
-                 备注
+                备注
             </span>
             <span title="药品处方">
                 处方
@@ -33,28 +33,29 @@
                 计划
             </span>
             <span title="录入档案">
-                 档案
+                档案
             </span>
             <span title="健康处方">
-                健康处 
+                健康处
             </span>
             <span title="转诊">
                 转诊
             </span>
             <span title="聊天记录">
-                聊天 
+                聊天
             </span>
         </div>
         <div>
-            <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea">
+            <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="messageBody">
             </el-input>
-            <button class="sendMessage" @click="sendMessage1()">发送</button>
+            <button class="sendMessage" @click="sendMessageChat()">发送</button>
             <button @click="sendMessage2()">ddd</button>
         </div>
     </div>
 </template>
 
 <script>
+import protobuf from "protobufjs";
 import { mapState } from "vuex";
 // import websocket from "../../common/websocket.js";
 import filesJs from "../../common/files.js";
@@ -64,7 +65,12 @@ let websocket = require("../../common/websocket.js");
 export default {
     data() {
         return {
-            input: ""
+            input: "",
+            childMessageType: "", //发送的消息类型
+            messageBody: "", //发送的文字消息内容
+            chatType:"",//单聊或群聊
+            userId:"",//发送者ID
+            to:"",//接受者Id
         };
     },
     computed: {
@@ -72,24 +78,52 @@ export default {
             userState: state => state.user.userInfo
         })
     },
+    created() {
+        // alert("hhhhhh")
+        // console.log("webSocket");
+        // console.log(webSocket);
+        // webSocket.onmessage = e => {
+        //     this.webSocketonmessage(e);
+        // };
+    },
     methods: {
+        // webSocketonmessage(e) {
+        //     console.log(e);
+        //     let odata = IMessage.decode(new Uint8Array(e.data));
+        //     console.log(odata)
+        // },
         sendMessage2() {
             websocket = require("../../common/websocket.js");
-            var ohtml=websocket.default.getContent()
-            console.log(ohtml)
+            var ohtml = websocket.default.getContent();
+            console.log(ohtml);
         },
-        sendMessage1() {
-            let odata = {
-                RequestType: 1,
-                login: {
-                    token: this.userState.token,
-                    timestamp: "",
-                    systemType: "WEB",
-                    deviceType: "WEB"
+        sendMessageChat() {
+            let tab="img";//辨识图片
+            if (this.messageBody.indexOf(tag) != -1) {
+                this.childMessageType = 5;
+            } else {
+                childMessageType = 0;
+            }
+            let Iessage = {
+                RequestType: 4,
+                ticket: websocket.default.getTicket(),
+                info: {
+                    messageType: 0, //消息
+                    childMessageType: childMessageType, //文本
+                    from: userId, //userid
+                    fromNickName: usernameP, //昵称
+                    toNickName: toNickName,
+                    to: to, //发给谁，接收者的用户ID
+                    body: this.messageBody, //消息内容
+                    groupId: to,
+                    sequence: websocket.default.getSequence(), //消息发送序号。
+                    chatType: 2, //单聊  GROUP 群聊
+                    clientTime: timestamp,
+                    serverTime: serverTime
                 }
             };
             console.log(websocket);
-            websocket.default.sendMessage(odata);
+            websocket.default.sendMessage(Iessage);
 
             // let aaa=websocket.dadaTransfer
         },
@@ -105,8 +139,7 @@ export default {
     model: {
         prop: ["tableData", "columns", "tableBtn"],
         event: "reBack"
-    },
-    async created() {}
+    }
 };
 </script>
 
@@ -120,20 +153,20 @@ export default {
     width: 100%;
     height: 280px;
 }
-.sendIcon{
+.sendIcon {
     display: flex;
     display: -webkit-flex;
 }
-.sendIcon>span{
-    margin:0 3px;
-    display:inline-block;
-    width:20px;
+.sendIcon > span {
+    margin: 0 3px;
+    display: inline-block;
+    width: 20px;
     height: 20px;
     background: red;
-    color:white;
+    color: white;
     text-align: center;
     line-height: 20px;
-    font-size:8px;
+    font-size: 8px;
     cursor: pointer;
 }
 /* 备注
