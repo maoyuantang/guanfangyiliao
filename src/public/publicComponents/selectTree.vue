@@ -5,7 +5,8 @@
             placeholder="请选择日期"
             suffix-icon="el-icon-arrow-down"
             readonly="readonly"
-@click.native="isShow">
+            size="mini"
+            @click.native="isShow">
         </el-input>
         <div class="list">
             <el-tree v-show="show"
@@ -13,6 +14,8 @@
                 show-checkbox
                 node-key="id"
                 ref="tree"
+                check-strictly
+                default-expand-all
                 @check="selectItem"
                 >
             </el-tree>
@@ -48,7 +51,7 @@ export default {
                     arr[i].select = true;
                 }
             }
-            if(arr[i].children){
+            if(arr[i].children.length !== 0){
                 this.setValue(arr[i].children,idArr)
             }
         }
@@ -68,6 +71,20 @@ export default {
 </script>
 
 <style scoped>
+.select-tree{
+    flex: 1;
+}
+.inner{
+    position: relative;
+    background-color: transparent;
+    /* margin-top: 10px; */
+}
+.list{
+    position: absolute;
+    width: 100%;
+    top: 40px;
+    z-index: 1;
+}
 </style>
 <!--
     使用先知：

@@ -81,25 +81,27 @@ import { setTimeout } from 'timers';
                             id: 4456,
                             label: '三级 3-1-1',
                             select:false,
+                            children:[]
                         }, {
                             id: 5,
                             label: '三级 3-1-2',
                             select:false,
-                            // disabled: true
+                            children:[]
                         }]
                     }, {
                         id: 2,
                         label: '二级 2-2',
                         select:false,
-                        // disabled: true,
                         children: [{
                             id: 6,
                             label: '三级 3-2-1',
                             select:false,
+                            children:[]
                         }, {
                             id: 7,
                             label: '三级 3-2-2',
                             select:false,
+                            children:[]
                             // disabled: true
                         }]
                     }]
