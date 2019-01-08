@@ -1,10 +1,13 @@
 <template>
     <div class="files">
         健康档案系统
-        <button class="chatBtn" @click="sendMessageFile()">聊天</button>
-        <div v-show="chatVisable">
+        <button class="chatBtn" @click="chatVisable=true">聊天</button>
+        <!-- <div v-show="chatVisable">
             <chat></chat>
-        </div>
+        </div> -->
+        <el-dialog title=" " :visible.sync="chatVisable" width="450px">
+            <chat></chat>
+        </el-dialog>F
         <!-- 管理端 -->
         <div v-if="oVisable">
             <div class="Admin-title">
@@ -23,6 +26,7 @@
                         <search @searchValue="searchChange"></search>
                     </div>
                     <div>
+
                         <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
                         <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
                         </el-pagination> -->
@@ -87,7 +91,7 @@ export default {
         return {
             chatVisable: true,
             onum: 3,
-            oVisable: false,
+            oVisable: true,
             oconsulVisable: true,
             oAdminTab: {
                 i: 0, //选中的是第几项，类型为int(注意：从0开始计数)
@@ -198,11 +202,13 @@ export default {
             tableDataList: [
                 {
                     age: "1545649424290",
-                    name: "冠方医院"
+                    name: "冠方医院",
+                    oclass: "redColor"
                 },
                 {
                     age: "1545618639429",
-                    name: "测试医院"
+                    name: "测试医院",
+                    oclass: "redColor"
                 }
             ],
             tableBtn: [
@@ -240,28 +246,7 @@ export default {
         filesJs.aaa(this.onum);
     },
     methods: {
-        sendMessageFile() {
-            var Iessage = {
-                RequestType: 4,
-                ticket: 0,
-                info: {
-                    messageType: 0, //消息
-                    childMessageType: "ddd", //文本
-                    from: "dd", //userid
-                    fromNickName: "dd", //昵称
-                    toNickName: "toNickName",
-                    to: "to", //发给谁，接收者的用户ID
-                    body: "body", //消息内容
-                    sequence: "dd", //消息发送序号。
-                    chatType: 2, //单聊  GROUP 群聊
-                    clientTime: "",
-                    serverTime: "",
-                    conferenceId: "conferenceNumber"
-                }
-            };
-            console.log(window.websocket)
-            window.websocket.send(Iessage);
-        },
+     
         getConsulTabData(res) {
             if (res.i == 0) {
                 this.oconsulVisable = true;
@@ -451,7 +436,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .files {
+}
+.redColor {
+    color: red;
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
     <div class="public-list">
         <el-table :data="tableData" style="width: 100%">
-            <el-table-column v-for="(column, index) in columns" :prop="column.prop" :key="index" :label="column.label" :width="column.width" :class="column.oclass">
+            <el-table-column v-for="(column, index) in columns" :prop="column.prop" :key="index" :label="column.label" :width="column.width">
                 <template slot-scope="scope">
-                    <span>
+                    <span :class="scope.row.oclass">
                         {{scope.row[column.prop]}}
                     </span>
                 </template>
@@ -79,18 +79,18 @@ export default {
                 }
             ],
    //列表数据格式
-    tableData: [
+   tableDataList: [
                 {
-                    id: "91F0B9D25A474B6FA0CDBAC872035984",
                     age: "1545649424290",
                     name: "冠方医院",
+                    oclass:"redColor"
                 },
                 {
-                    id: "120BAE29C23C470E9E73DED3D8C071BF",
                     age: "1545618639429",
                     name: "测试医院",
-                },
-            ]
+                    oclass:"redColor"
+                }
+            ],
             //列表按钮数据格式
             tableBtn: [
                 {
@@ -113,6 +113,7 @@ export default {
 注意：列表标题的prop对应的字符串要和列表数据列表的字段相对应
       列表按钮里面的method是每个按钮对应触发的事件
      列表按钮的oclass是给每个按钮赋值的class名字
+     要改变某一竖列表格的样式，按照tableDataList里面的oclass设定类名传过来
 
   */
 </style>
