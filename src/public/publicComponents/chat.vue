@@ -4,8 +4,22 @@
             和谭莹聊天
         </div>
         <div class="chatMessage">
-            <ul></ul>
-            <ul></ul>
+            <ul>
+                <li>
+                    dfjdfj
+                </li>
+                <li>
+                    dfjdfj
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    dfjdfj
+                </li>
+                <li>
+                    dfjdfj
+                </li>
+            </ul>
         </div>
         <div class="sendIcon">
             <span title="发送图片">
@@ -68,37 +82,53 @@ export default {
             input: "",
             childMessageType: "", //发送的消息类型
             messageBody: "", //发送的文字消息内容
-            chatType:"",//单聊或群聊
-            userId:"",//发送者ID
-            to:"",//接受者Id
+            chatType: "", //单聊或群聊
+            userId: this.userSelfInfo.userId, //发送者ID
+            to: "B43F34E1D4014D4F98ED57BA86B2239F", //接受者Id
+            sessionId: "" //会话Id
         };
     },
     computed: {
         ...mapState({
-            userState: state => state.user.userInfo
+            userState: state => state.user.userInfo,
+            userSelfInfo: state => state.user.userSelfInfo
         })
     },
     created() {
-        // alert("hhhhhh")
-        // console.log("webSocket");
-        // console.log(webSocket);
-        // webSocket.onmessage = e => {
-        //     this.webSocketonmessage(e);
-        // };
+        console.log(this.userSelfInfo);
+        this.getHisRecord();
     },
     methods: {
-        // webSocketonmessage(e) {
-        //     console.log(e);
-        //     let odata = IMessage.decode(new Uint8Array(e.data));
-        //     console.log(odata)
-        // },
         sendMessage2() {
             websocket = require("../../common/websocket.js");
             var ohtml = websocket.default.getContent();
             console.log(ohtml);
         },
+        //获取历史记录
+        async getHisRecord() {
+            let query = {
+                token: this.userState.token
+            };
+            const options = {
+                userId: this.userSelfInfo.userId,
+                sessionId: [this.sessionId],
+                msgId: 100,
+                pageNums: 15
+            };
+            const res = await login(query, options);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //发送
         sendMessageChat() {
-            let tab="img";//辨识图片
+            let tab = "img"; //辨识图片
             if (this.messageBody.indexOf(tag) != -1) {
                 this.childMessageType = 5;
             } else {
