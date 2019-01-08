@@ -76,9 +76,6 @@
                         </div>
                         <div class="select-layer">
                             <span class="leyer-item-name">科室:</span>
-                                <!-- <Select v-model="value" style="width:400px" size="small">
-                                <Option v-for="item in departmentlist" :value="item.name" :key="item.name">{{ item.name }}</Option>
-                            </Select> -->
                             <el-select v-model="addData.deptIds" placeholder="本账号范围内可多选" multiple size="mini"  style="flex:1">
                                 <el-option
                                     v-for="item in departmentlist"
@@ -91,21 +88,13 @@
                         </div>
                         <div class="select-layer">
                             <span class="leyer-item-name">医生业务范围:</span>
-                            <el-select v-model="addData.deptIds" placeholder="本账号范围内可多选" multiple size="mini"  style="flex:1">
-                                <el-option
-                                    v-for="item in departmentlist"
-                                    :key="item.name"
-                                    :label="item.name"
-                                    :value="item.name">
-                                    <div class="test">
-                                        <span style="float: left">{{ item.name }}</span>
-                                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
-                                    </div>
-                                    
-                                </el-option>
-                            </el-select>
+                            <selectTree v-model="DoctorBusinessScope"></selectTree>
                             <Icon type="md-star" />
                         </div>
+
+
+
+
                         <div class="select-layer">
                             <span class="leyer-item-name">科室管理权限范围:</span>
                             <el-select v-model="addData.deptIds" placeholder="本账号范围内可多选" multiple size="mini"  style="flex:1">
@@ -181,6 +170,7 @@
     import selftag from '../../../public/publicComponents/selftag.vue'
     import markLayer from '../../../public/publicComponents/markLayer.vue'
     import publicList from '../../../public/publicComponents/publicList.vue'
+    import selectTree from '../../../public/publicComponents/selectTree.vue'
     import {fetchHospitalDepts} from '../../../api/apiAll.js'
     
 	export default {
@@ -306,80 +296,43 @@
 					{name:'第7科'},
 					{name:'第8科'},
                 ],
-                DoctorBusinessScope:[//医生业务范围选项
-					{
-						title:'远程门诊',
-						border:true,
-						list:[
-							{
-								select:true,
-								name:'处方配送'
-							},
-							{
-								select:true,
-								name:'处方审核'
-							},
-							{
-								select:true,
-								name:'在线诊室'
-							}
-						]
-					},
-					{
-						title:' ',
-						border:false,
-						list:[
-							{
-								select:true,
-								name:'远程会诊'
-							},
-							{
-								select:true,
-								name:'远程协作'
-							},
-							{
-								select:true,
-								name:'移动查房'
-							}
-						]
-					},
-					{
-						title:'双向转诊',
-						border:true,
-						list:[
-							{
-								select:true,
-								name:'转诊申请'
-							},
-							{
-								select:true,
-								name:'转诊接诊'
-							},
-							{
-								select:true,
-								name:'转诊审核'
-							}
-						]
-					},
-					{
-						title:'',
-						border:false,
-						list:[
-							{
-								select:true,
-								name:'智能随访'
-							},
-							{
-								select:true,
-								name:'健康档案'
-							},
-							{
-								select:true,
-								name:'家医服务'
-							}
-						]
-					}
-                ],
+                DoctorBusinessScope:[{////医生业务范围选项
+                    id: 1,
+                    label: '一级 24465',
+                    select:false,
+                    children: [{
+                        id: 3,
+                        label: '二级 2-1',
+                        select:false,
+                        children: [{
+                            id: 4456,
+                            label: '三级 3-1-1',
+                            select:false,
+                            children:[]
+                        }, {
+                            id: 5,
+                            label: '三级 3-1-2',
+                            select:false,
+                            children:[]
+                        }]
+                    }, {
+                        id: 2,
+                        label: '二级 2-2',
+                        select:false,
+                        children: [{
+                            id: 6,
+                            label: '三级 3-2-1',
+                            select:false,
+                            children:[]
+                        }, {
+                            id: 7,
+                            label: '三级 3-2-2',
+                            select:false,
+                            children:[]
+                            // disabled: true
+                        }]
+                    }]
+                }],
                 DepartmentManagementAuthority:[//科室管理权限范围
 					{
 						title:'',
@@ -668,7 +621,8 @@
         components:{
             selftag,
             markLayer,
-            publicList
+            publicList,
+            selectTree
         },
 		async created(){
             console.log(this.$store.state.user)

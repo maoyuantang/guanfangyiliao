@@ -552,3 +552,101 @@ export const cancelPlan = (query,data)=>{//13.4.4 取消计划
         }
     })
 }
+export const fetchChatSession = (query,data)=>{//14.1.创建或获取单聊会话
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:`${apiList.fetchChatSession}?token=${query.token}`,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const putUser = (query,data)=>{//14.2.新增成员加入聊天会话
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:`${apiList.putUser}?token=${query.token}`,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const removeUser = (query,data)=>{//14.3.从聊天会话中移除成员
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:`${apiList.removeUser}?token=${query.token}`,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const fetchHistoryMessage = (query,data)=>{////14.4.拉取历史消息记录
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:`${apiList.fetchHistoryMessage}?token=${query.token}`,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const fetchSessionMembers = (query,data)=>{//14.5.获取会话成员列表
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:`${apiList.fetchSessionMembers}?token=${query.token}`,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const userSendMessageId = (query,data)=>{//14.6.用户接收到消息后更新同步
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:`${apiList.userSendMessageId}?token=${query.token}`,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const fetchReadMessageId = (query,data)=>{//14.7.医生进入会话获取用户已读位置
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:`${apiList.fetchReadMessageId}?token=${query.token}`,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const fetchNoticeInfo = query=>{//14.8.获取通知列表
+    return axios({
+        method:'get',
+        url:apiList.fetchNoticeInfo,
+        params:query
+    })
+}
+export const fetchSyncMaxVersionId = query=>{//14.9.获取最大同步指令的版本号
+    return axios({
+        method:'get',
+        url:apiList.fetchSyncMaxVersionId,
+        params:query
+    })
+}
+export const fetchSyncInfo = query=>{//14.10.拉取同步消息列表
+    return axios({
+        method:'get',
+        url:apiList.fetchSyncInfo,
+        params:query
+    })
+}
