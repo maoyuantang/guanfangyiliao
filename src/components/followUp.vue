@@ -129,6 +129,8 @@
 </template>
 
 <script>
+import { managerGetPlanList } from "../api/apiAll.js";
+import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
 import normalTab from "../public/publicComponents/normalTab.vue";
 import tableList from "../public/publicComponents/publicList.vue";
@@ -223,70 +225,82 @@ export default {
                     }
                 ]
             }, //管理端tab
-             oTab2: {
+            oTab2: {
                 more: true,
                 title: "类型",
                 list: [
                     {
-                        text: "全部"
+                        text: "全部",
+                        value: ""
                     },
                     {
-                        text: "门诊随访"
+                        text: "门诊随访",
+                        value: "OUTPATIENT"
                     },
                     {
-                        text: "住院随访"
+                        text: "住院随访",
+                        value: "INHOSPITAL"
                     }
                 ]
             }, //管理端tab
-             oTab3: {
+            oTab3: {
                 more: true,
                 title: "方式",
                 list: [
                     {
-                        text: "全部"
+                        text: "全部",
+                        value: ""
                     },
                     {
-                        text: "App"
+                        text: "App",
+                        value: "APP "
                     },
                     {
-                        text: "电话"
+                        text: "电话",
+                        value: "PHONE"
                     }
                 ]
             }, //管理端tab
-             oTab4: {
+            oTab4: {
                 more: true,
                 title: "内容",
                 list: [
                     {
-                        text: "全部"
+                        text: "全部",
+                        value: ""
                     },
                     {
-                        text: "提醒"
+                        text: "提醒",
+                        value: "REMIND"
                     },
                     {
-                        text: "问卷"
+                        text: "问诊",
+                        value: "INQUIRY"
                     },
                     {
-                        text: "健康知识"
+                        text: "健康知识",
+                        value: "ESSAY"
                     },
                     {
-                        text: "疾病自评"
+                        text: "疾病自评",
+                        value: "MEDICAL"
                     },
                     {
-                        text: "设备检测"
+                        text: "设备检测",
+                        value: "DEVICE"
                     }
                 ]
             }, //管理端tab
             odata: 1,
             columns: [
-                {
-                    prop: "name",
-                    label: "姓名"
-                },
-                {
-                    prop: "age",
-                    label: "年龄"
-                }
+                // {
+                //     prop: "name",
+                //     label: "姓名"
+                // },
+                // {
+                //     prop: "age",
+                //     label: "年龄"
+                // }
             ],
             tableDataList: [
                 {
@@ -300,19 +314,8 @@ export default {
             ],
             tableBtn: [
                 {
-                    name: "查看记录",
-                    method: (index, row) => {
-                        this.handleDel(index, row);
-                    }
-                },
-                {
-                    name: "查看记录",
-                    method: (index, row) => {
-                        this.handleDel(index, row);
-                    }
-                },
-                {
-                    name: "查看记录",
+                    name: "查看随访",
+                    oclass: "viewFollow",
                     method: (index, row) => {
                         this.handleDel(index, row);
                     }
@@ -320,11 +323,48 @@ export default {
             ]
         };
     },
+    computed: {
+        ...mapState({
+            userState: state => state.user.userInfo,
+            userSelfInfo: state => state.user.userSelfInfo
+        })
+    },
     async created() {
         this.circularData(this.odata["header"]);
+        this.getFoList();
     },
     mounted() {},
     methods: {
+        //获取随访列表
+        async getFoList() {
+            let _this=this;
+            const options = {
+                token: this.userState.token,
+                search: this.searchData,
+                department: "",
+                type: "",
+                mode: "",
+                content: "",
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await managerGetPlanList(options);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body.header, function(key, value) {
+                     _this.columns.push({
+                        prop: key,
+                        label: value
+                    });
+                });
+                _this.tableDataList=res.data.body.data2.list
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         //医生端tab切换
         docTab(oindex) {
             this.oDocThis = oindex;
@@ -355,13 +395,14 @@ export default {
         },
         //搜索框
         searchChange(data) {
-            alert(data);
+            this.searchData = data;
+            this.getFoList();
         }
     }
 };
 </script>
 
-<style scoped>
+<style>
 .followUp2-tab {
     margin: 0 auto;
     display: flex;
@@ -418,5 +459,16 @@ export default {
 .followDoc .titleTop .title-this {
     background: #0064d9;
     color: #ffffff;
+}
+.viewFollow {
+    width: 57px;
+    height: 20px;
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid rgba(66, 133, 244, 0.6);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #4d7cfe;
+    line-height: 0;
 }
 </style>
