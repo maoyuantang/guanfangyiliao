@@ -172,6 +172,7 @@
 		},
 		created(){
 			this.routerList = this.navList
+			console.log(this.$store.state.user.userInfo.hasAuth)
 		}
 	}
 </script>

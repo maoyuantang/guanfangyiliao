@@ -4,7 +4,7 @@
     <span class="el-tag tag-title">{{inData.title||''}}:</span>
       <!-- <span v-for="(item,index) in inData.list" :key="index" @click="reBackFn(index)" style="margin-left:20px">{{item.text}}</span>  -->
     <el-tag :type="index===0?'warning':''" 
-        :class="[{'all':index===0},{'warning':item.warning},{'select-item':selectIndex===index}]"
+        :class="[{'warning':item.warning},{'all':selectIndex===index}]"
         v-for="(item,index) in inData.list" 
         :key="index" 
         @click.native.prevent="reBackFn(item,index)">
@@ -20,7 +20,7 @@
 export default {
   data() {
     return {
-        selectIndex:null,
+        selectIndex:0,
     };
   },
   methods:{
@@ -71,9 +71,7 @@ export default {
 .self-tag .warning{
     color:red;/*!important*/
 }
-.self-tag .select-item{
-   opacity: .5;
-}
+
 </style>
 <!--
     使用先知：

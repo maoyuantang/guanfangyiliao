@@ -1,6 +1,7 @@
 export default {
 	namespaced: true,
 	state:{
+		root:null,//用户权限（角色） 四个角色：超级管理员，用'a'表示；医院管理员，用'b'吧表示；医生，用'c'表示；既是医生又是医院管理员，用'bc'表示
 		count:0,
 		userInfo:{//用户账号信息
 			isLogin:false,//是否登录，true是，false否.默认未登录
@@ -21,6 +22,7 @@ export default {
 				// {"type": "1","authorityId": "10000"}
 			],
 			hospitalCode:'',//医院代码
+			userType:false,//用户类型，true表示医生/管理/超级管理，false表示用户
 		},
 		userSelfInfo:{//用户个人信息（由于后端将这两个信息分成了两个接口，我写的时候又不知道还有这个分法，前面那个变量其实更合适，但是已经与前面写的代码混了）
 			userId:'',//用户ID: type => String
@@ -55,6 +57,15 @@ export default {
 		 */
 		ADDCOUNT(state,data){
 			state.count += data;
+		},
+
+		/**
+		 * 设置（切换）用户权限
+		 * @param {*} state 
+		 * @param {*} data 
+		 */
+		SETROOT(state,data){
+			state.rot = data;
 		},
 
 		/**

@@ -156,6 +156,7 @@
     import markLayer from '../../../public/publicComponents/markLayer.vue'
     import publicList from '../../../public/publicComponents/publicList.vue'
     import selectTree from '../../../public/publicComponents/selectTree.vue'
+    import sensitiveWordCheck from '../../../public/publicJs/sensitiveWordCheck.js'
     import { fetchHospitalDepts , fetchDoctorSubSystems , hospitalDepartmentManagementSubsystemList , createUser } from '../../../api/apiAll.js'
     
 	export default {
@@ -471,8 +472,6 @@
                     }
                 }
                 setFun(a);
-                console.log(arr)
-                // return arr
                 return{ok:true,mag:'',data:arr};
             },
 
@@ -482,8 +481,6 @@
             getDoctorBusinessScopeSelect(data){
                 const result = this.iterationArr(this.DoctorBusinessScope,data);
                 this.DoctorBusinessScopeSelect = result.ok?result.data:[];
-                // const result = this.iterationArr(data);
-                // this.DoctorBusinessScopeSelect = result.ok?result.data:[];
             },
             getDepartmentManagementAuthoritySelect(data){
                 const result = this.iterationArr(this.DepartmentManagementAuthority,data);
@@ -491,9 +488,40 @@
                 console.log(this.DepartmentManagementAuthoritySelect)
             },
             /**
-             * 检查新增用户数据是否正确
+             * 大致检查新增用户数据是否正确,是否为空，是否有敏感字
              */
-            checkAddInfo(){},
+            checkAddInfo(){
+                const option = {
+                    account:{
+                        zh:'账号',
+                        data:this.addData.account
+                    },
+                    name:{
+                        zh:'姓名',
+                        data:this.addData.name
+                    },
+                    passwd:{
+                        zh:'密码',
+                        data: this.addData.passwd,
+                    }
+                   
+                };
+                for(const i in option){
+                    if(!option[i].data)return{
+                        ok:false,
+                        msg:`${option[i].zh}为空`
+                    }
+                    const isSensitive = sensitiveWordCheck(option[i].data);
+                    if(!isSensitive.ok)return{
+                        ok:false,
+                        msg:`${option[i].zh}包含敏感字${isSensitive.key}`
+                    }
+                }
+                return {
+                    ok:true,
+                    msg:``
+                }
+            },
 
             /**
              * 获取新增用户提交数据
@@ -505,7 +533,8 @@
                     passwd:this.addData.passwd,
                     deptIds:[],
                     phone:this.addData.phone,
-                    authorizes:[]
+                    authorizes:[],
+                    userType:'0'//用户类型 0(医生),1(患者),2(医院管理员),3(超级管理员)
                 };
                 const deptIds = [];//已选中的科室列表。element-ui 不能绑定json，只能按照其中一个属性获取到该json,这个过程比较恶心，有众多for循环
                 const arr = [];//已选中的科室管理权限范围列表。
@@ -529,18 +558,6 @@
                 for(const i of deptIds){//取出被选中的科室列表的id，放入需要的数据组
                     options.deptIds.push(i.deptId)
                 }
-
-                // for(const i of this.DepartmentManagementAuthoritySelect){//取出被选中的科室管理权限范围列表，放入需要的数据组
-                //     for(const j of this.DepartmentManagementAuthority){
-                //         j.subName===i?arr.push(j):null;
-                //     }
-                // }
-                // for(const i of arr){
-                //     options.authorizes.push({
-                //         type:2,
-                //         authorityId:i.subCode
-                //     })
-                // }
                 console.log(options)
                 return options;
             },
@@ -548,10 +565,31 @@
              * 新增用户
              */
             async addSub(){
+                console.log(this.userInfo.token)
                 console.log('新增')
+                const testData = this.checkAddInfo();
+                if(!testData.ok){
+                    this.$message({
+                        type: 'info',
+                        message: `${ testData.msg }`
+                    });
+                    return;
+                }
                 const postData = this.getAddSubData();
-                const res = await createUser(postData);
+                const postQuery = {token:this.userInfo.token}
+                const res = await createUser(postQuery,postData);
                 console.log(res)
+                if(res.data.errCode === 0){
+                    this.$message({
+                        type: 'info',
+                        message: `添加成功`
+                    });
+                }else{
+                    this.$message({
+                        type: 'info',
+                        message: `添加失败`
+                    });
+                }
             },
             
             /**
@@ -649,7 +687,8 @@
 		async created(){
             this.getDepartmentList();
             this.fetchDoctorSubSystems();
-            this.hospitalDepartmentManagementSubsystemList()
+            this.hospitalDepartmentManagementSubsystemList();
+           console.log(this.userInfo.hasAuth)
             // console.log(this.$store.state.user)
 		}
 	}

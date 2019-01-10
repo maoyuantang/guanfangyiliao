@@ -197,12 +197,27 @@ import { setTimeout } from 'timers';
             },
 
             /**
+             * 计算用户是什么权限
+             * 四个角色：超级管理员，用'a'表示；医院管理员，用'b'吧表示；医生，用'c'表示；既是医生又是医院管理员，用'bc'表示
+             */
+            countRoot(data){
+                let root;
+                if(data.rooter){
+                    root = ['a']
+                }else if (data.manager){
+                    for(const i of data.hasAuth){
+                        root = i.type==='2'?['b','c']:['b']
+                    }
+                }else{
+                    root = ['c']
+                }
+                return root;
+            },
+
+            /**
              * 登录
              */
             async loginMethod(){
-                // console.log('enter')
-                // console.log(this.account.ok)
-                // console.log(this.passwd.ok)
                 if(!this.account.ok || !this.passwd.ok)return;//账号信息是否有误
                 const options = {
                     account:this.account.text,
@@ -218,7 +233,6 @@ import { setTimeout } from 'timers';
                     if(sign.ok){
                         res.data.body.sign = sign.msg
                     }else{
-                        // console.log('duandian')
                         this.$alert('sign翻转失败', 'sign翻转失败', {
                             confirmButtonText: '确定',
                             callback: action => {
@@ -232,6 +246,13 @@ import { setTimeout } from 'timers';
                     // console.log(res.data.body.sign);
                     res.data.body.sign = Base64.decode(res.data.body.sign)
                     this.$store.commit("user/SETUSERINFO",res.data.body);
+                    const root = this.countRoot({//计算用户的权限，f**k
+                        rooter:res.data.body.rooter,
+                        manager:res.data.body.manager,
+                        hasAuth:res.data.body.hasAuth
+                    });
+                    console.log(root);
+                    this.$store.commit("user/SETROOT",root);
                     // console.log(res.data.body.sign);
                     sessionStorage.setItem('userInfo',JSON.stringify(res.data.body));
                     // console.log(sessionStorage.getItem('userInfo'))

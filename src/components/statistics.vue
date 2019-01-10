@@ -78,9 +78,23 @@ import testb from './testb.vue'
 			 * 根据用户权限，动态渲染
 			 */
 			viewCurrent(){
-				if(this.$store.state.user.userInfo.rooter)return {page:'superManagement'};
-				if(this.$store.state.user.userInfo.manager)return {page:'hospitalManagement'};
-				return {page:'doctorsIndex'};
+				const rootArr = [
+					{name:'a',page:'superManagement'},
+					{name:'b',page:'hospitalManagement'},
+					{name:'c',page:'doctorsIndex'},
+				];
+				if(this.$store.state.user.root){
+					for(const i of rootArr){
+						if(i.name === this.$store.state.user.root[0]){
+							return {page:i.page}
+						}
+					}
+				}else{
+					return {page:'hospitalManagement'};
+				}
+				// if(this.$store.state.user.userInfo.rooter)return {page:'superManagement'};
+				// if(this.$store.state.user.userInfo.manager)return {page:'hospitalManagement'};
+				// return {page:'doctorsIndex'};
 			}
 		},
 		methods:{
