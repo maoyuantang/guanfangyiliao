@@ -4,10 +4,10 @@
     <span class="el-tag tag-title">{{inData.title||''}}:</span>
       <!-- <span v-for="(item,index) in inData.list" :key="index" @click="reBackFn(index)" style="margin-left:20px">{{item.text}}</span>  -->
     <el-tag :type="index===0?'warning':''" 
-        :class="[{'all':index===0},{'warning':item.warning}]"
+        :class="[{'all':index===0},{'warning':item.warning},{'select-item':selectIndex===index}]"
         v-for="(item,index) in inData.list" 
         :key="index" 
-        @click.native.prevent="reBackFn(item)">
+        @click.native.prevent="reBackFn(item,index)">
             {{item.text||''}}
     </el-tag>
 
@@ -19,12 +19,15 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+        selectIndex:null,
+    };
   },
   methods:{
-    reBackFn(index) {
-        // console.log(123123)
-        this.inData.index=index;
+    reBackFn(item,index) {
+        this.selectIndex = index;
+        console.log(this.selectIndex)
+        this.inData.index=item;
         this.$emit("reback",Object.assign({},this.inData));
         // :class="index===0?'all':''" 
         // :class="item.warning?'warning':''"
@@ -41,7 +44,6 @@ export default {
     event: "reback"
   },
    created() {
-    //   console.log(this.inData)
   }
 };
 </script>
@@ -67,7 +69,10 @@ export default {
   color: #0067ff;
 }
 .self-tag .warning{
-    color:red !important;
+    color:red;/*!important*/
+}
+.self-tag .select-item{
+   opacity: .5;
 }
 </style>
 <!--

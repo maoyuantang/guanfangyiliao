@@ -1,5 +1,5 @@
 <template>
-  <div class="select-tree">
+  <div class="select-tree" @click.stop>
      <div class="inner">
         <el-input
             placeholder="本账号范围内可多选"
@@ -40,83 +40,25 @@ export default {
     },
     selectItem(){
         this.$emit("reback",this.$refs.tree.getCheckedKeys());
-        // this.$emit("reback",this.setValue(this.inData,this.$refs.tree.getCheckedKeys()));
     },
-    setValue(arr,idArr){
-        "use strict"
-        const outPut = [];
-        const setFun = (arr,list) => {
-            for(const i of arr){
-                for(const j of list){
-                    if(j === i.id){
-                        outPut.push(i)
-                    }
-                }
-            }
-            const a = [
-                {
-                    id:1,
-                    children:[
-                        {
-                            id:2,
-                            children:[]
-                        },
-                        {
-                            id:3,
-                            children:[]
-                        },
-                    ]
-                },
-                {
-                    id:4,
-                    children:[
-                        {
-                            id:5,
-                            children:[]
-                        },
-                        {
-                            id:6,
-                            children:[]
-                        },
-                    ]
-                },
-
-            ]
-            const b = [1,2,3,4]
-            const test = (a,b) => {
-                const arr = [];
-                const setFun = data =>{
-                    for(const i of data){
-                        for(const j of b){
-                            if(j == i.id){
-                                arr.push(i)
-                            }
-                        }
-                        if(i.children.length>0){
-                            setFun(i.children)
-                        }
-                    }
-                }
-                setFun(a);
-                return arr
-            }
-            
-        };
-
+    unShow(){
+        this.show = false;
+    },
+    documentClick(){
+        window.addEventListener('click',this.unShow,false)
+    },
+    clearListen(){
+        window.removeEventListener('click',this.unShow,false)
     }
   },
   props:[
       'inData'
   ],
-//   props: {
-//     inData: 'inData'
-//     //  inData: Array
-//   },
-//   model: {
-//     prop: ["inData"],
-//     event: "reback"
-//   },
    created() {
+       this.documentClick();
+  },
+  beforeDestroy(){
+      this.clearListen();
   }
 };
 </script>
@@ -139,8 +81,10 @@ export default {
 .list-inner{
     position: relative;
     transition: 2s;
-    overflow: hidden;
+    /* overflow: hidden; */
     border-radius: 4px;
+    border: 1px solid #E5EDF3;
+    box-shadow: 0 6px 36px 0 
 }
 .list-inner-show{
     opacity: 1;

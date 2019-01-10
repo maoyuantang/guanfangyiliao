@@ -54,6 +54,9 @@ export default {
     changePlan:'/m/v1/api/followup/plan/savePlan',//13.4.2 修改计划
     getPlan:'/m/v1/api/followup/plan/getPlan',//13.4.3 查看计划详情
     cancelPlan:'/m/v1/api/followup/plan/cancelPlan',//13.4.4 取消计划
+    managerGetDeviceList:'/m/v1/api/device/manager/managerGetDeviceList',//13.5.2 管理获取设备列表【管理web】
+    getUseDetail:'/m/v1/api/device/manager/getUseDetail',//13.5.3 管理查看单个设备使用详情【管理web】
+    getAlertDetail:'/m/v1/api/device/manager/getAlertDetail',//13.5.4 管理查看告警详情【管理web】
     fetchChatSession:'/m/v1/api/im/session/fetchChatSession',//14.1.创建或获取单聊会话
     putUser:'/m/v1/api/im/session/putUser',//14.2.新增成员加入聊天会话
     removeUser:'/m/v1/api/im/session/removeUser',//14.3.从聊天会话中移除成员
