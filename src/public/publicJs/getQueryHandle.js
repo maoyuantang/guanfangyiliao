@@ -1,7 +1,7 @@
+"use strict"
 import md5 from 'js-md5'
 // import store from '../../vuex/index.js'
 import jsonSort from './jsonSort.js'
-
 // const sign = store.state.user.userInfo.sign;//签名
 
 /**
@@ -35,17 +35,9 @@ export default (data={}) => {
         return str;
     }
     data = getData(data);
-
     const newArr = [data,token];
-    console.log('newArr')
-    console.log(newArr)
     newArr.sort();
-    console.log('newArr sort')
-    console.log(newArr)
     data = newArr[0]+newArr[1];
-
-
-
     data += sign;
     data = md5(data);
     data = data.toUpperCase();//转大写

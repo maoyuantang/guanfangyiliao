@@ -1,7 +1,7 @@
+"use strict"
 import md5 from 'js-md5'
 // import store from '../../vuex/index.js'
 import jsonSort from './jsonSort.js'
-
 // const sign = store.state.user.userInfo.sign;//签名
 
 /**

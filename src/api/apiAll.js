@@ -68,10 +68,17 @@ export const userList = query=>{//首页-账号及权限-用户列表
         }
     })
 }
-export const fetchHospitalDepts = query=>{//13.4.3 查看计划详情
+export const fetchHospitalDepts = query=>{//2.2.获取医院科室列表
     return axios({
         method:'get',
         url:apiList.fetchHospitalDepts,
+        params:query,
+    })
+}
+export const fetchDoctorSubSystems = query=>{//3.2.1.首页-医院医生业务子系统列表（新）
+    return axios({
+        method:'get',
+        url:apiList.fetchDoctorSubSystems,
         params:query,
     })
 }
@@ -648,5 +655,49 @@ export const fetchSyncInfo = query=>{//14.10.拉取同步消息列表
         method:'get',
         url:apiList.fetchSyncInfo,
         params:query
+    })
+}
+export const synergyManageList = query=>{//15.1首页-账号及权限-院外协作列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.synergyManageList,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const synergyManageInvite = (query,data)=>{//15.2首页-账号及权限-院外协作邀请
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:`${apiList.synergyManageInvite}?token=${query.token}`,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const synergyManageUpdate = (query,data)=>{//15.3首页-账号及权限-更新协作范围
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:`${apiList.synergyManageUpdate}?token=${query.token}`,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const synergyManageDelete = query=>{//15.4首页-账号及权限-删除协作医生
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.synergyManageDelete,
+        params:query,
+        headers:{
+            sign
+        }
     })
 }

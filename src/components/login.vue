@@ -1,9 +1,5 @@
 <template>
 	<div class="login">
-        <!-- <div class="test">
-            <selectTree v-model="data3" @reback='conRedata'></selectTree>
-        </div> -->
-
         <div class="login-content">
             <p class="login-title">账号登录</p>
             <div class="login-input-div">
@@ -54,13 +50,12 @@ import { setTimeout } from 'timers';
         },
         watch:{
             way(n){console.log(n)},
-            data3(n){console.log(n)}
         },
 		data () {
 			return {
                 way:true,//登录方式，true为密码登录，false为验证码登录，默认true
                 account:{
-                    text:'gftechadmin',
+                    text:'admin',//gftechadmin
                     ok:true
                 },//账号
                 passwd:{
@@ -68,46 +63,7 @@ import { setTimeout } from 'timers';
                     ok:true
                 },//密码
                 checkBoxStatus:[true,false],
-                /********************** */
-                data3: [{
-                    id: 1,
-                    label: '一级 24465',
-                    select:false,
-                    children: [{
-                        id: 3,
-                        label: '二级 2-1',
-                        select:false,
-                        children: [{
-                            id: 4456,
-                            label: '三级 3-1-1',
-                            select:false,
-                            children:[]
-                        }, {
-                            id: 5,
-                            label: '三级 3-1-2',
-                            select:false,
-                            children:[]
-                        }]
-                    }, {
-                        id: 2,
-                        label: '二级 2-2',
-                        select:false,
-                        children: [{
-                            id: 6,
-                            label: '三级 3-2-1',
-                            select:false,
-                            children:[]
-                        }, {
-                            id: 7,
-                            label: '三级 3-2-2',
-                            select:false,
-                            children:[]
-                            // disabled: true
-                        }]
-                    }]
-                }],
-            }
-            
+            } 
         },
         computed:{
             ...mapState({
@@ -115,30 +71,6 @@ import { setTimeout } from 'timers';
             }),
         },
 		methods:{
-			setUserInfo(data){
-                // const options = {
-                //     isLogin:false,//是否登录，true是，false否.默认未登录
-				// 	account:'',//账号
-				// 	passwd:'',//密码
-				// 	token:'',//免密登录标识
-				// 	rooter:false,//是否超级管理员；true是，false否,默认false
-				// 	manager:false,//是否医院管理员；true是，false否,默认false
-				// 	completion:false,//是否已经完善信息；true是，false否 ,默认false
-				// 	sign:'',//接口签名串的加密串 
-				// 	hasAuth:[//拥有的权限 
-				// 		/**
-				// 		 * 
-				// 		 * hasAuth.type => 权限类型,类型String，1,科室管理权限.2,医生业务
-				// 		 * hasAuth.authorityId => 权限标识符,类型String
-				// 		 * 
-				// 		 *  */
-				// 		// {"type": "1","authorityId": "10000"}
-				// 	],
-				// 	hospitalCode:'',//医院代码
-                // };
-                const testData = this.$store.commit("user/SETUSERINFO",data)
-               
-              },
             setWayTrue(){
                 this.checkBoxStatus[0] = true;
                 this.checkBoxStatus[1] = false;
@@ -198,7 +130,7 @@ import { setTimeout } from 'timers';
                     
                 }
                 this.account.ok = true;
-                console.log(this.account)
+                // console.log(this.account)
             },
 
             /**
@@ -225,7 +157,7 @@ import { setTimeout } from 'timers';
             async getCode(){
                 if(!this.account.ok)return;
                 const reData = await getLoginCode({phone:this.account});
-                console.log(reData)
+                // console.log(reData)
                 if(reData.data&&reData.data.errCode===0){//成功
                 }else{//失败
                     this.$notify.error({
@@ -245,8 +177,11 @@ import { setTimeout } from 'timers';
                    oneself:true
                 //    userId:'',//等后台怎么说
                 };
-                const res = await userInfo(options);
-                console.log(res);
+                let res;
+                try{
+                    res = await userInfo(options);
+                }catch(e){e=>console.log(e)}
+                // console.log(res);
                 if(res.data.errCode === 0){//登录成功
                     this.$store.commit("user/SETUSERSELFINFO",res.data.body);
                     sessionStorage.setItem('userSelfInfo',JSON.stringify(res.data.body));
@@ -265,9 +200,9 @@ import { setTimeout } from 'timers';
              * 登录
              */
             async loginMethod(){
-                console.log('enter')
-                console.log(this.account.ok)
-                console.log(this.passwd.ok)
+                // console.log('enter')
+                // console.log(this.account.ok)
+                // console.log(this.passwd.ok)
                 if(!this.account.ok || !this.passwd.ok)return;//账号信息是否有误
                 const options = {
                     account:this.account.text,
@@ -276,14 +211,14 @@ import { setTimeout } from 'timers';
                 };
                 this.way?options.passwd=this.passwd.text:options.captcha=this.passwd.text;
                 const res = await login(options);
-                console.log(res.data);
+                // console.log(res.data);
                 if(res.data&&res.data.errCode===0){//成功
                     res.data.body.isLogin = true;//添加个字段，方便前端操作
                     const sign = this.reverseStr(res.data.body.sign);//翻转sign
                     if(sign.ok){
                         res.data.body.sign = sign.msg
                     }else{
-                        console.log('duandian')
+                        // console.log('duandian')
                         this.$alert('sign翻转失败', 'sign翻转失败', {
                             confirmButtonText: '确定',
                             callback: action => {
@@ -294,10 +229,10 @@ import { setTimeout } from 'timers';
                             }
                         });
                     }
-                    console.log(res.data.body.sign);
+                    // console.log(res.data.body.sign);
                     res.data.body.sign = Base64.decode(res.data.body.sign)
                     this.$store.commit("user/SETUSERINFO",res.data.body);
-                    console.log(res.data.body.sign);
+                    // console.log(res.data.body.sign);
                     sessionStorage.setItem('userInfo',JSON.stringify(res.data.body));
                     // console.log(sessionStorage.getItem('userInfo'))
                     // this.$router.push({path:'/'})
@@ -335,7 +270,7 @@ import { setTimeout } from 'timers';
                 
             }
             const newJson = jsonSort(json)
-            console.log(newJson)
+            // console.log(newJson)
 
             // getLoginCode()
             // .then(res=>console.log(res))

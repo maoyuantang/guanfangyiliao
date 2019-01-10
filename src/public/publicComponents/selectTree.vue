@@ -2,23 +2,26 @@
   <div class="select-tree">
      <div class="inner">
         <el-input
-            placeholder="请选择日期"
+            placeholder="本账号范围内可多选"
             suffix-icon="el-icon-arrow-down"
             readonly="readonly"
             size="mini"
             @click.native="isShow">
         </el-input>
         <div class="list">
-            <el-tree v-show="show"
-                :data="inData"
-                show-checkbox
-                node-key="id"
-                ref="tree"
-                check-strictly
-                default-expand-all
-                @check="selectItem"
-                >
-            </el-tree>
+            <div class="list-inner">
+                <el-tree v-show="show"
+                    :class="show?'list-inner-show':'list-inner-hiddle'"
+                    :data="inData"
+                    show-checkbox
+                    node-key="id"
+                    ref="tree"
+                    check-strictly
+                    default-expand-all
+                    @check="selectItem"
+                    >
+                </el-tree>
+            </div>
         </div>
      </div>
   </div>
@@ -32,39 +35,87 @@ export default {
     };
   },
   methods:{
-    reBackFn(index) {
-        // this.$emit("reback",this.$refs.tree.getCheckedKeys());
-    },
     isShow(){
         this.show = !this.show
-        console.log(6666)
     },
     selectItem(){
-        // const idArr = this.$refs.tree.getCheckedKeys();
-        // const newArr = this.setValue(this.inData,this.$refs.tree.getCheckedKeys());
-        this.$emit("reback",this.setValue(this.inData,this.$refs.tree.getCheckedKeys()));
+        this.$emit("reback",this.$refs.tree.getCheckedKeys());
+        // this.$emit("reback",this.setValue(this.inData,this.$refs.tree.getCheckedKeys()));
     },
     setValue(arr,idArr){
-        for(let i in arr){
-            for(let j in idArr){
-                if(idArr[j] == arr[i].id){
-                    arr[i].select = true;
+        "use strict"
+        const outPut = [];
+        const setFun = (arr,list) => {
+            for(const i of arr){
+                for(const j of list){
+                    if(j === i.id){
+                        outPut.push(i)
+                    }
                 }
             }
-            if(arr[i].children.length !== 0){
-                this.setValue(arr[i].children,idArr)
+            const a = [
+                {
+                    id:1,
+                    children:[
+                        {
+                            id:2,
+                            children:[]
+                        },
+                        {
+                            id:3,
+                            children:[]
+                        },
+                    ]
+                },
+                {
+                    id:4,
+                    children:[
+                        {
+                            id:5,
+                            children:[]
+                        },
+                        {
+                            id:6,
+                            children:[]
+                        },
+                    ]
+                },
+
+            ]
+            const b = [1,2,3,4]
+            const test = (a,b) => {
+                const arr = [];
+                const setFun = data =>{
+                    for(const i of data){
+                        for(const j of b){
+                            if(j == i.id){
+                                arr.push(i)
+                            }
+                        }
+                        if(i.children.length>0){
+                            setFun(i.children)
+                        }
+                    }
+                }
+                setFun(a);
+                return arr
             }
-        }
-        return arr
+            
+        };
+
     }
   },
-  props: {
-    inData: Array
-  },
-  model: {
-    prop: ["inData"],
-    event: "reback"
-  },
+  props:[
+      'inData'
+  ],
+//   props: {
+//     inData: 'inData'
+//     //  inData: Array
+//   },
+//   model: {
+//     prop: ["inData"],
+//     event: "reback"
+//   },
    created() {
   }
 };
@@ -83,6 +134,29 @@ export default {
     position: absolute;
     width: 100%;
     top: 40px;
+    z-index: 2;
+}
+.list-inner{
+    position: relative;
+    transition: 1s;
+}
+.list-inner-show{
+    opacity: 1;
+    height: auto;
+}
+.list-inner-hiddle{
+    opacity: 0;
+    height: 0;
+}
+.list-inner-show::before{
+    content: '';
+    border-top: solid transparent 10px;
+    border-bottom: white 10px solid;
+    border-left: transparent 10px solid;
+    border-right: transparent 10px solid;
+    position: absolute;
+    top: -20px;
+    left: 20px;
     z-index: 1;
 }
 </style>
