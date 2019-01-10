@@ -20,6 +20,7 @@
                         <search @searchValue="searchChange"></search>
                     </div>
                     <div>
+                        
                         <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
                         <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
                         </el-pagination> -->
@@ -36,9 +37,9 @@
 
                     <div class="mainTab">
                         <div>
-                            <selftag :inData="oTab"></selftag>
-                            <selftag :inData="oTab"></selftag>
-                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab1"></selftag>
+                            <selftag :inData="oTab2"></selftag>
+                            <selftag :inData="oTab3"></selftag>
                         </div>
 
                         <el-button class="startConsul" type="text" @click="centerDialogVisible = true">新增模板</el-button>
@@ -54,14 +55,15 @@
                 <div v-show="2==oMainShow">
                     <div class="mainTab">
                         <div>
-                            <selftag :inData="oTab1"></selftag>
-                            <selftag :inData="oTab2"></selftag>
+                            <selftag :inData="oTab1" @reback="getOTab1"></selftag>
+                            <selftag :inData="oTab5" @reback="getOTab5"></selftag>
                         </div>
 
                         <search @searchValue="searchChange"></search>
                     </div>
                     <div>
-                        <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
+                       {{tableDataListFa}}
+                        <tableList :tableData="tableDataListFa" :columns="columnsFa"></tableList>
                         <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
                         </el-pagination> -->
                     </div>
@@ -70,7 +72,7 @@
                 <div v-show="3==oMainShow">
                     <div class="mainTab">
                         <div>
-                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab1"></selftag>
                         </div>
 
                         <publicTime @timeValue="timeValueFun"></publicTime>
@@ -93,10 +95,10 @@
                 <div v-show="odocVisable==0">
                     <div class="mainTab">
                         <div>
-                            <selftag :inData="oTab"></selftag>
-                            <selftag :inData="oTab"></selftag>
-                            <selftag :inData="oTab"></selftag>
-                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab1"></selftag>
+                            <selftag :inData="oTab2"></selftag>
+                            <selftag :inData="oTab3"></selftag>
+                            <selftag :inData="oTab4"></selftag>
                         </div>
                         <search @searchValue="searchChange"></search>
                     </div>
@@ -129,7 +131,11 @@
 </template>
 
 <script>
-import { managerGetPlanList } from "../api/apiAll.js";
+import {
+    managerGetPlanList,
+    managerGetDeviceList,
+    fetchHospitalDepts
+} from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
 import normalTab from "../public/publicComponents/normalTab.vue";
@@ -152,6 +158,7 @@ export default {
             odepartment: "",
             otype: "",
             oTheWay: "",
+            equiType: "", //设备类型 血压计 血糖计
             oContent: "", //随访筛选
             odocVisable: 0, //医生端切换内容
             oMainShow: 0,
@@ -222,10 +229,8 @@ export default {
                 title: "科室",
                 list: [
                     {
-                        text: "全部"
-                    },
-                    {
-                        text: "今日"
+                        text: "全部",
+                        value: ""
                     }
                 ]
             }, //管理端tab
@@ -295,27 +300,104 @@ export default {
                     }
                 ]
             }, //管理端tab
+            oTab5: {
+                more: false,
+                title: "设备类型",
+                list: [
+                    {
+                        text: "全部",
+                        value: ""
+                    },
+                    {
+                        text: "血压计",
+                        value: "TONOMETER"
+                    },
+                    {
+                        text: "血糖仪",
+                        value: "GLUCOSE"
+                    }
+                ]
+            }, //管理端tab
             odata: 1,
-            columns: [
-                // {
-                //     prop: "name",
-                //     label: "姓名"
-                // },
-                // {
-                //     prop: "age",
-                //     label: "年龄"
-                // }
-            ],
-            tableDataList: [
-                {
-                    age: "1545649424290",
-                    name: "冠方医院"
+            columns: [{
+                    prop: "department",
+                    label: "科室"
                 },
                 {
-                    age: "1545618639429",
-                    name: "测试医院"
+                    prop: " type",
+                    label: " 类型 "
+                },
+                {
+                    prop: " title",
+                    label: "随访模板名 "
+                },
+                {
+                    prop: " doctor",
+                    label: "医生 "
+                },
+                {
+                    prop: "useNumber ",
+                    label: " 病人"
+                },
+                {
+                    prop: " appNum",
+                    label: "App "
+                },{
+                    prop: "phoneNum",
+                    label: "电话"
+                },
+                {
+                    prop: " remind",
+                    label: "提醒 "
+                },
+                {
+                    prop: " inquiry",
+                    label: "问卷 "
+                },
+                {
+                    prop: " knowledge",
+                    label: "知识 "
+                },
+                {
+                    prop: "selfAssessment ",
+                    label: " 自评"
+                },
+                {
+                    prop: " deviceTest",
+                    label: "自测 "
+                },
+                {
+                    prop: " state",
+                    label: "状态 "
+                }],
+            columnsFa: [
+                {
+                    prop: "department",
+                    label: "科室"
+                },
+                {
+                    prop: " deviceType",
+                    label: "设备类型 "
+                },
+                {
+                    prop: " serialNumber",
+                    label: "设备编号 "
+                },
+                {
+                    prop: " userName",
+                    label: "用户 "
+                },
+                {
+                    prop: "useNumber ",
+                    label: " 使用量"
+                },
+                {
+                    prop: " alertInfo",
+                    label: "告警情况 "
                 }
             ],
+            tableDataList: [],
+            tableDataListFa: [],
             tableBtn: [
                 {
                     name: "查看随访",
@@ -335,22 +417,66 @@ export default {
     },
     async created() {
         this.circularData(this.odata["header"]);
-        this.getFoList();
-        this.getfamiliList()
+        this.getFoList(); //随访列表
+        this.getfamiliList(); //家用设备列表
+        this.getDepartment(); //科室列表
     },
     mounted() {},
     methods: {
+        //筛选
+        getOTab1(data) {
+            this.odepartment = data.index.value;
+            this.getFoList();
+            this.getfamiliList();
+        },
         getOTab2(data) {
             this.otype = data.index.value;
             this.getFoList();
+            this.getfamiliList();
         },
         getOTab3(data) {
             this.oTheWay = data.index.value;
             this.getFoList();
+            this.getfamiliList();
         },
         getOTab4(data) {
             this.oContent = data.index.value;
             this.getFoList();
+            this.getfamiliList();
+        },
+        getOTab5(data) {
+            this.equiType = data.index.value;
+            this.getFoList();
+            this.getfamiliList();
+        },
+        //获取科室列表
+        async getDepartment() {
+            let _this = this;
+            let query = {
+                orgCode: this.userSelfInfo.orgCode,
+                deptId: ""
+            };
+            const res = await fetchHospitalDepts(query);
+            if (res.data && res.data.errCode === 0) {
+                console.log(res.data.body);
+                if (res.data.body.length > 6) {
+                    this.oTab1.more = true;
+                } else {
+                    this.oTab1.more = false;
+                }
+                $.each(res.data.body, function(index, text) {
+                    _this.oTab1.list.push({
+                        text: text.deptName,
+                        value: text.deptId
+                    });
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
         },
         //获取随访列表
         async getFoList() {
@@ -366,13 +492,7 @@ export default {
                 pageSize: 10
             };
             const res = await managerGetPlanList(options);
-            if (res.data && res.data.errCode === 0) {
-                $.each(res.data.body.header, function(key, value) {
-                    _this.columns.push({
-                        prop: key,
-                        label: value
-                    });
-                });
+            if (res.data && res.data.errCode === 0) { 
                 _this.tableDataList = res.data.body.data2.list;
             } else {
                 //失败
@@ -381,26 +501,22 @@ export default {
                     message: res.data.errMsg
                 });
             }
-        },//获取家用设备列表
+        }, //获取家用设备列表
         async getfamiliList() {
             let _this = this;
             const options = {
                 token: this.userState.token,
                 search: this.searchData,
                 department: this.odepartment,
-                houseDeviceType: this.otype,
+                houseDeviceType: this.equiType,
                 pageNum: 1,
                 pageSize: 10
             };
-            const res = await managerGetPlanList(options);
-            if (res.data && res.data.errCode === 0) {
-                $.each(res.data.body.header, function(key, value) {
-                    _this.columns.push({
-                        prop: key,
-                        label: value
-                    });
-                });
-                _this.tableDataList = res.data.body.data2.list;
+            const res = await managerGetDeviceList(options);
+            if (res.data && res.data.errCode === 0) { 
+                _this.tableDataListFa = res.data.body.data2.list;
+                console.log(_this.tableDataListFa)
+                alert(_this.tableDataListFa[0].alertInfo)
             } else {
                 //失败
                 this.$notify.error({
