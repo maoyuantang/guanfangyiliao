@@ -1,5 +1,8 @@
 <template>
     <div class="chat">
+        <div>
+           {{chatUser}}
+        </div>
         <div class="chatMessage">
             <ul class="chatRecord">
                 <li :class="text.form==userSelfInfo.userId?'recordLf':'recordRg'" v-for="(text,index) in messageList" :key="index">
@@ -91,13 +94,14 @@ import protobuf from "protobufjs";
 import { mapState } from "vuex";
 // import websocket from "../../common/websocket.js";
 import filesJs from "../../common/files.js";
-import { fetchHistoryMessage } from "../../api/apiAll.js";
+import { fetchHistoryMessage, fetchSessionMembers } from "../../api/apiAll.js";
 
 let websocket = require("../../common/websocket.js");
 
 export default {
     data() {
         return {
+            chatUser:"",//参与聊天的成员
             messageList: [],
             input: "",
             childMessageType: "", //发送的消息类型
@@ -115,6 +119,7 @@ export default {
     },
     created() {
         this.getHisRecord();
+        this.getMemberMess()
         console.log(this.sessionId);
     },
     methods: {
@@ -122,6 +127,33 @@ export default {
             websocket = require("../../common/websocket.js");
             var ohtml = websocket.default.getContent();
             console.log(ohtml);
+        },
+        //拉取会话好友列表
+        async getMemberMess() {
+            console.log(this.sessionId);
+            let query = {
+                token: this.userState.token
+            };
+            const options = {
+                sessionId: this.sessionId,
+                pageIndex: 1,
+                pageNums: 50
+            };
+            const res = await fetchSessionMembers(query, options);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                console.log(res.data.body)
+                $.each(res.data.body,function(text,index){
+                    alert(text.userName)
+                    this.chatUser=this.chatUser+","+text.userName
+                })
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
         },
         //获取历史记录
         async getHisRecord() {
@@ -198,30 +230,34 @@ export default {
                                 '<div class=" followCon"> <div> </div> <div> <h3>问诊表/随访表的标题</h3> <div>2018中医国际标准</div>  </div> </div>';
                         } else if (odata[i].childMessageType == "ARTICLE") {
                             //文章
-                            this.messageList[i].content="文章"
+                            this.messageList[i].content = "文章";
                         } else if (odata[i].childMessageType == "CRVIDEO") {
                             //视频
-                             this.messageList[i].content="视频"
+                            this.messageList[i].content = "视频";
                         } else if (odata[i].childMessageType == "FOLLOWUP") {
                             //随访
-                             this.messageList[i].content="随访"
+                            this.messageList[i].content = "随访";
                         } else if (odata[i].childMessageType == "AUDIO") {
                             //音频
-                             this.messageList[i].content="音频"
+                            this.messageList[i].content = "音频";
                         } else if (odata[i].childMessageType == "VIDEO") {
                             //视频
                             if (odata[i].body.indexOf("refuse") > -1) {
-                               this.messageList[i].content= "<span>挂断了视频</span>";
+                                this.messageList[i].content =
+                                    "<span>挂断了视频</span>";
                             } else if (odata[i].body.indexOf("sendroom") > -1) {
-                                this.messageList[i].content = "<span>发起了视频聊天</span>";
+                                this.messageList[i].content =
+                                    "<span>发起了视频聊天</span>";
                             } else if (odata[i].body.indexOf("complete") > -1) {
-                                this.messageList[i].content= "<span>视频通话已结束</span>";
+                                this.messageList[i].content =
+                                    "<span>视频通话已结束</span>";
                             } else if (odata[i].body.indexOf("cancle") > -1) {
-                                this.messageList[i].content = "<span>取消了视频</span>";
+                                this.messageList[i].content =
+                                    "<span>取消了视频</span>";
                             }
                         } else if (odata[i].childMessageType == "IMAGE") {
-                        }else{
-                             this.messageList[i].content =odata[i].body
+                        } else {
+                            this.messageList[i].content = odata[i].body;
                         }
                     }
                 }

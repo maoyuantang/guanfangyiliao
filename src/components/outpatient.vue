@@ -33,7 +33,7 @@ import outPatientHospitalManagent from "./outPatientHospitalManagent.vue";
 export default {
     data() {
         return {
-            chatVisible: true,
+            chatVisible: false,
             sessionId: "",
             doctorsInfo: {
                 //医生信息

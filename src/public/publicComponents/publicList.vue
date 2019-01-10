@@ -1,4 +1,5 @@
 <template>
+
     <div class="public-list">
         <el-table :data="tableData" style="width: 100%">
             <el-table-column v-for="(column, index) in columns" :prop="column.prop" :key="index" :label="column.label" :width="column.width">
@@ -8,7 +9,7 @@
                     </span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" v-show="tableBtn">
                 <template slot-scope="scope">
                     <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method(scope.row.id,'dd')" :class="text.oclass" type="text" size="small" :key="index"  >
                         {{text.name}}
