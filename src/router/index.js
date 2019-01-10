@@ -15,7 +15,7 @@ import medicalTreatment from '@/components/medicalTreatment'//分级诊疗系统
 import outpatient from '@/components/outpatient'//远程门诊系统
 import referral from '@/components/referral'//双向转诊系统
 import rounds from '@/components/rounds'//移动查房系统
-
+import cloudManagement from '@/components/cloudManagement'//移动查房系统
 
 
 //import test from '@/components/test'//测试页a
@@ -48,7 +48,14 @@ const router = new Router({
 		      }
         },
 				/**************************** */
-				
+				{
+      		path: '/cloudManagement',
+		      name: 'cloudManagement',
+		      component: cloudManagement,
+		      meta: {
+		        title: '云存储管理'
+		      }
+        },
         {
       		path: '/rounds',
 		      name: 'rounds',

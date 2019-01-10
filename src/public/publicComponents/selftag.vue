@@ -7,7 +7,7 @@
         :class="[{'all':index===0},{'warning':item.warning}]"
         v-for="(item,index) in inData.list" 
         :key="index" 
-        @click.native.prevent="reBackFn(index)">
+        @click.native.prevent="reBackFn(item)">
             {{item.text||''}}
     </el-tag>
 
