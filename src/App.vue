@@ -33,6 +33,7 @@ export default {
     methods: {
         lianjie:function() {
         //  websocket.close()
+        console.log(this.userState.token)
         
             window.websocket = websocket.initWebSocket(this.userState.token);
         

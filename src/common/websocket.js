@@ -11,6 +11,7 @@ let ticket; //票据，登录即可返回
 let sequence; //序列号
 let content;//消息内容
 let serverTime;//服务器时间
+let oMsgId;
 //初始化websocket
 // alert(this.$store.state.token)
 function initWebSocket(otoken, ofun) {
@@ -105,10 +106,25 @@ function webSocketonmessage(odata) {
         ticket = odata.ticket;//票据
         sequence = odata.status.sequence;//序列号
         serverTime= odata.status.serverTime;//服务器时间
+        oMsgId=odata.status.msgId
+        console.log(oMsgId)
         heartCheck.start()
        
     } else if (RequestType == 102) {
         alert('您在其他设备上进行了登录')
+    } else if (RequestType == 103) {
+        alert('dd')
+        let Iessage = {
+            RequestType: 105,
+            ticket: ticket,
+            status: {
+                state: true,
+                msgId: oMsgId, //客户端上接收到最后一条消息的ID号
+                sequence: sequence //客户端上发送最后一条消息的序号
+            }
+        }
+        sendMessage(Iessage);
+        return false;
     } else if (RequestType == 0) {//同步  
 
     } else if (RequestType === 5) {
@@ -122,7 +138,6 @@ function webSocketonmessage(odata) {
             }
         }
         sendMessage(Iessage);
-        return false;
     } if (RequestType == 0) {
         var localTeste = layui.data('sequence').number;
         sequence = localTeste;
@@ -293,511 +308,512 @@ function webSocketonmessage(odata) {
             }
         });
     } else if (RequestType === 6) {//接收到消息处理
-        var fromL = odata.info.from;
-        if (fromL != layui.data('realName').id) {//判断是不是本人发的消息
-            let msgId = odata.info.msgId;
-            let childMessageType = odata.info.childMessageType;
-            let bodyVideo = odata.info.body;
-            let fromNickNameL = odata.info.fromNickName;
+        console.log(odata.info.body)
+        // var fromL = odata.info.from;
+        // if (true) {//判断是不是本人发的消息
+        //     let msgId = odata.info.msgId;
+        //     let childMessageType = odata.info.childMessageType;
+        //     let bodyVideo = odata.info.body;
+        //     let fromNickNameL = odata.info.fromNickName;
 
-            let toL = odata.info.to;
-            let toNickNameL = odata.info.toNickName;
-            let Iessage = {
-                RequestType: 106,
-                ticket: ticket,
-                status: {
-                    state: true,
-                    msgId: msgId, //客户端上接收到最后一条消息的ID号
-                    sequence: sequence //客户端上发送最后一条消息的序号
-                }
-            }
-            sendIMessage(Iessage);
-            let username = dataone.info.fromNickName;
-            let id = dataone.info.to.replace("#", "M").replace(":", "-");
-            // let content = '';
-            if (childMessageType == 6 || childMessageType == 8) {
-                if (bodyVideo == "refuse") {//拒绝视频
-                    content = '<div style="color:#F60">拒绝了视频通话</div>';
-                    layer.msg('拒绝了视频通话');
-                } else if (bodyVideo == "cancle") {
-                    var videosessionid = layui.data('videosessionid').id;
-                    if (videosessionid == fromL) {
-                        var music = document.getElementById("audioPlay");
-                        music.pause();
-                        content = '<div style="color:#fff">取消了视频通话</div>';
-                        if (count == 0) {
-                            layer.msg('取消了视频通话');
-                            $(".closediV").hide();
-                            $(".vidoefix").remove();
-                            $(".viedoe").remove();
-                            setTimeout(function () {
-                                layer.closeAll(); //疯狂模式，关闭所有层
-                            }, 500)
-                        }
-                    }
-                    return false;
-                } else if (bodyVideo.indexOf("videoing") > -1) {
-                    layer.msg('对方正在视频通话中');
-                    return;
-                } else if (bodyVideo.indexOf("complete") > -1) {
-                    layui.data('selectRoomStateNw', {
-                        key: 'sessionId'
-                        , remove: true
-                    });
-                    layui.data('videoing', {
-                        key: "videoing"
-                        , value: "false"
-                    });
-                    content = '<div style="color:#373C38">视频通话已结束</div>';
-                    sessionStorage.setItem("joinroom", "false");//判断进入房间
-                    layer.msg('对方挂断视频');
-                } else if (bodyVideo.indexOf("MicroCinic&hangup") > -1) {
-                } else if (bodyVideo.indexOf("accept") > -1) {
-                    count++;
-                    acceptrom = "complete&time="
-                    content = '<div style="color:#373C38">接受了视频聊天</div>';
-                } else if (bodyVideo.indexOf("sendroom") > -1 || bodyVideo.indexOf("MicroCinicSendRoom") > -1) {
-                    var videoing = layui.data('videoing').videoing;
-                    if (videoing == "true") {
-                        var room = "";
-                        var bodyT = 'videoing';
-                        var childMessageTypeT = 6;
-                        var sessionId = toL;
-                        parent.seestateTPL(childMessageTypeT, bodyT, sessionId, room, layui.data('realName').realName, fromNickNameL);
-                        return false;
-                    }
-                    if (dataone.info.body.indexOf("$") > -1) {
-                        if (dataone.info.body.indexOf(userId) > -1) {
-                            var strAudio = "<audio id='audioPlay' src='./chat_vedio_callin.mp3' hidden='true' loop='true'>";
-                            if ($("body").find("audio").length <= 0)
-                                $("body").append(strAudio);
-                            var audio = document.getElementById("audioPlay");
-                            //浏览器支持 audion
-                            audio.play();
-                            content = '<div class="lay-video">' +
-                                '<div style="color:#fff;padding-bottom: 10px;">邀请你开视频</div>' +
-                                '<div class="closediV"><button class="layui-btn layui-btn-danger" layim-event="extend" lay-filter="refusedto">拒绝</button>' +
-                                '<button class="layui-btn" layim-event="extend" lay-filter="accept" data-typel="two" data-toNickNameL="' + toNickNameL + '" data-toL="' + toL + '" data-fromL="' + fromL + '" data-fromNickNameL="' + fromNickNameL + '" data-room="' + bodyVideo + '" data-type="true">接受</button>' +
-                                '</div></div>';
-                            layer.msg(username + '邀请你开视频');
-                            Notification.requestPermission(function (permission) {
-                                if (Notification.permission == "granted") {
-                                    var notification = new Notification("" + username + "", {
-                                        body: '邀请你开视频。。。。',
-                                        icon: '../../images/gf_logo_app.png'
-                                    });
-                                    notification.onclick = function () {
-                                        notification.close();
-                                    };
-                                }
-                            });
-                        } else {
-                            var conferenceId = dataone.info.body.split("&")[2].split('$')[0];
-                            var kName = dataone.info.fromNickName;
-                            content = '<div class="lay-video">' +
-                                '<div style="color:#F60" data-id="' + conferenceId + '" >发起了视频聊天</div>' +
-                                '<div class="closediV vidoefix"  id="' + conferenceId + '">' +
-                                '<div class="viedoe" style="color:#1474A9;padding: 5px;border-bottom: 2px solid #ccc;cursor: pointer;" layim-event="extend" data-conferenceId="' + conferenceId + '" lay-filter="jionRoom"><img src="../../images/v1.png" style="width: 20px;padding-right: 10px;    float: inherit;">正在进行视频会话</div>' +
-                                '<div class="jinlis" style="display:none"><div class="userImlist">' +
-                                '<img src="../../images/a1.png"><img src="../../images/a1.png"><img src="../../images/a1.png"><img src="../../images/a1.png">' +
-                                '</div>' +
-                                '<button class="layui-btn layui-btn-danger joninRom" layim-event="extend" lay-filter="cancelInto">取消</button>' +
-                                '<button class="layui-btn joninRom" layim-event="extend" lay-filter="accept" data-typel="one" data-toNickNameL="' + toNickNameL + '" data-toL="' + toL + '" data-fromL="' + fromL + '" data-fromNickNameL="' + fromNickNameL + '" data-room="' + bodyVideo + '" data-type="true">加入</button>' +
-                                '</div></div>';
-                            var roomArray = [];
-                            var roomNum = bodyVideo.split("&")[1];
-                            var roomSession = toL + "$" + roomNum + "$" + conferenceId;
-                            try {
-                                var roomAJosn = JSON.parse(localStorage.getItem('roomSession'));
-                                for (var i = 0; i < roomAJosn.length; i++) {
-                                    var roomnums = roomAJosn[i];
-                                    if (roomnums.indexOf(toL) > -1) {
-                                        console.log(roomnums)
-                                        roomAJosn.remove(roomnums);
-                                    } else {
-                                        roomArray.push(roomAJosn[i]);
-                                    }
-                                }
-                                //  roomArray.push(roomAJosn.toString());
-                            } catch (e) {
+        //     let toL = odata.info.to;
+        //     let toNickNameL = odata.info.toNickName;
+        //     let Iessage = {
+        //         RequestType: 106,
+        //         ticket: ticket,
+        //         status: {
+        //             state: true,
+        //             msgId: msgId, //客户端上接收到最后一条消息的ID号
+        //             sequence: sequence //客户端上发送最后一条消息的序号
+        //         }
+        //     }
+        //     sendMessage(Iessage);
+        //     let username = odata.info.fromNickName;
+        //     let id = odata.info.to.replace("#", "M").replace(":", "-");
+        //     // let content = '';
+        //     if (childMessageType == 6 || childMessageType == 8) {
+        //         if (bodyVideo == "refuse") {//拒绝视频
+        //             content = '<div style="color:#F60">拒绝了视频通话</div>';
+        //             layer.msg('拒绝了视频通话');
+        //         } else if (bodyVideo == "cancle") {
+        //             var videosessionid = layui.data('videosessionid').id;
+        //             if (videosessionid == fromL) {
+        //                 var music = document.getElementById("audioPlay");
+        //                 music.pause();
+        //                 content = '<div style="color:#fff">取消了视频通话</div>';
+        //                 if (count == 0) {
+        //                     layer.msg('取消了视频通话');
+        //                     $(".closediV").hide();
+        //                     $(".vidoefix").remove();
+        //                     $(".viedoe").remove();
+        //                     setTimeout(function () {
+        //                         layer.closeAll(); //疯狂模式，关闭所有层
+        //                     }, 500)
+        //                 }
+        //             }
+        //             return false;
+        //         } else if (bodyVideo.indexOf("videoing") > -1) {
+        //             layer.msg('对方正在视频通话中');
+        //             return;
+        //         } else if (bodyVideo.indexOf("complete") > -1) {
+        //             layui.data('selectRoomStateNw', {
+        //                 key: 'sessionId'
+        //                 , remove: true
+        //             });
+        //             layui.data('videoing', {
+        //                 key: "videoing"
+        //                 , value: "false"
+        //             });
+        //             content = '<div style="color:#373C38">视频通话已结束</div>';
+        //             sessionStorage.setItem("joinroom", "false");//判断进入房间
+        //             layer.msg('对方挂断视频');
+        //         } else if (bodyVideo.indexOf("MicroCinic&hangup") > -1) {
+        //         } else if (bodyVideo.indexOf("accept") > -1) {
+        //             count++;
+        //             acceptrom = "complete&time="
+        //             content = '<div style="color:#373C38">接受了视频聊天</div>';
+        //         } else if (bodyVideo.indexOf("sendroom") > -1 || bodyVideo.indexOf("MicroCinicSendRoom") > -1) {
+        //             var videoing = layui.data('videoing').videoing;
+        //             if (videoing == "true") {
+        //                 var room = "";
+        //                 var bodyT = 'videoing';
+        //                 var childMessageTypeT = 6;
+        //                 var sessionId = toL;
+        //                 parent.seestateTPL(childMessageTypeT, bodyT, sessionId, room, layui.data('realName').realName, fromNickNameL);
+        //                 return false;
+        //             }
+        //             if (odata.info.body.indexOf("$") > -1) {
+        //                 if (odata.info.body.indexOf(userId) > -1) {
+        //                     var strAudio = "<audio id='audioPlay' src='./chat_vedio_callin.mp3' hidden='true' loop='true'>";
+        //                     if ($("body").find("audio").length <= 0)
+        //                         $("body").append(strAudio);
+        //                     var audio = document.getElementById("audioPlay");
+        //                     //浏览器支持 audion
+        //                     audio.play();
+        //                     content = '<div class="lay-video">' +
+        //                         '<div style="color:#fff;padding-bottom: 10px;">邀请你开视频</div>' +
+        //                         '<div class="closediV"><button class="layui-btn layui-btn-danger" layim-event="extend" lay-filter="refusedto">拒绝</button>' +
+        //                         '<button class="layui-btn" layim-event="extend" lay-filter="accept" data-typel="two" data-toNickNameL="' + toNickNameL + '" data-toL="' + toL + '" data-fromL="' + fromL + '" data-fromNickNameL="' + fromNickNameL + '" data-room="' + bodyVideo + '" data-type="true">接受</button>' +
+        //                         '</div></div>';
+        //                     layer.msg(username + '邀请你开视频');
+        //                     Notification.requestPermission(function (permission) {
+        //                         if (Notification.permission == "granted") {
+        //                             var notification = new Notification("" + username + "", {
+        //                                 body: '邀请你开视频。。。。',
+        //                                 icon: '../../images/gf_logo_app.png'
+        //                             });
+        //                             notification.onclick = function () {
+        //                                 notification.close();
+        //                             };
+        //                         }
+        //                     });
+        //                 } else {
+        //                     var conferenceId = odata.info.body.split("&")[2].split('$')[0];
+        //                     var kName = odata.info.fromNickName;
+        //                     content = '<div class="lay-video">' +
+        //                         '<div style="color:#F60" data-id="' + conferenceId + '" >发起了视频聊天</div>' +
+        //                         '<div class="closediV vidoefix"  id="' + conferenceId + '">' +
+        //                         '<div class="viedoe" style="color:#1474A9;padding: 5px;border-bottom: 2px solid #ccc;cursor: pointer;" layim-event="extend" data-conferenceId="' + conferenceId + '" lay-filter="jionRoom"><img src="../../images/v1.png" style="width: 20px;padding-right: 10px;    float: inherit;">正在进行视频会话</div>' +
+        //                         '<div class="jinlis" style="display:none"><div class="userImlist">' +
+        //                         '<img src="../../images/a1.png"><img src="../../images/a1.png"><img src="../../images/a1.png"><img src="../../images/a1.png">' +
+        //                         '</div>' +
+        //                         '<button class="layui-btn layui-btn-danger joninRom" layim-event="extend" lay-filter="cancelInto">取消</button>' +
+        //                         '<button class="layui-btn joninRom" layim-event="extend" lay-filter="accept" data-typel="one" data-toNickNameL="' + toNickNameL + '" data-toL="' + toL + '" data-fromL="' + fromL + '" data-fromNickNameL="' + fromNickNameL + '" data-room="' + bodyVideo + '" data-type="true">加入</button>' +
+        //                         '</div></div>';
+        //                     var roomArray = [];
+        //                     var roomNum = bodyVideo.split("&")[1];
+        //                     var roomSession = toL + "$" + roomNum + "$" + conferenceId;
+        //                     try {
+        //                         var roomAJosn = JSON.parse(localStorage.getItem('roomSession'));
+        //                         for (var i = 0; i < roomAJosn.length; i++) {
+        //                             var roomnums = roomAJosn[i];
+        //                             if (roomnums.indexOf(toL) > -1) {
+        //                                 console.log(roomnums)
+        //                                 roomAJosn.remove(roomnums);
+        //                             } else {
+        //                                 roomArray.push(roomAJosn[i]);
+        //                             }
+        //                         }
+        //                         //  roomArray.push(roomAJosn.toString());
+        //                     } catch (e) {
 
-                            }
-                            roomArray.push(roomSession);
-                            localStorage.setItem('roomSession', JSON.stringify(roomArray))
-                        }
-                    } else {
-                        var strAudio = "<audio id='audioPlay' src='./chat_vedio_callin.mp3' hidden='true' loop='true'>";
-                        if ($("body").find("audio").length <= 0)
-                            $("body").append(strAudio);
-                        var audio = document.getElementById("audioPlay");
-                        //浏览器支持 audion
-                        audio.play();
-                        content = '<div class="lay-video">' +
-                            '<div style="color:#fff;padding-bottom: 10px;">邀请你开视频</div>' +
-                            '<div class="closediV"><button class="layui-btn layui-btn-danger" layim-event="extend" lay-filter="refusedto">拒绝</button>' +
-                            '<button class="layui-btn" layim-event="extend" lay-filter="accept" data-typel="two" data-toNickNameL="' + toNickNameL + '" data-toL="' + toL + '" data-fromL="' + fromL + '" data-fromNickNameL="' + fromNickNameL + '" data-room="' + bodyVideo + '" data-type="true">接受</button>' +
-                            '</div></div>';
-                        layer.msg(username + '邀请你开视频');
-                        Notification.requestPermission(function (permission) {
-                            if (Notification.permission == "granted") {
-                                var notification = new Notification("" + username + "", {
-                                    body: '邀请你开视频。。。。',
-                                    icon: '../../images/gf_logo_app.png'
-                                });
-                                notification.onclick = function () {
-                                    notification.close();
-                                };
-                            }
-                        });
-                    }
+        //                     }
+        //                     roomArray.push(roomSession);
+        //                     localStorage.setItem('roomSession', JSON.stringify(roomArray))
+        //                 }
+        //             } else {
+        //                 var strAudio = "<audio id='audioPlay' src='./chat_vedio_callin.mp3' hidden='true' loop='true'>";
+        //                 if ($("body").find("audio").length <= 0)
+        //                     $("body").append(strAudio);
+        //                 var audio = document.getElementById("audioPlay");
+        //                 //浏览器支持 audion
+        //                 audio.play();
+        //                 content = '<div class="lay-video">' +
+        //                     '<div style="color:#fff;padding-bottom: 10px;">邀请你开视频</div>' +
+        //                     '<div class="closediV"><button class="layui-btn layui-btn-danger" layim-event="extend" lay-filter="refusedto">拒绝</button>' +
+        //                     '<button class="layui-btn" layim-event="extend" lay-filter="accept" data-typel="two" data-toNickNameL="' + toNickNameL + '" data-toL="' + toL + '" data-fromL="' + fromL + '" data-fromNickNameL="' + fromNickNameL + '" data-room="' + bodyVideo + '" data-type="true">接受</button>' +
+        //                     '</div></div>';
+        //                 layer.msg(username + '邀请你开视频');
+        //                 Notification.requestPermission(function (permission) {
+        //                     if (Notification.permission == "granted") {
+        //                         var notification = new Notification("" + username + "", {
+        //                             body: '邀请你开视频。。。。',
+        //                             icon: '../../images/gf_logo_app.png'
+        //                         });
+        //                         notification.onclick = function () {
+        //                             notification.close();
+        //                         };
+        //                     }
+        //                 });
+        //             }
 
-                }
-            } else if (childMessageType == 4) {
-                content = '<div style="color:#F60">该消息为音频消息,请在手机上查看</div>';
-            } else if (childMessageType == 5) {
-                content = 'img[/user/api/v2/public/download?downType=Chat&secId=' + encodeBase64 + '&userId=&layer=00&deType=HD&fileId=' + bodyVideo + ']';
-            } else if (childMessageType == 7) {
-                var bodyPro = IMessage.decode(new Uint8Array(res.data)).info.body;
-                var videosessionid = layui.data('videosessionidNow').id;
-                if (bodyPro == "MicroCinic&hangup" && videosessionid == toL) {
-                    var kicking = layui.data('kicking').kicking;//判断是否踢人
-                    var videotyped = layui.data('videotype').type;
-                    var localTest = layui.data('videousertype').type;
-                    if (parent.quitType == "true") {
-                        layer.closeAll();
-                        parent.quitType = "false";
-                    }
-                    if (localTest == "true") {
-                        parent.leaveConference();
-                    }
+        //         }
+        //     } else if (childMessageType == 4) {
+        //         content = '<div style="color:#F60">该消息为音频消息,请在手机上查看</div>';
+        //     } else if (childMessageType == 5) {
+        //         content = 'img[/user/api/v2/public/download?downType=Chat&secId=' + encodeBase64 + '&userId=&layer=00&deType=HD&fileId=' + bodyVideo + ']';
+        //     } else if (childMessageType == 7) {
+        //         var bodyPro = IMessage.decode(new Uint8Array(res.data)).info.body;
+        //         var videosessionid = layui.data('videosessionidNow').id;
+        //         if (bodyPro == "MicroCinic&hangup" && videosessionid == toL) {
+        //             var kicking = layui.data('kicking').kicking;//判断是否踢人
+        //             var videotyped = layui.data('videotype').type;
+        //             var localTest = layui.data('videousertype').type;
+        //             if (parent.quitType == "true") {
+        //                 layer.closeAll();
+        //                 parent.quitType = "false";
+        //             }
+        //             if (localTest == "true") {
+        //                 parent.leaveConference();
+        //             }
 
-                    if (videotyped == "true") {
-                        if (kicking == "true") {
-                            // return;
-                        }
-                        parent.leaveConference();
-                    }
+        //             if (videotyped == "true") {
+        //                 if (kicking == "true") {
+        //                     // return;
+        //                 }
+        //                 parent.leaveConference();
+        //             }
 
-                }
-                return false;
-            } else if (childMessageType == 18) {
-                var formidls = IMessage.decode(new Uint8Array(res.data)).info.from;
-                if (formidls != layui.data('realName').id) {
-                    var fromNickName = IMessage.decode(new Uint8Array(res.data)).info.fromNickName;
-                    var bodyPro = JSON.parse(IMessage.decode(new Uint8Array(res.data)).info.body);
-                    var toNickName = IMessage.decode(new Uint8Array(res.data)).info.toNickName;
-                    var phtml;
-                    var fromid = dataone.info.to;
-                    content = '<div class="artic">' +
-                        '<span style="color: #3FDD86">' + fromNickName + "给您发了一份问诊表" +
-                        '<p class="mingpian"><img src="../../images/q1.png" style="width: 45px;"> ' + bodyPro.title + '</p></span>' +
-                        '<p class="shouji">请在手机上查看</p>' +
-                        '</div>'
-                } else {
-                    return false;
-                }
-            } else if (childMessageType == 20) {
-                var fromNickName = IMessage.decode(new Uint8Array(res.data)).info.fromNickName;
-                var bodyPro = JSON.parse(IMessage.decode(new Uint8Array(res.data)).info.body);
-                var toNickName = IMessage.decode(new Uint8Array(res.data)).info.toNickName;
-                var phtml;
-                var fromid = dataone.info.to;
-                content = '<div class="artic">' +
-                    '<span style="color: #3FDD86">' + fromNickName + "给您发了一份随访计划" +
-                    '<p class="mingpian"><img src="../../images/q1.png" style="width: 45px;"> ' + bodyPro.title + '</p></span>' +
-                    '<p class="shouji">请在手机上查看</p>' +
-                    '</div>'
-            } else if (childMessageType == 21) {
-                var bodyPo = JSON.parse(IMessage.decode(new Uint8Array(res.data)).info.body);
-                if (bodyPo.notice == "HOSPITAL") {//医院通知
-                    var notification = new Notification("" + bodyPo.title + "", {
-                        body: bodyPo.body,
-                        icon: '../../images/gf_logo_app.png'
-                    });
-                    notification.onclick = function () {
-                        notification.close();
-                    };
-                    parent.pullNoticeList();
-                } else if (bodyPo.notice == "FOLLOW_UP") {//随访通知,
-                    parent.pullNoticeList();
-                    var notification = new Notification("" + bodyPo.title + "", {
-                        body: bodyPo.body,
-                        icon: '../../images/gf_logo_app.png'
-                    });
-                    notification.onclick = function () {
-                        notification.close();
-                    };
-                    parent.pullNoticeList();
-                } else if (bodyPo.notice == "COOPERATION") {//协作邀请,
-                    parent.pullNoticeList();
-                    var notification = new Notification("" + bodyPo.title + "", {
-                        body: bodyPo.body,
-                        icon: '../../images/gf_logo_app.png'
-                    });
-                    notification.onclick = function () {
-                        notification.close();
-                    };
-                } else if (bodyPo.notice == "BIZ_APPOINT") {//业务指派,
-                    parent.pullNoticeList();
-                    var notification = new Notification("" + bodyPo.title + "", {
-                        body: bodyPo.body,
-                        icon: '../../images/gf_logo_app.png'
-                    });
-                    notification.onclick = function () {
-                        notification.close();
-                    };
-                } else if (bodyPo.notice == "CLINIC") {//新的诊室业务
-                    parent.pullNoticeList();
-                    var notification = new Notification("" + bodyPo.title + "", {
-                        body: bodyPo.body,
-                        icon: '../../images/gf_logo_app.png'
-                    });
-                    notification.onclick = function () {
-                        notification.close();
-                    };
-                } else if (bodyPo.notice == "FOLLOW_UP_TABLE") {//随访计划表,
-                    parent.pullNoticeList();
-                    var notification = new Notification("" + bodyPo.title + "", {
-                        body: bodyPo.body,
-                        icon: '../../images/gf_logo_app.png'
-                    });
-                    notification.onclick = function () {
-                        notification.close();
-                    };
-                } else if (bodyPo.notice == "REFUND") {//退款通知
-                    parent.pullNoticeList();
-                    var notification = new Notification("" + bodyPo.title + "", {
-                        body: bodyPo.body,
-                        icon: '../../images/gf_logo_app.png'
-                    });
-                    notification.onclick = function () {
-                        notification.close();
-                    };
-                } else if (bodyPo.notice == "CRVIDEO") {//视频回拨
-                    parent.pullNoticeList();
-                    var notification = new Notification("" + bodyPo.title + "", {
-                        body: bodyPo.body,
-                        icon: '../../images/gf_logo_app.png'
-                    });
-                    notification.onclick = function () {
-                        notification.close();
-                    };
-                } else if (bodyPo.notice == "CLINIC_INVITED") {//诊室邀请
-                    var bodyls = JSON.parse(IMessage.decode(new Uint8Array(res.data)).info.body);
-                    var botest = bodyls.body;
-                    var getParams = function (name) {
-                        var search = botest;
-                        var pattern = new RegExp("[?&]" + name + "\=([^&]+)", "g");
-                        var matcher = pattern.exec(search);
-                        var items = null;
-                        if (null != matcher) {
-                            try {
-                                items = decodeURIComponent(decodeURIComponent(matcher[1]));
-                            } catch (e) {
-                                try {
-                                    items = decodeURIComponent(matcher[1]);
-                                } catch (e) {
-                                    items = matcher[1];
-                                }
-                            }
-                        }
-                        return items;
-                    };
-                    var state = getParams("state");
-                    if (state == "true") {
-                        // var notification = new Notification("诊室邀请", {
-                        //     body: IMessage.decode(new Uint8Array(res.data)).info.fromNickName+'邀请您医技协作',
-                        //     icon: '../../images/gf_logo_app.png'
-                        // });
-                        // notification.onclick = function() {
-                        //     notification.close();
-                        // };
-                        layer.open({
-                            type: 2,
-                            title: '诊室邀请',
-                            shadeClose: true,
-                            shade: 0,
-                            anim: 6,
-                            offset: 'rb',
-                            area: ['280px', '350px'],
-                            content: './page/components/listbox/invitation.html?' + botest + '&formname=' + IMessage.decode(new Uint8Array(res.data)).info.fromNickName //iframe的url
-                        });
-                    } else {
-                        layer.closeAll();
-                    }
+        //         }
+        //         return false;
+        //     } else if (childMessageType == 18) {
+        //         var formidls = IMessage.decode(new Uint8Array(res.data)).info.from;
+        //         if (formidls != layui.data('realName').id) {
+        //             var fromNickName = IMessage.decode(new Uint8Array(res.data)).info.fromNickName;
+        //             var bodyPro = JSON.parse(IMessage.decode(new Uint8Array(res.data)).info.body);
+        //             var toNickName = IMessage.decode(new Uint8Array(res.data)).info.toNickName;
+        //             var phtml;
+        //             var fromid = odata.info.to;
+        //             content = '<div class="artic">' +
+        //                 '<span style="color: #3FDD86">' + fromNickName + "给您发了一份问诊表" +
+        //                 '<p class="mingpian"><img src="../../images/q1.png" style="width: 45px;"> ' + bodyPro.title + '</p></span>' +
+        //                 '<p class="shouji">请在手机上查看</p>' +
+        //                 '</div>'
+        //         } else {
+        //             return false;
+        //         }
+        //     } else if (childMessageType == 20) {
+        //         var fromNickName = IMessage.decode(new Uint8Array(res.data)).info.fromNickName;
+        //         var bodyPro = JSON.parse(IMessage.decode(new Uint8Array(res.data)).info.body);
+        //         var toNickName = IMessage.decode(new Uint8Array(res.data)).info.toNickName;
+        //         var phtml;
+        //         var fromid = odata.info.to;
+        //         content = '<div class="artic">' +
+        //             '<span style="color: #3FDD86">' + fromNickName + "给您发了一份随访计划" +
+        //             '<p class="mingpian"><img src="../../images/q1.png" style="width: 45px;"> ' + bodyPro.title + '</p></span>' +
+        //             '<p class="shouji">请在手机上查看</p>' +
+        //             '</div>'
+        //     } else if (childMessageType == 21) {
+        //         var bodyPo = JSON.parse(IMessage.decode(new Uint8Array(res.data)).info.body);
+        //         if (bodyPo.notice == "HOSPITAL") {//医院通知
+        //             var notification = new Notification("" + bodyPo.title + "", {
+        //                 body: bodyPo.body,
+        //                 icon: '../../images/gf_logo_app.png'
+        //             });
+        //             notification.onclick = function () {
+        //                 notification.close();
+        //             };
+        //             parent.pullNoticeList();
+        //         } else if (bodyPo.notice == "FOLLOW_UP") {//随访通知,
+        //             parent.pullNoticeList();
+        //             var notification = new Notification("" + bodyPo.title + "", {
+        //                 body: bodyPo.body,
+        //                 icon: '../../images/gf_logo_app.png'
+        //             });
+        //             notification.onclick = function () {
+        //                 notification.close();
+        //             };
+        //             parent.pullNoticeList();
+        //         } else if (bodyPo.notice == "COOPERATION") {//协作邀请,
+        //             parent.pullNoticeList();
+        //             var notification = new Notification("" + bodyPo.title + "", {
+        //                 body: bodyPo.body,
+        //                 icon: '../../images/gf_logo_app.png'
+        //             });
+        //             notification.onclick = function () {
+        //                 notification.close();
+        //             };
+        //         } else if (bodyPo.notice == "BIZ_APPOINT") {//业务指派,
+        //             parent.pullNoticeList();
+        //             var notification = new Notification("" + bodyPo.title + "", {
+        //                 body: bodyPo.body,
+        //                 icon: '../../images/gf_logo_app.png'
+        //             });
+        //             notification.onclick = function () {
+        //                 notification.close();
+        //             };
+        //         } else if (bodyPo.notice == "CLINIC") {//新的诊室业务
+        //             parent.pullNoticeList();
+        //             var notification = new Notification("" + bodyPo.title + "", {
+        //                 body: bodyPo.body,
+        //                 icon: '../../images/gf_logo_app.png'
+        //             });
+        //             notification.onclick = function () {
+        //                 notification.close();
+        //             };
+        //         } else if (bodyPo.notice == "FOLLOW_UP_TABLE") {//随访计划表,
+        //             parent.pullNoticeList();
+        //             var notification = new Notification("" + bodyPo.title + "", {
+        //                 body: bodyPo.body,
+        //                 icon: '../../images/gf_logo_app.png'
+        //             });
+        //             notification.onclick = function () {
+        //                 notification.close();
+        //             };
+        //         } else if (bodyPo.notice == "REFUND") {//退款通知
+        //             parent.pullNoticeList();
+        //             var notification = new Notification("" + bodyPo.title + "", {
+        //                 body: bodyPo.body,
+        //                 icon: '../../images/gf_logo_app.png'
+        //             });
+        //             notification.onclick = function () {
+        //                 notification.close();
+        //             };
+        //         } else if (bodyPo.notice == "CRVIDEO") {//视频回拨
+        //             parent.pullNoticeList();
+        //             var notification = new Notification("" + bodyPo.title + "", {
+        //                 body: bodyPo.body,
+        //                 icon: '../../images/gf_logo_app.png'
+        //             });
+        //             notification.onclick = function () {
+        //                 notification.close();
+        //             };
+        //         } else if (bodyPo.notice == "CLINIC_INVITED") {//诊室邀请
+        //             var bodyls = JSON.parse(IMessage.decode(new Uint8Array(res.data)).info.body);
+        //             var botest = bodyls.body;
+        //             var getParams = function (name) {
+        //                 var search = botest;
+        //                 var pattern = new RegExp("[?&]" + name + "\=([^&]+)", "g");
+        //                 var matcher = pattern.exec(search);
+        //                 var items = null;
+        //                 if (null != matcher) {
+        //                     try {
+        //                         items = decodeURIComponent(decodeURIComponent(matcher[1]));
+        //                     } catch (e) {
+        //                         try {
+        //                             items = decodeURIComponent(matcher[1]);
+        //                         } catch (e) {
+        //                             items = matcher[1];
+        //                         }
+        //                     }
+        //                 }
+        //                 return items;
+        //             };
+        //             var state = getParams("state");
+        //             if (state == "true") {
+        //                 // var notification = new Notification("诊室邀请", {
+        //                 //     body: IMessage.decode(new Uint8Array(res.data)).info.fromNickName+'邀请您医技协作',
+        //                 //     icon: '../../images/gf_logo_app.png'
+        //                 // });
+        //                 // notification.onclick = function() {
+        //                 //     notification.close();
+        //                 // };
+        //                 layer.open({
+        //                     type: 2,
+        //                     title: '诊室邀请',
+        //                     shadeClose: true,
+        //                     shade: 0,
+        //                     anim: 6,
+        //                     offset: 'rb',
+        //                     area: ['280px', '350px'],
+        //                     content: './page/components/listbox/invitation.html?' + botest + '&formname=' + IMessage.decode(new Uint8Array(res.data)).info.fromNickName //iframe的url
+        //                 });
+        //             } else {
+        //                 layer.closeAll();
+        //             }
 
-                }
-                return false;
-            } else {
-                content = dataone.info.body;
-            }
-            var cid = dataone.info.msgId;
-            var fromid = dataone.info.to;
-            var fromUserid = dataone.info.from;
-            var timestamp = dataone.info.clientTime;
-            var mine = false;
-            if (fromUserid == userId) {
-                mine = true;
-            }
-            if (userSeesion.indexOf(fromid) > -1) {
-                var type = 'group';
-            } else {
-                var type = 'firend';
-            }
-            var resdata = {
-                username: username //消息来源用户名
-                , avatar: interfaces + "/user/api/v2/public/download?downType=Head&secId=" + encodeBase64 + "&userId=" + dataone.info.from + "&layer=00&deType=HD"
-                , id: id //消息的来源ID（如果是私聊，则是用户id，如果是群聊，则是群组id）
-                , type: type //聊天窗口来源类型，从发送消息传递的to里面获取
-                , content: content //消息内容
-                , chatType: chatTypeT
-                , groupId: id //定义唯一的id方便你处理信息
-                , cid: cid //消息id，可不传。除非你要对消息进行一些操作（如撤回）
-                , mine: mine //是否我发送的消息，如果为true，则会显示在右方
-                , fromid: fromid //消息的发送者id（比如群组中的某个消息发送者），可用于自动解决浏览器多窗口时的一些问题
-                , timestamp: timestamp //服务端时间戳。注意：JS中的时间戳是精确到毫秒，如果你返回的是标准的 unix 时间戳，记得要 *1000
-            }
-            var seFromid = dataone.info.from;
-            var seBody = dataone.info.body;
-            var sEsessionId = layui.data('selectRoomState').sessionId;
-            var sEsessionIdt = layui.data('selectRoomStateT').sessionId;
-            var childNum = dataone.info.childMessageType;
+        //         }
+        //         return false;
+        //     } else {
+        //         content = odata.info.body;
+        //     }
+        //     var cid = odata.info.msgId;
+        //     var fromid = odata.info.to;
+        //     var fromUserid = odata.info.from;
+        //     var timestamp = odata.info.clientTime;
+        //     var mine = false;
+        //     if (fromUserid == userId) {
+        //         mine = true;
+        //     }
+        //     if (userSeesion.indexOf(fromid) > -1) {
+        //         var type = 'group';
+        //     } else {
+        //         var type = 'firend';
+        //     }
+        //     var resdata = {
+        //         username: username //消息来源用户名
+        //         , avatar: interfaces + "/user/api/v2/public/download?downType=Head&secId=" + encodeBase64 + "&userId=" + odata.info.from + "&layer=00&deType=HD"
+        //         , id: id //消息的来源ID（如果是私聊，则是用户id，如果是群聊，则是群组id）
+        //         , type: type //聊天窗口来源类型，从发送消息传递的to里面获取
+        //         , content: content //消息内容
+        //         , chatType: chatTypeT
+        //         , groupId: id //定义唯一的id方便你处理信息
+        //         , cid: cid //消息id，可不传。除非你要对消息进行一些操作（如撤回）
+        //         , mine: mine //是否我发送的消息，如果为true，则会显示在右方
+        //         , fromid: fromid //消息的发送者id（比如群组中的某个消息发送者），可用于自动解决浏览器多窗口时的一些问题
+        //         , timestamp: timestamp //服务端时间戳。注意：JS中的时间戳是精确到毫秒，如果你返回的是标准的 unix 时间戳，记得要 *1000
+        //     }
+        //     var seFromid = odata.info.from;
+        //     var seBody = odata.info.body;
+        //     var sEsessionId = layui.data('selectRoomState').sessionId;
+        //     var sEsessionIdt = layui.data('selectRoomStateT').sessionId;
+        //     var childNum = odata.info.childMessageType;
 
-            if (dataone.info.chatType == 3) {//判断是否是用户发送过来的消息
-                if (fromid == sEsessionId) {
-                    try {
-                        parent.onliConert(fromNickNameL, seBody, childNum);
-                    } catch (e) {
+        //     if (odata.info.chatType == 3) {//判断是否是用户发送过来的消息
+        //         if (fromid == sEsessionId) {
+        //             try {
+        //                 parent.onliConert(fromNickNameL, seBody, childNum);
+        //             } catch (e) {
 
-                    }
-                } else {
+        //             }
+        //         } else {
 
-                    try {
-                        var chatboxsession = layui.data('chatboxsession').id.replace("M", "#").replace("-", ":");
-                        var selectRoomStateNw = layui.data('selectRoomStateNw').sessionId.replace("M", "#").replace("-", ":");
-                    } catch (e) {
+        //             try {
+        //                 var chatboxsession = layui.data('chatboxsession').id.replace("M", "#").replace("-", ":");
+        //                 var selectRoomStateNw = layui.data('selectRoomStateNw').sessionId.replace("M", "#").replace("-", ":");
+        //             } catch (e) {
 
-                    }
-                    if (selectRoomStateNw == dataone.info.to) {
-                        try {
-                            parent.onliConertp(fromNickNameL, seBody, childNum);
-                        } catch (e) {
+        //             }
+        //             if (selectRoomStateNw == odata.info.to) {
+        //                 try {
+        //                     parent.onliConertp(fromNickNameL, seBody, childNum);
+        //                 } catch (e) {
 
-                        }
-                    }
-                    if (chatboxsession == dataone.info.to) {
-                        console.log(dataone.info.to);
-                        parent.chatKu(dataone.info.body, dataone.info.serverTime);
-                    }
-                    var notification = new Notification("" + dataone.info.fromNickName + "", {
-                        body: "我已填好问诊表，请医生查看",
-                        icon: '../../images/gf_logo_app.png'
-                    });
-                    notification.onclick = function () {
-                        notification.close();
-                    };
-                    parent.rendcoles(dataone.info.to.replace("#", "M").replace(":", "-"))
-                }
-            } else {
-                try {
-                    var selectRoomStateNw = layui.data('selectRoomStateNw').sessionId.replace("M", "#").replace("-", ":");
-                } catch (e) {
+        //                 }
+        //             }
+        //             if (chatboxsession == odata.info.to) {
+        //                 console.log(odata.info.to);
+        //                 parent.chatKu(odata.info.body, odata.info.serverTime);
+        //             }
+        //             var notification = new Notification("" + odata.info.fromNickName + "", {
+        //                 body: "我已填好问诊表，请医生查看",
+        //                 icon: '../../images/gf_logo_app.png'
+        //             });
+        //             notification.onclick = function () {
+        //                 notification.close();
+        //             };
+        //             parent.rendcoles(odata.info.to.replace("#", "M").replace(":", "-"))
+        //         }
+        //     } else {
+        //         try {
+        //             var selectRoomStateNw = layui.data('selectRoomStateNw').sessionId.replace("M", "#").replace("-", ":");
+        //         } catch (e) {
 
-                }
-                if (selectRoomStateNw == dataone.info.to) {
-                    try {
-                        parent.onliConertp(fromNickNameL, seBody, childNum);
-                    } catch (e) {
+        //         }
+        //         if (selectRoomStateNw == odata.info.to) {
+        //             try {
+        //                 parent.onliConertp(fromNickNameL, seBody, childNum);
+        //             } catch (e) {
 
-                    }
-                } else {
-                    if (userSeesion.indexOf(fromid) > -1) {
-                        layim.getMessage(resdata); //res.data即你发送消息传递的数据（阅读：监听发送的消息）
-                        return false;
-                    }
-                }
-            }
-        } else {
-            //判断当前接受的会话是否在当前列表中
-            console.log("b");
-            var msgId = IMessage.decode(new Uint8Array(res.data)).info.msgId;
-            var Iessage = {
-                RequestType: 106,
-                ticket: localTest.ticket,
-                status: {
-                    state: true,
-                    msgId: msgId, //客户端上接收到最后一条消息的ID号
-                    sequence: layui.data('sequence').number //客户端上发送最后一条消息的序号
-                }
-            }
-            sendIMessage(Iessage);
-            try {
-                var bodyls = JSON.parse(IMessage.decode(new Uint8Array(res.data)).info.body);
-                var botest = bodyls.body;
-                var bodyPo = JSON.parse(IMessage.decode(new Uint8Array(res.data)).info.body);
-                var childMessageType = IMessage.decode(new Uint8Array(res.data)).info.childMessageType;
-                if (childMessageType == 21) {
-                    // var notification = new Notification(""+bodyPo.title+"", {
-                    //     body: bodyPo.body,
-                    //     icon: '../../images/gf_logo_app.png'
-                    // });
-                    // notification.onclick = function() {
-                    //     notification.close();
-                    // };
-                    parent.pullNoticeList();
-                }
+        //             }
+        //         } else {
+        //             if (userSeesion.indexOf(fromid) > -1) {
+        //                 layim.getMessage(resdata); //res.data即你发送消息传递的数据（阅读：监听发送的消息）
+        //                 return false;
+        //             }
+        //         }
+        //     }
+        // } else {
+        //     //判断当前接受的会话是否在当前列表中
+        //     console.log("b");
+        //     var msgId = IMessage.decode(new Uint8Array(res.data)).info.msgId;
+        //     var Iessage = {
+        //         RequestType: 106,
+        //         ticket: localTest.ticket,
+        //         status: {
+        //             state: true,
+        //             msgId: msgId, //客户端上接收到最后一条消息的ID号
+        //             sequence: layui.data('sequence').number //客户端上发送最后一条消息的序号
+        //         }
+        //     }
+        //     sendMessage(Iessage);
+        //     try {
+        //         var bodyls = JSON.parse(IMessage.decode(new Uint8Array(res.data)).info.body);
+        //         var botest = bodyls.body;
+        //         var bodyPo = JSON.parse(IMessage.decode(new Uint8Array(res.data)).info.body);
+        //         var childMessageType = IMessage.decode(new Uint8Array(res.data)).info.childMessageType;
+        //         if (childMessageType == 21) {
+        //             // var notification = new Notification(""+bodyPo.title+"", {
+        //             //     body: bodyPo.body,
+        //             //     icon: '../../images/gf_logo_app.png'
+        //             // });
+        //             // notification.onclick = function() {
+        //             //     notification.close();
+        //             // };
+        //             parent.pullNoticeList();
+        //         }
 
-            } catch (e) {
+        //     } catch (e) {
 
-            }
-            var getParams = function (name) {
-                var search = botest;
-                var pattern = new RegExp("[?&]" + name + "\=([^&]+)", "g");
-                var matcher = pattern.exec(search);
-                var items = null;
-                if (null != matcher) {
-                    try {
-                        items = decodeURIComponent(decodeURIComponent(matcher[1]));
-                    } catch (e) {
-                        try {
-                            items = decodeURIComponent(matcher[1]);
-                        } catch (e) {
-                            items = matcher[1];
-                        }
-                    }
-                }
-                return items;
-            };
-            var state = getParams("state");
-            if (state == "true") {
-                parent.invitation++;
-                // var notification = new Notification("诊室邀请", {
-                //     body: IMessage.decode(new Uint8Array(res.data)).info.fromNickName+'邀请您医技协作',
-                //     icon: '../../images/gf_logo_app.png'
-                // });
-                // notification.onclick = function() {
-                //     notification.close();
-                // };
-                if (parent.invitation == 1) {
-                    layer.open({
-                        type: 2,
-                        title: '诊室邀请',
-                        shadeClose: true,
-                        shade: 0,
-                        anim: 6,
-                        offset: 'rb',
-                        area: ['280px', '350px'],
-                        content: './page/components/listbox/invitation.html?' + botest + '&formname=' + IMessage.decode(new Uint8Array(res.data)).info.fromNickName, //iframe的url
-                        cancel: function (index, layero) {
-                            parent.invitation = "";
-                        }
-                    });
-                }
-            } else if (state == "false") {
-                parent.invitation = "";
-                layer.closeAll();
-            }
-        }
+        //     }
+        //     var getParams = function (name) {
+        //         var search = botest;
+        //         var pattern = new RegExp("[?&]" + name + "\=([^&]+)", "g");
+        //         var matcher = pattern.exec(search);
+        //         var items = null;
+        //         if (null != matcher) {
+        //             try {
+        //                 items = decodeURIComponent(decodeURIComponent(matcher[1]));
+        //             } catch (e) {
+        //                 try {
+        //                     items = decodeURIComponent(matcher[1]);
+        //                 } catch (e) {
+        //                     items = matcher[1];
+        //                 }
+        //             }
+        //         }
+        //         return items;
+        //     };
+        //     var state = getParams("state");
+        //     if (state == "true") {
+        //         parent.invitation++;
+        //         // var notification = new Notification("诊室邀请", {
+        //         //     body: IMessage.decode(new Uint8Array(res.data)).info.fromNickName+'邀请您医技协作',
+        //         //     icon: '../../images/gf_logo_app.png'
+        //         // });
+        //         // notification.onclick = function() {
+        //         //     notification.close();
+        //         // };
+        //         if (parent.invitation == 1) {
+        //             layer.open({
+        //                 type: 2,
+        //                 title: '诊室邀请',
+        //                 shadeClose: true,
+        //                 shade: 0,
+        //                 anim: 6,
+        //                 offset: 'rb',
+        //                 area: ['280px', '350px'],
+        //                 content: './page/components/listbox/invitation.html?' + botest + '&formname=' + IMessage.decode(new Uint8Array(res.data)).info.fromNickName, //iframe的url
+        //                 cancel: function (index, layero) {
+        //                     parent.invitation = "";
+        //                 }
+        //             });
+        //         }
+        //     } else if (state == "false") {
+        //         parent.invitation = "";
+        //         layer.closeAll();
+        //     }
+        // }
 
     }
     //global_callback(e.data, IMessage)
@@ -941,5 +957,10 @@ function getServerTime(){
 function getSequence(){
     return sequence;
 }
+function getMsgId(){
+    return oMsgId;
+}
+console.log(getSequence())
 
-export default { sendMessage, initWebSocket,getContent,getTicket,getServerTime,getSequence }
+
+export default { sendMessage, initWebSocket,getContent,getTicket,getServerTime,getSequence,getMsgId }

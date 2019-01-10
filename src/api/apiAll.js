@@ -602,9 +602,9 @@ export const fetchSessionMembers = (query,data)=>{//14.5.获取会话成员列�
         method:'post',
         url:`${apiList.fetchSessionMembers}?token=${query.token}`,
         data:data,
-        headers:{
-            sign
-        }
+        // headers:{
+        //     sign
+        // }
     })
 }
 export const userSendMessageId = (query,data)=>{//14.6.用户接收到消息后更新同步

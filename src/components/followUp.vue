@@ -11,10 +11,10 @@
                 <div v-show="0==oMainShow">
                     <div class="mainTab">
                         <div>
-                            <selftag :inData="oTab"></selftag>
-                            <selftag :inData="oTab"></selftag>
-                            <selftag :inData="oTab"></selftag>
-                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab1"></selftag>
+                            <selftag :inData="oTab2"></selftag>
+                            <selftag :inData="oTab3"></selftag>
+                            <selftag :inData="oTab4"></selftag>
                         </div>
 
                         <search @searchValue="searchChange"></search>
@@ -151,7 +151,7 @@ export default {
             oMainShow: 0,
             indexTab2: 0,
             oDocThis: 0, //医生端tab切换
-            oVisable: false,
+            oVisable: true,
             oconsulVisable: true,
             followDocTab: [
                 {
@@ -211,15 +211,69 @@ export default {
                     }
                 ]
             },
-            oTab: {
+            oTab1: {
                 more: true,
-                title: "日期",
+                title: "科室",
                 list: [
                     {
                         text: "全部"
                     },
                     {
                         text: "今日"
+                    }
+                ]
+            }, //管理端tab
+             oTab2: {
+                more: true,
+                title: "类型",
+                list: [
+                    {
+                        text: "全部"
+                    },
+                    {
+                        text: "门诊随访"
+                    },
+                    {
+                        text: "住院随访"
+                    }
+                ]
+            }, //管理端tab
+             oTab3: {
+                more: true,
+                title: "方式",
+                list: [
+                    {
+                        text: "全部"
+                    },
+                    {
+                        text: "App"
+                    },
+                    {
+                        text: "电话"
+                    }
+                ]
+            }, //管理端tab
+             oTab4: {
+                more: true,
+                title: "内容",
+                list: [
+                    {
+                        text: "全部"
+                    },
+                    {
+                        text: "提醒"
+                    },
+                    {
+                        text: "问卷"
+                    },
+                    {
+                        text: "健康知识"
+                    },
+                    {
+                        text: "疾病自评"
+                    },
+                    {
+                        text: "设备检测"
                     }
                 ]
             }, //管理端tab
