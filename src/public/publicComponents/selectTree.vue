@@ -9,9 +9,9 @@
             @click.native="isShow">
         </el-input>
         <div class="list">
-            <div class="list-inner">
+            <div class="list-inner" :class="show?'list-inner-show':'list-inner-hiddle'">
                 <el-tree v-show="show"
-                    :class="show?'list-inner-show':'list-inner-hiddle'"
+                    
                     :data="inData"
                     show-checkbox
                     node-key="id"
@@ -138,7 +138,9 @@ export default {
 }
 .list-inner{
     position: relative;
-    transition: 1s;
+    transition: 2s;
+    overflow: hidden;
+    border-radius: 4px;
 }
 .list-inner-show{
     opacity: 1;

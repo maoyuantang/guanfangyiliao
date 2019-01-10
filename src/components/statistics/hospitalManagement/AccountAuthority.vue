@@ -10,7 +10,7 @@
            <div class="left-model" v-show="tabPosition==='left'">
                <div class="left-model-head">
                     <div class="left-model-head-flag">
-                        <selftag v-model="leftListDepartment" @reback="console.log('i is fish')"></selftag>
+                        <selftag v-model="leftListDepartment" @reback="test111"></selftag>
                     </div>
                     <div class="left-model-head-operating">
                         <el-input
@@ -92,7 +92,12 @@
                         <div class="select-item-list">
                             <span v-for="(item,index) in DoctorBusinessScopeSelect" :key="index" class="select-item-span">{{item.label}}</span>
                         </div>
-                        <div class="select-layer">
+                         <div class="select-layer">
+                            <span class="leyer-item-name">科室管理权限范围:</span>
+                            <selectTree :inData="DepartmentManagementAuthority" @reback="getDoctorBusinessScopeSelect"></selectTree>
+                            <Icon type="md-star" />
+                        </div>
+                        <!-- <div class="select-layer">
                             <span class="leyer-item-name">科室管理权限范围:</span>
                             <el-select v-model="DepartmentManagementAuthoritySelect" placeholder="本账号范围内可多选" multiple size="mini"  style="flex:1">
                                 <el-option
@@ -103,7 +108,7 @@
                                 </el-option>
                             </el-select>
                             <Icon type="md-star" />
-                        </div>
+                        </div> -->
                         <div class="select-item-list">
                            <span v-for="(item,index) in DepartmentManagementAuthoritySelect" :key="index" class="select-item-span">{{item}}</span>
                         </div>
@@ -214,7 +219,7 @@
                     title:'科室',
                     list:[
                         {
-                            text:'全部'
+                            text:'全部',
                         },
                         {
                             text:'急诊科'
@@ -635,9 +640,9 @@
                 num===1||num===2?this.otrue=true:this.otrue=false;
                 this.isAdd = num;
             },
-            test111(){
+            test111(data){
                
-                alert(45454)
+                console.log(data)
             }
         },
         components:{
@@ -745,13 +750,13 @@
         width: 100% !important; 
     }
     .select-item-list{
-        height: 0.86rem;
+        min-height: 0.86rem;
         padding-left: 0.96rem;
         padding-right: 0.52rem;
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        /* justify-content: space-between; */
+        overflow: hidden;
     }
     .select-item-span{
         font-family: var(--fontFamily3);
