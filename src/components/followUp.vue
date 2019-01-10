@@ -12,9 +12,9 @@
                     <div class="mainTab">
                         <div>
                             <selftag :inData="oTab1"></selftag>
-                            <selftag :inData="oTab2"></selftag>
-                            <selftag :inData="oTab3"></selftag>
-                            <selftag :inData="oTab4"></selftag>
+                            <selftag :inData="oTab2" @reback="getOTab2"></selftag>
+                            <selftag :inData="oTab3" @reback="getOTab3"></selftag>
+                            <selftag :inData="oTab4" @reback="getOTab4"></selftag>
                         </div>
 
                         <search @searchValue="searchChange"></search>
@@ -54,8 +54,8 @@
                 <div v-show="2==oMainShow">
                     <div class="mainTab">
                         <div>
-                            <selftag :inData="oTab"></selftag>
-                            <selftag :inData="oTab"></selftag>
+                            <selftag :inData="oTab1"></selftag>
+                            <selftag :inData="oTab2"></selftag>
                         </div>
 
                         <search @searchValue="searchChange"></search>
@@ -149,6 +149,10 @@ export default {
     },
     data() {
         return {
+            odepartment: "",
+            otype: "",
+            oTheWay: "",
+            oContent: "", //随访筛选
             odocVisable: 0, //医生端切换内容
             oMainShow: 0,
             indexTab2: 0,
@@ -226,7 +230,7 @@ export default {
                 ]
             }, //管理端tab
             oTab2: {
-                more: true,
+                more: false,
                 title: "类型",
                 list: [
                     {
@@ -244,7 +248,7 @@ export default {
                 ]
             }, //管理端tab
             oTab3: {
-                more: true,
+                more: false,
                 title: "方式",
                 list: [
                     {
@@ -262,7 +266,7 @@ export default {
                 ]
             }, //管理端tab
             oTab4: {
-                more: true,
+                more: false,
                 title: "内容",
                 list: [
                     {
@@ -332,31 +336,71 @@ export default {
     async created() {
         this.circularData(this.odata["header"]);
         this.getFoList();
+        this.getfamiliList()
     },
     mounted() {},
     methods: {
+        getOTab2(data) {
+            this.otype = data.index.value;
+            this.getFoList();
+        },
+        getOTab3(data) {
+            this.oTheWay = data.index.value;
+            this.getFoList();
+        },
+        getOTab4(data) {
+            this.oContent = data.index.value;
+            this.getFoList();
+        },
         //获取随访列表
         async getFoList() {
-            let _this=this;
+            let _this = this;
             const options = {
                 token: this.userState.token,
                 search: this.searchData,
-                department: "",
-                type: "",
-                mode: "",
-                content: "",
+                department: this.odepartment,
+                type: this.otype,
+                mode: this.oTheWay,
+                content: this.oContent,
                 pageNum: 1,
                 pageSize: 10
             };
             const res = await managerGetPlanList(options);
             if (res.data && res.data.errCode === 0) {
                 $.each(res.data.body.header, function(key, value) {
-                     _this.columns.push({
+                    _this.columns.push({
                         prop: key,
                         label: value
                     });
                 });
-                _this.tableDataList=res.data.body.data2.list
+                _this.tableDataList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },//获取家用设备列表
+        async getfamiliList() {
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                search: this.searchData,
+                department: this.odepartment,
+                houseDeviceType: this.otype,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await managerGetPlanList(options);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body.header, function(key, value) {
+                    _this.columns.push({
+                        prop: key,
+                        label: value
+                    });
+                });
+                _this.tableDataList = res.data.body.data2.list;
             } else {
                 //失败
                 this.$notify.error({
