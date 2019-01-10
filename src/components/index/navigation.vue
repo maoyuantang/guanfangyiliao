@@ -93,22 +93,59 @@
 						code:'100000'
 					},
 				];
-				const newArr = [
-					{
-						name:'首页',
-						select:true,
-						path:'/',
-						code:'0'
-					},
-				];
-				for(const i of allList){
-					for(const j of this.$store.state.user.userInfo.hasAuth){
-						if(i.code === j.authorityId){
-							newArr.push(i);
+				let items = [];
+				if(this.$store.state.user.userInfo.rooter){//超级管理员
+					items = [
+						{
+							name:'医院管理',
+							select:true,
+							path:'/',
+							code:'0'
+						},
+						{
+							name:'远程会诊系统',
+							select:false,
+							path:'/cloudManagement',
+							code:'0'
+						},
+					];
+					
+				}else{
+					items = [
+						{
+							name:'首页',
+							select:true,
+							path:'/',
+							code:'0'
+						},
+					];
+					for(const i of allList){
+						for(const j of this.$store.state.user.userInfo.hasAuth){
+							if(i.code === j.authorityId){
+								items.push(i);
+							}
 						}
 					}
+					
 				}
-				return newArr;
+				return items;
+				// /********** */
+				// const newArr = [
+				// 	{
+				// 		name:'首页',
+				// 		select:true,
+				// 		path:'/',
+				// 		code:'0'
+				// 	},
+				// ];
+				// for(const i of allList){
+				// 	for(const j of this.$store.state.user.userInfo.hasAuth){
+				// 		if(i.code === j.authorityId){
+				// 			newArr.push(i);
+				// 		}
+				// 	}
+				// }
+				// return newArr;
 			},
 			
 		},

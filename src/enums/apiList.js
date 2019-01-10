@@ -7,6 +7,7 @@ export default {
     initializeTheCreationOfHospital:'/m/v1/api/basics/hospital/init',//初始化创建医院
     userList:'/m/v1/api/user/list',//首页-账号及权限-用户列表
     fetchHospitalDepts:'/m/v1/api/basics/hospital/fetchHospitalDepts',//2.2.获取医院科室列表
+    fetchDoctorSubSystems:'/m/v1/api/basics/hospital/fetchDoctorSubSystems',//3.2.1.首页-医院医生业务子系统列表（新）
     createUser:'/m/v1/api/user/user/createUser',//3.3首页-账号及权限-创建用户
     updateUser:'/m/v1/api/user/user/updateUser',//3.4首页-账号及权限-编辑用户
     deleteUser:'/m/v1/api/user/user/deleteUser',//3.5首页-账号及权限-删除用户
@@ -63,4 +64,9 @@ export default {
     fetchNoticeInfo:'/m/v1/api/im/sys/message/fetchNoticeInfo',//14.8.获取通知列表
     fetchSyncMaxVersionId:'/m/v1/api/im/sys/message/fetchSyncMaxVersionId',//14.9.获取最大同步指令的版本号
     fetchSyncInfo:'/m/v1/api/im/sys/message/fetchSyncInfo',//14.10.拉取同步消息列表
+    synergyManageList:'/m/v1/api/synergy/synergyManage/list',//15.1首页-账号及权限-院外协作列表
+    synergyManageInvite:'/m/v1/api/synergy/synergyManage/invite',//15.2首页-账号及权限-院外协作邀请
+    synergyManageUpdate:'/m/v1/api/synergy/synergyManage/update',//15.3首页-账号及权限-更新协作范围
+    synergyManageDelete:'/m/v1/api/synergy/synergyManage/delete',//15.4首页-账号及权限-删除协作医生
+
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-		<div class="index-left" v-if="!userInfo.rooter">
+		<div class="index-left">
 			<navigation></navigation>
 		</div>
 		<div class="index-right">

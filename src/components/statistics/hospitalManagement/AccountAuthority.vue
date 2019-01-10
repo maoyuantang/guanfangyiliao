@@ -46,86 +46,67 @@
            </div>
         </el-tabs>
         <el-dialog class="startGroup" title="新增" :visible.sync="otrue" width="602px" hight="607px" center>
-        <!-- <markLayer v-if="isAdd===1||isAdd===2"> -->
-           <!-- <div class="mark-content"  @click.native="alertStatus(0)"> -->
                 <div class="mark-add" v-if="isAdd===1">
                     <!-- <p class="mark-add-title">新增<p> -->
                     <div class="add-module">
                         <div class="input-layer">
                             <div class="leyer-item">
                                 <span class="leyer-item-name">姓名:</span>
-                                <el-input  placeholder="" size="mini"></el-input>
+                                <el-input  placeholder="" size="mini" v-model="addData.name"></el-input>
                                 <Icon type="md-star" />
                             </div>
                             <div class="leyer-item">
                                 <span class="leyer-item-name">电话:</span>
-                                <el-input  placeholder="关联后可使用手机号" size="mini"></el-input>
+                                <el-input  placeholder="关联后可使用手机号" size="mini" v-model="addData.phone"></el-input>
                             </div>
                         </div>
                         <div class="input-layer">
                             <div class="leyer-item">
                                 <span class="leyer-item-name">账号:</span>
-                                <el-input  placeholder="" size="mini"></el-input>
+                                <el-input  placeholder="" size="mini" v-model="addData.account"></el-input>
                                 <Icon type="md-star" />
                             </div>
                             <div class="leyer-item">
                                 <span class="leyer-item-name">密码:</span>
-                                <el-input  placeholder="" size="mini"></el-input>
+                                <el-input  placeholder="" size="mini" v-model="addData.passwd"></el-input>
                                 <Icon type="md-star" />
                             </div>
                         </div>
-                        <div class="select-layer">
+                        <div class="select-layer" style="margin-bottom:0.18rem">
                             <span class="leyer-item-name">科室:</span>
-                            <el-select v-model="addData.deptIds" placeholder="本账号范围内可多选" multiple size="mini"  style="flex:1">
+                            <el-select v-model="deptIds" placeholder="本账号范围内可多选" multiple size="mini"  style="flex:1">
                                 <el-option
-                                    v-for="item in departmentlist"
-                                    :key="item.name"
-                                    :label="item.name"
-                                    :value="item.name">
+                                    v-for="(item) in departmentlist"
+                                    :key="item.deptId"
+                                    :label="item.deptName"
+                                    :value="item.deptName">
                                 </el-option>
                             </el-select>
                             <Icon type="md-star" />
                         </div>
                         <div class="select-layer">
                             <span class="leyer-item-name">医生业务范围:</span>
-                            <selectTree v-model="DoctorBusinessScope"></selectTree>
+                            <selectTree :inData="DoctorBusinessScope" @reback="getDoctorBusinessScopeSelect"></selectTree>
                             <Icon type="md-star" />
                         </div>
-
-
-
-
+                        <div class="select-item-list">
+                            <span v-for="(item,index) in DoctorBusinessScopeSelect" :key="index" class="select-item-span">{{item.label}}</span>
+                        </div>
                         <div class="select-layer">
                             <span class="leyer-item-name">科室管理权限范围:</span>
-                            <el-select v-model="addData.deptIds" placeholder="本账号范围内可多选" multiple size="mini"  style="flex:1">
+                            <el-select v-model="DepartmentManagementAuthoritySelect" placeholder="本账号范围内可多选" multiple size="mini"  style="flex:1">
                                 <el-option
-                                    v-for="item in departmentlist"
-                                    :key="item.name"
-                                    :label="item.name"
-                                    :value="item.name">
+                                    v-for="(item) in DepartmentManagementAuthority"
+                                    :key="item.subCode"
+                                    :label="item.subName"
+                                    :value="item.subName">
                                 </el-option>
                             </el-select>
                             <Icon type="md-star" />
                         </div>
-                        
-                        <!-- <div class="check-div">
-                            <p class="check-div-title">医生业务范围:<p>
-                            <div class="check-div-content">
-                                <div class="check-div-item" v-for="(item,index) in DoctorBusinessScope" :key="index" :class="item.border?'has-border':''">
-                                    <span>{{item.title}}</span>
-                                        <el-checkbox :label="item2.name" v-for="(item2,index2) in item.list" :key="index2" v-model="item2.select"></el-checkbox>
-                                </div>
-                            </div>	
+                        <div class="select-item-list">
+                           <span v-for="(item,index) in DepartmentManagementAuthoritySelect" :key="index" class="select-item-span">{{item}}</span>
                         </div>
-                        <div class="check-div">
-                            <p class="check-div-title">医生业务范围:<p>
-                            <div class="check-div-content">
-                                <div class="check-div-item" v-for="(item,index) in DepartmentManagementAuthority" :key="index" :class="item.border?'has-border':''">
-                                    <span>{{item.title}}</span>
-                                        <el-checkbox :label="item2.name" v-for="(item2,index2) in item.list" :key="index2" v-model="item2.select"></el-checkbox>
-                                </div>
-                            </div>	
-                        </div> -->
                     </div>	
                     <div class="sub-add"><el-button type="primary" size="mini"  @click.native="addSub">确定</el-button></div>	
                 </div>
@@ -159,26 +140,28 @@
                     </div>
                     <div class="mark-invite-sub"><el-button type="primary" size="mini" @click="inviteSub">确定</el-button></div>
                 </div>
-            <!-- </div> -->
-        <!-- </markLayer> -->
         </el-dialog>
 		远程教育系统
 	</div>
 </template>
 
 <script>
+    import { mapState } from 'vuex'
     import selftag from '../../../public/publicComponents/selftag.vue'
     import markLayer from '../../../public/publicComponents/markLayer.vue'
     import publicList from '../../../public/publicComponents/publicList.vue'
     import selectTree from '../../../public/publicComponents/selectTree.vue'
-    import {fetchHospitalDepts} from '../../../api/apiAll.js'
+    import { fetchHospitalDepts , fetchDoctorSubSystems , hospitalDepartmentManagementSubsystemList , createUser } from '../../../api/apiAll.js'
     
 	export default {
         watch:{
-            leftListDepartment(n,o){
-                console.log(n)
-            }
         },
+        computed:{
+			...mapState({
+                userInfo:state => state.user.userInfo,
+                userSelfInfo:state => state.user.userSelfInfo
+			})
+		},
 		data () {
 			return {
                 addData:{//新增时，收集信息
@@ -186,12 +169,25 @@
                     phone:'',//电话
                     account:'',//账号
                     passwd:'',//密码 
-                    deptIds:[],//
+                   
                 },
-
-
-
-
+                deptIds:[],//科室数组 (已选择)
+                DoctorBusinessScope:[],//医生业务范围选项
+                DoctorBusinessScopeSelect:[],//‘医生业务范围’已选择项id
+                DepartmentManagementAuthority:[//科室管理权限范围选择项
+                    {name:'第一科'},
+					{name:'第2科'},
+					{name:'第3科'},
+					{name:'第4科'},
+					{name:'第5科'},
+					{name:'第6科'},
+					{name:'第7科'},
+					{name:'第8科'},
+                ],
+                DepartmentManagementAuthoritySelect:[],//‘科室管理权限范围’已选择项
+                departmentlist:[//科室列表
+					// {deptId:'',deptName:''}
+                ],
                 /********************************** */
                 groups:[
                     [
@@ -286,124 +282,6 @@
                     ]
                 },
                 isAdd:1,//1是新增弹窗，2是邀请弹窗，其余隐藏弹窗，建议选0
-                departmentlist:[//科室列表
-					{name:'第一科'},
-					{name:'第2科'},
-					{name:'第3科'},
-					{name:'第4科'},
-					{name:'第5科'},
-					{name:'第6科'},
-					{name:'第7科'},
-					{name:'第8科'},
-                ],
-                DoctorBusinessScope:[{////医生业务范围选项
-                    id: 1,
-                    label: '一级 24465',
-                    select:false,
-                    children: [{
-                        id: 3,
-                        label: '二级 2-1',
-                        select:false,
-                        children: [{
-                            id: 4456,
-                            label: '三级 3-1-1',
-                            select:false,
-                            children:[]
-                        }, {
-                            id: 5,
-                            label: '三级 3-1-2',
-                            select:false,
-                            children:[]
-                        }]
-                    }, {
-                        id: 2,
-                        label: '二级 2-2',
-                        select:false,
-                        children: [{
-                            id: 6,
-                            label: '三级 3-2-1',
-                            select:false,
-                            children:[]
-                        }, {
-                            id: 7,
-                            label: '三级 3-2-2',
-                            select:false,
-                            children:[]
-                            // disabled: true
-                        }]
-                    }]
-                }],
-                DepartmentManagementAuthority:[//科室管理权限范围
-					{
-						title:'',
-						border:false,
-						list:[
-							{
-								select:true,
-								name:'远程门诊'
-							},
-							{
-								select:true,
-								name:'健康档案'
-							},
-							{
-								select:true,
-								name:'移动查房'
-							}
-						]
-					},
-					{
-						title:' ',
-						border:false,
-						list:[
-							{
-								select:true,
-								name:'远程会诊'
-							},
-							{
-								select:true,
-								name:'远程教育'
-							},
-							{
-								select:true,
-								name:'终端管理'
-							}
-						]
-					},
-					{
-						title:'',
-						border:false,
-						list:[
-							{
-								select:true,
-								name:'远程协作'
-							},
-							{
-								select:true,
-								name:'分级诊疗'
-							},
-							{
-								select:true,
-								name:'家医服务'
-							}
-						]
-					},
-					{
-						title:'',
-						border:false,
-						list:[
-							{
-								select:true,
-								name:'智能随访'
-							},
-							{
-								select:true,
-								name:'双向转诊'
-							},
-							
-						]
-					}
-                ],
                 inviteNumber:'',
                 CollaborationScopeOk:null,
                 CollaborationScope:[//协作范围科室选择列表
@@ -593,17 +471,161 @@
             }
         },
 		methods:{
+            /**
+             * 取出嵌套数组需要的值
+             */
+            iterationArr(a,b){
+                "use strict"
+                if(Object.prototype.toString.call(a)!=="[object Array]")return{ok:false,mag:'传参需要是数组',data:null}
+                const arr = [];
+                const setFun = data =>{
+                    for(const i of data){
+                        for(const j of b){
+                            if(j == i.id){
+                                arr.push(i)
+                            }
+                        }
+                        if(i.children.length>0){
+                            setFun(i.children)
+                        }
+                    }
+                }
+                setFun(a);
+                console.log(arr)
+                // return arr
+                return{ok:true,mag:'',data:arr};
+            },
+
+            /**
+             * 设置‘医生业务范围’已选择项
+             */
+            getDoctorBusinessScopeSelect(data){
+                const result = this.iterationArr(this.DoctorBusinessScope,data);
+                this.DoctorBusinessScopeSelect = result.ok?result.data:[];
+                // const result = this.iterationArr(data);
+                // this.DoctorBusinessScopeSelect = result.ok?result.data:[];
+            },
+
+            /**
+             * 检查新增用户数据是否正确
+             */
+            checkAddInfo(){},
+
+            /**
+             * 获取新增用户提交数据
+             */
+            getAddSubData(){
+                const options = {//提交数据
+                    account:this.addData.account,
+                    name:this.addData.name,
+                    passwd:this.addData.passwd,
+                    deptIds:[],
+                    phone:this.addData.phone,
+                    authorizes:[]
+                };
+                const deptIds = [];//已选中的科室列表。element-ui 不能绑定json，只能按照其中一个属性获取到该json,这个过程比较恶心，有众多for循环
+                const arr = [];//已选中的科室管理权限范围列表。element-ui 不能绑定json，只能按照其中一个属性获取到该json,这个过程比较恶心，有众多for循环
+                for(const i of this.DoctorBusinessScopeSelect){//这个'医生业务范围'由于自己写的（非element-ui），所以可以直接获取json，直接循环取出值
+                    options.authorizes.push({
+                        type:1,
+                        authorityId:i
+                    })
+                }
+                for(const i of this.deptIds){//获取被选中的科室列表
+                    for(const j of this.departmentlist){
+                        j.deptName===i?deptIds.push(j):null;
+                    }
+                }
+                for(const i of deptIds){//取出被选中的科室列表的id，放入需要的数据组
+                    options.deptIds.push(i.deptId)
+                }
+                for(const i of this.DepartmentManagementAuthoritySelect){//取出被选中的科室管理权限范围列表，放入需要的数据组
+                    for(const j of this.DepartmentManagementAuthority){
+                        j.subName===i?arr.push(j):null;
+                    }
+                }
+                for(const i of arr){
+                    options.authorizes.push({
+                        type:2,
+                        authorityId:i.subCode
+                    })
+                }
+                console.log(options)
+                return options;
+            },
+            /**
+             * 新增用户
+             */
+            async addSub(){
+                console.log('新增')
+                const postData = this.getAddSubData();
+                const res = await createUser(postData);
+                console.log(res)
+            },
             
+            /**
+             * 获取科室列表
+             */
+            async getDepartmentList(){
+                const res = await fetchHospitalDepts({
+                    orgCode:this.userSelfInfo.orgCode
+                });
+                if(res.data.errCode === 0){
+                    this.departmentlist = res.data.body;
+                    // console.log(this.departmentlist)
+                }else{
+                    this.$notify.error({
+                        title: '数据获取失败',
+                        message: res.data.errMsg
+                    });
+                }
+            },
 
+            /**
+             * 获取 3.2.1.首页-医院医生业务子系统列表（新）
+             * 
+             */
+            async fetchDoctorSubSystems(){
+                const res = await fetchDoctorSubSystems({
+                    token:this.userInfo.token,
+                    orgCode:this.userSelfInfo.orgCode
+                });
+                if(res.data.errCode === 0){
+                    this.DoctorBusinessScope = res.data.body;
+                }else{
+                    this.$notify.error({
+                        title: '数据获取失败',
+                        message: res.data.errMsg
+                    });
+                }
+            },
 
+            /**
+             * 获取 3.1.首页-医院科室管理子系统列表
+             * 
+             */
+            async hospitalDepartmentManagementSubsystemList(){
+                const res = await hospitalDepartmentManagementSubsystemList({
+                    token:this.userInfo.token,
+                    orgCode:this.userSelfInfo.orgCode
+                });
+                if(res.data.errCode === 0){
+                    this.DepartmentManagementAuthority = res.data.body;
+                    console.log( this.DepartmentManagementAuthority)
+                }else{
+                    this.$notify.error({
+                        title: '数据获取失败',
+                        message: res.data.errMsg
+                    });
+                }
+               
+            },
             /******************** */
             gitIndex(index){
-                console.log(456)
-                console.log(index)
+                // console.log(456)
+                // console.log(index)
             },
-            addSub(){
-                console.log('新增')
-            },
+            
             inviteSub(){
 
                 console.log('邀请')
@@ -625,7 +647,10 @@
             selectTree
         },
 		async created(){
-            console.log(this.$store.state.user)
+            this.getDepartmentList();
+            this.fetchDoctorSubSystems();
+            this.hospitalDepartmentManagementSubsystemList()
+            // console.log(this.$store.state.user)
 		}
 	}
 </script>
@@ -718,6 +743,22 @@
     }
     .select-div .el-radio-group label .el-radio-button__inner{
         width: 100% !important; 
+    }
+    .select-item-list{
+        height: 0.86rem;
+        padding-left: 0.96rem;
+        padding-right: 0.52rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        /* justify-content: space-between; */
+    }
+    .select-item-span{
+        font-family: var(--fontFamily3);
+        color: var(--color7);
+        letter-spacing: 0;
+        line-height: 0.27rem;
+        margin-right: 0.25rem;
     }
     /******************************************************/
     .mark-content{
