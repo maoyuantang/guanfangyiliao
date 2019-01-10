@@ -68,7 +68,7 @@
                             </div>
                             <div class="leyer-item">
                                 <span class="leyer-item-name">密码:</span>
-                                <el-input  placeholder="" size="mini" v-model="addData.passwd"></el-input>
+                                <el-input  placeholder="" size="mini" v-model="addData.passwd" type="password"></el-input>
                                 <Icon type="md-star" />
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                         </div>
                          <div class="select-layer">
                             <span class="leyer-item-name">科室管理权限范围:</span>
-                            <selectTree :inData="DepartmentManagementAuthority" @reback="getDoctorBusinessScopeSelect"></selectTree>
+                            <selectTree :inData="DepartmentManagementAuthority" @reback="getDepartmentManagementAuthoritySelect"></selectTree>
                             <Icon type="md-star" />
                         </div>
                         <!-- <div class="select-layer">
@@ -110,7 +110,7 @@
                             <Icon type="md-star" />
                         </div> -->
                         <div class="select-item-list">
-                           <span v-for="(item,index) in DepartmentManagementAuthoritySelect" :key="index" class="select-item-span">{{item}}</span>
+                           <span v-for="(item,index) in DepartmentManagementAuthoritySelect" :key="index" class="select-item-span">{{item.subName}}</span>
                         </div>
                     </div>	
                     <div class="sub-add"><el-button type="primary" size="mini"  @click.native="addSub">确定</el-button></div>	
@@ -180,37 +180,12 @@
                 DoctorBusinessScope:[],//医生业务范围选项
                 DoctorBusinessScopeSelect:[],//‘医生业务范围’已选择项id
                 DepartmentManagementAuthority:[//科室管理权限范围选择项
-                    {name:'第一科'},
-					{name:'第2科'},
-					{name:'第3科'},
-					{name:'第4科'},
-					{name:'第5科'},
-					{name:'第6科'},
-					{name:'第7科'},
-					{name:'第8科'},
                 ],
                 DepartmentManagementAuthoritySelect:[],//‘科室管理权限范围’已选择项
                 departmentlist:[//科室列表
 					// {deptId:'',deptName:''}
                 ],
                 /********************************** */
-                groups:[
-                    [
-                        {name:1212},
-                        {name:'ghjds'},
-                        {name:'ujio'}
-                    ],
-                    [
-                        {name:1212},
-                        {name:'ghjds'},
-                        {name:'ujio'}
-                    ],
-                    [
-                        {name:1212},
-                        {name:'ghjds'},
-                        {name:'ujio'}
-                    ],
-                ],
                 otrue:false,
                 tabPosition: 'left',
                 leftListDepartment:{//本院人员的科室标签列表
@@ -510,7 +485,11 @@
                 // const result = this.iterationArr(data);
                 // this.DoctorBusinessScopeSelect = result.ok?result.data:[];
             },
-
+            getDepartmentManagementAuthoritySelect(data){
+                const result = this.iterationArr(this.DepartmentManagementAuthority,data);
+                this.DepartmentManagementAuthoritySelect = result.ok?result.data:[];
+                console.log(this.DepartmentManagementAuthoritySelect)
+            },
             /**
              * 检查新增用户数据是否正确
              */
@@ -529,11 +508,17 @@
                     authorizes:[]
                 };
                 const deptIds = [];//已选中的科室列表。element-ui 不能绑定json，只能按照其中一个属性获取到该json,这个过程比较恶心，有众多for循环
-                const arr = [];//已选中的科室管理权限范围列表。element-ui 不能绑定json，只能按照其中一个属性获取到该json,这个过程比较恶心，有众多for循环
+                const arr = [];//已选中的科室管理权限范围列表。
                 for(const i of this.DoctorBusinessScopeSelect){//这个'医生业务范围'由于自己写的（非element-ui），所以可以直接获取json，直接循环取出值
                     options.authorizes.push({
                         type:1,
-                        authorityId:i
+                        authorityId:i.id
+                    })
+                }
+                for(const i of this.DepartmentManagementAuthoritySelect){
+                    options.authorizes.push({
+                        type:2,
+                        authorityId:i.id
                     })
                 }
                 for(const i of this.deptIds){//获取被选中的科室列表
@@ -544,17 +529,18 @@
                 for(const i of deptIds){//取出被选中的科室列表的id，放入需要的数据组
                     options.deptIds.push(i.deptId)
                 }
-                for(const i of this.DepartmentManagementAuthoritySelect){//取出被选中的科室管理权限范围列表，放入需要的数据组
-                    for(const j of this.DepartmentManagementAuthority){
-                        j.subName===i?arr.push(j):null;
-                    }
-                }
-                for(const i of arr){
-                    options.authorizes.push({
-                        type:2,
-                        authorityId:i.subCode
-                    })
-                }
+
+                // for(const i of this.DepartmentManagementAuthoritySelect){//取出被选中的科室管理权限范围列表，放入需要的数据组
+                //     for(const j of this.DepartmentManagementAuthority){
+                //         j.subName===i?arr.push(j):null;
+                //     }
+                // }
+                // for(const i of arr){
+                //     options.authorizes.push({
+                //         type:2,
+                //         authorityId:i.subCode
+                //     })
+                // }
                 console.log(options)
                 return options;
             },
@@ -597,6 +583,7 @@
                 });
                 if(res.data.errCode === 0){
                     this.DoctorBusinessScope = res.data.body;
+                    console.log(this.DoctorBusinessScope)
                 }else{
                     this.$notify.error({
                         title: '数据获取失败',
@@ -615,7 +602,15 @@
                     orgCode:this.userSelfInfo.orgCode
                 });
                 if(res.data.errCode === 0){
-                    this.DepartmentManagementAuthority = res.data.body;
+                    this.DepartmentManagementAuthority = res.data.body.map(item=>{
+                        return Object.assign({},{
+                           children:[],
+                           id:item.subCode,
+                           label:item.subName,
+                           select:item.checkbox
+                        },item)
+                    });
+                    // this.DepartmentManagementAuthority = res.data.body;
                     console.log( this.DepartmentManagementAuthority)
                 }else{
                     this.$notify.error({

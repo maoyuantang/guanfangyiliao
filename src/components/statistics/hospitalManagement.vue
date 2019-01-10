@@ -61,6 +61,7 @@ import statisticsTable from './hospitalManagement/statisticsTable.vue'
 import AccountAuthority from './hospitalManagement/AccountAuthority.vue'
 // import {fetchHospitalDepts} from '../../api/apiAll.js'
 
+import check from '../../public/publicJs/check.js'//检查字符串是否包含敏感字
 import postQueryHandle from '../../public/publicJs/postQueryHandle.js'
 import getQueryHandle from '../../public/publicJs/getQueryHandle.js'
 // import test from './test.vue'//测试动态渲染组件
@@ -359,6 +360,9 @@ import getQueryHandle from '../../public/publicJs/getQueryHandle.js'
 			// testb
 		},
 		async created(){
+			console.log(check)
+			const test = new check('hjjhdhdfsjdfjhjavascript')
+			console.log(test.wordsCheck());
 			// this.getDepartmentList();
 			// console.log('postQueryHandle')
 			// let testJson = {

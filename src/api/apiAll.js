@@ -559,6 +559,39 @@ export const cancelPlan = (query,data)=>{//13.4.4 取消计划
         }
     })
 }
+export const managerGetDeviceList = query=>{//13.5.2 管理获取设备列表【管理web】
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.managerGetDeviceList,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const getUseDetail = query=>{//13.5.3 管理查看单个设备使用详情【管理web】
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.getUseDetail,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const getAlertDetail = query=>{//13.5.4 管理查看告警详情【管理web】
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.getAlertDetail,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
 export const fetchChatSession = (query,data)=>{//14.1.创建或获取单聊会话
     const sign = postQueryHandle(Object.assign({},data,query));
     return axios({
