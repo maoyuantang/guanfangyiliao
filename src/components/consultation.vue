@@ -177,25 +177,8 @@
 				</li>
 			</ul>
 		</el-dialog>
-		<!-- 医生端 -->
-		<div class="consultation" v-if="oVisable">
-			<div class="doc-title">
-				<selftag :inData="oTab"></selftag>
-				<div class="statistics-way">
-					<span>时间段：</span>
-					<el-date-picker v-model="time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
-					</el-date-picker>
-				</div>
-				<el-button class="startConsul" type="text" @click="centerDialogVisible = true">发起会诊</el-button>
-			</div>
-
-			<div>
-				<tableList :tableData="tableData" :columns="columns" :tableBtn="tableBtn"> </tableList>
-			</div>
-
-		</div>
 		<!-- 管理端 -->
-		<div class="consultation" v-else>
+		<div class="consultation" v-if="oVisable">
 			<div class="Admin-title">
 				<normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
 			</div>
@@ -230,6 +213,24 @@
 				</div>
 			</div>
 		</div>
+		<!-- 医生端 -->
+		<div class="consultation" v-else>
+			<div class="doc-title">
+				<selftag :inData="oTab"></selftag>
+				<div class="statistics-way">
+					<span>时间段：</span>
+					<el-date-picker v-model="time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+					</el-date-picker>
+				</div>
+				<el-button class="startConsul" type="text" @click="centerDialogVisible = true">发起会诊</el-button>
+			</div>
+
+			<div>
+				<tableList :tableData="tableData" :columns="columns" :tableBtn="tableBtn"> </tableList>
+			</div>
+
+		</div>
+		
 	</div>
 </template>
 <script>
@@ -253,7 +254,7 @@ export default {
     },
     data() {
         return {
-            oVisable: false,
+            oVisable: true,
             oconsulVisable: true, //切换会诊管理和统计的显示
             centerDialogVisible: false, //是否发起会诊
             evaluateVisible: false, //是否打开评价
