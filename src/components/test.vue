@@ -6,7 +6,7 @@
 </template>
 
 <script>
-	import test from '../api/test.js'
+	// import test from '../api/test.js'
 	export default {
 		data () {
 			return {

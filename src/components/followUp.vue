@@ -145,6 +145,10 @@ import selftag from "../public/publicComponents/selftag.vue";
 import statisticsWay from "../public/publicComponents/statisticsWay.vue";
 import publicTime from "../public/publicComponents/publicTime.vue";
 export default {
+    watch:{
+        tableDataListFa(n){console.log(n)},
+        tableDataList(n){console.log(n)}
+    },
     components: {
         tableList,
         search,
@@ -493,7 +497,8 @@ export default {
             };
             const res = await managerGetPlanList(options);
             if (res.data && res.data.errCode === 0) { 
-                _this.tableDataList = res.data.body.data2.list;
+                this.tableDataList = res.data.body.data2.list;
+                console.log(this.tableDataList)
             } else {
                 //失败
                 this.$notify.error({
@@ -516,7 +521,7 @@ export default {
             if (res.data && res.data.errCode === 0) { 
                 _this.tableDataListFa = res.data.body.data2.list;
                 console.log(_this.tableDataListFa)
-                alert(_this.tableDataListFa[0].alertInfo)
+                // alert(_this.tableDataListFa[0].alertInfo)
             } else {
                 //失败
                 this.$notify.error({
@@ -557,6 +562,7 @@ export default {
         searchChange(data) {
             this.searchData = data;
             this.getFoList();
+            this.getfamiliList();
         }
     }
 };

@@ -2,7 +2,6 @@ export default {
 	namespaced: true,
 	state:{
 		root:null,//用户权限（角色） 四个角色：超级管理员，用'a'表示；医院管理员，用'b'吧表示；医生，用'c'表示；既是医生又是医院管理员，用'bc'表示
-		count:0,
 		userInfo:{//用户账号信息
 			isLogin:false,//是否登录，true是，false否.默认未登录
 			account:'',//账号
@@ -50,22 +49,13 @@ export default {
 	},
 	mutations:{
 		/**
-		 * 
-		 * @param {*} state 
-		 * @param {*} data 
-		 * 作用：测试
-		 */
-		ADDCOUNT(state,data){
-			state.count += data;
-		},
-
-		/**
 		 * 设置（切换）用户权限
 		 * @param {*} state 
 		 * @param {*} data 
 		 */
 		SETROOT(state,data){
-			state.rot = data;
+			console.log(data)
+			state.root = data;
 		},
 
 		/**

@@ -688,7 +688,7 @@
             this.getDepartmentList();
             this.fetchDoctorSubSystems();
             this.hospitalDepartmentManagementSubsystemList();
-           console.log(this.userInfo.hasAuth)
+           
             // console.log(this.$store.state.user)
 		}
 	}

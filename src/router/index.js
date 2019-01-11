@@ -1,3 +1,5 @@
+import countRoot from '../public/publicJs/countRoot.js'
+
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../vuex/index.js'
@@ -167,7 +169,7 @@ const router = new Router({
 			name: 'login',
 			component: login,
 			meta: {
-				title: 'denglu'
+				title: 'login'
 			}
 		},
 		{
@@ -185,7 +187,7 @@ const router = new Router({
  * 作用：路由跳转，设置title，未登录重定向
  */
 router.beforeEach((to, from, next) => {
-	if(!store.state.user.userInfo.isLogin&&to.path!=='/login'){//未登录,重定向到登录页(暂时关闭，方便开发)
+	if(!store.state.user.userInfo.isLogin&&to.path!=='/login'){
 		let userInfoSession = sessionStorage.getItem('userInfo'); 
 		let userSelfInfoSession= sessionStorage.getItem('userSelfInfo'); 
 		
@@ -199,6 +201,11 @@ router.beforeEach((to, from, next) => {
 			}
 			store.commit("user/SETUSERINFO",userInfoSession);
 			store.commit("user/SETUSERSELFINFO",userSelfInfoSession);
+			store.commit("user/SETROOT",countRoot({//用户的权限需要计算
+				rooter:userInfoSession.rooter,
+				manager:userInfoSession.manager,
+				hasAuth:userInfoSession.hasAuth
+			}));
 		}else{
 			next({path:'/login'})
 			return;

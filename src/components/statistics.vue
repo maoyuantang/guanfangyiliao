@@ -105,6 +105,7 @@ import testb from './testb.vue'
 			doctorsIndex
 		},
 		async created(){
+			// console.log(this.$store.state.user.userInfo.hasAuth)
 			// console.log('test');
 			// const test = await settingsList({token:this.$store.state.user.userInfo.token});
 			

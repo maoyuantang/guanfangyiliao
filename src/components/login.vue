@@ -35,6 +35,7 @@
     import sensitiveWordCheck from '../public/publicJs/sensitiveWordCheck.js'
     import { Base64 } from 'js-base64'
     import jsonSort from '../public/publicJs/jsonSort.js'
+    import countRoot from '../public/publicJs/countRoot.js'
     import websocket from "../common/websocket.js"
     import { mapState } from 'vuex'
     import {testA} from '../api/test.js'
@@ -196,23 +197,7 @@ import { setTimeout } from 'timers';
                 this.$router.push({path:'/'})
             },
 
-            /**
-             * 计算用户是什么权限
-             * 四个角色：超级管理员，用'a'表示；医院管理员，用'b'吧表示；医生，用'c'表示；既是医生又是医院管理员，用'bc'表示
-             */
-            countRoot(data){
-                let root;
-                if(data.rooter){
-                    root = ['a']
-                }else if (data.manager){
-                    for(const i of data.hasAuth){
-                        root = i.type==='2'?['b','c']:['b']
-                    }
-                }else{
-                    root = ['c']
-                }
-                return root;
-            },
+           
 
             /**
              * 登录
@@ -246,7 +231,7 @@ import { setTimeout } from 'timers';
                     // console.log(res.data.body.sign);
                     res.data.body.sign = Base64.decode(res.data.body.sign)
                     this.$store.commit("user/SETUSERINFO",res.data.body);
-                    const root = this.countRoot({//计算用户的权限，f**k
+                    const root = countRoot({//计算用户的权限，f**k
                         rooter:res.data.body.rooter,
                         manager:res.data.body.manager,
                         hasAuth:res.data.body.hasAuth
