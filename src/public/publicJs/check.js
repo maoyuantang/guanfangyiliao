@@ -1,13 +1,12 @@
 "use strict"
+/**
+ * 字符串检测
+ */
 export default class Check{
     constructor(str,...args){
         this.str = str;
         this.words = ['&','<','>','"',"'",'/','javascript','http','https',' '];
     }
-    say(){
-        console.log('test')
-        console.log(this.str)
-    };
     /**
      * 检查是否有关键字
      * 返回值{
@@ -16,7 +15,7 @@ export default class Check{
      *  key:string//包含哪一个关键字，ok为true时为空
      * }
      */
-    wordsCheck(){
+     wordsCheck(){
         if(!this.str)return{ok:false,msg:'输入为空',key:''};
         for(const i of this.words){
             if(this.str.indexOf(i) != -1 ){
@@ -35,19 +34,27 @@ export default class Check{
     };
 
     /**
-     * 检测是否是手机号
+     * 检测手机号格式是否正确
+     * 返回值{
+     *  ok:Boolean,//格式是否正确，true为正确
+     *  msg:string//错误信息
+     * }
      */
     phone(){
         if(!this.str)return{ok:false,msg:'输入为空',};
-
+        const testPhone = /^1[34578]\d{9}$/;
+        if(!testPhone.test(this.str)){
+            return{ok:false,msg:'手机号格式错误',}
+        }
+        return{ok:true,msg:'手机号格式正确',}
     };
 
     /**
      * 翻转字符串
      * 返回值{
-     *  ok:Boolean,//是否
-     *  msg:string,//
-     *  data:string//
+     *  ok:Boolean,//是否有错误
+     *  msg:string,//错误信息
+     *  data:string//翻转后的字符串
      * }
      */
     reverseStr(){
@@ -55,3 +62,4 @@ export default class Check{
         return {ok:true,data:this.str.split("").reverse().join(""),msg:''}
     };
 }
+

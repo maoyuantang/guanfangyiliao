@@ -93,59 +93,106 @@
 						code:'100000'
 					},
 				];
-				let items = [];
-				if(this.$store.state.user.userInfo.rooter){//超级管理员
-					items = [
-						{
-							name:'医院管理',
-							select:true,
-							path:'/',
-							code:'0'
-						},
-						{
-							name:'远程会诊系统',
-							select:false,
-							path:'/cloudManagement',
-							code:'0'
-						},
-					];
-					
-				}else{
-					items = [
-						{
-							name:'首页',
-							select:true,
-							path:'/',
-							code:'0'
-						},
-					];
-					for(const i of allList){
-						for(const j of this.$store.state.user.userInfo.hasAuth){
-							if(i.code === j.authorityId){
-								items.push(i);
+
+				const rootMap = {
+					a:data=>{//超级管理员
+						return [
+							{
+								name:'医院管理',
+								select:true,
+								path:'/',
+								code:'0'
+							},
+							{
+								name:'远程会诊系统',
+								select:false,
+								path:'/cloudManagement',
+								code:'0'
+							},
+						];
+					},
+					b:data=>{//医院管理员
+						const newArr = this.$store.state.user.userInfo.hasAuth.filter(item=>{//权限列表里面混杂着两种权限，调出医院管理员权限（type为‘1’）
+							return item.type==='1';
+						});
+						const list = [
+							{//首页后台并不返回，自己加上
+								name:'首页',
+								select:true,
+								path:'/',
+								code:'0'
+							},
+						];
+						for(const i of allList){
+							for(const j of newArr){
+								if(i.code === j.authorityId){//从上面过滤出的权限列表里面，对应准备好的路由，挑出来
+									list.push(i);
+								}
 							}
 						}
+						return list;
+					},
+					c:data=>{//医生
+						const newArr = this.$store.state.user.userInfo.hasAuth.filter(item=>{//权限列表里面混杂着两种权限，调出医院管理员权限（type为‘1’）
+							return item.type==='2';
+						});
+						const list = [
+							{//首页后台并不返回，自己加上
+								name:'首页',
+								select:true,
+								path:'/',
+								code:'0'
+							},
+						];
+						for(const i of allList){
+							for(const j of newArr){
+								if(i.code === j.authorityId){//从上面过滤出的权限列表里面，对应准备好的路由，挑出来
+									list.push(i);
+								}
+							}
+						}
+						return list;
 					}
-					
 				}
-				return items;
-				// /********** */
-				// const newArr = [
-				// 	{
-				// 		name:'首页',
-				// 		select:true,
-				// 		path:'/',
-				// 		code:'0'
-				// 	},
-				// ];
-				// for(const i of allList){
-				// 	for(const j of this.$store.state.user.userInfo.hasAuth){
-				// 		if(i.code === j.authorityId){
-				// 			newArr.push(i);
+				const root = this.$store.state.user.root[0];
+				return rootMap[root]();
+			
+				// let items = [];
+				// if(this.$store.state.user.userInfo.rooter){//超级管理员
+				// 	items = [
+				// 		{
+				// 			name:'医院管理',
+				// 			select:true,
+				// 			path:'/',
+				// 			code:'0'
+				// 		},
+				// 		{
+				// 			name:'远程会诊系统',
+				// 			select:false,
+				// 			path:'/cloudManagement',
+				// 			code:'0'
+				// 		},
+				// 	];
+					
+				// }else{
+				// 	items = [
+				// 		{
+				// 			name:'首页',
+				// 			select:true,
+				// 			path:'/',
+				// 			code:'0'
+				// 		},
+				// 	];
+				// 	for(const i of allList){
+				// 		for(const j of this.$store.state.user.userInfo.hasAuth){
+				// 			if(i.code === j.authorityId){
+				// 				items.push(i);
+				// 			}
 				// 		}
 				// 	}
+					
 				// }
-				// return newArr;
+				// return items;
 			},
 			
 		},
@@ -172,6 +219,7 @@
 		},
 		created(){
 			this.routerList = this.navList
+			console.log(this.$store.state.user.userInfo.hasAuth)
 		}
 	}
 </script>
