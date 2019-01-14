@@ -1,7 +1,7 @@
 <template>
 	<div class="info-list-head">
         <span class="table-title">{{inData.name||""}}</span>
-        <!-- <el-button @click="$emit('reBack',{click:true})">查看历史计划</el-button> -->
+        <el-button @click="$emit('reBack',{click:true})">查看历史计划</el-button>
     </div>
 </template>
 
@@ -41,10 +41,10 @@
 		line-height: 0.28rem;
 	}
 	.info-list-head>.el-button{
-		border-color: var(--borderColor4);
+		/* border-color: var(--borderColor4); */
 	}
 	.info-list-head>.el-button>span{
-		color: var(--color15);
+		/* color: var(--color15); */
 	}
 
 </style>

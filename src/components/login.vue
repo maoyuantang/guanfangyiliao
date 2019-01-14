@@ -35,7 +35,7 @@
     import sensitiveWordCheck from '../public/publicJs/sensitiveWordCheck.js'
     import { Base64 } from 'js-base64'
     import jsonSort from '../public/publicJs/jsonSort.js'
-    import countRoot from '../public/publicJs/countRoot.js'
+    // import countRoot from '../public/publicJs/countRoot.js'
     import websocket from "../common/websocket.js"
     import { mapState } from 'vuex'
     import {testA} from '../api/test.js'
@@ -56,7 +56,7 @@ import { setTimeout } from 'timers';
 			return {
                 way:true,//登录方式，true为密码登录，false为验证码登录，默认true
                 account:{
-                    text:'admin',//gftechadmin
+                    text:'gftechadmin',//gftechadmin
                     ok:true
                 },//账号
                 passwd:{
@@ -231,13 +231,15 @@ import { setTimeout } from 'timers';
                     // console.log(res.data.body.sign);
                     res.data.body.sign = Base64.decode(res.data.body.sign)
                     this.$store.commit("user/SETUSERINFO",res.data.body);
-                    const root = countRoot({//计算用户的权限，f**k
-                        rooter:res.data.body.rooter,
-                        manager:res.data.body.manager,
-                        hasAuth:res.data.body.hasAuth
-                    });
-                    console.log(root);
-                    this.$store.commit("user/SETROOT",root);
+                    this.$store.commit("user/SETVIEWROOT");
+                    
+                    // const root = countRoot({//计算用户的权限，f**k
+                    //     rooter:res.data.body.rooter,
+                    //     manager:res.data.body.manager,
+                    //     hasAuth:res.data.body.hasAuth
+                    // });
+                    // console.log(root);
+                    // this.$store.commit("user/SETROOT",root);
                     // console.log(res.data.body.sign);
                     sessionStorage.setItem('userInfo',JSON.stringify(res.data.body));
                     // console.log(sessionStorage.getItem('userInfo'))

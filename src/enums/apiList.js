@@ -14,6 +14,7 @@ export default {
     userInfo:'/m/v1/api/user/user/userInfo',//3.8获取用户信息
     createQrInfo:'/m/v1/api/login/createQrInfo',//4.4.创建登录码（WEB）
     scanMonitor:'/m/v1/api/login/scanMonitor',//4.5.登录码扫码监听（WEB）
+    queryByDoctorPage:'/m/v1/api/consultation/queryByDoctorPage',//8.1.医生WEB分页列表
     updateHospital:'/m/v1/api/basics/hospital/updateHospital',//8.2.更新医院名称和密码
     fetchHospitalList:'/m/v1/api/basics/hospital/fetchHospitalList',//8.3.医院列表查询
     fetchAllSubSystem:'/m/v1/api/basics/hospital/fetchAllSubSystem',//8.4.获取医院子系统设置列表
@@ -71,5 +72,12 @@ export default {
     synergyManageInvite:'/m/v1/api/synergy/synergyManage/invite',//15.2首页-账号及权限-院外协作邀请
     synergyManageUpdate:'/m/v1/api/synergy/synergyManage/update',//15.3首页-账号及权限-更新协作范围
     synergyManageDelete:'/m/v1/api/synergy/synergyManage/delete',//15.4首页-账号及权限-删除协作医生
-
+    addConsultation:'/m/v1/api/consultation/add',//2.新增会诊
+    appraiseConsultation:'/m/v1/api/consultation/appraiseConsultation',//3.评价会诊
+    updateConsultationStatus:'/m/v1/api/consultation/updateConsultationStatus',//4.更新会诊状态
+    queryByManagerPage:'/m/v1/api/consultation/queryByManagerPage',//5.管理端WEB分页列表
+    queryByDeptList:'/m/v1/api/consultation/queryByDeptList',//6.查询会诊申请科室列表
+    queryByAppraiseList:'/m/v1/api/consultation/queryByAppraiseList',//7.查询会诊评论列表
+    queryStatisticalByApplication:'/m/v1/api/consultation/queryStatisticalByApplication',//8.查询申请科室统计
+    queryStatisticalBySponsor:'/m/v1/api/consultation/queryStatisticalBySponsor',//9.查询发起科室统计
 }

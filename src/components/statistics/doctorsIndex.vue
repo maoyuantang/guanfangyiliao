@@ -1,11 +1,28 @@
 <template>
 	<div class="doctors-index">
 		<div class="top-info">
-			<div class="info-box-out" v-for="(item,index) in topInfo" :key="index">
+			<!-- <div class="info-box-out" v-for="(item,index) in topInfo" :key="index">
 				<infoBox :inData="item" @reback="getReData">
 					<infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter>
 					<infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter>
-					<!-- <infoList :inData="infoListData"></infoList> -->
+					<infoList :inData="infoListData"></infoList>	
+				</infoBox>
+			</div> -->
+
+			<div class="info-box-out">
+				<infoBox :inData="topInfo[0]" @reback="getReData">
+					<infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter>
+					<infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter>
+				</infoBox>
+			</div>
+			<div class="info-box-out">
+				<infoBox :inData="topInfo[1]" @reback="getReData">
+					<infoList :inData="infoListData"></infoList>	
+				</infoBox>
+			</div>
+			<div class="info-box-out">
+				<infoBox :inData="topInfo[2]" @reback="getReData">
+					<infoList :inData="infoListData"></infoList>	
 				</infoBox>
 			</div>
 		</div>
@@ -228,7 +245,7 @@
 	}
 	.doctors-index .top-info{
 		display: flex;
-		display: none;
+		/* display: none; */
 		/* justify-content: space-between; */
 
 	}
