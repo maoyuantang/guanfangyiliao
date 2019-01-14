@@ -78,20 +78,27 @@ import testb from './testb.vue'
 			 * 根据用户权限，动态渲染
 			 */
 			viewCurrent(){
-				const rootArr = [
-					{name:'a',page:'superManagement'},
-					{name:'b',page:'hospitalManagement'},
-					{name:'c',page:'doctorsIndex'},
-				];
-				if(this.$store.state.user.root){
-					for(const i of rootArr){
-						if(i.name === this.$store.state.user.root[0]){
-							return {page:i.page}
-						}
-					}
-				}else{
-					return {page:'hospitalManagement'};
-				}
+				// const rootArr = [
+				// 	{name:'rooter',page:'superManagement'},
+				// 	{name:'manager',page:'hospitalManagement'},
+				// 	{name:'doctors',page:'doctorsIndex'},
+				// ];
+				const rootView = {
+					rooter:'superManagement',
+					manager:'hospitalManagement',
+					doctors:'doctorsIndex'
+				};
+				return {page:rootView[this.$store.state.user.viewRoot]}
+
+				// if(this.$store.state.user.root){
+				// 	for(const i of rootArr){
+				// 		if(i.name === this.$store.state.user.root[0]){
+				// 			return {page:i.page}
+				// 		}
+				// 	}
+				// }else{
+				// 	return {page:'hospitalManagement'};
+				// }
 				// if(this.$store.state.user.userInfo.rooter)return {page:'superManagement'};
 				// if(this.$store.state.user.userInfo.manager)return {page:'hospitalManagement'};
 				// return {page:'doctorsIndex'};

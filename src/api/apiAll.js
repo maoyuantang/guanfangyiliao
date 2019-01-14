@@ -131,6 +131,17 @@ export const scanMonitor = query=>axios({//4.5.登录码扫码监听（WEB）
 	url:apiList.scanMonitor,
     params:query
 })
+export const queryByDoctorPage = query=>{//8.1.医生WEB分页列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.queryByDoctorPage,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
 export const updateHospital = (query,data)=>{//8.2.更新医院名称和密码
     const sign = postQueryHandle(Object.assign({},data,query));
     return axios({
@@ -728,6 +739,94 @@ export const synergyManageDelete = query=>{//15.4首页-账号及权限-删除�
     return axios({
         method:'get',
         url:apiList.synergyManageDelete,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const addConsultation = (query,data)=>{//2.新增会诊
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:`${apiList.addConsultation}?token=${query.token}`,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const appraiseConsultation = (query,data)=>{//3.评价会诊
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:`${apiList.appraiseConsultation}?token=${query.token}`,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const updateConsultationStatus = (query,data)=>{//4.更新会诊状态
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:`${apiList.updateConsultationStatus}?token=${query.token}`,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const queryByManagerPage = query=>{//5.管理端WEB分页列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.queryByManagerPage,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const queryByDeptList = query=>{//6.查询会诊申请科室列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.queryByDeptList,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const queryByAppraiseList = query=>{//7.查询会诊评论列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.queryByAppraiseList,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const queryStatisticalByApplication = query=>{//8.查询申请科室统计
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.queryStatisticalByApplication,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const queryStatisticalBySponsor = query=>{//9.查询发起科室统计
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.queryStatisticalBySponsor,
         params:query,
         headers:{
             sign

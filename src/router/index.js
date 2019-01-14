@@ -1,8 +1,7 @@
-import countRoot from '../public/publicJs/countRoot.js'
-
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../vuex/index.js'
+import countRoot from '../public/publicJs/countRoot.js'
 import index from '@/components/index'//主页
 import statistics from '@/components/statistics'//首页统计
 import login from '@/components/login'//主页
@@ -18,16 +17,9 @@ import outpatient from '@/components/outpatient'//远程门诊系统
 import referral from '@/components/referral'//双向转诊系统
 import rounds from '@/components/rounds'//移动查房系统
 import cloudManagement from '@/components/cloudManagement'//移动查房系统
-
-
-//import test from '@/components/test'//测试页a
-//import testb from '@/components/testb'//测试页b
-//import testc from '@/components/testc'//测试页b
 import notFound from '@/components/notFound'//404页面
 
-
 Vue.use(Router)
-
 
 const router = new Router({
 	mode: 'hash',

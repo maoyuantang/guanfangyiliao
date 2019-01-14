@@ -93,9 +93,11 @@
 						code:'100000'
 					},
 				];
+				
+				
 
 				const rootMap = {
-					a:data=>{//超级管理员
+					rooter:data=>{//超级管理员
 						return [
 							{
 								name:'医院管理',
@@ -111,7 +113,7 @@
 							},
 						];
 					},
-					b:data=>{//医院管理员
+					manager:data=>{//医院管理员
 						const newArr = this.$store.state.user.userInfo.hasAuth.filter(item=>{//权限列表里面混杂着两种权限，调出医院管理员权限（type为‘1’）
 							return item.type==='1';
 						});
@@ -132,7 +134,7 @@
 						}
 						return list;
 					},
-					c:data=>{//医生
+					doctors:data=>{//医生
 						const newArr = this.$store.state.user.userInfo.hasAuth.filter(item=>{//权限列表里面混杂着两种权限，调出医院管理员权限（type为‘1’）
 							return item.type==='2';
 						});
@@ -152,62 +154,23 @@
 							}
 						}
 						return list;
-					}
+					},
+					defaultItem:data=>[{name:'wrong',selcrt:true,path:'/',code:'-1'}]
 				}
-				const root = this.$store.state.user.root[0];
-				return rootMap[root]();
-			
-				// let items = [];
-				// if(this.$store.state.user.userInfo.rooter){//超级管理员
-				// 	items = [
-				// 		{
-				// 			name:'医院管理',
-				// 			select:true,
-				// 			path:'/',
-				// 			code:'0'
-				// 		},
-				// 		{
-				// 			name:'远程会诊系统',
-				// 			select:false,
-				// 			path:'/cloudManagement',
-				// 			code:'0'
-				// 		},
-				// 	];
-					
-				// }else{
-				// 	items = [
-				// 		{
-				// 			name:'首页',
-				// 			select:true,
-				// 			path:'/',
-				// 			code:'0'
-				// 		},
-				// 	];
-				// 	for(const i of allList){
-				// 		for(const j of this.$store.state.user.userInfo.hasAuth){
-				// 			if(i.code === j.authorityId){
-				// 				items.push(i);
-				// 			}
-				// 		}
-				// 	}
-					
-				// }
-				// return items;
+				const root = this.$store.state.user.viewRoot;
+				if(!root)return{ok:false,data:[]};
+				console.log(rootMap[root]())
+				console.log(this.$store.state.user.userInfo.hasAuth)
+				return rootMap[root]?{ok:true,data:rootMap[root]()}:{ok:false,data:[]};
 			},
 			
 		},
 		methods:{
 			changeCss(index){//点击导航条，改变样式
-				// for(let i of this.routerList){
-				// 	i.select = false;
-				// }
-				// this.routerList[index].select = true;
-				const newArr = this.routerList.map(item=>{//试试map函数
-					item.select = false;
+				this.routerList = this.routerList.map((item,key)=>{
+					item.select = key===index;
 					return item;
 				});
-				newArr[index].select = true;
-				this.routerList = newArr;
 			},
 			gotoPage(index){//路由跳转
 				this.$router.push({path:this.routerList[index].path})
@@ -218,7 +181,11 @@
 			},
 		},
 		created(){
-			this.routerList = this.navList
+			this.routerList = this.navList.data;
+			setTimeout(() => {
+				console.log('enter')
+				this.$store.commit("user/SETVIEWROOT",'2');
+			}, 5000);
 			console.log(this.$store.state.user.userInfo.hasAuth)
 		}
 	}

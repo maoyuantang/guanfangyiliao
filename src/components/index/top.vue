@@ -1,5 +1,18 @@
 <template>
 <div class="top">
+	<div class="change-root">
+		<Menu mode="horizontal" active-name="1">
+			<MenuItem name="1">
+				<!-- <Icon type="ios-paper" /> -->
+				管理权限
+			</MenuItem>
+			<MenuItem name="2">
+				<!-- <Icon type="ios-people" /> -->
+				医生端
+			</MenuItem>
+		</Menu>
+	</div>
+	
 	<div class="top-left">
 		<marquee class="title-marquee">{{marquee}}</marquee>
 		<div class="msg"><i class="iconfont msg-icon">&#xe8c0;</i></div>
@@ -58,6 +71,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		position: relative;
 	}
 	.top-left{
 		flex: 1;
@@ -65,6 +79,8 @@
 		height: 100%;
 		display: flex;
 		align-items: center;
+		display: flex;
+		justify-content: flex-end;
 	}
 	.top-right{
 		width: 1.8rem;
@@ -120,6 +136,7 @@
 		font-family: PingFangSC-Regular;
 		letter-spacing: 0.005rem;
 		line-height: 0.3rem;
+		width: 20%;
 	}
 	.msg{
 		width: 0.73rem;
@@ -140,5 +157,10 @@
 		position:absolute;
 		top: 0;
 		right: -0.08rem;
+	}
+	.change-root{
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%)
 	}
 </style>
