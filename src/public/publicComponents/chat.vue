@@ -1,20 +1,25 @@
 <template>
     <div class="chat">
         <div>
-           {{chatUser}}
+            {{chatUser}}
         </div>
         <div class="chatMessage">
             <ul class="chatRecord">
-                <li :class="text.form==userSelfInfo.userId?'recordLf':'recordRg'" v-for="(text,index) in messageList" :key="index">
+                <li v-for="(text,index) in messageList" :key="index"  :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
                         <img src="../../assets/日照宝宝.jpg" />
+                       
                     </div>
                     <div class="otherCon">
-                        <h4>
+                        <h4> 
                             <span class="peopleName">{{text.name}}</span>
-                            <span class="otime">11:28</span>
+                            <span class="otime">{{text.serverTime}}</span>
                         </h4>
-                        <div><div style="float:right"> {{text.content}} </div></div>
+                        <div>
+                            <div style="float:left">
+                                <span class="allReadColor" v-if="text.oRead">已读 </span>
+                                <span class="noReadColor" v-else>未读77 </span> {{text.content}} </div>
+                        </div>
                     </div>
                 </li>
                 <!-- <li class="recordRg">
@@ -94,15 +99,19 @@ import protobuf from "protobufjs";
 import { mapState } from "vuex";
 // import websocket from "../../common/websocket.js";
 import filesJs from "../../common/files.js";
-import { fetchHistoryMessage, fetchSessionMembers,fetchReadMessageId } from "../../api/apiAll.js";
+import {
+    fetchHistoryMessage,
+    fetchSessionMembers,
+    fetchReadMessageId
+} from "../../api/apiAll.js";
 
 let websocket = require("../../common/websocket.js");
 
 export default {
     data() {
         return {
-            areadyReadNum:"",//已读
-            chatUser:"",//参与聊天的成员
+            areadyReadNum: "", //已读
+            chatUser: "", //参与聊天的成员
             messageList: [],
             input: "",
             childMessageType: "", //发送的消息类型
@@ -130,10 +139,10 @@ export default {
             var ohtml = websocket.default.getContent();
             console.log(ohtml);
         },
-        
+
         //已读未读
         async alreadyRead() {
-            console.log(this.sessionId);
+            console.log(this.userSelfInfo.userId);
             let query = {
                 token: this.userState.token
             };
@@ -143,8 +152,7 @@ export default {
             const res = await fetchReadMessageId(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
-               alert(res.data.body)
-               this.areadyReadNum=res.data.body
+                this.areadyReadNum = res.data.body;
             } else {
                 //失败
                 this.$notify.error({
@@ -155,6 +163,7 @@ export default {
         },
         //拉取会话好友列表
         async getMemberMess() {
+            let _this = this;
             console.log(this.sessionId);
             let query = {
                 token: this.userState.token
@@ -167,11 +176,14 @@ export default {
             const res = await fetchSessionMembers(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
-                console.log(res.data.body)
-                $.each(res.data.body,function(text,index){
-                    alert(text.userName)
-                    this.chatUser=this.chatUser+","+text.userName
-                })
+                console.log(res.data.body);
+                $.each(res.data.body, function(index, text) {
+                    if (_this.chatUser == "") {
+                        _this.chatUser = text.userName;
+                    } else {
+                        _this.chatUser = _this.chatUser + "," + text.userName;
+                    }
+                });
             } else {
                 //失败
                 this.$notify.error({
@@ -196,7 +208,7 @@ export default {
             const res = await fetchHistoryMessage(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
-                console.log(res.data.body)
+                console.log(res.data.body);
                 // let odata = [
                 //     {
                 //         id: "5b8f7eb42bfacc279cea20cc",
@@ -247,10 +259,32 @@ export default {
                 //         new: false
                 //     }
                 // ];
-                 let odata =res.data.body;
+                let odata = res.data.body.reverse();
                 this.messageList = odata;
+                $.each(this.messageList, function(index, text) {
+                    let timestamp4 = new Date(text.serverTime);
+                    let y = timestamp4.getHours();
+                    // let m = timestamp4.getMonth() + 1;
+                    let d = timestamp4.getMinutes();
+                    if (y <= 9) {
+                        y = "0" + y;
+                    }
+                    if (d <= 9) {
+                        d = "0" + d;
+                    }
+                    console.log(y + "-" + d);
+                    text.serverTime = y + ":" + d;
+                    //  text.serverTime=
+                });
+
                 for (let i = 0; i < odata.length; i++) {
-                    if (odata[i].from != this.userSelfInfo.userId) { 
+                    if (this.areadyReadNum > odata[i].msgId) {
+                        this.messageList[i].oRead = true;
+                    } else {
+                        this.messageList[i].oRead = false;
+                    }
+
+                    if (odata[i].from != this.userSelfInfo.userId) {
                         if (odata[i].childMessageType == "INTERROGATION") {
                             //问诊
                             this.messageList[i].content =
@@ -286,7 +320,7 @@ export default {
                         } else {
                             this.messageList[i].content = odata[i].body;
                         }
-                    }else{ 
+                    } else {
                         if (odata[i].childMessageType == "INTERROGATION") {
                             //问诊
                             this.messageList[i].content =
@@ -320,7 +354,7 @@ export default {
                             }
                         } else if (odata[i].childMessageType == "IMAGE") {
                         } else {
-                            this.messageList[i].content =odata[i].body;
+                            this.messageList[i].content = odata[i].body;
                         }
                     }
                 }
@@ -334,11 +368,19 @@ export default {
         },
         //发送
         sendMessageChat() {
-            console.log(this.sessionId);
-            console.log(websocket.default);
-            console.log(websocket.default.getTicket());
-            console.log(websocket.default.getSequence());
-
+            let odate = new Date();
+            let oHour = odate.getHours();
+            let oMinite = odate.getMinutes();
+            if (oHour <= 9) {
+                oHour = "0" + oHour;
+            }
+            if (oMinite <= 9) {
+                oMinite = "0" + oMinite;
+            }
+            this.messageList.push({
+                content: this.messageBody,
+                serverTime: oHour + ":" + oMinite
+            });
             let timestamp = Date.parse(new Date());
             let tag = "img"; //辨识图片
             if (this.messageBody.indexOf(tag) != -1) {
@@ -414,6 +456,7 @@ export default {
 }
 .chatRecord > li {
     width: 100%;
+    margin-bottom: 10px;
 }
 .recordLf {
     display: flex;
@@ -528,6 +571,27 @@ export default {
 }
 .recordRg .followCon {
     float: right;
+}
+.chatMessage > ul {
+    overflow-y: scroll;
+    height: 300px;
+}
+.chatRecord > li:after {
+    content: "";
+    height: 0;
+    line-height: 0;
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+.chatInputK textarea {
+    height: 138px;
+}
+.allReadColor {
+    color: #cccccc;
+}
+.noReadColor {
+    color: green;
 }
 /* 备注
 

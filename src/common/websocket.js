@@ -112,8 +112,7 @@ function webSocketonmessage(odata) {
        
     } else if (RequestType == 102) {
         alert('您在其他设备上进行了登录')
-    } else if (RequestType == 103) {
-        alert('dd')
+    } else if (RequestType == 103) { 
         let Iessage = {
             RequestType: 105,
             ticket: ticket,

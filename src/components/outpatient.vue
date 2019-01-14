@@ -2,7 +2,7 @@
 	<div class="outpatient">
 		远程门诊系统
 		<button @click="openChat()">聊天</button>
-		<el-dialog title=" 张医生/或者群名称" :visible.sync="chatVisible" width="680px">
+		<el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
 			<chat :sessionId="sessionId"></chat>
 		</el-dialog>
 
@@ -56,7 +56,7 @@ export default {
                 token: this.userState.token
             };
             const options = {
-                to: "B43F34E1D4014D4F98ED57BA86B2239F"
+                to: "b9736cc01ac34daaa4aa4c68b38fff91"
             };
             console.log(fetchChatSession);
             const res = await fetchChatSession(query, options);
@@ -82,12 +82,19 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 .outpatient {
 }
 .outpatient-alert {
     width: 5.03rem;
     height: 200px;
     background-color: var(--bgColor5);
+}
+
+.chatDialog .el-dialog__header{
+	height: 10px
+}
+.chatDialog  .el-dialog__body{
+	padding-top:0px
 }
 </style>
