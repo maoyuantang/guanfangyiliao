@@ -101,7 +101,7 @@ function sendMessage(agentData) {
 //数据接收
 function webSocketonmessage(odata) {
     let RequestType = odata.RequestType;
-    if (RequestType == 101 && odata.status.state) {
+    if (RequestType == 101 || RequestType == 104) {
         console.log('登录成功')
         ticket = odata.ticket;//票据
         sequence = odata.status.sequence;//序列号
@@ -861,7 +861,7 @@ function websocketsend(data) {
     //     }
     // }
 
-
+   console.log(data)
     let msg = IMessage.encode(data).finish();
     webSocket.send(msg);
 }

@@ -14,7 +14,7 @@
                             <span class="peopleName">{{text.name}}</span>
                             <span class="otime">11:28</span>
                         </h4>
-                        <div>{{text.content}}</div>
+                        <div><div style="float:right"> {{text.content}} </div></div>
                     </div>
                 </li>
                 <!-- <li class="recordRg">
@@ -94,13 +94,14 @@ import protobuf from "protobufjs";
 import { mapState } from "vuex";
 // import websocket from "../../common/websocket.js";
 import filesJs from "../../common/files.js";
-import { fetchHistoryMessage, fetchSessionMembers } from "../../api/apiAll.js";
+import { fetchHistoryMessage, fetchSessionMembers,fetchReadMessageId } from "../../api/apiAll.js";
 
 let websocket = require("../../common/websocket.js");
 
 export default {
     data() {
         return {
+            areadyReadNum:"",//已读
             chatUser:"",//参与聊天的成员
             messageList: [],
             input: "",
@@ -119,7 +120,8 @@ export default {
     },
     created() {
         this.getHisRecord();
-        this.getMemberMess()
+        this.getMemberMess();
+        this.alreadyRead();
         console.log(this.sessionId);
     },
     methods: {
@@ -127,6 +129,29 @@ export default {
             websocket = require("../../common/websocket.js");
             var ohtml = websocket.default.getContent();
             console.log(ohtml);
+        },
+        
+        //已读未读
+        async alreadyRead() {
+            console.log(this.sessionId);
+            let query = {
+                token: this.userState.token
+            };
+            const options = {
+                sessionId: this.sessionId
+            };
+            const res = await fetchReadMessageId(query, options);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+               alert(res.data.body)
+               this.areadyReadNum=res.data.body
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
         },
         //拉取会话好友列表
         async getMemberMess() {
@@ -171,59 +196,61 @@ export default {
             const res = await fetchHistoryMessage(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
-                let odata = [
-                    {
-                        id: "5b8f7eb42bfacc279cea20cc",
-                        sessionId: "#9b7b21c703044d78a83b2f459e746411",
-                        messageType: "SESSION",
-                        childMessageType: "DEFAULT",
-                        from: "b462c046b0bd11e8ba2f000c29bf158c",
-                        fromNickName: "唐宇",
-                        to: "",
-                        toNickName: "",
-                        title: "",
-                        summary: "",
-                        body: "456",
-                        clientTime: 0,
-                        serverTime: 1536130740864,
-                        unReadNum: 0,
-                        sequence: 59,
-                        msgId: 99,
-                        chatType: "DOCTOR",
-                        at: [],
-                        instruct: [],
-                        conferenceId: "",
-                        deleteType: false,
-                        new: false
-                    },
-                    {
-                        id: "5b8f7eb32bfacc279cea20cb",
-                        sessionId: "#9b7b21c703044d78a83b2f459e746411",
-                        messageType: "SESSION",
-                        childMessageType: "DEFAULT",
-                        from: "b462c046b0bd11e8ba2f000c29bf158c",
-                        fromNickName: "唐宇",
-                        to: "",
-                        toNickName: "",
-                        title: "",
-                        summary: "",
-                        body: "123",
-                        clientTime: 0,
-                        serverTime: 1536130739827,
-                        unReadNum: 0,
-                        sequence: 58,
-                        msgId: 98,
-                        chatType: "DOCTOR",
-                        at: [],
-                        instruct: [],
-                        conferenceId: "",
-                        deleteType: false,
-                        new: false
-                    }
-                ];
+                console.log(res.data.body)
+                // let odata = [
+                //     {
+                //         id: "5b8f7eb42bfacc279cea20cc",
+                //         sessionId: "#9b7b21c703044d78a83b2f459e746411",
+                //         messageType: "SESSION",
+                //         childMessageType: "DEFAULT",
+                //         from: "b462c046b0bd11e8ba2f000c29bf158c",
+                //         fromNickName: "唐宇",
+                //         to: "",
+                //         toNickName: "",
+                //         title: "",
+                //         summary: "",
+                //         body: "456",
+                //         clientTime: 0,
+                //         serverTime: 1536130740864,
+                //         unReadNum: 0,
+                //         sequence: 59,
+                //         msgId: 99,
+                //         chatType: "DOCTOR",
+                //         at: [],
+                //         instruct: [],
+                //         conferenceId: "",
+                //         deleteType: false,
+                //         new: false
+                //     },
+                //     {
+                //         id: "5b8f7eb32bfacc279cea20cb",
+                //         sessionId: "#9b7b21c703044d78a83b2f459e746411",
+                //         messageType: "SESSION",
+                //         childMessageType: "DEFAULT",
+                //         from: "b462c046b0bd11e8ba2f000c29bf158c",
+                //         fromNickName: "唐宇",
+                //         to: "",
+                //         toNickName: "",
+                //         title: "",
+                //         summary: "",
+                //         body: "123",
+                //         clientTime: 0,
+                //         serverTime: 1536130739827,
+                //         unReadNum: 0,
+                //         sequence: 58,
+                //         msgId: 98,
+                //         chatType: "DOCTOR",
+                //         at: [],
+                //         instruct: [],
+                //         conferenceId: "",
+                //         deleteType: false,
+                //         new: false
+                //     }
+                // ];
+                 let odata =res.data.body;
                 this.messageList = odata;
                 for (let i = 0; i < odata.length; i++) {
-                    if (odata[i].from != this.userSelfInfo.userId) {
+                    if (odata[i].from != this.userSelfInfo.userId) { 
                         if (odata[i].childMessageType == "INTERROGATION") {
                             //问诊
                             this.messageList[i].content =
@@ -258,6 +285,42 @@ export default {
                         } else if (odata[i].childMessageType == "IMAGE") {
                         } else {
                             this.messageList[i].content = odata[i].body;
+                        }
+                    }else{ 
+                        if (odata[i].childMessageType == "INTERROGATION") {
+                            //问诊
+                            this.messageList[i].content =
+                                '<div class=" followCon"> <div> </div> <div> <h3>问诊表/随访表的标题</h3> <div>2018中医国际标准</div>  </div> </div>';
+                        } else if (odata[i].childMessageType == "ARTICLE") {
+                            //文章
+                            this.messageList[i].content = "文章";
+                        } else if (odata[i].childMessageType == "CRVIDEO") {
+                            //视频
+                            this.messageList[i].content = "视频";
+                        } else if (odata[i].childMessageType == "FOLLOWUP") {
+                            //随访
+                            this.messageList[i].content = "随访";
+                        } else if (odata[i].childMessageType == "AUDIO") {
+                            //音频
+                            this.messageList[i].content = "音频";
+                        } else if (odata[i].childMessageType == "VIDEO") {
+                            //视频
+                            if (odata[i].body.indexOf("refuse") > -1) {
+                                this.messageList[i].content =
+                                    "<span>挂断了视频</span>";
+                            } else if (odata[i].body.indexOf("sendroom") > -1) {
+                                this.messageList[i].content =
+                                    "<span>发起了视频聊天</span>";
+                            } else if (odata[i].body.indexOf("complete") > -1) {
+                                this.messageList[i].content =
+                                    "<span>视频通话已结束</span>";
+                            } else if (odata[i].body.indexOf("cancle") > -1) {
+                                this.messageList[i].content =
+                                    "<span>取消了视频</span>";
+                            }
+                        } else if (odata[i].childMessageType == "IMAGE") {
+                        } else {
+                            this.messageList[i].content =odata[i].body;
                         }
                     }
                 }

@@ -400,7 +400,8 @@ export default {
                     label: "告警情况 "
                 }
             ],
-            tableDataList: [],
+            tableDataList: [
+            ],
             tableDataListFa: [],
             tableBtn: [
                 {
@@ -520,6 +521,9 @@ export default {
             const res = await managerGetDeviceList(options);
             if (res.data && res.data.errCode === 0) { 
                 _this.tableDataListFa = res.data.body.data2.list;
+                console.log(_this.columns)
+               
+                console.log(_this.columnsFa)
                 console.log(_this.tableDataListFa)
                 // alert(_this.tableDataListFa[0].alertInfo)
             } else {
