@@ -187,10 +187,10 @@
 				<div v-if="oconsulVisable">
 					<div class="mainTab">
 						<div>
-							<selftag :inData="oTab"></selftag>
-							<selftag :inData="oTab"></selftag>
-							<selftag :inData="oTab"></selftag>
-							<selftag :inData="oTab"></selftag>
+							<selftag :inData="oTab1"></selftag>
+							<selftag :inData="oTab1"></selftag>
+							<selftag :inData="oTab2"></selftag>
+							<selftag :inData="oTab3"></selftag>
 						</div>
 
 						<search @searchValue="searchChange"></search>
@@ -230,10 +230,16 @@
 			</div>
 
 		</div>
-		
+
 	</div>
 </template>
 <script>
+import {
+    managerGetPlanList,
+    managerGetDeviceList,
+    fetchHospitalDepts
+} from "../api/apiAll.js";
+import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
 import tableList from "../public/publicComponents/publicList.vue";
 import selftag from "../public/publicComponents/selftag.vue";
@@ -242,15 +248,14 @@ import normalColumnChart from "../public/publicComponents/normalColumnChart.vue"
 import search from "../public/publicComponents/search.vue";
 import statisticsWay from "../public/publicComponents/statisticsWay.vue";
 
-
 export default {
     components: {
         selftag,
         tableList,
         normalTab,
         normalColumnChart,
-		search,
-		statisticsWay
+        search,
+        statisticsWay
     },
     data() {
         return {
@@ -263,18 +268,53 @@ export default {
             groupVisible: false, //会诊评价
             recordVisible: false, //查看记录
             form: "",
-            oTab: {
+            oTab1: {
                 more: true,
-                title: "日期",
+                title: "全部",
+                list: [
+                    {
+                        text: "全部"
+                    }
+                ]
+            },
+            oTab2: {
+                more: false,
+                title: "全部",
                 list: [
                     {
                         text: "全部"
                     },
                     {
-                        text: "今日"
+                        text: "专科会诊",
+                        value: "SPECIALIST"
                     },
+                    {
+                        text: "专家会诊",
+                        value: "EXPERT"
+                    }
                 ]
-            }, //医生端tab
+            },
+            oTab3: {
+                more: false,
+                title: "全部",
+                list: [
+                    {
+                        text: "全部"
+                    },
+                    {
+                        text: "未开始",
+                        value: "NEW"
+                    },
+                    {
+                        text: "进行中",
+                        value: "UNDERWAY"
+                    },
+                    {
+                        text: "结束",
+                        value: "OVER"
+                    }
+                ]
+            },
             columns: [
                 {
                     prop: "name",
@@ -358,9 +398,14 @@ export default {
                     234
                 ], //具体数值
                 title: "测试测试,修改修改" //图表标题
-			},
-		
+            }
         };
+    },
+    computed: {
+        ...mapState({
+            userState: state => state.user.userInfo,
+            userSelfInfo: state => state.user.userSelfInfo
+        })
     },
     methods: {
         //医生端事件
@@ -379,9 +424,66 @@ export default {
             } else if (res.i == 1) {
                 this.oconsulVisable = false;
             }
+        },
+        //获取科室列表
+        async getDepartment() {
+            let _this = this;
+            let query = {
+                orgCode: this.userSelfInfo.orgCode,
+                deptId: ""
+            };
+            const res = await fetchHospitalDepts(query);
+            if (res.data && res.data.errCode === 0) {
+                console.log(res.data.body);
+                if (res.data.body.length > 6) {
+                    this.oTab1.more = true;
+                } else {
+                    this.oTab1.more = false;
+                }
+                $.each(res.data.body, function(index, text) {
+                    _this.oTab1.list.push({
+                        text: text.deptName,
+                        value: text.deptId
+                    });
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //获取管理端列表
+        async getAdminList() {
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                search: this.searchData,
+                department: this.odepartment,
+                type: this.otype,
+                mode: this.oTheWay,
+                content: this.oContent,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await managerGetPlanList(options);
+            if (res.data && res.data.errCode === 0) {
+                this.tableDataList = res.data.body.data2.list;
+                console.log(this.tableDataList);
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
         }
     },
-    async created() {}
+    async created() {
+		this.getDepartment();
+		this.getAdminList()
+    }
 };
 </script>
 
@@ -397,15 +499,15 @@ export default {
     box-shadow: 0 6px 36px 0 rgba(0, 62, 100, 0.04);
     border-radius: 4px;
 }
-.admin-oMain>div{
-	position: relative;
+.admin-oMain > div {
+    position: relative;
 }
-.mainTab{
-	display: flex;
-	display: -webkit-flex
+.mainTab {
+    display: flex;
+    display: -webkit-flex;
 }
-.mainTab>div:first-child{
-	width:100%
+.mainTab > div:first-child {
+    width: 100%;
 }
 /* 医生端样式 */
 .consultation .doc-title {
