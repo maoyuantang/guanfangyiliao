@@ -60,12 +60,23 @@ export default {
 		 */
 		SETVIEWROOT(state,data='1'){
 			if(state.userInfo.rooter)state.viewRoot='rooter';
-			state.userInfo.hasAuth.find(item=>{
-				if(item.type===data){
-					state.viewRoot = data==='1'?'manager':'doctors';
-					sessionStorage.setItem('viewRoot',state.viewRoot);
+			for(const i of state.userInfo.hasAuth){
+				if(i.type===data){
+					state.viewRoot = data==='1'?{name:'manager',type:data}:{name:'doctors',type:data};
+					sessionStorage.setItem('viewRoot',JSON.stringify(state.viewRoot));
+					// console.log(state.viewRoot)
+					return
 				}
-			})
+			}
+
+			// state.userInfo.hasAuth.find(item=>{
+			// 	if(item.type===data){
+			// 		state.viewRoot = data==='1'?{name:'manager',type:data}:{name:'doctors',type:data};
+			// 		sessionStorage.setItem('viewRoot',JSON.stringify(state.viewRoot));
+			// 		console.log(state.viewRoot)
+			// 		return
+			// 	}
+			// })
 		},
 
 		/**

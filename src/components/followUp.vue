@@ -1,7 +1,7 @@
 <template>
     <div class="followUp">
         <!-- 管理端 -->
-        <div v-if="oVisable">
+        <div v-if="$store.state.user.viewRoot.name==='manager'">
             <div class="Admin-title">
                 <normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
             </div>
@@ -168,7 +168,7 @@ export default {
             oMainShow: 0,
             indexTab2: 0,
             oDocThis: 0, //医生端tab切换
-            oVisable: true,
+            oVisable: true, 
             oconsulVisable: true,
             followDocTab: [
                 {

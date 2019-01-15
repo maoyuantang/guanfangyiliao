@@ -4,28 +4,44 @@
 			<span class="logo-font">冠方智慧医疗</span>
 		</div>
 		<el-menu>
-		    <el-menu-item index="2" v-for="(item,index) in routerList" :key="index" :class="item.select?'select-item':'not-select-item'" @click="navClick(index)">
+		    <el-menu-item index="2" v-for="(item,index) in navList.data" :key="index" :class="item.select?'select-item':'not-select-item'" @click="navClick(index,item)">
 		        <!-- <i class="el-icon-menu"></i> -->
-		        <span slot="title">{{item.name}}</span>
+		        <span slot="title">{{item.name}}{{item.select}}</span>
 		    </el-menu-item>
 		</el-menu>
 </div>
 </template>
 
 <script>
+// import { constants } from 'http2';
+import { mapState } from 'vuex'
+import jsonSort from '../../public/publicJs/jsonSort';
 	export default {
 		name : 'navigation',
 		watch:{
-			
+			// listenChange(n){
+			// 	let root = this.$store.state.user.viewRoot
+			// 	const rootMap = this.returnRootAll();
+			// 	console.log('456465')
+			// 	if(!root)return{ok:false,data:[]};
+			// 	let originalList = rootMap[root.name]();
+			// 	let nowPage = sessionStorage.getItem('nowView')
+			// 	if(nowPage){
+			// 		nowPage = JSON.parse(nowPage);
+			// 		originalList = originalList.map(item=>{
+			// 			item.select = item.code===nowPage.code;
+			// 			return item;
+			// 		})
+			// 	}
+			// 	this.routerList = rootMap[this.$store.state.user.viewRoot.name]?{ok:true,data:originalList}:{ok:false,data:[]};
+			// 	console.log(this.routerList)
+				
+			// }
 		},
 		data(){
 			return {
-				routerList:[]
-			}
-		},
-		computed:{
-			navList(state)  {
-				const allList = [
+				routerList:[],
+				navMapList:[
 					// {
 					// 	name:'首页',
 					// 	select:true,
@@ -92,11 +108,85 @@
 						path:'/management',
 						code:'100000'
 					},
-				];
-				
-				
+				]
+			}
+		},
+		computed:{
+			...mapState({
+                userState: state => state.user.userInfo,
+			}),
+			navList:{
+				get(){
+					console.log('456465')
+					let root = this.$store.state.user.viewRoot
+					const rootMap = this.returnRootAll();
+					if(!root)return{ok:false,data:[]};
+					let originalList = rootMap[root.name]();
+					let nowPage = sessionStorage.getItem('nowView')
+					if(nowPage){
+						nowPage = JSON.parse(nowPage);
+						originalList = originalList.map(item=>{
+							item.select = item.code===nowPage.code;
+							return item;
+						})
+						console.log(originalList)
+						if(!originalList.find((item,index)=>item.select)){
+							originalList[0].select = true;
+							sessionStorage.setItem('nowView',JSON.stringify(originalList[0]));//记录下当前显示的是哪个页面
+							this.$router.push({path:originalList[0].path})
+						}
+						
+					}
+					return rootMap[this.$store.state.user.viewRoot.name]?{ok:true,data:originalList}:{ok:false,data:[]};
+				},
+				set(data){
+					return data
+				}
+			},
 
-				const rootMap = {
+
+
+			// navList(state){
+			// 	console.log('456465')
+			// 	let root = this.$store.state.user.viewRoot
+			// 	const rootMap = this.returnRootAll();
+			// 	if(!root)return{ok:false,data:[]};
+			// 	let originalList = rootMap[root.name]();
+			// 	let nowPage = sessionStorage.getItem('nowView')
+			// 	if(nowPage){
+			// 		nowPage = JSON.parse(nowPage);
+			// 		originalList = originalList.map(item=>{
+			// 			item.select = item.code===nowPage.code;
+			// 			return item;
+			// 		})
+			// 	}
+			// 	return rootMap[this.$store.state.user.viewRoot.name]?{ok:true,data:originalList}:{ok:false,data:[]};
+			// },
+			
+		},
+		methods:{
+			changeCss(index){//点击导航条，改变样式
+				this.navList.data = this.navList.data.map((item,key)=>{
+					item.select = key===index;
+					console.log(item)
+					return item;
+				});
+				// this.routerList = this.routerList.map((item,key)=>{
+				// 	item.select = key===index;
+				// 	return item;
+				// });
+			},
+			gotoPage(index){//路由跳转
+				this.$router.push({path:this.routerList[index].path})
+			},
+			navClick(index,item){//导航被点击
+				this.changeCss(index);//切换被选项样式
+				this.gotoPage(index);//跳转路由
+				sessionStorage.setItem('nowView',JSON.stringify(item));//记录下当前显示的是哪个页面
+				
+			},
+			returnRootAll(){
+				return {
 					rooter:data=>{//超级管理员
 						return [
 							{
@@ -125,7 +215,7 @@
 								code:'0'
 							},
 						];
-						for(const i of allList){
+						for(const i of this.navMapList){
 							for(const j of newArr){
 								if(i.code === j.authorityId){//从上面过滤出的权限列表里面，对应准备好的路由，挑出来
 									list.push(i);
@@ -146,7 +236,7 @@
 								code:'0'
 							},
 						];
-						for(const i of allList){
+						for(const i of this.navMapList){
 							for(const j of newArr){
 								if(i.code === j.authorityId){//从上面过滤出的权限列表里面，对应准备好的路由，挑出来
 									list.push(i);
@@ -157,36 +247,17 @@
 					},
 					defaultItem:data=>[{name:'wrong',selcrt:true,path:'/',code:'-1'}]
 				}
-				const root = this.$store.state.user.viewRoot;
-				if(!root)return{ok:false,data:[]};
-				console.log(rootMap[root]())
-				console.log(this.$store.state.user.userInfo.hasAuth)
-				return rootMap[root]?{ok:true,data:rootMap[root]()}:{ok:false,data:[]};
-			},
-			
-		},
-		methods:{
-			changeCss(index){//点击导航条，改变样式
-				this.routerList = this.routerList.map((item,key)=>{
-					item.select = key===index;
-					return item;
-				});
-			},
-			gotoPage(index){//路由跳转
-				this.$router.push({path:this.routerList[index].path})
-			},
-			navClick(index){//导航被点击
-				this.changeCss(index);//切换被选项样式
-				this.gotoPage(index);//跳转路由
 			},
 		},
 		created(){
 			this.routerList = this.navList.data;
-			setTimeout(() => {
-				console.log('enter')
-				this.$store.commit("user/SETVIEWROOT",'2');
-			}, 5000);
-			console.log(this.$store.state.user.userInfo.hasAuth)
+			// console.log(this.routerList)
+			// setTimeout(() => {
+			// 	console.log('enter')
+				
+			// 	console.log(this.$store.state.user.viewRoot)
+			// }, 5000);
+			// console.log(this.$store.state.user.userInfo.hasAuth)
 		}
 	}
 </script>

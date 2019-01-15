@@ -182,22 +182,28 @@ router.beforeEach((to, from, next) => {
 	if(!store.state.user.userInfo.isLogin&&to.path!=='/login'){
 		let userInfoSession = sessionStorage.getItem('userInfo'); 
 		let userSelfInfoSession= sessionStorage.getItem('userSelfInfo'); 
-		
+		let viewRoot = sessionStorage.getItem('viewRoot'); 
+		// console.log(viewRoot)
 		if(userInfoSession&&userSelfInfoSession){
 			try{
 				userInfoSession = JSON.parse(userInfoSession);
 				userSelfInfoSession = JSON.parse(userSelfInfoSession);
+				// viewRoot = JSON.parse(viewRoot);
 			}catch(e){
+				console.log(e)
 				next({path:'/login'})
 				return;
 			}
 			store.commit("user/SETUSERINFO",userInfoSession);
 			store.commit("user/SETUSERSELFINFO",userSelfInfoSession);
-			store.commit("user/SETROOT",countRoot({//用户的权限需要计算
-				rooter:userInfoSession.rooter,
-				manager:userInfoSession.manager,
-				hasAuth:userInfoSession.hasAuth
-			}));
+			store.commit("user/SETVIEWROOT",viewRoot.type);
+			console.log(viewRoot)
+			console.log(store.state.user.viewRoot)
+			// store.commit("user/SETROOT",countRoot({//用户的权限需要计算
+			// 	rooter:userInfoSession.rooter,
+			// 	manager:userInfoSession.manager,
+			// 	hasAuth:userInfoSession.hasAuth
+			// }));
 		}else{
 			next({path:'/login'})
 			return;

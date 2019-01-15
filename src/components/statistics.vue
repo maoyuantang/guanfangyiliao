@@ -4,54 +4,6 @@
 			<!-- <hospitalManagement></hospitalManagement> -->
 			<!-- <doctorsIndex></doctorsIndex> -->
 		</div>
-
-		<!-- <div>
-			<normalTab v-model="some" @reBack="reData"></normalTab>
-		</div> -->
-		<!-- <div class="index-body">
-			<statisticsTable></statisticsTable>
-			<AccountAuthority></AccountAuthority>
-		</div> -->
-		
-		<!-- <div class="set-flex">
-			<normalColumnChart v-model="drawData" v-for="i in 6"></normalColumnChart>
-		</div> -->
-		<!-- <div>
-			<el-dropdown >
-				<el-button type="primary">
-					更多菜单<i class="el-icon-arrow-down el-icon--right"></i>
-				</el-button>
-				<el-dropdown-menu slot="dropdown">
-					<el-dropdown-item @click.native="testSomeThing">黄金糕</el-dropdown-item>
-					<el-dropdown-item>狮子头</el-dropdown-item>
-					<el-dropdown-item>螺蛳粉</el-dropdown-item>
-					<el-dropdown-item>双皮奶</el-dropdown-item>
-					<el-dropdown-item>蚵仔煎</el-dropdown-item>
-				</el-dropdown-menu>
-			</el-dropdown>
-		</div> -->
-		<!-- <div>
-			<div class="block">
-				<span class="demonstration">默认</span>
-				{{value6}}
-				<el-date-picker
-				v-model="value6"
-				type="daterange"
-				range-separator="至"
-				start-placeholder="开始日期"
-				end-placeholder="结束日期">
-				</el-date-picker>
-			</div>
-		</div>  -->
-		<!-- <selftag @reBack="gitIndex" v-model="test"></selftag> -->
-		<!-- <selftag @reBack="gitIndex" v-model="test"></selftag> -->
-		<!-- <el-button type="primary" @click="changeComFun">主要按钮</el-button>
-		<div>
-			<div :is="changeCom?'test':'testb'"></div>
-		</div> -->
-		<!-- <div>
-			<statisticsWay @reBack='getTime'></statisticsWay>
-		</div> -->
 	</div>
 </template>
 
@@ -78,30 +30,12 @@ import testb from './testb.vue'
 			 * 根据用户权限，动态渲染
 			 */
 			viewCurrent(){
-				// const rootArr = [
-				// 	{name:'rooter',page:'superManagement'},
-				// 	{name:'manager',page:'hospitalManagement'},
-				// 	{name:'doctors',page:'doctorsIndex'},
-				// ];
 				const rootView = {
 					rooter:'superManagement',
 					manager:'hospitalManagement',
 					doctors:'doctorsIndex'
 				};
-				return {page:rootView[this.$store.state.user.viewRoot]}
-
-				// if(this.$store.state.user.root){
-				// 	for(const i of rootArr){
-				// 		if(i.name === this.$store.state.user.root[0]){
-				// 			return {page:i.page}
-				// 		}
-				// 	}
-				// }else{
-				// 	return {page:'hospitalManagement'};
-				// }
-				// if(this.$store.state.user.userInfo.rooter)return {page:'superManagement'};
-				// if(this.$store.state.user.userInfo.manager)return {page:'hospitalManagement'};
-				// return {page:'doctorsIndex'};
+				return {page:rootView[this.$store.state.user.viewRoot.name]}
 			}
 		},
 		methods:{
@@ -112,6 +46,7 @@ import testb from './testb.vue'
 			doctorsIndex
 		},
 		async created(){
+			console.log(this.$store.state.user);
 			// console.log(this.$store.state.user.userInfo.hasAuth)
 			// console.log('test');
 			// const test = await settingsList({token:this.$store.state.user.userInfo.token});

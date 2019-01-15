@@ -1,16 +1,10 @@
 <template>
 <div class="top">
 	<div class="change-root">
-		<Menu mode="horizontal" active-name="1">
-			<MenuItem name="1">
-				<!-- <Icon type="ios-paper" /> -->
-				管理权限
-			</MenuItem>
-			<MenuItem name="2">
-				<!-- <Icon type="ios-people" /> -->
-				医生端
-			</MenuItem>
-		</Menu>
+		<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+		<el-menu-item index="1">处理中心</el-menu-item>
+		<el-menu-item index="2">消息中心</el-menu-item>
+	</el-menu>
 	</div>
 	
 	<div class="top-left">
@@ -33,8 +27,6 @@
 					<DropdownItem divided>北京烤鸭</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
-			<!-- <i class="iconfont user-select" :class="isClick?'user-select-true':''" @click="switchStatus">&#xe65a;</i>
-			<div class="detailed-info" v-show="isClick"></div> -->
 		</div>
 	</div>
 </div>
@@ -51,13 +43,16 @@
 		},
 		data(){
 			return {
-				isClick:true,
+				activeIndex:'1',
 				marquee:'i is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fish'
 			}
 		},
 		methods:{
 			switchStatus(){
 				console.log('444')
+			},
+			handleSelect(index){
+				this.$store.commit("user/SETVIEWROOT",index);
 			}
 		}
 	}
