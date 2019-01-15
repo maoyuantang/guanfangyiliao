@@ -232,7 +232,7 @@ import { setTimeout } from 'timers';
                     res.data.body.sign = Base64.decode(res.data.body.sign)
                     this.$store.commit("user/SETUSERINFO",res.data.body);
                     this.$store.commit("user/SETVIEWROOT");
-                    
+                    console.log(this.$store.state.user.viewRoot)
                     // const root = countRoot({//计算用户的权限，f**k
                     //     rooter:res.data.body.rooter,
                     //     manager:res.data.body.manager,
