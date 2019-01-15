@@ -4,9 +4,10 @@
         <el-date-picker
             v-model="time"
             type="daterange"
-            range-separator="至"
+            range-separator="-"
             start-placeholder="开始日期"
-            end-placeholder="结束日期">
+            end-placeholder="结束日期"
+            value-format="yyyy-MM-dd">
         </el-date-picker>
         <span>
             <Dropdown>
@@ -28,10 +29,10 @@
 			return {
                 time:null,
                 testData:[
-                    {name:'按科室统计'},
-                    {name:'按日统计'},
-                    {name:'按月统计'},
-                    {name:'按年统计'}
+                    {name:'按科室统计',value:"DEPT"},
+                    {name:'按日统计',value:"DAY"},
+                    {name:'按月统计',value:"MONTH"},
+                    {name:'按年统计',value:"YEAR"}
                 ],
                 defaultSelect:{name:'按月统计'}
 			}

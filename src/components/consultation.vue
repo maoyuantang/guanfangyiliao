@@ -11,19 +11,22 @@
 		会诊评价
 		<!-- 发起会诊弹窗 -->
 		<el-dialog class="startGroup" title="发起会诊" :visible.sync="centerDialogVisible" width="602px" hight="607px" center>
-			<el-form ref="form" :model="form" label-width="80px">
+			<el-form ref="form" :model="startHz" label-width="80px">
 				<el-form-item label="类型">
-					<el-input v-model="form.name"></el-input>
+					<el-radio-group v-model="startHz.type">
+						<el-radio label="专科会诊"></el-radio>
+						<el-radio label="专家会诊"></el-radio>
+					</el-radio-group>
 				</el-form-item>
 				<div style="display:flex">
 					<el-form-item label="申请医院:">
-						<el-select v-model="form.region" placeholder="请选择活动区域">
+						<el-select placeholder="请选择活动区域">
 							<el-option label="区域一" value="shanghai"></el-option>
 							<el-option label="区域二" value="beijing"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="申请科室:">
-						<el-select v-model="form.region" placeholder="请选择活动区域">
+						<el-select v-model="startHz.deptId" placeholder="请选择活动区域">
 							<el-option label="区域一" value="shanghai"></el-option>
 							<el-option label="区域二" value="beijing"></el-option>
 						</el-select>
@@ -31,16 +34,16 @@
 				</div>
 
 				<el-form-item label="会诊病人:">
-					<el-input v-model="form.name"></el-input>
+					<el-input v-model="startHz.userId"></el-input>
 				</el-form-item>
 				<el-form-item label="病人病历:">
-					<el-input v-model="form.name"></el-input>
+					<el-input v-model="startHz.medicalHistory"></el-input>
 				</el-form-item>
 				<el-form-item label="申请时间:">
-					<el-input v-model="form.name"></el-input>
+					<el-input v-model="startHz.applicationTime"></el-input>
 				</el-form-item>
 				<el-form-item label="会诊目的:">
-					<el-input v-model="form.name"></el-input>
+					<el-input v-model="startHz.consultationPurpose"></el-input>
 				</el-form-item>
 				<el-form-item class="confirmBtnBox">
 					<el-button class="confirmBtn" type="primary">确认</el-button>
@@ -187,28 +190,30 @@
 				<div v-if="oconsulVisable">
 					<div class="mainTab">
 						<div>
-							<selftag :inData="oTab1"></selftag>
-							<selftag :inData="oTab1"></selftag>
-							<selftag :inData="oTab2"></selftag>
-							<selftag :inData="oTab3"></selftag>
+							<selftag :inData="oTab1" @reback="getOTab1"></selftag>
+							<selftag :inData="oTab1" @reback="getOTab11"></selftag>
+							<selftag :inData="oTab2" @reback="getOTab2"></selftag>
+							<selftag :inData="oTab3" @reback="getOTab3"></selftag>
 						</div>
 
-						<search @searchValue="searchChange"></search>
+						<search @searchValue="adminSearchChange"></search>
 					</div>
 					<div>
-						<tableList :tableData="tableData" :columns="columns" :tableBtn="tableBtn"> </tableList>
+						<tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn"> </tableList>
 					</div>
 				</div>
 				<!-- 统计 -->
 				<div v-else>
 					<div class="mainTab">
 						<div>
-							<selftag :inData="oTab"></selftag>
+							<selftag :inData="oTab1"  @reback="getOTab1"></selftag>
 						</div>
-						<statisticsWay></statisticsWay>
+						<statisticsWay @reBack="getTjData"></statisticsWay>
 					</div>
-					<div>
+					<div style="display:flex">
 						<normalColumnChart :inData="drawData"> </normalColumnChart>
+						<normalColumnChart :inData="drawDataStart"> </normalColumnChart>
+						{{drawDataStart}}
 					</div>
 				</div>
 			</div>
@@ -216,7 +221,7 @@
 		<!-- 医生端 -->
 		<div class="consultation" v-else>
 			<div class="doc-title">
-				<selftag :inData="oTab"></selftag>
+				<selftag :inData="oTab4"></selftag>
 				<div class="statistics-way">
 					<span>时间段：</span>
 					<el-date-picker v-model="time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
@@ -226,7 +231,7 @@
 			</div>
 
 			<div>
-				<tableList :tableData="tableData" :columns="columns" :tableBtn="tableBtn"> </tableList>
+				<tableList :tableData="docTableData" :columns="columnsDoc" :tableBtn="docTableBtn"> </tableList>
 			</div>
 
 		</div>
@@ -237,7 +242,11 @@
 import {
     managerGetPlanList,
     managerGetDeviceList,
-    fetchHospitalDepts
+    fetchHospitalDepts,
+    queryByManagerPage,
+    queryByAppraiseList,
+	queryStatisticalByApplication,
+	queryStatisticalBySponsor
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -267,6 +276,16 @@ export default {
             doctorVisible: false, //医生详情
             groupVisible: false, //会诊评价
             recordVisible: false, //查看记录
+            applicationDeptId: "", //发起科室
+            receiveDeptId: "", //接收科室
+            searchValue: "", //管理端搜索框
+            adminType: "",
+            adminStatus: "",
+            statisticsStart: "",
+            statisticsType: "DEPT",
+            statisticsEnd: "",
+            departmentsId: "",
+
             form: "",
             oTab1: {
                 more: true,
@@ -315,34 +334,147 @@ export default {
                     }
                 ]
             },
+            //医生端
+            oDocTime: "",
+            startDate: "",
+            endDate: "",
+            startHz: {
+                type: "会诊类型",
+                deptId: "发起科室ID",
+                userId: "会诊病人ID",
+                medicalHistory: "病历",
+                applicationTime: "申请时间",
+                consultationPurpose: "目的",
+                consultationHospitalDept: [
+                    {
+                        hospitalId: "申请医院ID",
+                        departmentsId: "申请科室ID"
+                    }
+                ]
+            },
+            oTab4: {
+                more: false,
+                title: "全部",
+                list: [
+                    {
+                        text: "全部",
+                        value: "ALL"
+                    },
+                    {
+                        text: "今日",
+                        value: "TODAY"
+                    }
+                ]
+            },
+            columnsDoc: [
+                {
+                    prop: "consultationId",
+                    label: "会诊编号"
+                },
+                {
+                    prop: "hospital",
+                    label: "发起医院"
+                },
+                {
+                    prop: "department",
+                    label: "发起科室"
+                },
+                {
+                    prop: "doctor",
+                    label: "发起医生"
+                },
+                {
+                    prop: "applicationTime",
+                    label: "发起时间"
+                },
+                {
+                    prop: "type",
+                    label: "会诊类型"
+                },
+                {
+                    prop: "consultationPurpose",
+                    label: "目的"
+                },
+                {
+                    prop: "doctorNumber",
+                    label: "参与专家"
+                },
+                {
+                    prop: "status",
+                    label: "状态"
+                }
+            ],
             columns: [
                 {
-                    prop: "name",
-                    label: "姓名"
+                    prop: "consultationId",
+                    label: "会诊编号"
                 },
                 {
-                    prop: "age",
-                    label: "年龄"
-                }
-            ],
-            tableData: [
-                {
-                    id: "91F0B9D25A474B6FA0CDBAC872035984",
-                    age: "1545649424290",
-                    name: "冠方医院"
+                    prop: "hospital",
+                    label: "发起医院"
                 },
                 {
-                    id: "120BAE29C23C470E9E73DED3D8C071BF",
-                    age: "1545618639429",
-                    name: "测试医院"
+                    prop: "department",
+                    label: "发起科室"
+                },
+                {
+                    prop: "doctor",
+                    label: "发起医生"
+                },
+                {
+                    prop: "applicationTime",
+                    label: "发起时间"
+                },
+                {
+                    prop: "type",
+                    label: "会诊类型"
+                },
+                {
+                    prop: "userName",
+                    label: "会诊病人"
+                },
+                {
+                    prop: "startTime",
+                    label: "会诊时间"
+                },
+                {
+                    prop: "consultationTimeNumber",
+                    label: "会诊用时"
+                },
+                {
+                    prop: "receiveDeptNumber",
+                    label: "接收科室"
+                },
+                {
+                    prop: "medicalHistory",
+                    label: "病历"
+                },
+                {
+                    prop: "doctorNumber",
+                    label: "参与专家"
+                },
+                {
+                    prop: "status",
+                    label: "状态"
                 }
             ],
+            adminTableData: [], //管理端列表
+            docTableData: [], //医生端列表
             tableBtn: [
                 {
-                    name: "评价",
-                    oclass: "evaluateBtn",
+                    name: "查看记录",
+                    oclass: "recordBtn",
                     method: (index, row) => {
-                        this.evaluateFun(index, row);
+                        this.recordFun(index, row);
+                    }
+                }
+            ],
+            docTableBtn: [
+                {
+                    name: "病历",
+                    oclass: "recordBtn",
+                    method: (index, row) => {
+                        this.recordFun(index, row);
                     }
                 },
                 {
@@ -367,37 +499,23 @@ export default {
                     }
                 ]
             },
-            //统计图
+            //申请科室统计图
             drawData: {
                 dataAxis: [
-                    "点",
-                    "击",
-                    "柱",
-                    "子",
-                    "点",
-                    "击",
-                    "柱",
-                    "子",
-                    "点",
-                    "击",
-                    "柱",
-                    "子"
                 ], //每个柱子代表的类名
                 data: [
-                    220,
-                    182,
-                    191,
-                    234,
-                    220,
-                    182,
-                    191,
-                    234,
-                    220,
-                    182,
-                    191,
-                    234
                 ], //具体数值
-                title: "测试测试,修改修改" //图表标题
+                title: " ", //图表标题
+                totalNumber: "555"
+			},
+			//发起科室统计图
+            drawDataStart: {
+                dataAxis: [
+                ], //每个柱子代表的类名
+                data: [
+                ], //具体数值
+                title: " ", //图表标题
+                totalNumber: "555"
             }
         };
     },
@@ -408,15 +526,39 @@ export default {
         })
     },
     methods: {
-        //医生端事件
-        //评价
-        evaluateFun(oid) {
-            // alert(oid);
-            this.evaluateVisible = true;
+        // 管理端事件
+        getOTab1(data) {
+			this.applicationDeptId = data.index.value;
+			this.getAdminList();
+			this.getAdminTjList();
+			this.getApplyTjList();
+        },
+        getOTab11(data) {
+            this.receiveDeptId = data.index.value;
+            this.getAdminList();
+        },
+        getOTab2(data) {
+            this.adminType = data.index.value;
+            this.getAdminList();
+        },
+        getOTab3(data) {
+            this.adminStatus = data.index.value;
+            this.getAdminList();
         },
         //查看记录
-        recordFun() {},
-        searchChange() {},
+        recordFun() {
+            this.recordVisible = true;
+        },
+        //医生端事件
+        getOTab4(data) {
+            this.oDocTime = data.index.value;
+            this.getDocList();
+        },
+
+        adminSearchChange(data) {
+            this.searchValue = data;
+            this.getAdminList();
+        },
         //管理端事件
         getConsulTabData(res) {
             if (res.i == 0) {
@@ -459,18 +601,101 @@ export default {
             let _this = this;
             const options = {
                 token: this.userState.token,
-                search: this.searchData,
-                department: this.odepartment,
-                type: this.otype,
-                mode: this.oTheWay,
-                content: this.oContent,
+                searchKey: this.searchValue,
+                applicationDeptId: this.applicationDeptId,
+                receiveDeptId: this.receiveDeptId,
+                pageNum: 1,
+                pageSize: 10,
+                type: this.adminType,
+                status: this.adminStatus
+            };
+            const res = await queryByManagerPage(options);
+            if (res.data && res.data.errCode === 0) {
+                this.adminTableData = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //获取管理端申请科室统计列表
+        async getApplyTjList() {
+			this.drawData.dataAxis=[];
+			this.drawData.data=[]
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                type: this.statisticsType,
+                startDate: this.statisticsStart,
+                endDate: this.statisticsEnd,
+                deptId: this.applicationDeptId
+            };
+            const res = await queryStatisticalByApplication(options);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body.data, function(index, text) {
+                    _this.drawData.dataAxis.push(text.unit);
+                    _this.drawData.data.push(text.number);
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+		},
+		        //获取管理端发起科室统计列表
+        async getAdminTjList() {
+			this.drawDataStart.dataAxis=[];
+			this.drawDataStart.data=[]
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                type: this.statisticsType,
+                startDate: this.statisticsStart,
+                endDate: this.statisticsEnd,
+                deptId: this.applicationDeptId
+            };
+            const res = await queryStatisticalBySponsor(options);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body.data, function(index, text) {
+                    _this.drawDataStart.dataAxis.push(text.unit);
+					_this.drawDataStart.data.push(text.number);
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //获取统计类型
+        getTjData(data) {
+			console.log(data)
+			this.statisticsType = data.select.value;
+			this.statisticsStart=data.time[0]
+			this.statisticsEnd=data.time[1]
+			this.getAdminTjList();
+			this.getApplyTjList();
+
+        },
+        //获取医生端列表
+        async getDocList() {
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                dateType: this.oDocTime,
+                startDate: this.startDate,
+                endDate: this.endDate,
                 pageNum: 1,
                 pageSize: 10
             };
-            const res = await managerGetPlanList(options);
+            const res = await queryByManagerPage(options);
             if (res.data && res.data.errCode === 0) {
-                this.tableDataList = res.data.body.data2.list;
-                console.log(this.tableDataList);
+                this.docTableData = res.data.body.data2.list;
             } else {
                 //失败
                 this.$notify.error({
@@ -481,8 +706,11 @@ export default {
         }
     },
     async created() {
-		this.getDepartment();
-		this.getAdminList()
+        this.getDepartment();
+        this.getAdminList();
+        this.getDocList();
+		this.getAdminTjList();
+		this.getApplyTjList();
     }
 };
 </script>
