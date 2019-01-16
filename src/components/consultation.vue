@@ -277,7 +277,6 @@
 							<el-button v-show="scope.row.status=='OVER'" @click="handleClick(scope.row)" type="text" size="small">查看记录</el-button>
 							<el-button v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="toConsultation(scope.row)" type="text" size="small">进入会诊</el-button>
 							<el-button v-show="scope.row.departmentId==userState.userId" @click="handleClick(scope.row)" type="text" size="small">结束</el-button>
-							<el-button type="text" size="small">编辑</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -320,13 +319,13 @@ export default {
         normalTab,
         normalColumnChart,
         search,
-		statisticsWay,
-		chat
+        statisticsWay,
+        chat
     },
     data() {
         return {
-			sessionId:"",//会诊id
-			chatVisible:false,//聊天框
+            sessionId: "", //会诊id
+            chatVisible: false, //聊天框
             oVisable: true,
             oconsulVisable: true, //切换会诊管理和统计的显示
             centerDialogVisible: false, //是否发起会诊
@@ -660,7 +659,14 @@ export default {
             };
             const res = await addConsultation(query, options);
             if (res.data && res.data.errCode === 0) {
-                alert("陈宫");
+                this.$notify.success({
+                    title: "发起成功",
+                    message: res.data.errMsg
+                });
+                setTimeout(function() {
+                    _this.centerDialogVisible = false;
+                    _this.getDocList();
+                }, 1000);
             } else {
                 //失败
                 this.$notify.error({
@@ -668,13 +674,12 @@ export default {
                     message: res.data.errMsg
                 });
             }
-		},
-		//进入会诊
-		async toConsultation(oObject){
-			alert(oObject.sessionId)
-			this.chatVisible=true;
-			this.sessionId=oObject.sessionId;
-		},
+        },
+        //进入会诊
+        async toConsultation(oObject) {
+            this.chatVisible = true;
+            this.sessionId = oObject.sessionId;
+        },
         //管理端事件
         getConsulTabData(res) {
             if (res.i == 0) {

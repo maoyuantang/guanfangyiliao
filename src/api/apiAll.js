@@ -368,6 +368,18 @@ export const add = (query,data)=>{//13.2.1 新增随访模板
         }
     })
 }
+export const webGetTitleList = (query)=>{//10.2.11获取随访标题列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.webGetTitleList,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+
 export const get = query=>{//13.2.2 获取模板详情
     const sign = postQueryHandle(query);
     return axios({

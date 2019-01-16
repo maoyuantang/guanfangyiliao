@@ -5,20 +5,20 @@
         </div>
         <div class="chatMessage">
             <ul class="chatRecord">
-                <li v-for="(text,index) in messageList" :key="index"  :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
+                <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
                         <img src="../../assets/日照宝宝.jpg" />
-                       
+
                     </div>
                     <div class="otherCon">
-                        <h4> 
+                        <h4>
                             <span class="peopleName">{{text.name}}</span>
                             <span class="otime">{{text.serverTime}}</span>
                         </h4>
                         <div>
-                            <div style="float:left">
+                            <div class="messageCon">
                                 <span class="allReadColor" v-if="text.oRead">已读 </span>
-                                <span class="noReadColor" v-else>未读77 </span> {{text.content}} </div>
+                                <span class="noReadColor" v-else>未读</span> {{text.content}} </div>
                         </div>
                     </div>
                 </li>
@@ -49,7 +49,11 @@
         </div>
         <div class="sendIcon">
             <span title="发送图片">
-                <!-- <input type="file" name="file" class="layui-upload-file" id="test" lay-title=" " style='opacity:0;width:25px;'> -->
+                <input type="file" name="file" class="layui-upload-file sendImgCss" id="test" lay-title=" ">
+                <!-- <el-upload class="upload-demo" action="/m/v1/api/fs/download" :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" multiple :limit="3" :on-exceed="handleExceed" :file-list="fileList">
+                    <el-button size="small" type="primary">点击上传</el-button>
+
+                </el-upload> -->
                 <img src="../../assets/sendNew1.png" />
             </span>
             <span title="发送视频">
@@ -58,19 +62,19 @@
             <span title="发送文章">
                 <img src="../../assets/sendNew3.png" />
             </span>
-            <span title="发送随访">
+            <span @click="addFollow()" title="发送随访">
                 <img src="../../assets/sendNew4.png" />
             </span>
             <span title="发送问诊">
                 <img src="../../assets/sendNew5.png" />
             </span>
-            <span title="添加备注">
+            <span @click="addRemarks()" title="添加备注">
                 <img src="../../assets/sendNew6.png" />
             </span>
             <span title="药品处方">
                 <img src="../../assets/sendNew8.png" />
             </span>
-            <span title="计划">
+            <span @click="addPlan()" title="计划">
                 <img src="../../assets/sendNew9.png" />
             </span>
             <span title="录入档案">
@@ -91,6 +95,70 @@
             </el-input>
             <button class="sendMessage" @click="sendMessageChat()">发送</button>
         </div>
+        <!-- 备注 -->
+        <el-dialog title="备注" :visible.sync="remarkVisible" center append-to-body>
+            <el-form ref="form" :model="remarkData" label-width="80px">
+                <el-form-item label="活动形式">
+                    <el-input type="textarea" v-model="remarkData.remarkCon"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="onSubmit">确认</el-button>
+                    <el-button>取消</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
+        <!-- 计划 -->
+        <el-dialog title="计划" :visible.sync="planVisible" center append-to-body>
+            <el-form ref="form" :model="planData" label-width="80px">
+                <el-form-item label="计划时间">
+                    <el-date-picker v-model="planData.planTime" type="datetime" placeholder="选择日期时间">
+                    </el-date-picker>
+                </el-form-item>
+
+                <el-form-item label="计划内容">
+                    <el-input type="textarea" v-model="planData.planCon"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="onSubmit">确认</el-button>
+                    <el-button>取消</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
+        <!-- 随访 -->
+        <el-dialog title="随访" :visible.sync="followVisible" center append-to-body>
+            <ul>
+                <li class="followBox" v-for="(text,index) in followList" :key="index">
+                    <span>{{text.title}}</span>
+                    <span @click="followDetail(text.id)"> > </span>
+                </li>
+            </ul>
+        </el-dialog>
+        <!-- 随访计划详情 -->
+        <el-dialog title="随访" :visible.sync="followListVisible" center append-to-body>
+            <ul>
+                <li class="followBox" v-for="(text,index) in followList" :key="index">
+                    <span>{{text.title}}</span>
+                    <span @click="followDetail(text.id)"> > </span>
+                </li>
+            </ul>
+        </el-dialog>
+        <!-- 录入档案 -->
+        <!-- <el-dialog title="录入新档案" :visible.sync="planVisible"   center append-to-body>
+            <el-form ref="form" :model="planData" label-width="80px">
+                <el-form-item label="计划时间">
+                    <el-date-picker v-model="planData.planTime" type="datetime" placeholder="选择日期时间">
+                    </el-date-picker>
+                </el-form-item>
+
+                <el-form-item label="计划内容">
+                    <el-input type="textarea" v-model="planData.planCon"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="onSubmit">确认</el-button>
+                    <el-button>取消</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog> -->
     </div>
 </template>
 
@@ -102,7 +170,8 @@ import filesJs from "../../common/files.js";
 import {
     fetchHistoryMessage,
     fetchSessionMembers,
-    fetchReadMessageId
+    fetchReadMessageId,
+    webGetTitleList
 } from "../../api/apiAll.js";
 
 let websocket = require("../../common/websocket.js");
@@ -110,6 +179,27 @@ let websocket = require("../../common/websocket.js");
 export default {
     data() {
         return {
+            remarkVisible: false, //备注是否显示
+            remarkData: {
+                remarkCon: ""
+            },
+            planVisible: false, //计划是否显示
+            planData: {
+                planTime: "",
+                planCon: ""
+            },
+            followVisible: false, //随访是否显示
+            followList: [], //随访标题列表
+            followListVisible: false, //随访列表详情是否显示
+            fileList: [
+                // {
+                //     token:d,
+                //     id: xxxxx,
+                //     fileName: xxxxxx,
+                //     width: 80,
+                //     height: 80
+                // }
+            ], //上传图片
             areadyReadNum: "", //已读
             chatUser: "", //参与聊天的成员
             messageList: [],
@@ -134,10 +224,43 @@ export default {
         console.log(this.sessionId);
     },
     methods: {
+        //添加备注
+        addRemarks() {
+            this.remarkVisible = true;
+        },
+        //添加计划
+        addPlan() {
+            this.planVisible = true;
+        },
+        //添加随访
+        async addFollow() {
+            this.followVisible = true;
+            let query = {
+                token: this.userState.token,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await webGetTitleList(query);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                console.log(res.data);
+                this.followList = res.data.body.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //随访详情
+        followDetail() {
+            this.followListVisible = true;
+        },
         sendMessage2() {
             websocket = require("../../common/websocket.js");
             var ohtml = websocket.default.getContent();
-            console.log(ohtml);
+            alert(ohtml);
         },
 
         //已读未读
@@ -378,6 +501,7 @@ export default {
                 oMinite = "0" + oMinite;
             }
             this.messageList.push({
+                from:this.userSelfInfo.userId,
                 content: this.messageBody,
                 serverTime: oHour + ":" + oMinite
             });
@@ -444,6 +568,7 @@ export default {
     display: -webkit-flex;
 }
 .sendIcon > span {
+    position: relative;
     margin: 0 3px;
     display: inline-block;
     width: 44px;
@@ -541,6 +666,12 @@ export default {
 .recordRg .otherCon {
     float: right;
 }
+.recordRg .messageCon {
+    float: right;
+}
+.recordLf .messageCon {
+    float: left;
+}
 .otherCon {
     width: 86%;
 }
@@ -592,6 +723,19 @@ export default {
 }
 .noReadColor {
     color: green;
+}
+.sendImgCss {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+}
+.followBox > span:last-child {
+    float: right;
+    cursor: pointer;
+}
+.followBox {
+    padding: 4px 0;
 }
 /* 备注
 
