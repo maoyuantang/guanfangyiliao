@@ -840,3 +840,14 @@ export const queryStatisticalBySponsor = query=>{//9.查询发起科室统计
         }
     })
 }
+export const getxiezuoList = (query,data)=>{//13.1.8 提交评论
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:`${apiList.getxiezuoList}?token=${query.token}`,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}

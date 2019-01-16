@@ -1,5 +1,6 @@
 <template>
 	<div id="app">
+        
 		<!-- <img src="./assets/logo.png">-->
 		<transition>
 			<router-view class="router-view-class" />
@@ -14,7 +15,7 @@ import { mapState } from "vuex";
 import websocket from "./common/websocket.js";
 import "./public/publicCss/base.css";
 export default {
-
+  
     name: "App",
     data() {
         return {

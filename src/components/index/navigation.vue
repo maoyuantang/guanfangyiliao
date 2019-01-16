@@ -31,6 +31,9 @@ import jsonSort from '../../public/publicJs/jsonSort';
 						return item;
 					});
 				}
+			},
+			'$store.state.user.viewRoot'(n,o){
+				console.log(n)
 			}
 		},
 		data(){
@@ -142,6 +145,7 @@ import jsonSort from '../../public/publicJs/jsonSort';
 			 * 该函数恢复页面，主要用在刷新之后
 			 */
 			restorePage(){
+				console.log('enter')
 				let rePage = sessionStorage.getItem('page');
 				if(rePage){//说明以前有记录，恢复他
 					try{
@@ -154,6 +158,8 @@ import jsonSort from '../../public/publicJs/jsonSort';
 						});
 						return;
 					}
+					console.log(rePage)
+					console.log(this.viewRoot[this.viewRoot.now.name])
 					const index = this.viewRoot[this.viewRoot.now.name].find(item=>{//该权限视图是否包含该页面
 						return item.code===rePage.code
 					});
@@ -169,7 +175,7 @@ import jsonSort from '../../public/publicJs/jsonSort';
 			}
 		},
 		created(){
-			// this.restorePage()
+			this.restorePage()
 			console.log(this.$store.state.user.viewRoot);
 			console.log(sessionStorage.getItem('page'))
 		}
