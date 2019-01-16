@@ -1,7 +1,7 @@
 <template>
     <div class="followUp">
         <!-- 管理端 -->
-        <div v-if="$store.state.user.viewRoot.name==='manager'">
+        <div v-if="$store.state.user.viewRoot.now.name==='manager'">
             <div class="Admin-title">
                 <normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
             </div>
@@ -147,7 +147,10 @@ import publicTime from "../public/publicComponents/publicTime.vue";
 export default {
     watch:{
         tableDataListFa(n){console.log(n)},
-        tableDataList(n){console.log(n)}
+        tableDataList(n){console.log(n)},
+        viewRoot(n){
+            console.log(n)
+        }
     },
     components: {
         tableList,
@@ -417,7 +420,8 @@ export default {
     computed: {
         ...mapState({
             userState: state => state.user.userInfo,
-            userSelfInfo: state => state.user.userSelfInfo
+            userSelfInfo: state => state.user.userSelfInfo,
+            viewRoot: state => state.user.viewRoot,
         })
     },
     async created() {
@@ -425,6 +429,7 @@ export default {
         this.getFoList(); //随访列表
         this.getfamiliList(); //家用设备列表
         this.getDepartment(); //科室列表
+        console.log(this.$store.state.user.viewRoot.now.name) 
     },
     mounted() {},
     methods: {
