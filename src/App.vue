@@ -14,7 +14,7 @@ import { mapState } from "vuex";
 import websocket from "./common/websocket.js";
 import "./public/publicCss/base.css";
 export default {
-
+  
     name: "App",
     data() {
         return {
