@@ -14,23 +14,36 @@
 			<el-form ref="form" :model="startHz" label-width="80px">
 				<el-form-item label="类型">
 					<el-radio-group v-model="startHz.type">
-						<el-radio label="专科会诊"></el-radio>
-						<el-radio label="专家会诊"></el-radio>
+						<el-radio label="SPECIALIST">专科会诊</el-radio>
+						<el-radio label="EXPERT">专家会诊</el-radio>
 					</el-radio-group>
 				</el-form-item>
-				<div style="display:flex">
-					<el-form-item label="申请医院:">
-						<el-select placeholder="请选择活动区域">
-							<el-option label="区域一" value="shanghai"></el-option>
-							<el-option label="区域二" value="beijing"></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="申请科室:">
-						<el-select v-model="startHz.deptId" placeholder="请选择活动区域">
-							<el-option label="区域一" value="shanghai"></el-option>
-							<el-option label="区域二" value="beijing"></el-option>
-						</el-select>
-					</el-form-item>
+				<el-form-item label="发起科室">
+					<el-select v-model="startHz.deptId" placeholder="请选择活动区域">
+						<el-option v-for="(text,index) in departmentList" :label="text.name" :value="text.value" :key="index"></el-option>
+
+					</el-select>
+				</el-form-item>
+				<!-- <el-form-item label="发起科室:">
+							<el-select placeholder="请选择活动区域" v-model="text.deptId" >
+								<el-option v-for="(text,index) in departmentList" :label="text.name" :value="text.value" :key="index"></el-option>
+							</el-select>
+						</el-form-item> -->
+				<div>
+					<div style="display:flex" v-for="(text,index) in startHz.consultationHospitalDept" :key="index">
+
+						<el-form-item label="申请医院:">
+							<el-select placeholder="请选择活动区域" v-model="text.hospitalId" @change="hosChange(text.hospitalId,index)">
+								<el-option v-for="(text,index) in hospitalList" :label="text.name" :value="text.value" :key="index"></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="申请科室:">
+							<el-select v-model="text.departmentsId" placeholder="请选择活动区域">
+								<el-option v-for="(otext,index) in text.departmentListOO" :label="otext.name" :value="otext.value" :key="index"></el-option>
+							</el-select>
+						</el-form-item>
+					</div>
+					<span @click="addHospital">加号</span>
 				</div>
 
 				<el-form-item label="会诊病人:">
@@ -40,13 +53,17 @@
 					<el-input v-model="startHz.medicalHistory"></el-input>
 				</el-form-item>
 				<el-form-item label="申请时间:">
+					<!-- <el-date-picker v-model="startHz.applicationTime" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
+					</el-date-picker> -->
+					<!-- <el-date-picker v-model="startHz.applicationTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
+					</el-date-picker> -->
 					<el-input v-model="startHz.applicationTime"></el-input>
 				</el-form-item>
 				<el-form-item label="会诊目的:">
 					<el-input v-model="startHz.consultationPurpose"></el-input>
 				</el-form-item>
 				<el-form-item class="confirmBtnBox">
-					<el-button class="confirmBtn" type="primary">确认</el-button>
+					<el-button class="confirmBtn" type="primary" @click="addHz()">确认</el-button>
 				</el-form-item>
 			</el-form>
 		</el-dialog>
@@ -181,7 +198,7 @@
 			</ul>
 		</el-dialog>
 		<!-- 管理端 -->
-		<div class="consultation" v-if="oVisable">
+		<div class="consultation" v-if="$store.state.user.viewRoot.name==='manager'">
 			<div class="Admin-title">
 				<normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
 			</div>
@@ -206,7 +223,7 @@
 				<div v-else>
 					<div class="mainTab">
 						<div>
-							<selftag :inData="oTab1"  @reback="getOTab1"></selftag>
+							<selftag :inData="oTab1" @reback="getOTab1"></selftag>
 						</div>
 						<statisticsWay @reBack="getTjData"></statisticsWay>
 					</div>
@@ -223,18 +240,54 @@
 			<div class="doc-title">
 				<selftag :inData="oTab4"></selftag>
 				<div class="statistics-way">
-					<span>时间段：</span>
+					<!-- <span>时间段：</span>
 					<el-date-picker v-model="time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
-					</el-date-picker>
+					</el-date-picker> -->
 				</div>
 				<el-button class="startConsul" type="text" @click="centerDialogVisible = true">发起会诊</el-button>
 			</div>
 
 			<div>
-				<tableList :tableData="docTableData" :columns="columnsDoc" :tableBtn="docTableBtn"> </tableList>
+				<el-table :data="docTableData" border style="width: 100%">
+					<el-table-column fixed prop="consultationId" label="会诊编号" width="150">
+					</el-table-column>
+					<el-table-column prop="hospital" label="发起医院" width="120">
+					</el-table-column>
+					<el-table-column prop="department" label="发起科室" width="120">
+					</el-table-column>
+					<el-table-column prop="doctor" label="发起医生" width="120">
+					</el-table-column>
+					<el-table-column prop="applicationTime" label="发起时间" width="300">
+					</el-table-column>
+					<el-table-column prop="type" label="会诊类型" width="120">
+					</el-table-column>
+					<el-table-column prop="userName" label="会诊病人" width="120">
+					</el-table-column>
+					<el-table-column prop="consultationPurpose" label="目的" width="120">
+					</el-table-column>
+					<el-table-column prop="doctorNumber" label="参与专家" width="120">
+					</el-table-column>
+					<el-table-column prop="status" label="状态" width="120">
+					</el-table-column>
+					<el-table-column fixed="right" label="操作" width="100">
+						<template slot-scope="scope">
+							<!-- {{scope.row}} -->
+							<el-button @click="handleClick(scope.row)" type="text" size="small">病历</el-button>
+							<el-button @click="handleClick(scope.row)" type="text" size="small">邀请</el-button>
+							<el-button v-show="scope.row.status=='OVER'" @click="handleClick(scope.row)" type="text" size="small">查看记录</el-button>
+							<el-button v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="toConsultation(scope.row)" type="text" size="small">进入会诊</el-button>
+							<el-button v-show="scope.row.departmentId==userState.userId" @click="handleClick(scope.row)" type="text" size="small">结束</el-button>
+							<el-button type="text" size="small">编辑</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+				<!-- <tableList :tableData="docTableData" :columns="columnsDoc" :tableBtn="docTableBtn"> </tableList> -->
 			</div>
 
 		</div>
+		<el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+			<chat :sessionId="sessionId"></chat>
+		</el-dialog>
 
 	</div>
 </template>
@@ -245,13 +298,16 @@ import {
     fetchHospitalDepts,
     queryByManagerPage,
     queryByAppraiseList,
-	queryStatisticalByApplication,
-	queryStatisticalBySponsor
+    queryStatisticalByApplication,
+    queryStatisticalBySponsor,
+    getAllHospital,
+    addConsultation
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
 import tableList from "../public/publicComponents/publicList.vue";
 import selftag from "../public/publicComponents/selftag.vue";
+import chat from "../public/publicComponents/chat.vue";
 import normalTab from "../public/publicComponents/normalTab.vue";
 import normalColumnChart from "../public/publicComponents/normalColumnChart.vue";
 import search from "../public/publicComponents/search.vue";
@@ -264,10 +320,13 @@ export default {
         normalTab,
         normalColumnChart,
         search,
-        statisticsWay
+		statisticsWay,
+		chat
     },
     data() {
         return {
+			sessionId:"",//会诊id
+			chatVisible:false,//聊天框
             oVisable: true,
             oconsulVisable: true, //切换会诊管理和统计的显示
             centerDialogVisible: false, //是否发起会诊
@@ -277,6 +336,7 @@ export default {
             groupVisible: false, //会诊评价
             recordVisible: false, //查看记录
             applicationDeptId: "", //发起科室
+            applicationDeptId2: "",
             receiveDeptId: "", //接收科室
             searchValue: "", //管理端搜索框
             adminType: "",
@@ -285,7 +345,8 @@ export default {
             statisticsType: "DEPT",
             statisticsEnd: "",
             departmentsId: "",
-
+            departmentList: [], //科室列表
+            hospitalList: [], //医院列表
             form: "",
             oTab1: {
                 more: true,
@@ -339,16 +400,17 @@ export default {
             startDate: "",
             endDate: "",
             startHz: {
-                type: "会诊类型",
-                deptId: "发起科室ID",
-                userId: "会诊病人ID",
-                medicalHistory: "病历",
-                applicationTime: "申请时间",
-                consultationPurpose: "目的",
+                type: "SPECIALIST",
+                deptId: " ",
+                userId: " ",
+                medicalHistory: " ",
+                applicationTime: " ",
+                consultationPurpose: " ",
                 consultationHospitalDept: [
                     {
-                        hospitalId: "申请医院ID",
-                        departmentsId: "申请科室ID"
+                        hospitalId: "1",
+                        departmentsId: "2",
+                        departmentListOO: []
                     }
                 ]
             },
@@ -478,6 +540,13 @@ export default {
                     }
                 },
                 {
+                    name: "邀请",
+                    oclass: "recordBtn",
+                    method: (index, row) => {
+                        this.recordFun(index, row);
+                    }
+                },
+                {
                     name: "查看记录",
                     oclass: "recordBtn",
                     method: (index, row) => {
@@ -501,19 +570,15 @@ export default {
             },
             //申请科室统计图
             drawData: {
-                dataAxis: [
-                ], //每个柱子代表的类名
-                data: [
-                ], //具体数值
+                dataAxis: [], //每个柱子代表的类名
+                data: [], //具体数值
                 title: " ", //图表标题
                 totalNumber: "555"
-			},
-			//发起科室统计图
+            },
+            //发起科室统计图
             drawDataStart: {
-                dataAxis: [
-                ], //每个柱子代表的类名
-                data: [
-                ], //具体数值
+                dataAxis: [], //每个柱子代表的类名
+                data: [], //具体数值
                 title: " ", //图表标题
                 totalNumber: "555"
             }
@@ -528,10 +593,8 @@ export default {
     methods: {
         // 管理端事件
         getOTab1(data) {
-			this.applicationDeptId = data.index.value;
-			this.getAdminList();
-			this.getAdminTjList();
-			this.getApplyTjList();
+            this.applicationDeptId = data.index.value;
+            this.getAdminList();
         },
         getOTab11(data) {
             this.receiveDeptId = data.index.value;
@@ -545,6 +608,12 @@ export default {
             this.adminStatus = data.index.value;
             this.getAdminList();
         },
+
+        getOTab4(data) {
+            this.applicationDeptId2 = data.index.value;
+            this.getAdminTjList();
+            this.getApplyTjList();
+        },
         //查看记录
         recordFun() {
             this.recordVisible = true;
@@ -554,11 +623,58 @@ export default {
             this.oDocTime = data.index.value;
             this.getDocList();
         },
-
+        addHospital() {
+            this.startHz.consultationHospitalDept.push({
+                hospitalId: "",
+                departmentsId: ""
+            });
+        },
         adminSearchChange(data) {
             this.searchValue = data;
             this.getAdminList();
         },
+        //发起会诊
+        async addHz() {
+            let _this = this;
+            let addHzConsultatonList = [];
+            $.each(this.startHz.consultationHospitalDept, function(
+                index,
+                text
+            ) {
+                addHzConsultatonList.push({
+                    hospitalId: text.hospitalId,
+                    departmentsId: text.departmentsId
+                });
+            });
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                type: this.startHz.type,
+                deptId: this.startHz.deptId,
+                userId: this.startHz.userId,
+                medicalHistory: this.startHz.medicalHistory,
+                applicationTime: this.startHz.applicationTime,
+                consultationPurpose: this.startHz.consultationPurpose,
+                consultationHospitalDept: addHzConsultatonList
+            };
+            const res = await addConsultation(query, options);
+            if (res.data && res.data.errCode === 0) {
+                alert("陈宫");
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+		},
+		//进入会诊
+		async toConsultation(oObject){
+			alert(oObject.sessionId)
+			this.chatVisible=true;
+			this.sessionId=oObject.sessionId;
+		},
         //管理端事件
         getConsulTabData(res) {
             if (res.i == 0) {
@@ -566,13 +682,38 @@ export default {
             } else if (res.i == 1) {
                 this.oconsulVisable = false;
             }
+        }, //获取医院列表
+        async getHospitalment() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const res = await getAllHospital(query);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body, function(index, text) {
+                    _this.hospitalList.push({
+                        name: text.orgName,
+                        value: text.orgCode
+                    });
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //改变医院 同时改变科室
+        hosChange(oid, oindex) {
+            this.getDepartment(oindex);
         },
         //获取科室列表
-        async getDepartment() {
+        async getDepartment(oindex) {
             let _this = this;
             let query = {
                 orgCode: this.userSelfInfo.orgCode,
-                deptId: ""
+                deptId: this.departmentsId
             };
             const res = await fetchHospitalDepts(query);
             if (res.data && res.data.errCode === 0) {
@@ -583,6 +724,16 @@ export default {
                     this.oTab1.more = false;
                 }
                 $.each(res.data.body, function(index, text) {
+                    _this.departmentList.push({
+                        name: text.deptName,
+                        value: text.deptId
+                    });
+                    _this.startHz.consultationHospitalDept[
+                        oindex
+                    ].departmentListOO.push({
+                        name: text.deptName,
+                        value: text.deptId
+                    });
                     _this.oTab1.list.push({
                         text: text.deptName,
                         value: text.deptId
@@ -622,15 +773,15 @@ export default {
         },
         //获取管理端申请科室统计列表
         async getApplyTjList() {
-			this.drawData.dataAxis=[];
-			this.drawData.data=[]
+            this.drawData.dataAxis = [];
+            this.drawData.data = [];
             let _this = this;
             const options = {
                 token: this.userState.token,
                 type: this.statisticsType,
                 startDate: this.statisticsStart,
                 endDate: this.statisticsEnd,
-                deptId: this.applicationDeptId
+                deptId: this.applicationDeptId2
             };
             const res = await queryStatisticalByApplication(options);
             if (res.data && res.data.errCode === 0) {
@@ -645,24 +796,24 @@ export default {
                     message: res.data.errMsg
                 });
             }
-		},
-		        //获取管理端发起科室统计列表
+        },
+        //获取管理端发起科室统计列表
         async getAdminTjList() {
-			this.drawDataStart.dataAxis=[];
-			this.drawDataStart.data=[]
+            this.drawDataStart.dataAxis = [];
+            this.drawDataStart.data = [];
             let _this = this;
             const options = {
                 token: this.userState.token,
                 type: this.statisticsType,
                 startDate: this.statisticsStart,
                 endDate: this.statisticsEnd,
-                deptId: this.applicationDeptId
+                deptId: this.applicationDeptId2
             };
             const res = await queryStatisticalBySponsor(options);
             if (res.data && res.data.errCode === 0) {
                 $.each(res.data.body.data, function(index, text) {
                     _this.drawDataStart.dataAxis.push(text.unit);
-					_this.drawDataStart.data.push(text.number);
+                    _this.drawDataStart.data.push(text.number);
                 });
             } else {
                 //失败
@@ -674,13 +825,12 @@ export default {
         },
         //获取统计类型
         getTjData(data) {
-			console.log(data)
-			this.statisticsType = data.select.value;
-			this.statisticsStart=data.time[0]
-			this.statisticsEnd=data.time[1]
-			this.getAdminTjList();
-			this.getApplyTjList();
-
+            console.log(data);
+            this.statisticsType = data.select.value;
+            this.statisticsStart = data.time[0];
+            this.statisticsEnd = data.time[1];
+            this.getAdminTjList();
+            this.getApplyTjList();
         },
         //获取医生端列表
         async getDocList() {
@@ -706,11 +856,12 @@ export default {
         }
     },
     async created() {
-        this.getDepartment();
+        this.getDepartment("");
         this.getAdminList();
         this.getDocList();
-		this.getAdminTjList();
-		this.getApplyTjList();
+        this.getAdminTjList();
+        this.getApplyTjList();
+        this.getHospitalment();
     }
 };
 </script>
