@@ -1,6 +1,6 @@
 <template>
 <div class="top">
-	<div class="change-root" v-if="!(viewRoot.now.type === '0')">
+	<div class="change-root" v-if="!userInfo.rooter">
 		<el-menu :default-active="viewRoot.now.type" class="el-menu-demo" mode="horizontal" @select="handleSelect">
 		<el-menu-item index="1">管理权限</el-menu-item>
 		<el-menu-item index="2">医生端</el-menu-item>
@@ -43,7 +43,9 @@
 			...mapState({
 				viewRoot:state => state.user.viewRoot
 			}),
-			
+			...mapState({
+				userInfo:state => state.user.userInfo
+			}),
 		},
 		data(){
 			return {

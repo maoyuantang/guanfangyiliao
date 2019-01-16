@@ -11,12 +11,6 @@
                     <el-radio :label="true">密码登录</el-radio>
                     <el-radio :label="false">验证码登录</el-radio>
                 </el-radio-group>
-
-
-                <!-- <el-radio v-model="way" @click="setWayTrue">密码登录</el-radio>
-                <el-radio v-model="checkBoxStatus[1]" @click="setWayFalse">验证码登录</el-radio> -->
-                    <!-- <Checkbox >密码登录</Checkbox>
-                    <Checkbox v-model="checkBoxStatus[1]" @click="setWayFalse">验证码登录</Checkbox> -->
             </div>
             <div class="login-input-div">
                 <span class="login-input-name">{{way?"密码":"验证码"}}</span>
@@ -35,19 +29,12 @@
     import sensitiveWordCheck from '../public/publicJs/sensitiveWordCheck.js'
     import { Base64 } from 'js-base64'
     import jsonSort from '../public/publicJs/jsonSort.js'
-    // import countRoot from '../public/publicJs/countRoot.js'
     import websocket from "../common/websocket.js"
     import { mapState } from 'vuex'
-    import {testA} from '../api/test.js'
-    import {testC} from '../api/test.js'
     import {getLoginCode,login,userInfo} from '../api/apiAll.js'//api
     import createUUID from '../public/publicJs/createUUID.js'
-    /****************** */
-    import selectTree from '../public/publicComponents/selectTree.vue'
-import { setTimeout } from 'timers';
 	export default {
         components:{
-            selectTree
         },
         watch:{
             way(n){console.log(n)},
@@ -140,17 +127,6 @@ import { setTimeout } from 'timers';
             }),
         },
 		methods:{
-            setWayTrue(){
-                this.checkBoxStatus[0] = true;
-                this.checkBoxStatus[1] = false;
-                this.way = true;
-            },
-            setWayFalse(){
-                this.checkBoxStatus[0] = false;
-                this.checkBoxStatus[1] = true;
-                this.way = false;
-            },
-
            /**
             * 传入 字符串
             * 输出 json 
@@ -199,7 +175,6 @@ import { setTimeout } from 'timers';
                     
                 }
                 this.account.ok = true;
-                // console.log(this.account)
             },
 
             /**
@@ -226,7 +201,6 @@ import { setTimeout } from 'timers';
             async getCode(){
                 if(!this.account.ok)return;
                 const reData = await getLoginCode({phone:this.account});
-                // console.log(reData)
                 if(reData.data&&reData.data.errCode===0){//成功
                 }else{//失败
                     this.$notify.error({
@@ -274,7 +248,6 @@ import { setTimeout } from 'timers';
                 };
                 this.way?options.passwd=this.passwd.text:options.captcha=this.passwd.text;
                 const res = await login(options);
-                // console.log(res.data);
                 if(res.data&&res.data.errCode===0){//成功
                     res.data.body.isLogin = true;//添加个字段，方便前端操作
                     const sign = this.reverseStr(res.data.body.sign);//翻转sign
@@ -291,12 +264,9 @@ import { setTimeout } from 'timers';
                             }
                         });
                     }
-                    // console.log(res.data.body.sign);
                     res.data.body.sign = Base64.decode(res.data.body.sign)
                     this.$store.commit("user/SETUSERINFO",res.data.body);
-                    // this.$store.commit("user/SETVIEWROOT");
                     sessionStorage.setItem('userInfo',JSON.stringify(res.data.body));//将用户权限信息写入缓存
-                    // console.log(res.data.body)
                     // console.log(this.$store.state.user.viewRoot)
                     this.getUserInfo();//使用登录页、过后的token，请求用户个人信息
                     this.setViewRoot(res.data.body);//计算用户权限
@@ -313,7 +283,6 @@ import { setTimeout } from 'timers';
              *通过登录信息，计算用户权限，存入vuex 
              */
             setViewRoot(data){
-                console.log(data)
                 let reData = {//计算后的数据
                     now:{},//当前显示权限，有三个权限，超级管理员rooter, 医院管理员manager，医生doctors
                     rooter:[],//超级管理员
@@ -364,12 +333,12 @@ import { setTimeout } from 'timers';
                         }
                     }
                 }
-                if(reData.manager.length>2){//为什么是大于2？因为我一开始就在里面放了个元素，还有为什么我不用用户的身份判断？因为那东西是真的水，根据产品设计，用户不是管理员也有可能操作管理员页面~~~！
+                if(reData.manager.length>1){//为什么是大于1？因为我一开始就在里面放了个元素，还有为什么我不用用户的身份判断？因为那东西是真的水，根据产品设计，用户不是管理员也有可能操作管理员页面~~~！
                     reData.now = {
                         name:'manager',
                         type:'1'
                     }	
-                }else if(reData.doctors.length>2){
+                }else if(reData.doctors.length>1){
                     reData.now = {
                         name:'doctors',
                         type:'2'
@@ -381,42 +350,7 @@ import { setTimeout } from 'timers';
         },
         
 		async created(){
-            return;
-
-
-            let json = {
-                "adc":"123",
-                "ccc":"234",
-                "mm":{
-                    "aa":"33333",
-                    "vv":"dd",
-                    "cc":{
-                        "ttt":'44',
-                        "nnn":"66"
-                    }
-                },
-                "bb":"444",
-                "zz":[
-                    '1','2','3'
-                ]
-                
-            }
-            const newJson = jsonSort(json)
-            // console.log(newJson)
-
-            // getLoginCode()
-            // .then(res=>console.log(res))
-        //    const user = await login({
-        //         "account":"gftechadmin",
-        //         "passwd":"111111",
-        //         "captcha":"",
-        //         "agreement":true,
-        //         "appDevice":"WEB"
-        //     });
-        //     console.log(user) 
-
-            console.log(createUUID())//生成uuid
-           
+            // console.log(createUUID())//生成uuid
 		}
 	}
 </script>
@@ -497,49 +431,3 @@ import { setTimeout } from 'timers';
         margin-bottom: 0.32rem;
     }
 </style>
-
-
-// const test = {
-//     z:45456,
-//     y:56564654,
-//     a:454545,
-//     w:4545454,
-//     wed:45415,
-//     aw:45,
-//     cg:45,
-//     jsh:{
-//         hdsj:5445,
-//         dush:797
-//     }
-// }
-// const cf = obj => {//json转数组
-//     const arr = [];
-//     const toarr = data =>{
-//         for(const i in data){
-//             const sjson = {};
-//             if(Object.prototype.toString.call(i) === "[object Object]"){
-//                 sjson.name = i;
-//                 sjson.value = toarr(data[i])
-//             }else{
-               
-//                 sjson.name = i;
-//                 sjson.value = obj[i]
-//             }
-//             return sjson
-//         }
-        
-//     }
-//     return toarr(arr)
-// }
-// const px = prop => {//数组排序
-//     return (a,b)=>{
-//         return a[prop] > b[prop] ? 1 : -1 
-//     }
-// }
-// const toJson = arr => {
-//     const newJson = {};
-//     for(let i of arr){
-//         newJson[i.name] = i.value
-//     }
-//     return newJson
-// }
