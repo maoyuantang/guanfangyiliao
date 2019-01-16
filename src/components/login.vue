@@ -326,10 +326,10 @@
                     sessionStorage.setItem('viewRoot',JSON.stringify(reData));//缓存将权限下来
                     return;
                 }
-                for(let i of data.hasAuth){
-                    for(let j of this.allPages){
-                        if(i.authorityId === j.code){
-                            i.type==='1'?reData.manager.push(j):reData.doctors.push(j)//将type==='1'的，推入manager数组，其他的推入doctors数组
+                for(let i of this.allPages){
+                    for(let j of data.hasAuth){
+                        if(j.authorityId === i.code){
+                            j.type==='1'?reData.manager.push(i):reData.doctors.push(i)
                         }
                     }
                 }

@@ -15,6 +15,7 @@
 <script>
 import { mapState } from 'vuex'
 import jsonSort from '../../public/publicJs/jsonSort';
+import { parse } from 'protobufjs';
 	export default {
 		name : 'navigation',
 		watch:{
@@ -33,7 +34,26 @@ import jsonSort from '../../public/publicJs/jsonSort';
 				}
 			},
 			'$store.state.user.viewRoot'(n,o){
-				console.log(n)
+				console.log(n);
+				let rePage = sessionStorage.getItem('page');
+				if(rePage){
+					try{
+						rePage = JSON.parse(rePage);
+					}catch(e){
+						console.log(e);
+						this.$notify.error({
+							title: '错误',
+							message: '数据解析失败!!'
+						});
+						return;
+					}
+					if(this.viewRoot[this.viewRoot.now.name].find(item=>item.code===rePage.code)){
+						this.navList = this.navList.map(i=>{
+							i.select = i.code===rePage.code
+						});
+						this.$router.push({path:rePage.path});
+					}
+				}
 			}
 		},
 		data(){

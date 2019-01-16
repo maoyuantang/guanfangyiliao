@@ -69,6 +69,7 @@
             },
 			draw(setData){
                 this.$nextTick(arg=>{
+                    if(!this.$refs.testEcharts)return;
                     const myChart = echarts.init(this.$refs.testEcharts);
                     let getMaxNum = this.getMax(setData.data);
                     if(!getMaxNum.ok){
@@ -211,7 +212,10 @@
                 title:this.inData.title,
                 total:this.inData.total+'4544464'
             });
-		}
+        },
+        async beforeMount(){
+            
+        }
 	}
 </script>
 
