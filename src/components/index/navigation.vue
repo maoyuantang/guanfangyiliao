@@ -24,15 +24,16 @@ import jsonSort from '../../public/publicJs/jsonSort';
 			 * 在视图权限切换的情况下，切换后的权限不一定有切换前展示的页面，如果没有，直接跳转首页
 			 */
 			navList(n,o){
-				console.log(n)
-				console.log(n[this.$store.state.user.viewRoot.now.name]);
-				if(!n[this.$store.state.user.viewRoot.now.name]){//确实视图权限
+				if(!n[this.$store.state.user.viewRoot.now.name]){//缺失视图权限
 					this.$router.push({path:'/'});//路由跳转
 					this.navList = this.navList.map(item=>{
-						item.select = item.code==='1';
+						item.select = item.code==='1';//首页的code是‘1’
 						return item;
 					});
 				}
+			},
+			'$store.state.user.viewRoot'(n,o){
+				console.log(n)
 			}
 		},
 		data(){
@@ -144,14 +145,21 @@ import jsonSort from '../../public/publicJs/jsonSort';
 			 * 该函数恢复页面，主要用在刷新之后
 			 */
 			restorePage(){
+				console.log('enter')
 				let rePage = sessionStorage.getItem('page');
 				if(rePage){//说明以前有记录，恢复他
 					try{
 						rePage = JSON.parse(rePage);
 					}catch(e){
 						console.log(e);
+						this.$notify.error({
+							title: '错误',
+							message: '记录恢复失败!'
+						});
 						return;
 					}
+					console.log(rePage)
+					console.log(this.viewRoot[this.viewRoot.now.name])
 					const index = this.viewRoot[this.viewRoot.now.name].find(item=>{//该权限视图是否包含该页面
 						return item.code===rePage.code
 					});

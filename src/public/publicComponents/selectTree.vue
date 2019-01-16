@@ -11,15 +11,11 @@
         <div class="list">
             <div class="list-inner" :class="show?'list-inner-show':'list-inner-hiddle'">
                 <el-tree v-show="show"
-                    
                     :data="inData"
                     show-checkbox
                     node-key="id"
                     ref="tree"
-                    check-strictly
-                    default-expand-all
-                    @check="selectItem"
-                    >
+                    @check="selectItem">
                 </el-tree>
             </div>
         </div>
@@ -52,13 +48,14 @@ export default {
     }
   },
   props:[
-      'inData'
+    'inData'
   ],
-   created() {
-       this.documentClick();
+  created() {
+    this.documentClick();
+    console.log(this.inData)
   },
   beforeDestroy(){
-      this.clearListen();
+    this.clearListen();
   }
 };
 </script>

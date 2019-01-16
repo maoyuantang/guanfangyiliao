@@ -81,5 +81,9 @@ export default {
     queryStatisticalByApplication:'/m/v1/api/consultation/queryStatisticalByApplication',//8.查询申请科室统计
     queryStatisticalBySponsor:'/m/v1/api/consultation/queryStatisticalBySponsor',//9.查询发起科室统计
     getAllHospital:'/m/v1/api/basics/hospital/getAllHospital',//1.20获取所有医院
+<<<<<<< HEAD
     webGetTitleList:'/m/v1/api/followup/followupModel/webGetTitleList',//10.2.11获取随访标题列表
+=======
+    getxiezuoList:'/m/v1/api/synergy/manage/page',//9.2协作管理列表 
+>>>>>>> abfde0f77b560ccbd323cb0cb53db10e5bead199
 }
