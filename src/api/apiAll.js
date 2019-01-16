@@ -68,6 +68,13 @@ export const userList = query=>{//首页-账号及权限-用户列表
         }
     })
 }
+export const getAllHospital = query=>{//2.2.获取医院列表
+    return axios({
+        method:'get',
+        url:apiList.getAllHospital,
+        params:query,
+    })
+}
 export const fetchHospitalDepts = query=>{//2.2.获取医院科室列表
     return axios({
         method:'get',

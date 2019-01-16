@@ -80,4 +80,5 @@ export default {
     queryByAppraiseList:'/m/v1/api/consultation/queryByAppraiseList',//7.查询会诊评论列表
     queryStatisticalByApplication:'/m/v1/api/consultation/queryStatisticalByApplication',//8.查询申请科室统计
     queryStatisticalBySponsor:'/m/v1/api/consultation/queryStatisticalBySponsor',//9.查询发起科室统计
+    getAllHospital:'/m/v1/api/basics/hospital/getAllHospital',//1.20获取所有医院
 }
