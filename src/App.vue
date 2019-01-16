@@ -1,6 +1,6 @@
 <template>
 	<div id="app">
-		<!-- <img src="./assets/logo.png">-->
+		<!--11111 <img src="./assets/logo.png">-->
 		<transition>
 			<router-view class="router-view-class" />
 		</transition>
