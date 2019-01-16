@@ -93,6 +93,7 @@ export default {
 		 */
 		CHANGEVIEWAUTH(state,data){
 			state.viewRoot.now = data;
+			state.viewRoot = Object.assign({},state.viewRoot);
 			// const obj = {
 			// 	'1':'manager',
 			// 	'2':'doctors'
