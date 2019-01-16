@@ -1,7 +1,31 @@
 export default {
 	namespaced: true,
 	state:{
-		viewRoot:null,//视图权限，用户能看到哪些界面，现在用户权限基本是个摆设，而且既是医生又是医院管理这个角色无法判断（后端未返回），根据后端要求，用户的权限和视图已经没啥关系了
+		viewRoot:{
+			now:{
+				name:'',
+				type:''
+			},
+			rooter:[
+
+			],
+			manager:[
+				{
+					name:'首页',
+					select:true,
+					path:'/',
+					code:'1'
+				}
+			],
+			doctors:[
+				{
+					name:'首页',
+					select:true,
+					path:'/',
+					code:'1'
+				}
+			]
+		},//视图权限，用户能看到哪些界面，现在用户权限基本是个摆设，而且既是医生又是医院管理这个角色无法判断（后端未返回），根据后端要求，用户的权限和视图已经没啥关系了
 		// root:null,//用户权限（角色） 四个角色：超级管理员，用'a'表示；医院管理员，用'b'吧表示；医生，用'c'表示；既是医生又是医院管理员，用'bc'表示
 		userInfo:{//用户账号信息
 			isLogin:false,//是否登录，true是，false否.默认未登录
@@ -50,39 +74,14 @@ export default {
 	},
 	mutations:{
 		/**
-		 * 设置（切换）用户视图权限
-		 * 注意：用户视图权限和用户权限没有半毛钱关系
-		 *      用户视图权限只有三种：超级管理员，医院管理员和医生
-		 * 		有了对应的视图权限就可以看对应的页面，即使该用户权限不够
-		 * 		这个权限来自后端返回的‘hasAuth’列表
-		 * 		比如：用户的身份只是个医生，没有其他的权限（不是医院管理员，更不是超级管理员），但是只要后端返回的‘hasAuth’列表包含有type=1（等于1表示就可以看医院管理员的页面），就可以看
-		 * 			超出该用户（身份只是个医生）权限的页面（医院管理员）
+		 * 保存用户视图权限
 		 */
-		SETVIEWROOT(state,data='1'){
-			if(state.userInfo.rooter)state.viewRoot='rooter';
-			for(const i of state.userInfo.hasAuth){
-				if(i.type===data){
-					state.viewRoot = data==='1'?{name:'manager',type:data}:{name:'doctors',type:data};
-					sessionStorage.setItem('viewRoot',JSON.stringify(state.viewRoot));
-					// console.log(state.viewRoot)
-					return
-				}
-			}
-
-			// state.userInfo.hasAuth.find(item=>{
-			// 	if(item.type===data){
-			// 		state.viewRoot = data==='1'?{name:'manager',type:data}:{name:'doctors',type:data};
-			// 		sessionStorage.setItem('viewRoot',JSON.stringify(state.viewRoot));
-			// 		console.log(state.viewRoot)
-			// 		return
-			// 	}
-			// })
+		SETVIEWROOT(state,data){
+			state.viewRoot = data;
 		},
 
 		/**
 		 * 设置（切换）用户权限
-		 * @param {*} state 
-		 * @param {*} data 
 		 */
 		SETROOT(state,data){
 			console.log(data)
@@ -90,8 +89,24 @@ export default {
 		},
 
 		/**
-		 * @param {*} state =>state 
-		 * @param {*} data =>传入数据，类型为json
+		 * 切换用户视图身份
+		 */
+		CHANGEVIEWAUTH(state,data){
+			state.viewRoot.now = data;
+			// const obj = {
+			// 	'1':'manager',
+			// 	'2':'doctors'
+			// };
+			// state.viewRoot.now ={
+			// 	name:obj[data],
+			// 	type:data
+			// }
+			// state.viewRoot.now = data==='1'?{name:'manager',type:'1'}:{name:'manager',type:'2'}
+		},
+
+		/**
+		 *  state =>state 
+		 *  data =>传入数据，类型为json
 		 * 作用：设置用户账号信息
 		 */
 		SETUSERINFO(state,data){
@@ -131,8 +146,6 @@ export default {
 
 		/**
 		 * 
-		 * @param {*} state 
-		 * @param {*} data 
 		 * 作用：设置用户个人信息
 		 */
 		SETUSERSELFINFO(state,data){
@@ -176,8 +189,6 @@ export default {
 		},
 		/**
 		 * 
-		 * @param {*} context 
-		 * @param {*} data 
 		 * 作用：设置用户账号信息
 		 */
 		setUserInfo(context,data){//设置用户账号信息
@@ -185,7 +196,6 @@ export default {
 		},
 		/**
 		 * 
-		 * @param {*} context 
 		 * 作用：清除用户账号信息
 		 */
 		clearUserInfo(context){//清除用户账号信息

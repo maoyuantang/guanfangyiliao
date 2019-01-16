@@ -1,9 +1,9 @@
 <template>
 <div class="top">
-	<div class="change-root">
-		<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-		<el-menu-item index="1">处理中心</el-menu-item>
-		<el-menu-item index="2">消息中心</el-menu-item>
+	<div class="change-root" v-if="!(viewRoot.now.type === '0')">
+		<el-menu :default-active="viewRoot.now.type" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+		<el-menu-item index="1">管理权限</el-menu-item>
+		<el-menu-item index="2">医生端</el-menu-item>
 	</el-menu>
 	</div>
 	
@@ -39,11 +39,14 @@
 		computed:{
 			...mapState({
 				userSelfInfo:state => state.user.userSelfInfo
-			})
+			}),
+			...mapState({
+				viewRoot:state => state.user.viewRoot
+			}),
+			
 		},
 		data(){
 			return {
-				activeIndex:'1',
 				marquee:'i is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fish'
 			}
 		},
@@ -52,8 +55,20 @@
 				console.log('444')
 			},
 			handleSelect(index){
-				this.$store.commit("user/SETVIEWROOT",index);
+				const obj = {
+					'1':'manager',
+					'2':'doctors'
+				};
+				let sendData = {
+					name:obj[index],
+					type:index
+				}
+				this.$store.commit("user/CHANGEVIEWAUTH",sendData);
+				sessionStorage.setItem('viewRoot',JSON.stringify(this.viewRoot));//存缓存,或者叫跟新缓存更合适
 			}
+		},
+		async created(){
+			console.log(this.$store.state.user.viewRoot.now)
 		}
 	}
 </script>

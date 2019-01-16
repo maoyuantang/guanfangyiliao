@@ -179,36 +179,30 @@ const router = new Router({
  * 作用：路由跳转，设置title，未登录重定向
  */
 router.beforeEach((to, from, next) => {
-	if(!store.state.user.userInfo.isLogin&&to.path!=='/login'){
-		let userInfoSession = sessionStorage.getItem('userInfo'); 
-		let userSelfInfoSession= sessionStorage.getItem('userSelfInfo'); 
-		let viewRoot = sessionStorage.getItem('viewRoot'); 
-		// console.log(viewRoot)
-		if(userInfoSession&&userSelfInfoSession){
+	if(!store.state.user.userInfo.isLogin&&to.path!=='/login'){//vuex中没有用户信息，并且不在登录页面,检查缓存中有没有数据，判断是否是刷新
+		let userInfo = sessionStorage.getItem('userInfo');//用户信息
+		let userSelfInfo = sessionStorage.getItem('userSelfInfo');//用户个人信息
+		let viewRoot = sessionStorage.getItem('viewRoot');//用户视图权限信息
+		
+		if(userInfo&&userSelfInfo&&viewRoot){//缓存中有数据，说明是刷新
 			try{
-				userInfoSession = JSON.parse(userInfoSession);
-				userSelfInfoSession = JSON.parse(userSelfInfoSession);
-				// viewRoot = JSON.parse(viewRoot);
+				userInfo =  JSON.parse(userInfo);
+				userSelfInfo =  JSON.parse(userSelfInfo);
+				viewRoot =  JSON.parse(viewRoot);
+				console.log(viewRoot.now)
 			}catch(e){
-				console.log(e)
-				next({path:'/login'})
+				console.log(e);
+				next({path:'/login'});
 				return;
 			}
-			store.commit("user/SETUSERINFO",userInfoSession);
-			store.commit("user/SETUSERSELFINFO",userSelfInfoSession);
-			store.commit("user/SETVIEWROOT",viewRoot.type);
-			console.log(viewRoot)
+			store.commit("user/SETUSERINFO",userInfo);
+			store.commit("user/SETUSERSELFINFO",userSelfInfo);
+			store.commit("user/SETVIEWROOT",viewRoot);
 			console.log(store.state.user.viewRoot)
-			// store.commit("user/SETROOT",countRoot({//用户的权限需要计算
-			// 	rooter:userInfoSession.rooter,
-			// 	manager:userInfoSession.manager,
-			// 	hasAuth:userInfoSession.hasAuth
-			// }));
 		}else{
-			next({path:'/login'})
+			next({path:'/login'});
 			return;
 		}
-		
 	}
 	/* 路由发生变化修改页面title */
 	document.title = to.meta.title?to.meta.title:null;
