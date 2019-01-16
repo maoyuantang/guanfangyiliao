@@ -35,7 +35,7 @@ import testb from './testb.vue'
 					manager:'hospitalManagement',
 					doctors:'doctorsIndex'
 				};
-				return {page:rootView[this.$store.state.user.viewRoot.name]}
+				return {page:rootView[this.$store.state.user.viewRoot.now.name]}
 			}
 		},
 		methods:{
@@ -46,7 +46,8 @@ import testb from './testb.vue'
 			doctorsIndex
 		},
 		async created(){
-			console.log(this.$store.state.user);
+			// console.log(this.$store.state.user);
+			window.onerror = err=>console.log(err)
 			// console.log(this.$store.state.user.userInfo.hasAuth)
 			// console.log('test');
 			// const test = await settingsList({token:this.$store.state.user.userInfo.token});

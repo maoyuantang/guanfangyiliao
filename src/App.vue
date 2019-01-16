@@ -44,18 +44,7 @@ export default {
         }
     },
     watch: {
-        $route(to, from) {
-            console.log(to);
-            console.log(from);
-        }
     },
-    beforeRouteUpdate(to, from, next) {
-        if (this.$router.isBack) {
-        } else {
-        }
-        this.$router.isBack = false;
-        next();
-    }
 }
 </script>
 

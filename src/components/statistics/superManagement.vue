@@ -58,7 +58,7 @@ export default {
             };
             const res = await fetchHospitalList(options);
             if (res.data && res.data.errCode === 0) {
-                alert("dd");
+                // alert("dd");
             } else {
                 //失败
                 this.$notify.error({

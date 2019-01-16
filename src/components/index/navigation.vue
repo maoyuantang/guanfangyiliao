@@ -4,8 +4,8 @@
 			<span class="logo-font">冠方智慧医疗</span>
 		</div>
 		<el-menu>
-		    <el-menu-item index="2" v-for="(item,index) in navList.data" :key="index" :class="item.select?'select-item':'not-select-item'" @click="navClick(index,item)">
-		        <!-- <i class="el-icon-menu"></i> -->
+		    <el-menu-item index="2" v-for="(item,index) in navList" :key="index" :class="item.select?'select-item':'not-select-item'" @click="gotoPage(item,index)">
+		        <i class="el-icon-menu"></i>
 		        <span slot="title">{{item.name}}{{item.select}}</span>
 		    </el-menu-item>
 		</el-menu>
@@ -13,30 +13,27 @@
 </template>
 
 <script>
-// import { constants } from 'http2';
 import { mapState } from 'vuex'
 import jsonSort from '../../public/publicJs/jsonSort';
 	export default {
 		name : 'navigation',
 		watch:{
-			// listenChange(n){
-			// 	let root = this.$store.state.user.viewRoot
-			// 	const rootMap = this.returnRootAll();
-			// 	console.log('456465')
-			// 	if(!root)return{ok:false,data:[]};
-			// 	let originalList = rootMap[root.name]();
-			// 	let nowPage = sessionStorage.getItem('nowView')
-			// 	if(nowPage){
-			// 		nowPage = JSON.parse(nowPage);
-			// 		originalList = originalList.map(item=>{
-			// 			item.select = item.code===nowPage.code;
-			// 			return item;
-			// 		})
-			// 	}
-			// 	this.routerList = rootMap[this.$store.state.user.viewRoot.name]?{ok:true,data:originalList}:{ok:false,data:[]};
-			// 	console.log(this.routerList)
-				
-			// }
+			/**
+			 * 监听navList变化
+			 * 其实是监听点击顶上的‘管理权限’和‘医生端’的点击情况
+			 * 在视图权限切换的情况下，切换后的权限不一定有切换前展示的页面，如果没有，直接跳转首页
+			 */
+			navList(n,o){
+				console.log(n)
+				console.log(n[this.$store.state.user.viewRoot.now.name]);
+				if(!n[this.$store.state.user.viewRoot.now.name]){//确实视图权限
+					this.$router.push({path:'/'});//路由跳转
+					this.navList = this.navList.map(item=>{
+						item.select = item.code==='1';
+						return item;
+					});
+				}
+			}
 		},
 		data(){
 			return {
@@ -108,157 +105,75 @@ import jsonSort from '../../public/publicJs/jsonSort';
 						path:'/management',
 						code:'100000'
 					},
-				]
+				],
+
 			}
 		},
 		computed:{
 			...mapState({
-                userState: state => state.user.userInfo,
+				userState: state => state.user.userInfo,
+				viewRoot: state => state.user.viewRoot,
 			}),
 			navList:{
 				get(){
-					console.log('456465')
-					let root = this.$store.state.user.viewRoot
-					const rootMap = this.returnRootAll();
-					if(!root)return{ok:false,data:[]};
-					let originalList = rootMap[root.name]();
-					let nowPage = sessionStorage.getItem('nowView')
-					if(nowPage){
-						nowPage = JSON.parse(nowPage);
-						originalList = originalList.map(item=>{
-							item.select = item.code===nowPage.code;
-							return item;
-						})
-						console.log(originalList)
-						if(!originalList.find((item,index)=>item.select)){
-							originalList[0].select = true;
-							sessionStorage.setItem('nowView',JSON.stringify(originalList[0]));//记录下当前显示的是哪个页面
-							this.$router.push({path:originalList[0].path})
-						}
-						
-					}
-					return rootMap[this.$store.state.user.viewRoot.name]?{ok:true,data:originalList}:{ok:false,data:[]};
+					return this.$store.state.user.viewRoot[this.$store.state.user.viewRoot.now.name]
 				},
 				set(data){
 					return data
 				}
 			},
-
-
-
-			// navList(state){
-			// 	console.log('456465')
-			// 	let root = this.$store.state.user.viewRoot
-			// 	const rootMap = this.returnRootAll();
-			// 	if(!root)return{ok:false,data:[]};
-			// 	let originalList = rootMap[root.name]();
-			// 	let nowPage = sessionStorage.getItem('nowView')
-			// 	if(nowPage){
-			// 		nowPage = JSON.parse(nowPage);
-			// 		originalList = originalList.map(item=>{
-			// 			item.select = item.code===nowPage.code;
-			// 			return item;
-			// 		})
-			// 	}
-			// 	return rootMap[this.$store.state.user.viewRoot.name]?{ok:true,data:originalList}:{ok:false,data:[]};
-			// },
 			
 		},
 		methods:{
-			changeCss(index){//点击导航条，改变样式
-				this.navList.data = this.navList.data.map((item,key)=>{
-					item.select = key===index;
-					console.log(item)
-					return item;
+			/**
+			 * 左侧菜单导航栏被点击
+			 * 修改css样式
+			 * 记录下当前点击源，防止刷新
+			 * 路由跳转
+			 */
+			gotoPage(item,index){
+				this.navList = this.navList.map((i,key)=>{//修改css
+					i.select = index===key;
+					return i;
 				});
-				// this.routerList = this.routerList.map((item,key)=>{
-				// 	item.select = key===index;
-				// 	return item;
-				// });
+				sessionStorage.setItem('page',JSON.stringify(item));//存缓存
+				this.$router.push({path:item.path});//路由跳转
 			},
-			gotoPage(index){//路由跳转
-				this.$router.push({path:this.routerList[index].path})
-			},
-			navClick(index,item){//导航被点击
-				this.changeCss(index);//切换被选项样式
-				this.gotoPage(index);//跳转路由
-				sessionStorage.setItem('nowView',JSON.stringify(item));//记录下当前显示的是哪个页面
-				
-			},
-			returnRootAll(){
-				return {
-					rooter:data=>{//超级管理员
-						return [
-							{
-								name:'医院管理',
-								select:true,
-								path:'/',
-								code:'0'
-							},
-							{
-								name:'远程会诊系统',
-								select:false,
-								path:'/cloudManagement',
-								code:'0'
-							},
-						];
-					},
-					manager:data=>{//医院管理员
-						const newArr = this.$store.state.user.userInfo.hasAuth.filter(item=>{//权限列表里面混杂着两种权限，调出医院管理员权限（type为‘1’）
-							return item.type==='1';
+
+			/**
+			 * 该函数恢复页面，主要用在刷新之后
+			 */
+			restorePage(){
+				let rePage = sessionStorage.getItem('page');
+				if(rePage){//说明以前有记录，恢复他
+					try{
+						rePage = JSON.parse(rePage);
+					}catch(e){
+						console.log(e);
+						return;
+					}
+					const index = this.viewRoot[this.viewRoot.now.name].find(item=>{//该权限视图是否包含该页面
+						return item.code===rePage.code
+					});
+					if(index){
+						this.navList = this.navList.map((item,key)=>{
+							item.select = item.code===rePage.code;
+							return item;
 						});
-						const list = [
-							{//首页后台并不返回，自己加上
-								name:'首页',
-								select:true,
-								path:'/',
-								code:'0'
-							},
-						];
-						for(const i of this.navMapList){
-							for(const j of newArr){
-								if(i.code === j.authorityId){//从上面过滤出的权限列表里面，对应准备好的路由，挑出来
-									list.push(i);
-								}
-							}
-						}
-						return list;
-					},
-					doctors:data=>{//医生
-						const newArr = this.$store.state.user.userInfo.hasAuth.filter(item=>{//权限列表里面混杂着两种权限，调出医院管理员权限（type为‘1’）
-							return item.type==='2';
-						});
-						const list = [
-							{//首页后台并不返回，自己加上
-								name:'首页',
-								select:true,
-								path:'/',
-								code:'0'
-							},
-						];
-						for(const i of this.navMapList){
-							for(const j of newArr){
-								if(i.code === j.authorityId){//从上面过滤出的权限列表里面，对应准备好的路由，挑出来
-									list.push(i);
-								}
-							}
-						}
-						return list;
-					},
-					defaultItem:data=>[{name:'wrong',selcrt:true,path:'/',code:'-1'}]
+					}else{
+
+					}
+					
 				}
-			},
+
+			}
 		},
 		created(){
-			this.routerList = this.navList.data;
-			// console.log(this.routerList)
-			// setTimeout(() => {
-			// 	console.log('enter')
-				
-			// 	console.log(this.$store.state.user.viewRoot)
-			// }, 5000);
-			// console.log(this.$store.state.user.userInfo.hasAuth)
+			this.restorePage()
+			console.log(this.$store.state.user.viewRoot);
+			console.log(sessionStorage.getItem('page'))
 		}
+		
 	}
 </script>
 

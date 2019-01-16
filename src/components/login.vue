@@ -64,6 +64,74 @@ import { setTimeout } from 'timers';
                     ok:true
                 },//密码
                 checkBoxStatus:[true,false],
+                allPages:[//左侧导航栏列表
+				// {
+				// 	name:'首页',
+				// 	select:true,
+				// 	path:'/',
+				// 	code:0
+				// },
+				{
+					name:'远程门诊系统',
+					select:false,
+					path:'/outpatient',
+					code:'10000'
+				},
+				{
+					name:'远程会诊系统',
+					select:false,
+					path:'/consultation',
+					code:'20000'
+				},
+				{
+					name:'远程协作系统',
+					select:false,
+					path:'/cooperation',
+					code:'30000'
+				},
+				{
+					name:'智能随访系统',
+					select:false,
+					path:'/followUp',
+					code:'40000'
+				},
+				{
+					name:'健康档案系统',
+					select:false,
+					path:'/files',
+					code:'50000'
+				},
+				{
+					name:'远程教育系统',
+					select:false,
+					path:'/education',
+					code:'60000'
+				},
+					{
+					name:'分级诊疗系统',
+					select:false,
+					path:'/medicalTreatment',
+					code:'70000'
+				},
+					{
+					name:'双向转诊系统',
+					select:false,
+					path:'/referral',
+					code:'80000'
+				},
+					{
+					name:'移动查房系统',
+					select:false,
+					path:'/rounds',
+					code:'90000'
+				},
+					{
+					name:'终端管理系统',
+					select:false,
+					path:'/management',
+					code:'100000'
+				},
+			]
             } 
         },
         computed:{
@@ -176,16 +244,11 @@ import { setTimeout } from 'timers';
                 const options = {
                    token:this.userState.token,
                    oneself:true
-                //    userId:'',//等后台怎么说
                 };
-                let res;
-                try{
-                    res = await userInfo(options);
-                }catch(e){e=>console.log(e)}
-                // console.log(res);
+                let res = await userInfo(options);
                 if(res.data.errCode === 0){//登录成功
                     this.$store.commit("user/SETUSERSELFINFO",res.data.body);
-                    sessionStorage.setItem('userSelfInfo',JSON.stringify(res.data.body));
+                    sessionStorage.setItem('userSelfInfo',JSON.stringify(res.data.body));//将用户个人信息写入缓存
                     // this.$router.push({path:'/'})
                 }else{
                     this.$message({
@@ -231,20 +294,12 @@ import { setTimeout } from 'timers';
                     // console.log(res.data.body.sign);
                     res.data.body.sign = Base64.decode(res.data.body.sign)
                     this.$store.commit("user/SETUSERINFO",res.data.body);
-                    this.$store.commit("user/SETVIEWROOT");
-                    console.log(this.$store.state.user.viewRoot)
-                    // const root = countRoot({//计算用户的权限，f**k
-                    //     rooter:res.data.body.rooter,
-                    //     manager:res.data.body.manager,
-                    //     hasAuth:res.data.body.hasAuth
-                    // });
-                    // console.log(root);
-                    // this.$store.commit("user/SETROOT",root);
-                    // console.log(res.data.body.sign);
-                    sessionStorage.setItem('userInfo',JSON.stringify(res.data.body));
-                    // console.log(sessionStorage.getItem('userInfo'))
-                    // this.$router.push({path:'/'})
-                    this.getUserInfo();
+                    // this.$store.commit("user/SETVIEWROOT");
+                    sessionStorage.setItem('userInfo',JSON.stringify(res.data.body));//将用户权限信息写入缓存
+                    // console.log(res.data.body)
+                    // console.log(this.$store.state.user.viewRoot)
+                    this.getUserInfo();//使用登录页、过后的token，请求用户个人信息
+                    this.setViewRoot(res.data.body);//计算用户权限
                     websocket.initWebSocket(this.userState.token)
                 }else{//失败
                     this.$notify.error({
@@ -253,10 +308,79 @@ import { setTimeout } from 'timers';
                     });
                 }
             },
-            conRedata(data){console.log(data)}
-		},
+
+            /**
+             *通过登录信息，计算用户权限，存入vuex 
+             */
+            setViewRoot(data){
+                console.log(data)
+                let reData = {//计算后的数据
+                    now:{},//当前显示权限，有三个权限，超级管理员rooter, 医院管理员manager，医生doctors
+                    rooter:[],//超级管理员
+                    manager:[//医院管理员
+                        {
+                            name:'首页',
+                            select:true,
+                            path:'/',
+                            code:'1'//这个code有空写个不重复的，虽然暂时还用不到，以后怕是有点用
+                        }
+                    ],
+                    doctors:[//医生
+                        {
+                            name:'首页',
+                            select:true,
+                            path:'/',
+                            code:'1'
+                        }
+                    ]
+                };
+                if(data.rooter){//如果是超级管理员，直接赋值，这个是固定的，直接写，并且直接返回，是超级管理员就不能是医院管理员或者医生身份
+                    reData.rooter = [
+                        {
+                            name:'医院管理',
+                            select:true,
+                            path:'/',
+                            code:'2'
+                        },
+                        {
+                            name:'远程会诊系统',
+                            select:false,
+                            path:'/cloudManagement',
+                            code:'2'
+                        }
+                    ];
+                    reData.now = {
+                        name:'rooter',
+                        type:'0'
+                    }	
+                    this.$store.commit("user/SETVIEWROOT",reData);
+                    sessionStorage.setItem('viewRoot',JSON.stringify(reData));//缓存将权限下来
+                    return;
+                }
+                for(let i of data.hasAuth){
+                    for(let j of this.allPages){
+                        if(i.authorityId === j.code){
+                            i.type==='1'?reData.manager.push(j):reData.doctors.push(j)//将type==='1'的，推入manager数组，其他的推入doctors数组
+                        }
+                    }
+                }
+                if(reData.manager.length>2){//为什么是大于2？因为我一开始就在里面放了个元素，还有为什么我不用用户的身份判断？因为那东西是真的水，根据产品设计，用户不是管理员也有可能操作管理员页面~~~！
+                    reData.now = {
+                        name:'manager',
+                        type:'1'
+                    }	
+                }else if(reData.doctors.length>2){
+                    reData.now = {
+                        name:'doctors',
+                        type:'2'
+                    }
+                }
+                this.$store.commit("user/SETVIEWROOT",reData);
+                sessionStorage.setItem('viewRoot',JSON.stringify(reData));//缓存将权限下来
+            }
+        },
+        
 		async created(){
-        //    setTimeout(()=>console.log(this.$refs.tree.getCheckedKeys()),10000)
             return;
 
 
