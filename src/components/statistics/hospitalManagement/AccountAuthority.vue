@@ -540,13 +540,13 @@
                 const arr = [];//已选中的科室管理权限范围列表。
                 for(const i of this.DoctorBusinessScopeSelect){//这个'医生业务范围'由于自己写的（非element-ui），所以可以直接获取json，直接循环取出值
                     options.authorizes.push({
-                        type:1,
+                        type:2,
                         authorityId:i.id
                     })
                 }
                 for(const i of this.DepartmentManagementAuthoritySelect){
                     options.authorizes.push({
-                        type:2,
+                        type:1,
                         authorityId:i.id
                     })
                 }
@@ -565,18 +565,20 @@
              * 新增用户
              */
             async addSub(){
-                console.log(this.userInfo.token)
-                console.log('新增')
-                const testData = this.checkAddInfo();
-                if(!testData.ok){
-                    this.$message({
-                        type: 'info',
-                        message: `${ testData.msg }`
-                    });
-                    return;
-                }
+                // console.log(this.userInfo.token)
+                // console.log('新增')
+                // const testData = this.checkAddInfo();
+                // if(!testData.ok){
+                //     this.$message({
+                //         type: 'info',
+                //         message: `${ testData.msg }`
+                //     });
+                //     return;
+                // }
                 const postData = this.getAddSubData();
                 const postQuery = {token:this.userInfo.token}
+                console.log(postQuery,postData)
+                return
                 const res = await createUser(postQuery,postData);
                 console.log(res)
                 if(res.data.errCode === 0){

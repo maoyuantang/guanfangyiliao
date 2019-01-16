@@ -35,6 +35,7 @@ export default {
         this.show = !this.show
     },
     selectItem(){
+        console.log(this.$refs.tree.getCheckedKeys())
         this.$emit("reback",this.$refs.tree.getCheckedKeys());
     },
     unShow(){
