@@ -152,6 +152,9 @@
                 </li>
             </ul>
         </el-dialog>
+        <!-- 视频聊天 -->
+        <el-dialog title="视频" :visible.sync="videoVisible" center append-to-body>
+        </el-dialog>
         <!-- 录入档案 -->
         <!-- <el-dialog title="录入新档案" :visible.sync="planVisible"   center append-to-body>
             <el-form ref="form" :model="planData" label-width="80px">
@@ -211,6 +214,7 @@ export default {
             //         fileName:'ddd'
             //     }
             // ], //上传图片
+            videoVisible:false,//视频是否显示
             areadyReadNum: "", //已读
             chatUser: "", //参与聊天的成员
             messageList: [],
@@ -248,17 +252,14 @@ export default {
                 alert("失败");
             }
         },
+        //打开视频
         async setVideo() {
             let query = {
-                token: this.userState.token,
-                pageNum: 1,
-                pageSize: 10
+                token: this.userState.token
             };
-            const res = await webGetTitleList(query);
-            console.log(res);
+            const res = await createVideoRoom(query);
             if (res.data && res.data.errCode === 0) {
-                console.log(res.data);
-                this.followList = res.data.body.list;
+                this.videoVisible=true
             } else {
                 //失败
                 this.$notify.error({
