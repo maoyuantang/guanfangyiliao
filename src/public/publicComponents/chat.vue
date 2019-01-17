@@ -49,11 +49,11 @@
         </div>
         <div class="sendIcon">
             <span title="发送图片">
-                <input type="file" name="file" class="layui-upload-file sendImgCss" id="test" lay-title=" ">
-                <!-- <el-upload class="upload-demo" action="/m/v1/api/fs/download" :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" multiple :limit="3" :on-exceed="handleExceed" :file-list="fileList">
+                <!-- <input type="file" name="file" class="layui-upload-file sendImgCss" id="test" lay-title=" "> -->
+                <el-upload class="upload-demo" action="/m/v1/api/fs/upload" :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" multiple :limit="3" :on-exceed="handleExceed" :file-list="fileList">
                     <el-button size="small" type="primary">点击上传</el-button>
 
-                </el-upload> -->
+                </el-upload>
                 <img src="../../assets/sendNew1.png" />
             </span>
             <span title="发送视频">
@@ -501,7 +501,7 @@ export default {
                 oMinite = "0" + oMinite;
             }
             this.messageList.push({
-                from:this.userSelfInfo.userId,
+                from: this.userSelfInfo.userId,
                 content: this.messageBody,
                 serverTime: oHour + ":" + oMinite
             });

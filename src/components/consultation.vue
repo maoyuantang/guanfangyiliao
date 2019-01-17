@@ -40,7 +40,7 @@
 					</div>
 					<span @click="addHospital">加号</span>
 				</div>
-
+ 
 				<el-form-item label="会诊病人:">
 					<el-input v-model="startHz.userId"></el-input>
 				</el-form-item>
@@ -193,7 +193,7 @@
 			</ul>
 		</el-dialog>
 		<!-- 管理端 -->
-		<div class="consultation" v-if="$store.state.user.viewRoot.name==='manager'">
+		<div class="consultation"  v-if="$store.state.user.viewRoot.now.name==='manager'">
 			<div class="Admin-title">
 				<normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
 			</div>
