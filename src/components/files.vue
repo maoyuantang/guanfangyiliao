@@ -1,13 +1,6 @@
 <template>
     <div class="files">
         健康档案系统
-        <button class="chatBtn" @click="chatVisable=true">聊天</button>
-        <!-- <div v-show="chatVisable">
-            <chat></chat>
-        </div> -->
-        <el-dialog title=" " :visible.sync="chatVisable" width="450px">
-            <chat></chat>
-        </el-dialog>F
         <!-- 管理端 -->
         <div v-if="oVisable">
             <div class="Admin-title">

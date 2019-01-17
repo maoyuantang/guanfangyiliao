@@ -12,13 +12,24 @@
                     </div>
                     <div class="otherCon">
                         <h4>
+                            {{ohtml}}
                             <span class="peopleName">{{text.name}}</span>
                             <span class="otime">{{text.serverTime}}</span>
                         </h4>
                         <div>
                             <div class="messageCon">
+
                                 <span class="allReadColor" v-if="text.oRead">已读 </span>
-                                <span class="noReadColor" v-else>未读</span> {{text.content}} </div>
+                                <span class="noReadColor" v-else>未读</span>
+                                <!-- 显示图片 -->
+                                <div v-show="text.childMessageType=='IMAGE'" class="imgUrlBig">
+                                    <span>
+
+                                    </span>
+                                    <img :src="text.imgUrl" />
+                                </div>
+                                {{text.content}} </div>
+
                         </div>
                     </div>
                 </li>
@@ -49,14 +60,13 @@
         </div>
         <div class="sendIcon">
             <span title="发送图片">
-                <!-- <input type="file" name="file" class="layui-upload-file sendImgCss" id="test" lay-title=" "> -->
-                <el-upload class="upload-demo" action="/m/v1/api/fs/upload" :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" multiple :limit="3" :on-exceed="handleExceed" :file-list="fileList">
+                <el-upload class="upload-demo upload-demo-chat" :action="ourl" :on-success="imgUpload" :before-remove="beforeRemove" :limit="1">
                     <el-button size="small" type="primary">点击上传</el-button>
 
                 </el-upload>
                 <img src="../../assets/sendNew1.png" />
             </span>
-            <span title="发送视频">
+            <span @click="setVideo()" title="发送视频">
                 <img src="../../assets/sendNew2.png" />
             </span>
             <span title="发送文章">
@@ -163,6 +173,7 @@
 </template>
 
 <script>
+import apiBaseURL from "../../enums/apiBaseURL.js";
 import protobuf from "protobufjs";
 import { mapState } from "vuex";
 // import websocket from "../../common/websocket.js";
@@ -191,15 +202,15 @@ export default {
             followVisible: false, //随访是否显示
             followList: [], //随访标题列表
             followListVisible: false, //随访列表详情是否显示
-            fileList: [
-                // {
-                //     token:d,
-                //     id: xxxxx,
-                //     fileName: xxxxxx,
-                //     width: 80,
-                //     height: 80
-                // }
-            ], //上传图片
+            ourl: "",
+            imgId: "", //上传图片后得到的id
+            imgUrl: "/m/v1/api/hdfs/fs/download/",
+            // fileList: [
+            //     {
+            //         name:"ddd",
+            //         fileName:'ddd'
+            //     }
+            // ], //上传图片
             areadyReadNum: "", //已读
             chatUser: "", //参与聊天的成员
             messageList: [],
@@ -221,9 +232,41 @@ export default {
         this.getHisRecord();
         this.getMemberMess();
         this.alreadyRead();
+        this.ourl = "/m/v1/api/hdfs/fs/upload?token=" + this.userState.token;
         console.log(this.sessionId);
     },
     methods: {
+        //图片上传成功
+        imgUpload(res) {
+            console.log(res);
+            if (res.body && res.errCode === 0) {
+                this.imgId = res.body;
+                this.messageBody = res.body;
+                this.childMessageType = 5;
+                this.sendMessageChat();
+            } else {
+                alert("失败");
+            }
+        },
+        async setVideo() {
+            let query = {
+                token: this.userState.token,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await webGetTitleList(query);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                console.log(res.data);
+                this.followList = res.data.body.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         //添加备注
         addRemarks() {
             this.remarkVisible = true;
@@ -253,6 +296,7 @@ export default {
                 });
             }
         },
+
         //随访详情
         followDetail() {
             this.followListVisible = true;
@@ -457,6 +501,13 @@ export default {
                         } else if (odata[i].childMessageType == "FOLLOWUP") {
                             //随访
                             this.messageList[i].content = "随访";
+                        } else if (odata[i].childMessageType == "IMAGE") {
+                            //图片
+                            this.messageList[i].imgUrl =
+                                apiBaseURL.developmentEnvironment +
+                                "/m/v1/api/hdfs/fs/download/" +
+                                odata[i].body;
+                            // this.messageList[i].imgUrl="http://pic1.nipic.com/2008-12-30/200812308231244_2.jpg"
                         } else if (odata[i].childMessageType == "AUDIO") {
                             //音频
                             this.messageList[i].content = "音频";
@@ -506,12 +557,12 @@ export default {
                 serverTime: oHour + ":" + oMinite
             });
             let timestamp = Date.parse(new Date());
-            let tag = "img"; //辨识图片
-            if (this.messageBody.indexOf(tag) != -1) {
-                this.childMessageType = 5;
-            } else {
-                this.childMessageType = 0;
-            }
+            // let tag = "img"; //辨识图片
+            // if (this.messageBody.indexOf(tag) != -1) {
+            //     this.childMessageType = 5;
+            // } else {
+            //     this.childMessageType = 0;
+            // }
             console.log(this.userSelfInfo);
             let Iessage = {
                 RequestType: 4,
@@ -736,6 +787,28 @@ export default {
 }
 .followBox {
     padding: 4px 0;
+}
+.upload-demo-chat {
+    position: absolute;
+    width: 44px;
+    height: 55px;
+}
+.upload-demo-chat > div {
+    width: 100%;
+    height: 100%;
+}
+.upload-demo-chat > div button {
+    visibility: hidden;
+    width: 100%;
+    height: 100%;
+}
+.imgUrlBig {
+    width: 50px;
+    height: 100px;
+}
+.imgUrlBig > img {
+    width: 100%;
+    height: 100%;
 }
 /* 备注
 
