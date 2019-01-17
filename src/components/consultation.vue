@@ -243,8 +243,8 @@
 			</div>
 
 			<div>
-				<el-table :data="docTableData" border style="width: 100%">
-					<el-table-column fixed prop="consultationId" label="会诊编号" width="150">
+				<el-table :data="docTableData" border style="width: 100%"  @header-cell-style="alertAT()">
+					<el-table-column   fixed prop="consultationId" label="会诊编号" width="150">
 					</el-table-column>
 					<el-table-column prop="hospital" label="发起医院" width="120">
 					</el-table-column>
@@ -521,6 +521,13 @@ export default {
                     method: (index, row) => {
                         this.recordFun(index, row);
                     }
+                },
+                {
+                    name: "aaaa",
+                    oclass: "recordBtn",
+                    method: (index, row) => {
+                        this.recordFun(index, row);
+                    }
                 }
             ],
             docTableBtn: [
@@ -583,6 +590,9 @@ export default {
         })
     },
     methods: {
+		alertAT(){
+alert('dd')
+		},
         // 管理端事件
         getOTab1(data) {
             this.applicationDeptId = data.index.value;
@@ -761,6 +771,7 @@ export default {
             const res = await queryByManagerPage(options);
             if (res.data && res.data.errCode === 0) {
                 this.adminTableData = res.data.body.data2.list;
+                console.log(res)
             } else {
                 //失败
                 this.$notify.error({

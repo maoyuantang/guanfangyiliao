@@ -64,7 +64,7 @@ export default {
     fetchHistoryMessage:'/m/v1/api/im/session/fetchHistoryMessage',//14.4.拉取历史消息记录
     fetchSessionMembers:'/m/v1/api/im/session/fetchSessionMembers',//14.5.获取会话成员列表
     userSendMessageId:'/m/v1/api/im/session/userSendMessageId',//14.6.用户接收到消息后更新同步
-    fetchReadMessageId:'/m/v1/api/im/session/fetchReadMessageId',//14.7.医生进入会话获取用户已读位置
+    fetchReadMessageId:'/m/v1/api/im/session/fetchReadMessageId',//14.7.医生进入会话获取用户已读managePage位置
     fetchNoticeInfo:'/m/v1/api/im/sys/message/fetchNoticeInfo',//14.8.获取通知列表
     fetchSyncMaxVersionId:'/m/v1/api/im/sys/message/fetchSyncMaxVersionId',//14.9.获取最大同步指令的版本号
     fetchSyncInfo:'/m/v1/api/im/sys/message/fetchSyncInfo',//14.10.拉取同步消息列表
