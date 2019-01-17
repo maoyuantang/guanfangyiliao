@@ -863,3 +863,98 @@ export const getxiezuoList = (query,data)=>{//13.1.8 提交评论
         }
     })
 }
+export const managePage = (query)=>{//9.2协作管理列表
+    const sign = postQueryHandle(Object.assign({},query));
+    return axios({
+        method:'post',
+        url:`${apiList.managePage}?token=${query.token}`,
+        headers:{
+            sign
+        }
+    })
+}
+export const manageStatistics = (query)=>{//9.3协作管理统计
+    const sign = postQueryHandle(Object.assign({},query));
+    return axios({
+        method:'post',
+        url:`${apiList.manageStatistics}?token=${query.token}`,
+        headers:{
+            sign
+        }
+    })
+}
+export const synergyPage = (query)=>{//9.4医生协作列表 
+    const sign = postQueryHandle(Object.assign({},query));
+    return axios({
+        method:'post',
+        url:`${apiList.synergyPage}?token=${query.token}`,
+        headers:{
+            sign
+        }
+    })
+}
+export const enableSynergyDoctor = query=>{//9.5获取可协作医生（本院、院外协作）
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.enableSynergyDoctor,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const sendSynergy = (query,data)=>{//9.6发起协作
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:`${apiList.sendSynergy}?token=${query.token}`,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const synergyChangeStatus = (query)=>{//9.7开始/结束协作
+    const sign = postQueryHandle(Object.assign({},query));
+    return axios({
+        method:'post',
+        url:`${apiList.synergyChangeStatus}?token=${query.token}`,
+        headers:{
+            sign
+        }
+    })
+}
+export const synergyInto = query=>{//9.8进入协作
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.synergyInto,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const receiveDept = query=>{//9.9本院参与科室
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.receiveDept,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const receiveDoctor = query=>{//9.10本院参与科室
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.receiveDoctor,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}

@@ -1,5 +1,4 @@
 <template>
-
     <div class="public-list">
         <el-table :data="tableData" style="width: 100%">
             <el-table-column v-for="(column, index) in columns" :prop="column.prop" :key="index" :label="column.label" :width="column.width">
@@ -32,6 +31,10 @@ export default {
         reBackFn(index) {
             this.inData.i = index;
             this.$emit("reBack", this.inData);
+        },
+        sendData(data){
+            console.log(555)
+            this.$emit("sendData", data);
         }
     },
     props: {
