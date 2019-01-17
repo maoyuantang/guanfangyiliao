@@ -82,4 +82,14 @@ export default {
     queryStatisticalBySponsor:'/m/v1/api/consultation/queryStatisticalBySponsor',//9.查询发起科室统计
     getAllHospital:'/m/v1/api/basics/hospital/getAllHospital',//1.20获取所有医院
     webGetTitleList:'/m/v1/api/followup/followupModel/webGetTitleList',//10.2.11获取随访标题列表
+    managePage:'/m/v1/api/synergy/manage/page',//9.2协作管理列表
+    manageStatistics:'/m/v1/api/synergy/manage/statistics',//9.3协作管理统计
+    synergyPage:'/m/v1/api/synergy/page',//9.4医生协作列表
+    enableSynergyDoctor:'/m/v1/api/synergy/enableSynergyDoctor',//9.5获取可协作医生（本院、院外协作）
+    sendSynergy:'/m/v1/api/synergy/sendSynergy',//9.6发起协作
+    synergyChangeStatus:'/m/v1/api/synergy/changeStatus',//9.7开始/结束协作
+    synergyInto:'/m/v1/api/synergy/into',//9.8进入协作
+    receiveDept:"/m/v1/api/synergy/receiveDept",//9.9本院参与科室
+    receiveDoctor:'/m/v1/api/synergy/receiveDoctor',//9.10本院参与科室
+
 }

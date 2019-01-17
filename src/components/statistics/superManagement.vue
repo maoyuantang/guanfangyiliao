@@ -1,11 +1,25 @@
 <template>
 	<div class="super-management">
 		超级管理员
+        <Button type="primary" @click="testData.show = true">Display dialog box</Button>
+        <!-- <Modal
+            v-model="modal1"
+            title="test"
+            @on-ok="ok"
+            @on-cancel="cancel">
+           <el-tree
+                :data="testData"
+                show-checkbox
+                node-key="id"
+                @check="selectItem">
+            </el-tree>
+        </Modal> -->
+        <alertTree :inData="testData" @reback="getSelect"></alertTree>
         <div class="super-management-top">
             <search></search>
         </div>
         <div class="super-management-middle">
-            <publicList :columns="tableData.head" :tableData="tableData.data" :tableBtn="tableData.btns"></publicList> 
+            <publicList :columns="tableData.head" :tableData="tableData.data" :tableBtn="tableData.btns" @sendData="getSendData"></publicList> 
         </div>
 	</div>
 </template>
@@ -15,38 +29,61 @@ import { fetchHospitalList } from "../../api/apiAll.js";
 import { mapState } from "vuex";
 import search from "../../public/publicComponents/search.vue";
 import publicList from "../../public/publicComponents/publicList.vue";
+import alertTree from "../../public/publicComponents/alertTree.vue";
 import { constants } from 'zlib';
 export default {
     components: {
         search,
-        publicList
+        publicList,
+        alertTree
     },
     data() {
         return {
+            modal1:false,
+            testData:{
+                title:'test title',
+                canClick:true,
+                show:false,
+                data:[{
+                    id: 1,
+                    label: '一级 1',
+                    children: [{
+                        id: 4,
+                        label: '二级 1-1',
+                        children: [{
+                        id: 9,
+                        label: '三级 1-1-1'
+                        }, {
+                        id: 10,
+                        label: '三级 1-1-2'
+                        }]
+                    }]
+                    }, {
+                    id: 2,
+                    label: '一级 2',
+                    children: [{
+                        id: 5,
+                        label: '二级 2-1'
+                    }, {
+                        id: 6,
+                        label: '二级 2-2'
+                    }]
+                    }, {
+                    id: 3,
+                    label: '一级 3',
+                    children: [{
+                        id: 7,
+                        label: '二级 3-1'
+                    }, {
+                        id: 8,
+                        label: '二级 3-2'
+                    }]
+                }],
+            },
+            
             tableData:{
-                head:[
-                    {
-                        prop:"name",
-                        label:"姓名"
-                    },
-                    {
-                        prop:"age",
-                        label:"年龄"
-                    }
-                ],
-                data:[
-                    {
-                        age: "1545649424290",
-                        name: "冠方医院",
-                        oclass:"redColor"
-                    },
-                    {
-                        age: "1545618639429",
-                        name: "测试医院",
-                        oclass:"redColor"
-                    }
-
-                ],
+                head:[],
+                data:[],
                 btns:[
                     {
                         name: "编辑",
@@ -130,6 +167,15 @@ export default {
         })
     },
     methods: {
+        ok(){},
+        cancel(){},
+        selectItem(){},
+        getSelect(data){
+            console.log(data)
+        },
+        getSendData(data){
+            console.log(data)
+        },
         /**
          * 获取表格数据
          */
@@ -201,11 +247,14 @@ export default {
         },
         consoleSome(){
             console.log('i have a test')
+        },
+        canClick(){
+            console.log('can click')
         }
     },
     async created() {
         this.getTableData();
-        this.fun1('i is fish');
+        // this.fun1('i is fish');
     }
 };
 </script>
