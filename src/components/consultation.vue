@@ -24,11 +24,6 @@
 
 					</el-select>
 				</el-form-item>
-				<!-- <el-form-item label="发起科室:">
-							<el-select placeholder="请选择活动区域" v-model="text.deptId" >
-								<el-option v-for="(text,index) in departmentList" :label="text.name" :value="text.value" :key="index"></el-option>
-							</el-select>
-						</el-form-item> -->
 				<div>
 					<div style="display:flex" v-for="(text,index) in startHz.consultationHospitalDept" :key="index">
 
@@ -45,7 +40,7 @@
 					</div>
 					<span @click="addHospital">加号</span>
 				</div>
-
+ 
 				<el-form-item label="会诊病人:">
 					<el-input v-model="startHz.userId"></el-input>
 				</el-form-item>
@@ -55,9 +50,9 @@
 				<el-form-item label="申请时间:">
 					<!-- <el-date-picker v-model="startHz.applicationTime" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
 					</el-date-picker> -->
-					<!-- <el-date-picker v-model="startHz.applicationTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
-					</el-date-picker> -->
-					<el-input v-model="startHz.applicationTime"></el-input>
+					<el-date-picker v-model="startHz.applicationTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
+					</el-date-picker>
+					<!-- <el-input v-model="startHz.applicationTime"></el-input> -->
 				</el-form-item>
 				<el-form-item label="会诊目的:">
 					<el-input v-model="startHz.consultationPurpose"></el-input>
@@ -198,7 +193,7 @@
 			</ul>
 		</el-dialog>
 		<!-- 管理端 -->
-		<div class="consultation" v-if="$store.state.user.viewRoot.name==='manager'">
+		<div class="consultation"  v-if="$store.state.user.viewRoot.now.name==='manager'">
 			<div class="Admin-title">
 				<normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
 			</div>
@@ -238,7 +233,7 @@
 		<!-- 医生端 -->
 		<div class="consultation" v-else>
 			<div class="doc-title">
-				<selftag :inData="oTab4"></selftag>
+				<selftag :inData="oTab4" @reback="getOTab4"></selftag>
 				<div class="statistics-way">
 					<!-- <span>时间段：</span>
 					<el-date-picker v-model="time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
@@ -271,7 +266,6 @@
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="100">
 						<template slot-scope="scope">
-							<!-- {{scope.row}} -->
 							<el-button @click="handleClick(scope.row)" type="text" size="small">病历</el-button>
 							<el-button @click="handleClick(scope.row)" type="text" size="small">邀请</el-button>
 							<el-button v-show="scope.row.status=='OVER'" @click="handleClick(scope.row)" type="text" size="small">查看记录</el-button>
@@ -280,7 +274,6 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<!-- <tableList :tableData="docTableData" :columns="columnsDoc" :tableBtn="docTableBtn"> </tableList> -->
 			</div>
 
 		</div>
@@ -415,7 +408,7 @@ export default {
             },
             oTab4: {
                 more: false,
-                title: "全部",
+                title: "日期",
                 list: [
                     {
                         text: "全部",
@@ -608,11 +601,11 @@ export default {
             this.getAdminList();
         },
 
-        getOTab4(data) {
-            this.applicationDeptId2 = data.index.value;
-            this.getAdminTjList();
-            this.getApplyTjList();
-        },
+        // getOTab4(data) {
+        //     this.applicationDeptId2 = data.index.value;
+        //     this.getAdminTjList();
+        //     this.getApplyTjList();
+        // },
         //查看记录
         recordFun() {
             this.recordVisible = true;
