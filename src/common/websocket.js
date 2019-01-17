@@ -15,17 +15,17 @@ let oMsgId;
 //初始化websocket
 // alert(this.$store.state.token)
 function initWebSocket(otoken, ofun) {
-    console.log(otoken)
+    // console.log(otoken)
     //封装自定义的消息协议
     // protobuf.load('../common/imessage.json', (error, root) => {
     let root = protobuf.Root.fromJSON(imessage);
     //获取消息协议类型
     IMessage = root.lookupType("IMessage");
-    console.log(IMessage)
+    // console.log(IMessage)
     //创建Message对象,进行Im登录
     //getCookie('token'),
     let message = loginIM(otoken)
-    console.log(message)
+    // console.log(message)
     // Encode a message to an Uint8Array (browser) or Buffer (node)
     let buffer = IMessage.encode(message).finish();
 
@@ -33,12 +33,12 @@ function initWebSocket(otoken, ofun) {
     //ws地址
     let wsUrl = 'wss://demo.chuntaoyisheng.com:10002/chat'
     // let wsUrl = 'wss://echo.websocket.org'
-    console.log(wsUrl)
+    // console.log(wsUrl)
     if (!window.webSocket) {
 
         webSocket = new WebSocket(wsUrl);
         window.webSocket = webSocket
-        console.log(window.webSocket)
+        // console.log(window.webSocket)
 
     }
 
@@ -51,7 +51,7 @@ function initWebSocket(otoken, ofun) {
     //接受消息
     webSocket.onmessage = function (e) {
 
-        console.log(IMessage.decode(new Uint8Array(e.data)));
+        // console.log(IMessage.decode(new Uint8Array(e.data)));
         let odata = IMessage.decode(new Uint8Array(e.data));
 
         webSocketonmessage(odata);
@@ -107,7 +107,7 @@ function webSocketonmessage(odata) {
         sequence = odata.status.sequence;//序列号
         serverTime= odata.status.serverTime;//服务器时间
         oMsgId=odata.status.msgId
-        console.log(oMsgId)
+        // console.log(oMsgId)
         heartCheck.start()
        
     } else if (RequestType == 102) {
@@ -268,7 +268,7 @@ function webSocketonmessage(odata) {
                                         $.cookie("userIdL", userIdL, { expires: dates, path: "/", domain: "chuntaoyisheng.com" });
                                         // var gruouid=data.body[0].sessionId.replace("#","M").replace(":","-");
                                         var gruouid = "" + data.body[0].sessionId.replace("#", "M").replace(":", "-") + ""
-                                        console.log(gruouid);
+                                        // console.log(gruouid);
                                         setTimeout(function () {
                                             var addGroup = {
                                                 type: 'group'
@@ -307,7 +307,8 @@ function webSocketonmessage(odata) {
             }
         });
     } else if (RequestType === 6) {//接收到消息处理
-        console.log(odata.info.body)
+        // console.log(odata.info.body)
+
         // var fromL = odata.info.from;
         // if (true) {//判断是不是本人发的消息
         //     let msgId = odata.info.msgId;
@@ -860,14 +861,14 @@ function websocketsend(data) {
     //     }
     // }
 
-   console.log(data)
+//    console.log(data)
     let msg = IMessage.encode(data).finish();
     webSocket.send(msg);
 }
 
 //关闭
 function webSocketonclose(e) {
-    console.log("connection closed (" + e.code + ")");
+    // console.log("connection closed (" + e.code + ")");
     reconnect();
 }
 
@@ -901,7 +902,7 @@ let heartCheck = {
             //这里发送一个心跳，后端收到后，返回一个心跳消息，
             let buffer = IMessage.encode(data).finish();
             webSocket.send(buffer); //心跳的内容需要根据实际情况进行自己定义
-            console.log('send-heart', data);
+            // console.log('send-heart', data);
         }, this.timeout)
     }
 }
@@ -912,7 +913,7 @@ let heartCheck = {
 //重新连接IM
 function reconnect(otoken) {
 
-    console.log(otoken)
+    // console.log(otoken)
     if (lockReconnect) {
         return;
     };
@@ -927,9 +928,9 @@ function reconnect(otoken) {
 }
 
 function loginIM(token) {
-    console.log(token)
+    // console.log(token)
     var odata = new Date()
-    console.log(odata.getTime())
+    // console.log(odata.getTime())
     //消息类型按照这样传递
     let message = IMessage.create({
         RequestType: 1,
@@ -959,7 +960,7 @@ function getSequence(){
 function getMsgId(){
     return oMsgId;
 }
-console.log(getSequence())
+// console.log(getSequence())
 
 
 export default { sendMessage, initWebSocket,getContent,getTicket,getServerTime,getSequence,getMsgId }
