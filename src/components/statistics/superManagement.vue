@@ -2,24 +2,12 @@
 	<div class="super-management">
 		超级管理员
         <Button type="primary" @click="testData.show = true">Display dialog box</Button>
-        <!-- <Modal
-            v-model="modal1"
-            title="test"
-            @on-ok="ok"
-            @on-cancel="cancel">
-           <el-tree
-                :data="testData"
-                show-checkbox
-                node-key="id"
-                @check="selectItem">
-            </el-tree>
-        </Modal> -->
         <alertTree :inData="testData" @reback="getSelect"></alertTree>
         <div class="super-management-top">
             <search></search>
         </div>
         <div class="super-management-middle">
-            <publicList :columns="tableData.head" :tableData="tableData.data" :tableBtn="tableData.btns" @sendData="getSendData"></publicList> 
+           
         </div>
 	</div>
 </template>
@@ -30,15 +18,81 @@ import { mapState } from "vuex";
 import search from "../../public/publicComponents/search.vue";
 import publicList from "../../public/publicComponents/publicList.vue";
 import alertTree from "../../public/publicComponents/alertTree.vue";
-import { constants } from 'zlib';
+import selfTab from "../../public/publicComponents/selfTab.vue";
 export default {
     components: {
         search,
         publicList,
-        alertTree
+        alertTree,
+        selfTab
     },
     data() {
         return {
+            tableTestData:{
+                head:[
+                    {
+                        name:'title 1'
+                    },
+                    {
+                        name:'title 2'
+                    },
+                    {
+                        name:'title 3'
+                    },
+                    {
+                        name:'title 4'
+                    },
+                ],
+                body:[
+                    {
+                        name:'body 1',
+                        data:{
+                            a:'00',
+                            b:'01',
+                            c:'02',
+                            d:'03'
+                        }
+                    },
+                    {
+                        name:'body 2',
+                        data:{
+                            a:'00',
+                            b:'01',
+                            c:'02',
+                            d:'03'
+                        }
+                    },
+                    {
+                        name:'body 3',
+                        data:{
+                            a:'00',
+                            b:'01',
+                            c:'02',
+                            d:'03'
+                        }
+                    },
+                    {
+                        name:'body 4',
+                        data:{
+                            a:'00',
+                            b:'01',
+                            c:'02',
+                            d:'03'
+                        }
+                    },
+                ],
+                operating:[
+                    {
+                        name:'操作1'
+                    },
+                    {
+                        name:'操作2'
+                    },
+                ]
+            },
+
+
+
             modal1:false,
             testData:{
                 title:'test title',
@@ -80,7 +134,24 @@ export default {
                     }]
                 }],
             },
-            
+            tableData: [{
+                date: '2016-05-02',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄'
+                }, {
+                date: '2016-05-04',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1517 弄'
+                }, {
+                date: '2016-05-01',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1519 弄'
+                }, {
+                date: '2016-05-03',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1516 弄'
+            }]
+            /*
             tableData:{
                 head:[],
                 data:[],
@@ -158,6 +229,7 @@ export default {
                     "lastPage": 1
                 }
             },
+            */
         };
     },
     computed: {
@@ -192,8 +264,8 @@ export default {
             if (res.data && res.data.errCode === 0) {
                 console.log(this.jsonToArray(res.data.body.header))
                 const tableHead = this.jsonToArray(res.data.body.header);
-                tableHead.ok?this.tableData.head=tableHead.data:this.$notify.error({title: "数据解析失败",message:tableHead.msg});
-                this.tableData.data = res.data.body.data2.list
+                // tableHead.ok?this.tableTestData.head=tableHead.data:this.$notify.error({title: "数据解析失败",message:tableHead.msg});
+                // this.tableTestData.body = res.data.body.data2.list
             } else { //失败
                 this.$notify.error({
                     title: "数据获取失败",
@@ -229,24 +301,11 @@ export default {
             const reArr = [];
             for(let i in newJson){
                 reArr.push({
-                    prop:i,
-                    label:newJson[i]
+                    key:i,
+                    name:newJson[i]
                 })
             }
             return {ok:true,msg:'',data:reArr} 
-        },
-        fun1(data){
-            this.$alert(`<h1 @click="consoleSome">
-                ${data}
-            </h1>`, 'HTML 片段', {
-            dangerouslyUseHTMLString: true,
-            callback: action=>{
-                console.log('click')
-            }
-            });
-        },
-        consoleSome(){
-            console.log('i have a test')
         },
         canClick(){
             console.log('can click')
@@ -254,7 +313,6 @@ export default {
     },
     async created() {
         this.getTableData();
-        // this.fun1('i is fish');
     }
 };
 </script>
