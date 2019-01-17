@@ -867,7 +867,8 @@ export const managePage = (query)=>{//9.2协作管理列表
     const sign = postQueryHandle(Object.assign({},query));
     return axios({
         method:'post',
-        url:`${apiList.managePage}?token=${query.token}`,
+        url:`${apiList.managePage}`,
+        params:query,
         headers:{
             sign
         }
@@ -877,7 +878,8 @@ export const manageStatistics = (query)=>{//9.3协作管理统计
     const sign = postQueryHandle(Object.assign({},query));
     return axios({
         method:'post',
-        url:`${apiList.manageStatistics}?token=${query.token}`,
+        url:`${apiList.managePage}`,
+        params:query,
         headers:{
             sign
         }
@@ -887,7 +889,8 @@ export const synergyPage = (query)=>{//9.4医生协作列表
     const sign = postQueryHandle(Object.assign({},query));
     return axios({
         method:'post',
-        url:`${apiList.synergyPage}?token=${query.token}`,
+        url:`${apiList.managePage}`,
+        params:query,
         headers:{
             sign
         }
@@ -908,7 +911,8 @@ export const sendSynergy = (query,data)=>{//9.6发起协作
     const sign = postQueryHandle(Object.assign({},data,query));
     return axios({
         method:'post',
-        url:`${apiList.sendSynergy}?token=${query.token}`,
+        url:`${apiList.managePage}`,
+        params:query,
         data:data,
         headers:{
             sign
@@ -919,7 +923,8 @@ export const synergyChangeStatus = (query)=>{//9.7开始/结束协作
     const sign = postQueryHandle(Object.assign({},query));
     return axios({
         method:'post',
-        url:`${apiList.synergyChangeStatus}?token=${query.token}`,
+        url:`${apiList.managePage}`,
+        params:query,
         headers:{
             sign
         }

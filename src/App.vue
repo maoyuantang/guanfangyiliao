@@ -29,19 +29,19 @@ export default {
     },
     created() {
         const test = this.lianjie();
-        console.log(this.$store.state.user.userInfo.hasAuth)
-        console.log(this.$store.state.user.userInfo.rooter)
-         console.log(this.$store.state.user.userInfo.manager)
+        // console.log(this.$store.state.user.userInfo.hasAuth)
+        // console.log(this.$store.state.user.userInfo.rooter)
+        //  console.log(this.$store.state.user.userInfo.manager)
 				
     },
     methods: {
         lianjie:function() {
         //  websocket.close()
-        console.log(this.userState.token)
+        // console.log(this.userState.token)
         
             window.websocket = websocket.initWebSocket(this.userState.token);
         
-            console.log(window.websocket)
+            // console.log(window.websocket)
         }
     },
     watch: {
