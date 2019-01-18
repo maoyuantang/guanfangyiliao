@@ -17,7 +17,10 @@ import outpatient from '@/components/outpatient'//远程门诊系统
 import referral from '@/components/referral'//双向转诊系统
 import rounds from '@/components/rounds'//移动查房系统
 import cloudManagement from '@/components/cloudManagement'//移动查房系统
+import familyMedicine from '@/components/familyMedicine'//移动查房系统
 import notFound from '@/components/notFound'//404页面
+
+
 
 Vue.use(Router)
 
@@ -129,7 +132,15 @@ const router = new Router({
 		      meta: {
 		        title: '远程会诊系统'
 		      }
-        },
+				},
+				{
+      		path: '/familyMedicine',
+		      name: 'familyMedicine',
+		      component: familyMedicine,
+		      meta: {
+		        title: '家医生系统'
+		      }
+				},
       ]
     },
     {

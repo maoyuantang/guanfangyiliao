@@ -22,7 +22,7 @@ export default {
     createHospitalDept:'/m/v1/api/basics/hospital/createHospitalDept',//8.6.新增医院科室
     updateHospitalDept:'/m/v1/api/basics/hospital/updateHospitalDept',//8.7.变更科室名称
     deleteHospitalDept:'/m/v1/api/basics/hospital/deleteHospitalDept',//8.8.删除医院科室
-    settingsList:'/m/v1/api/synergySystem/settingsList',//8.9获取协作人员设置树
+    settingsList:'/m/v1/api/basics/hospital/fetchHospitalDepts',//8.9获取协作人员设置树
     settingsUpdate:'/m/v1/api/synergySystem/settingsUpdate',//8.10超级管理员更新协作人员
     addCloud:'/m/v1/api/cloud/addCloud',//11.1.新增云存储业务
     updateCloud:'/m/v1/api/cloud/updateCloud',//11.2.更新云存储业务
@@ -91,5 +91,39 @@ export default {
     synergyInto:'/m/v1/api/synergy/into',//9.8进入协作
     receiveDept:"/m/v1/api/synergy/receiveDept",//9.9本院参与科室
     receiveDoctor:'/m/v1/api/synergy/receiveDoctor',//9.10本院参与科室
-
+    createVideoRoom:'/m/v1/api/videoMeeting/createVideoRoom',//1.3.创建视频
+    storageUsers:'/m/v1/api/videoMeeting/storageUsers',//1.4.进入/退出视频房间
+    queryStorageUsers:'/m/v1/api/videoMeeting/queryStorageUsers/',//1.5.根据房间号获取用户列表
+    closeVideoRoom:'/m/v1/api/videoMeeting/closeVideoRoom/',//1.6.删除视频会议房间
+    videoMeetingInvited:'/m/v1/api/videoMeeting/invited/',//1.7.邀请用户进行视频通话
+    invitedOff:'/m/v1/api/videoMeeting/invited/off/',//1.8.通知邀请者已经进入会议视频
+    upload:'/m/v1/api/hdfs/fs/upload',//1.9.1文件上传
+    fsDownload:'/m/v1/api/hdfs/fs/download/',//1.9.文件下载
+    fetchHospitalRel:'/m/v1/api/basics/hospital/fetchHospitalRel',//8.11.获取医院上下级是否已选中列表
+    modelInsert:'/m/v1/api/satisfaction/model/insert',//10.3.1 创建满意度模板
+    getModelInsert:'/m/v1/api/satisfaction/model/select',//10.3.2 获取模板列表
+    editModel:'/m/v1/api/satisfaction/model/edit',//10.3.3 编辑模板
+    deleteModel:'/m/v1/api/satisfaction/model/delete',//10.3.4 删除模板
+    getTemplateInfo:'/m/v1/api/satisfaction/model/getTemplateInfo',//10.3.5 查看模板详情
+    getTitleList:'/m/v1/api/satisfaction/model/getTitleList',//10.3.6 获取可使用的模板标题列表
+    examine:'/m/v1/api/satisfaction/model/examine',//10.3.7 模板审核
+    getMissileList:'/m/v1/api/satisfaction/send/getMissileList',//10.3.8 获取可发送的用户列表
+    publishNotice:'/m/v1/api/satisfaction/send/publishNotice',//10.3.9 通过短信发送满意度调查
+    rePublish:'/m/v1/api/satisfaction/send/rePublish',//10.3.10 失败重发
+    getResultList:'/m/v1/api/satisfaction/send/getResultList',//10.3.11 调查管理列表
+    sendExport:'/m/v1/api/satisfaction/send/export',//10.3.12 导出短信回复
+    createInquiry:'/m/v1/api/inquiry/inquiryModel/createInquiry',//10.6.1 新建问诊模板【医生web】
+    editInquiry:'/m/v1/api/inquiry/inquiryModel/editInquiry',//10.6.2 编辑问诊模板【医生web】
+    queryInquiry:'/m/v1/api/inquiry/inquiryModel/queryInquiry',//10.6.3 查询问诊模板
+    deleteInquiry:'/m/v1/api/inquiry/inquiryModel/deleteInquiry',//10.6.4 删除问诊模板【医生web】
+    queryList:'/m/v1/api/inquiry/inquiryModel/queryList',//10.6.5 获取问诊模板列表【医生web】
+    getModelTitleList:'/m/v1/api/inquiry/inquiryModel/webGetTitleList',//10.6.6 获取问诊模板标题列表【医生web】
+    generateInquiryPlan:'/m/v1/api/inquiry/inquiryPlan/generateInquiryPlan',//10.6.8 生成问诊计划
+    handleInquiryPlan:'/m/v1/api/inquiry/inquiryPlan/handleInquiryPlan',//10.6.9 用户处理问诊计划
+    queryInquiryPlan:'/m/v1/api/inquiry/inquiryPlan/queryInquiryPlan',//10.6.10 查看问诊计划详情
+    INHOSPITAL:'/m/v1/api/followup/followupPlan/getFollowupGraph/INHOSPITAL',//10.7.1 获取住院随访统计
+    OUTPATIENT:'/m/v1/api/followup/followupPlan/getFollowupGraph/OUTPATIENT',//10.7.2 获取门诊随访统计
+    alertGet:'/m/v1/api/device/house/alertGet',//10.9.1 获取设备告警信息【医生web】
+    alertSwitch:'/m/v1/api/device/house/alertSwitch',//10.9.2 设备告警开关改变【医生web】
+    alertSet:'/m/v1/api/device/house/alertSet',//10.9.3 告警值修改【医生web】
 }

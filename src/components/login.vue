@@ -117,6 +117,12 @@
 					select:false,
 					path:'/management',
 					code:'100000'
+                },
+                {
+					name:'家医系统',
+					select:false,
+					path:'/familyMedicine',
+					code:'110000'
 				},
 			]
             } 
