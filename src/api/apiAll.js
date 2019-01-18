@@ -885,11 +885,11 @@ export const manageStatistics = (query)=>{//9.3协作管理统计
         }
     })
 }
-export const synergyPage = (query)=>{//9.4医生协作列表 
-    const sign = postQueryHandle(Object.assign({},query));
+export const synergyPage = query=>{//9.4医生协作列表 
+    const sign = postQueryHandle(query);
     return axios({
-        method:'post',
-        url:`${apiList.synergyPage}`,
+        method:'get',
+        url:apiList.synergyPage,
         params:query,
         headers:{
             sign
@@ -1347,6 +1347,17 @@ export const alertSet = (query,data)=>{//10.9.3 告警值修改【医生web】
         url:apiList.alertSet,
         params:query,
         data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const getSettingsList = query=>{//8.9获取协作人员设置树
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.getSettingsList,
+        params:query,
         headers:{
             sign
         }

@@ -34,7 +34,7 @@
                        <th @click="doctorNum({type:'doctorNum',value:item})"><span>{{item.doctorNum||'缺失'}}</span></th>
                        <th @click="superOrgNum({type:'superOrgNum',value:item})"><span>{{item.superOrgNum||'缺失'}}</span></th>
                        <th @click="superOrgNum({type:'childOrgNum',value:item})"><span>{{item.childOrgNum||'缺失'}}</span></th>
-                       <th @click="getHeadClick({type:'teamNum',value:item})"><span>{{item.teamNum||'缺失'}}</span></th>
+                       <th @click="teamNum({type:'teamNum',value:item})"><span>{{item.teamNum||'缺失'}}</span></th>
                        <th @click="getHeadClick({type:'consNum',value:item})"><span>{{item.consNum||'缺失'}}</span></th>
                        <th ><span>{{item.deviceNum}}</span></th>
                        <th v-if="tableData.operating.length>0">
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { fetchHospitalList, fetchAllSubSystem ,fetchHospitalDepts,fetchHospitalRel,settingsList} from "../../api/apiAll.js"; 
+import { fetchHospitalList, fetchAllSubSystem ,fetchHospitalDepts,fetchHospitalRel,getSettingsList} from "../../api/apiAll.js"; 
 import { mapState } from "vuex";
 import search from "../../public/publicComponents/search.vue";
 import publicList from "../../public/publicComponents/publicList.vue";
@@ -283,12 +283,47 @@ export default {
             });
             console.log(res)
             if(res.data&&res.data.errCode===0){
-
+                this.testData.data = res.data.body.map(value=>{
+                    return {
+                        id:value.id,
+                        label:value.name
+                    }
+                });
+                this.testData.title = item.type==='superOrgNum'?'上级医院':'下级医院';
+                this.testData.canClick = true;
+                this.testData.show = true
             }else{
 
             }
         },
 
+        /**
+         * 协作人员
+         */
+        async teamNum(item){
+            const res = await getSettingsList({token:this.userState.token});
+            console.log(res)
+            if(res.data&&res.data.errCode===0){
+                function iteration(arr){
+                    const newArr = arr.map(value=>{
+                        value.label = value.name;
+                        if(value.children)iteration(value.children);
+                        return value
+                    });
+                    return newArr
+                }
+                this.testData.data = iteration(res.data.body);
+                // this.testData.data = res.data.body.map(value=>{
+                //     value.label = value.name;
+                //     return value;
+                // });
+                this.testData.title = '协作人员';
+                this.testData.canClick = true;
+                this.testData.show = true
+            }else{
+
+            }
+        },
 
         /**
          * 表格头部被点击
