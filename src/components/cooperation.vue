@@ -33,6 +33,7 @@
 			</el-form>
 
 		</el-dialog>
+		
 		<!-- 打开评价 -->
 		<el-dialog class="evaluateBox" title=" " :visible.sync="evaluateVisible" width="602px" hight="356px" center>
 			<el-form ref="form" :model="form" label-width="80px">
@@ -305,7 +306,7 @@
 				hospitalList: [], //医院列表
 				
 				adminType: "",
-				adminStatus: "",
+				adminStatus: 1,
 				statisticsStart: "",
 				statisticsType: "DEPT",
 				statisticsEnd: "",
@@ -724,20 +725,25 @@
 				let _this = this;
 				const options = {
 					token: this.userState.token,
+					query: "",
 					pageNum: 1,
 					pageSize: 10,
-					query: "",
-					applyDeptId: this.applicationDeptId,
-					synergyDeptId: this.receiveDeptId,
 					status: this.adminStatus,
+
+					applyDeptId: this.applicationDeptId,//协作科室
+					synergyDeptId: this.receiveDeptId,
 					startTime: this.startTimeXieZuo,
 					endTime: this.startTimeXieZuo,
 				};
+					alert('成功获取管理端发起科室统计列表')
+					alert(options)
+					console.log(options)
 				const res = await managePage(options);
 				if (res.data && res.data.errCode === 0) {
 					alert()
 					this.adminTableData = res.data.body.data2.list;
 				} else {
+					alert('失败获取管理端发起科室统计列表')
 					//失败
 					this.$notify.error({
 						title: "警告",
@@ -812,16 +818,16 @@
 			async getDocList() {
 				let _this = this;
 				const options = {
-					pageNum: 1,
-					pageSize: 15,
-					startTime: this.startTimeXieZuo,
-					endTime: this.endTimeXieZuo,
-					
 					token: this.userState.token,
 					query: "",
+					pageNum: 1,
+					pageSize: 15,
 					status: this.adminStatus,
+
 					applyDeptId: this.applicationDeptId2,
 					synergyDeptId: this.receiveDeptId,
+					startTime: this.startTimeXieZuo,
+					endTime: this.endTimeXieZuo,
 				};
 				console.log(Options)
 				const res = await synergyPage(options);
@@ -840,7 +846,7 @@
 		},
 		async created() {
 			// this.getDepartment("");
-			// this.getAdminList();
+			this.getAdminList();
 			this.getDocList();
 			// this.getAdminTjList();
 			// this.getApplyTjList();
