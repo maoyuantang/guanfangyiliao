@@ -691,6 +691,10 @@ export default {
             };
             const res = await managerGetDeviceList(options);
             if (res.data && res.data.errCode === 0) {
+                // _this.tableDataListFa = res.data.body.data2.list;
+                // _this.tableDataListFa=[{
+                //     department:"ddd"
+                // }]
                 _this.tableDataListFa = res.data.body.data2.list;
                 console.log(_this.columns);
 
