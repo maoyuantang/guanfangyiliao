@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import "./video/assets/css/bootstrap.original.css"
 import { mapState } from "vuex";
 
 import websocket from "./common/websocket.js";

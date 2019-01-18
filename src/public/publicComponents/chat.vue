@@ -12,7 +12,6 @@
                     </div>
                     <div class="otherCon">
                         <h4>
-                            {{ohtml}}
                             <span class="peopleName">{{text.name}}</span>
                             <span class="otime">{{text.serverTime}}</span>
                         </h4>
@@ -60,7 +59,7 @@
         </div>
         <div class="sendIcon">
             <span title="发送图片">
-                <el-upload class="upload-demo upload-demo-chat" :action="ourl" :on-success="imgUpload" :before-remove="beforeRemove" :limit="1">
+                <el-upload class="upload-demo upload-demo-chat" :action="ourl" :on-success="imgUpload"  :limit="1">
                     <el-button size="small" type="primary">点击上传</el-button>
 
                 </el-upload>
@@ -153,7 +152,8 @@
             </ul>
         </el-dialog>
         <!-- 视频聊天 -->
-        <el-dialog title="视频" :visible.sync="videoVisible" center append-to-body>
+        <el-dialog title="视频" :visible.sync="videoVisible" center append-to-body fullscreen>
+            <ovideo></ovideo>
         </el-dialog>
         <!-- 录入档案 -->
         <!-- <el-dialog title="录入新档案" :visible.sync="planVisible"   center append-to-body>
@@ -187,10 +187,13 @@ import {
     fetchReadMessageId,
     webGetTitleList
 } from "../../api/apiAll.js";
-
+import ovideo from "../../video/video.vue";
 let websocket = require("../../common/websocket.js");
 
 export default {
+    components: {
+        ovideo
+    },
     data() {
         return {
             remarkVisible: false, //备注是否显示
@@ -214,7 +217,7 @@ export default {
             //         fileName:'ddd'
             //     }
             // ], //上传图片
-            videoVisible:false,//视频是否显示
+            videoVisible: false, //视频是否显示
             areadyReadNum: "", //已读
             chatUser: "", //参与聊天的成员
             messageList: [],
@@ -240,6 +243,9 @@ export default {
         console.log(this.sessionId);
     },
     methods: {
+        onSubmit(){
+
+        },
         //图片上传成功
         imgUpload(res) {
             console.log(res);
@@ -252,21 +258,22 @@ export default {
                 alert("失败");
             }
         },
-        //打开视频
+        //创建视频
         async setVideo() {
-            let query = {
-                token: this.userState.token
-            };
-            const res = await createVideoRoom(query);
-            if (res.data && res.data.errCode === 0) {
-                this.videoVisible=true
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
+            this.videoVisible = true;
+            // let query = {
+            //     token: this.userState.token
+            // };
+            // const res = await createVideoRoom(query);
+            // if (res.data && res.data.errCode === 0) {
+            //     this.videoVisible = true;
+            // } else {
+            //     //失败
+            //     this.$notify.error({
+            //         title: "警告",
+            //         message: res.data.errMsg
+            //     });
+            // }
         },
         //添加备注
         addRemarks() {
@@ -304,8 +311,7 @@ export default {
         },
         sendMessage2() {
             websocket = require("../../common/websocket.js");
-            var ohtml = websocket.default.getContent();
-            alert(ohtml);
+            let ohtml = websocket.default.getContent();
         },
 
         //已读未读

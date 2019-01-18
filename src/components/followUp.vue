@@ -11,7 +11,7 @@
                 <div v-show="0==oMainShow">
                     <div class="mainTab">
                         <div>
-                            <selftag :inData="oTab1"></selftag>
+                            <selftag :inData="oTab1" @reback="getOTab1"></selftag>
                             <selftag :inData="oTab2" @reback="getOTab2"></selftag>
                             <selftag :inData="oTab3" @reback="getOTab3"></selftag>
                             <selftag :inData="oTab4" @reback="getOTab4"></selftag>
@@ -20,7 +20,7 @@
                         <search @searchValue="searchChange"></search>
                     </div>
                     <div>
-                        
+
                         <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
                         <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
                         </el-pagination> -->
@@ -37,9 +37,9 @@
 
                     <div class="mainTab">
                         <div>
-                            <selftag :inData="oTab1"></selftag>
-                            <selftag :inData="oTab2"></selftag>
-                            <selftag :inData="oTab3"></selftag>
+                            <selftag :inData="oTab1" @reback="getOTab1"></selftag>
+                            <selftag :inData="oTab2" @reback="getOTab2"></selftag>
+                            <selftag :inData="oTab3" @reback="getOTab3" v-show="wayVisible"></selftag>
                         </div>
 
                         <el-button class="startConsul" type="text" @click="centerDialogVisible = true">新增模板</el-button>
@@ -48,7 +48,7 @@
 
                     </div>
                     <div>
-                        <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
+                        <tableList :tableData="satisfiedList" :columns="satisfiedColumns" :tableBtn="SatisfiedBtn"></tableList>
                     </div>
                 </div>
                 <!-- 家用设备检测 -->
@@ -62,7 +62,7 @@
                         <search @searchValue="searchChange"></search>
                     </div>
                     <div>
-                       {{tableDataListFa}}
+                        {{tableDataListFa}}
                         <tableList :tableData="tableDataListFa" :columns="columnsFa"></tableList>
                         <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
                         </el-pagination> -->
@@ -78,6 +78,8 @@
                         <publicTime @timeValue="timeValueFun"></publicTime>
                     </div>
                     <div>
+                        <normalColumnChart :inData="drawData"> </normalColumnChart>
+                        <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
 
                     </div>
                 </div>
@@ -145,11 +147,15 @@ import selftag from "../public/publicComponents/selftag.vue";
 import statisticsWay from "../public/publicComponents/statisticsWay.vue";
 import publicTime from "../public/publicComponents/publicTime.vue";
 export default {
-    watch:{
-        tableDataListFa(n){console.log(n)},
-        tableDataList(n){console.log(n)},
-        viewRoot(n){
-            console.log(n)
+    watch: {
+        tableDataListFa(n) {
+            console.log(n);
+        },
+        tableDataList(n) {
+            console.log(n);
+        },
+        viewRoot(n) {
+            console.log(n);
         }
     },
     components: {
@@ -162,6 +168,7 @@ export default {
     },
     data() {
         return {
+            wayVisible: true,
             odepartment: "",
             otype: "",
             oTheWay: "",
@@ -171,7 +178,7 @@ export default {
             oMainShow: 0,
             indexTab2: 0,
             oDocThis: 0, //医生端tab切换
-            oVisable: true, 
+            oVisable: true,
             oconsulVisable: true,
             followDocTab: [
                 {
@@ -326,7 +333,8 @@ export default {
                 ]
             }, //管理端tab
             odata: 1,
-            columns: [{
+            columns: [
+                {
                     prop: "department",
                     label: "科室"
                 },
@@ -349,7 +357,8 @@ export default {
                 {
                     prop: " appNum",
                     label: "App "
-                },{
+                },
+                {
                     prop: "phoneNum",
                     label: "电话"
                 },
@@ -376,7 +385,8 @@ export default {
                 {
                     prop: " state",
                     label: "状态 "
-                }],
+                }
+            ],
             columnsFa: [
                 {
                     prop: "department",
@@ -403,8 +413,7 @@ export default {
                     label: "告警情况 "
                 }
             ],
-            tableDataList: [
-            ],
+            tableDataList: [],
             tableDataListFa: [],
             tableBtn: [
                 {
@@ -414,14 +423,35 @@ export default {
                         this.handleDel(index, row);
                     }
                 }
-            ]
+            ],
+            //满意度数据
+            satisfiedList: [],
+            mydType: "",
+            mydStartTime: "",
+            mydEndTime: "",
+            mydMode: "",
+            //统计数据
+            //申请科室统计图
+            drawData: {
+                dataAxis: [], //每个柱子代表的类名
+                data: [], //具体数值
+                title: " ", //图表标题
+                totalNumber: "555"
+            },
+            //发起科室统计图
+            drawDataStart: {
+                dataAxis: [], //每个柱子代表的类名
+                data: [], //具体数值
+                title: " ", //图表标题
+                totalNumber: "555"
+            }
         };
     },
     computed: {
         ...mapState({
             userState: state => state.user.userInfo,
             userSelfInfo: state => state.user.userSelfInfo,
-            viewRoot: state => state.user.viewRoot,
+            viewRoot: state => state.user.viewRoot
         })
     },
     async created() {
@@ -429,7 +459,7 @@ export default {
         this.getFoList(); //随访列表
         this.getfamiliList(); //家用设备列表
         this.getDepartment(); //科室列表
-        console.log(this.$store.state.user.viewRoot.now.name) 
+        console.log(this.$store.state.user.viewRoot.now.name);
     },
     mounted() {},
     methods: {
@@ -438,16 +468,24 @@ export default {
             this.odepartment = data.index.value;
             this.getFoList();
             this.getfamiliList();
+
+            this.oGetModelList();
+            this.oGetResultList();
+            this.oGetMissileList();
         },
         getOTab2(data) {
             this.otype = data.index.value;
             this.getFoList();
             this.getfamiliList();
+            this.oGetModelList();
+            this.oGetResultList();
+            this.oGetMissileList();
         },
         getOTab3(data) {
             this.oTheWay = data.index.value;
             this.getFoList();
             this.getfamiliList();
+            this.oGetResultList();
         },
         getOTab4(data) {
             this.oContent = data.index.value;
@@ -502,9 +540,9 @@ export default {
                 pageSize: 10
             };
             const res = await managerGetPlanList(options);
-            if (res.data && res.data.errCode === 0) { 
+            if (res.data && res.data.errCode === 0) {
                 this.tableDataList = res.data.body.data2.list;
-                console.log(this.tableDataList)
+                console.log(this.tableDataList);
             } else {
                 //失败
                 this.$notify.error({
@@ -524,12 +562,12 @@ export default {
                 pageSize: 10
             };
             const res = await managerGetDeviceList(options);
-            if (res.data && res.data.errCode === 0) { 
+            if (res.data && res.data.errCode === 0) {
                 _this.tableDataListFa = res.data.body.data2.list;
-                console.log(_this.columns)
-               
-                console.log(_this.columnsFa)
-                console.log(_this.tableDataListFa)
+                console.log(_this.columns);
+
+                console.log(_this.columnsFa);
+                console.log(_this.tableDataListFa);
                 // alert(_this.tableDataListFa[0].alertInfo)
             } else {
                 //失败
@@ -545,9 +583,301 @@ export default {
             this.odocVisable = oindex;
         },
         timeValueFun(data) {},
+        //满意度接口
         // 满意度调查切换
         followUp2Fun(index) {
             this.indexTab2 = index;
+
+            if (index == 0) {
+                this.wayVisible = true;
+                this.satisfiedList = [
+                    {
+                        prop: "department",
+                        label: "科室"
+                    },
+                    {
+                        prop: "type",
+                        label: "类型"
+                    },
+                    {
+                        prop: "mode",
+                        label: "方式"
+                    },
+                    {
+                        prop: "title",
+                        label: "模板"
+                    },
+                    {
+                        prop: "sender",
+                        label: "调查人"
+                    },
+                    {
+                        prop: "sendNum",
+                        label: "调查数"
+                    },
+                    {
+                        prop: "receiveNum",
+                        label: "接受数"
+                    },
+                    {
+                        prop: "feedbackNum",
+                        label: "反馈数"
+                    },
+                    {
+                        prop: "feedbackPercent",
+                        label: "反馈率"
+                    }
+                ];
+            } else if (index == 1) {
+                this.wayVisible = false;
+                this.satisfiedList = [
+                    {
+                        prop: "name",
+                        label: "名称"
+                    },
+                    {
+                        prop: "department",
+                        label: "科室"
+                    },
+                    {
+                        prop: "type",
+                        label: "类型"
+                    },
+                    {
+                        prop: "context",
+                        label: "内容"
+                    },
+                    {
+                        prop: "createTime",
+                        label: "创建时间"
+                    },
+                    {
+                        prop: "editTime",
+                        label: "修改时间"
+                    },
+                    {
+                        prop: "sendNum",
+                        label: "发送数"
+                    },
+                    {
+                        prop: "replyNum",
+                        label: "回复数"
+                    },
+                    {
+                        prop: "status",
+                        label: "状态"
+                    },
+                    {
+                        prop: "updater",
+                        label: "最近修改"
+                    }
+                ];
+            } else {
+                this.wayVisible = false;
+                this.satisfiedList = [
+                    {
+                        prop: "userName",
+                        label: "姓名"
+                    },
+                    {
+                        prop: "phone",
+                        label: "手机号"
+                    },
+                    {
+                        prop: "userType",
+                        label: "用户类型"
+                    },
+                    {
+                        prop: "hospital",
+                        label: "医院"
+                    },
+                    {
+                        prop: "department",
+                        label: "科室"
+                    },
+                    {
+                        prop: "loginTime",
+                        label: "登录时间"
+                    },
+                    {
+                        prop: "sendStatus",
+                        label: "发送状态"
+                    },
+                    {
+                        prop: "sendTime",
+                        label: "发送时间"
+                    }
+                ];
+            }
+        },
+
+        //满意度调查管理接口
+        async oGetResultList() {
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                type: this.mydType,
+                mode: this.mydMode,
+                search: this.searchData,
+                department: this.department,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await getResultList(options);
+            if (res.data && res.data.errCode === 0) {
+                _this.satisfiedList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //满意度调查模板接口
+        async oGetModelList() {
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                type: this.mydType,
+                search: this.searchData,
+                department: this.department,
+                start: this.mydStartTime,
+                end: this.mydEndTime,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await getResultList(options);
+            if (res.data && res.data.errCode === 0) {
+                _this.satisfiedList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //满意度调查模板接口
+        async oGetMissileList() {
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                userType: this.mydType,
+                search: this.searchData,
+                department: this.department,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await getMissileList(options);
+            if (res.data && res.data.errCode === 0) {
+                _this.satisfiedList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //家用设备接口
+        //家用设备列表接口
+        async oManagerGetDeviceList() {
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                houseDeviceType: this.houseDeviceType,
+                search: this.searchData,
+                department: this.department,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await managerGetDeviceList(options);
+            if (res.data && res.data.errCode === 0) {
+                _this.equipmentList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //统计接口
+        //获取住院随访统计
+        async oGetFollowupGraph() {
+            this.drawData.dataAxis = [];
+            this.drawData.data = [];
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                department: this.department,
+                type: DAY,
+                startDate: this.tjStartTime,
+                endDate: this.tjEndTime
+            };
+            const res = await getFollowupGraph(options);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body.data, function(index, text) {
+                    _this.drawData.dataAxis.push(text.unit);
+                    _this.drawData.data.push(text.number);
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        // 获取门诊随访统计
+        async oGetFollowupRemarks() {
+            this.drawDataStart.dataAxis = [];
+            this.drawDataStart.data = [];
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                department: this.department,
+                type: DAY,
+                startDate: this.tjStartTime,
+                endDate: this.tjEndTime
+            };
+            const res = await OUTPATIENT(options);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body.data, function(index, text) {
+                    _this.drawDataStart.dataAxis.push(text.unit);
+                    _this.drawDataStart.data.push(text.number);
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //医生端接口
+        //我的随访
+        async getUsFollow() {
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                houseDeviceType: this.houseDeviceType,
+                search: this.searchData,
+                department: this.department,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await managerGetDeviceList(options);
+            if (res.data && res.data.errCode === 0) {
+                _this.equipmentList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
         },
         getConsulTabData(res) {
             this.oMainShow = res.i;
@@ -572,6 +902,8 @@ export default {
             this.searchData = data;
             this.getFoList();
             this.getfamiliList();
+            this.oGetModelList();
+            this.oGetResultList();
         }
     }
 };
