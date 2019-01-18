@@ -1,66 +1,37 @@
 <template>
 	<!-- 远程协作系统 -->
 	<div class="cooperation">
-		远程协作系统
 
-		<el-button type="text" @click="evaluateVisible = true">评价</el-button>
-		<el-button type="text" @click="departVisible = true">接收科室</el-button>
-		<el-button type="text" @click="doctorVisible = true">医生详情</el-button>
-		<el-button type="text" @click="groupVisible = true">会诊评价</el-button>
-		<el-button type="text" @click="recordVisible = true">查看记录</el-button>
-		会诊评价
-		<!-- 发起会诊弹窗 -->
-		<el-dialog class="startGroup" title="发起会诊" :visible.sync="centerDialogVisible" width="602px" hight="607px" center>
+		<!-- 发起协作弹窗 -->
+		<el-dialog class="startGroup" title="重庆市西南医院" :visible.sync="centerDialogVisible" left>
+
+			<el-tree :props="props" :load="loadNode" lazy show-checkbox @check-change="handleCheckChange">
+			</el-tree>
+
 			<el-form ref="form" :model="startHz" label-width="80px">
-				<el-form-item label="类型">
-					<el-radio-group v-model="startHz.type">
-						<el-radio label="SPECIALIST">专科会诊</el-radio>
-						<el-radio label="EXPERT">专家会诊</el-radio>
-					</el-radio-group>
-				</el-form-item>
-				<el-form-item label="发起科室">
-					<el-select v-model="startHz.deptId" placeholder="请选择活动区域">
-						<el-option v-for="(text,index) in departmentList" :label="text.name" :value="text.value" :key="index"></el-option>
 
-					</el-select>
-				</el-form-item>
-				<div>
-					<div style="display:flex" v-for="(text,index) in startHz.consultationHospitalDept" :key="index">
-
-						<el-form-item label="申请医院:">
-							<el-select placeholder="请选择活动区域" v-model="text.hospitalId" @change="hosChange(text.hospitalId,index)">
-								<el-option v-for="(text,index) in hospitalList" :label="text.name" :value="text.value" :key="index"></el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="申请科室:">
-							<el-select v-model="text.departmentsId" placeholder="请选择活动区域">
-								<el-option v-for="(otext,index) in text.departmentListOO" :label="otext.name" :value="otext.value" :key="index"></el-option>
-							</el-select>
-						</el-form-item>
-					</div>
-					<span @click="addHospital">加号</span>
+				<div style="display:flex" v-for="(text,index) in startHz.cooperationHospitalDept" :key="index">
+					<el-form-item label="病历：">
+						<el-select placeholder="请选择活动区域" v-model="text.hospitalId" @change="hosChange(text.hospitalId,index)">
+							<el-option v-for="(text,index) in hospitalList" :label="text.name" :value="text.value" :key="index"></el-option>
+						</el-select>
+					</el-form-item>
 				</div>
 
-				<el-form-item label="会诊病人:">
-					<el-input v-model="startHz.userId"></el-input>
-				</el-form-item>
-				<el-form-item label="病人病历:">
-					<el-input v-model="startHz.medicalHistory"></el-input>
-				</el-form-item>
-				<el-form-item label="申请时间:">
-					<!-- <el-date-picker v-model="startHz.applicationTime" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
-							</el-date-picker> -->
-					<el-date-picker v-model="startHz.applicationTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
-					</el-date-picker>
-					<!-- <el-input v-model="startHz.applicationTime"></el-input> -->
-				</el-form-item>
-				<el-form-item label="会诊目的:">
-					<el-input v-model="startHz.consultationPurpose"></el-input>
-				</el-form-item>
+				<div style="display:flex" v-for="(text,index) in startHz.cooperationHospitalDept" :key="index">
+					<el-form-item label="目的：">
+						<el-select placeholder="请选择活动区域" v-model="text.hospitalId" @change="hosChange(text.hospitalId,index)">
+							<el-option v-for="(text,index) in hospitalList" :label="text.name" :value="text.value" :key="index"></el-option>
+						</el-select>
+					</el-form-item>
+				</div>
+
 				<el-form-item class="confirmBtnBox">
 					<el-button class="confirmBtn" type="primary" @click="addHz()">确认</el-button>
 				</el-form-item>
+
 			</el-form>
+
 		</el-dialog>
 		<!-- 打开评价 -->
 		<el-dialog class="evaluateBox" title=" " :visible.sync="evaluateVisible" width="602px" hight="356px" center>
@@ -237,31 +208,24 @@
 			<div class="doc-title">
 				<selftag :inData="oTab4" @reback="getOTab4"></selftag>
 				<div class="statistics-way">
-					<!-- <span>时间段：</span>
-							<el-date-picker v-model="time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
-							</el-date-picker> -->
+					<span>时间段：</span>
+					<el-date-picker v-model="time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+					</el-date-picker>
 				</div>
-				<el-button class="startConsul" type="text" @click="centerDialogVisible = true">发起会诊</el-button>
+				<el-button class="startConsul" type="text" @click="centerDialogVisible = true">发起协作</el-button>
 			</div>
 
 			<div>
 				<el-table :data="docTableData" border style="width: 100%">
-					<el-table-column fixed prop="consultationId" label="协作编号" width="150">
-					</el-table-column>
-					<el-table-column prop="department" label="发起科室" width="120">
-					</el-table-column>
-					<el-table-column prop="doctor" label="发起医生" width="120">
-					</el-table-column>
-					<el-table-column prop="applicationTime" label="发起时间" width="300">
-					</el-table-column>
-					<el-table-column prop="consultationPurpose" label="目的" width="120">
-					</el-table-column>
-					<el-table-column prop="status" label="协作科室" width="120">
-					</el-table-column>
-					<el-table-column prop="status" label="协作医生" width="120">
-					</el-table-column>
-					<el-table-column prop="status" label="状态" width="120">
-					</el-table-column>
+
+					<el-table-column fixed prop="cooperationId" label="协作编号"></el-table-column>
+					<el-table-column fixed prop="initiateDepartment" label="发起科室"></el-table-column>
+					<el-table-column fixed prop="initiateDoctor" label="发起医生"></el-table-column>
+					<el-table-column fixed prop="initiateTime" label="发起时间"></el-table-column>
+					<el-table-column fixed prop="purpose" label="目的"></el-table-column>
+					<el-table-column fixed prop="cooperationDepartment" label="协作科室"></el-table-column>
+					<el-table-column fixed prop="cooperationDoctor" label="协作医生"></el-table-column>
+					<el-table-column fixed prop="status" label="状态"></el-table-column>
 					<el-table-column fixed="right" label="操作" width="100">
 						<template slot-scope="scope">
 							<el-button @click="handleClick(scope.row)" type="text" size="small">病历</el-button>
@@ -312,6 +276,15 @@
 		},
 		data() {
 			return {
+				//ele.ui插件参数
+				props: {
+					label: 'name',
+					children: 'zones'
+				},
+				count: 1,
+
+
+
 				sessionId: "", //会诊id
 				chatVisible: false, //聊天框
 				oVisable: true,
@@ -322,23 +295,24 @@
 				doctorVisible: false, //医生详情
 				groupVisible: false, //会诊评价
 				recordVisible: false, //查看记录
-
+				searchValue: "", //管理端搜索框
 
 				applicationDeptId: "", //发起科室
-				applicationDeptId2: "",//申请科室
+				applicationDeptId2: "",//
+				
 				receiveDeptId: "", //接收科室
-				searchValue: "", //管理端搜索框
+				departmentList: [], //科室列表
+				hospitalList: [], //医院列表
+				
 				adminType: "",
 				adminStatus: "",
 				statisticsStart: "",
 				statisticsType: "DEPT",
 				statisticsEnd: "",
 				departmentsId: "",
-				departmentList: [], //科室列表
-				hospitalList: [], //医院列表
-				startTimeXieZuo: "",
-				endTimeXieZuo: "",
 				form: "",
+
+
 				oTab1: {
 					more: true,
 					title: "全部",
@@ -386,18 +360,21 @@
 						}
 					]
 				},
-				//医生端
-				oDocTime: "",
-				startDate: "",
-				endDate: "",
+				
+				// 医生端列表请求参数
+				applyDepartmentId:"",//申请科室ID
+				cooperationDepartmentId:"",//协作科室ID
+				oDocTime: "",//医生端事件参数
+				startTimeXieZuo: "",
+				endTimeXieZuo: "",
 				startHz: {
 					type: "SPECIALIST",
 					deptId: " ",
 					userId: " ",
 					medicalHistory: " ",
 					applicationTime: " ",
-					consultationPurpose: " ",
-					consultationHospitalDept: [
+					cooperationPurpose: " ",
+					cooperationHospitalDept: [
 						{
 							hospitalId: "1",
 							departmentsId: "2",
@@ -419,96 +396,55 @@
 						}
 					]
 				},
-				columnsDoc: [
-					{
-						prop: "consultationId",
-						label: "会诊编号"
-					},
-					{
-						prop: "hospital",
-						label: "发起医院"
-					},
-					{
-						prop: "department",
-						label: "发起科室"
-					},
-					{
-						prop: "doctor",
-						label: "发起医生"
-					},
-					{
-						prop: "applicationTime",
-						label: "发起时间"
-					},
-					{
-						prop: "type",
-						label: "会诊类型"
-					},
-					{
-						prop: "consultationPurpose",
-						label: "目的"
-					},
-					{
-						prop: "doctorNumber",
-						label: "参与专家"
-					},
-					{
-						prop: "status",
-						label: "状态"
-					}
-				],
+
 				columns: [
 					{
-						prop: "consultationId",
-						label: "会诊编号"
+						prop: "cooperationId",
+						label: "协作编号"
 					},
 					{
-						prop: "hospital",
-						label: "发起医院"
-					},
-					{
-						prop: "department",
+						prop: "initiateDepartment",
 						label: "发起科室"
 					},
 					{
-						prop: "doctor",
+						prop: "applyDepartment",
+						label: "申请科室"
+					},
+					{
+						prop: "initiateDoctor",
 						label: "发起医生"
 					},
 					{
-						prop: "applicationTime",
+						prop: "initiateTime",
 						label: "发起时间"
 					},
 					{
-						prop: "type",
-						label: "会诊类型"
+						prop: "cooperationDepartment",
+						label: "协作科室"
 					},
 					{
-						prop: "userName",
-						label: "会诊病人"
+						prop: "cooperationDoctor",
+						label: "协作医生"
 					},
 					{
-						prop: "startTime",
-						label: "会诊时间"
+						prop: "lookMedicalHistory",
+						label: "查看病历"
 					},
 					{
-						prop: "consultationTimeNumber",
-						label: "会诊用时"
+						prop: "cooperationTime",
+						label: "协作用时"
 					},
 					{
-						prop: "receiveDeptNumber",
-						label: "接收科室"
-					},
-					{
-						prop: "medicalHistory",
-						label: "病历"
-					},
-					{
-						prop: "doctorNumber",
-						label: "参与专家"
+						prop: "overView",
+						label: "综合评价"
 					},
 					{
 						prop: "status",
 						label: "状态"
+					},
+					{
+						prop: "purpose",
+						label: "目的"
 					}
 				],
 				adminTableData: [], //管理端列表
@@ -550,8 +486,8 @@
 					list: [
 						//选项列表，类型Array
 						{
-							en: "CONSULTATION", //选项英文，类型 string
-							zh: "会诊管理" //选项中文，类型string
+							en: "COOPERATION", //选项英文，类型 string
+							zh: "协作管理" //选项中文，类型string
 						},
 						{
 							en: "STATISTICS",
@@ -582,6 +518,45 @@
 			})
 		},
 		methods: {
+			//ele.ui插件
+
+			handleCheckChange(data, checked, indeterminate) {
+				console.log(data, checked, indeterminate);
+			},
+			handleNodeClick(data) {
+				console.log(data);
+			},
+			loadNode(node, resolve) {
+				if (node.level === 0) {
+					return resolve([{ name: 'region1' }, { name: 'region2' }]);
+				}
+				if (node.level > 3) return resolve([]);
+
+				var hasChild;
+				if (node.data.name === 'region1') {
+					hasChild = true;
+				} else if (node.data.name === 'region2') {
+					hasChild = false;
+				} else {
+					hasChild = Math.random() > 0.5;
+				}
+
+				setTimeout(() => {
+					var data;
+					if (hasChild) {
+						data = [{
+							name: 'zone' + this.count++
+						}, {
+							name: 'zone' + this.count++
+						}];
+					} else {
+						data = [];
+					}
+
+					resolve(data);
+				}, 500);
+			},
+
 			// 管理端事件
 			getOTab1(data) {
 				this.applicationDeptId = data.index.value;
@@ -615,7 +590,7 @@
 				this.getDocList();
 			},
 			addHospital() {
-				this.startHz.consultationHospitalDept.push({
+				this.startHz.cooperationHospitalDept.push({
 					hospitalId: "",
 					departmentsId: ""
 				});
@@ -628,7 +603,7 @@
 			async addHz() {
 				let _this = this;
 				let addHzConsultatonList = [];
-				$.each(this.startHz.consultationHospitalDept, function (
+				$.each(this.startHz.cooperationHospitalDept, function (
 					index,
 					text
 				) {
@@ -646,8 +621,8 @@
 					userId: this.startHz.userId,
 					medicalHistory: this.startHz.medicalHistory,
 					applicationTime: this.startHz.applicationTime,
-					consultationPurpose: this.startHz.consultationPurpose,
-					consultationHospitalDept: addHzConsultatonList
+					cooperationPurpose: this.startHz.cooperationPurpose,
+					cooperationHospitalDept: addHzConsultatonList
 				};
 				const res = await addConsultation(query, options);
 				if (res.data && res.data.errCode === 0) {
@@ -668,7 +643,7 @@
 				}
 			},
 			//进入会诊
-			async toConsultation(oObject) {
+			async tocooperation(oObject) {
 				this.chatVisible = true;
 				this.sessionId = oObject.sessionId;
 			},
@@ -725,7 +700,7 @@
 							name: text.deptName,
 							value: text.deptId
 						});
-						_this.startHz.consultationHospitalDept[
+						_this.startHz.cooperationHospitalDept[
 							oindex
 						].departmentListOO.push({
 							name: text.deptName,
@@ -837,18 +812,18 @@
 			async getDocList() {
 				let _this = this;
 				const options = {
-					token: this.userState.token,
 					pageNum: 1,
 					pageSize: 15,
-					query: "",
-					applyDeptId: this.applicationDeptId,
-					synergyDeptId: this.receiveDeptId,
-					status: this.adminStatus,
 					startTime: this.startTimeXieZuo,
 					endTime: this.endTimeXieZuo,
-
-
+					
+					token: this.userState.token,
+					query: "",
+					status: this.adminStatus,
+					applyDeptId: this.applicationDeptId2,
+					synergyDeptId: this.receiveDeptId,
 				};
+				console.log(Options)
 				const res = await synergyPage(options);
 				if (res.data && res.data.errCode === 0) {
 					this.docTableData = res.data.body.data2.list;
@@ -859,18 +834,17 @@
 						title: "警告",
 						message: res.data.errMsg
 					});
-					console.log(222222222222222)
 				}
 
 			}
 		},
 		async created() {
-			this.getDepartment("");
-			this.getAdminList();
+			// this.getDepartment("");
+			// this.getAdminList();
 			this.getDocList();
-			this.getAdminTjList();
-			this.getApplyTjList();
-			this.getHospitalment();
+			// this.getAdminTjList();
+			// this.getApplyTjList();
+			// this.getHospitalment();
 		}
 	};
 </script>
@@ -903,10 +877,19 @@
 	}
 
 	/* 医生端样式 */
-	.consultation .doc-title {
+	.cooperation .doc-title {
 		display: flex;
 		display: -webkit-flex;
 		margin-bottom: 52px;
+	}
+	
+	.el-tree-node__content{
+		margin: 0 0 20px 20px !important;
+	}
+
+	.el-tree-node__content .el-checkbox__inner{
+		width: 20px !important;
+		height: 20px !important;
 	}
 
 	.evaluateBtn {
@@ -952,11 +935,12 @@
 		line-height: 3px;
 	}
 
-	.consultation {}
-
+	.startGroup{
+		width: 30%;
+    margin: auto;
+	}
 	.startGroup input {
-		width: 162px;
-		height: 28px;
+		height: 30px;
 	}
 
 	.confirmBtn {
@@ -968,7 +952,9 @@
 		font-size: 12px;
 		line-height: 21px;
 	}
-
+	.confirmBtnBox{
+		display: flex
+	}
 	.confirmBtnBox>div {
 		margin-left: 0;
 	}
