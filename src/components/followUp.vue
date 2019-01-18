@@ -38,8 +38,9 @@
                     <div class="mainTab">
                         <div>
                             <selftag :inData="oTab1" @reback="getOTab1"></selftag>
-                            <selftag :inData="oTab2" @reback="getOTab2"></selftag>
-                            <selftag :inData="oTab3" @reback="getOTab3" v-show="wayVisible"></selftag>
+                            <selftag :inData="oTab6" @reback="getOTab6" v-show="wayVisible1"></selftag>
+                            <selftag :inData="oTab3" @reback="getOTab3" v-show="wayVisible2"></selftag>
+                            <selftag :inData="oTab7" @reback="getOTab7" v-show="wayVisible3"></selftag>
                         </div>
 
                         <el-button class="startConsul" type="text" @click="centerDialogVisible = true">新增模板</el-button>
@@ -62,7 +63,9 @@
                         <search @searchValue="searchChange"></search>
                     </div>
                     <div>
-                        {{tableDataListFa}}
+                        {{columnsFa}}<br />
+                        
+                         {{tableDataListFa}}
                         <tableList :tableData="tableDataListFa" :columns="columnsFa"></tableList>
                         <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
                         </el-pagination> -->
@@ -72,10 +75,11 @@
                 <div v-show="3==oMainShow">
                     <div class="mainTab">
                         <div>
-                            <selftag :inData="oTab1"></selftag>
+                            <selftag :inData="oTab1" @reback="getOTab1"></selftag>
                         </div>
 
-                        <publicTime @timeValue="timeValueFun"></publicTime>
+                        <!-- <publicTime @timeValue="timeValueFun"></publicTime> -->
+                        <statisticsWay @reBack="tjTimeValueFun"></statisticsWay>
                     </div>
                     <div>
                         <normalColumnChart :inData="drawData"> </normalColumnChart>
@@ -136,7 +140,13 @@
 import {
     managerGetPlanList,
     managerGetDeviceList,
-    fetchHospitalDepts
+    fetchHospitalDepts,
+    OUTPATIENT,
+    INHOSPITAL,
+    getResultList,
+    getModelInsert,
+    getMissileList,
+    deleteModel
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -146,29 +156,32 @@ import search from "../public/publicComponents/search.vue";
 import selftag from "../public/publicComponents/selftag.vue";
 import statisticsWay from "../public/publicComponents/statisticsWay.vue";
 import publicTime from "../public/publicComponents/publicTime.vue";
+import normalColumnChart from "../public/publicComponents/normalColumnChart.vue";
+
 export default {
-    watch: {
-        tableDataListFa(n) {
-            console.log(n);
-        },
-        tableDataList(n) {
-            console.log(n);
-        },
-        viewRoot(n) {
-            console.log(n);
-        }
-    },
     components: {
         tableList,
         search,
         normalTab,
         selftag,
         statisticsWay,
-        publicTime
+        publicTime,
+        normalColumnChart
     },
     data() {
         return {
-            wayVisible: true,
+            odata1: [
+                {
+                    prop: "name",
+                    label: "姓名"
+                }
+            ],
+            odata2: [
+                {
+                    name: "谭莹"
+                }
+            ],
+            wayVisible1: true,
             odepartment: "",
             otype: "",
             oTheWay: "",
@@ -426,10 +439,109 @@ export default {
             ],
             //满意度数据
             satisfiedList: [],
+            satisfiedColumns: [
+                {
+                    prop: "department",
+                    label: "科室"
+                },
+                {
+                    prop: "type",
+                    label: "类型"
+                },
+                {
+                    prop: "mode",
+                    label: "方式"
+                },
+                {
+                    prop: "title",
+                    label: "模板"
+                },
+                {
+                    prop: "sender",
+                    label: "调查人"
+                },
+                {
+                    prop: "sendNum",
+                    label: "调查数"
+                },
+                {
+                    prop: "receiveNum",
+                    label: "接受数"
+                },
+                {
+                    prop: "feedbackNum",
+                    label: "反馈数"
+                },
+                {
+                    prop: "feedbackPercent",
+                    label: "反馈率"
+                }
+            ],
+            SatisfiedBtn: [
+                {
+                    name: "查看随访",
+                    oclass: "viewFollow",
+                    method: (index, row) => {
+                        this.handleDel(index, row);
+                    }
+                }
+            ],
+            oTab6: {
+                more: false,
+                title: "类型",
+                list: [
+                    {
+                        text: "全部",
+                        value: ""
+                    },
+                    {
+                        text: "门诊调查",
+                        value: "OUTPATIENT"
+                    },
+                    {
+                        text: "医技调查",
+                        value: "MEDICALTECHNOLOGY"
+                    },
+                    {
+                        text: "住院调查",
+                        value: "INHOSPITAL"
+                    },
+                    {
+                        text: "行政调查",
+                        value: "ADMINISTRATION"
+                    },
+                    {
+                        text: "推送链接",
+                        value: "URL"
+                    }
+                ]
+            },
+            oTab7: {
+                more: false,
+                title: "类型",
+                list: [
+                    {
+                        text: "全部",
+                        value: ""
+                    },
+                    {
+                        text: "病人",
+                        value: "USER"
+                    },
+                    {
+                        text: "医生",
+                        value: "DOCTOR"
+                    }
+                ]
+            },
+            userType: "",
             mydType: "",
             mydStartTime: "",
             mydEndTime: "",
             mydMode: "",
+            mydSearchData: "",
+            wayVisible2:true,
+            wayVisible3:false,
             //统计数据
             //申请科室统计图
             drawData: {
@@ -444,7 +556,10 @@ export default {
                 data: [], //具体数值
                 title: " ", //图表标题
                 totalNumber: "555"
-            }
+            },
+            tjType: "DEPT",
+            tjStartTime: "",
+            tjEndTime: ""
         };
     },
     computed: {
@@ -459,6 +574,9 @@ export default {
         this.getFoList(); //随访列表
         this.getfamiliList(); //家用设备列表
         this.getDepartment(); //科室列表
+        this.oGetFollowupGraph(); //住院随访统计图
+        this.oGetFollowupRemarks(); //门诊随访统计图
+        this.oGetResultList(); //满意度调查 调查管理列表
         console.log(this.$store.state.user.viewRoot.now.name);
     },
     mounted() {},
@@ -472,13 +590,14 @@ export default {
             this.oGetModelList();
             this.oGetResultList();
             this.oGetMissileList();
+            this.oGetFollowupGraph();
+            this.oGetFollowupRemarks();
         },
         getOTab2(data) {
             this.otype = data.index.value;
             this.getFoList();
             this.getfamiliList();
-            this.oGetModelList();
-            this.oGetResultList();
+
             this.oGetMissileList();
         },
         getOTab3(data) {
@@ -496,6 +615,15 @@ export default {
             this.equiType = data.index.value;
             this.getFoList();
             this.getfamiliList();
+        },
+        getOTab6(data) {
+            this.mydType = data.index.value;
+            this.oGetModelList();
+            this.oGetResultList();
+        },
+        getOTab7(data) {
+            this.userType = data.index.value;
+            this.oGetMissileList();
         },
         //获取科室列表
         async getDepartment() {
@@ -582,15 +710,18 @@ export default {
             this.oDocThis = oindex;
             this.odocVisable = oindex;
         },
-        timeValueFun(data) {},
+
         //满意度接口
         // 满意度调查切换
         followUp2Fun(index) {
             this.indexTab2 = index;
 
             if (index == 0) {
-                this.wayVisible = true;
-                this.satisfiedList = [
+                this.wayVisible1 = true;
+                this.wayVisible2=true;
+                this.wayVisible3=false,
+                this.oGetResultList();
+                this.satisfiedColumns = [
                     {
                         prop: "department",
                         label: "科室"
@@ -628,9 +759,21 @@ export default {
                         label: "反馈率"
                     }
                 ];
+                this.SatisfiedBtn = [
+                    {
+                        name: "查看随访",
+                        oclass: "viewFollow",
+                        method: (index, row) => {
+                            this.handleDel(index, row);
+                        }
+                    }
+                ];
             } else if (index == 1) {
-                this.wayVisible = false;
-                this.satisfiedList = [
+                this.wayVisible1 = true;
+                this.wayVisible2=false;
+                this.wayVisible3=false;
+                this.oGetModelList();
+                this.satisfiedColumns = [
                     {
                         prop: "name",
                         label: "名称"
@@ -672,9 +815,28 @@ export default {
                         label: "最近修改"
                     }
                 ];
+                this.SatisfiedBtn = [
+                    {
+                        name: "编辑",
+                        oclass: "viewFollow",
+                        method: (index, row) => {
+                            this.handleDel(index, row);
+                        }
+                    },
+                    {
+                        name: "删除",
+                        oclass: "viewFollow",
+                        method: (row) => {
+                            this.deleteModel(row);
+                        }
+                    }
+                ];
             } else {
-                this.wayVisible = false;
-                this.satisfiedList = [
+                this.wayVisible1 = false;
+                this.wayVisible2=false;
+                this.wayVisible3=true;
+                this.oGetMissileList();
+                this.satisfiedColumns = [
                     {
                         prop: "userName",
                         label: "姓名"
@@ -710,22 +872,23 @@ export default {
                 ];
             }
         },
-
-        //满意度调查管理接口
+        //  一
+        //满意度调查管理接口1
         async oGetResultList() {
             let _this = this;
             const options = {
                 token: this.userState.token,
                 type: this.mydType,
                 mode: this.mydMode,
-                search: this.searchData,
-                department: this.department,
+                search: this.mydSearchData,
+                department: this.odepartment,
                 pageNum: 1,
                 pageSize: 10
             };
             const res = await getResultList(options);
             if (res.data && res.data.errCode === 0) {
                 _this.satisfiedList = res.data.body.data2.list;
+                console.log(_this.satisfiedList);
             } else {
                 //失败
                 this.$notify.error({
@@ -734,20 +897,21 @@ export default {
                 });
             }
         },
-        //满意度调查模板接口
+         //  二
+        //满意度调查模板接口2
         async oGetModelList() {
             let _this = this;
             const options = {
                 token: this.userState.token,
                 type: this.mydType,
-                search: this.searchData,
-                department: this.department,
+                search: this.mydSearchData,
+                department: this.odepartment,
                 start: this.mydStartTime,
                 end: this.mydEndTime,
                 pageNum: 1,
                 pageSize: 10
             };
-            const res = await getResultList(options);
+            const res = await getModelInsert(options);
             if (res.data && res.data.errCode === 0) {
                 _this.satisfiedList = res.data.body.data2.list;
             } else {
@@ -758,14 +922,39 @@ export default {
                 });
             }
         },
-        //满意度调查模板接口
+        // 调查模板删除
+                async deleteModel(index,row) {
+                    console.log(row)
+            let _this = this;
+            let query={
+                token:this.userState.token
+            }
+            const options = {
+                id: "",
+            };
+            const res = await deleteModel(query,options);
+            if (res.data && res.data.errCode === 0) {
+              this.$notify.success({
+                    title: "成功",
+                    message:"删除成功"
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+         //  三
+        //获取可发送的用户列表3
         async oGetMissileList() {
             let _this = this;
             const options = {
                 token: this.userState.token,
-                userType: this.mydType,
-                search: this.searchData,
-                department: this.department,
+                userType: this.userType,
+                search: this.mydSearchData,
+                department: this.odepartment,
                 pageNum: 1,
                 pageSize: 10
             };
@@ -811,12 +1000,12 @@ export default {
             let _this = this;
             const options = {
                 token: this.userState.token,
-                department: this.department,
-                type: DAY,
+                department: this.odepartment,
+                type: this.tjType,
                 startDate: this.tjStartTime,
                 endDate: this.tjEndTime
             };
-            const res = await getFollowupGraph(options);
+            const res = await INHOSPITAL(options);
             if (res.data && res.data.errCode === 0) {
                 $.each(res.data.body.data, function(index, text) {
                     _this.drawData.dataAxis.push(text.unit);
@@ -837,8 +1026,8 @@ export default {
             let _this = this;
             const options = {
                 token: this.userState.token,
-                department: this.department,
-                type: DAY,
+                department: this.odepartment,
+                type: this.tjType,
                 startDate: this.tjStartTime,
                 endDate: this.tjEndTime
             };
@@ -856,6 +1045,15 @@ export default {
                 });
             }
         },
+        //统计时间
+        tjTimeValueFun(data) {
+            console.log(data);
+            this.tjType = data.select.value;
+            this.tjStartTime = data.time[0];
+            this.tjEndTime = data.time[0];
+            this.oGetFollowupGraph();
+            this.oGetFollowupRemarks();
+        },
         //医生端接口
         //我的随访
         async getUsFollow() {
@@ -864,7 +1062,7 @@ export default {
                 token: this.userState.token,
                 houseDeviceType: this.houseDeviceType,
                 search: this.searchData,
-                department: this.department,
+                department: this.odepartment,
                 pageNum: 1,
                 pageSize: 10
             };
@@ -881,6 +1079,9 @@ export default {
         },
         getConsulTabData(res) {
             this.oMainShow = res.i;
+            if (res.i == 2) {
+                this.oManagerGetDeviceList(); //家用设备列表
+            }
         },
         // 表格分页
         seeCurrentChange() {},
