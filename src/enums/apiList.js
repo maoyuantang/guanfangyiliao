@@ -126,4 +126,5 @@ export default {
     alertGet:'/m/v1/api/device/house/alertGet',//10.9.1 获取设备告警信息【医生web】
     alertSwitch:'/m/v1/api/device/house/alertSwitch',//10.9.2 设备告警开关改变【医生web】
     alertSet:'/m/v1/api/device/house/alertSet',//10.9.3 告警值修改【医生web】
+    getSettingsList:'/m/v1/api/basics/synergySystem/settingsList',//8.9获取协作人员设置树
 }
