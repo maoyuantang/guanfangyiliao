@@ -35,6 +35,14 @@ export default {
         sendData(data){
             console.log(555)
             this.$emit("sendData", data);
+        },
+        renderHeader(h) {
+            return (
+                <div>
+                    <span>表头</span>
+                    <el-button>按钮</el-button>
+                </div>
+            )
         }
     },
     props: {

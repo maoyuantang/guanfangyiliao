@@ -878,7 +878,7 @@ export const manageStatistics = (query)=>{//9.3协作管理统计
     const sign = postQueryHandle(Object.assign({},query));
     return axios({
         method:'post',
-        url:`${apiList.managePage}`,
+        url:`${apiList.manageStatistics}`,
         params:query,
         headers:{
             sign
@@ -889,7 +889,7 @@ export const synergyPage = (query)=>{//9.4医生协作列表
     const sign = postQueryHandle(Object.assign({},query));
     return axios({
         method:'post',
-        url:`${apiList.managePage}`,
+        url:`${apiList.synergyPage}`,
         params:query,
         headers:{
             sign
@@ -911,7 +911,7 @@ export const sendSynergy = (query,data)=>{//9.6发起协作
     const sign = postQueryHandle(Object.assign({},data,query));
     return axios({
         method:'post',
-        url:`${apiList.managePage}`,
+        url:`${apiList.sendSynergy}`,
         params:query,
         data:data,
         headers:{
@@ -923,7 +923,7 @@ export const synergyChangeStatus = (query)=>{//9.7开始/结束协作
     const sign = postQueryHandle(Object.assign({},query));
     return axios({
         method:'post',
-        url:`${apiList.managePage}`,
+        url:`${apiList.synergyChangeStatus}`,
         params:query,
         headers:{
             sign
@@ -957,6 +957,234 @@ export const receiveDoctor = query=>{//9.10本院参与科室
     return axios({
         method:'get',
         url:apiList.receiveDoctor,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const createVideoRoom = (query,data)=>{//1.3.创建视频
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.createVideoRoom,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const storageUsers = (query,data)=>{//1.4.进入/退出视频房间
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.storageUsers,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const queryStorageUsers = query=>{//1.5.根据房间号获取用户列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:`${apiList.queryStorageUsers}${query.conferenceId}`,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const closeVideoRoom = query=>{//1.6.删除视频会议房间   注意：除了需要传入query 还需要parse
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:`${apiList.closeVideoRoom}${query.cID}?token=${query.token}`,
+        // params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const videoMeetingInvited = query=>{//1.7.邀请用户进行视频通话 注意：除了需要传入query 还需要parse
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:`${apiList.videoMeetingInvited}${query.userId}/${query.conferenceId}?token=${query.token}`,
+        // params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const invitedOff = query=>{//1.8.通知邀请者已经进入会议视频 注意：除了需要传入query 还需要parse
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:`${apiList.invitedOff}${query.userId}/${query.conferenceId}?token=${query.token}`,
+        // params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const fsDownload = query=>{//1.9.文件下载 注意：除了需要传入query 还需要parse
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:`${apiList.fsDownload}${query.id}`,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const fetchHospitalRel = query=>{//8.11.获取医院上下级是否已选中列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.fetchHospitalRel,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const modelInsert = (query,data)=>{//10.3.1 创建满意度模板
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.modelInsert,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const getModelInsert = query=>{//10.3.2 获取模板列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.getModelInsert,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const editModel = (query,data)=>{//10.3.3 编辑模板
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.editModel,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const deleteModel = (query,data)=>{//10.3.4 删除模板
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.deleteModel,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const getTemplateInfo = query=>{//10.3.5 查看模板详情
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.getTemplateInfo,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const getTitleList = query=>{//10.3.6 获取可使用的模板标题列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.getTitleList,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const examine = (query,data)=>{//10.3.7 模板审核
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.examine,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const getMissileList = query=>{//10.3.8 获取可发送的用户列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.getMissileList,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const publishNotice = (query,data)=>{//10.3.9 通过短信发送满意度调查
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.publishNotice,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const rePublish = (query,data)=>{//10.3.10 失败重发
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.rePublish,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const getResultList = query=>{//10.3.11 调查管理列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.getResultList,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const sendExport = query=>{//10.3.12 导出短信回复
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.sendExport,
         params:query,
         headers:{
             sign
