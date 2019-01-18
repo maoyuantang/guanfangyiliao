@@ -1,18 +1,14 @@
 <template>
 	<!-- 远程协作系统 -->
 	<div class="cooperation">
-
-
-
-
 		<!-- 管理端 -->
 		<div class="cooperation" v-if="$store.state.user.viewRoot.now.name==='manager'">
 			<div class="Admin-title">
 				<normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
 			</div>
 			<div class="admin-oMain">
-				<!-- 协作管理端筛选目录 -->
-				<div v-if="oconsulVisable">
+				<!-- 协作管理列表 -->
+				<div v-if="manageOrCount">
 					<div class="mainTab">
 						<div>
 							<selftag :inData="oTab1" @reback="getOTab1"></selftag>
@@ -53,7 +49,7 @@
 				<selftag :inData="oTab4" @reback="getOTab4"></selftag>
 				<div class="statistics-way">
 					<span>时间段：</span>
-					<el-date-picker v-model="time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+					<el-date-picker v-model="time" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期">
 					</el-date-picker>
 				</div>
 				<el-button class="startConsul" type="text" @click="centerDialogVisible = true">发起协作</el-button>
@@ -71,6 +67,11 @@
 					<el-table-column fixed="right" label="操作" width="100">
 						<template slot-scope="scope">
 							<el-button @click="handleClick(scope.row)" type="text" size="small">病历</el-button>
+							<el-button @click="handleClick(scope.row)" type="text" size="small">邀请</el-button>
+							<el-button v-show="scope.row.status=='OVER'" @click="handleClick(scope.row)" type="text" size="small">查看记录</el-button>
+							<el-button v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="toConsultation(scope.row)"
+							 type="text" size="small">进入会诊</el-button>
+							<el-button v-show="scope.row.departmentId==userState.userId" @click="handleClick(scope.row)" type="text" size="small">结束</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -114,16 +115,16 @@
 		managePage,//9.2协作管理列表
 		manageStatistics, //9.3协作管理统计
 		synergyPage,//9.4医生协作列表 
-		// enableSynergyDoctor, //9.5获取可协作医生（本院、院外协作）
-		// sendSynergy,//9.6发起协作
+		enableSynergyDoctor, //9.5获取可协作医生（本院、院外协作）
+		sendSynergy,//9.6发起协作
+		receiveDept,//9.9本院参与科室
 		// synergyChangeStatus, //9.7开始/结束协作
 		// synergyInto,//9.8进入协作
-		receiveDept,//9.9本院参与科室
-		receiveDoctor,//9.10本院参与科室
-		addConsultation//2.新增会诊
+		// receiveDoctor,//9.10本院参与医生
 	} from "../api/apiAll.js";
 	import { mapState } from "vuex";
 	import echarts from "../plugs/echarts.js";
+
 	import tableList from "../public/publicComponents/publicList.vue";
 	import selftag from "../public/publicComponents/selftag.vue";
 	import chat from "../public/publicComponents/chat.vue";
@@ -131,6 +132,7 @@
 	import normalColumnChart from "../public/publicComponents/normalColumnChart.vue";
 	import search from "../public/publicComponents/search.vue";
 	import statisticsWay from "../public/publicComponents/statisticsWay.vue";
+	
 	export default {
 		components: {
 			selftag,
@@ -143,29 +145,45 @@
 		},
 		data() {
 			return {
-				sessionId: "", //会诊id
-				chatVisible: false, //聊天框
-				oVisable: true,
-				oconsulVisable: true, //切换会诊管理和统计的显示
-				centerDialogVisible: false, //是否发起会诊
-				evaluateVisible: false, //是否打开评价
-				departVisible: false, //是否接收科室
-				doctorVisible: false, //医生详情
-				groupVisible: false, //会诊评价
-				recordVisible: false, //查看记录
-				searchValue: "", //管理端搜索框
-				applicationDeptId: "", //发起科室
-				applicationDeptId2: "",//申请科室
-				receiveDeptId: "", //接收科室
+				manageOrCount: true, //切换管理和统计
+				centerDialogVisible: false, //是否发起协作
 				departmentList: [], //科室列表
-				hospitalList: [], //医院列表
-				adminType: "",
+				initiateDepartmentId: "", //发起科室ID
+				applyDepartmentId: "",//申请科室ID
+				acceptDepartmentId: "", //接收科室ID
+				sessionId: "", //协作id（操作下）
+				chatVisible: false, //聊天框（操作下）
+				searchValue: "", //管理端搜索框
 				adminStatus: 1,
-				statisticsStart: "",
-				statisticsType: "DEPT",
-				statisticsEnd: "",
-				departmentsId: "",
-				form: "",
+				startingTime: "",//统计筛选开始时间
+				endingTime: "",//统计筛选结束时间
+				adminType: "",//协作科室
+				statisticsType: "DEPT",//统计筛选某类
+				departmentsId: "",//弹框内参数
+				startHz: {
+					type: "SPECIALIST",
+					deptId: " ",
+					userId: " ",
+					medicalHistory: " ",
+					applicationTime: " ",
+					cooperationPurpose: " ",
+					cooperationHospitalDept: [
+						{
+							hospitalId: "1",
+							departmentsId: "2",
+							departmentListOO: []
+						}
+					]
+				},
+				// hospitalList: [], //医院列表
+				// oVisable: true,
+				// evaluateVisible: false, //是否打开评价
+				// departVisible: false, //是否接收科室
+				// doctorVisible: false, //医生详情
+				// groupVisible: false, //会诊评价
+				// recordVisible: false, //查看记录
+
+
 
 				// 筛选参数
 				oAdminTab: {
@@ -256,30 +274,10 @@
 					]
 				},
 
-				// 医生端列表请求参数
-				applyDepartmentId: "",//申请科室ID
-				cooperationDepartmentId: "",//协作科室ID
-				oDocTime: "",//医生端事件参数
-				startTimeXieZuo: "",
-				endTimeXieZuo: "",
-				startHz: {
-					type: "SPECIALIST",
-					deptId: " ",
-					userId: " ",
-					medicalHistory: " ",
-					applicationTime: " ",
-					cooperationPurpose: " ",
-					cooperationHospitalDept: [
-						{
-							hospitalId: "1",
-							departmentsId: "2",
-							departmentListOO: []
-						}
-					]
-				},
-				
 
-				// 列表参数
+
+
+				// 表格参数（共需传3个）
 				adminTableData: [], //管理端列表
 				docTableData: [], //医生端列表
 				columns: [
@@ -434,19 +432,19 @@
 			//选择管理？统计？
 			getConsulTabData(res) {
 				if (res.i == 0) {
-					this.oconsulVisable = true;
+					this.manageOrCount = true;
 				} else if (res.i == 1) {
-					this.oconsulVisable = false;
+					this.manageOrCount = false;
 				}
 			},
 			//发起科室筛选
 			getOTab1(data) {
-				this.applicationDeptId = data.index.value;
+				this.initiateDepartmentId = data.index.value;
 				this.getAdminList();
 			},
 			//接收科室筛选
 			// getOTab11(data) {
-			// 	this.receiveDeptId = data.index.value;
+			// 	this.acceptDepartmentId = data.index.value;
 			// 	this.getAdminList();
 			// },
 			//协作科室筛选
@@ -465,16 +463,28 @@
 
 
 			//管理统计事件
+
 			//点击筛选日期
 			getOTab4(data) {
-				this.applicationDeptId2 = data.index.value;
+				this.applyDepartmentId = data.index.value;
 				this.getAdminTjList();
 				this.getApplyTjList();
 			},
-			//点击查看记录
-			recordFun() {
-				this.recordVisible = true;
+
+			//点击选择统计类型
+			getTjData(data) {
+				// console.log(data);
+				this.statisticsType = data.select.value;
+				this.startingTime = data.time[0];
+				this.endingTime = data.time[1];
+				this.getAdminTjList();
+				this.getApplyTjList();
 			},
+
+			//点击查看记录
+			// recordFun() {
+			// 	this.recordVisible = true;
+			// },
 
 
 
@@ -483,13 +493,17 @@
 			//医生事件
 			//点击筛选日期
 			getOTab4(data) {
-				this.oDocTime = data.index.value;
 				this.getDocList();
 			},
 			//右上角搜索框
 			adminSearchChange(data) {
 				this.searchValue = data;
 				this.getAdminList();
+			},
+			//进入协作
+			async toConsultation(oObject) {
+				this.chatVisible = true;
+				this.sessionId = oObject.sessionId;
 			},
 
 
@@ -500,81 +514,128 @@
 
 
 			//接口
-			//发起协作确认-弹框
-			async addHz() {
-				let _this = this;
-				let addHzConsultatonList = [];
-				$.each(this.startHz.cooperationHospitalDept, function (
-					index,
-					text
-				) {
-					addHzConsultatonList.push({
-						hospitalId: text.hospitalId,
-						departmentsId: text.departmentsId
-					});
-				});
-				let query = {
-					token: this.userState.token
-				};
-				let options = {
-					type: this.startHz.type,
-					deptId: this.startHz.deptId,
-					userId: this.startHz.userId,
-					medicalHistory: this.startHz.medicalHistory,
-					applicationTime: this.startHz.applicationTime,
-					cooperationPurpose: this.startHz.cooperationPurpose,
-					cooperationHospitalDept: addHzConsultatonList
-				};
-				const res = await addConsultation(query, options);
-				if (res.data && res.data.errCode === 0) {
-					this.$notify.success({
-						title: "发起成功",
-						message: res.data.errMsg
-					});
-					setTimeout(function () {
-						_this.centerDialogVisible = false;
-						_this.getDocList();
-					}, 1000);
-				} else {
-					//失败
-					// alert()
-					this.$notify.error({
-						title: "警告",
-						message: res.data.errMsg
-					});
-				}
-			},
-			//获取联系人-弹框
-			async getHospitalment() {
-				let _this = this;
-				let query = {
-					token: this.userState.token
-				};
-				const res = await receiveDept(query);
-				if (res.data && res.data.errCode === 0) {
-					$.each(res.data.body, function (index, text) {
-						_this.hospitalList.push({
-							name: text.orgName,
-							value: text.orgCode
-						});
-					});
-				} else {
-					//失败
-					this.$notify.error({
-						title: "警告",
-						message: res.data.errMsg
-					});
-				}
-			},
-			//获取病例-弹框
-			ObtainMedicalCase(oid, oindex) {
-				this.getDepartment(oindex);
-			},
-			//获取目的-弹框
-			ObtainPurpose() {
 
+			//获取管理端列表
+			async getAdminList() {
+				let _this = this;
+				const options = {
+					token: this.userState.token,
+					query: "",
+					pageNum: 1,
+					pageSize: 10,
+					status: this.adminStatus,
+					applyDeptId: this.initiateDepartmentId,
+					synergyDeptId: this.acceptDepartmentId,
+					startTime: this.startingTime,
+					endTime: this.startingTime,
+				};
+				const res = await managePage(options);
+				if (res.data && res.data.errCode === 0) {
+					this.adminTableData = res.data.body.data2.list;
+					if (res.data.body.data2.list.length == 0) {
+						console.log('9.2管理列表List无数据')
+					}
+				} else {
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
 			},
-			//获取科室列表
+
+
+			//获取统计列表-1
+			async getAdminTjList() {
+				this.drawDataStart.dataAxis = [];
+				this.drawDataStart.data = [];
+				let _this = this;
+				const options = {
+					token: this.userState.token,
+					statisticsType: 1,
+					applyDeptId: this.initiateDepartmentId,
+					startTime: this.startingTime,
+					endTime: this.endingTime,
+				};
+				const res = await manageStatistics(options);
+				if (res.data && res.data.errCode === 0) {
+					$.each(res.data.body.data, function (index, text) {
+						_this.drawDataStart.dataAxis.push(text.unit);
+						_this.drawDataStart.data.push(text.number);
+					});
+					console.log('getAdminTjList成功')
+				} else {
+					console.log('getAdminTjList失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
+
+
+			//获取统计筛选科室列表-2
+			async getApplyTjList() {
+				this.drawData.dataAxis = [];
+				this.drawData.data = [];
+				let _this = this;
+				const options = {
+					token: this.userState.token,
+					applyDeptId: this.initiateDepartmentId,
+					statisticsType: 1,
+					startTime: this.startingTime,
+					endTime: this.endingTime,
+				};
+				// console.log(options)
+				const res = await manageStatistics(options);
+				if (res.data && res.data.errCode === 0) {
+					$.each(res.data.body.data, function (index, text) {
+						_this.drawData.dataAxis.push(text.unit);
+						_this.drawData.data.push(text.number);
+					});
+					console.log('getApplyTjList成功')
+				} else {
+					console.log('getApplyTjList失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
+
+
+			//获取医生端列表
+			async getDocList() {
+				let _this = this;
+				const options = {
+					token: this.userState.token,
+					query: "",
+					pageNum: 1,
+					pageSize: 15,
+					status: this.adminStatus,
+					applyDeptId: this.applyDepartmentId,
+					synergyDeptId: this.acceptDepartmentId,
+					startTime: this.startingTime,
+					endTime: this.endingTime,
+				};
+				const res = await synergyPage(options);
+				if (res.data && res.data.errCode === 0) {
+					this.docTableData = res.data.body.data2.list;
+					if (res.data.body.data2.list.length == 0) {
+						console.log('9.4医生列表List无数据')
+					}
+				} else {
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
+
+			//获取协作科室列表
 			async getDepartment(oindex) {
 				let _this = this;
 				let query = {
@@ -613,77 +674,20 @@
 					});
 				}
 			},
-			//获取管理端列表
-			async getAdminList() {
-				let _this = this;
-				const options = {
-					token: this.userState.token,
-					query: "",
-					pageNum: 1,
-					pageSize: 10,
-					status: this.adminStatus,
 
-					applyDeptId: this.applicationDeptId,
-					synergyDeptId: this.receiveDeptId,
-					startTime: this.startTimeXieZuo,
-					endTime: this.startTimeXieZuo,
-				};
-				const res = await managePage(options);
-				if (res.data && res.data.errCode === 0) {
-					// console.log(res)
-					this.adminTableData = res.data.body.data2.list;
-				} else {
-					//失败
-					this.$notify.error({
-						title: "警告",
-						message: res.data.errMsg
-					});
-				}
-			},
-			//获取管理端申请科室统计列表
-			async getApplyTjList() {
-				this.drawData.dataAxis = [];
-				this.drawData.data = [];
+			//获取联系人-弹框
+			async getEnableSynergyDoctor() {
 				let _this = this;
-				const options = {
-					token: this.userState.token,
-					applyDeptId: this.applicationDeptId,
-					statisticsType: 1,
-					startTime: this.startTimeXieZuo,
-					endTime: this.endTimeXieZuo,
+				let query = {
+					token: this.userState.token
 				};
-				const res = await manageStatistics(options);
+				const res = await enableSynergyDoctor(query);
 				if (res.data && res.data.errCode === 0) {
-					$.each(res.data.body.data, function (index, text) {
-						_this.drawData.dataAxis.push(text.unit);
-						_this.drawData.data.push(text.number);
-					});
-					// console.log(res)
-				} else {
-					//失败
-					this.$notify.error({
-						title: "警告",
-						message: res.data.errMsg
-					});
-				}
-			},
-			//获取管理端发起科室统计列表
-			async getAdminTjList() {
-				this.drawDataStart.dataAxis = [];
-				this.drawDataStart.data = [];
-				let _this = this;
-				const options = {
-					token: this.userState.token,
-					statisticsType: 1,
-					applyDeptId: this.applicationDeptId,
-					startTime: this.startTimeXieZuo,
-					endTime: this.endTimeXieZuo,
-				};
-				const res = await manageStatistics(options);
-				if (res.data && res.data.errCode === 0) {
-					$.each(res.data.body.data, function (index, text) {
-						_this.drawDataStart.dataAxis.push(text.unit);
-						_this.drawDataStart.data.push(text.number);
+					$.each(res.data.body, function (index, text) {
+						_this.hospitalList.push({
+							name: text.orgName,
+							value: text.orgCode
+						});
 					});
 				} else {
 					//失败
@@ -693,35 +697,50 @@
 					});
 				}
 			},
-			//获取统计类型
-			getTjData(data) {
-				// console.log(data);
-				this.statisticsType = data.select.value;
-				this.statisticsStart = data.time[0];
-				this.statisticsEnd = data.time[1];
-				this.getAdminTjList();
-				this.getApplyTjList();
+			//获取病例-弹框
+			ObtainMedicalCase(oid, oindex) {
+				// this.getDepartment(oindex);
 			},
-			//获取医生端列表
-			async getDocList() {
-				let _this = this;
-				const options = {
-					token: this.userState.token,
-					query: "",
-					pageNum: 1,
-					pageSize: 15,
-					status: this.adminStatus,
+			//获取目的-弹框
+			ObtainPurpose() {
 
-					applyDeptId: this.applicationDeptId2,
-					synergyDeptId: this.receiveDeptId,
-					startTime: this.startTimeXieZuo,
-					endTime: this.endTimeXieZuo,
+			},
+
+			//提交协作-弹框
+			async addHz() {
+				let _this = this;
+				let addHzConsultatonList = [];
+				$.each(this.startHz.cooperationHospitalDept, function (
+					index,
+					text
+				) {
+					addHzConsultatonList.push({
+						hospitalId: text.hospitalId,
+						departmentsId: text.departmentsId
+					});
+				});
+				let query = {
+					token: this.userState.token
 				};
-				const res = await synergyPage(options);
+				let options = {
+					type: this.startHz.type,
+					deptId: this.startHz.deptId,
+					userId: this.startHz.userId,
+					medicalHistory: this.startHz.medicalHistory,
+					applicationTime: this.startHz.applicationTime,
+					cooperationPurpose: this.startHz.cooperationPurpose,
+					cooperationHospitalDept: addHzConsultatonList
+				};
+				const res = await sendSynergy(query, options);
 				if (res.data && res.data.errCode === 0) {
-					this.docTableData = res.data.body.data2.list;
-					console.log(res)
-					console.log(2222)
+					this.$notify.success({
+						title: "发起成功",
+						message: res.data.errMsg
+					});
+					setTimeout(function () {
+						_this.centerDialogVisible = false;
+						_this.getDocList();
+					}, 1000);
 				} else {
 					//失败
 					this.$notify.error({
@@ -729,8 +748,7 @@
 						message: res.data.errMsg
 					});
 				}
-
-			}
+			},
 		},
 
 
@@ -743,10 +761,18 @@
 		async created() {
 			//管理列表
 			this.getAdminList();
-			//管理统计
-			// this.getAdminTjList();
+
+			//统计
+			this.getAdminTjList();
+
+			//获取科室
+			this.getDepartment();
+
 			//医生列表
 			this.getDocList();
+
+			//联系人窗口列表
+			this.getEnableSynergyDoctor();
 
 		}
 	};
@@ -773,16 +799,19 @@
 	.mainTab {
 		display: flex;
 		display: -webkit-flex;
+		justify-content: space-between;
 	}
 
 	.mainTab>div:first-child {
-		width: 100%;
+		width: auto !important;
 	}
 
 	/* 医生端样式 */
 	.cooperation .doc-title {
 		display: flex;
 		display: -webkit-flex;
+		justify-content:space-evenly;
+		align-items: baseline;
 		margin-bottom: 52px;
 	}
 
