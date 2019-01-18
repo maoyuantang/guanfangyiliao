@@ -2,43 +2,74 @@
 	<div class="super-management">
 		超级管理员
         <Button type="primary" @click="testData.show = true">Display dialog box</Button>
-        <!-- <Modal
-            v-model="modal1"
-            title="test"
-            @on-ok="ok"
-            @on-cancel="cancel">
-           <el-tree
-                :data="testData"
-                show-checkbox
-                node-key="id"
-                @check="selectItem">
-            </el-tree>
-        </Modal> -->
         <alertTree :inData="testData" @reback="getSelect"></alertTree>
         <div class="super-management-top">
             <search></search>
         </div>
         <div class="super-management-middle">
-            <publicList :columns="tableData.head" :tableData="tableData.data" :tableBtn="tableData.btns" @sendData="getSendData"></publicList> 
+           <table class="super-management-middle-table">
+               <thead>
+                    <tr class="super-management-middle-table-tr table-thead-tr">
+                       <th ><span>{{tableData.head.name||'缺失'}}</span></th>
+                       <th ><span>{{tableData.head.account||'缺失'}}</span></th>
+                       <th ><span>{{tableData.head.subSystemNum||'缺失'}}</span></th>
+                       <th ><span>{{tableData.head.deptNum||'缺失'}}</span></th>
+                       <th ><span>{{tableData.head.deptManageNum||'缺失'}}</span></th>
+                       <th ><span>{{tableData.head.doctorNum||'缺失'}}</span></th>
+                       <th ><span>{{tableData.head.superOrgNum||'缺失'}}</span></th>
+                       <th ><span>{{tableData.head.childOrgNum||'缺失'}}</span></th>
+                       <th ><span>{{tableData.head.teamNum||'缺失'}}</span></th>
+                       <th ><span>{{tableData.head.consNum||'缺失'}}</span></th>
+                       <th ><span>{{tableData.head.deviceNum||'缺失'}}</span></th>
+                       <th v-if="tableData.operating.length>0"><span>操作</span></th>
+                    </tr>
+               </thead>
+               <tbody>
+                   <tr v-for="(item,index) in tableData.data" :key="index" class="super-management-middle-table-tr table-tbody-tr">
+                       <th><span>{{item.name}}</span></th>
+                       <th><span>{{item.account}}</span></th>
+                       <th @click="subSystemNum({type:'subSystemNum',value:item})"><span>{{item.subSystemNum||'缺失'}}</span></th>
+                       <th @click="deptNum({type:'deptNum',value:item})"><span>{{item.deptNum||'缺失'}}</span></th>
+                       <th @click="deptManageNum({type:'deptManageNum',value:item})"><span>{{item.deptManageNum||'缺失'}}</span></th>
+                       <th @click="doctorNum({type:'doctorNum',value:item})"><span>{{item.doctorNum||'缺失'}}</span></th>
+                       <th @click="superOrgNum({type:'superOrgNum',value:item})"><span>{{item.superOrgNum||'缺失'}}</span></th>
+                       <th @click="superOrgNum({type:'childOrgNum',value:item})"><span>{{item.childOrgNum||'缺失'}}</span></th>
+                       <th @click="getHeadClick({type:'teamNum',value:item})"><span>{{item.teamNum||'缺失'}}</span></th>
+                       <th @click="getHeadClick({type:'consNum',value:item})"><span>{{item.consNum||'缺失'}}</span></th>
+                       <th ><span>{{item.deviceNum}}</span></th>
+                       <th v-if="tableData.operating.length>0">
+                           <span v-for="(v,k) in tableData.operating" :key="k" class="operating-span">
+                               <el-button type="primary" size="mini" @click="btnClick(v)">{{v.name}}</el-button>
+                            </span>
+                        </th>
+                   </tr>
+               </tbody>
+           </table>
         </div>
+        <Spin size="large" fix v-if="spinShow"></Spin>
 	</div>
 </template>
 
 <script>
-import { fetchHospitalList } from "../../api/apiAll.js";
+import { fetchHospitalList, fetchAllSubSystem ,fetchHospitalDepts,fetchHospitalRel,settingsList} from "../../api/apiAll.js"; 
 import { mapState } from "vuex";
 import search from "../../public/publicComponents/search.vue";
 import publicList from "../../public/publicComponents/publicList.vue";
 import alertTree from "../../public/publicComponents/alertTree.vue";
-import { constants } from 'zlib';
+import selfTab from "../../public/publicComponents/selfTab.vue";
 export default {
     components: {
         search,
         publicList,
-        alertTree
+        alertTree,
+        selfTab
     },
     data() {
         return {
+           spinShow:false,
+
+
+
             modal1:false,
             testData:{
                 title:'test title',
@@ -82,22 +113,14 @@ export default {
             },
             
             tableData:{
-                head:[],
+                head:{},
                 data:[],
-                btns:[
+                operating:[
                     {
-                        name: "编辑",
-                        oclass:"evaluateBtn",
-                        method: (index, row) => {
-                            this.evaluateFun(index, row);
-                        }
+                        name:'修改'
                     },
                     // {
-                    //     name: "查看记录",
-                    //     oclass:"recordBtn",
-                    //     method: (index, row) => {
-                    //         this.recordFun(index, row);
-                    //     }
+                    //     name:'删除'
                     // }
                 ]
             },
@@ -116,48 +139,9 @@ export default {
                     "doctorNum": "医生数",
                     "account": "医院账号"
                 },
-                "data1": null,
-                "data2": {
-                    "pageNum": 1,
-                    "pageSize": 10,
-                    "size": 1,
-                    "startRow": 1,
-                    "endRow": 1,
-                    "total": 1,
-                    "pages": 1,
-                    "list": [
-                        {
-                            "id": "91F0B9D25A474B6FA0CDBAC872035984",
-                            "code": "1545649424290",
-                            "name": "冠方医院",
-                            "account": "admin2",
-                            "subSystemNum": 0,
-                            "deptNum": 0,
-                            "deptManageNum": 0,
-                            "doctorNum": 0,
-                            "superOrgNum": 0,
-                            "childOrgNum": 0,
-                            "teamNum": 0,
-                            "consNum": 0,
-                            "deviceNum": 0
-                        }
-                    ],
-                    "prePage": 0,
-                    "nextPage": 0,
-                    "isFirstPage": true,
-                    "isLastPage": true,
-                    "hasPreviousPage": false,
-                    "hasNextPage": false,
-                    "navigatePages": 8,
-                    "navigatepageNums": [
-                        1
-                    ],
-                    "navigateFirstPage": 1,
-                    "navigateLastPage": 1,
-                    "firstPage": 1,
-                    "lastPage": 1
-                }
+                
             },
+            
         };
     },
     computed: {
@@ -190,10 +174,8 @@ export default {
             const res = await fetchHospitalList(data);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
-                console.log(this.jsonToArray(res.data.body.header))
-                const tableHead = this.jsonToArray(res.data.body.header);
-                tableHead.ok?this.tableData.head=tableHead.data:this.$notify.error({title: "数据解析失败",message:tableHead.msg});
-                this.tableData.data = res.data.body.data2.list
+                this.tableData.head = res.data.body.header;
+                this.tableData.data = res.data.body.data2.list;
             } else { //失败
                 this.$notify.error({
                     title: "数据获取失败",
@@ -201,6 +183,13 @@ export default {
                 });
             }
         },
+
+        /**
+         * 获取医院子系统列表
+         */
+        
+
+
         /**
          * json转数组
          * 传入 json
@@ -229,24 +218,198 @@ export default {
             const reArr = [];
             for(let i in newJson){
                 reArr.push({
-                    prop:i,
-                    label:newJson[i]
+                    key:i,
+                    name:newJson[i]
                 })
             }
             return {ok:true,msg:'',data:reArr} 
         },
-        fun1(data){
-            this.$alert(`<h1 @click="consoleSome">
-                ${data}
-            </h1>`, 'HTML 片段', {
-            dangerouslyUseHTMLString: true,
-            callback: action=>{
-                console.log('click')
-            }
+        /**
+         * 子系统
+         */
+        async subSystemNum(item){
+            const res = await fetchAllSubSystem({
+                hospitalId:item.value.id,
+                token:this.userState.token
             });
+            if(res.data&&res.data.errCode===0){
+                this.testData.data = res.data.body.map(value=>{
+                    return {
+                        id: value.subCode,
+                        label: value.subName,
+                    }
+                });
+                this.testData.title = '子系统';
+                this.testData.canClick = true;
+                this.testData.show = true
+            }else{
+
+            }
         },
-        consoleSome(){
-            console.log('i have a test')
+
+        /**
+         * 科室
+         */
+        async deptNum(item){
+            const res = await fetchHospitalDepts({orgCode:item.value.code});
+            console.log(res)
+            if(res.data&&res.data.errCode===0){
+                
+            }else{
+
+            }
+        },
+        /**
+         * 科室管理员
+         */
+        async deptManageNum(item){//接口还没有
+            console.log(item)
+        },
+
+        /**
+         * 医生
+         */
+        async doctorNum(item){//接口还没有
+            console.log(item)
+        },
+
+        /**
+         * 上级医院，下级医院(后端说这两个其实就是一个玩意)
+         */
+        async superOrgNum(item){
+            const res = await fetchHospitalRel({
+                hospitalId:item.value.id,
+                token:this.userState.token
+            });
+            console.log(res)
+            if(res.data&&res.data.errCode===0){
+
+            }else{
+
+            }
+        },
+
+
+        /**
+         * 表格头部被点击
+         */
+        /*
+        async getHeadClick(item){
+            const obj = {
+                subSystemNum:{
+                    type:'1',
+                    title:'子系统',
+                    fun:fetchAllSubSystem,
+                    data:[
+                        {
+                            hospitalId:item.value.id,
+                            token:this.userState.token
+                        }
+                    ]
+                },
+                deptNum:{
+                    type:'2',
+                    title:'科室',
+                    fun:fetchHospitalDepts,
+                    data:[
+                        {
+                            orgCode:item.value.code
+                        }
+                    ]
+                },
+                deptManageNum:{//接口还没有
+                    type:'3',
+                    title:'科室管理员',
+                    fun:()=>{},
+                    data:[
+                        {
+                            orgCode:item.value.code
+                        }
+                    ]
+                },
+                doctorNum:{//接口还没有
+                    type:'3',
+                    title:'医生',
+                    fun:()=>{},
+                    data:[
+                        {
+                            orgCode:item.value.code
+                        }
+                    ]
+                },
+                superOrgNum:{
+                    type:'1',
+                    title:'上级医院',
+                    fun:fetchHospitalRel,
+                    data:[
+                        {
+                            hospitalId:item.value.id,
+                            token:this.userState.token
+                        }
+                    ]
+                },
+                childOrgNum:{
+                    type:'1',
+                    title:'下级医院',
+                    fun:fetchHospitalRel,
+                    data:[
+                        {
+                            hospitalId:item.value.id,
+                            token:this.userState.token
+                        }
+                    ]
+                },
+                teamNum:{
+                    type:'1',
+                    title:'协作人员',
+                    fun:settingsList,
+                    data:[
+                        {
+                            token:this.userState.token
+                        }
+                    ]
+                    
+                },
+                consNum:{
+                    type:'1',
+                    title:'会诊范围',
+                    fun:()=>{},
+                    data:[
+                        {
+                            token:this.userState.token
+                        }
+                    ]
+                    
+                },
+                deviceNum:'',
+            };
+            if(!obj[item.type])return;
+            const res = await obj[item.type].fun(...obj[item.type].data);
+            console.log(res)
+            return;
+            if(res.data&&res.data.errCode===0){
+                const useData = res.data.body.map(value=>{
+                    return {
+                        id: value.subCode,
+                        label: value.subName,
+                        // children:[]
+                    }
+                })
+                this.testData.title =  obj[item.title];
+                this.testData.canClick = true;
+                this.testData.data = useData;
+                this.testData.show = true
+            }
+
+            return;
+            console.log(item);
+            this.testData.show = true
+        },*/
+        /**
+         * 按钮被点击
+         */
+        btnClick(item){
+            console.log(item)
         },
         canClick(){
             console.log('can click')
@@ -254,7 +417,6 @@ export default {
     },
     async created() {
         this.getTableData();
-        // this.fun1('i is fish');
     }
 };
 </script>
@@ -264,6 +426,25 @@ export default {
 }
 .super-management-top{
     padding: 0.2rem;
+}
+.super-management-middle-table{
+    width: 100%;
+}
+.super-management-middle-table-tr{
+    border-bottom: 1px solid var(--borderColor1);
+    height: 0.4rem;
+    color: var(--color3);
+}
+.table-thead-tr span{
+    font-weight: bold;
+    cursor: pointer;
+    font-size: var(--fontSize3);
+}
+.table-tbody-tr{
+    
+}
+.operating-span{
+    padding: 0.05rem;
 }
 </style>
 <!--

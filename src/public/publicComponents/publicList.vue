@@ -1,6 +1,6 @@
 <template>
     <div class="public-list">
-        <el-table :data="tableData" style="width: 100%">
+        <el-table :data="tableData" style="width: 100%" @cell-click="sendData">
             <el-table-column v-for="(column, index) in columns" :prop="column.prop" :key="index" :label="column.label" :width="column.width">
                 <template slot-scope="scope">
                     <span :class="scope.row.oclass">
@@ -35,6 +35,14 @@ export default {
         sendData(data){
             console.log(555)
             this.$emit("sendData", data);
+        },
+        renderHeader(h) {
+            return (
+                <div>
+                    <span>表头</span>
+                    <el-button>按钮</el-button>
+                </div>
+            )
         }
     },
     props: {
