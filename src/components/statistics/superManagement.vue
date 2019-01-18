@@ -31,9 +31,9 @@
                        <th @click="subSystemNum({type:'subSystemNum',value:item})"><span>{{item.subSystemNum||'缺失'}}</span></th>
                        <th @click="deptNum({type:'deptNum',value:item})"><span>{{item.deptNum||'缺失'}}</span></th>
                        <th @click="deptManageNum({type:'deptManageNum',value:item})"><span>{{item.deptManageNum||'缺失'}}</span></th>
-                       <th @click="getHeadClick({type:'doctorNum',value:item})"><span>{{item.doctorNum||'缺失'}}</span></th>
-                       <th @click="getHeadClick({type:'superOrgNum',value:item})"><span>{{item.superOrgNum||'缺失'}}</span></th>
-                       <th @click="getHeadClick({type:'childOrgNum',value:item})"><span>{{item.childOrgNum||'缺失'}}</span></th>
+                       <th @click="doctorNum({type:'doctorNum',value:item})"><span>{{item.doctorNum||'缺失'}}</span></th>
+                       <th @click="superOrgNum({type:'superOrgNum',value:item})"><span>{{item.superOrgNum||'缺失'}}</span></th>
+                       <th @click="superOrgNum({type:'childOrgNum',value:item})"><span>{{item.childOrgNum||'缺失'}}</span></th>
                        <th @click="getHeadClick({type:'teamNum',value:item})"><span>{{item.teamNum||'缺失'}}</span></th>
                        <th @click="getHeadClick({type:'consNum',value:item})"><span>{{item.consNum||'缺失'}}</span></th>
                        <th ><span>{{item.deviceNum}}</span></th>
@@ -269,14 +269,31 @@ export default {
         /**
          * 医生
          */
+        async doctorNum(item){//接口还没有
+            console.log(item)
+        },
 
+        /**
+         * 上级医院，下级医院(后端说这两个其实就是一个玩意)
+         */
+        async superOrgNum(item){
+            const res = await fetchHospitalRel({
+                hospitalId:item.value.id,
+                token:this.userState.token
+            });
+            console.log(res)
+            if(res.data&&res.data.errCode===0){
 
+            }else{
 
+            }
+        },
 
 
         /**
          * 表格头部被点击
          */
+        /*
         async getHeadClick(item){
             const obj = {
                 subSystemNum:{
@@ -387,7 +404,7 @@ export default {
             return;
             console.log(item);
             this.testData.show = true
-        },
+        },*/
         /**
          * 按钮被点击
          */

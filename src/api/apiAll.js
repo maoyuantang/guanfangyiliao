@@ -863,11 +863,11 @@ export const getxiezuoList = (query,data)=>{//13.1.8 提交评论
         }
     })
 }
-export const managePage = (query)=>{//9.2协作管理列表
-    const sign = postQueryHandle(Object.assign({},query));
+export const managePage = query=>{//9.2协作管理列表
+    const sign = postQueryHandle(query);
     return axios({
-        method:'post',
-        url:`${apiList.managePage}`,
+        method:'get',
+        url:apiList.managePage,
         params:query,
         headers:{
             sign
@@ -1186,6 +1186,167 @@ export const sendExport = query=>{//10.3.12 导出短信回复
         method:'get',
         url:apiList.sendExport,
         params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const createInquiry = (query,data)=>{//10.6.1 新建问诊模板【医生web】
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.createInquiry,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const editInquiry = (query,data)=>{//10.6.2 编辑问诊模板【医生web】
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.editInquiry,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const queryInquiry = query=>{//10.6.3 查询问诊模板
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.queryInquiry,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const deleteInquiry = (query,data)=>{//10.6.4 删除问诊模板【医生web】
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.deleteInquiry,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const queryList = query=>{//10.6.5 获取问诊模板列表【医生web】
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.queryList,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const getModelTitleList = query=>{//10.6.6 获取问诊模板标题列表【医生web】
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.getModelTitleList,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const generateInquiryPlan = (query,data)=>{//10.6.8 生成问诊计划
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.generateInquiryPlan,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const handleInquiryPlan = (query,data)=>{//10.6.9 用户处理问诊计划
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.handleInquiryPlan,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const queryInquiryPlan = query=>{//10.6.10 查看问诊计划详情
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.queryInquiryPlan,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const INHOSPITAL = query=>{//10.7.1 获取住院随访统计
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.INHOSPITAL,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const OUTPATIENT = query=>{//10.7.2 获取门诊随访统计
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.OUTPATIENT,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const alertGet = query=>{//10.9.1 获取设备告警信息【医生web】
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.alertGet,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const alertSwitch = (query,data)=>{//10.9.2 设备告警开关改变【医生web】
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.alertSwitch,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const alertSet = (query,data)=>{//10.9.3 告警值修改【医生web】
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.alertSet,
+        params:query,
+        data:data,
         headers:{
             sign
         }

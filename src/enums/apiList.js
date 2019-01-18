@@ -112,4 +112,18 @@ export default {
     rePublish:'/m/v1/api/satisfaction/send/rePublish',//10.3.10 失败重发
     getResultList:'/m/v1/api/satisfaction/send/getResultList',//10.3.11 调查管理列表
     sendExport:'/m/v1/api/satisfaction/send/export',//10.3.12 导出短信回复
+    createInquiry:'/m/v1/api/inquiry/inquiryModel/createInquiry',//10.6.1 新建问诊模板【医生web】
+    editInquiry:'/m/v1/api/inquiry/inquiryModel/editInquiry',//10.6.2 编辑问诊模板【医生web】
+    queryInquiry:'/m/v1/api/inquiry/inquiryModel/queryInquiry',//10.6.3 查询问诊模板
+    deleteInquiry:'/m/v1/api/inquiry/inquiryModel/deleteInquiry',//10.6.4 删除问诊模板【医生web】
+    queryList:'/m/v1/api/inquiry/inquiryModel/queryList',//10.6.5 获取问诊模板列表【医生web】
+    getModelTitleList:'/m/v1/api/inquiry/inquiryModel/webGetTitleList',//10.6.6 获取问诊模板标题列表【医生web】
+    generateInquiryPlan:'/m/v1/api/inquiry/inquiryPlan/generateInquiryPlan',//10.6.8 生成问诊计划
+    handleInquiryPlan:'/m/v1/api/inquiry/inquiryPlan/handleInquiryPlan',//10.6.9 用户处理问诊计划
+    queryInquiryPlan:'/m/v1/api/inquiry/inquiryPlan/queryInquiryPlan',//10.6.10 查看问诊计划详情
+    INHOSPITAL:'/m/v1/api/followup/followupPlan/getFollowupGraph/INHOSPITAL',//10.7.1 获取住院随访统计
+    OUTPATIENT:'/m/v1/api/followup/followupPlan/getFollowupGraph/OUTPATIENT',//10.7.2 获取门诊随访统计
+    alertGet:'/m/v1/api/device/house/alertGet',//10.9.1 获取设备告警信息【医生web】
+    alertSwitch:'/m/v1/api/device/house/alertSwitch',//10.9.2 设备告警开关改变【医生web】
+    alertSet:'/m/v1/api/device/house/alertSet',//10.9.3 告警值修改【医生web】
 }
