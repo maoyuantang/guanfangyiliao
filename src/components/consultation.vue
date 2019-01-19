@@ -243,8 +243,8 @@
 			</div>
 
 			<div>
-				<el-table :data="docTableData" border style="width: 100%"  @header-cell-style="alertAT()">
-					<el-table-column   fixed prop="consultationId" label="会诊编号" width="150">
+				<el-table :data="docTableData" border style="width: 100%">
+					<el-table-column fixed prop="consultationId" label="会诊编号" width="150">
 					</el-table-column>
 					<el-table-column prop="hospital" label="发起医院" width="120">
 					</el-table-column>
@@ -590,9 +590,6 @@ export default {
         })
     },
     methods: {
-		alertAT(){
-alert('dd')
-		},
         // 管理端事件
         getOTab1(data) {
             this.applicationDeptId = data.index.value;
