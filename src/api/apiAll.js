@@ -874,11 +874,11 @@ export const managePage = query=>{//9.2协作管理列表
         }
     })
 }
-export const manageStatistics = (query)=>{//9.3协作管理统计
-    const sign = postQueryHandle(Object.assign({},query));
+export const manageStatistics = query=>{//9.3协作管理统计
+    const sign = postQueryHandle(query);
     return axios({
-        method:'post',
-        url:`${apiList.manageStatistics}`,
+        method:'get',
+        url:apiList.manageStatistics,
         params:query,
         headers:{
             sign
@@ -1357,6 +1357,28 @@ export const getSettingsList = query=>{//8.9获取协作人员设置树
     return axios({
         method:'get',
         url:apiList.getSettingsList,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const fetchUserCloud = query=>{//11.4.云存储用户统计信息列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.fetchUserCloud,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const viewCloud = query=>{//11.3.查看云存储服务
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.viewCloud,
         params:query,
         headers:{
             sign

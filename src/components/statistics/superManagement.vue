@@ -2,7 +2,7 @@
 	<div class="super-management">
 		超级管理员
         <Button type="primary" @click="testData.show = true">Display dialog box</Button>
-        <alertTree :inData="testData" @reback="getSelect"></alertTree>
+        <alertTree :inData="testData" @reback="getSelect" v-if="showAlertTree"></alertTree>
         <div class="super-management-top">
             <search></search>
         </div>
@@ -25,7 +25,7 @@
                     </tr>
                </thead>
                <tbody>
-                   <tr v-for="(item,index) in tableData.data" :key="index" class="super-management-middle-table-tr table-tbody-tr">
+                   <tr v-for="(item,index) in tableData.data" :key="index" class="super-management-middle-table-tr table-tbody-tr" @click="setNowItem(item)">
                        <th><span>{{item.name}}</span></th>
                        <th><span>{{item.account}}</span></th>
                        <th @click="subSystemNum({type:'subSystemNum',value:item})"><span>{{item.subSystemNum||'缺失'}}</span></th>
@@ -35,28 +35,98 @@
                        <th @click="superOrgNum({type:'superOrgNum',value:item})"><span>{{item.superOrgNum||'缺失'}}</span></th>
                        <th @click="superOrgNum({type:'childOrgNum',value:item})"><span>{{item.childOrgNum||'缺失'}}</span></th>
                        <th @click="teamNum({type:'teamNum',value:item})"><span>{{item.teamNum||'缺失'}}</span></th>
-                       <th @click="getHeadClick({type:'consNum',value:item})"><span>{{item.consNum||'缺失'}}</span></th>
+                       <th @click="consNum({type:'consNum',value:item})"><span>{{item.consNum||'缺失'}}</span></th>
                        <th ><span>{{item.deviceNum}}</span></th>
                        <th v-if="tableData.operating.length>0">
                            <span v-for="(v,k) in tableData.operating" :key="k" class="operating-span">
-                               <el-button type="primary" size="mini" @click="btnClick(v)">{{v.name}}</el-button>
+                               <el-button type="primary" size="mini" @click="btnClick(v,item)">{{v.name}}</el-button>
                             </span>
                         </th>
                    </tr>
                </tbody>
            </table>
+           <Modal
+                v-model="showAdd"
+                title="新增医院"
+                @on-ok="sureAdd"
+                @on-cancel="cancelAdd">
+                <div class="add-data">
+                    <div class="data-item">
+                        <span>医院名:</span>
+                        <el-input
+                            placeholder="请输入内容"
+                            v-model="addHospitalInfo.name"
+                            clearable>
+                        </el-input>
+                    </div>
+                    <div class="data-item">
+                        <span>账号:</span>
+                        <el-input
+                            placeholder="请输入内容"
+                            v-model="addHospitalInfo.account"
+                            clearable>
+                        </el-input>
+                    </div>
+                    <div class="data-item">
+                        <span>密码:</span>
+                        <el-input
+                            placeholder="请输入内容"
+                            v-model="addHospitalInfo.passwd"
+                            type="password"
+                            clearable>
+                        </el-input>
+                    </div>
+                </div>
+           </Modal>
+           <div class="add-hospital">
+               <el-button type="danger" @click="alertAddMark">新增医院</el-button>
+           </div>
         </div>
+        <!-- 科室弹出框 -->
+        <Modal
+            v-model="department.show"
+            title="科室"
+            @on-ok="departmentOk"
+            @on-cancel="departmentCancel">
+            <div class="department-out">
+                <div class="department-list">
+                    <ul>
+                        <li v-for="(item,index) in department.list" :key="index" class="department-li">
+                            <span>{{item.deptName}}</span>
+                            <div class="btn-div">
+                                <el-button type="danger" size="mini" @click="deleteDepartment(item,index)">删除</el-button>
+                                <!-- <el-button type="primary" size="mini">修改</el-button> -->
+                            </div>
+                            
+                        </li>
+                    </ul>
+                </div>
+                <div class="add-department" v-if="department.showAdd">
+                    <input type="text" v-model="department.addDepartmentName">
+                    <i class="iconfont msg-icon" @click="closeDepartmentAdd">&#xe6df;</i>
+                </div>
+                
+                <div class="department-add">
+                    <el-button type="primary" @click="showDepartmentAdd"> {{department.showAdd?"保存":"新增"}} </el-button>
+                </div>
+            </div>
+            
+        </Modal>
         <Spin size="large" fix v-if="spinShow"></Spin>
 	</div>
 </template>
 
 <script>
-import { fetchHospitalList, fetchAllSubSystem ,fetchHospitalDepts,fetchHospitalRel,getSettingsList} from "../../api/apiAll.js"; 
+import { 
+    fetchHospitalList, fetchAllSubSystem ,fetchHospitalDepts,fetchHospitalRel,getSettingsList,initializeTheCreationOfHospital,deleteHospitalDept,
+    createHospitalDept, updateSubSystemRel
+} from "../../api/apiAll.js"; 
 import { mapState } from "vuex";
 import search from "../../public/publicComponents/search.vue";
 import publicList from "../../public/publicComponents/publicList.vue";
 import alertTree from "../../public/publicComponents/alertTree.vue";
 import selfTab from "../../public/publicComponents/selfTab.vue";
+import sensitiveWordCheck from '../../public/publicJs/sensitiveWordCheck.js'
 export default {
     components: {
         search,
@@ -66,13 +136,24 @@ export default {
     },
     data() {
         return {
-           spinShow:false,
-
-
-
-            modal1:false,
+            spinShow:false,//是否显示loading
+            showAlertTree:false,
+            showAdd:false,//是否显示添加医院
+            addHospitalInfo:{//手机添加医院的信息
+                name:'',
+                account:'',
+                passwd:''
+            },
+            nowItem:null,
+            department:{//科室状态管理   
+                show:false,//是否显示科室弹窗 
+                showAdd:false,
+                addDepartmentName:'',//新增科室的名称
+                list:[]//科室列表
+            },
             testData:{
                 title:'test title',
+                tag:null,
                 canClick:true,
                 show:false,
                 data:[{
@@ -111,37 +192,18 @@ export default {
                     }]
                 }],
             },
-            
             tableData:{
                 head:{},
                 data:[],
                 operating:[
                     {
-                        name:'修改'
+                        name:'编辑'
                     },
                     // {
                     //     name:'删除'
                     // }
                 ]
             },
-            body: {
-                "header": {
-                    "deviceNum": "家用设备数",
-                    "superOrgNum": "上级医院数",
-                    "childOrgNum": "下级医院数",
-                    "deptManageNum": "科室管理员数",
-                    "consNum": "会诊范围",
-                    "name": "医院名称",
-                    "subSystemNum": "子系统数",
-                    "deptNum": "科室数",
-                    "id": "操作",
-                    "teamNum": "协作人员",
-                    "doctorNum": "医生数",
-                    "account": "医院账号"
-                },
-                
-            },
-            
         };
     },
     computed: {
@@ -151,15 +213,50 @@ export default {
         })
     },
     methods: {
-        ok(){},
-        cancel(){},
-        selectItem(){},
-        getSelect(data){
-            console.log(data)
+        getSelect(item){
+            console.log(item)
+            // return;
+            const table = {
+                subSystemNum:async data=>{
+                    console.log('enter')
+                    const res = await updateSubSystemRel({token:this.userState.token},{
+                        hospitalId:this.nowItem.id||'',
+                        subCodes:item.select
+                    });
+                    console.log(res);
+                    if(res.data && res.data.errCode === 0){
+                        this.$notify({
+                            title: '成功',
+                            message: '修改成功',
+                            type: 'success'
+                        });
+                        this.getTableData()
+                        // Promise.all([this.subSystemNum({type:'subSystemNum',value:item.tag.value}),this.getTableData()])
+                        //     .then(responense=>console.log(responense))
+                        //     .catch(err=>console.log(err))
+                        
+                    }else{
+                        this.$notify({
+                            title: '失败',
+                            message: '修改失败',
+                            type: 'error'
+                        });
+                    }
+                },
+                default:data=>{}
+            }
+            if(table[item.tag.type]){
+                table[item.tag.type]();
+            }
+            
+
         },
-        getSendData(data){
-            console.log(data)
+        setNowItem(item){
+            console.log(item)
+            this.nowItem = item
         },
+
+        
         /**
          * 获取表格数据
          */
@@ -183,12 +280,6 @@ export default {
                 });
             }
         },
-
-        /**
-         * 获取医院子系统列表
-         */
-        
-
 
         /**
          * json转数组
@@ -233,15 +324,20 @@ export default {
                 token:this.userState.token
             });
             if(res.data&&res.data.errCode===0){
+                console.log(res.data.body)
                 this.testData.data = res.data.body.map(value=>{
-                    return {
-                        id: value.subCode,
-                        label: value.subName,
-                    }
+                    value.id = value.subCode;
+                    value.label = value.subName;
+                    value.check = value.checkbox;
+                    return value;
                 });
+                console.log(this.testData.data)
                 this.testData.title = '子系统';
                 this.testData.canClick = true;
-                this.testData.show = true
+                this.testData.show = true;
+                this.testData.tag = item;
+                this.testData = Object.assign({},this.testData)
+                this.showAlertTree = true;
             }else{
 
             }
@@ -251,10 +347,24 @@ export default {
          * 科室
          */
         async deptNum(item){
+            console.log(item)
             const res = await fetchHospitalDepts({orgCode:item.value.code});
             console.log(res)
             if(res.data&&res.data.errCode===0){
-                
+                this.department.list = res.data.body
+                this.department.show = true;
+                return
+                this.testData.data = res.data.body.map(value=>{
+                    return{
+                        id:value.deptId,
+                        label:value.deptName
+                    }
+                });
+                this.testData.title = '科室';
+                this.testData.canClick = true;
+                this.testData.show = true;
+                this.testData.tag = item;
+                this.showAlertTree = true;
             }else{
 
             }
@@ -282,16 +392,19 @@ export default {
                 token:this.userState.token
             });
             console.log(res)
+            // return;
             if(res.data&&res.data.errCode===0){
                 this.testData.data = res.data.body.map(value=>{
-                    return {
-                        id:value.id,
-                        label:value.name
-                    }
+                    value.label = value.subName;
+                    value.label = value.name;
+                    value.check = value.checked;
+                    return value;
                 });
                 this.testData.title = item.type==='superOrgNum'?'上级医院':'下级医院';
                 this.testData.canClick = true;
-                this.testData.show = true
+                this.testData.show = true;
+                this.testData.tag = item;
+                this.showAlertTree = true;
             }else{
 
             }
@@ -319,131 +432,140 @@ export default {
                 // });
                 this.testData.title = '协作人员';
                 this.testData.canClick = true;
-                this.testData.show = true
+                this.testData.show = true;
+                this.testData.tag = item;
+                this.showAlertTree = true;
             }else{
 
             }
         },
 
         /**
-         * 表格头部被点击
+         * 会诊范围
          */
-        /*
-        async getHeadClick(item){
-            const obj = {
-                subSystemNum:{
-                    type:'1',
-                    title:'子系统',
-                    fun:fetchAllSubSystem,
-                    data:[
-                        {
-                            hospitalId:item.value.id,
-                            token:this.userState.token
-                        }
-                    ]
-                },
-                deptNum:{
-                    type:'2',
-                    title:'科室',
-                    fun:fetchHospitalDepts,
-                    data:[
-                        {
-                            orgCode:item.value.code
-                        }
-                    ]
-                },
-                deptManageNum:{//接口还没有
-                    type:'3',
-                    title:'科室管理员',
-                    fun:()=>{},
-                    data:[
-                        {
-                            orgCode:item.value.code
-                        }
-                    ]
-                },
-                doctorNum:{//接口还没有
-                    type:'3',
-                    title:'医生',
-                    fun:()=>{},
-                    data:[
-                        {
-                            orgCode:item.value.code
-                        }
-                    ]
-                },
-                superOrgNum:{
-                    type:'1',
-                    title:'上级医院',
-                    fun:fetchHospitalRel,
-                    data:[
-                        {
-                            hospitalId:item.value.id,
-                            token:this.userState.token
-                        }
-                    ]
-                },
-                childOrgNum:{
-                    type:'1',
-                    title:'下级医院',
-                    fun:fetchHospitalRel,
-                    data:[
-                        {
-                            hospitalId:item.value.id,
-                            token:this.userState.token
-                        }
-                    ]
-                },
-                teamNum:{
-                    type:'1',
-                    title:'协作人员',
-                    fun:settingsList,
-                    data:[
-                        {
-                            token:this.userState.token
-                        }
-                    ]
-                    
-                },
-                consNum:{
-                    type:'1',
-                    title:'会诊范围',
-                    fun:()=>{},
-                    data:[
-                        {
-                            token:this.userState.token
-                        }
-                    ]
-                    
-                },
-                deviceNum:'',
-            };
-            if(!obj[item.type])return;
-            const res = await obj[item.type].fun(...obj[item.type].data);
-            console.log(res)
-            return;
-            if(res.data&&res.data.errCode===0){
-                const useData = res.data.body.map(value=>{
-                    return {
-                        id: value.subCode,
-                        label: value.subName,
-                        // children:[]
-                    }
-                })
-                this.testData.title =  obj[item.title];
-                this.testData.canClick = true;
-                this.testData.data = useData;
-                this.testData.show = true
-            }
+        async consNum(item){//接口暂时还没有
+           console.log(item)
+        },
 
-            return;
+        /**
+         * 弹出’添加医院‘弹窗
+         */
+        alertAddMark(){
+            this.showAdd = true;
+        },
+
+        /**
+         * 确认添加医院
+         */
+        async sureAdd(){
+            const arr = [sensitiveWordCheck(this.addHospitalInfo.name) , sensitiveWordCheck(this.addHospitalInfo.account) , sensitiveWordCheck(this.addHospitalInfo.passwd)];
+            for(const i of arr){
+                if(!i.ok){
+                    this.$notify.error({
+                        title: '错误',
+                        message: i.msg
+                    });
+                    return;
+                }
+            }
+            const res = await initializeTheCreationOfHospital({token:this.userState.token},this.addHospitalInfo);
+            if(res.data&&res.data.errCode===0){
+                this.$notify({
+                    title: '成功',
+                    message: '添加成功',
+                    type: 'success'
+                });
+                this.getTableData();
+            }else{
+                this.$notify({
+                    title: '失败',
+                    message: '添加失败',
+                    type: 'error'
+                });
+            }
+        },
+
+        /**
+         * 科室弹窗 确认
+         */
+        departmentCancel(){},
+
+        /**
+         *  科室弹窗 取消
+         */
+        departmentOk(){
+
+        },
+
+        /**
+         * 删除科室
+         */
+        async deleteDepartment(item,index){
             console.log(item);
-            this.testData.show = true
-        },*/
+            const res = await deleteHospitalDept({token: this.userState.token},{
+                deptId:item.deptId,
+                hospitalId:this.nowItem.id||''
+            });
+            console.log(res);
+            if(res.data&&res.data.errCode===0){
+                this.department.list.splice(index,1);
+            }else{
+                this.$notify({
+                    title: '删除失败',
+                    message: '添加失败',
+                    type: 'error'
+                });
+            }
+        },
+
+        /**
+         * 新增按钮被点击
+         * 最新信息：点击新增 ->  显示输入框，新增二字变成保存 -> 再点击发送请求，根据返回值处理
+         */
+        async showDepartmentAdd(){
+            this.department.showAdd = !this.department.showAdd;
+            if(!this.department.showAdd){
+                const res = await createHospitalDept({token: this.userState.token},{
+                    hospitalId:this.nowItem.id||'',
+                    deptName:this.department.addDepartmentName
+                });
+                console.log(res);
+                if(res.data&&res.data.errCode===0){
+                    this.$notify({
+                        title: '成功',
+                        message: '添加成功',
+                        type: 'success'
+                    });
+                    this.department.addDepartmentName = '';
+                    this.deptNum( {type:'deptNum',value:this.nowItem})
+                }else{
+                    this.$notify({
+                        title: '失败',
+                        message: '添加失败',
+                        type: 'error'
+                    });
+                }
+            }
+        },
+
+        /**
+         * 关闭添加科室input
+         */
+        closeDepartmentAdd(){
+            this.department.showAdd = false;
+        },
+
+        /**
+         * 取消添加医院
+         */
+        cancelAdd(){},
+
+
         /**
          * 按钮被点击
          */
-        btnClick(item){
+        btnClick(v,item){
+            console.log(v)
             console.log(item)
         },
         canClick(){
@@ -480,6 +602,65 @@ export default {
 }
 .operating-span{
     padding: 0.05rem;
+}
+.add-hospital{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.2rem;
+}
+.data-item{
+    display: flex;
+    align-items: center;
+}
+.data-item>span{
+    flex: 1;
+}
+.data-item>.el-input{
+    flex:4;
+}
+.department-li{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* padding-left: 0.4rem;
+    padding-right: 0.4rem; */
+}
+.department-li{
+    padding-top: 0.1rem;
+}
+.department-add{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.15rem;
+}
+.department-add>button{
+    width: 100%;
+}
+.add-department{
+    border: 1px solid var(--borderColor1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.1rem;
+    margin: 0 auto;
+    margin-top: 0.1rem;
+    border-radius: 0.04rem;
+}
+.add-department>input{
+    border: none;
+    outline:none;
+    flex: 1;
+}
+.add-department>i{
+    margin-left: 0.2rem;
+    font-size: 0.12rem;
+    cursor: pointer;
+}
+.department-out{
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 </style>
 <!--

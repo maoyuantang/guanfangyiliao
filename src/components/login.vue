@@ -318,10 +318,10 @@
                             code:'2'
                         },
                         {
-                            name:'远程会诊系统',
+                            name:'云存储管理',
                             select:false,
                             path:'/cloudManagement',
-                            code:'2'
+                            code:'3'
                         }
                     ];
                     reData.now = {

@@ -165,26 +165,27 @@ import { parse } from 'protobufjs';
 			 * 该函数恢复页面，主要用在刷新之后
 			 */
 			restorePage(){
-				// console.log('enter')
 				let rePage = sessionStorage.getItem('page');
 				if(rePage){//说明以前有记录，恢复他
 					try{
 						rePage = JSON.parse(rePage);
 					}catch(e){
-						// console.log(e);
+						console.log(e);
 						this.$notify.error({
 							title: '错误',
 							message: '记录恢复失败!'
 						});
 						return;
 					}
-					// console.log(rePage)
+					
 					// console.log(this.viewRoot[this.viewRoot.now.name])
 					const index = this.viewRoot[this.viewRoot.now.name].find(item=>{//该权限视图是否包含该页面
 						return item.code===rePage.code
 					});
+					console.log(index);
 					if(index){
 						this.navList = this.navList.map((item,key)=>{
+							console.log(item)
 							item.select = item.code===rePage.code;
 							return item;
 						});
