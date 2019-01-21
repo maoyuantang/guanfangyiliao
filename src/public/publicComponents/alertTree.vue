@@ -8,6 +8,7 @@
         <el-tree
             :data="inData.data"
             :show-checkbox="inData.canClick"
+            :default-checked-keys="selectIdList"
             node-key="id"
             ref="alertTree"
             @check="selectItem">
@@ -18,23 +19,40 @@
 
 <script>
 export default {
+  watch:{
+    inData(n){
+        console.log(n)
+        this.findSelect();
+    }
+  },
   data() {
     return {
+        selectIdList:[]
     };
   },
   methods:{
     ok(){
-        this.$emit("reback",this.$refs.alertTree.getCheckedKeys());
+        this.$emit("reback",{
+            select:this.$refs.alertTree.getCheckedKeys(),
+            tag:this.inData.tag
+        });
     },
     cancel(){},
     selectItem(){
-        this.$refs.alertTree.getCheckedKeys()
+        this.$refs.alertTree.getCheckedKeys();
+    },
+    findSelect(){
+        this.selectIdList = [];
+        this.inData.data.forEach(i=>i.check?this.selectIdList.push(i.id):null);
+        console.log(this.selectIdList)
     }
   },
   props:[
     'inData'
   ],
   created() {
+    this.findSelect();
+    console.log(this.selectIdList)
   },
   beforeDestroy(){
   }

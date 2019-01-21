@@ -46,6 +46,9 @@ html{
 	--color15:#4285f4;
 	--color16:#626262;
 	--color17:#f54813;
+	--color18:#002257;
+	--color19:#97A3B4;
+	--color20:#646464;
 
 	/*背景颜色*/
 	--bgColoor1:#fbfdfd;
@@ -59,11 +62,14 @@ html{
 	--fontFamily1:PingFangSC-Semibold;
 	--fontFamily2:Helvetica;
 	--fontFamily3:PingFangSC-Regular;
+	--fontFamily4:OpenSans;
 	/*border-color*/
 	--borderColor1:#E6EAEE;
 	--borderColor2:#E8ECEF;
 	--borderColor3:#6DD230;
 	--borderColor4:#e4e8eb;
+	--borderColor5:#0064FF;
+	--borderColor6:#E9EFF4;
 }
 body{
 	font-size: 0.14rem;

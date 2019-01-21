@@ -127,4 +127,6 @@ export default {
     alertSwitch:'/m/v1/api/device/house/alertSwitch',//10.9.2 设备告警开关改变【医生web】
     alertSet:'/m/v1/api/device/house/alertSet',//10.9.3 告警值修改【医生web】
     getSettingsList:'/m/v1/api/basics/synergySystem/settingsList',//8.9获取协作人员设置树
+    fetchUserCloud:'/m/v1/api/cloud/cloud/fetchUserCloud',//11.4.云存储用户统计信息列表
+    viewCloud:'/m/v1/api/cloud/cloud/cloudDetail',//11.3.查看云存储服务
 }

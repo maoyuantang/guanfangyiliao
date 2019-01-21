@@ -236,6 +236,75 @@ import websocket from "../common/websocket.js"
                         message: res.data.errMsg
                     });
                 }
+            },
+
+            /**
+             *通过登录信息，计算用户权限，存入vuex 
+             */
+            setViewRoot(data){
+                let reData = {//计算后的数据
+                    now:{},//当前显示权限，有三个权限，超级管理员rooter, 医院管理员manager，医生doctors
+                    rooter:[],//超级管理员
+                    manager:[//医院管理员
+                        {
+                            name:'首页',
+                            select:true,
+                            path:'/',
+                            code:'1'//这个code有空写个不重复的，虽然暂时还用不到，以后怕是有点用
+                        }
+                    ],
+                    doctors:[//医生
+                        {
+                            name:'首页',
+                            select:true,
+                            path:'/',
+                            code:'1'
+                        }
+                    ]
+                };
+                if(data.rooter){//如果是超级管理员，直接赋值，这个是固定的，直接写，并且直接返回，是超级管理员就不能是医院管理员或者医生身份
+                    reData.rooter = [
+                        {
+                            name:'医院管理',
+                            select:true,
+                            path:'/',
+                            code:'2'
+                        },
+                        {
+                            name:'云存储管理',
+                            select:false,
+                            path:'/cloudManagement',
+                            code:'3'
+                        }
+                    ];
+                    reData.now = {
+                        name:'rooter',
+                        type:'0'
+                    }	
+                    this.$store.commit("user/SETVIEWROOT",reData);
+                    sessionStorage.setItem('viewRoot',JSON.stringify(reData));//缓存将权限下来
+                    return;
+                }
+                for(let i of this.allPages){
+                    for(let j of data.hasAuth){
+                        if(j.authorityId === i.code){
+                            j.type==='1'?reData.manager.push(i):reData.doctors.push(i)
+                        }
+                    }
+                }
+                if(reData.manager.length>1){//为什么是大于1？因为我一开始就在里面放了个元素，还有为什么我不用用户的身份判断？因为那东西是真的水，根据产品设计，用户不是管理员也有可能操作管理员页面~~~！
+                    reData.now = {
+                        name:'manager',
+                        type:'1'
+                    }	
+                }else if(reData.doctors.length>1){
+                    reData.now = {
+                        name:'doctors',
+                        type:'2'
+                    }
+                }
+                this.$store.commit("user/SETVIEWROOT",reData);
+                sessionStorage.setItem('viewRoot',JSON.stringify(reData));//缓存将权限下来
             }
 		},
 		async created(){
