@@ -51,7 +51,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 [v-cloak] {
     display: none !important;
 }
