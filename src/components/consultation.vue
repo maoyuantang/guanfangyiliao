@@ -225,7 +225,6 @@
 					<div style="display:flex">
 						<normalColumnChart :inData="drawData"> </normalColumnChart>
 						<normalColumnChart :inData="drawDataStart"> </normalColumnChart>
-						{{drawDataStart}}
 					</div>
 				</div>
 			</div>
@@ -718,6 +717,7 @@ alert('dd')
         },
         //获取科室列表
         async getDepartment(oindex) {
+			return;
             let _this = this;
             let query = {
                 orgCode: this.userSelfInfo.orgCode,

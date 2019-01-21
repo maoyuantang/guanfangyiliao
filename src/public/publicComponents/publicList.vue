@@ -1,6 +1,7 @@
 <template>
+
     <div class="public-list">
-        <el-table :data="tableData" style="width: 100%" @cell-click="sendData">
+        <el-table :data="tableData" style="width: 100%">
             <el-table-column v-for="(column, index) in columns" :prop="column.prop" :key="index" :label="column.label" :width="column.width">
                 <template slot-scope="scope">
                     <span :class="scope.row.oclass">
@@ -10,7 +11,7 @@
             </el-table-column>
             <el-table-column label="操作" v-show="tableBtn">
                 <template slot-scope="scope">
-                    <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method(scope.row.id,'dd')" :class="text.oclass" type="text" size="small" :key="index"  >
+                    <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method(scope.row)" :class="text.oclass" type="text" size="small" :key="index"  >
                         {{text.name}}
                     </el-button>
                 </template>
@@ -31,18 +32,6 @@ export default {
         reBackFn(index) {
             this.inData.i = index;
             this.$emit("reBack", this.inData);
-        },
-        sendData(data){
-            console.log(555)
-            this.$emit("sendData", data);
-        },
-        renderHeader(h) {
-            return (
-                <div>
-                    <span>表头</span>
-                    <el-button>按钮</el-button>
-                </div>
-            )
         }
     },
     props: {
@@ -54,7 +43,8 @@ export default {
         prop: ["tableData", "columns", "tableBtn"],
         event: "reBack"
     },
-    async created() {}
+    async created() {
+    }
 };
 </script>
 
@@ -88,7 +78,7 @@ export default {
                 {
                     prop:"age",
                     label:"年龄"
-                }
+                }c   
             ],
    //列表数据格式
    tableDataList: [

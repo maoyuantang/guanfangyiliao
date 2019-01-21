@@ -191,6 +191,7 @@
 // import "../../static/assets/css/bootstrap.original.css"
 // import "Manis-Meetings-Chrome-Extension_v0.0.9.crx"
 import "../../static/assets/css/jquery-impromptu.css";
+// import oVideo from "../../static/oVideo.js"
 
 export default {
     name: "video",
@@ -269,6 +270,7 @@ export default {
         }
     },
     created() {
+        // console.log(oVideo)
     },
     beforeCreate() {
         const linkData = document.createElement("link");

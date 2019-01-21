@@ -1,5 +1,150 @@
 <template>
     <div class="followUp">
+
+        <el-dialog class="evaluateBox" title=" " :visible.sync="followTableVisible" width="602px" hight="356px" center>
+            <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
+            <div class="addFollowM-bot">
+                <el-radio v-model="addFollowData.type" label="INHOSPITAL">住院随访</el-radio>
+                <el-radio v-model="addFollowData.type" label="OUTPATIENT">门诊随访</el-radio>
+            </div>
+            <div class="addFollowMain">
+                <div class="addFollowM-bot">
+                    首次治疗
+                    <el-date-picker class="oTime" type="date" placeholder="选择日期">
+                    </el-date-picker>
+                </div>
+                <ul>
+                    <li v-for="(text,index) in addFollowData.itemModels" :key="index" @mouseover="addFollowBtnVis=true" @mouseout="addFollowBtnVis=false">
+                        <div class="addFollowM-bot">
+                            距离首次治疗
+                            <el-select class="addFollowHou" v-model="followSelectTime" placeholder="请选择">
+                                <el-option v-for="item in addFollowTime" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <ul class="questBox">
+                            <li v-for="(otext,oindex) in text.contentModels" :key="oindex">
+                                <div>
+                                    <span v-show="otext.followUpType=='REMIND'">提醒：</span>
+                                    <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
+                                    <span v-show="otext.followUpType=='INQUIRY'">问诊：</span>
+                                    <span v-show="otext.followUpType=='MEDICAL'">疾病自评：</span>
+                                    <span v-show="otext.followUpType=='DEVICE'">设备监测：</span>
+                                    <span class="questTableName">{{otext.title}}</span>
+                                </div>
+
+                                <span @click="deleteQuest(oindex)" class="questDelete">
+                                    <img src="../assets/addFollowDelete2.png" />
+                                </span>
+                            </li>
+                        </ul>
+                        <div class="addFollowBtn" v-show="addFollowBtnVis">
+                            <div @click="addQuest()">
+                                <span class="questDelete"><img src="../assets/addFollowJa2.png" /></span> 问诊表/健康知识
+                            </div>
+                            <div>
+                                <span @click="addFollowTimeList()">
+                                    <span class="questDelete"><img src="../assets/addFollowJa1.png" /> </span> 添加一项</span>
+                                <span @click="deleteFollowTimeList(index)">
+                                    <span class="questDelete"> <img src="../assets/addFollowDelete.png" /> </span>
+                                    此项</span>
+                            </div>
+                        </div>
+
+                    </li>
+                </ul>
+                <div class="addFollowM-bot">
+                    提醒时间
+                    <el-select class="addFollowHou" v-model="addFollowData.remindDays" placeholder="请选择">
+                        <el-option v-for="item in addFollowTimeTx" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div>
+                    <el-checkbox v-model="addFollowData.remindMe">提醒我</el-checkbox>
+                    <el-checkbox v-model="addFollowData.remindHe">提醒他</el-checkbox>
+                </div>
+                <el-button @click="addFollowTable()" type="primary">保存</el-button>
+            </div>
+
+        </el-dialog>
+        <!-- 新增文章 -->
+        <el-dialog class="evaluateBox" title=" " :visible.sync="articleTableVisible" width="602px" hight="356px" center>
+            <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
+            <div class="addFollowM-bot">
+                <el-radio v-model="addFollowData.type" label="INHOSPITAL">住院随访</el-radio>
+                <el-radio v-model="addFollowData.type" label="OUTPATIENT">门诊随访</el-radio>
+            </div>
+            <div class="addFollowMain">
+                <div class="addFollowM-bot">
+                    首次治疗
+                    <el-date-picker class="oTime" type="date" placeholder="选择日期">
+                    </el-date-picker>
+                </div>
+                <ul>
+                    <li v-for="(text,index) in addFollowData.itemModels" :key="index" @mouseover="addFollowBtnVis=true" @mouseout="addFollowBtnVis=false">
+                        <div class="addFollowM-bot">
+                            距离首次治疗
+                            <el-select class="addFollowHou" v-model="followSelectTime" placeholder="请选择">
+                                <el-option v-for="item in addFollowTime" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <ul class="questBox">
+                            <li v-for="(otext,oindex) in text.contentModels" :key="oindex">
+                                <div>
+                                    <span v-show="otext.followUpType=='REMIND'">提醒：</span>
+                                    <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
+                                    <span v-show="otext.followUpType=='INQUIRY'">问诊：</span>
+                                    <span v-show="otext.followUpType=='MEDICAL'">疾病自评：</span>
+                                    <span v-show="otext.followUpType=='DEVICE'">设备监测：</span>
+                                    <span class="questTableName">{{otext.title}}</span>
+                                </div>
+
+                                <span @click="deleteQuest(oindex)" class="questDelete">
+                                    <img src="../assets/addFollowDelete2.png" />
+                                </span>
+                            </li>
+                        </ul>
+                        <div class="addFollowBtn" v-show="addFollowBtnVis">
+                            <div @click="addQuest()">
+                                <span class="questDelete"><img src="../assets/addFollowJa2.png" /></span> 问诊表/健康知识
+                            </div>
+                            <div>
+                                <span @click="addFollowTimeList()">
+                                    <span class="questDelete"><img src="../assets/addFollowJa1.png" /> </span> 添加一项</span>
+                                <span @click="deleteFollowTimeList(index)">
+                                    <span class="questDelete"> <img src="../assets/addFollowDelete.png" /> </span>
+                                    此项</span>
+                            </div>
+                        </div>
+
+                    </li>
+                </ul>
+                <div class="addFollowM-bot">
+                    提醒时间
+                    <el-select class="addFollowHou" v-model="addFollowData.remindDays" placeholder="请选择">
+                        <el-option v-for="item in addFollowTimeTx" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div>
+                    <el-checkbox v-model="addFollowData.remindMe">提醒我</el-checkbox>
+                    <el-checkbox v-model="addFollowData.remindHe">提醒他</el-checkbox>
+                </div>
+                <el-button @click="addFollowTable()" type="primary">保存</el-button>
+            </div>
+
+        </el-dialog>
+        <!-- 问诊等等列表 -->
+        <el-dialog title="随访" :visible.sync="questVisible" center append-to-body>
+            <ul>
+                <li class="followBox" v-for="(text,index) in questList" :key="index">
+                    <span>{{text.title}}</span>
+                    <span @click="followDetail(text.id)"> > </span>
+                </li>
+            </ul>
+        </el-dialog>
         <!-- 管理端 -->
         <div v-if="$store.state.user.viewRoot.now.name==='manager'">
             <div class="Admin-title">
@@ -43,7 +188,7 @@
                             <selftag :inData="oTab7" @reback="getOTab7" v-show="wayVisible3"></selftag>
                         </div>
 
-                        <el-button class="startConsul" type="text" @click="centerDialogVisible = true">新增模板</el-button>
+                        <el-button class="startConsul" type="text" @click="followTableVisible = true">新增模板</el-button>
                     </div>
                     <div>
 
@@ -63,9 +208,7 @@
                         <search @searchValue="searchChange"></search>
                     </div>
                     <div>
-                        {{columnsFa}}<br />
-                        
-                         {{tableDataListFa}}
+                        {{columnsFa}}<br /> {{tableDataListFa}}
                         <tableList :tableData="tableDataListFa" :columns="columnsFa"></tableList>
                         <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
                         </el-pagination> -->
@@ -101,15 +244,15 @@
                 <div v-show="odocVisable==0">
                     <div class="mainTab">
                         <div>
-                            <selftag :inData="oTab1"></selftag>
-                            <selftag :inData="oTab2"></selftag>
-                            <selftag :inData="oTab3"></selftag>
-                            <selftag :inData="oTab4"></selftag>
+                            <selftag :inData="oTab1" @reback="docDeperment"></selftag>
+                            <selftag :inData="oTab2" v-show="doctorSxVisiable"></selftag>
+                            <selftag :inData="oTab3" v-show="doctorSxVisiable"></selftag>
+                            <selftag :inData="oTab4" v-show="doctorSxVisiable"></selftag>
                         </div>
-                        <search @searchValue="searchChange"></search>
+                        <search @searchValue="docSearchChange"></search>
                     </div>
                     <div>
-                        <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
+                        <tableList :tableData="doctorList" :columns="doctorColumns" :tableBtn="doctorBtn"></tableList>
                         <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
                         </el-pagination> -->
                     </div>
@@ -146,7 +289,16 @@ import {
     getResultList,
     getModelInsert,
     getMissileList,
-    deleteModel
+    deleteModel,
+    getTemplate,
+    queryList,
+    queryArticleList,
+    deleteTemplate, //删除随访模板
+    update, //编辑随访模板
+    get, //获取随访模板详情
+    add, //新增随访模板
+    deleteArticle, //删除文章
+    deleteInquiry //删除问诊模板
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -170,6 +322,124 @@ export default {
     },
     data() {
         return {
+            questList:[],//问诊列表
+            articleTableVisible:true,
+            addFollowBtnVis: false,
+            questVisible: false,
+            addFollowData: {
+                department: [""],
+                title: " ",
+                type: "INHOSPITAL",
+                remindMe: true,
+                remindHe: true,
+                remindDays: 1,
+                itemModels: [
+                    {
+                        calcVal: 1,
+                        calcUnit: "天",
+                        state: true,
+                        contentModels: [
+                            {
+                                followUpType: "REMIND",
+                                title: "天气转凉注意吃药",
+                                contentId: null
+                            },
+                            {
+                                followUpType: "ESSAY",
+                                title: "他改变了中国(上)",
+                                contentId: "5b162dbd6132c62d846fb793"
+                            },
+                            {
+                                followUpType: "INQUIRY",
+                                title: "问诊模板修改标题",
+                                contentId: "282b6e6499104c538fc98df1cc3ee072"
+                            }
+                        ]
+                    },
+                    {
+                        calcVal: 2,
+                        calcUnit: "天",
+                        state: true,
+                        contentModels: [
+                            {
+                                followUpType: "REMIND",
+                                title: "天气转凉注意吃药",
+                                contentId: null
+                            },
+                            {
+                                followUpType: "ESSAY",
+                                title: "他改变了中国(中)",
+                                contentId: "5b162dbd6132c62d846fb794"
+                            },
+                            {
+                                followUpType: "INQUIRY",
+                                title: "问诊模板修改标题",
+                                contentId: "282b6e6499104c538fc98df1cc3ee072"
+                            }
+                        ]
+                    },
+                    {
+                        calcVal: 3,
+                        calcUnit: "天",
+                        state: true,
+                        contentModels: [
+                            {
+                                followUpType: "REMIND",
+                                title: "天气转凉注意吃药",
+                                contentId: null
+                            },
+                            {
+                                followUpType: "ESSAY",
+                                title: "他改变了中国(下)",
+                                contentId: "5b162dbd6132c62d846fb795"
+                            },
+                            {
+                                followUpType: "INQUIRY",
+                                title: "问诊模板修改标题",
+                                contentId: "282b6e6499104c538fc98df1cc3ee072"
+                            }
+                        ]
+                    }
+                ]
+            },
+            followSelectTime: "",
+            addFollowRadio: "INHOSPITAL",
+            addFollowTime: [
+                {
+                    value: "选项1",
+                    label: "3月后"
+                },
+                {
+                    value: "选项2",
+                    label: "6月后"
+                },
+                {
+                    value: "选项3",
+                    label: "9月后"
+                },
+                {
+                    value: "选项4",
+                    label: "一年后"
+                }
+            ],
+            addFollowTimeTx: [
+                {
+                    value: "1",
+                    label: "1"
+                },
+                {
+                    value: "2",
+                    label: "2"
+                },
+                {
+                    value: "3",
+                    label: "3"
+                },
+                {
+                    value: "4",
+                    label: "4"
+                }
+            ],
             odata1: [
                 {
                     prop: "name",
@@ -438,7 +708,12 @@ export default {
                 }
             ],
             //满意度数据
+            followTableVisible: false,
             satisfiedList: [],
+            defaultProps: {
+                children: "children",
+                label: "label"
+            },
             satisfiedColumns: [
                 {
                     prop: "department",
@@ -540,8 +815,8 @@ export default {
             mydEndTime: "",
             mydMode: "",
             mydSearchData: "",
-            wayVisible2:true,
-            wayVisible3:false,
+            wayVisible2: true,
+            wayVisible3: false,
             //统计数据
             //申请科室统计图
             drawData: {
@@ -559,7 +834,111 @@ export default {
             },
             tjType: "DEPT",
             tjStartTime: "",
-            tjEndTime: ""
+            tjEndTime: "",
+            //医生
+            doctorSxVisiable: true,
+            doctorList: [],
+            doctorBtn: [
+                {
+                    name: "删除",
+                    oclass: "viewFollow",
+                    method: row => {
+                        this.docFollowDelete(row);
+                    }
+                }
+            ],
+            doctorColumns: [
+                {
+                    prop: "department",
+                    label: "科室"
+                },
+                {
+                    prop: "title",
+                    label: "随访模板名"
+                },
+                {
+                    prop: "userName",
+                    label: "作者"
+                },
+                {
+                    prop: "createTime",
+                    label: "创建时间"
+                },
+                {
+                    prop: "updateTime",
+                    label: "最后修改时间"
+                },
+                {
+                    prop: "useNumber",
+                    label: "使用量"
+                },
+                {
+                    prop: "nearlyUpdater",
+                    label: "最近修改"
+                }
+            ],
+            docSearchData: "",
+            docDepartment: "",
+            followPlan: [
+                {
+                    more: false,
+                    title: "类型",
+                    list: [
+                        {
+                            text: "全部",
+                            value: ""
+                        },
+                        {
+                            text: "病人",
+                            value: "USER"
+                        },
+                        {
+                            text: "医生",
+                            value: "DOCTOR"
+                        }
+                    ]
+                }
+            ],
+            followPlan: [
+                {
+                    more: false,
+                    title: "类型",
+                    list: [
+                        {
+                            text: "全部",
+                            value: ""
+                        },
+                        {
+                            text: "病人",
+                            value: "USER"
+                        },
+                        {
+                            text: "医生",
+                            value: "DOCTOR"
+                        }
+                    ]
+                }
+            ],
+            followPlan: [
+                {
+                    more: false,
+                    title: "类型",
+                    list: [
+                        {
+                            text: "全部",
+                            value: ""
+                        },
+                        {
+                            text: "病人",
+                            value: "USER"
+                        },
+                        {
+                            text: "医生",
+                            value: "DOCTOR"
+                        }
+                    ]
+                }
+            ]
         };
     },
     computed: {
@@ -581,6 +960,68 @@ export default {
     },
     mounted() {},
     methods: {
+        // 新增随访表接口
+        //添加问诊表
+        addQuest() {
+            this.questVisible = true;
+        },
+        //删除问诊表
+        deleteQuest(index, oindex) {
+            this.addFollowData.itemModels[index].contentModels.splice(
+                oindex,
+                1
+            );
+        },
+        //添加一项
+        addFollowTimeList() {
+            this.addFollowData.itemModels.push({
+                calcVal: 1,
+                calcUnit: "天",
+                state: true,
+                contentModels: [
+                    {
+                        followUpType: "REMIND",
+                        title: "天气转凉注意吃药",
+                        contentId: null
+                    },
+                    {
+                        followUpType: "ESSAY",
+                        title: "他改变了中国(上)",
+                        contentId: "5b162dbd6132c62d846fb793"
+                    },
+                    {
+                        followUpType: "INQUIRY",
+                        title: "问诊模板修改标题",
+                        contentId: "282b6e6499104c538fc98df1cc3ee072"
+                    }
+                ]
+            });
+        },
+        //删除当前项
+        deleteFollowTimeList(index) {
+            this.addFollowData.itemModels.splice(index, 1);
+        },
+        //新增随访表
+        async addFollowTable() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const options = this.addFollowData;
+            const res = await add(query, options);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "新增成功"
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         //筛选
         getOTab1(data) {
             this.odepartment = data.index.value;
@@ -709,11 +1150,6 @@ export default {
                 });
             }
         },
-        //医生端tab切换
-        docTab(oindex) {
-            this.oDocThis = oindex;
-            this.odocVisable = oindex;
-        },
 
         //满意度接口
         // 满意度调查切换
@@ -722,9 +1158,8 @@ export default {
 
             if (index == 0) {
                 this.wayVisible1 = true;
-                this.wayVisible2=true;
-                this.wayVisible3=false,
-                this.oGetResultList();
+                this.wayVisible2 = true;
+                (this.wayVisible3 = false), this.oGetResultList();
                 this.satisfiedColumns = [
                     {
                         prop: "department",
@@ -774,8 +1209,8 @@ export default {
                 ];
             } else if (index == 1) {
                 this.wayVisible1 = true;
-                this.wayVisible2=false;
-                this.wayVisible3=false;
+                this.wayVisible2 = false;
+                this.wayVisible3 = false;
                 this.oGetModelList();
                 this.satisfiedColumns = [
                     {
@@ -830,15 +1265,15 @@ export default {
                     {
                         name: "删除",
                         oclass: "viewFollow",
-                        method: (row) => {
-                            this.deleteModel(row);
+                        method: row => {
+                            this.deleteModel(row.id);
                         }
                     }
                 ];
             } else {
                 this.wayVisible1 = false;
-                this.wayVisible2=false;
-                this.wayVisible3=true;
+                this.wayVisible2 = false;
+                this.wayVisible3 = true;
                 this.oGetMissileList();
                 this.satisfiedColumns = [
                     {
@@ -901,7 +1336,7 @@ export default {
                 });
             }
         },
-         //  二
+        //  二
         //满意度调查模板接口2
         async oGetModelList() {
             let _this = this;
@@ -927,20 +1362,19 @@ export default {
             }
         },
         // 调查模板删除
-                async deleteModel(index,row) {
-                    console.log(row)
+        async deleteModel(oid) {
             let _this = this;
-            let query={
-                token:this.userState.token
-            }
-            const options = {
-                id: "",
+            let query = {
+                token: this.userState.token
             };
-            const res = await deleteModel(query,options);
+            const options = {
+                id: oid
+            };
+            const res = await deleteModel(query, options);
             if (res.data && res.data.errCode === 0) {
-              this.$notify.success({
+                this.$notify.success({
                     title: "成功",
-                    message:"删除成功"
+                    message: "删除成功"
                 });
             } else {
                 //失败
@@ -950,7 +1384,7 @@ export default {
                 });
             }
         },
-         //  三
+        //  三
         //获取可发送的用户列表3
         async oGetMissileList() {
             let _this = this;
@@ -1058,29 +1492,7 @@ export default {
             this.oGetFollowupGraph();
             this.oGetFollowupRemarks();
         },
-        //医生端接口
-        //我的随访
-        async getUsFollow() {
-            let _this = this;
-            const options = {
-                token: this.userState.token,
-                houseDeviceType: this.houseDeviceType,
-                search: this.searchData,
-                department: this.odepartment,
-                pageNum: 1,
-                pageSize: 10
-            };
-            const res = await managerGetDeviceList(options);
-            if (res.data && res.data.errCode === 0) {
-                _this.equipmentList = res.data.body.data2.list;
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
-        },
+
         getConsulTabData(res) {
             this.oMainShow = res.i;
             if (res.i == 2) {
@@ -1109,6 +1521,236 @@ export default {
             this.getfamiliList();
             this.oGetModelList();
             this.oGetResultList();
+        },
+        //医生端接口
+        //医生端tab切换
+        docTab(oindex) {
+            this.oDocThis = oindex;
+            // this.odocVisable = oindex;
+            if (oindex == 0) {
+                this.doctorSxVisiable = true;
+            } else {
+                this.doctorSxVisiable = false;
+            }
+            if (oindex == 0) {
+                this.getUsFollow();
+                this.oGetTemplate();
+                this.doctorBtn = [
+                    {
+                        name: "删除",
+                        oclass: "viewFollow",
+                        method: row => {
+                            this.docFollowDelete0(0, row);
+                        }
+                    }
+                ];
+            } else if (oindex == 1) {
+                this.oGetTemplate();
+                this.doctorBtn = [
+                    {
+                        name: "删除",
+                        oclass: "viewFollow",
+                        method: row => {
+                            this.docFollowDelete1(1, row);
+                        }
+                    }
+                ];
+            } else if (oindex == 2) {
+                this.oQueryList();
+                this.doctorBtn = [
+                    {
+                        name: "删除",
+                        oclass: "viewFollow",
+                        method: row => {
+                            this.docFollowDelete2(2, row);
+                        }
+                    }
+                ];
+            } else if (oindex == 3) {
+                this.oQueryArticleList();
+                this.doctorBtn = [
+                    {
+                        name: "删除",
+                        oclass: "viewFollow",
+                        method: row => {
+                            this.docFollowDelete3(3, row);
+                        }
+                    }
+                ];
+            } else if (oindex == 4) {
+                this.doctorBtn = [
+                    {
+                        name: "删除",
+                        oclass: "viewFollow",
+                        method: row => {
+                            this.docFollowDelete4(4, row);
+                        }
+                    }
+                ];
+            }
+        },
+        //搜索
+        docSearchChange(data) {
+            this.docSearchData = data;
+            this.getUsFollow();
+            this.oGetTemplate();
+            this.oQueryList();
+            this.oQueryArticleList();
+        },
+        //删除
+        async docFollowDelete(index, row) {
+            let _this = this;
+            const query = {
+                token: this.userState.token
+            };
+            const options = {
+                id: row.id
+            };
+            if (index == 0) {
+                const res = await managerGetDeviceList(query, options);
+            } else if (index == 1) {
+                const res = await deleteTemplate(query, options);
+            } else if (index == 2) {
+                const res = await deleteInquiry(query, options);
+            } else if (index == 3) {
+                const res = await deleteArticle(query, options);
+            } else if (index == 4) {
+                const res = await managerGetDeviceList(query, options);
+            }
+
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "删除成功"
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+
+        //切换
+        docDeperment(data) {
+            this.docDepartment = data.index.value;
+            this.getUsFollow();
+            this.oGetTemplate();
+            this.oQueryList();
+            this.oQueryArticleList();
+        },
+        //我的随访
+        async getUsFollow() {
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                houseDeviceType: this.houseDeviceType,
+                search: this.docSearchData,
+                department: this.docDepartment,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await managerGetDeviceList(options);
+            if (res.data && res.data.errCode === 0) {
+                _this.equipmentList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+
+        //随访模板
+        //随访模板列表
+
+        async oGetTemplate() {
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                search: this.docSearchData,
+                department: this.docDepartment,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await getTemplate(options);
+            if (res.data && res.data.errCode === 0) {
+                _this.doctorList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //门诊模板
+        //门诊列表
+        async oQueryList() {
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                search: this.docSearchData,
+                department: this.docDepartment,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await queryList(options);
+            if (res.data && res.data.errCode === 0) {
+                _this.doctorList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //宣教文章
+        //宣教文章列表
+        async oQueryArticleList() {
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                search: this.docSearchData,
+                department: this.docDepartment,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await queryArticleList(options);
+            if (res.data && res.data.errCode === 0) {
+                _this.doctorList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //疾病风险评估模板
+        //列表
+        async getUsFollow() {
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                search: this.docSearchData,
+                department: this.docDepartment,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await managerGetDeviceList(options);
+            if (res.data && res.data.errCode === 0) {
+                _this.doctorList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
         }
     }
 };
@@ -1182,5 +1824,58 @@ export default {
     font-size: 12px;
     color: #4d7cfe;
     line-height: 0;
+}
+
+/* 新增随访表 */
+.addFollowTitle > input {
+    margin-bottom: 20px;
+    width: 338px;
+    height: 27px;
+}
+.questTableName {
+    color: red;
+}
+.addFollowMain input {
+    height: 27px;
+}
+.addFollowMain li {
+    margin-bottom: 10px;
+}
+.addFollowM-bot {
+    margin-bottom: 20px;
+}
+.addFollowMain .oTime input {
+    width: 158px;
+    height: 27px;
+}
+.questBox > li {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
+    padding-left: 20px;
+}
+.addFollowBtn {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
+    width: 555px;
+    height: 27px;
+    background: white;
+}
+.questDelete {
+    display: inline-block;
+    cursor: pointer;
+    width: 14px;
+    height: 14px;
+}
+.questDelete > img {
+    width: 100%;
+    height: 100%;
+}
+.addFollowHou {
+    width: 100px;
+}
+.el-input__icon {
+    line-height: 27px;
 }
 </style>

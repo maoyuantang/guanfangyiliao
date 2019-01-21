@@ -30,6 +30,7 @@ export default {
     },
     created() {
         const test = this.lianjie();
+        console.log(window.Manis)
         // console.log(this.$store.state.user.userInfo.hasAuth)
         // console.log(this.$store.state.user.userInfo.rooter)
         //  console.log(this.$store.state.user.userInfo.manager)
