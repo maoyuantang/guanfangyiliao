@@ -2,7 +2,7 @@
     <div class="search">
             <el-input v-model="input" placeholder="Search by keywords…"></el-input>
             <span @click="searchBtn">
-                <img src="../../assets/search.png" alt="">
+                <img src="../../assets/img/search.png" alt="">
             </span>
 
     </div>

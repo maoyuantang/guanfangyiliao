@@ -380,11 +380,11 @@ export const webGetTitleList = (query)=>{//10.2.11获取随访标题列表
     })
 }
 
-export const get = query=>{//13.2.2 获取模板详情
+export const getFollowDetail = query=>{//13.2.2 获取模板详情
     const sign = postQueryHandle(query);
     return axios({
         method:'get',
-        url:apiList.get,
+        url:apiList.getFollowDetail,
         params:query,
         headers:{
             sign

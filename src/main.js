@@ -14,7 +14,16 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './icons/baseIcon.css'
 import 'iview/dist/styles/iview.css'
 import echarts from 'echarts'
- 
+
+
+import  VueQuillEditor from 'vue-quill-editor'
+// require styles 引入样式
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+Vue.use(VueQuillEditor)
+
 Vue.prototype.$echarts = echarts 
 
 Vue.use(elementUi);

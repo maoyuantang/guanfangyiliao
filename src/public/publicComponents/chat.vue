@@ -7,7 +7,7 @@
             <ul class="chatRecord">
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
-                        <img src="../../assets/日照宝宝.jpg" />
+                        <img src="../../assets/img/日照宝宝.jpg" />
 
                     </div>
                     <div class="otherCon">
@@ -63,37 +63,37 @@
                     <el-button size="small" type="primary">点击上传</el-button>
 
                 </el-upload>
-                <img src="../../assets/sendNew1.png" />
+                <img src="../../assets/img/sendNew1.png" />
             </span>
             <span @click="setVideo()" title="发送视频">
-                <img src="../../assets/sendNew2.png" />
+                <img src="../../assets/img/sendNew2.png" />
             </span>
             <span title="发送文章">
-                <img src="../../assets/sendNew3.png" />
+                <img src="../../assets/img/sendNew3.png" />
             </span>
             <span @click="addFollow()" title="发送随访">
-                <img src="../../assets/sendNew4.png" />
+                <img src="../../assets/img/sendNew4.png" />
             </span>
             <span title="发送问诊">
-                <img src="../../assets/sendNew5.png" />
+                <img src="../../assets/img/sendNew5.png" />
             </span>
             <span @click="addRemarks()" title="添加备注">
-                <img src="../../assets/sendNew6.png" />
+                <img src="../../assets/img/sendNew6.png" />
             </span>
             <span title="药品处方">
-                <img src="../../assets/sendNew8.png" />
+                <img src="../../assets/img/sendNew8.png" />
             </span>
             <span @click="addPlan()" title="计划">
-                <img src="../../assets/sendNew9.png" />
+                <img src="../../assets/img/sendNew9.png" />
             </span>
             <span title="录入档案">
-                <img src="../../assets/sendNew10.png" />
+                <img src="../../assets/img/sendNew10.png" />
             </span>
             <span title="健康处方">
-                <img src="../../assets/sendNew11.png" />
+                <img src="../../assets/img/sendNew11.png" />
             </span>
             <span title="转诊">
-                <img src="../../assets/sendNew12.png" />
+                <img src="../../assets/img/sendNew12.png" />
             </span>
             <span title="聊天记录">
 

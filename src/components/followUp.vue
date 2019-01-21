@@ -1,140 +1,199 @@
 <template>
     <div class="followUp">
+        <!-- 随访表模板 -->
+        <el-dialog class="evaluateBox addFollowBox" title=" " :visible.sync="followTableVisible" width="602px" hight="356px" center>
+            <el-form ref="form" :model="addFollowData" label-width="80px">
 
-        <el-dialog class="evaluateBox" title=" " :visible.sync="followTableVisible" width="602px" hight="356px" center>
-            <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
+                <el-form-item>
+                    <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
+                </el-form-item>
+                <el-form-item label="">
+                    <el-radio-group v-model="addFollowData.type">
+                        <el-radio label="INHOSPITAL">住院随访</el-radio>
+                        <el-radio label="OUTPATIENT">门诊随访</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <!-- <div class="addFollowM-bot">
+                    <el-radio v-model="addFollowData.type" label="INHOSPITAL">住院随访</el-radio>
+                    <el-radio v-model="addFollowData.type" label="OUTPATIENT">门诊随访</el-radio>
+                </div> -->
+                <div class="addFollowMain">
+                    <el-form-item class="addFollowM-bot" label="首次治疗">
+                        <el-date-picker class="oTime" type="date" placeholder="选择日期">
+                        </el-date-picker>
+                    </el-form-item>
+                    <ul>
+                        <li v-for="(text,index) in addFollowData.itemModels" :key="index" @mouseover="addFollowBtnVis=true" @mouseout="addFollowBtnVis=false">
+                            <div class="addFollowM-bot">
+                                距离首次治疗
+                                <el-select class="addFollowHou" v-model="followSelectTime" placeholder="请选择">
+                                    <el-option v-for="item in addFollowTime" :key="item.value" :label="item.label" :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </div>
+                            <ul class="questBox">
+                                <li v-for="(otext,oindex) in text.contentModels" :key="oindex">
+                                    <div>
+                                        <span v-show="otext.followUpType=='REMIND'">提醒：</span>
+                                        <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
+                                        <span v-show="otext.followUpType=='INQUIRY'">问诊：</span>
+                                        <span v-show="otext.followUpType=='MEDICAL'">疾病自评：</span>
+                                        <span v-show="otext.followUpType=='DEVICE'">设备监测：</span>
+                                        <span class="questTableName">{{otext.title}}</span>
+                                    </div>
+
+                                    <span @click="deleteQuest(oindex)" class="questDelete">
+                                        <img src="../assets/img/addFollowDelete2.png" />
+                                    </span>
+                                </li>
+                            </ul>
+                            <div class="addFollowBtn" v-show="addFollowBtnVis">
+                                <div @click="addQuest()">
+                                    <span class="questDelete"><img src="../assets/img/addFollowJa2.png" /></span> 问诊表/健康知识
+                                </div>
+                                <div>
+                                    <span @click="addFollowTimeList()">
+                                        <span class="questDelete"><img src="../assets/img/addFollowJa1.png" /> </span> 添加一项</span>
+                                    <span @click="deleteFollowTimeList(index)">
+                                        <span class="questDelete"> <img src="../assets/img/addFollowDelete.png" /> </span>
+                                        此项</span>
+                                </div>
+                            </div>
+
+                        </li>
+                    </ul>
+                    <div class="addFollowM-bot">
+                        提醒时间
+                        <el-select class="addFollowHou" v-model="addFollowData.remindDays" placeholder="请选择">
+                            <el-option v-for="item in addFollowTimeTx" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div>
+                        <el-checkbox v-model="addFollowData.remindMe">提醒我</el-checkbox>
+                        <el-checkbox v-model="addFollowData.remindHe">提醒他</el-checkbox>
+                    </div>
+                    <el-button @click="addFollowTable()" type="primary">保存</el-button>
+                </div>
+
+            </el-form>
+        </el-dialog>
+        <!-- 随访计划详情 -->
+        <el-dialog class="evaluateBox addFollowBox" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
+            <el-form ref="form" :model="followPlanData" label-width="80px">
+
+                <el-form-item>
+                    <el-input class="addFollowTitle" v-model="followPlanData.title" placeholder="请输入随访标题"></el-input>
+                </el-form-item>
+                <el-form-item label="">
+                    <el-radio-group v-model="followPlanData.type">
+                        <el-radio label="INHOSPITAL">住院随访</el-radio>
+                        <el-radio label="OUTPATIENT">门诊随访</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <div class="addFollowMain">
+                    <el-form-item class="addFollowM-bot" label="首次治疗">
+                        <el-date-picker class="oTime" type="date" placeholder="选择日期">
+                        </el-date-picker>
+                    </el-form-item>
+                    <ul>
+                        <li v-for="(text,index) in followPlanData.planItemResults" :key="index" @mouseover="addFollowBtnVis=true" @mouseout="addFollowBtnVis=false">
+                            <div class="addFollowM-bot">
+                                距离首次治疗
+                                <el-select class="addFollowHou" v-model="followSelectTime" placeholder="请选择">
+                                    <el-option v-for="item in addFollowTime" :key="item.value" :label="item.label" :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </div>
+                            <ul class="questBox">
+                                <li v-for="(otext,oindex) in text.itemContentResults" :key="oindex">
+                                    <div>
+                                        <span v-show="otext.followUpType=='REMIND'">提醒：</span>
+                                        <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
+                                        <span v-show="otext.followUpType=='INQUIRY'">问诊：</span>
+                                        <span v-show="otext.followUpType=='MEDICAL'">疾病自评：</span>
+                                        <span v-show="otext.followUpType=='DEVICE'">设备监测：</span>
+                                        <span class="questTableName">{{otext.title}}</span>
+                                    </div>
+
+                                    <span @click="deleteQuest(oindex)" class="questDelete">
+                                        <img src="../assets/img/addFollowDelete2.png" />
+                                    </span>
+                                </li>
+                            </ul>
+                            <div class="addFollowBtn" v-show="addFollowBtnVis">
+                                <div @click="addQuest()">
+                                    <span class="questDelete"><img src="../assets/img/addFollowJa2.png" /></span> 问诊表/健康知识
+                                </div>
+                                <div>
+                                    <span @click="addFollowTimeList()">
+                                        <span class="questDelete"><img src="../assets/img/addFollowJa1.png" /> </span> 添加一项</span>
+                                    <span @click="deleteFollowTimeList(index)">
+                                        <span class="questDelete"> <img src="../assets/img/addFollowDelete.png" /> </span>
+                                        此项</span>
+                                </div>
+                            </div>
+
+                        </li>
+                    </ul>
+                    <div class="addFollowM-bot">
+                        提醒时间
+                        <el-select class="addFollowHou" v-model="followPlanData.remindDays" placeholder="请选择">
+                            <el-option v-for="item in addFollowTimeTx" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div>
+                        <el-checkbox v-model="followPlanData.remindMe">提醒我</el-checkbox>
+                        <el-checkbox v-model="followPlanData.remindHe">提醒他</el-checkbox>
+                    </div>
+                    <!-- <el-button @click="addFollowTable()" type="primary">保存</el-button> -->
+                </div>
+
+            </el-form>
+        </el-dialog>
+        <!-- 新增文章 -->
+        <el-dialog class="evaluateBox" title=" " :visible.sync="articleTableVisible" width="770px" hight="356px" center>
+            <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="文章标题"></el-input>
             <div class="addFollowM-bot">
                 <el-radio v-model="addFollowData.type" label="INHOSPITAL">住院随访</el-radio>
                 <el-radio v-model="addFollowData.type" label="OUTPATIENT">门诊随访</el-radio>
             </div>
-            <div class="addFollowMain">
-                <div class="addFollowM-bot">
-                    首次治疗
-                    <el-date-picker class="oTime" type="date" placeholder="选择日期">
-                    </el-date-picker>
-                </div>
-                <ul>
-                    <li v-for="(text,index) in addFollowData.itemModels" :key="index" @mouseover="addFollowBtnVis=true" @mouseout="addFollowBtnVis=false">
-                        <div class="addFollowM-bot">
-                            距离首次治疗
-                            <el-select class="addFollowHou" v-model="followSelectTime" placeholder="请选择">
-                                <el-option v-for="item in addFollowTime" :key="item.value" :label="item.label" :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </div>
-                        <ul class="questBox">
-                            <li v-for="(otext,oindex) in text.contentModels" :key="oindex">
-                                <div>
-                                    <span v-show="otext.followUpType=='REMIND'">提醒：</span>
-                                    <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
-                                    <span v-show="otext.followUpType=='INQUIRY'">问诊：</span>
-                                    <span v-show="otext.followUpType=='MEDICAL'">疾病自评：</span>
-                                    <span v-show="otext.followUpType=='DEVICE'">设备监测：</span>
-                                    <span class="questTableName">{{otext.title}}</span>
-                                </div>
-
-                                <span @click="deleteQuest(oindex)" class="questDelete">
-                                    <img src="../assets/addFollowDelete2.png" />
-                                </span>
-                            </li>
-                        </ul>
-                        <div class="addFollowBtn" v-show="addFollowBtnVis">
-                            <div @click="addQuest()">
-                                <span class="questDelete"><img src="../assets/addFollowJa2.png" /></span> 问诊表/健康知识
-                            </div>
-                            <div>
-                                <span @click="addFollowTimeList()">
-                                    <span class="questDelete"><img src="../assets/addFollowJa1.png" /> </span> 添加一项</span>
-                                <span @click="deleteFollowTimeList(index)">
-                                    <span class="questDelete"> <img src="../assets/addFollowDelete.png" /> </span>
-                                    此项</span>
-                            </div>
-                        </div>
-
-                    </li>
-                </ul>
-                <div class="addFollowM-bot">
-                    提醒时间
-                    <el-select class="addFollowHou" v-model="addFollowData.remindDays" placeholder="请选择">
-                        <el-option v-for="item in addFollowTimeTx" :key="item.value" :label="item.label" :value="item.value">
-                        </el-option>
-                    </el-select>
+            <div class="addArticleImg">
+                <div>
+                    <img src="../assets/img/日照宝宝.jpg" />
                 </div>
                 <div>
-                    <el-checkbox v-model="addFollowData.remindMe">提醒我</el-checkbox>
-                    <el-checkbox v-model="addFollowData.remindHe">提醒他</el-checkbox>
+                    文章配图
+                </div>
+            </div>
+            <div>
+                <div>
+                    您可以通过自编原创、URL转载、从Word导入完成文章编辑
+                </div>
+                <div class="addArticleEditor">
+                    <quill-editor v-model="infoForm.a_content" ref="myQuillEditor" class="editer" :options="infoForm.editorOption" @ready="onEditorReady($event)">
+                    </quill-editor>
+                </div>
+                <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
+            </div>
+            <div class="addFollowMain">
+
+                <div>
+                    <el-checkbox v-model="addFollowData.remindMe">所有人可见</el-checkbox>
+                    <el-checkbox v-model="addFollowData.remindHe">开放讨论</el-checkbox>
                 </div>
                 <el-button @click="addFollowTable()" type="primary">保存</el-button>
             </div>
 
         </el-dialog>
-        <!-- 新增文章 -->
-        <el-dialog class="evaluateBox" title=" " :visible.sync="articleTableVisible" width="602px" hight="356px" center>
-            <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
-            <div class="addFollowM-bot">
-                <el-radio v-model="addFollowData.type" label="INHOSPITAL">住院随访</el-radio>
-                <el-radio v-model="addFollowData.type" label="OUTPATIENT">门诊随访</el-radio>
-            </div>
-            <div class="addFollowMain">
-                <div class="addFollowM-bot">
-                    首次治疗
-                    <el-date-picker class="oTime" type="date" placeholder="选择日期">
-                    </el-date-picker>
-                </div>
-                <ul>
-                    <li v-for="(text,index) in addFollowData.itemModels" :key="index" @mouseover="addFollowBtnVis=true" @mouseout="addFollowBtnVis=false">
-                        <div class="addFollowM-bot">
-                            距离首次治疗
-                            <el-select class="addFollowHou" v-model="followSelectTime" placeholder="请选择">
-                                <el-option v-for="item in addFollowTime" :key="item.value" :label="item.label" :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </div>
-                        <ul class="questBox">
-                            <li v-for="(otext,oindex) in text.contentModels" :key="oindex">
-                                <div>
-                                    <span v-show="otext.followUpType=='REMIND'">提醒：</span>
-                                    <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
-                                    <span v-show="otext.followUpType=='INQUIRY'">问诊：</span>
-                                    <span v-show="otext.followUpType=='MEDICAL'">疾病自评：</span>
-                                    <span v-show="otext.followUpType=='DEVICE'">设备监测：</span>
-                                    <span class="questTableName">{{otext.title}}</span>
-                                </div>
-
-                                <span @click="deleteQuest(oindex)" class="questDelete">
-                                    <img src="../assets/addFollowDelete2.png" />
-                                </span>
-                            </li>
-                        </ul>
-                        <div class="addFollowBtn" v-show="addFollowBtnVis">
-                            <div @click="addQuest()">
-                                <span class="questDelete"><img src="../assets/addFollowJa2.png" /></span> 问诊表/健康知识
-                            </div>
-                            <div>
-                                <span @click="addFollowTimeList()">
-                                    <span class="questDelete"><img src="../assets/addFollowJa1.png" /> </span> 添加一项</span>
-                                <span @click="deleteFollowTimeList(index)">
-                                    <span class="questDelete"> <img src="../assets/addFollowDelete.png" /> </span>
-                                    此项</span>
-                            </div>
-                        </div>
-
-                    </li>
-                </ul>
-                <div class="addFollowM-bot">
-                    提醒时间
-                    <el-select class="addFollowHou" v-model="addFollowData.remindDays" placeholder="请选择">
-                        <el-option v-for="item in addFollowTimeTx" :key="item.value" :label="item.label" :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div>
-                    <el-checkbox v-model="addFollowData.remindMe">提醒我</el-checkbox>
-                    <el-checkbox v-model="addFollowData.remindHe">提醒他</el-checkbox>
-                </div>
-                <el-button @click="addFollowTable()" type="primary">保存</el-button>
-            </div>
-
+        <!-- 满意度发送的模板列表 -->
+        <el-dialog class="evaluateBox" title=" " :visible.sync="templateVisible" width="240px" hight="356px" center>
+            <ul>
+                <li v-for="(text,index) in mydTemplateTitle" :key="index" @click="selectTemplate(index,text)">
+                    {{text.title}}
+                </li>
+            </ul>
         </el-dialog>
         <!-- 问诊等等列表 -->
         <el-dialog title="随访" :visible.sync="questVisible" center append-to-body>
@@ -152,7 +211,7 @@
             </div>
 
             <div class="admin-oMain">
-                <!-- 随访管理 -->
+                <!-- 随访计划 -->
                 <div v-show="0==oMainShow">
                     <div class="mainTab">
                         <div>
@@ -165,7 +224,6 @@
                         <search @searchValue="searchChange"></search>
                     </div>
                     <div>
-
                         <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
                         <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
                         </el-pagination> -->
@@ -189,12 +247,32 @@
                         </div>
 
                         <el-button class="startConsul" type="text" @click="followTableVisible = true">新增模板</el-button>
+                        <el-button v-show="mydTableChecked" class="startConsul" type="text" @click="sendBtn()">发送</el-button>
+                    </div>
+                    <div class="sendTemplateBox" v-show="sendTemplateListVis">
+                        <ul>
+                            <li v-for="(text,index) in sendTemplate1" :key="index">
+                                {{text.title}}
+                                <span class="questDelete" @click="deleteMydTemplate(index,text)">
+                                    <img src="../assets/img/addFollowDelete2.png" />
+                                </span>
+                            </li>
+                        </ul>
+                        <div class="addTemplate">
+                            <div @click="sendTemplateList()">
+                                加
+                            </div>
+                            <div>
+                                此处可选择多个模板
+                            </div>
+                        </div>
                     </div>
                     <div>
 
                     </div>
                     <div>
-                        <tableList :tableData="satisfiedList" :columns="satisfiedColumns" :tableBtn="SatisfiedBtn"></tableList>
+                        <tableList :tableData="satisfiedList" :columns="satisfiedColumns" :tableBtn="SatisfiedBtn" :checkVisable="mydTableChecked" @reBack="getUserId"></tableList>
+
                     </div>
                 </div>
                 <!-- 家用设备检测 -->
@@ -208,7 +286,6 @@
                         <search @searchValue="searchChange"></search>
                     </div>
                     <div>
-                        {{columnsFa}}<br /> {{tableDataListFa}}
                         <tableList :tableData="tableDataListFa" :columns="columnsFa"></tableList>
                         <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
                         </el-pagination> -->
@@ -236,7 +313,7 @@
         <div v-else class=" followDoc">
             <div>
                 <ul class="titleTop">
-                    <li v-for="(text,index) in followDocTab" :class="{'title-this':index==oDocThis}" @click="docTab(index)">{{text.name}}</li>
+                    <li v-for="(text,index) in followDocTab" :class="{'title-this':index==oDocThis}" @click="docTab(index)" :key="index">{{text.name}}</li>
                 </ul>
             </div>
             <div class="admin-oMain">
@@ -298,7 +375,11 @@ import {
     get, //获取随访模板详情
     add, //新增随访模板
     deleteArticle, //删除文章
-    deleteInquiry //删除问诊模板
+    deleteInquiry, //删除问诊模板
+    getFollowDetail, //查看随访模板详情
+    getFollowUpPlan, //查看随访计划详情
+    getTitleList, //选择模板发送
+    publishNotice //发送模板
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -309,6 +390,7 @@ import selftag from "../public/publicComponents/selftag.vue";
 import statisticsWay from "../public/publicComponents/statisticsWay.vue";
 import publicTime from "../public/publicComponents/publicTime.vue";
 import normalColumnChart from "../public/publicComponents/normalColumnChart.vue";
+import { quillEditor } from "vue-quill-editor";
 
 export default {
     components: {
@@ -318,12 +400,22 @@ export default {
         selftag,
         statisticsWay,
         publicTime,
-        normalColumnChart
+        normalColumnChart,
+        quillEditor
     },
     data() {
         return {
-            questList:[],//问诊列表
-            articleTableVisible:true,
+            //随访计划
+            followPlanVisible: false,
+            followPlanData: [],
+            infoForm: {
+                a_title: "",
+                a_source: "",
+                a_content: "",
+                editorOption: {}
+            },
+            questList: [],
+            articleTableVisible: false,
             addFollowBtnVis: false,
             questVisible: false,
             addFollowData: {
@@ -622,15 +714,15 @@ export default {
                     label: "科室"
                 },
                 {
-                    prop: " type",
+                    prop: "type",
                     label: " 类型 "
                 },
                 {
-                    prop: " title",
+                    prop: "title",
                     label: "随访模板名 "
                 },
                 {
-                    prop: " doctor",
+                    prop: "doctor",
                     label: "医生 "
                 },
                 {
@@ -638,7 +730,7 @@ export default {
                     label: " 病人"
                 },
                 {
-                    prop: " appNum",
+                    prop: "appNum",
                     label: "App "
                 },
                 {
@@ -646,15 +738,15 @@ export default {
                     label: "电话"
                 },
                 {
-                    prop: " remind",
+                    prop: "remind",
                     label: "提醒 "
                 },
                 {
-                    prop: " inquiry",
+                    prop: "inquiry",
                     label: "问卷 "
                 },
                 {
-                    prop: " knowledge",
+                    prop: "knowledge",
                     label: "知识 "
                 },
                 {
@@ -662,11 +754,11 @@ export default {
                     label: " 自评"
                 },
                 {
-                    prop: " deviceTest",
+                    prop: "deviceTest",
                     label: "自测 "
                 },
                 {
-                    prop: " state",
+                    prop: "state",
                     label: "状态 "
                 }
             ],
@@ -676,15 +768,15 @@ export default {
                     label: "科室"
                 },
                 {
-                    prop: " deviceType",
+                    prop: "deviceType",
                     label: "设备类型 "
                 },
                 {
-                    prop: " serialNumber",
+                    prop: "serialNumber",
                     label: "设备编号 "
                 },
                 {
-                    prop: " userName",
+                    prop: "userName",
                     label: "用户 "
                 },
                 {
@@ -692,7 +784,7 @@ export default {
                     label: " 使用量"
                 },
                 {
-                    prop: " alertInfo",
+                    prop: "alertInfo",
                     label: "告警情况 "
                 }
             ],
@@ -703,11 +795,18 @@ export default {
                     name: "查看随访",
                     oclass: "viewFollow",
                     method: (index, row) => {
-                        this.handleDel(index, row);
+                        this.seeFollow(index, row);
                     }
                 }
             ],
             //满意度数据
+            sendTemplate1: [],
+            mydTableChecked: false,
+            mydTemplateTitle: [],
+            sendTemplateId: [], //要发送的模板id
+            userList: [], //要发送的用户id
+            templateVisible: false, //发送满意度模板
+            sendTemplateListVis: false,
             followTableVisible: false,
             satisfiedList: [],
             defaultProps: {
@@ -960,6 +1059,7 @@ export default {
     },
     mounted() {},
     methods: {
+        onEditorReady(editor) {},
         // 新增随访表接口
         //添加问诊表
         addQuest() {
@@ -1095,6 +1195,8 @@ export default {
                 });
             }
         },
+
+        //随访计划接口
         //获取随访列表
         async getFoList() {
             let _this = this;
@@ -1119,7 +1221,28 @@ export default {
                     message: res.data.errMsg
                 });
             }
-        }, //获取家用设备列表
+        },
+        //查看随访计划详情
+        async seeFollow(index, row) {
+            this.followPlanVisible = true;
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                planId: row.id
+            };
+            const res = await getFollowUpPlan(options);
+            if (res.data && res.data.errCode === 0) {
+                this.followPlanData = [];
+                this.followPlanData = res.data.body;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //获取家用设备列表
         async getfamiliList() {
             let _this = this;
             const options = {
@@ -1157,7 +1280,9 @@ export default {
             this.indexTab2 = index;
 
             if (index == 0) {
-                this.wayVisible1 = true;
+                (this.mydTableChecked = false),
+                    (this.sendTemplateListVis = false),
+                    (this.wayVisible1 = true);
                 this.wayVisible2 = true;
                 (this.wayVisible3 = false), this.oGetResultList();
                 this.satisfiedColumns = [
@@ -1208,7 +1333,9 @@ export default {
                     }
                 ];
             } else if (index == 1) {
-                this.wayVisible1 = true;
+                (this.mydTableChecked = false),
+                    (this.sendTemplateListVis = false),
+                    (this.wayVisible1 = true);
                 this.wayVisible2 = false;
                 this.wayVisible3 = false;
                 this.oGetModelList();
@@ -1271,6 +1398,8 @@ export default {
                     }
                 ];
             } else {
+                (this.mydTableChecked = true),
+                    (this.sendTemplateListVis = true);
                 this.wayVisible1 = false;
                 this.wayVisible2 = false;
                 this.wayVisible3 = true;
@@ -1309,6 +1438,7 @@ export default {
                         label: "发送时间"
                     }
                 ];
+                this.SatisfiedBtn = [];
             }
         },
         //  一
@@ -1353,6 +1483,68 @@ export default {
             const res = await getModelInsert(options);
             if (res.data && res.data.errCode === 0) {
                 _this.satisfiedList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //满意度发送模板
+        async sendTemplateList() {
+            this.templateVisible = true;
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                type: this.mydType
+            };
+            const res = await getTitleList(query);
+            if (res.data && res.data.errCode === 0) {
+                this.mydTemplateTitle = res.data.body;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //选中满意度模板进行操作
+        selectTemplate(index, text) {
+            this.mydTemplateTitle.splice(index, 1);
+            this.sendTemplateId.push(text.associationId);
+            this.sendTemplate1.push(text);
+        },
+        //删除满意度模板
+        deleteMydTemplate(index, text) {
+            this.sendTemplate1.splice(index, 1);
+            let oindex = sendTemplateId.indexOf(text.associationId);
+            this.sendTemplateId.splice(oindex, 1);
+            this.mydTemplateTitle.push(text);
+        },
+        getUserId(row) {
+
+            $.each(row, (text,index)=> {
+                this.userList.push(text.userId);
+            });
+        },
+        //发送模板
+        async sendBtn() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const options = {
+                templateList: this.sendTemplateId,
+                userList: this.userList
+            };
+            const res = await publishNotice(query, options);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "发送成功"
+                });
             } else {
                 //失败
                 this.$notify.error({
@@ -1877,5 +2069,60 @@ export default {
 }
 .el-input__icon {
     line-height: 27px;
+}
+.addFollowBox .el-form-item__content {
+    margin-left: 0 !important;
+}
+
+.addArticleImg {
+    position: relative;
+    margin-bottom: 33px;
+    width: 100px;
+    height: 82px;
+}
+.addArticleImg > div:first-child {
+    width: 100%;
+    height: 100%;
+}
+.addArticleImg > div:first-child > img {
+    width: 100%;
+    height: 100%;
+}
+.addArticleImg > div:last-child {
+    position: absolute;
+    width: 100%;
+    height: 24px;
+    bottom: 0;
+    text-align: center;
+    line-height: 24px;
+    background: rgba(0, 0, 0, 0.6);
+    font-family: .PingFangSC-Regular;
+    font-size: 12px;
+    color: #ffffff;
+    letter-spacing: -0.17px;
+}
+.ql-container {
+    height: 144px;
+}
+.addArticleEditor {
+    margin-bottom: 10px;
+}
+.sendTemplateBox {
+    margin:20px 0;
+    padding: 10px;
+    width: 100%;
+    height: 100px;
+    background: rgba(250, 251, 252, 0);
+    border: 1px solid #d8dfe5;
+    border-radius: 5px;
+}
+.sendTemplateBox > ul {
+    display: flex;
+    display: -webkit-flex;
+}
+.sendTemplateBox > ul > li {
+    padding: 2px 2px;
+}
+.addTemplate {
 }
 </style>
