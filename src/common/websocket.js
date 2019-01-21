@@ -102,7 +102,7 @@ function sendMessage(agentData) {
 function webSocketonmessage(odata) {
     let RequestType = odata.RequestType;
     if (RequestType == 101 || RequestType == 104) {
-        console.log('登录成功')
+        // console.log('登录成功')
         ticket = odata.ticket;//票据
         sequence = odata.status.sequence;//序列号
         serverTime= odata.status.serverTime;//服务器时间
@@ -874,7 +874,7 @@ function webSocketonclose(e) {
 
 function webSocketonopen(buffer) {
     if (webSocket.readyState === 1) {
-        console.log("连接成功");
+        // console.log("连接成功");
 
         webSocket.send(buffer);
     } else {

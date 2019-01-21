@@ -225,7 +225,6 @@
 					<div style="display:flex">
 						<normalColumnChart :inData="drawData"> </normalColumnChart>
 						<normalColumnChart :inData="drawDataStart"> </normalColumnChart>
-						{{drawDataStart}}
 					</div>
 				</div>
 			</div>
@@ -243,8 +242,8 @@
 			</div>
 
 			<div>
-				<el-table :data="docTableData" border style="width: 100%"  @header-cell-style="alertAT()">
-					<el-table-column   fixed prop="consultationId" label="会诊编号" width="150">
+				<el-table :data="docTableData" border style="width: 100%">
+					<el-table-column fixed prop="consultationId" label="会诊编号" width="150">
 					</el-table-column>
 					<el-table-column prop="hospital" label="发起医院" width="120">
 					</el-table-column>
@@ -590,9 +589,6 @@ export default {
         })
     },
     methods: {
-		alertAT(){
-alert('dd')
-		},
         // 管理端事件
         getOTab1(data) {
             this.applicationDeptId = data.index.value;
@@ -718,6 +714,7 @@ alert('dd')
         },
         //获取科室列表
         async getDepartment(oindex) {
+			return;
             let _this = this;
             let query = {
                 orgCode: this.userSelfInfo.orgCode,

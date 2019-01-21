@@ -39,7 +39,7 @@ export default {
     get:'/m/v1/api/followup/followupModel/get',//13.2.2 获取模板详情
     update:'/m/v1/api/followup/followupModel/update',//13.2.3 编辑随访模板
     deleteTemplate:'/m/v1/api/followup/followupModel/delete',//13.2.4 删除随访模板
-    getTemplate:'/m/v1/api/followup/followupModel/add',//13.2.5 获取随访模板列表【医生web】
+    getTemplate:'/m/v1/api/followup/followupModel/list',//13.2.5 获取随访模板列表【医生web】
     createFollowUpPlan:'/m/v1/api/followup/followupPlan/createFollowUpPlan',//13.2.6 创建随访计划
     getFollowUpPlan:'/m/v1/api/followup/followupPlan/getFollowUpPlan',//13.2.7 查看随访计划详情
     userListUnfFollowUpPlan:'/m/v1/api/followup/followupPlan/userListUnfFollowUpPlan',//13.2.8 用户获取未完成随访计划
