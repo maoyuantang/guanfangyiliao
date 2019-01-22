@@ -12,7 +12,7 @@
             <div class="input-item-div" v-if="inData.type==='2'">
                 <span class="input-item-name">业务类型:</span>
                 <div class="input-item-value-div">
-                    <el-select v-model="info.businessType1" clearable placeholder="请选择" size="mini">
+                    <el-select v-model="info.businessType2" clearable placeholder="请选择" size="mini">
                         <el-option
                         v-for="item in inData.businessTypeList||[]"
                         :key="item.value"
@@ -30,7 +30,7 @@
                     <el-input
                         placeholder="请输入内容"
                         size="mini"
-                        v-model="info.businessType2"
+                        v-model="info.businessType1"
                         clearable>
                     </el-input>
                 </div>
@@ -123,7 +123,7 @@
                                 <img src="../../assets/img/a-6.png" alt="">
                                 <i class="iconfont cancel-doctor" >&#xe611;</i>
                             </div>
-                            <p>name</p>
+                            <p>{{inData.doctorList.find(i=>i.value===item).label}}</p>
                         </div>
                     </div>
                 </div>
@@ -184,6 +184,7 @@
 </template>
 
 <script>
+import sensitiveWordCheck from "../publicJs/sensitiveWordCheck.js";
 export default {
   watch:{
   },
@@ -252,25 +253,41 @@ export default {
     },
     cancel(){},
     saveInfo(){
+        const resData = {};
         if(this.inData.type==='1'){//新增在线诊室
-            const resData = {
-                businessType:this.info.businessType1,
-               
-                businessName:this.info.businessName,
-                businessPrice:this.info.businessPrice,
-                department:this.info.department,
-                doctors:this.info.doctors
+            resData.businessType = this.info.businessType1;
+            resData.businessName = this.info.businessName;
+            resData.businessPrice = this.info.businessPrice;
+            resData.department = this.info.department;
+            resData.doctors = this.info.doctors;
+            const isPass = [sensitiveWordCheck(resData.businessName),sensitiveWordCheck(resData.businessPrice)];
+            for(const i of isPass){
+                if(!i.ok){
+                    this.$notify({
+                        title: '输入验证失败',
+                        message: i.msg,
+                        type: 'error'
+                    });
+                    return;
+                }
             }
-            
-
         }else if(this.inData.type==='2'){//新增家医业务
-            const resData = {
-                businessType:this.info.businessType2,
-                businessTemplate:this.info.businessTemplate,
-            }
+            resData.businessType = this.info.businessType2,
+            resData.businessTemplate = this.info.businessTemplate,
+            resData.businessName = this.info.businessName,
+            resData.businessPrice = this.info.businessPrice,
+            resData.department = this.info.department,
+            resData.doctors = this.info.doctors
+            console.log(resData)
         }else{
-            console.log('传入参数格式错误')
+            console.log('传入参数格式错误');
+            return;
         }
+        resData.businessDescription = this.info.businessDescription;
+        resData.selectAgreement = this.info.selectAgreement;
+        resData.servicePhone = this.info.servicePhone;
+        this.$emit("reback",resData);
+        this.inData.show = false;
     },
     chooseAgreement(item){
         this.info.selectAgreement = item;
@@ -336,8 +353,8 @@ export default {
         color: var(--color6);
         cursor: pointer;
         position: absolute;
-        right: 10px;
-        bottom: 8px;
+        right: -10px;
+        bottom: -8px;
         margin: 0;
     }
     .input-item-value-div>.el-textarea{

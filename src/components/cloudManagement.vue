@@ -8,27 +8,31 @@
 			<div class="config-module">
 				<div class="config-module-content">
 					<div class="config-module-content-head">
-						<span>业务名称占位符</span>
+						<span>{{cloudStorage.fullName||'缺失'}}</span>
 						<i class="iconfont edit-business" @click="editBusiness">&#xe608;</i>
 					</div>
-					<div class="config-module-content-price">
-						<span class="price-to">To</span>
-						<span class="price-symbol"><i class="iconfont price-symbol-icon">&#xe76d;</i></span>
-						<span class="price-num">50</span>
+					<div class="config-module-content-price-list">
+						<div class="config-module-content-price" v-for="(item,index) in cloudStorage.price" :key="index" v-show="index<3">
+							<span class="price-to">To</span>
+							<span class="price-symbol"><i class="iconfont price-symbol-icon">&#xe76d;</i></span>
+							<span class="price-num">{{item.worth}}<span>/{{item.valueUnit}}年</span></span>
+						</div>
 					</div>
 					<div class="config-module-content-config">
 						<p class="config-module-content-config-title">医院配置</p>
 						<div class="config-module-content-config-body">
-							<div class="business-item" v-for="i in 5" :key="i">
-								<p>
+							<div class="business-item" v-for="(item,index) in cloudStorage.hospital" :key="index">
+								{{item.hospitalName}}
+								<!-- <p>
 									<span>重庆市西南医院</span>
 									<span>档案数(18)</span>
 								</p>
 								<p>
 									<span>重庆市西南医院</span>
 									<span>档案数(18)</span>
-								</p>
-							</div>
+								</p> -->
+							</div> 
+							<p v-if="cloudStorage.hospital.length<=0">暂无数据</p>
 						</div>
 					</div>
 				</div>
@@ -44,7 +48,7 @@
 							<th ><span>{{tableInfo.header.hospitals||'缺失'}}</span></th>
 							<th ><span>{{tableInfo.header.orders||'缺失'}}</span></th>
 							<th ><span>{{tableInfo.header.expiredTime||'缺失'}}</span></th>
-							<th ><span>操作</span></th>
+							<!-- <th ><span>操作</span></th> -->
 						</tr>
 					</thead>
 					<tbody>
@@ -56,14 +60,49 @@
 							<th><span>{{item.hospitals||'缺失'}}</span></th>
 							<th><span>{{item.orders||'缺失'}}</span></th>
 							<th><span>{{item.expiredTime||'缺失'}}</span></th>
-							<th ><el-button type="success" plain size="mini">编辑</el-button></th>
+							<!-- <th ><el-button type="success" plain size="mini">编辑</el-button></th> -->
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
-		<addNewFrame :inData="haveATry"></addNewFrame>
-		<render :propData="propTest"></render>
+		<addNewFrame :inData="haveATry" @reback="getData"></addNewFrame>
+		<Modal
+			v-model="editingBusiness.show"
+			title="编辑"
+			
+			footer-hide
+			@on-ok="editOk"
+			@on-cancel="editCancel">
+			<div class="editing-business-alert">
+				<div class="editing-business-alert-item">
+					<span class="editing-business-alert-item-name">业务名称</span>
+					<div class="editing-business-alert-item-value">
+						<el-input
+						placeholder="请输入内容"
+						size="mini"
+						v-model="editingBusiness.name"
+						clearable>
+						</el-input>
+					</div>
+				</div>
+				<div class="editing-business-alert-item">
+					<span class="editing-business-alert-item-name">医院配置</span>
+					<div class="editing-business-alert-item-value">
+						<el-select v-model="editingBusiness.configurations" multiple placeholder="请选择">
+							<el-option
+							size="mini"
+							v-for="item in editingBusiness.configurationsList"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value">
+							</el-option>
+						</el-select>
+					</div>
+				</div>
+			</div>
+		</Modal>
+		<!-- <render :propData="propTest"></render> -->
 	</div>
 </template>
 
@@ -72,7 +111,7 @@
 	import addNewFrame from '../public/publicComponents/addNewFrame.vue'
 	import search from '../public/publicComponents/search.vue'
 	import {fetchUserCloud, viewCloud} from '../api/apiAll.js'
-
+	
 
 
 	import render from '../public/publicComponents/render.vue'
@@ -102,8 +141,8 @@
 					]
 				],
 				haveATry:{
-					show:true,
-					type:'2',//1表示新增在线诊室，2表示新增家医业务
+					show:false,
+					type:'1',//1表示新增在线诊室，2表示新增家医业务
 					businessTypeList:[//新增在线诊室业务类型
 						{
 							label:'//新增在线诊室业务类型1',
@@ -155,8 +194,62 @@
 						},
 					]
 				},
+				
 
+/*********************************************************************************************** */
+				
+				editingBusiness:{//编辑业务
+					show:false,//是否显示
+					name:'',//名称
+					configurations:[],//医院配置（已选择）
+					configurationsList:[],//医院配置（所有）
+					priceList:[//价格
+						// {
+						// 	price:'',
+						// 	year:0
+						// }
+					]
 
+				},
+				cloudStorage:{//云存储 第一个表格数据
+					description:'',//这是云存储的描述
+					fullName:'',//云存储业务
+					hospital:[
+						// {
+						// 	hospitalOrgCode:'',//医院机构码
+						// 	hospitalName:'',//医院机构名
+						// 	days:0//配置天数
+						// }
+					],
+					hospitalCount:0,//
+					id:'',//
+					phone:'',//
+					price:[
+						// {
+						// 	worth:0,//价格数值
+						// 	unitEnum:'',//价格单位  (HOUR,//小时   TIMES,//次   DAY,//天   MONTH,//月   QUARTER,//季   YEAR,//年)
+						// 	valueUnit:0//价格单位值
+						// },
+						// {
+						// 	worth:0,//价格数值
+						// 	unitEnum:'',//价格单位  (HOUR,//小时   TIMES,//次   DAY,//天   MONTH,//月   QUARTER,//季   YEAR,//年)
+						// 	valueUnit:0//价格单位值
+						// },
+						// {
+						// 	worth:0,//价格数值
+						// 	unitEnum:'',//价格单位  (HOUR,//小时   TIMES,//次   DAY,//天   MONTH,//月   QUARTER,//季   YEAR,//年)
+						// 	valueUnit:0//价格单位值
+						// },
+						// {
+						// 	worth:0,//价格数值
+						// 	unitEnum:'',//价格单位  (HOUR,//小时   TIMES,//次   DAY,//天   MONTH,//月   QUARTER,//季   YEAR,//年)
+						// 	valueUnit:0//价格单位值
+						// }
+					],
+					protocolContent:null,
+					protocolId:null,
+					protocolName:null
+				},
 
 				/**
 				 * 表格信息
@@ -224,18 +317,19 @@
 			}
 		},
 		methods:{
+
+
+
+
+
 			/**
 			 * 获取业务信息
 			 */
 			async getBusinessInfo(){
-				const options = [
-					{token: this.userState.token},
-					{cloudId:''}//这玩意没有啊 周一问问怎么获得
-				];
-				const res = await viewCloud(...options);
+				const res = await viewCloud({token: this.userState.token});
 				console.log(res);
 				if(res.data && res.data.errCode === 0){
-
+					this.cloudStorage = res.data.body;
 				}else{
 					this.$notify({
 						title: '失败',
@@ -255,6 +349,7 @@
 					this.tableInfo.header = res.data.body.header;
 					this.tableInfo.data = res.data.body.data2;
 				}else{
+					console.log('fail')
 					this.$notify({
 						title: '失败',
 						message: '表格数据获取失败',
@@ -268,11 +363,28 @@
 			 * 
 			 */
 			editBusiness(){
+				this.editingBusiness.show = true;
+			},
+
+			/**
+			 * 确认编辑
+			 */
+			editOk(){
 
 			},
+
+			/**
+			 * 取消编辑
+			 */
+			editCancel(){},
+			/******************** */
+			getData(data){
+				console.log(data)
+			}
 		},
 		async created(){
 			this.getTableInfo();
+			this.getBusinessInfo();
 		}
 	}
 </script>
@@ -323,14 +435,15 @@
 		padding-top: 0.2rem;
 		display: flex;
 		align-items: center;
+		margin-right: 0.5rem;
 	}
 	.config-module-content-config-body{
-		padding-top: 0.15rem;
-		padding-bottom: 0.12rem;
-		/* display: grid;
+		/* padding-top: 0.15rem;
+		padding-bottom: 0.12rem; */
+		display: grid;
 		grid-template-columns:1fr 1fr;
-		justify-items: center;
-		align-items: center; */
+		justify-content: start;
+		align-items: center;
 	}
 	.price-to{
 		font-family: var(--fontFamily4);
@@ -354,10 +467,12 @@
 		color: var(--color18);
 	}
 	.business-item {
-		display: flex;
+		/* display: grid;
+		grid-template-columns:1fr 1fr; */
+		/* display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding-bottom: 0.1rem;
+		padding-bottom: 0.1rem; */
 	}
 	.business-item > p{
 		flex: 1;
@@ -386,5 +501,15 @@
 	.edit-business{
 		cursor: pointer;
 		color: var(--borderColor5);
+	}
+	.config-module-content-price-list{
+		display: flex;
+	}
+	.price-num>span{
+		font-size: var(--fontSize3);
+	}
+	.editing-business-alert-item{
+		display: flex;
+		align-items: center;
 	}
 </style>

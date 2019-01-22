@@ -343,18 +343,20 @@
                         },
                     ],
                     tableBtn: [
-                        {
-                            name: "新增",
-                            method: (index, row) => {
-                                console.log(index)
-                                console.log(row)
-                                // this.handleDel(index, row);
-                            }
-                        },
+                        // {
+                        //     name: "新增",
+                        //     method: (index, row) => {
+                        //         console.log(index)
+                        //         console.log(row)
+                        //         // this.handleDel(index, row);
+                        //     }
+                        // },
                         {
                             name: "编辑",
                             method: (index, row) => {
-                                this.handleDel(index, row);
+                                // constants.log(index)
+                                // connect.log(row)
+                                // this.handleDel(index, row);
                             }
                         }
                     ]
