@@ -15,7 +15,6 @@
 			
 		},
 		async created(){
-
 		}
 	}
 </script>

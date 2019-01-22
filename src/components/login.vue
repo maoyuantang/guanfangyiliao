@@ -4,23 +4,17 @@
             <p class="login-title">账号登录</p>
             <div class="login-input-div">
                 <span class="login-input-name">账号</span>
-                <input type="text" name="" placeholder="请输入手机号/账号" class="login-input" v-model="account.text" @blur="checkAccount"> 
+                <input type="text" name="" placeholder="请输入手机号/账号" class="login-input" v-model="account.text"> 
             </div>
             <div class="login-check-box-div">
                 <el-radio-group v-model="way">
                     <el-radio :label="true">密码登录</el-radio>
                     <el-radio :label="false">验证码登录</el-radio>
                 </el-radio-group>
-
-
-                <!-- <el-radio v-model="way" @click="setWayTrue">密码登录</el-radio>
-                <el-radio v-model="checkBoxStatus[1]" @click="setWayFalse">验证码登录</el-radio> -->
-                    <!-- <Checkbox >密码登录</Checkbox>
-                    <Checkbox v-model="checkBoxStatus[1]" @click="setWayFalse">验证码登录</Checkbox> -->
             </div>
             <div class="login-input-div">
                 <span class="login-input-name">{{way?"密码":"验证码"}}</span>
-                <input type="password" name="" placeholder="请输入手机号/账号" class="login-input" v-model="passwd.text" @blur="checkPasswd">
+                <input type="password" name="" placeholder="请输入手机号/账号" class="login-input" v-model="passwd.text">
                 <span class="get-code" v-if="!way" @click="getCode">发送验证码</span>
             </div>
             <div class="login-btn-div">
@@ -31,72 +25,131 @@
 </template>
 
 <script>
-import websocket from "../common/websocket.js"
-     import sensitiveWordCheck from '../public/publicJs/sensitiveWordCheck.js'
+
+    import sensitiveWordCheck from '../public/publicJs/sensitiveWordCheck.js'
+    import { Base64 } from 'js-base64'
+    import jsonSort from '../public/publicJs/jsonSort.js'
+    import websocket from "../common/websocket.js"
     import { mapState } from 'vuex'
-    import {testA} from '../api/test.js'
-    import {testC} from '../api/test.js'
-    import {getLoginCode,login} from '../api/apiAll.js'//api
+    import {getLoginCode,login,userInfo} from '../api/apiAll.js'//api
     import createUUID from '../public/publicJs/createUUID.js'
 	export default {
+        components:{
+        },
         watch:{
-            way(n){console.log(n)}
+            way(n){console.log(n)},
         },
 		data () {
 			return {
                 way:true,//登录方式，true为密码登录，false为验证码登录，默认true
                 account:{
-                    text:'',
-                    ok:false
+                    text:'gftechadmin',//gftechadmin
+                    ok:true
                 },//账号
                 passwd:{
-                    text:'',
-                    ok:false
+                    text:'111111',
+                    ok:true
                 },//密码
-                checkBoxStatus:[true,false]
-			}
+                checkBoxStatus:[true,false],
+                allPages:[//左侧导航栏列表
+				// {
+				// 	name:'首页',
+				// 	select:true,
+				// 	path:'/',
+				// 	code:0
+				// },
+				{
+					name:'远程门诊系统',
+					select:false,
+					path:'/outpatient',
+					code:'10000'
+				},
+				{
+					name:'远程会诊系统',
+					select:false,
+					path:'/consultation',
+					code:'20000'
+				},
+				{
+					name:'远程协作系统',
+					select:false,
+					path:'/cooperation',
+					code:'30000'
+				},
+				{
+					name:'智能随访系统',
+					select:false,
+					path:'/followUp',
+					code:'40000'
+				},
+				{
+					name:'健康档案系统',
+					select:false,
+					path:'/files',
+					code:'50000'
+				},
+				{
+					name:'远程教育系统',
+					select:false,
+					path:'/education',
+					code:'60000'
+				},
+					{
+					name:'分级诊疗系统',
+					select:false,
+					path:'/medicalTreatment',
+					code:'70000'
+				},
+					{
+					name:'双向转诊系统',
+					select:false,
+					path:'/referral',
+					code:'80000'
+				},
+					{
+					name:'移动查房系统',
+					select:false,
+					path:'/rounds',
+					code:'90000'
+				},
+					{
+					name:'终端管理系统',
+					select:false,
+					path:'/management',
+					code:'100000'
+                },
+                {
+					name:'家医系统',
+					select:false,
+					path:'/familyMedicine',
+					code:'110000'
+				},
+			]
+            } 
         },
         computed:{
-            	...mapState({
-                    userState: state => state.user.userInfo,
-                }),
-
+            ...mapState({
+                userState: state => state.user.userInfo,
+            }),
         },
 		methods:{
-			setUserInfo(data){
-                // const options = {
-                //     isLogin:false,//是否登录，true是，false否.默认未登录
-				// 	account:'',//账号
-				// 	passwd:'',//密码
-				// 	token:'',//免密登录标识
-				// 	rooter:false,//是否超级管理员；true是，false否,默认false
-				// 	manager:false,//是否医院管理员；true是，false否,默认false
-				// 	completion:false,//是否已经完善信息；true是，false否 ,默认false
-				// 	sign:'',//接口签名串的加密串 
-				// 	hasAuth:[//拥有的权限 
-				// 		/**
-				// 		 * 
-				// 		 * hasAuth.type => 权限类型,类型String，1,科室管理权限.2,医生业务
-				// 		 * hasAuth.authorityId => 权限标识符,类型String
-				// 		 * 
-				// 		 *  */
-				// 		// {"type": "1","authorityId": "10000"}
-				// 	],
-				// 	hospitalCode:'',//医院代码
-                // };
-                const testData = this.$store.commit("user/SETUSERINFO",data)
-               
-              },
-            setWayTrue(){
-                this.checkBoxStatus[0] = true;
-                this.checkBoxStatus[1] = false;
-                this.way = true;
+           /**
+            * 传入 字符串
+            * 输出 json 
+            * {
+            *   ok:boolean,//是否成功
+            *   msg:str//若成功，msg代指翻转后的字符串，；若失败则是失败信息
+            * }
+            */
+            reverseStr(str){
+
+                if(Object.prototype.toString.call(str)!=="[object String]")return{ok:false,msg:'参数类型必须是字符串'};
+                return {
+                    ok:true,
+                    msg:str.split("").reverse().join("") 
+                }
             },
-            setWayFalse(){
-                this.checkBoxStatus[0] = false;
-                this.checkBoxStatus[1] = true;
-                this.way = false;
-            },
+
 
             /**
              * 检查帐号是否正确
@@ -128,7 +181,6 @@ import websocket from "../common/websocket.js"
                     
                 }
                 this.account.ok = true;
-                console.log(this.account)
             },
 
             /**
@@ -155,7 +207,6 @@ import websocket from "../common/websocket.js"
             async getCode(){
                 if(!this.account.ok)return;
                 const reData = await getLoginCode({phone:this.account});
-                console.log(reData)
                 if(reData.data&&reData.data.errCode===0){//成功
                 }else{//失败
                     this.$notify.error({
@@ -174,11 +225,11 @@ import websocket from "../common/websocket.js"
                    token:this.userState.token,
                    oneself:true
                 };
-                const res = await userInfo(options);
-                console.log(res);
+                let res = await userInfo(options);
                 if(res.data.errCode === 0){//登录成功
                     this.$store.commit("user/SETUSERSELFINFO",res.data.body);
-                    this.$router.push({path:'/'})
+                    sessionStorage.setItem('userSelfInfo',JSON.stringify(res.data.body));//将用户个人信息写入缓存
+                    // this.$router.push({path:'/'})
                 }else{
                     this.$message({
                         showClose: true,
@@ -186,16 +237,16 @@ import websocket from "../common/websocket.js"
                         type: 'error'
                     });
                 }
+                this.$router.push({path:'/'})
             },
+
+           
 
             /**
              * 登录
              */
             async loginMethod(){
-                console.log('enter')
-                console.log(this.account.ok)
-                console.log(this.passwd.ok)
-                if(!this.account.ok || !this.passwd.ok)return;
+                if(!this.account.ok || !this.passwd.ok)return;//账号信息是否有误
                 const options = {
                     account:this.account.text,
                     agreement:true,
@@ -203,12 +254,7 @@ import websocket from "../common/websocket.js"
                 };
                 this.way?options.passwd=this.passwd.text:options.captcha=this.passwd.text;
                 const res = await login(options);
-                console.log(res);
                 if(res.data&&res.data.errCode===0){//成功
-                    res.data.body.isLogin = true;
-                    this.$store.commit("user/SETUSERINFO",res.data.body);
-                    sessionStorage.setItem('userInfo',JSON.stringify(res.data.body))
-                  
                     res.data.body.isLogin = true;//添加个字段，方便前端操作
                     const sign = this.reverseStr(res.data.body.sign);//翻转sign
                     if(sign.ok){
@@ -226,9 +272,10 @@ import websocket from "../common/websocket.js"
                     }
                     res.data.body.sign = Base64.decode(res.data.body.sign)
                     this.$store.commit("user/SETUSERINFO",res.data.body);
-                    console.log(res.data.body.sign);
-                    sessionStorage.setItem('userInfo',JSON.stringify(res.data.body));
-                    this.getUserInfo();
+                    sessionStorage.setItem('userInfo',JSON.stringify(res.data.body));//将用户权限信息写入缓存
+                    // console.log(this.$store.state.user.viewRoot)
+                    this.getUserInfo();//使用登录页、过后的token，请求用户个人信息
+                    this.setViewRoot(res.data.body);//计算用户权限
                     websocket.initWebSocket(this.userState.token)
                 }else{//失败
                     this.$notify.error({
@@ -306,21 +353,10 @@ import websocket from "../common/websocket.js"
                 this.$store.commit("user/SETVIEWROOT",reData);
                 sessionStorage.setItem('viewRoot',JSON.stringify(reData));//缓存将权限下来
             }
-		},
+        },
+        
 		async created(){
-            // getLoginCode()
-            // .then(res=>console.log(res))
-        //    const user = await login({
-        //         "account":"gftechadmin",
-        //         "passwd":"111111",
-        //         "captcha":"",
-        //         "agreement":true,
-        //         "appDevice":"WEB"
-        //     });
-        //     console.log(user) 
-
-            console.log(createUUID())//生成uuid
-           
+            // console.log(createUUID())//生成uuid
 		}
 	}
 </script>
