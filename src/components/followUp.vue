@@ -1491,7 +1491,7 @@ export default {
                 });
             }
         },
-        //满意度发送模板
+        //满意度发送模板3
         async sendTemplateList() {
             this.templateVisible = true;
             let _this = this;
@@ -1545,6 +1545,7 @@ export default {
                     title: "成功",
                     message: "发送成功"
                 });
+                this.sendTemplateList()
             } else {
                 //失败
                 this.$notify.error({
