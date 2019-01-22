@@ -189,6 +189,7 @@ import { parse } from 'protobufjs';
 							item.select = item.code===rePage.code;
 							return item;
 						});
+						this.$router.push({path:rePage.path});
 					}else{
 
 					}
