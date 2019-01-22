@@ -91,7 +91,7 @@
 			list:[//选项列表，类型Array
 				{
 					en:'STATISTICS',//选项英文，类型 string
-					zh:'统计'//选项中文，类型string
+					zh:'统计'//选项中文，类型string 
 				},
 				{
 					en:'STATISTICS',
