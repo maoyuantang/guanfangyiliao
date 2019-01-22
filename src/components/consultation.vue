@@ -163,7 +163,7 @@
 					<ul>
 						<li class="ohisListMain">
 							<div>
-								<img src="../assets/a-6.png" />
+								<img src="../assets/img/a-6.png" />
 							</div>
 							<div class="ohisListRg">
 								<div>张某人
@@ -179,7 +179,7 @@
 					<ul>
 						<li class="ohisListMain">
 							<div>
-								<img src="../assets/a-6.png" />
+								<img src="../assets/img/a-6.png" />
 							</div>
 							<div class="ohisListRg">
 								<div>张某人
@@ -225,7 +225,6 @@
 					<div style="display:flex">
 						<normalColumnChart :inData="drawData"> </normalColumnChart>
 						<normalColumnChart :inData="drawDataStart"> </normalColumnChart>
-						{{drawDataStart}}
 					</div>
 				</div>
 			</div>
@@ -715,6 +714,7 @@ export default {
         },
         //获取科室列表
         async getDepartment(oindex) {
+			return;
             let _this = this;
             let query = {
                 orgCode: this.userSelfInfo.orgCode,

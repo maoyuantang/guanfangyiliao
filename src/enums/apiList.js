@@ -36,10 +36,10 @@ export default {
     changeArticleStatus:'/m/v1/api/inquiry/article/changeArticleStatus',//13.1.9 改变文章状态
     queryArticleList:'/m/v1/api/inquiry/article/queryArticleList',//13.1.10 获取文章列表【医生web】
     add:'/m/v1/api/followup/followupModel/add',//13.2.1 新增随访模板
-    get:'/m/v1/api/followup/followupModel/get',//13.2.2 获取模板详情
+    getFollowDetail:'/m/v1/api/followup/followupModel/get',//13.2.2 获取模板详情
     update:'/m/v1/api/followup/followupModel/update',//13.2.3 编辑随访模板
     deleteTemplate:'/m/v1/api/followup/followupModel/delete',//13.2.4 删除随访模板
-    getTemplate:'/m/v1/api/followup/followupModel/add',//13.2.5 获取随访模板列表【医生web】
+    getTemplate:'/m/v1/api/followup/followupModel/list',//13.2.5 获取随访模板列表【医生web】
     createFollowUpPlan:'/m/v1/api/followup/followupPlan/createFollowUpPlan',//13.2.6 创建随访计划
     getFollowUpPlan:'/m/v1/api/followup/followupPlan/getFollowUpPlan',//13.2.7 查看随访计划详情
     userListUnfFollowUpPlan:'/m/v1/api/followup/followupPlan/userListUnfFollowUpPlan',//13.2.8 用户获取未完成随访计划
@@ -127,4 +127,6 @@ export default {
     alertSwitch:'/m/v1/api/device/house/alertSwitch',//10.9.2 设备告警开关改变【医生web】
     alertSet:'/m/v1/api/device/house/alertSet',//10.9.3 告警值修改【医生web】
     getSettingsList:'/m/v1/api/basics/synergySystem/settingsList',//8.9获取协作人员设置树
+    fetchUserCloud:'/m/v1/api/cloud/cloud/fetchUserCloud',//11.4.云存储用户统计信息列表
+    viewCloud:'/m/v1/api/cloud/cloud/cloudDetail',//11.3.查看云存储服务
 }
