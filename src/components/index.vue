@@ -101,7 +101,7 @@ export default {
 		padding-left: 0.37rem;
 		flex: 1;
 		overflow-y: auto;
-		/* height: 0; */
+		height: 100%;
 	}
 </style>
 <!--
