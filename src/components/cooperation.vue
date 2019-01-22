@@ -95,7 +95,7 @@
 						</el-select>
 					</el-form-item>
 				</div>
-				<div style="display:flex" v-for="(text,index) in startHz.cooperationHospitalDept" :key="index">
+				<div style="display:flex" v-for="(text,index) in startHz.cooperationHospitalDept" :key="index + '1'">
 					<el-form-item label="目的：">
 						<el-select placeholder="请选择活动区域" v-model="text.hospitalId" @change="ObtainPurpose(text.hospitalId,index)">
 							<el-option v-for="(text,index) in hospitalList" :label="text.name" :value="text.value" :key="index"></el-option>
@@ -160,6 +160,7 @@
 				adminType: "",//协作科室
 				statisticsType: "DEPT",//统计筛选某类
 				departmentsId: "",//弹框内参数
+				time:'',
 				startHz: {
 					type: "SPECIALIST",
 					deptId: " ",
@@ -175,7 +176,7 @@
 						}
 					]
 				},
-				// hospitalList: [], //医院列表
+				hospitalList: [], //医院列表
 				// oVisable: true,
 				// evaluateVisible: false, //是否打开评价
 				// departVisible: false, //是否接收科室
@@ -606,7 +607,7 @@
 			},
 
 
-			//获取医生端列表
+			//协作列表（医生端）
 			async getDocList() {
 				let _this = this;
 				const options = {
@@ -624,6 +625,7 @@
 				if (res.data && res.data.errCode === 0) {
 					this.docTableData = res.data.body.data2.list;
 					if (res.data.body.data2.list.length == 0) {
+						console.log(res)
 						console.log('9.4医生列表List无数据')
 					}
 				} else {
@@ -666,6 +668,7 @@
 							value: text.deptId
 						});
 					});
+					
 				} else {
 					//失败
 					this.$notify.error({
@@ -675,12 +678,14 @@
 				}
 			},
 
-			//获取联系人-弹框
+			//可协作医生（医生端）-弹框
 			async getEnableSynergyDoctor() {
 				let _this = this;
 				let query = {
 					token: this.userState.token
+					// id:""
 				};
+
 				const res = await enableSynergyDoctor(query);
 				if (res.data && res.data.errCode === 0) {
 					$.each(res.data.body, function (index, text) {
@@ -689,7 +694,9 @@
 							value: text.orgCode
 						});
 					});
+					console.log(res)
 				} else {
+					console.log(res)
 					//失败
 					this.$notify.error({
 						title: "警告",
