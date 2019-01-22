@@ -131,13 +131,14 @@
             </div>
         </el-dialog>
         <Spin size="large" fix v-if="spinShow"></Spin>
+        <Tree :data="data2" show-checkbox @on-check-change="iviewTest"></Tree>
 	</div>
 </template>
 
 <script>
 import { 
     fetchHospitalList, fetchAllSubSystem ,fetchHospitalDepts,fetchHospitalRel,getSettingsList,initializeTheCreationOfHospital,deleteHospitalDept,
-    createHospitalDept, updateSubSystemRel, updateHospital
+    createHospitalDept, updateSubSystemRel, updateHospital, settingsUpdate
 } from "../../api/apiAll.js"; 
 import { mapState } from "vuex";
 import search from "../../public/publicComponents/search.vue";
@@ -228,6 +229,45 @@ export default {
                     // }
                 ]
             },
+            data2: [
+                {
+                    title: 'parent 1',
+                    expand: true,
+                    id:'1st',
+                    children: [
+                        {
+                            title: 'parent 1-1',
+                            expand: true,
+                            id:'2nd',
+                            children: [
+                                {
+                                    title: 'leaf 1-1-1',
+                                    id:'3th',
+                                },
+                                {
+                                    title: 'leaf 1-1-2',
+                                    id:'4th',
+                                }
+                            ]
+                        },
+                        {
+                            title: 'parent 1-2',
+                            id:'5th',
+                            expand: true,
+                            children: [
+                                {
+                                    title: 'leaf 1-2-1',
+                                    id:'6th',
+                                },
+                                {
+                                    title: 'leaf 1-2-1',
+                                    id:'7th',
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         };
     },
     computed: {
@@ -266,6 +306,17 @@ export default {
                             type: 'error'
                         });
                     }
+                },
+                teamNum:async data =>{
+                    const options = [
+                        {token:this.userState.token},
+                        {
+                            orgCode:item.tag.value.code,
+                            data:[]
+                        }
+                    ];
+                    const res = await settingsUpdate();
+                    
                 },
                 default:data=>{}
             }
@@ -438,8 +489,12 @@ export default {
          * 协作人员
          */
         async teamNum(item){
-            const res = await getSettingsList({token:this.userState.token});
+            const res = await getSettingsList({token:this.userState.token,orgCode:item.value.code});
             console.log(res)
+
+
+
+            return;
             if(res.data&&res.data.errCode===0){
                 function iteration(arr){
                     const newArr = arr.map(value=>{
@@ -454,10 +509,13 @@ export default {
                 //     value.label = value.name;
                 //     return value;
                 // });
+                
                 this.testData.title = '协作人员';
                 this.testData.canClick = true;
                 this.testData.show = true;
                 this.testData.tag = item;
+                console.log(this.testData)
+
                 this.showAlertTree = true;
             }else{
 
@@ -647,6 +705,9 @@ export default {
 
         canClick(){
             console.log('can click')
+        },
+        iviewTest(data){
+            console.log(data)
         }
     },
     async created() {

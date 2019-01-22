@@ -87,11 +87,38 @@
 					</div>
 				</div>
 				<div class="editing-business-alert-item">
+					<span class="editing-business-alert-item-name">价格</span>
+					<div class="editing-business-alert-item-value">
+						<div class="editing-business-price-item" v-for="(item,index) in editingBusiness.priceList" :key="index">
+							<div class="editing-business-alert-input-price">
+								<el-input
+								placeholder="请输入内容"
+								size="mini"
+								v-model="item.price"
+								clearable>
+								</el-input>
+							</div>
+							<div class="editing-business-alert-selcert">
+								<el-dropdown>
+								<span class="el-dropdown-link">
+									<span>44</span><i class="el-icon-arrow-down el-icon--right"></i>
+								</span>
+								<el-dropdown-menu slot="dropdown">
+									<el-dropdown-item v-for="i in [1,2,5]" :key="i">{{i}}年</el-dropdown-item>
+									<!-- <el-dropdown-item>2</el-dropdown-item>
+									<el-dropdown-item>5</el-dropdown-item> -->
+								</el-dropdown-menu>
+								</el-dropdown>
+							</div>
+						</div>
+						<el-button type="primary" icon="el-icon-plus" size="mini"></el-button>
+					</div>
+				</div>
+				<div class="editing-business-alert-item">
 					<span class="editing-business-alert-item-name">医院配置</span>
 					<div class="editing-business-alert-item-value">
-						<el-select v-model="editingBusiness.configurations" multiple placeholder="请选择">
+						<el-select v-model="editingBusiness.configurations" multiple placeholder="请选择" size="mini">
 							<el-option
-							size="mini"
 							v-for="item in editingBusiness.configurationsList"
 							:key="item.value"
 							:label="item.label"
@@ -99,6 +126,13 @@
 							</el-option>
 						</el-select>
 					</div>
+				</div>
+				<div class="editing-business-alert-item">
+					<el-checkbox v-model="editingBusiness.agree">备选项</el-checkbox>
+					<span>用户协议</span>
+				</div>
+				<div class="editing-business-alert-item">
+					<el-button type="primary" size="mini">主要按钮</el-button>
 				</div>
 			</div>
 		</Modal>
@@ -204,11 +238,12 @@
 					configurations:[],//医院配置（已选择）
 					configurationsList:[],//医院配置（所有）
 					priceList:[//价格
-						// {
-						// 	price:'',
-						// 	year:0
-						// }
-					]
+						{
+							price:'',
+							year:0
+						}
+					],
+					agree:false,//是否同意协议
 
 				},
 				cloudStorage:{//云存储 第一个表格数据
@@ -511,5 +546,31 @@
 	.editing-business-alert-item{
 		display: flex;
 		align-items: center;
+		padding-left: 0.2rem;
+	}
+	.editing-business-alert-item-name{
+		padding-right: 0.2rem;
+		text-align: justify;
+		width: 0.8rem;
+	}
+	/* .editing-business-alert-item-name::after{
+		content: " ";
+		display: inline-block;
+		width: 100%;
+	} */
+	.editing-business-alert-item-value{
+		display: flex;
+		flex: 1;
+	}
+	.editing-business-price-item{
+		display: flex;
+	}
+	.editing-business-alert-input-price .el-input{
+		width: 01rem;
+	}
+	.editing-business-alert-input-price .editing-business-alert-selcert{
+		display: flex;
+		align-items: center;
+		background-color: var(--color8);
 	}
 </style>

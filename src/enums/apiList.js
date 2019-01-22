@@ -23,7 +23,7 @@ export default {
     updateHospitalDept:'/m/v1/api/basics/hospital/updateHospitalDept',//8.7.变更科室名称
     deleteHospitalDept:'/m/v1/api/basics/hospital/deleteHospitalDept',//8.8.删除医院科室
     settingsList:'/m/v1/api/basics/hospital/fetchHospitalDepts',//8.9获取协作人员设置树
-    settingsUpdate:'/m/v1/api/synergySystem/settingsUpdate',//8.10超级管理员更新协作人员
+    // settingsUpdate:'/m/v1/api/synergySystem/settingsUpdate',//8.10超级管理员更新协作人员
     addCloud:'/m/v1/api/cloud/addCloud',//11.1.新增云存储业务
     updateCloud:'/m/v1/api/cloud/updateCloud',//11.2.更新云存储业务
     cloudDetail:'/m/v1/api/cloud/cloudDetail',//11.3.查看云存储服务
@@ -129,4 +129,19 @@ export default {
     getSettingsList:'/m/v1/api/basics/synergySystem/settingsList',//8.9获取协作人员设置树
     fetchUserCloud:'/m/v1/api/cloud/cloud/fetchUserCloud',//11.4.云存储用户统计信息列表
     viewCloud:'/m/v1/api/cloud/cloud/cloudDetail',//11.3.查看云存储服务
+    addClinic:'/m/v1/api/clinic/clinic/addClinic',//7.1新增远程门诊业务
+    updateClinic:'/m/v1/api/clinic/clinic/updateClinic',//7.2更新远程门诊业务
+    clinicDetail:'/m/v1/api/clinic/clinic/clinicDetail',//7.3查看远程门诊业务详情
+    disableClinic:'/m/v1/api/clinic/clinic/disableClinic',//7.4禁用远程门诊业务和诊室
+    searchClinic:'/m/v1/api/clinic/clinic/searchClinic',//7.5根据条件搜索在线诊室业务
+    onlineRoomsByDoctor:'/m/v1/api/clinic/clinic/onlineRoomsByDoctor',//7.6(WEB医生)获取所有该医生的在线诊室
+    addPrescription:'/m/v1/api/prescription/prescription/addPrescription',//7.8开处方
+    updatePrescription:'/m/v1/api/prescription/prescription/updatePrescription',//7.9审核处方
+    reviewList:'/m/v1/api/prescription/prescription/reviewList',//7.10按审方医生获取处方审核列表
+    prescriptionDetailByCondition:'/m/v1/api/prescription/prescription/prescriptionDetailByCondition',//7.11根据条件获取处方信息
+    prescriptionDetailById:'/m/v1/api/prescription/prescription/prescriptionDetailById',//7.12根据处方id获取处方电子版
+    drugSendRecord:'/m/v1/api/prescription/prescription/drugSendRecord',//7.13根据处方id获取处方发货记录
+    drugsByCondition:'/m/v1/api/prescription/prescription/drugsByCondition',//7.16药品名称搜索药品信息
+    clinicOrders:'/m/v1/api/clinic/clinic/clinicOrder',//7.18(WEB医生)获取所有该诊室的订单信息
+    settingsUpdate:'/m/v1/api/basics/synergySystem/settingsUpdate',//8.10超级管理员更新协作人员
 }

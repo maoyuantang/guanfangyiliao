@@ -225,17 +225,17 @@ export const settingsList = query=>{//8.9获取协作人员设置树(这个留�
         }
     })
 }
-export const settingsUpdate = (query,data)=>{//8.10超级管理员更新协作人员
-    const sign = postQueryHandle(Object.assign({},data,query));
-    return axios({
-        method:'post',
-        url:`${apiList.settingsUpdate}?token=${query.token}`,
-        data:data,
-        headers:{
-            sign
-        }
-    })
-}
+// export const settingsUpdate = (query,data)=>{//8.10超级管理员更新协作人员
+//     const sign = postQueryHandle(Object.assign({},data,query));
+//     return axios({
+//         method:'post',
+//         url:`${apiList.settingsUpdate}?token=${query.token}`,
+//         data:data,
+//         headers:{
+//             sign
+//         }
+//     })
+// }
 export const addCloud = (query,data)=>{//11.1.新增云存储业务
     const sign = postQueryHandle(Object.assign({},data,query));
     return axios({
@@ -1380,6 +1380,177 @@ export const viewCloud = query=>{//11.3.查看云存储服务
         method:'get',
         url:apiList.viewCloud,
         params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const addClinic = (query,data)=>{//7.1新增远程门诊业务
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.addClinic,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const updateClinic = (query,data)=>{//7.2更新远程门诊业务
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.updateClinic,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const clinicDetail = query=>{//7.3查看远程门诊业务详情
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.clinicDetail,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const disableClinic = (query,data)=>{//7.4禁用远程门诊业务和诊室
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.disableClinic,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const searchClinic = query=>{//7.5根据条件搜索在线诊室业务
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.searchClinic,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const onlineRoomsByDoctor = query=>{//7.6(WEB医生)获取所有该医生的在线诊室
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.onlineRoomsByDoctor,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const addPrescription = (query,data)=>{//7.8开处方
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.addPrescription,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const updatePrescription = (query,data)=>{//7.9审核处方
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.updatePrescription,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const reviewList = query=>{//7.10按审方医生获取处方审核列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.reviewList,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const prescriptionDetailByCondition = query=>{//7.11根据条件获取处方信息
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.prescriptionDetailByCondition,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const prescriptionDetailById = query=>{//7.12根据处方id获取处方电子版
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.prescriptionDetailById,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const drugSendRecord = query=>{//7.13根据处方id获取处方发货记录
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.drugSendRecord,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const drugsByCondition = query=>{//7.16药品名称搜索药品信息
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.drugsByCondition,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const clinicOrders = query=>{//7.18(WEB医生)获取所有该诊室的订单信息
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.clinicOrders,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const settingsUpdate = (query,data)=>{//8.10超级管理员更新协作人员
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.settingsUpdate,
+        params:query,
+        data:data,
         headers:{
             sign
         }
