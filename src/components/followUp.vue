@@ -213,9 +213,11 @@
                                     <el-form-item label="活动名称">
                                         <el-input v-model="mydAddData.name"></el-input>
                                     </el-form-item>
+
                                     <el-form-item label="所属分类">
-                                        <el-cascader :options="mydAddoptions" v-model="selectedOptions"  expand-trigger="hover" @change="handleChange">
-                                        </el-cascader>
+                                        <el-cascader :options="mydAddoptions" @active-item-change="handleChange" :props="props"></el-cascader>
+                                        <!-- <el-cascader :options="mydAddoptions" v-model="selectedOptions" expand-trigger="hover" @change="handleChange"> -->
+                                        <!-- </el-cascader> -->
                                     </el-form-item>
                                 </div>
                                 <span>
@@ -426,6 +428,7 @@ import {
     getFollowUpPlan, //查看随访计划详情
     getTitleList, //选择模板发送
     publishNotice //发送模板
+    // getTitleList
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -859,16 +862,90 @@ export default {
                     }
                 ]
             },
-            selectedOptions:[],
+            selectedOptions: [],
+            // mydAddoptions: [
+            //     {
+            //         value: "OUTPATIENT",
+            //         label: "门诊调查",
+            //         children: [
+            //             {
+            //                 value: "shejiyuanze",
+            //                 label: "设计原则",
+            //                 children: [
+            //                     {
+            //                         value: "yizhi",
+            //                         label: "一致"
+            //                     },
+            //                     {
+            //                         value: "fankui",
+            //                         label: "反馈"
+            //                     },
+            //                     {
+            //                         value: "xiaolv",
+            //                         label: "效率"
+            //                     },
+            //                     {
+            //                         value: "kekong",
+            //                         label: "可控"
+            //                     }
+            //                 ]
+            //             }
+            //         ]
+            //     },
+            //     {
+            //         value: "MEDICALTECHNOLOGY",
+            //         label: "医技调查",
+            //         children: [
+            //             {
+            //                 value: "shejiyuanze",
+            //                 label: "设计原则",
+            //                 children: []
+            //             }
+            //         ]
+            //     },
+            //     {
+            //         value: "INHOSPITAL",
+            //         label: "住院调查",
+            //         children: [
+            //             {
+            //                 value: "shejiyuanze",
+            //                 label: "设计原则",
+            //                 children: []
+            //             }
+            //         ]
+            //     },
+            //     {
+            //         value: "ADMINISTRATION",
+            //         label: "行政调查",
+            //         children: [
+            //             {
+            //                 value: "shejiyuanze",
+            //                 label: "设计原则",
+            //                 children: []
+            //             }
+            //         ]
+            //     },
+            //     {
+            //         value: "URL",
+            //         label: "推送链接",
+            //         children: [
+            //             {
+            //                 value: "shejiyuanze",
+            //                 label: "设计原则",
+            //                 children: []
+            //             }
+            //         ]
+            //     }
+            // ],
             mydAddoptions: [
                 {
                     value: "OUTPATIENT",
                     label: "门诊调查",
-                    children: [
+                    cities: [
                         {
                             value: "shejiyuanze",
                             label: "设计原则",
-                            children: [
+                            cities: [
                                 {
                                     value: "yizhi",
                                     label: "一致"
@@ -892,48 +969,52 @@ export default {
                 {
                     value: "MEDICALTECHNOLOGY",
                     label: "医技调查",
-                    children: [
+                    cities: [
                         {
                             value: "shejiyuanze",
                             label: "设计原则",
-                            children: []
+                            cities: []
                         }
                     ]
                 },
                 {
                     value: "INHOSPITAL",
                     label: "住院调查",
-                    children: [
+                    cities: [
                         {
                             value: "shejiyuanze",
                             label: "设计原则",
-                            children: []
+                            cities: []
                         }
                     ]
                 },
                 {
                     value: "ADMINISTRATION",
                     label: "行政调查",
-                    children: [
+                    cities: [
                         {
                             value: "shejiyuanze",
                             label: "设计原则",
-                            children: []
+                            cities: []
                         }
                     ]
                 },
                 {
                     value: "URL",
                     label: "推送链接",
-                    children: [
+                    cities: [
                         {
                             value: "shejiyuanze",
                             label: "设计原则",
-                            children: []
+                            cities: []
                         }
                     ]
                 }
             ],
+            props: {
+                value: "value",
+                children: "cities"
+            },
             mydTableChecked: false,
             mydTemplateTitle: [],
             sendTemplateId: [], //要发送的模板id
@@ -1194,8 +1275,12 @@ export default {
     },
     mounted() {},
     methods: {
-        handleChange(value) {
+        //满意度新增模板借口
+        async handleChange(value) {
             console.log(value);
+            this.mydType = value[0];
+            this.sendTemplateList();
+            // this.mydTemplateTitle
         },
         onEditorReady(editor) {},
         // 新增随访表接口
@@ -1634,7 +1719,7 @@ export default {
         },
         //满意度发送模板3
         async sendTemplateList() {
-            this.templateVisible = true;
+            // this.templateVisible = true;
             let _this = this;
             let query = {
                 token: this.userState.token,
