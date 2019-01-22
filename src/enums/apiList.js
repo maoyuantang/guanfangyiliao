@@ -36,7 +36,7 @@ export default {
     changeArticleStatus:'/m/v1/api/inquiry/article/changeArticleStatus',//13.1.9 改变文章状态
     queryArticleList:'/m/v1/api/inquiry/article/queryArticleList',//13.1.10 获取文章列表【医生web】
     add:'/m/v1/api/followup/followupModel/add',//13.2.1 新增随访模板
-    get:'/m/v1/api/followup/followupModel/get',//13.2.2 获取模板详情
+    getFollowDetail:'/m/v1/api/followup/followupModel/get',//13.2.2 获取模板详情
     update:'/m/v1/api/followup/followupModel/update',//13.2.3 编辑随访模板
     deleteTemplate:'/m/v1/api/followup/followupModel/delete',//13.2.4 删除随访模板
     getTemplate:'/m/v1/api/followup/followupModel/list',//13.2.5 获取随访模板列表【医生web】

@@ -1,7 +1,10 @@
 <template>
 
     <div class="public-list">
-        <el-table :data="tableData" style="width: 100%">
+        <el-table :data="tableData" ref="multipleTable" style="width: 100%"  @selection-change="reBackFn">
+            
+            <el-table-column v-if="checkVisable" type="selection" width="55">
+            </el-table-column>
             <el-table-column v-for="(column, index) in columns" :prop="column.prop" :key="index" :label="column.label" :width="column.width">
                 <template slot-scope="scope">
                     <span :class="scope.row.oclass">
@@ -11,12 +14,13 @@
             </el-table-column>
             <el-table-column label="操作" v-show="tableBtn">
                 <template slot-scope="scope">
-                    <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method(scope.row)" :class="text.oclass" type="text" size="small" :key="index"  >
+                    <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method(index,scope.row)" :class="text.oclass" type="text" size="small" :key="index">
                         {{text.name}}
                     </el-button>
                 </template>
             </el-table-column>
         </el-table>
+        <el-button @click="reBackFn()">发送</el-button>
 
     </div>
 </template>
@@ -25,25 +29,31 @@
 export default {
     data() {
         return {
-            otrue:true
+            otrue: true,
+            multipleTable:[],
         };
     },
     methods: {
-        reBackFn(index) {
-            this.inData.i = index;
-            this.$emit("reBack", this.inData);
+        // reBackFn(index) {
+        //     this.inData.i = index;
+        //     this.$emit("reBack", this.inData);
+        // }
+        reBackFn(val) {
+            this.$emit("reBack", val);
         }
     },
     props: {
         tableData: Array, //父组件传来的 列表 数据
         columns: Array, //父组件传来的 列表标题 数据
-        tableBtn: Array //父组件传来的 列表按钮 数据
+        tableBtn: Array, //父组件传来的 列表按钮 数据
+        checkVisable: Boolean //父组件传来的是否有多选框
     },
     model: {
-        prop: ["tableData", "columns", "tableBtn"],
+        prop: ["tableData", "columns", "tableBtn","checkVisable"],
         event: "reBack"
     },
     async created() {
+        this.reBackFn()
     }
 };
 </script>

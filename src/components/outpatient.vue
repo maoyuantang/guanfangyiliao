@@ -10,7 +10,7 @@
             <outPatientHospitalManagent></outPatientHospitalManagent>
         </div>
 
-        <div v-else>
+        <div class="outPatientDoctor" v-else>
             <outPatientDoctor></outPatientDoctor>
         </div>
 
@@ -97,7 +97,12 @@
 </script>
 
 <style>
-    .outpatient {}
+    .outpatient {
+        height: 100%;
+    }
+    .outPatientDoctor{
+        height: 100%;
+    }
 
     .outpatient-alert {
         width: 5.03rem;

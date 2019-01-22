@@ -120,7 +120,7 @@
                     <div class="show-select-doctores-list">
                         <div class="select-doctores-list-item" v-for="(item,index) in info.doctors" :key="index">
                             <div class="select-doctores-list-item-pic">
-                                <img src="../../assets/a-6.png" alt="">
+                                <img src="../../assets/img/a-6.png" alt="">
                                 <i class="iconfont cancel-doctor" >&#xe611;</i>
                             </div>
                             <p>{{inData.doctorList.find(i=>i.value===item).label}}</p>
