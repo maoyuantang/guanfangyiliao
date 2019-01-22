@@ -187,6 +187,51 @@
             </div>
 
         </el-dialog>
+        <!-- 满意度新增模板 -->
+        <el-dialog class="evaluateBox" title=" " :visible.sync="mydAddTemplate" width="770px" hight="356px" center>
+            <div class="mydAddTemplate-title">
+                <img src="../assets/img/Bitmap.png" />
+            </div>
+            <el-form ref="form" :model="mydAddData" label-width="80px">
+                <el-form-item label="所属分类">
+                    <el-select v-model="mydAddData.type" placeholder="请选择活动区域">
+                        <el-option v-for="(text,index) in oTab6.list" :label="text.text" :value="text.value" :key="index"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="活动名称">
+                    <el-input v-model="mydAddData.name"></el-input>
+                </el-form-item>
+                <el-form-item label="模板内容">
+                    <el-input type="textarea" v-model="mydAddData.context"></el-input>
+                </el-form-item>
+                <div>
+                    <div>回复选项关联(系统根据回复自动发送后续的关联问卷)</div>
+                    <div>
+                        <ul>
+                            <li class="mydQuestList">
+                                <div>
+                                    <el-form-item label="活动名称">
+                                        <el-input v-model="mydAddData.name"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="所属分类">
+                                        <el-cascader :options="mydAddoptions" v-model="selectedOptions"  expand-trigger="hover" @change="handleChange">
+                                        </el-cascader>
+                                    </el-form-item>
+                                </div>
+                                <span>
+                                    删除
+                                </span>
+                            </li>
+                        </ul>
+                        <span>
+                            添加
+                        </span>
+                    </div>
+                </div>
+            </el-form>
+
+        </el-dialog>
+
         <!-- 满意度发送的模板列表 -->
         <el-dialog class="evaluateBox" title=" " :visible.sync="templateVisible" width="240px" hight="356px" center>
             <ul>
@@ -246,8 +291,8 @@
                             <selftag :inData="oTab7" @reback="getOTab7" v-show="wayVisible3"></selftag>
                         </div>
 
-                        <el-button class="startConsul" type="text" @click="followTableVisible = true">新增模板</el-button>
-                        <el-button v-show="mydTableChecked" class="startConsul" type="text" @click="sendBtn()">发送</el-button>
+                        <el-button class="startConsul" v-show="addFollowVis" type="text" @click="mydAddTemplate = true">新增模板</el-button>
+
                     </div>
                     <div class="sendTemplateBox" v-show="sendTemplateListVis">
                         <ul>
@@ -267,6 +312,7 @@
                             </div>
                         </div>
                     </div>
+                    <el-button v-show="mydTableChecked" class="startConsul" type="text" @click="sendBtn()">发送</el-button>
                     <div>
 
                     </div>
@@ -801,6 +847,93 @@ export default {
             ],
             //满意度数据
             sendTemplate1: [],
+            mydAddData: {
+                type: "OUTPATIENT",
+                name: "需要被实验修改的模板",
+                context: "孙悟空有几个妖精女朋友啊？",
+                deptId: ["1111111111111"],
+                associations: [
+                    {
+                        answer: "0",
+                        associationId: "5e34d5bb8aaf445794e56998e21587e8"
+                    }
+                ]
+            },
+            selectedOptions:[],
+            mydAddoptions: [
+                {
+                    value: "OUTPATIENT",
+                    label: "门诊调查",
+                    children: [
+                        {
+                            value: "shejiyuanze",
+                            label: "设计原则",
+                            children: [
+                                {
+                                    value: "yizhi",
+                                    label: "一致"
+                                },
+                                {
+                                    value: "fankui",
+                                    label: "反馈"
+                                },
+                                {
+                                    value: "xiaolv",
+                                    label: "效率"
+                                },
+                                {
+                                    value: "kekong",
+                                    label: "可控"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    value: "MEDICALTECHNOLOGY",
+                    label: "医技调查",
+                    children: [
+                        {
+                            value: "shejiyuanze",
+                            label: "设计原则",
+                            children: []
+                        }
+                    ]
+                },
+                {
+                    value: "INHOSPITAL",
+                    label: "住院调查",
+                    children: [
+                        {
+                            value: "shejiyuanze",
+                            label: "设计原则",
+                            children: []
+                        }
+                    ]
+                },
+                {
+                    value: "ADMINISTRATION",
+                    label: "行政调查",
+                    children: [
+                        {
+                            value: "shejiyuanze",
+                            label: "设计原则",
+                            children: []
+                        }
+                    ]
+                },
+                {
+                    value: "URL",
+                    label: "推送链接",
+                    children: [
+                        {
+                            value: "shejiyuanze",
+                            label: "设计原则",
+                            children: []
+                        }
+                    ]
+                }
+            ],
             mydTableChecked: false,
             mydTemplateTitle: [],
             sendTemplateId: [], //要发送的模板id
@@ -808,6 +941,8 @@ export default {
             templateVisible: false, //发送满意度模板
             sendTemplateListVis: false,
             followTableVisible: false,
+            addFollowVis: false,
+            mydAddTemplate: false,
             satisfiedList: [],
             defaultProps: {
                 children: "children",
@@ -1059,6 +1194,9 @@ export default {
     },
     mounted() {},
     methods: {
+        handleChange(value) {
+            console.log(value);
+        },
         onEditorReady(editor) {},
         // 新增随访表接口
         //添加问诊表
@@ -1280,6 +1418,7 @@ export default {
             this.indexTab2 = index;
 
             if (index == 0) {
+                this.addFollowVis = false;
                 (this.mydTableChecked = false),
                     (this.sendTemplateListVis = false),
                     (this.wayVisible1 = true);
@@ -1338,6 +1477,7 @@ export default {
                     (this.wayVisible1 = true);
                 this.wayVisible2 = false;
                 this.wayVisible3 = false;
+                this.addFollowVis = true;
                 this.oGetModelList();
                 this.satisfiedColumns = [
                     {
@@ -1401,6 +1541,7 @@ export default {
                 (this.mydTableChecked = true),
                     (this.sendTemplateListVis = true);
                 this.wayVisible1 = false;
+                this.addFollowVis = false;
                 this.wayVisible2 = false;
                 this.wayVisible3 = true;
                 this.oGetMissileList();
@@ -1524,8 +1665,7 @@ export default {
             this.mydTemplateTitle.push(text);
         },
         getUserId(row) {
-
-            $.each(row, (text,index)=> {
+            $.each(row, (text, index) => {
                 this.userList.push(text.userId);
             });
         },
@@ -1545,7 +1685,7 @@ export default {
                     title: "成功",
                     message: "发送成功"
                 });
-                this.sendTemplateList()
+                this.sendTemplateList();
             } else {
                 //失败
                 this.$notify.error({
@@ -2109,7 +2249,7 @@ export default {
     margin-bottom: 10px;
 }
 .sendTemplateBox {
-    margin:20px 0;
+    margin: 20px 0;
     padding: 10px;
     width: 100%;
     height: 100px;
@@ -2125,5 +2265,21 @@ export default {
     padding: 2px 2px;
 }
 .addTemplate {
+}
+.mydAddTemplate-title {
+    width: 100%;
+    height: 117px;
+}
+.mydAddTemplate-title > img {
+    width: 100%;
+    height: 100%;
+}
+.mydQuestList {
+    display: flex;
+    display: -webkit-flex;
+}
+.mydQuestList > div {
+    display: flex;
+    display: -webkit-flex;
 }
 </style>
