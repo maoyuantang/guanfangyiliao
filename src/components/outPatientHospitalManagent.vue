@@ -18,7 +18,8 @@
 					</div>
 				</div>
 				<div class="online-clinic-middle">
-					<!-- <publicList :columns="onlineClinic.tableBody.columns" :tableData="onlineClinic.tableBody.tableData" :tableBtn="onlineClinic.tableBody.tableBtn"> -->
+					{{onlineClinic.tableBody.tableData}}
+					<publicList :columns="onlineClinic.tableBody.columns" :tableData="onlineClinic.tableBody.tableData" :tableBtn="onlineClinic.tableBody.tableBtn">
 					</publicList>
 				</div>
 			</div>
@@ -136,7 +137,8 @@
 						},
 					]
 				},
-				onlineClinic: {//在线诊室管理 数据
+				//在线诊室管理 数据
+				onlineClinic: {
 					topFlag: [
 						{
 							more: true,
@@ -170,7 +172,7 @@
 								label: "业务编号"
 							},
 							{
-								prop: "",
+								prop: "departmentName",
 								label: "科室"
 							},
 							{
@@ -181,14 +183,17 @@
 								prop: "price",
 								label: "价格"
 							},
+							//字符串
 							{
-								prop: "doctorName",
+								prop: "doctors",
 								label: "关联医生"
 							},
+							//数组
 							{
-								prop: "todayPeople",
+								prop: "totalPeople",
 								label: "业务人次"
-							}, {
+							},
+							{
 								prop: "totalIncome",
 								label: "总收入"
 							},
@@ -235,7 +240,8 @@
 						]
 					}
 				},
-				prescriptionAuditDistribution: {//处方审核和配送 数据
+				//处方审核和配送
+				prescriptionAuditDistribution: {
 					topFlag: [
 						{
 							more: true,
@@ -330,7 +336,8 @@
 						}
 					]
 				},
-				statistics: {//统计 数据
+				//统计 数据
+				statistics: {
 					topFlag: [
 						{
 							more: true,
@@ -457,8 +464,11 @@
 				const res = await searchClinic(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表1+成功')
-					console.log(res)
-					// this.onlineClinic.tableBody.tableData = res.data.body.data2.list;
+					$.each(res.data.body.data2.list,function(index,text){
+						text.totalPeople="总: "+text.totalPeople+"  今日: "+text.todayPeople
+						text.doctors="查看"
+					})
+						_this.onlineClinic.tableBody.tableData = res.data.body.data2.list;
 				} else {
 					//失败
 					console.log('列表1+失败')
@@ -473,8 +483,8 @@
 				let query = {
 					token: this.userState.token,
 					departmentId: "",
-					reviewEnum: null,
-					sendEnum: null,
+					reviewEnum: "",
+					sendEnum: "",
 					reviewDoctorId: "",
 					sendDoctorId: "",
 					string: "",
@@ -484,6 +494,7 @@
 				const res = await prescriptionDetailByCondition(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表2+成功')
+					console.log(res)
 					this.adminTableData = res.data.body.data2.list;
 				} else {
 					//失败
@@ -518,7 +529,7 @@
 		async created() {
 			this.getList1departmentManage();//门诊管理科室获取
 			this.getList1();//管理列表1
-			// this.getList2();//管理列表2
+			this.getList2();//管理列表2
 			// this.getList3();//管理列表3（统计）
 		}
 	}
