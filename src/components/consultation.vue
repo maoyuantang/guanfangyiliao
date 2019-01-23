@@ -69,6 +69,7 @@
 					<el-input class="evaluateInput" type="textarea" v-model="form.desc" placeholder="请选择活动区域"></el-input>
 				</el-form-item>
 
+<<<<<<< HEAD
 				<el-form-item class="evaluateMargin">
 					<el-button class="confirmBtn" type="primary">确认</el-button>
 				</el-form-item>
@@ -207,6 +208,137 @@
 							<selftag :inData="oTab2" @reback="getOTab2"></selftag>
 							<selftag :inData="oTab3" @reback="getOTab3"></selftag>
 						</div>
+=======
+                <el-form-item class="evaluateMargin">
+                    <el-button class="confirmBtn" type="primary">确认</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
+        <!-- 接收科室 -->
+        <el-dialog class="evaluateBox" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
+            <ul>
+                <li v-for="(text,index) in receptionDepartment" :key="index">
+                    <div>
+                        <img src="" />
+                    </div>
+                    <div class="evaluateCont">
+                        <h5>{{text.hospital}}</h5>
+                        <div>{{text.department}}</div>
+                    </div>
+                </li>
+            </ul>
+        </el-dialog>
+        <!-- 医生详情 -->
+        <el-dialog class="evaluateBox evaluateBox2" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
+            <ul>
+                <li>
+                    <div>
+                        <img src="" />
+                    </div>
+                    <div class="evaluateCont">
+                        <h5>西南医院第三附属医院</h5>
+                        <div>神经内科</div>
+                    </div>
+                    <div>
+                        文字
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <img src="" />
+                    </div>
+                    <div class="evaluateCont">
+                        <h5>西南医院第三附属医院</h5>
+                        <div>神经内科</div>
+                    </div>
+                    <div>
+                        文字
+                    </div>
+                </li>
+            </ul>
+        </el-dialog>
+        <!-- 会诊评价 -->
+        <el-dialog class="evaluateBox evaluateBox2" title=" 会诊评价" :visible.sync="groupVisible" width="602px" hight="356px" center>
+            <ul>
+                <li>
+                    <div>
+                        <img src="" />
+                    </div>
+                    <div class="evaluateCont">
+                        <h5>西南医院第三附属医院</h5>
+                        <div>神经内科</div>
+                    </div>
+                    <div>
+                        文字
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <img src="" />
+                    </div>
+                    <div class="evaluateCont">
+                        <h5>西南医院第三附属医院</h5>
+                        <div>神经内科</div>
+                    </div>
+                    <div>
+                        文字
+                    </div>
+                </li>
+            </ul>
+        </el-dialog>
+        <!-- 查看记录 -->
+        <el-dialog class="  " title="  " :visible.sync="recordVisible" width="602px" hight="356px" center>
+            <ul>
+                <li class="ohisList">
+                    <h3>2018年4月4日</h3>
+                    <ul>
+                        <li class="ohisListMain">
+                            <div>
+                                <img src="../assets/img/a-6.png" />
+                            </div>
+                            <div class="ohisListRg">
+                                <div>张某人
+                                    <span> 17:54:34</span>
+                                </div>
+                                <div>那就等带节后再说吧。</div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li class="ohisList">
+                    <h3>2018年4月4日</h3>
+                    <ul>
+                        <li class="ohisListMain">
+                            <div>
+                                <img src="../assets/img/a-6.png" />
+                            </div>
+                            <div class="ohisListRg">
+                                <div>张某人
+                                    <span> 17:54:34</span>
+                                </div>
+                                <div>那就等带节后再说吧。</div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </el-dialog>
+        <!-- 管理端 -->
+        <div class="consultation" v-if="$store.state.user.viewRoot.now.name==='manager'">
+            <div class="Admin-title">
+                <normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
+            </div>
+            <div class="admin-oMain">
+                <!-- 会诊管理 -->
+                <div v-if="oconsulVisable">
+                    <div class="mainTab">
+                        <div>
+                            <selftag :inData="oTab1" @reback="getOTab1"></selftag>
+                            <selftag :inData="oTab11" @reback="getOTab11"></selftag>
+                            <selftag :inData="oTab2" @reback="getOTab2"></selftag>
+                            <selftag :inData="oTab3" @reback="getOTab3"></selftag>
+                        </div>
+>>>>>>> 1ae0576c1c1079fd4358688859048eac7bf0f31b
 
 						<search @searchValue="adminSearchChange"></search>
 					</div>
@@ -292,7 +424,8 @@ import {
     queryStatisticalByApplication,
     queryStatisticalBySponsor,
     getAllHospital,
-    addConsultation
+    addConsultation,
+    queryByDeptList
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -316,6 +449,19 @@ export default {
     },
     data() {
         return {
+            cellColor: [
+                {
+                    cell: 7,
+                    value: "接收科室",
+                    oclass: "ooRed"
+                },
+                {
+                    cell: 8,
+                    value: "参与专家",
+                    oclass: "ooRed"
+                }
+            ],
+            receptionDepartment: [], //接收科室数据
             sessionId: "", //会诊id
             chatVisible: false, //聊天框
             oVisable: true,
@@ -341,7 +487,16 @@ export default {
             form: "",
             oTab1: {
                 more: true,
-                title: "全部",
+                title: "发起科室",
+                list: [
+                    {
+                        text: "全部"
+                    }
+                ]
+            },
+            oTab11: {
+                more: true,
+                title: "接收科室",
                 list: [
                     {
                         text: "全部"
@@ -483,29 +638,34 @@ export default {
                     label: "会诊类型"
                 },
                 {
-                    prop: "userName",
-                    label: "会诊病人"
-                },
-                {
-                    prop: "startTime",
-                    label: "会诊时间"
-                },
-                {
-                    prop: "consultationTimeNumber",
-                    label: "会诊用时"
+                    prop: "无",
+                    label: "接收医院"
                 },
                 {
                     prop: "receiveDeptNumber",
                     label: "接收科室"
                 },
                 {
+                    prop: "doctorNumber",
+                    label: "参与专家"
+                },
+                {
+                    prop: "userName",
+                    label: "会诊病人"
+                },
+                {
                     prop: "medicalHistory",
                     label: "病历"
                 },
                 {
-                    prop: "doctorNumber",
-                    label: "参与专家"
+                    prop: "startTime",
+                    label: "发起时间"
                 },
+                {
+                    prop: "consultationTimeNumber",
+                    label: "会诊用时"
+                },
+
                 {
                     prop: "status",
                     label: "状态"
@@ -606,12 +766,38 @@ export default {
             this.adminStatus = data.index.value;
             this.getAdminList();
         },
+<<<<<<< HEAD
 
         // getOTab4(data) {
         //     this.applicationDeptId2 = data.index.value;
         //     this.getAdminTjList();
         //     this.getApplyTjList();
         // },
+=======
+        async cellClickData(data) {
+            console.log(data);
+            if ((data[1].label = "接收科室")) {
+                this.departVisible = true;
+                let _this = this;
+                let query = {
+                    token: this.userState.token,
+                    consultationId: data[0].id
+                };
+                const res = await queryByDeptList(query);
+                if (res.data && res.data.errCode === 0) {
+                    _this.receptionDepartment = res.data.body;
+                } else {
+                    //失败
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
+            }
+            if ((data[1].label = "参与专家")) {
+            }
+        },
+>>>>>>> 1ae0576c1c1079fd4358688859048eac7bf0f31b
         //查看记录
         recordFun() {
             this.recordVisible = true;
@@ -722,6 +908,7 @@ export default {
             };
             const res = await fetchHospitalDepts(query);
             if (res.data && res.data.errCode === 0) {
+                alert('dd')
                 console.log(res.data.body);
                 if (res.data.body.length > 6) {
                     this.oTab1.more = true;
@@ -768,7 +955,16 @@ export default {
             const res = await queryByManagerPage(options);
             if (res.data && res.data.errCode === 0) {
                 this.adminTableData = res.data.body.data2.list;
+<<<<<<< HEAD
                 console.log(res)
+=======
+                // $.each(this.adminTableData,function(index,text){
+                //     text.oclass="doctorDatial"
+                // })
+                this.adminTableData[0].oclass = "doctorDatial";
+
+                console.log(res);
+>>>>>>> 1ae0576c1c1079fd4358688859048eac7bf0f31b
             } else {
                 //失败
                 this.$notify.error({
@@ -1031,4 +1227,10 @@ export default {
     color: #939eab;
     font-size: 0.12rem;
 }
+<<<<<<< HEAD
+=======
+.ooRed {
+    color: red !important;
+}
+>>>>>>> 1ae0576c1c1079fd4358688859048eac7bf0f31b
 </style>
