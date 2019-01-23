@@ -311,18 +311,18 @@ export default {
     },
     data() {
         return {
-            // cellColor: [
-            //     {
-            //         cell: 7,
-            //         value: "接收科室",
-            //         oclass: "ooRed"
-            //     },
-            //     {
-            //         cell: 8,
-            //         value: "参与专家",
-            //         oclass: "ooRed"
-            //     }
-            // ],
+            cellColor: [
+                {
+                    cell: 7,
+                    value: "接收科室",
+                    oclass: "ooRed"
+                },
+                {
+                    cell: 8,
+                    value: "参与专家",
+                    oclass: "ooRed"
+                }
+            ],
             receptionDepartment: [], //接收科室数据
             sessionId: "", //会诊id
             chatVisible: false, //聊天框
