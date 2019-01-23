@@ -768,8 +768,7 @@ export default {
             const res = await queryByManagerPage(options);
             if (res.data && res.data.errCode === 0) {
                 this.adminTableData = res.data.body.data2.list;
-                // console.log(res)
-                // console.log(this.adminTableData)
+                console.log(res)
             } else {
                 //失败
                 this.$notify.error({

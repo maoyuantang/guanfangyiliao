@@ -1,11 +1,11 @@
 <template>
 
     <div class="public-list">
-        <el-table :data="tableData" ref="multipleTable" style="width: 100%"  @selection-change="reBackFn">
-            
+        <el-table :data="tableData" ref="multipleTable" style="width: 100%" @selection-change="reBackFn" :cell-class-name="cellClassName" @cell-click="cellClick">
+
             <el-table-column v-if="checkVisable" type="selection" width="55">
             </el-table-column>
-            <el-table-column v-for="(column, index) in columns" :prop="column.prop" :key="index" :label="column.label" :width="column.width">
+            <el-table-column v-for="(column, index) in columns" :prop="column.prop" :key="index" :label="column.label" :width="column.width" label-class-name="tableHeadColor">
                 <template slot-scope="scope">
                     <span :class="scope.row.oclass">
                         {{scope.row[column.prop]}}
@@ -20,8 +20,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-button @click="reBackFn()">发送</el-button>
-
     </div>
 </template>
 
@@ -30,7 +28,7 @@ export default {
     data() {
         return {
             otrue: true,
-            multipleTable:[],
+            multipleTable: []
         };
     },
     methods: {
@@ -40,20 +38,36 @@ export default {
         // }
         reBackFn(val) {
             this.$emit("reBack", val);
+        },
+        cellClassName(data) {
+            for (let i = 0; i < this.cellColor.length; i++) {
+                if (data.columnIndex == this.cellColor[i].cell) {
+                    return this.cellColor[i].oclass;
+                }
+            }
+        },
+        cellClick(row, column, cell, event) {
+            for (let i = 0; i < this.cellColor.length; i++) {
+                if (column.label == this.cellColor[i].value) {
+                    console.log(column);
+                    this.$emit("cellClickData", [row, column]);
+                }
+            }
         }
     },
     props: {
         tableData: Array, //父组件传来的 列表 数据
         columns: Array, //父组件传来的 列表标题 数据
         tableBtn: Array, //父组件传来的 列表按钮 数据
-        checkVisable: Boolean //父组件传来的是否有多选框
+        checkVisable: Boolean, //父组件传来的是否有多选框
+        cellColor: Array // 添加类名和事件
     },
     model: {
-        prop: ["tableData", "columns", "tableBtn","checkVisable"],
+        prop: ["tableData", "columns", "tableBtn", "checkVisable", "cellColor"],
         event: "reBack"
     },
     async created() {
-        this.reBackFn()
+        this.reBackFn();
     }
 };
 </script>
@@ -66,18 +80,20 @@ export default {
     color: #5e6875;
     letter-spacing: 0;
 }
-.public-list th {
+.tableHeadColor {
     font-family: PingFangSC-Semibold;
     font-size: var(--fontSize2);
     color: #5e6875;
     letter-spacing: 0;
 }
 /* 表格公共组件
-父组件一共需要传入3个参数
+ <tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData"> </tableList>
+父组件一共需要传入的参数
         tableData: Array, //父组件传来的 列表 数据
         columns: Array, //父组件传来的 列表标题 数据
         tableBtn: Array //父组件传来的 列表按钮 数据
-
+checkVisable: Boolean, //父组件传来的是否有多选框      //表格前面不需要多选框可不传
+        cellColor: Array //父组件传来的要改变颜色列及事件
 
   //列表标题 数据格式
    columns: [
@@ -121,7 +137,19 @@ export default {
                 }
             ]
 
+            cellColor:[{
+                cell:9,  //cell代表你要给第几列添加类名或者事件
+                value:"接收科室",  //这是要改变的列的表头名称
+                oclass:"ooRed"  //这是给要改变列添加的类名，添加类名之后，自己写样式，不改样式只添加事件可传空
+            },{
+                cell:10,
+                value:"参与专家",
+                oclass:"ooGreen"
+            }],
 
+             <tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData"> </tableList>
+
+             
 注意：列表标题的prop对应的字符串要和列表数据列表的字段相对应
       列表按钮里面的method是每个按钮对应触发的事件
      列表按钮的oclass是给每个按钮赋值的class名字
