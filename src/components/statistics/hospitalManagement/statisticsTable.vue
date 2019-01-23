@@ -101,7 +101,7 @@
 					// deptId:'',
 					orgCode:this.userInfo.hospitalCode
 				});
-				console.log(res)
+				// console.log(res)
 				if(res.data.errCode===0){//成功
                     this.test.list =  res.body;
 				}else{//失败
