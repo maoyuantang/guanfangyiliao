@@ -114,7 +114,7 @@
             </div>
         </Modal>
         <!-- 编辑按钮弹窗 -->
-        <el-dialog title="收货地址" :visible.sync="editHospital.dialogFormVisible">
+        <el-dialog title="编辑医院" :visible.sync="editHospital.dialogFormVisible">
             <el-form>
                 <el-form-item label="医院名">
                     <el-input v-model="editHospital.name" autocomplete="off"></el-input>
@@ -131,14 +131,22 @@
             </div>
         </el-dialog>
         <Spin size="large" fix v-if="spinShow"></Spin>
-        <Tree :data="data2" show-checkbox @on-check-change="iviewTest"></Tree>
+        <!-- <Modal
+            :styles="{width:'323px'}"
+            v-model="data2"
+            title="协作"
+            @on-ok="teamNumOk"
+            @on-cancel="teamNumCancel">
+            
+        </Modal> -->
+        <Tree :data="data2" show-checkbox @on-check-change="iviewTest" ref="iviewTree"></Tree>
 	</div>
 </template>
 
 <script>
 import { 
     fetchHospitalList, fetchAllSubSystem ,fetchHospitalDepts,fetchHospitalRel,getSettingsList,initializeTheCreationOfHospital,deleteHospitalDept,
-    createHospitalDept, updateSubSystemRel, updateHospital, settingsUpdate
+    createHospitalDept, updateSubSystemRel, updateHospital, settingsUpdate, getConsultationTree, updateConsultationTree
 } from "../../api/apiAll.js"; 
 import { mapState } from "vuex";
 import search from "../../public/publicComponents/search.vue";
@@ -230,43 +238,48 @@ export default {
                 ]
             },
             data2: [
-                {
-                    title: 'parent 1',
-                    expand: true,
-                    id:'1st',
-                    children: [
-                        {
-                            title: 'parent 1-1',
-                            expand: true,
-                            id:'2nd',
-                            children: [
-                                {
-                                    title: 'leaf 1-1-1',
-                                    id:'3th',
-                                },
-                                {
-                                    title: 'leaf 1-1-2',
-                                    id:'4th',
-                                }
-                            ]
-                        },
-                        {
-                            title: 'parent 1-2',
-                            id:'5th',
-                            expand: true,
-                            children: [
-                                {
-                                    title: 'leaf 1-2-1',
-                                    id:'6th',
-                                },
-                                {
-                                    title: 'leaf 1-2-1',
-                                    id:'7th',
-                                }
-                            ]
-                        }
-                    ]
-                }
+                // {
+                //         title:'all',
+                //         expand: true,
+                //         children:[]
+                // }
+                // {
+                //     title: 'parent 1',
+                //     expand: true,
+                //     id:'1st',
+                //     children: [
+                //         {
+                //             title: 'parent 1-1',
+                //             expand: true,
+                //             id:'2nd',
+                //             children: [
+                //                 {
+                //                     title: 'leaf 1-1-1',
+                //                     id:'3th',
+                //                 },
+                //                 {
+                //                     title: 'leaf 1-1-2',
+                //                     id:'4th',
+                //                 }
+                //             ]
+                //         },
+                //         {
+                //             title: 'parent 1-2',
+                //             id:'5th',
+                //             expand: true,
+                //             children: [
+                //                 {
+                //                     title: 'leaf 1-2-1',
+                //                     id:'6th',
+                //                 },
+                //                 {
+                //                     title: 'leaf 1-2-1',
+                //                     id:'7th',
+                //                 }
+                //             ]
+                //         }
+                //     ]
+                // }
             ]
         };
     },
@@ -278,8 +291,7 @@ export default {
     },
     methods: {
         getSelect(item){
-            console.log(item)
-            // return;
+            // console.log(item)
             const table = {
                 subSystemNum:async data=>{
                     console.log('enter')
@@ -308,14 +320,65 @@ export default {
                     }
                 },
                 teamNum:async data =>{
-                    const options = [
-                        {token:this.userState.token},
-                        {
-                            orgCode:item.tag.value.code,
-                            data:[]
+                    const setMap = (arr,tag) => {//拷贝原数组，找出被选值
+                        return arr.map(item=>{
+                            tag.forEach(v=>item.select = item.select?item.select:item.id === v.id);
+                            item.children?setMap(item.children,tag):null;
+                            return item
+                        })
+                    }
+                    const deleteNoOption = arr =>{//过滤掉未被选中的选项
+                        return arr.filter(item=>{
+                            item.children?item.children=deleteNoOption(item.children):null
+                            return item.select
+                        })
+                    }
+                    const hintArr = arr =>{//递归映射数组
+                        return arr.map(item=>{
+                            const result = {};
+                            result.id = item.id;
+                            item.children&&item.children.length>0?result.children=hintArr(item.children):null;
+                            return result;
+                        })
+                    }
+                    const result = setMap(this.testData.data, item.select);
+                    let fanal = deleteNoOption(result);
+                    fanal = hintArr(fanal);
+                    const ask = fanal.map(item=>{//将格式调整成后端想要的结构
+                        const options = [//请求参数
+                            {token:this.userState.token},
+                            {
+                                orgCode:item.id,
+                                data:item.children
+                            }
+                        ];
+                        return options;
+                    });
+                    Promise.all(ask.map(item => settingsUpdate(...item)))
+                    .then(res=>{
+                        if(res.data&&res.data.errCode===0){
+                            this.$notify({
+                                title: '成功',
+                                message: '修改成功',
+                                type: 'success'
+                            });
+                        }else{
+                            this.$notify({
+                                title: '失败',
+                                message: '修改失败',
+                                type: 'error'
+                            });
                         }
-                    ];
-                    const res = await settingsUpdate();
+                        // console.log(res)
+                    })
+                    .catch(err=>{
+                        // console.log(err)
+                         this.$notify({
+                            title: 'err',
+                            message: err,
+                            type: 'error'
+                        });
+                    })
                     
                 },
                 default:data=>{}
@@ -489,12 +552,9 @@ export default {
          * 协作人员
          */
         async teamNum(item){
+            console.log(123)
             const res = await getSettingsList({token:this.userState.token,orgCode:item.value.code});
             console.log(res)
-
-
-
-            return;
             if(res.data&&res.data.errCode===0){
                 function iteration(arr){
                     const newArr = arr.map(value=>{
@@ -505,11 +565,6 @@ export default {
                     return newArr
                 }
                 this.testData.data = iteration(res.data.body);
-                // this.testData.data = res.data.body.map(value=>{
-                //     value.label = value.name;
-                //     return value;
-                // });
-                
                 this.testData.title = '协作人员';
                 this.testData.canClick = true;
                 this.testData.show = true;
@@ -527,6 +582,19 @@ export default {
          */
         async consNum(item){//接口暂时还没有
            console.log(item)
+           const res = await getConsultationTree({
+               token:this.userState.token,
+               orgCode:item.value.code
+           });
+           console.log(res);
+           if(res.data&&res.data.errCode===0){
+
+           }else{
+               this.$notify.error({
+                    title: "数据获取失败",
+                    message: res.data.errMsg
+                });
+           }
         },
 
         /**
@@ -700,14 +768,25 @@ export default {
                     type: 'error'
                 });
             }
-            
         },
+
+        /**
+         * 协作弹窗 取消按钮被点击
+         */
+        teamNumCancel(){
+
+        },
+        
+        /**
+         * 协作弹窗 确认按钮被点击
+         */
+        teamNumOk(){},
 
         canClick(){
             console.log('can click')
         },
         iviewTest(data){
-            console.log(data)
+            console.log(this.$refs.iviewTree.getCheckedNodes())
         }
     },
     async created() {
@@ -761,8 +840,6 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* padding-left: 0.4rem;
-    padding-right: 0.4rem; */
 }
 .department-li{
     padding-top: 0.1rem;
@@ -796,7 +873,6 @@ export default {
     font-size: 0.12rem;
     cursor: pointer;
     flex: 1;
-    /* margin-right: 0.2rem; */
 }
 .department-out{
     padding-left: 0.5rem;

@@ -1,73 +1,73 @@
 <template>
-	<!-- 远程会诊系统 -->
-	<div class="consultation">
-		远程会诊系统
+    <!-- 远程会诊系统 -->
+    <div class="consultation">
+        远程会诊系统
 
-		<el-button type="text" @click="evaluateVisible = true">评价</el-button>
-		<el-button type="text" @click="departVisible = true">接收科室</el-button>
-		<el-button type="text" @click="doctorVisible = true">医生详情</el-button>
-		<el-button type="text" @click="groupVisible = true">会诊评价</el-button>
-		<el-button type="text" @click="recordVisible = true">查看记录</el-button>
-		会诊评价
-		<!-- 发起会诊弹窗 -->
-		<el-dialog class="startGroup" title="发起会诊" :visible.sync="centerDialogVisible" width="602px" hight="607px" center>
-			<el-form ref="form" :model="startHz" label-width="80px">
-				<el-form-item label="类型">
-					<el-radio-group v-model="startHz.type">
-						<el-radio label="SPECIALIST">专科会诊</el-radio>
-						<el-radio label="EXPERT">专家会诊</el-radio>
-					</el-radio-group>
-				</el-form-item>
-				<el-form-item label="发起科室">
-					<el-select v-model="startHz.deptId" placeholder="请选择活动区域">
-						<el-option v-for="(text,index) in departmentList" :label="text.name" :value="text.value" :key="index"></el-option>
+        <el-button type="text" @click="evaluateVisible = true">评价</el-button>
+        <el-button type="text" @click="departVisible = true">接收科室</el-button>
+        <el-button type="text" @click="doctorVisible = true">医生详情</el-button>
+        <el-button type="text" @click="groupVisible = true">会诊评价</el-button>
+        <el-button type="text" @click="recordVisible = true">查看记录</el-button>
+        会诊评价
+        <!-- 发起会诊弹窗 -->
+        <el-dialog class="startGroup" title="发起会诊" :visible.sync="centerDialogVisible" width="602px" hight="607px" center>
+            <el-form ref="form" :model="startHz" label-width="80px">
+                <el-form-item label="类型">
+                    <el-radio-group v-model="startHz.type">
+                        <el-radio label="SPECIALIST">专科会诊</el-radio>
+                        <el-radio label="EXPERT">专家会诊</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="发起科室">
+                    <el-select v-model="startHz.deptId" placeholder="请选择活动区域">
+                        <el-option v-for="(text,index) in departmentList" :label="text.name" :value="text.value" :key="index"></el-option>
 
-					</el-select>
-				</el-form-item>
-				<div>
-					<div style="display:flex" v-for="(text,index) in startHz.consultationHospitalDept" :key="index">
+                    </el-select>
+                </el-form-item>
+                <div>
+                    <div style="display:flex" v-for="(text,index) in startHz.consultationHospitalDept" :key="index">
 
-						<el-form-item label="申请医院:">
-							<el-select placeholder="请选择活动区域" v-model="text.hospitalId" @change="hosChange(text.hospitalId,index)">
-								<el-option v-for="(text,index) in hospitalList" :label="text.name" :value="text.value" :key="index"></el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="申请科室:">
-							<el-select v-model="text.departmentsId" placeholder="请选择活动区域">
-								<el-option v-for="(otext,index) in text.departmentListOO" :label="otext.name" :value="otext.value" :key="index"></el-option>
-							</el-select>
-						</el-form-item>
-					</div>
-					<span @click="addHospital">加号</span>
-				</div>
- 
-				<el-form-item label="会诊病人:">
-					<el-input v-model="startHz.userId"></el-input>
-				</el-form-item>
-				<el-form-item label="病人病历:">
-					<el-input v-model="startHz.medicalHistory"></el-input>
-				</el-form-item>
-				<el-form-item label="申请时间:">
-					<!-- <el-date-picker v-model="startHz.applicationTime" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
+                        <el-form-item label="申请医院:">
+                            <el-select placeholder="请选择活动区域" v-model="text.hospitalId" @change="hosChange(text.hospitalId,index)">
+                                <el-option v-for="(text,index) in hospitalList" :label="text.name" :value="text.value" :key="index"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="申请科室:">
+                            <el-select v-model="text.departmentsId" placeholder="请选择活动区域">
+                                <el-option v-for="(otext,index) in text.departmentListOO" :label="otext.name" :value="otext.value" :key="index"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                    <span @click="addHospital">加号</span>
+                </div>
+
+                <el-form-item label="会诊病人:">
+                    <el-input v-model="startHz.userId"></el-input>
+                </el-form-item>
+                <el-form-item label="病人病历:">
+                    <el-input v-model="startHz.medicalHistory"></el-input>
+                </el-form-item>
+                <el-form-item label="申请时间:">
+                    <!-- <el-date-picker v-model="startHz.applicationTime" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
 					</el-date-picker> -->
-					<el-date-picker v-model="startHz.applicationTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
-					</el-date-picker>
-					<!-- <el-input v-model="startHz.applicationTime"></el-input> -->
-				</el-form-item>
-				<el-form-item label="会诊目的:">
-					<el-input v-model="startHz.consultationPurpose"></el-input>
-				</el-form-item>
-				<el-form-item class="confirmBtnBox">
-					<el-button class="confirmBtn" type="primary" @click="addHz()">确认</el-button>
-				</el-form-item>
-			</el-form>
-		</el-dialog>
-		<!-- 打开评价 -->
-		<el-dialog class="evaluateBox" title=" " :visible.sync="evaluateVisible" width="602px" hight="356px" center>
-			<el-form ref="form" :model="form" label-width="80px">
-				<el-form-item class="evaluateMargin evaluateMargin1">
-					<el-input class="evaluateInput" type="textarea" v-model="form.desc" placeholder="请选择活动区域"></el-input>
-				</el-form-item>
+                    <el-date-picker v-model="startHz.applicationTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
+                    </el-date-picker>
+                    <!-- <el-input v-model="startHz.applicationTime"></el-input> -->
+                </el-form-item>
+                <el-form-item label="会诊目的:">
+                    <el-input v-model="startHz.consultationPurpose"></el-input>
+                </el-form-item>
+                <el-form-item class="confirmBtnBox">
+                    <el-button class="confirmBtn" type="primary" @click="addHz()">确认</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
+        <!-- 打开评价 -->
+        <el-dialog class="evaluateBox" title=" " :visible.sync="evaluateVisible" width="602px" hight="356px" center>
+            <el-form ref="form" :model="form" label-width="80px">
+                <el-form-item class="evaluateMargin evaluateMargin1">
+                    <el-input class="evaluateInput" type="textarea" v-model="form.desc" placeholder="请选择活动区域"></el-input>
+                </el-form-item>
 
                 <el-form-item class="evaluateMargin">
                     <el-button class="confirmBtn" type="primary">确认</el-button>
@@ -199,79 +199,80 @@
                             <selftag :inData="oTab3" @reback="getOTab3"></selftag>
                         </div>
 
-						<search @searchValue="adminSearchChange"></search>
-					</div>
-					<div>
-						<tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn"> </tableList>
-					</div>
-				</div>
-				<!-- 统计 -->
-				<div v-else>
-					<div class="mainTab">
-						<div>
-							<selftag :inData="oTab1" @reback="getOTab1"></selftag>
-						</div>
-						<statisticsWay @reBack="getTjData"></statisticsWay>
-					</div>
-					<div style="display:flex">
-						<normalColumnChart :inData="drawData"> </normalColumnChart>
-						<normalColumnChart :inData="drawDataStart"> </normalColumnChart>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- 医生端 -->
-		<div class="consultation" v-else>
-			<div class="doc-title">
-				<selftag :inData="oTab4" @reback="getOTab4"></selftag>
-				<div class="statistics-way">
-					<!-- <span>时间段：</span>
-					<el-date-picker v-model="time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+                        <search @searchValue="adminSearchChange"></search>
+                    </div>
+                    <div>
+                        <tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData"> </tableList>
+                    </div>
+                </div>
+                <!-- 统计 -->
+                <div v-else>
+                    <div class="mainTab">
+                        <div>
+                            <selftag :inData="oTab1" @reback="getOTab1"></selftag>
+                        </div>
+                        <statisticsWay @reBack="getTjData"></statisticsWay>
+                    </div>
+                    <div style="display:flex">
+                        <normalColumnChart :inData="drawData"> </normalColumnChart>
+                        <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 医生端 -->
+        <div class="consultation" v-else>
+            <div class="doc-title">
+                <selftag :inData="oTab4" @reback="getOTab4"></selftag>
+                <div class="statistics-way">
+                    <publicTime @timeValue="getDocTime"></publicTime>
+                    <!-- <span>时间段：</span>
+					<el-date-picker v-model="doctorTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
 					</el-date-picker> -->
-				</div>
-				<el-button class="startConsul" type="text" @click="centerDialogVisible = true">发起会诊</el-button>
-			</div>
+                </div>
+                <el-button class="startConsul" type="text" @click="centerDialogVisible = true">发起会诊</el-button>
+            </div>
 
-			<div>
-				<el-table :data="docTableData" border style="width: 100%">
-					<el-table-column fixed prop="consultationId" label="会诊编号" width="150">
-					</el-table-column>
-					<el-table-column prop="hospital" label="发起医院" width="120">
-					</el-table-column>
-					<el-table-column prop="department" label="发起科室" width="120">
-					</el-table-column>
-					<el-table-column prop="doctor" label="发起医生" width="120">
-					</el-table-column>
-					<el-table-column prop="applicationTime" label="发起时间" width="300">
-					</el-table-column>
-					<el-table-column prop="type" label="会诊类型" width="120">
-					</el-table-column>
-					<el-table-column prop="userName" label="会诊病人" width="120">
-					</el-table-column>
-					<el-table-column prop="consultationPurpose" label="目的" width="120">
-					</el-table-column>
-					<el-table-column prop="doctorNumber" label="参与专家" width="120">
-					</el-table-column>
-					<el-table-column prop="status" label="状态" width="120">
-					</el-table-column>
-					<el-table-column fixed="right" label="操作" width="100">
-						<template slot-scope="scope">
-							<el-button @click="handleClick(scope.row)" type="text" size="small">病历</el-button>
-							<el-button @click="handleClick(scope.row)" type="text" size="small">邀请</el-button>
-							<el-button v-show="scope.row.status=='OVER'" @click="handleClick(scope.row)" type="text" size="small">查看记录</el-button>
-							<el-button v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="toConsultation(scope.row)" type="text" size="small">进入会诊</el-button>
-							<el-button v-show="scope.row.departmentId==userState.userId" @click="handleClick(scope.row)" type="text" size="small">结束</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
-			</div>
+            <div>
+                <el-table :data="docTableData" border style="width: 100%">
+                    <el-table-column fixed prop="consultationId" label="会诊编号" width="150">
+                    </el-table-column>
+                    <el-table-column prop="hospital" label="发起医院" width="120">
+                    </el-table-column>
+                    <el-table-column prop="department" label="发起科室" width="120">
+                    </el-table-column>
+                    <el-table-column prop="doctor" label="发起医生" width="120">
+                    </el-table-column>
+                    <el-table-column prop="applicationTime" label="发起时间" width="300">
+                    </el-table-column>
+                    <el-table-column prop="type" label="会诊类型" width="120">
+                    </el-table-column>
+                    <el-table-column prop="userName" label="会诊病人" width="120">
+                    </el-table-column>
+                    <el-table-column prop="consultationPurpose" label="目的" width="120">
+                    </el-table-column>
+                    <el-table-column prop="doctorNumber" label="参与专家" width="120">
+                    </el-table-column>
+                    <el-table-column prop="status" label="状态" width="120">
+                    </el-table-column>
+                    <el-table-column fixed="right" label="操作" width="100">
+                        <template slot-scope="scope">
+                            <el-button @click="handleClick(scope.row)" type="text" size="small">病历</el-button>
+                            <el-button @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
+                            <el-button v-show="scope.row.status=='OVER'" @click="handleClick(scope.row)" type="text" size="small">查看记录</el-button>
+                            <el-button v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="toConsultation(scope.row)" type="text" size="small">进入会诊</el-button>
+                            <el-button v-show="scope.row.departmentId==userState.userId" @click="handleClick(scope.row)" type="text" size="small">结束</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
 
-		</div>
-		<el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-			<chat :sessionId="sessionId"></chat>
-		</el-dialog>
+        </div>
+        <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+            <chat :sessionId="sessionId"></chat>
+        </el-dialog>
 
-	</div>
+    </div>
 </template>
 <script>
 import {
@@ -295,6 +296,7 @@ import normalTab from "../public/publicComponents/normalTab.vue";
 import normalColumnChart from "../public/publicComponents/normalColumnChart.vue";
 import search from "../public/publicComponents/search.vue";
 import statisticsWay from "../public/publicComponents/statisticsWay.vue";
+import publicTime from "../public/publicComponents/publicTime.vue";
 
 export default {
     components: {
@@ -304,7 +306,8 @@ export default {
         normalColumnChart,
         search,
         statisticsWay,
-        chat
+        chat,
+        publicTime
     },
     data() {
         return {
@@ -401,6 +404,7 @@ export default {
                 ]
             },
             //医生端
+            doctorTime: "",
             oDocTime: "",
             startDate: "",
             endDate: "",
@@ -539,13 +543,6 @@ export default {
                     method: (index, row) => {
                         this.recordFun(index, row);
                     }
-                },
-                {
-                    name: "aaaa",
-                    oclass: "recordBtn",
-                    method: (index, row) => {
-                        this.recordFun(index, row);
-                    }
                 }
             ],
             docTableBtn: [
@@ -654,6 +651,7 @@ export default {
         },
         //医生端事件
         getOTab4(data) {
+            console.log(data);
             this.oDocTime = data.index.value;
             this.getDocList();
         },
@@ -666,6 +664,13 @@ export default {
         adminSearchChange(data) {
             this.searchValue = data;
             this.getAdminList();
+        },
+        //获取起始时间
+        getDocTime(data) {
+            console.log(data);
+            this.startDate = data[0];
+            this.endDate = data[1];
+            this.getDocList();
         },
         //发起会诊
         async addHz() {
@@ -748,9 +753,30 @@ export default {
         hosChange(oid, oindex) {
             this.getDepartment(oindex);
         },
+        //获取邀请列表
+        async Invitation(row) {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const res = await getAllHospital(query);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body, function(index, text) {
+                    _this.hospitalList.push({
+                        name: text.orgName,
+                        value: text.orgCode
+                    });
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         //获取科室列表
         async getDepartment(oindex) {
-			return;
             let _this = this;
             let query = {
                 orgCode: this.userSelfInfo.orgCode,
@@ -758,8 +784,6 @@ export default {
             };
             const res = await fetchHospitalDepts(query);
             if (res.data && res.data.errCode === 0) {
-                alert('dd')
-                console.log(res.data.body);
                 if (res.data.body.length > 6) {
                     this.oTab1.more = true;
                 } else {

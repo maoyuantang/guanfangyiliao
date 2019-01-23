@@ -144,4 +144,8 @@ export default {
     drugsByCondition:'/m/v1/api/prescription/prescription/drugsByCondition',//7.16药品名称搜索药品信息
     clinicOrders:'/m/v1/api/clinic/clinic/clinicOrder',//7.18(WEB医生)获取所有该诊室的订单信息
     settingsUpdate:'/m/v1/api/basics/synergySystem/settingsUpdate',//8.10超级管理员更新协作人员
+    getConsultationTree:'/m/v1/api/basics/hospital/getConsultationTree',//8.13获取会诊范围树
+    updateConsultationTree:'/m/v1/api/basics/hospital/updateConsultationTree',//8.14更新会诊范围
+    queryConsultationInformList:'/m/v1/api/consultation/queryConsultationInformList',//10.邀请会诊范围树
+    sponsorConsultationInform:'/m/v1/api/consultation/sponsorConsultationInform',//11.发起会诊通知
 }

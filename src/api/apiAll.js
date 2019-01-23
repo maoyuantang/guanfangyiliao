@@ -214,17 +214,17 @@ export const deleteHospitalDept = (query,data)=>{//8.8.删除医院科室
         }
     })
 }
-export const settingsList = query=>{//8.9获取协作人员设置树(这个留着实验实验)
-    const sign = postQueryHandle(query);
-    return axios({
-        method:'get',
-        url:apiList.settingsList,
-        params:query,
-        headers:{
-            sign
-        }
-    })
-}
+// export const settingsList = query=>{//8.9获取协作人员设置树(这个留着实验实验)
+//     const sign = postQueryHandle(query);
+//     return axios({
+//         method:'get',
+//         url:apiList.settingsList,
+//         params:query,
+//         headers:{
+//             sign
+//         }
+//     })
+// }
 // export const settingsUpdate = (query,data)=>{//8.10超级管理员更新协作人员
 //     const sign = postQueryHandle(Object.assign({},data,query));
 //     return axios({
@@ -1549,6 +1549,52 @@ export const settingsUpdate = (query,data)=>{//8.10超级管理员更新协作�
     return axios({
         method:'post',
         url:apiList.settingsUpdate,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const getConsultationTree = query=>{//8.13获取会诊范围树
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.getConsultationTree,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const updateConsultationTree = (query,data)=>{//8.14更新会诊范围
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.updateConsultationTree,
+        params:query,
+        data:data,
+        headers:{
+            sign
+        }
+    })
+}
+export const queryConsultationInformList = query=>{//10.邀请会诊范围树
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.queryConsultationInformList,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
+export const sponsorConsultationInform = (query,data)=>{//11.发起会诊通知
+    const sign = postQueryHandle(Object.assign({},data,query));
+    return axios({
+        method:'post',
+        url:apiList.sponsorConsultationInform,
         params:query,
         data:data,
         headers:{

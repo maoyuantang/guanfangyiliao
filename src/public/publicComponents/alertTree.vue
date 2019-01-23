@@ -33,8 +33,9 @@ export default {
   },
   methods:{
     ok(){
+        // console.log(this.$refs.alertTree.getCheckedNodes())
         this.$emit("reback",{
-            select:this.$refs.alertTree.getCheckedKeys(),
+            select:this.$refs.alertTree.getCheckedNodes(false,true),
             tag:this.inData.tag
         });
     },
