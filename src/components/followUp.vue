@@ -208,14 +208,14 @@
                     <div>回复选项关联(系统根据回复自动发送后续的关联问卷)</div>
                     <div>
                         <ul>
-                            <li class="mydQuestList">
+                            <li class="mydQuestList" v-for="(text,index) in mydAddData.associations" :key="index">
                                 <div>
                                     <el-form-item label="活动名称">
-                                        <el-input v-model="mydAddData.name"></el-input>
+                                        <el-input v-model="text.answer"></el-input>
                                     </el-form-item>
 
                                     <el-form-item label="所属分类">
-                                        <el-cascader :options="mydAddoptions" @active-item-change="handleChange" :props="props"></el-cascader>
+                                        <el-cascader :options="mydAddoptions" @active-item-change="handleChange" v-model="text.associationId" :props="props"></el-cascader>
                                         <!-- <el-cascader :options="mydAddoptions" v-model="selectedOptions" expand-trigger="hover" @change="handleChange"> -->
                                         <!-- </el-cascader> -->
                                     </el-form-item>
@@ -941,74 +941,27 @@ export default {
                 {
                     value: "OUTPATIENT",
                     label: "门诊调查",
-                    cities: [
-                        {
-                            value: "shejiyuanze",
-                            label: "设计原则",
-                            cities: [
-                                {
-                                    value: "yizhi",
-                                    label: "一致"
-                                },
-                                {
-                                    value: "fankui",
-                                    label: "反馈"
-                                },
-                                {
-                                    value: "xiaolv",
-                                    label: "效率"
-                                },
-                                {
-                                    value: "kekong",
-                                    label: "可控"
-                                }
-                            ]
-                        }
-                    ]
+                    cities: []
                 },
                 {
                     value: "MEDICALTECHNOLOGY",
                     label: "医技调查",
-                    cities: [
-                        {
-                            value: "shejiyuanze",
-                            label: "设计原则",
-                            cities: []
-                        }
-                    ]
+                    cities: []
                 },
                 {
                     value: "INHOSPITAL",
                     label: "住院调查",
-                    cities: [
-                        {
-                            value: "shejiyuanze",
-                            label: "设计原则",
-                            cities: []
-                        }
-                    ]
+                    cities: []
                 },
                 {
                     value: "ADMINISTRATION",
                     label: "行政调查",
-                    cities: [
-                        {
-                            value: "shejiyuanze",
-                            label: "设计原则",
-                            cities: []
-                        }
-                    ]
+                    cities: []
                 },
                 {
                     value: "URL",
                     label: "推送链接",
-                    cities: [
-                        {
-                            value: "shejiyuanze",
-                            label: "设计原则",
-                            cities: []
-                        }
-                    ]
+                    cities: []
                 }
             ],
             props: {
@@ -1278,9 +1231,9 @@ export default {
         //满意度新增模板借口
         async handleChange(value) {
             console.log(value);
-            this.mydType = value[0];
-            this.sendTemplateList();
-            // this.mydTemplateTitle
+
+            this.sendTemplateList(value);
+            console.log(this.mydTemplateTitle);
         },
         onEditorReady(editor) {},
         // 新增随访表接口
@@ -1718,8 +1671,9 @@ export default {
             }
         },
         //满意度发送模板3
-        async sendTemplateList() {
+        async sendTemplateList(value) {
             // this.templateVisible = true;
+            this.mydType = value[0];
             let _this = this;
             let query = {
                 token: this.userState.token,
@@ -1728,6 +1682,106 @@ export default {
             const res = await getTitleList(query);
             if (res.data && res.data.errCode === 0) {
                 this.mydTemplateTitle = res.data.body;
+
+                if (value[0] == "OUTPATIENT") {
+                    _this.mydAddoptions[0].cities = [];
+                    $.each(res.data.body, function(index, text) {
+                        _this.mydAddoptions[0].cities.push({
+                            value: text.associationId,
+                            label: text.title,
+                            cities: [
+                                {
+                                    value: "",
+                                    label: text.context
+                                }
+                            ]
+                        });
+                    });
+                } else if (value[0] == "MEDICALTECHNOLOGY") {
+                    _this.mydAddoptions[1].cities = [];
+                    $.each(res.data.body, function(index, text) {
+                        _this.mydAddoptions[1].cities.push({
+                            value: text.associationId,
+                            label: text.title,
+                            cities: [
+                                {
+                                    value: "",
+                                    label: text.context
+                                }
+                            ]
+                        });
+                    });
+                } else if (value[0] == "INHOSPITAL") {
+                    _this.mydAddoptions[2].cities = [];
+                    $.each(res.data.body, function(index, text) {
+                        _this.mydAddoptions[1].cities.push({
+                            value: text.associationId,
+                            label: text.title,
+                            cities: [
+                                {
+                                    value: "",
+                                    label: text.context
+                                }
+                            ]
+                        });
+                    });
+                } else if (value[0] == "ADMINISTRATION") {
+                    _this.mydAddoptions[3].cities = [];
+                    $.each(res.data.body, function(index, text) {
+                        _this.mydAddoptions[1].cities.push({
+                            value: text.associationId,
+                            label: text.title,
+                            cities: [
+                                {
+                                    value: "",
+                                    label: text.context
+                                }
+                            ]
+                        });
+                    });
+                } else if (value[0] == "URL") {
+                    _this.mydAddoptions[4].cities = [];
+                    $.each(res.data.body, function(index, text) {
+                        _this.mydAddoptions[1].cities.push({
+                            value: text.associationId,
+                            label: text.title,
+                            cities: [
+                                {
+                                    value: "",
+                                    label: text.context
+                                }
+                            ]
+                        });
+                    });
+                } else if (value[0] == "MEDICALTECHNOLOGY") {
+                    _this.mydAddoptions[1].cities = [];
+                    $.each(res.data.body, function(index, text) {
+                        _this.mydAddoptions[1].cities.push({
+                            value: text.associationId,
+                            label: text.title,
+                            cities: [
+                                {
+                                    value: "",
+                                    label: text.context
+                                }
+                            ]
+                        });
+                    });
+                } else if (value[0] == "MEDICALTECHNOLOGY") {
+                    _this.mydAddoptions[1].cities = [];
+                    $.each(res.data.body, function(index, text) {
+                        _this.mydAddoptions[1].cities.push({
+                            value: text.associationId,
+                            label: text.title,
+                            cities: [
+                                {
+                                    value: "",
+                                    label: text.context
+                                }
+                            ]
+                        });
+                    });
+                }
             } else {
                 //失败
                 this.$notify.error({
@@ -1735,6 +1789,21 @@ export default {
                     message: res.data.errMsg
                 });
             }
+        },
+        addMydAddoptions(oBody, num) {
+            console.log(num);
+            $.each(oBody, function(index, text) {
+                this.mydAddoptions[0].cities.push({
+                    value: text.associationId,
+                    label: text.title,
+                    cities: [
+                        {
+                            value: "",
+                            label: text.context
+                        }
+                    ]
+                });
+            });
         },
         //选中满意度模板进行操作
         selectTemplate(index, text) {
