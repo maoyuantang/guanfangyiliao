@@ -18,7 +18,7 @@
 					</div>
 				</div>
 				<div class="online-clinic-middle">
-					<publicList :columns="onlineClinic.tableBody.columns" :tableData="onlineClinic.tableBody.tableData" :tableBtn="onlineClinic.tableBody.tableBtn">
+					<!-- <publicList :columns="onlineClinic.tableBody.columns" :tableData="onlineClinic.tableBody.tableData" :tableBtn="onlineClinic.tableBody.tableBtn"> -->
 					</publicList>
 				</div>
 			</div>
@@ -448,15 +448,17 @@
 				let _this = this;
 				let query = {
 					token: this.userState.token,
-					
 					string: this.searchValue,
 					pageNum: 1,
 					pageSize: 10,
+					departmentId: '',
+					businessType: ''
 				};
 				const res = await searchClinic(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表1+成功')
-					this.onlineClinic.tableBody.tableData = res.data.body.data2.list;
+					console.log(res)
+					// this.onlineClinic.tableBody.tableData = res.data.body.data2.list;
 				} else {
 					//失败
 					console.log('列表1+失败')
@@ -516,7 +518,7 @@
 		async created() {
 			this.getList1departmentManage();//门诊管理科室获取
 			this.getList1();//管理列表1
-			this.getList2();//管理列表2
+			// this.getList2();//管理列表2
 			// this.getList3();//管理列表3（统计）
 		}
 	}
