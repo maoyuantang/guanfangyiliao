@@ -20,7 +20,7 @@
         </div>
         <i></i>
         <tableList class="tableList" :tableData="adminTableData" :columns="columns"></tableList>
-        <el-button class="startConsul" type="text" @click="centerDialogVisible = true">发起会诊</el-button>
+        <el-button class="startConsul" type="text" @click="centerDialogVisible = true">进入门诊</el-button>
       </li>
       <li class="outpatient_right">
         <!-- 病人个数循环 -->
@@ -172,8 +172,7 @@
                   <li>
                     <div class="block">
                       <span class="demonstration">发病日期： </span>
-                      <el-date-picker @blur="demonstration1" v-model="value1" align="right" type="date" placeholder="选择日期"
-                        :picker-options="pickerOptions1">
+                      <el-date-picker @blur="demonstration1" v-model="value1" align="right" type="date" placeholder="选择日期">
                       </el-date-picker>
                     </div>
                   </li>
@@ -182,8 +181,7 @@
               <div class="behind">
                 <div class="block">
                   <span class="demonstration">下次复查日期: </span>
-                  <el-date-picker @blur="demonstration2" v-model="value2" align="right" type="date" placeholder="选择日期"
-                    :picker-options="pickerOptions1">
+                  <el-date-picker @blur="demonstration2" v-model="value2" align="right" type="date" placeholder="选择日期">
                   </el-date-picker>
                 </div>
               </div>
@@ -338,8 +336,7 @@
                   <li>
                     <div class="block">
                       <span class="demonstration">发病日期： </span>
-                      <el-date-picker @blur="demonstration1" v-model="value1" align="right" type="date" placeholder="选择日期"
-                        :picker-options="pickerOptions1">
+                      <el-date-picker @blur="demonstration1" v-model="value1" align="right" type="date" placeholder="选择日期">
                       </el-date-picker>
                     </div>
                   </li>
@@ -348,8 +345,7 @@
               <div class="behind">
                 <div class="block">
                   <span class="demonstration">下次复查日期: </span>
-                  <el-date-picker @blur="demonstration2" v-model="value2" align="right" type="date" placeholder="选择日期"
-                    :picker-options="pickerOptions1">
+                  <el-date-picker @blur="demonstration2" v-model="value2" align="right" type="date" placeholder="选择日期">
                   </el-date-picker>
                 </div>
               </div>
@@ -649,7 +645,7 @@
       }
 
       .startConsul {
-        width: 3.49rem;
+        width: 60%;
         height: 0.4rem;
         background: #4da1ff;
         border-radius: 4px;

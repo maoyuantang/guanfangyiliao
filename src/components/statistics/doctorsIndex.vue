@@ -99,7 +99,6 @@
 				</userInfoRow>
 			</div>
 		</div>	
-		
 	</div>
 </template>
 

@@ -1,7 +1,6 @@
 <template>
 	<div class="super-management">
 		超级管理员
-        <Button type="primary" @click="testData.show = true">Display dialog box</Button>
         <alertTree :inData="testData" @reback="getSelect" v-if="showAlertTree"></alertTree>
         <div class="super-management-top">
             <search></search>
@@ -84,6 +83,8 @@
         </div>
         <!-- 科室弹出框 -->
         <Modal
+            :styles="{width:'323px'}"
+            footer-hide
             v-model="department.show"
             title="科室"
             @on-ok="departmentOk"
@@ -94,7 +95,8 @@
                         <li v-for="(item,index) in department.list" :key="index" class="department-li">
                             <span>{{item.deptName}}</span>
                             <div class="btn-div">
-                                <el-button type="danger" size="mini" @click="deleteDepartment(item,index)">删除</el-button>
+                                <i class="iconfont super-management-del-Department" @click="deleteDepartment(item,index)">&#xe618;</i>
+                                <!-- <el-button type="danger" size="mini" @click="deleteDepartment(item,index)">删除</el-button> -->
                                 <!-- <el-button type="primary" size="mini">修改</el-button> -->
                             </div>
                             
@@ -103,23 +105,40 @@
                 </div>
                 <div class="add-department" v-if="department.showAdd">
                     <input type="text" v-model="department.addDepartmentName">
-                    <i class="iconfont msg-icon" @click="closeDepartmentAdd">&#xe6df;</i>
+                    <i class="iconfont msg-icon" @click="closeDepartmentAdd">&#xe618;</i>
                 </div>
                 
                 <div class="department-add">
                     <el-button type="primary" @click="showDepartmentAdd"> {{department.showAdd?"保存":"新增"}} </el-button>
                 </div>
             </div>
-            
         </Modal>
+        <!-- 编辑按钮弹窗 -->
+        <el-dialog title="收货地址" :visible.sync="editHospital.dialogFormVisible">
+            <el-form>
+                <el-form-item label="医院名">
+                    <el-input v-model="editHospital.name" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <el-form>
+                <el-form-item label="密码">
+                    <el-input v-model="editHospital.pwd" autocomplete="off" type="password"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <!-- <el-button @click="editHospital.dialogFormVisible = false">取 消</el-button> -->
+                <el-button type="primary" @click="subInfo">确 定</el-button>
+            </div>
+        </el-dialog>
         <Spin size="large" fix v-if="spinShow"></Spin>
+        <Tree :data="data2" show-checkbox @on-check-change="iviewTest"></Tree>
 	</div>
 </template>
 
 <script>
 import { 
     fetchHospitalList, fetchAllSubSystem ,fetchHospitalDepts,fetchHospitalRel,getSettingsList,initializeTheCreationOfHospital,deleteHospitalDept,
-    createHospitalDept, updateSubSystemRel
+    createHospitalDept, updateSubSystemRel, updateHospital, settingsUpdate
 } from "../../api/apiAll.js"; 
 import { mapState } from "vuex";
 import search from "../../public/publicComponents/search.vue";
@@ -150,6 +169,12 @@ export default {
                 showAdd:false,
                 addDepartmentName:'',//新增科室的名称
                 list:[]//科室列表
+            },
+            editHospital:{//编辑医院信息    
+                dialogFormVisible:false,//是否显示编辑医院弹窗
+                name:'',//医院名
+                pwd:'',//密码
+                obj:null
             },
             testData:{
                 title:'test title',
@@ -204,6 +229,45 @@ export default {
                     // }
                 ]
             },
+            data2: [
+                {
+                    title: 'parent 1',
+                    expand: true,
+                    id:'1st',
+                    children: [
+                        {
+                            title: 'parent 1-1',
+                            expand: true,
+                            id:'2nd',
+                            children: [
+                                {
+                                    title: 'leaf 1-1-1',
+                                    id:'3th',
+                                },
+                                {
+                                    title: 'leaf 1-1-2',
+                                    id:'4th',
+                                }
+                            ]
+                        },
+                        {
+                            title: 'parent 1-2',
+                            id:'5th',
+                            expand: true,
+                            children: [
+                                {
+                                    title: 'leaf 1-2-1',
+                                    id:'6th',
+                                },
+                                {
+                                    title: 'leaf 1-2-1',
+                                    id:'7th',
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         };
     },
     computed: {
@@ -242,6 +306,17 @@ export default {
                             type: 'error'
                         });
                     }
+                },
+                teamNum:async data =>{
+                    const options = [
+                        {token:this.userState.token},
+                        {
+                            orgCode:item.tag.value.code,
+                            data:[]
+                        }
+                    ];
+                    const res = await settingsUpdate();
+                    
                 },
                 default:data=>{}
             }
@@ -414,8 +489,12 @@ export default {
          * 协作人员
          */
         async teamNum(item){
-            const res = await getSettingsList({token:this.userState.token});
+            const res = await getSettingsList({token:this.userState.token,orgCode:item.value.code});
             console.log(res)
+
+
+
+            return;
             if(res.data&&res.data.errCode===0){
                 function iteration(arr){
                     const newArr = arr.map(value=>{
@@ -430,10 +509,13 @@ export default {
                 //     value.label = value.name;
                 //     return value;
                 // });
+                
                 this.testData.title = '协作人员';
                 this.testData.canClick = true;
                 this.testData.show = true;
                 this.testData.tag = item;
+                console.log(this.testData)
+
                 this.showAlertTree = true;
             }else{
 
@@ -567,9 +649,65 @@ export default {
         btnClick(v,item){
             console.log(v)
             console.log(item)
+            this.editHospital.obj = item;
+            this.editHospital.name = item.name;
+            this.editHospital.dialogFormVisible = true
         },
+
+        /**
+         * 确认提交修改医院信息
+         */
+        async subInfo(){
+            const isPass = [sensitiveWordCheck(this.editHospital.name),sensitiveWordCheck(this.editHospital.pwd)];
+            for(const i of isPass){
+                if(!i.ok){
+                    this.$notify({
+                        title: '提交失败',
+                        message: i.msg,
+                        type: 'error'
+                    });
+                    return;
+                }
+            }
+            console.log(this.editHospital)
+            const options = [
+                {token: this.userState.token},
+                {
+                    name:this.editHospital.name,
+                    passwd:this.editHospital.pwd,
+                    hospitalId:this.editHospital.obj.id
+                }
+            ];
+            const res = await updateHospital(...options);
+            console.log(res);
+            if(res.data&&res.data.errCode===0){
+                this.$notify({
+                    title: '成功',
+                    message: '修改成功',
+                    type: 'success'
+                });
+                await this.getTableData();
+                this.editHospital = {
+                    name:'',
+                    passwd:'',
+                    obj:null,
+                    dialogFormVisible:false
+                }
+            }else{
+                this.$notify({
+                    title: '失败',
+                    message: "修改失败",
+                    type: 'error'
+                });
+            }
+            
+        },
+
         canClick(){
             console.log('can click')
+        },
+        iviewTest(data){
+            console.log(data)
         }
     },
     async created() {
@@ -651,16 +789,25 @@ export default {
 .add-department>input{
     border: none;
     outline:none;
-    flex: 1;
+    width: 80%;
 }
 .add-department>i{
     margin-left: 0.2rem;
     font-size: 0.12rem;
     cursor: pointer;
+    flex: 1;
+    /* margin-right: 0.2rem; */
 }
 .department-out{
     padding-left: 0.5rem;
     padding-right: 0.5rem;
+}
+.super-management table  th{
+    text-align: center;
+}
+.super-management-del-Department{
+    font-size: var(--fontSize1);
+    cursor: pointer;
 }
 </style>
 <!--

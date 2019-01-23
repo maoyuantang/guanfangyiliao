@@ -3,6 +3,7 @@
     <Modal
         v-model="inData.show"
         :title="inData.title"
+        :styles="{width:'323px'}"
         @on-ok="ok"
         @on-cancel="cancel">
         <el-tree
