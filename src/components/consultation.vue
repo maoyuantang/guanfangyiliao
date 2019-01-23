@@ -75,24 +75,15 @@
             </el-form>
         </el-dialog>
         <!-- 接收科室 -->
-        <el-dialog class="evaluateBox" title=" 接收科室" :visible.sync="departVisible" width="602px" hight="356px" center>
+        <el-dialog class="evaluateBox" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
             <ul>
-                <li>
+                <li v-for="(text,index) in receptionDepartment" :key="index">
                     <div>
                         <img src="" />
                     </div>
                     <div class="evaluateCont">
-                        <h5>西南医院第三附属医院</h5>
-                        <div>神经内科</div>
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        <img src="" />
-                    </div>
-                    <div class="evaluateCont">
-                        <h5>西南医院第三附属医院</h5>
-                        <div>神经内科</div>
+                        <h5>{{text.hospital}}</h5>
+                        <div>{{text.department}}</div>
                     </div>
                 </li>
             </ul>
@@ -203,7 +194,7 @@
                     <div class="mainTab">
                         <div>
                             <selftag :inData="oTab1" @reback="getOTab1"></selftag>
-                            <selftag :inData="oTab1" @reback="getOTab11"></selftag>
+                            <selftag :inData="oTab11" @reback="getOTab11"></selftag>
                             <selftag :inData="oTab2" @reback="getOTab2"></selftag>
                             <selftag :inData="oTab3" @reback="getOTab3"></selftag>
                         </div>
@@ -293,7 +284,8 @@ import {
     queryStatisticalByApplication,
     queryStatisticalBySponsor,
     getAllHospital,
-    addConsultation
+    addConsultation,
+    queryByDeptList
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -319,15 +311,19 @@ export default {
     },
     data() {
         return {
-            cellColor:[{
-                cell:9,
-                value:"接收科室",
-                oclass:"ooRed"
-            },{
-                cell:10,
-                value:"参与专家",
-                oclass:"ooGreen"
-            }],
+            // cellColor: [
+            //     {
+            //         cell: 7,
+            //         value: "接收科室",
+            //         oclass: "ooRed"
+            //     },
+            //     {
+            //         cell: 8,
+            //         value: "参与专家",
+            //         oclass: "ooRed"
+            //     }
+            // ],
+            receptionDepartment: [], //接收科室数据
             sessionId: "", //会诊id
             chatVisible: false, //聊天框
             oVisable: true,
@@ -353,7 +349,16 @@ export default {
             form: "",
             oTab1: {
                 more: true,
-                title: "全部",
+                title: "发起科室",
+                list: [
+                    {
+                        text: "全部"
+                    }
+                ]
+            },
+            oTab11: {
+                more: true,
+                title: "接收科室",
                 list: [
                     {
                         text: "全部"
@@ -496,29 +501,34 @@ export default {
                     label: "会诊类型"
                 },
                 {
-                    prop: "userName",
-                    label: "会诊病人"
-                },
-                {
-                    prop: "startTime",
-                    label: "会诊时间"
-                },
-                {
-                    prop: "consultationTimeNumber",
-                    label: "会诊用时"
+                    prop: "无",
+                    label: "接收医院"
                 },
                 {
                     prop: "receiveDeptNumber",
                     label: "接收科室"
                 },
                 {
+                    prop: "doctorNumber",
+                    label: "参与专家"
+                },
+                {
+                    prop: "userName",
+                    label: "会诊病人"
+                },
+                {
                     prop: "medicalHistory",
                     label: "病历"
                 },
                 {
-                    prop: "doctorNumber",
-                    label: "参与专家"
+                    prop: "startTime",
+                    label: "发起时间"
                 },
+                {
+                    prop: "consultationTimeNumber",
+                    label: "会诊用时"
+                },
+
                 {
                     prop: "status",
                     label: "状态"
@@ -612,12 +622,27 @@ export default {
             this.adminStatus = data.index.value;
             this.getAdminList();
         },
-        cellClickData(data){
-            if(data[1].label="接收科室"){
-                this.departVisible=true;
-
-            }if(data[1].label="参与专家"){
-                
+        async cellClickData(data) {
+            console.log(data);
+            if ((data[1].label = "接收科室")) {
+                this.departVisible = true;
+                let _this = this;
+                let query = {
+                    token: this.userState.token,
+                    consultationId: data[0].id
+                };
+                const res = await queryByDeptList(query);
+                if (res.data && res.data.errCode === 0) {
+                    _this.receptionDepartment = res.data.body;
+                } else {
+                    //失败
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
+            }
+            if ((data[1].label = "参与专家")) {
             }
         },
         //查看记录
@@ -738,6 +763,7 @@ export default {
             };
             const res = await fetchHospitalDepts(query);
             if (res.data && res.data.errCode === 0) {
+                alert('dd')
                 console.log(res.data.body);
                 if (res.data.body.length > 6) {
                     this.oTab1.more = true;
@@ -787,8 +813,8 @@ export default {
                 // $.each(this.adminTableData,function(index,text){
                 //     text.oclass="doctorDatial"
                 // })
-                this.adminTableData[0].oclass="doctorDatial"
-                
+                this.adminTableData[0].oclass = "doctorDatial";
+
                 console.log(res);
             } else {
                 //失败
@@ -1052,10 +1078,7 @@ export default {
     color: #939eab;
     font-size: 0.12rem;
 }
-.ooRed{
-    color:red !important
-}
-.ooGreen{
-    color:green !important
+.ooRed {
+    color: red !important;
 }
 </style>

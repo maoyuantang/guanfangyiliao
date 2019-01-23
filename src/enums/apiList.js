@@ -22,7 +22,7 @@ export default {
     createHospitalDept:'/m/v1/api/basics/hospital/createHospitalDept',//8.6.新增医院科室
     updateHospitalDept:'/m/v1/api/basics/hospital/updateHospitalDept',//8.7.变更科室名称
     deleteHospitalDept:'/m/v1/api/basics/hospital/deleteHospitalDept',//8.8.删除医院科室
-    settingsList:'/m/v1/api/basics/hospital/fetchHospitalDepts',//8.9获取协作人员设置树
+    // settingsList:'/m/v1/api/basics/hospital/fetchHospitalDepts',//8.9获取协作人员设置树
     // settingsUpdate:'/m/v1/api/synergySystem/settingsUpdate',//8.10超级管理员更新协作人员
     addCloud:'/m/v1/api/cloud/addCloud',//11.1.新增云存储业务
     updateCloud:'/m/v1/api/cloud/updateCloud',//11.2.更新云存储业务

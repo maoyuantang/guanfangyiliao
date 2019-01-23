@@ -40,17 +40,21 @@ export default {
             this.$emit("reBack", val);
         },
         cellClassName(data) {
-            for (let i = 0; i < this.cellColor.length; i++) {
-                if (data.columnIndex == this.cellColor[i].cell) {
-                    return this.cellColor[i].oclass;
+            if (this.cellColor) {
+                for (let i = 0; i < this.cellColor.length; i++) {
+                    if (data.columnIndex == this.cellColor[i].cell) {
+                        return this.cellColor[i].oclass;
+                    }
                 }
             }
         },
         cellClick(row, column, cell, event) {
-            for (let i = 0; i < this.cellColor.length; i++) {
-                if (column.label == this.cellColor[i].value) {
-                    console.log(column);
-                    this.$emit("cellClickData", [row, column]);
+            if (this.cellColor) {
+                for (let i = 0; i < this.cellColor.length; i++) {
+                    if (column.label == this.cellColor[i].value) {
+                        console.log(column);
+                        this.$emit("cellClickData", [row, column]);
+                    }
                 }
             }
         }
