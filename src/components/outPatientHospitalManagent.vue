@@ -40,7 +40,7 @@
 
 				</div>
 				<div class="online-clinic-middle">
-					<publicList :columns="onlineClinic.tableBody.columns" :tableData="onlineClinic.tableBody.tableData" :tableBtn="onlineClinic.tableBody.tableBtn">
+					<publicList :columns="prescriptionAuditDistribution.tableBody.columns" :tableData="prescriptionAuditDistribution.tableBody.tableData" :tableBtn="onlineClinic.tableBody.tableBtn">
 					</publicList>
 				</div>
 			</div>
@@ -108,16 +108,28 @@
 		},
 		data() {
 			return {
-				//管理1搜索框
-				searchValue: "", //管理端搜索框
-				//新增门诊
-				dialogFormVisible: false,
+				//显示隐藏
+				dialogFormVisible: false,//是否新增门诊
+				
+				//函数传参
+				// 公共
+				pageNum:1,//页数
+				pageSize:10,//条数
+				searchValue: "", //搜索框
+				departmentId:"",//科室id
+				businessType:"",//业务类型
+
+				//getList2
+				string:"",//门诊订单号
+				sendDoctorId:"",//发药医生
+				reviewDoctorId:"",//审核医生
+				sendEnum:"",//配送状态（UNSEND, //未配送；SENDING, //配送中；SENDOVER, //已签收）
+				reviewEnum:"",//审核状态（REVIEWED, //已审核；UNREVIEWED, //未审核；FAILREVIEWED, //不通过）
 
 				//医生信息
 				doctorsInfo: {
 					headImg: '',
 					name: '',
-
 				},
 				time: null,
 				navInfo: {
@@ -183,12 +195,10 @@
 								prop: "price",
 								label: "价格"
 							},
-							//字符串
 							{
 								prop: "doctors",
 								label: "关联医生"
 							},
-							//数组
 							{
 								prop: "totalPeople",
 								label: "业务人次"
@@ -242,6 +252,7 @@
 				},
 				//处方审核和配送
 				prescriptionAuditDistribution: {
+					// 1、筛选
 					topFlag: [
 						{
 							more: true,
@@ -334,7 +345,91 @@
 								}
 							]
 						}
-					]
+					],
+					//2、表格
+					tableBody: {
+						//2.1表头
+						columns: [
+							{
+								prop: "departmentName",
+								label: "科室"
+							},
+							{
+								prop: "id",
+								label: "门诊订单号"
+							},
+							{
+								prop: "prescriptionOrderId",
+								label: "处方订单号"
+							},
+							{
+								prop: "userName",
+								label: "病人"
+							},
+							{
+								prop: "reviewEnum",
+								label: "审核状态"
+							},
+							{
+								prop: "reviewDoctorName",
+								label: "审核医生"
+							},
+							{
+								prop: "reviewTime",
+								label: "审核时间"
+							},
+							{
+								prop: "sendDoctorName",
+								label: "发药医生"
+							},
+							{
+								prop: "sendEnum",
+								label: "配送状态"
+							},
+							{
+								prop: "prescriptionPrice",
+								label: "处方费"
+							},
+							{
+								prop: "sendPrice",
+								label: "配送费"
+							},
+							{
+								prop: "btns",
+								label: " "
+							}
+						],
+						//2.2表体
+						tableData: [
+							{
+								id: "91F0B9D25A474B6FA0CDBAC872035984",
+								age: "1545649424290",
+								name: "冠方医院",
+							},
+							// {
+							//     id: "120BAE29C23C470E9E73DED3D8C071BF",
+							//     age: "1545618639429",
+							//     name: "测试医院",
+							// },
+						],
+						//2.3操作
+						tableBtn: [
+							{
+								name: "评价",
+								oclass: "evaluateBtn",
+								method: (index, row) => {
+									this.evaluateFun(index, row);
+								}
+							},
+							{
+								name: "查看记录",
+								oclass: "recordBtn",
+								method: (index, row) => {
+									this.recordFun(index, row);
+								}
+							}
+						]
+					}
 				},
 				//统计 数据
 				statistics: {
@@ -425,7 +520,7 @@
 			//     }
 			// }
 
-			//门诊管理科室列表
+			//1.2.获取医院科室列表 
 			async getList1departmentManage() {
 				let _this = this;
 				let query = {
@@ -450,25 +545,25 @@
 					});
 				}
 			},
-			//在线诊室列表
+			//7.5根据条件搜索在线诊室业务 
 			async getList1() {
 				let _this = this;
 				let query = {
 					token: this.userState.token,
 					string: this.searchValue,
-					pageNum: 1,
-					pageSize: 10,
-					departmentId: '',
-					businessType: ''
+					pageNum: this.pageNum,
+					pageSize:this.pageSize,
+					departmentId: this.departmentId,
+					businessType: this.businessType
 				};
 				const res = await searchClinic(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表1+成功')
-					$.each(res.data.body.data2.list,function(index,text){
-						text.totalPeople="总: "+text.totalPeople+"  今日: "+text.todayPeople
-						text.doctors="查看"
+					$.each(res.data.body.data2.list, function (index, text) {
+						text.totalPeople = "总: " + text.totalPeople + "  今日: " + text.todayPeople
+						text.doctors = "查看"
 					})
-						_this.onlineClinic.tableBody.tableData = res.data.body.data2.list;
+					_this.onlineClinic.tableBody.tableData = res.data.body.data2.list;
 				} else {
 					//失败
 					console.log('列表1+失败')
@@ -478,24 +573,44 @@
 					});
 				}
 			},
+			// 7.11根据条件获取处方信息 
 			async getList2() {
 				let _this = this;
 				let query = {
 					token: this.userState.token,
-					departmentId: "",
-					reviewEnum: "",
-					sendEnum: "",
-					reviewDoctorId: "",
-					sendDoctorId: "",
-					string: "",
-					pageNum: 1,
-					pageSize: 10,
+					departmentId: "this.departmentId",
+					reviewEnum: "this.reviewEnum",
+					sendEnum: "this.sendEnum",
+					reviewDoctorId: "this.reviewDoctorId",
+					sendDoctorId: "this.sendDoctorId",
+					string: this.string,
+					pageNum: this.pageNum,
+					pageSize: this.pageSize,
 				};
 				const res = await prescriptionDetailByCondition(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表2+成功')
-					console.log(res)
-					this.adminTableData = res.data.body.data2.list;
+					$.each(res.data.body.data2.list,function(index,text){
+						if(text.reviewEnum == "UNREVIEWED"){
+							text.reviewEnum = '未审核'
+						}else if(text.reviewEnum == "REVIEWED"){
+							text.reviewEnum = '已审核'
+						}else if(text.reviewEnum == "FAILREVIEWED"){
+							text.reviewEnum = '不通过'
+						}else{
+							text.reviewEnum = '出错了'
+						};
+						if(text.sendEnum == "UNSEND"){
+							text.sendEnum = '未配送'
+						}else if(text.sendEnum == "SENDING"){
+							text.sendEnum = '配送中'
+						}else if(text.sendEnum == "SENDOVER"){
+							text.sendEnum = '已签收'
+						}else{
+							text.sendEnum = '出错了'
+						}
+					})
+					this.prescriptionAuditDistribution.tableBody.tableData = res.data.body.data2.list;
 				} else {
 					//失败
 					console.log('列表2+失败')
