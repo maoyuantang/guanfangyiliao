@@ -14,7 +14,7 @@
 					</div>
 					<div class="online-clinic-top-right">
 						<search @searchValue="adminSearchOne"></search>
-						<el-button type="primary" @click="dialogFormVisible = true">新增业务</el-button>
+						<el-button type="primary" @click="isShowNewOutPatient = true">新增业务</el-button>
 					</div>
 				</div>
 				<div class="online-clinic-middle">
@@ -41,7 +41,7 @@
 				</div>
 				<div class="online-clinic-middle">
 					<publicList :columns="prescriptionAuditDistribution.tableBody.columns" :tableData="prescriptionAuditDistribution.tableBody.tableData"
-					 :tableBtn="onlineClinic.tableBody.tableBtn">
+					 :tableBtn="prescriptionAuditDistribution.tableBody.tableBtn">
 					</publicList>
 				</div>
 			</div>
@@ -61,12 +61,13 @@
 			</div>
 		</div>
 		<!-- 新增门诊弹框 -->
-		<el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+		<el-dialog title="收货地址" :visible.sync="isShowNewOutPatient">
 			<!-- <addNewFrame></addNewFrame> -->
 		</el-dialog>
 
 		<!-- 表一查看关联医生弹框 -->
-		<el-dialog class="evaluateBox1" title=" 关联医生" :visible.sync="departVisible" width="503px" hight="470px" center>
+		<el-dialog class="evaluateBox1" title=" 关联医生" :visible.sync="isShowrelationalDoctor" width="503px" hight="470px"
+		 center>
 			<ul>
 				<li v-for="(text,index) in relationalDoctor" :key="index">
 					<div>
@@ -83,7 +84,7 @@
 		</el-dialog>
 
 		<!-- 查看记录弹框 -->
-		<el-dialog class="  " title="  " :visible.sync="recordVisible" width="602px" hight="356px" center>
+		<el-dialog class="  " title="  " :visible.sync="isShowRecord" width="602px" hight="356px" center>
 			<ul>
 				<li class="ohisList">
 					<h3>2018年4月4日</h3>
@@ -121,7 +122,7 @@
 		</el-dialog>
 
 		<!-- 编辑 -->
-		<el-dialog title="编辑" :visible.sync="edit" center>
+		<el-dialog title="编辑" :visible.sync="isShowEdit" center>
 			<ul>
 				<li>1</li>
 				<li>2</li>
@@ -129,14 +130,23 @@
 			</ul>
 		</el-dialog>
 
-		<!-- 禁止 -->
-		<el-dialog title="禁用" :visible.sync="forbid" center>
-				<ul>
-					<li>1</li>
-					<li>2</li>
-					<li>3</li>
-				</ul>
-			</el-dialog>
+		<!-- 处方详情 -->
+		<el-dialog title="处方详情" :visible.sync="isShowPrescriptionDetail" center>
+			<ul>
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+			</ul>
+		</el-dialog>
+
+		<!-- 物流状态 -->
+		<el-dialog title="物流状态" :visible.sync="isShowLogisticsStatus" center>
+			<ul>
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+			</ul>
+		</el-dialog>
 
 
 	</div>
@@ -145,29 +155,32 @@
 <script>
 	//引入接口
 	import {
-		fetchHospitalDepts,//2.2.获取医院科室列表
-		addClinic,//7.1新增远程门诊业务
-		updateClinic,//7.2更新远程门诊业务
-		clinicDetail,//7.3查看远程门诊业务详情
+		// 已使用接口
+		addClinic,//7.1新增业务
+		searchClinic,//7.5门诊列表1
+		prescriptionDetailByCondition,//7.11出方列表2
 		disableClinic,//7.4禁用远程门诊业务和诊室
-		searchClinic,//7.5根据条件搜索在线诊室业务
-		onlineRoomsByDoctor,//7.6(WEB医生)获取所有该医生的在线诊室
-		addPrescription,//7.8开处方
-		updatePrescription,//7.9审核处方
-		reviewList,//7.10按审方医生获取处方审核列表
-		prescriptionDetailByCondition,//7.11根据条件获取处方信息
-		prescriptionDetailById,//7.12根据处方id获取处方电子版
-		drugSendRecord,//7.13根据处方id获取处方发货记录
-		drugsByCondition,//7.16药品名称搜索药品信息
-		clinicOrders,//7.18(WEB医生)获取所有该诊室的订单信息
-
+		//筛选接口
 		toolDept,//1.21.1.科室工具栏  get
 		toolRxReviewStatus,//1.21.2.处方审核状态  get
 		toolRxSendStatus,//1.21.3.处方配送状态  get
 		toolRxReviewDoctors,//1.21.4.处方审核医生   get
 		toolRxSendDoctors,//1.21.5.处方发药医生   get
 
+		//未使用接口
+		updateClinic,//7.2更新远程门诊业务
+		clinicDetail,//7.3查看远程门诊业务详情
+		onlineRoomsByDoctor,//7.6(WEB医生)获取所有该医生的在线诊室
+		addPrescription,//7.8开处方
+		updatePrescription,//7.9审核处方
+		reviewList,//7.10按审方医生获取处方审核列表
+		prescriptionDetailById,//7.12根据处方id获取处方电子版
+		drugSendRecord,//7.13根据处方id获取处方发货记录
+		drugsByCondition,//7.16药品名称搜索药品信息
+		clinicOrders,//7.18(WEB医生)获取所有该诊室的订单信息
 
+		// 废弃接口
+		// fetchHospitalDepts,//2.2.获取医院科室列表
 	} from "../api/apiAll.js";
 	//引入组件
 	import normalTab from '../public/publicComponents/normalTab.vue'
@@ -191,8 +204,19 @@
 		data() {
 			return {
 				//显示隐藏
-				dialogFormVisible: false,//是否弹出新增门诊
-				recordVisible: false,//是否弹出查看详情
+
+				//是否弹出新增门诊
+				isShowNewOutPatient: false,
+				//是否弹出关联医生
+				isShowrelationalDoctor: false,
+				//是否弹出查看详情
+				isShowRecord: false,
+				//是否弹出编辑
+				isShowEdit: false,
+				//是否物流状态
+				isShowLogisticsStatus: false,
+				//是否处方详情
+				isShowPrescriptionDetail: false,
 
 				//函数传参
 				// 公共
@@ -204,6 +228,8 @@
 				selectType: "",//统计时筛选的类型
 				time0: "",//统计筛选起始时间
 				time1: "",//统计筛选结束时间
+				clinicId: '',//门诊业务编号
+				status: false,//状态（禁用按钮）
 
 
 				//getList2
@@ -213,22 +239,15 @@
 				sendEnum: "",//配送状态（UNSEND, //未配送；SENDING, //配送中；SENDOVER, //已签收）
 				reviewEnum: "",//审核状态（REVIEWED, //已审核；UNREVIEWED, //未审核；FAILREVIEWED, //
 
-				//查看关联医生弹框的参数
-				departVisible: false,//是否弹出关联医生
+				//选定各个弹框的参数
 				relationalDoctor: [],//接收弹框内的数据
 				cellColor: [
 					{
 						cell: 4,
 						value: "关联医生",
 						oclass: "ooRed"
-					}
+					},
 				],
-
-				//编辑弹框参数
-				edit: false,//是否弹出编辑
-
-				//禁用按钮参数
-				forbid:false,//是否禁用
 
 				//医生信息
 				doctorsInfo: {
@@ -322,21 +341,21 @@
 								name: "查看记录",
 								oclass: "recordBtn",
 								method: (index, row) => {
-									this.recordFun(index, row);
+									this.isShowRecordFun(index, row);
 								}
 							},
 							{
 								name: "编辑",
 								oclass: "recordBtn",
 								method: (index, row) => {
-									this.editFun(index, row);
+									this.isShowEditFun(index, row);
 								}
 							},
 							{
 								name: "禁用",
 								oclass: "recordBtn",
 								method: (index, row) => {
-									this.forbidFun(index, row);
+									this.isShowForbidFun(index, row);
 								}
 							}
 						]
@@ -455,13 +474,26 @@
 						//2.3操作
 						tableBtn: [
 							{
+								name: "处方详情",
+								oclass: "recordBtn",
+								method: (index, row) => {
+									this.isShowPrescriptionDetailFun(index, row);
+								}
+							},
+							{
+								name: "物流状态",
+								oclass: "recordBtn",
+								method: (index, row) => {
+									this.isShowLogisticsStatusFun(index, row);
+								}
+							},
+							{
 								name: "查看记录",
 								oclass: "recordBtn",
 								method: (index, row) => {
-									this.recordFun(index, row);
+									this.isShowRecordFun(index, row);
 								}
-							},
-
+							}
 						]
 					}
 				},
@@ -533,40 +565,6 @@
 				this.time0 = '';//待补充
 				this.getList3();
 			},
-			//7.1新增业务
-			// async newBusiness() {
-			//     let _this = this;
-			//     let query = {
-			//         token: this.userState.token
-			//     };
-			//     const options = {
-			//         clinicId: "",
-			//         clinicType: "远程门诊业务",
-			//         clinicName: "新增远程门诊业务",
-			//         clinicPrice: 1,
-			//         clinicDepartmentId: "1398F2FBB8AA48518385F2486840FE17",
-			//         orgCode: "1545618639429",
-			//         clinicDoctors: ["EB237A1368A44A32B4070154C225C088"],
-			//         clinicDesc: "这是远程门诊的业务噢~",
-			//         clinicProtocolId: "",
-			//         clinicProtocolName: "收费协议",
-			//         clinicProtocolContent: "Oracle 将继续提供JDK 8 免费的公共更新和自动更新。",
-			//         clinicPhone: "18888888888",
-			//         status: ""
-			//     };
-			//     const res = await addClinic(query,options);
-			//     if (res.data && res.data.errCode === 0) {
-			//         this.adminTableData = res.data.body.data2.list;
-			//     } else {
-			//         console.log(res)
-			//         //失败
-			//         this.$notify.error({
-			//             title: "警告",
-			//             message: res.data.errMsg
-			//         });
-			//     }
-			// }
-
 
 			//筛选列表
 			//1.21.1.科室工具栏 (管理)
@@ -735,38 +733,6 @@
 					});
 				}
 			},
-			//getList1中查看的弹框事件
-			async cellClickData(data) {
-				// console.log(data);
-				if ((data[1].label = "关联医生")) {
-					this.departVisible = true;
-					// let _this = this;
-					// let query = {
-					// 	token: this.userState.token,
-					// 	string: this.searchValue,
-					// 	pageNum: this.pageNum,
-					// 	pageSize: this.pageSize,
-					// 	departmentId: data[0].id,
-					// 	businessType: this.businessType,
-					// 	// 	token: this.userState.token,
-					// 	// 	consultationId: data[0].id
-					// };
-					// const res = await searchClinic(query);
-					// if (res.data && res.data.errCode === 0) {
-					// 	console.log('查看关联医生列表请求+成功')
-					// 	// _this.relationalDoctor = res.data.body.data2.list[(data[1].level)].doctors;
-					// 	console.log(res)
-
-					// } else {
-					// 	//失败
-					// 	console.log('查看关联医生列表请求+失败')
-					// 	this.$notify.error({
-					// 		title: "警告",
-					// 		message: res.data.errMsg
-					// 	});
-					// }
-				}
-			},
 			// 7.11根据条件获取处方信息 
 			async getList2() {
 				let _this = this;
@@ -836,16 +802,97 @@
 				// 	});
 				// }
 			},
+
+			//弹框
+			//7.1新增业务
+			// async newBusiness() {
+			//     let _this = this;
+			//     let query = {
+			//         token: this.userState.token
+			//     };
+			//     const options = {
+			//         clinicId: "",
+			//         clinicType: "远程门诊业务",
+			//         clinicName: "新增远程门诊业务",
+			//         clinicPrice: 1,
+			//         clinicDepartmentId: "1398F2FBB8AA48518385F2486840FE17",
+			//         orgCode: "1545618639429",
+			//         clinicDoctors: ["EB237A1368A44A32B4070154C225C088"],
+			//         clinicDesc: "这是远程门诊的业务噢~",
+			//         clinicProtocolId: "",
+			//         clinicProtocolName: "收费协议",
+			//         clinicProtocolContent: "Oracle 将继续提供JDK 8 免费的公共更新和自动更新。",
+			//         clinicPhone: "18888888888",
+			//         status: ""
+			//     };
+			//     const res = await addClinic(query,options);
+			//     if (res.data && res.data.errCode === 0) {
+			//         this.adminTableData = res.data.body.data2.list;
+			//     } else {
+			//         console.log(res)
+			//         //失败
+			//         this.$notify.error({
+			//             title: "警告",
+			//             message: res.data.errMsg
+			//         });
+			//     }
+			// }
+
+			//点击表格1（门诊）中内容 控制是否弹出的事件
+			//查看关联医生
+			async cellClickData(data) {
+				console.log(data);
+				if ((data[1].label = "关联医生")) {
+					this.isShowrelationalDoctor = true;
+				}
+			},
 			//查看记录
-			recordFun() {
-				this.recordVisible = true;
+			isShowRecordFun() {
+				this.isShowRecord = true;
 			},
-			editFun() {
-				this.edit = true;
+			//查看编辑
+			isShowEditFun() {
+				this.isShowEdit = true;
 			},
-			forbidFun() {
-				this.forbid = true;
+			//查看处方详情
+			isShowPrescriptionDetailFun() {
+				this.isShowPrescriptionDetail = true;
 			},
+			//查看物流状态
+			isShowLogisticsStatusFun() {
+				this.isShowLogisticsStatus = true;
+			},
+			//禁用接口的调用
+			async isShowForbidFun(index,row) {
+				console.log(index,row)
+				this.clinicId = row.id;
+				let _this = this;
+				let query = {
+					token: this.userState.token
+				};
+				let options = {
+					clinicId: this.clinicId,
+					status: this.status
+				};
+				const res = await disableClinic(query, options);
+				if (res.data && res.data.errCode === 0) {
+					console.log(res)
+					console.log(_this.status)
+					if(_this.status == true){
+						_this.onlineClinic.tableBody.tableBtn[2].name = '禁用'
+						_this.status = false;
+					}else{
+						_this.onlineClinic.tableBody.tableBtn[2].name = '解除禁用'
+						_this.status = true;
+					}
+				} else {
+					失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			}
 		},
 		async created() {
 			this.filter0();//获取科室列表
