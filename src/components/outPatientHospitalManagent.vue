@@ -9,8 +9,8 @@
 			<div class="online-clinic" v-if="navInfo.i===0">
 				<div class="online-clinic-top">
 					<div class="online-clinic-top-left">
-						<selftag v-model="onlineClinic.topFlag[0]" @reBack="getDepartment"></selftag>
-						<selftag v-model="onlineClinic.topFlag[1]" @reBack="getType"></selftag>
+						<selftag :inData="onlineClinic.topFlag[0]" @reback="getFilter0"></selftag>
+						<selftag v-model="onlineClinic.topFlag[1]" @reback="getFilter1"></selftag>
 					</div>
 					<div class="online-clinic-top-right">
 						<search @searchValue="adminSearchOne"></search>
@@ -18,8 +18,8 @@
 					</div>
 				</div>
 				<div class="online-clinic-middle">
-					{{onlineClinic.tableBody.tableData}}
-					<publicList :columns="onlineClinic.tableBody.columns" :tableData="onlineClinic.tableBody.tableData" :tableBtn="onlineClinic.tableBody.tableBtn">
+					<publicList :columns="onlineClinic.tableBody.columns" :tableData="onlineClinic.tableBody.tableData" :tableBtn="onlineClinic.tableBody.tableBtn" 
+					:cellColor="cellColor" @cellClickData="cellClickData">
 					</publicList>
 				</div>
 			</div>
@@ -27,11 +27,11 @@
 			<div v-else-if="navInfo.i===1">
 				<div class="online-clinic-top">
 					<div class="online-clinic-top-left">
-						<selftag v-model="prescriptionAuditDistribution.topFlag[0]" @reBack="getDepartment"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[1]" @reBack="getType"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[2]" @reBack="getDepartment"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[3]" @reBack="getType"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[4]" @reBack="getDepartment"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[0]" @reback="getFilter0"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[1]" @reback="getFilter1"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[2]" @reback="getFilter2"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[3]" @reback="getFilter3"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[4]" @reback="getFilter4"></selftag>
 					</div>
 					<div class="online-clinic-top-right">
 						<search></search>
@@ -40,7 +40,8 @@
 
 				</div>
 				<div class="online-clinic-middle">
-					<publicList :columns="prescriptionAuditDistribution.tableBody.columns" :tableData="prescriptionAuditDistribution.tableBody.tableData" :tableBtn="onlineClinic.tableBody.tableBtn">
+					<publicList :columns="prescriptionAuditDistribution.tableBody.columns" :tableData="prescriptionAuditDistribution.tableBody.tableData"
+					 :tableBtn="onlineClinic.tableBody.tableBtn">
 					</publicList>
 				</div>
 			</div>
@@ -48,10 +49,10 @@
 			<div v-else-if="navInfo.i===2" class="statistics">
 				<div class="hospital-management-outpatient-statistics-top">
 					<div class="hospital-management-outpatient-statistics-top-left">
-						<selftag v-model="statistics.topFlag[0]" @reBack="getDepartment"></selftag>
+						<selftag v-model="statistics.topFlag[0]" @reback="getFilter0"></selftag>
 					</div>
 					<div class="hospital-management-outpatient-statistics-top-right">
-						<statisticsWay v-model="time" @reBack="getTime"></statisticsWay>
+						<statisticsWay v-model="time" @reBack="getFilterTime"></statisticsWay>
 					</div>
 				</div>
 				<div class="hospital-management-outpatient-statistics-midle">
@@ -62,6 +63,21 @@
 		<!-- 新增门诊弹框 -->
 		<el-dialog title="收货地址" :visible.sync="dialogFormVisible">
 			<!-- <addNewFrame></addNewFrame> -->
+		</el-dialog>
+
+		<!-- 表一查看关联医生弹框 -->
+		<el-dialog class="evaluateBox" title=" 关联医生" :visible.sync="departVisible" width="503px" hight="470px" center>
+			<!-- <ul>
+						<li v-for="(text,index) in receptionDepartment" :key="index">
+								<div>
+										<img src="" />
+								</div>
+								<div class="evaluateCont">
+										<h5>{{text.hospital}}</h5>
+										<div>{{text.department}}</div>
+								</div>
+						</li>
+				</ul> -->
 		</el-dialog>
 
 
@@ -86,6 +102,14 @@
 		drugSendRecord,//7.13根据处方id获取处方发货记录
 		drugsByCondition,//7.16药品名称搜索药品信息
 		clinicOrders,//7.18(WEB医生)获取所有该诊室的订单信息
+
+		toolDept,//1.21.1.科室工具栏  get
+		toolRxReviewStatus,//1.21.2.处方审核状态  get
+		toolRxSendStatus,//1.21.3.处方配送状态  get
+		toolRxReviewDoctors,//1.21.4.处方审核医生   get
+		toolRxSendDoctors,//1.21.5.处方发药医生   get
+
+
 	} from "../api/apiAll.js";
 	//引入组件
 	import normalTab from '../public/publicComponents/normalTab.vue'
@@ -110,21 +134,34 @@
 			return {
 				//显示隐藏
 				dialogFormVisible: false,//是否新增门诊
-				
+
 				//函数传参
 				// 公共
-				pageNum:1,//页数
-				pageSize:10,//条数
-				searchValue: "", //搜索框
-				departmentId:"",//科室id
-				businessType:"",//业务类型
+				pageNum: 1,//页数
+				pageSize: 10,//条数
+				searchValue: "", //搜索框接收参数
+				departmentId: "",//科室id接收参数
+				businessType: "",//业务类型接收参数
+				selectType: "",//统计时筛选的类型
+				time0: "",//统计筛选起始时间
+				time1: "",//统计筛选结束时间
+
+				//getList2查看关联医生弹框的参数
+				departVisible: false,
+				cellColor: [
+					{
+						cell: 4,
+						value: "关联医生",
+						oclass: "ooRed"
+					}
+				],
 
 				//getList2
-				string:"",//门诊订单号
-				sendDoctorId:"",//发药医生
-				reviewDoctorId:"",//审核医生
-				sendEnum:"",//配送状态（UNSEND, //未配送；SENDING, //配送中；SENDOVER, //已签收）
-				reviewEnum:"",//审核状态（REVIEWED, //已审核；UNREVIEWED, //未审核；FAILREVIEWED, //不通过）
+				string: "",//门诊订单号
+				sendDoctorId: "",//发药医生
+				reviewDoctorId: "",//审核医生
+				sendEnum: "",//配送状态（UNSEND, //未配送；SENDING, //配送中；SENDOVER, //已签收）
+				reviewEnum: "",//审核状态（REVIEWED, //已审核；UNREVIEWED, //未审核；FAILREVIEWED, //不通过）
 
 				//医生信息
 				doctorsInfo: {
@@ -157,7 +194,8 @@
 							title: '科室',
 							list: [
 								{
-									text: '全部'
+									text: '测试',
+									value: ''
 								}
 							]
 						},
@@ -166,13 +204,8 @@
 							title: '类型',
 							list: [
 								{
-									text: '全部'
-								},
-								{
-									text: '查询提取'
-								},
-								{
-									text: '主动推送'
+									text: '测试',
+									value: ''
 								}
 							]
 						}
@@ -220,26 +253,8 @@
 								label: " "
 							}
 						],
-						tableData: [
-							{
-								id: "91F0B9D25A474B6FA0CDBAC872035984",
-								age: "1545649424290",
-								name: "冠方医院",
-							},
-							// {
-							//     id: "120BAE29C23C470E9E73DED3D8C071BF",
-							//     age: "1545618639429",
-							//     name: "测试医院",
-							// },
-						],
+						tableData: [],
 						tableBtn: [
-							{
-								name: "评价",
-								oclass: "evaluateBtn",
-								method: (index, row) => {
-									this.evaluateFun(index, row);
-								}
-							},
 							{
 								name: "查看记录",
 								oclass: "recordBtn",
@@ -259,22 +274,8 @@
 							title: '科室',
 							list: [
 								{
-									text: '全部'
-								},
-								{
-									text: '急诊科'
-								},
-								{
-									text: '骨科'
-								},
-								{
-									text: '普外科'
-								},
-								{
-									text: '肿瘤科'
-								},
-								{
-									text: '脑病科'
+									text: '测试',
+									value: ''
 								}
 							]
 						},
@@ -283,17 +284,8 @@
 							title: '审核状态',
 							list: [
 								{
-									text: '全部'
-								},
-								{
-									text: '已审核'
-								},
-								{
-									text: '未审核(22)',
-									warning: true
-								},
-								{
-									text: '不通过'
+									text: '测试',
+									value: ''
 								}
 							]
 						},
@@ -302,16 +294,8 @@
 							title: '配送状态',
 							list: [
 								{
-									text: '全部'
-								},
-								{
-									text: '未配送'
-								},
-								{
-									text: '配送中'
-								},
-								{
-									text: '已签收'
+									text: '测试',
+									value: ''
 								}
 							]
 						},
@@ -320,13 +304,8 @@
 							title: '审核医生',
 							list: [
 								{
-									text: '全部'
-								},
-								{
-									text: 'Dennis Welch'
-								},
-								{
-									text: 'Julie Fields'
+									text: '测试',
+									value: ''
 								}
 							]
 						},
@@ -335,13 +314,8 @@
 							title: '发药医生',
 							list: [
 								{
-									text: '全部'
-								},
-								{
-									text: 'Frank Ryan'
-								},
-								{
-									text: 'Rebecca Warren'
+									text: '测试',
+									value: ''
 								}
 							]
 						}
@@ -400,27 +374,9 @@
 							}
 						],
 						//2.2表体
-						tableData: [
-							{
-								id: "91F0B9D25A474B6FA0CDBAC872035984",
-								age: "1545649424290",
-								name: "冠方医院",
-							},
-							// {
-							//     id: "120BAE29C23C470E9E73DED3D8C071BF",
-							//     age: "1545618639429",
-							//     name: "测试医院",
-							// },
-						],
+						tableData: [],
 						//2.3操作
 						tableBtn: [
-							{
-								name: "评价",
-								oclass: "evaluateBtn",
-								method: (index, row) => {
-									this.evaluateFun(index, row);
-								}
-							},
 							{
 								name: "查看记录",
 								oclass: "recordBtn",
@@ -439,22 +395,8 @@
 							title: '科室',
 							list: [
 								{
-									text: '全部'
-								},
-								{
-									text: '急诊科'
-								},
-								{
-									text: '骨科'
-								},
-								{
-									text: '普外科'
-								},
-								{
-									text: '肿瘤科'
-								},
-								{
-									text: '脑病科'
+									text: '测试',
+									value: ''
 								}
 							]
 						},
@@ -470,21 +412,48 @@
 			})
 		},
 		methods: {
-			getNav(msg) {
-				console.log(msg)
+			//在线、处方审核、统计、切换插件返回值
+			getNav(data) {
+				// console.log(data)
 			},
-			getDepartment(msg) {
-				console.log(msg)
+			//筛选返回值
+			getFilter0(data) {//科室筛选
+				this.departmentId = data.index.value;
+				console.log(this.departmentId)
+				this.getList1();
+				this.getList2();
+				this.getList3();
 			},
-			getType(msg) {
-				console.log(msg)
+			getFilter1(data) {//审核状态
+				this.reviewEnum = data.index.value;
+				console.log(this.reviewEnum)
+				this.getList1();
+				this.getList2();
 			},
-			getTime(time) {
-				console.log(time)
+			getFilter2(data) {//配送状态
+				this.sendEnum = data.index.value;
+				this.getList1();
+				this.getList2();
+			},
+			getFilter3(data) {//审核医生
+				this.reviewDoctorId = data.index.value;
+				this.getList1();
+				this.getList2();
+			},
+			getFilter4(data) {//发药医生
+				this.sendDoctorId = data.index.value;
+				this.getList1();
+				this.getList2();
 			},
 			adminSearchOne(data) {
 				this.searchValue = data;
 				this.getList1();
+				this.getList2();
+			},
+			getFilterTime(data) {
+				this.time0 = '';//待补充
+				this.time0 = '';//待补充
+				this.getList3();
 			},
 			//7.1新增业务
 			// async newBusiness() {
@@ -520,24 +489,37 @@
 			//     }
 			// }
 
-			//1.2.获取医院科室列表 
-			async getList1departmentManage() {
+
+			//筛选列表
+			//1.21.1.科室工具栏 (管理)
+			async filter0() {
 				let _this = this;
 				let query = {
-					orgCode: "1545649424290",
-					deptId: ""
+					token: this.userState.token,
+					type: 'MANAGE'
 				};
-				const res = await fetchHospitalDepts(query);
+				const res = await toolDept(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('科室列表+成功')
+					console.log('1.21.1.科室工具栏 +成功')
 					$.each(res.data.body, function (index, text) {
+						//在线诊室筛选列表渲染
 						_this.onlineClinic.topFlag[0].list.push({
-							text: text.deptName,
-							value: text.deptId
+							text: text.name,
+							value: text.id
+						});
+						//处方审核筛选列表渲染
+						_this.prescriptionAuditDistribution.topFlag[0].list.push({
+							text: text.name,
+							value: text.id
+						});
+						//统计筛选列表渲染
+						_this.statistics.topFlag[0].list.push({
+							text: text.name,
+							value: text.id
 						});
 					});
 				} else {
-					console.log('科室列表+失败')
+					console.log('1.21.1.科室工具栏 +失败')
 					//失败
 					this.$notify.error({
 						title: "警告",
@@ -545,14 +527,114 @@
 					});
 				}
 			},
-			//7.5根据条件搜索在线诊室业务 
+			//1.21.2.处方审核状态
+			async filter1() {
+				let _this = this;
+				let query = {
+					token: this.userState.token,
+				};
+				const res = await toolRxReviewStatus(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('1.21.2.处方审核状态 +成功')
+					$.each(res.data.body, function (index, text) {
+						//处方审核状态列表渲染
+						_this.prescriptionAuditDistribution.topFlag[1].list.push({
+							text: text.name,
+							value: text.id
+						});
+					});
+				} else {
+					console.log('1.21.2.处方审核状态+失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
+			//1.21.3.处方配送状态
+			async filter2() {
+				let _this = this;
+				let query = {
+					token: this.userState.token,
+				};
+				const res = await toolRxSendStatus(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('1.21.3.处方配送状态+成功')
+					$.each(res.data.body, function (index, text) {
+						//处方配送状态渲染
+						_this.prescriptionAuditDistribution.topFlag[2].list.push({
+							text: text.name,
+							value: text.id
+						});
+					});
+				} else {
+					console.log('1.21.3.处方配送状态+失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
+			//1.21.4.处方审核医生
+			async filter3() {
+				let _this = this;
+				let query = {
+					token: this.userState.token,
+				};
+				const res = await toolRxReviewDoctors(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('1.21.4.处方审核医生+成功')
+					$.each(res.data.body, function (index, text) {
+						//处方审核医生渲染
+						_this.prescriptionAuditDistribution.topFlag[3].list.push({
+							text: text.name,
+							value: text.id
+						});
+					});
+				} else {
+					console.log('1.21.4.处方审核医生+失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
+			//1.21.5.处方发药医生
+			async filter4() {
+				let _this = this;
+				let query = {
+					token: this.userState.token,
+				};
+				const res = await toolRxSendDoctors(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('1.21.5.处方发药医生+成功')
+					$.each(res.data.body, function (index, text) {
+						//处方发药医生渲染
+						_this.prescriptionAuditDistribution.topFlag[4].list.push({
+							text: text.name,
+							value: text.id
+						});
+					});
+				} else {
+					console.log('1.21.5.处方发药医生+失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
+			//7.5根据条件搜索在线诊室业务 获取列表
 			async getList1() {
 				let _this = this;
 				let query = {
 					token: this.userState.token,
 					string: this.searchValue,
 					pageNum: this.pageNum,
-					pageSize:this.pageSize,
+					pageSize: this.pageSize,
 					departmentId: this.departmentId,
 					businessType: this.businessType
 				};
@@ -573,16 +655,41 @@
 					});
 				}
 			},
+			//getList1中查看的弹框事件
+			async cellClickData(data) {
+				alert(22)
+				console.log(data);
+				if ((data[1].label = "关联医生")) {
+					this.departVisible = true;
+					// let _this = this;
+					// let query = {
+					// 	token: this.userState.token,
+					// 	consultationId: data[0].id
+					// };
+					// const res = await queryByDeptList(query);
+					// if (res.data && res.data.errCode === 0) {
+					// 	_this.receptionDepartment = res.data.body;
+					// } else {
+					// 	//失败
+					// 	this.$notify.error({
+					// 		title: "警告",
+					// 		message: res.data.errMsg
+					// 	});
+					// }
+				}
+				// if ((data[1].label = "参与专家")) {
+				// }
+			},
 			// 7.11根据条件获取处方信息 
 			async getList2() {
 				let _this = this;
 				let query = {
 					token: this.userState.token,
-					departmentId: "this.departmentId",
-					reviewEnum: "this.reviewEnum",
-					sendEnum: "this.sendEnum",
-					reviewDoctorId: "this.reviewDoctorId",
-					sendDoctorId: "this.sendDoctorId",
+					departmentId: this.departmentId,
+					reviewEnum: this.reviewEnum,
+					sendEnum: this.sendEnum,
+					reviewDoctorId: this.reviewDoctorId,
+					sendDoctorId: this.sendDoctorId,
 					string: this.string,
 					pageNum: this.pageNum,
 					pageSize: this.pageSize,
@@ -590,23 +697,24 @@
 				const res = await prescriptionDetailByCondition(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表2+成功')
-					$.each(res.data.body.data2.list,function(index,text){
-						if(text.reviewEnum == "UNREVIEWED"){
+					console.log(res)
+					$.each(res.data.body.data2.list, function (index, text) {
+						if (text.reviewEnum == "UNREVIEWED") {
 							text.reviewEnum = '未审核'
-						}else if(text.reviewEnum == "REVIEWED"){
+						} else if (text.reviewEnum == "REVIEWED") {
 							text.reviewEnum = '已审核'
-						}else if(text.reviewEnum == "FAILREVIEWED"){
+						} else if (text.reviewEnum == "FAILREVIEWED") {
 							text.reviewEnum = '不通过'
-						}else{
+						} else {
 							text.reviewEnum = '出错了'
 						};
-						if(text.sendEnum == "UNSEND"){
+						if (text.sendEnum == "UNSEND") {
 							text.sendEnum = '未配送'
-						}else if(text.sendEnum == "SENDING"){
+						} else if (text.sendEnum == "SENDING") {
 							text.sendEnum = '配送中'
-						}else if(text.sendEnum == "SENDOVER"){
+						} else if (text.sendEnum == "SENDOVER") {
 							text.sendEnum = '已签收'
-						}else{
+						} else {
 							text.sendEnum = '出错了'
 						}
 					})
@@ -620,32 +728,37 @@
 					});
 				}
 			},
-			//统计列表
+			//统计图表数据的获取
 			async getList3() {
-				let _this = this;
-				let query = {
-					token: this.userState.token
-				};
-				const res = await searchClinic(query);
-				if (res.data && res.data.errCode === 0) {
-					console.log('统计列表+成功')
-					this.adminTableData = res.data.body.data2.list;
-				} else {
-					//失败
-					console.log('统计列表+失败')
-					this.$notify.error({
-						title: "警告",
-						message: res.data.errMsg
-					});
-				}
+				console.log('统计接口还没出来')
+				// let _this = this;
+				// let query = {
+				// 	token: this.userState.token
+				//	//筛选的时间条件参数待补充
+				// };
+				// const res = await searchClinic(query);
+				// if (res.data && res.data.errCode === 0) {
+				// 	console.log('统计图标数据+成功')
+				// 	this.adminTableData = res.data.body.data2.list;
+				// } else {
+				// 	//失败
+				// 	console.log('统计图标数据+失败')
+				// 	this.$notify.error({
+				// 		title: "警告",
+				// 		message: res.data.errMsg
+				// 	});
+				// }
 			}
 		},
-
 		async created() {
-			this.getList1departmentManage();//门诊管理科室获取
+			this.filter0();//获取科室列表
+			this.filter1();//审核状态
+			this.filter2();//配送状态
+			this.filter3();//审核医生
+			this.filter4();//发药医生
 			this.getList1();//管理列表1
 			this.getList2();//管理列表2
-			// this.getList3();//管理列表3（统计）
+			this.getList3();//管理图表3（统计图表数据获取）
 		}
 	}
 </script>

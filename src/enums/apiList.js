@@ -148,4 +148,11 @@ export default {
     updateConsultationTree:'/m/v1/api/basics/hospital/updateConsultationTree',//8.14更新会诊范围
     queryConsultationInformList:'/m/v1/api/consultation/queryConsultationInformList',//10.邀请会诊范围树
     sponsorConsultationInform:'/m/v1/api/consultation/sponsorConsultationInform',//11.发起会诊通知
+
+    //筛选列表--唐茂原
+    toolDept:'/m/v1/api/basics/common/toolDept',//1.21.1.科室工具栏  get
+    toolRxReviewStatus:'/m/v1/api/basics/common/toolRxReviewStatus',//1.21.2.处方审核状态  get
+    toolRxSendStatus:'/m/v1/api/basics/common/toolRxSendStatus',//1.21.3.处方配送状态  get
+    toolRxReviewDoctors:'/m/v1/api/basics/common/toolRxReviewDoctors',//1.21.4.处方审核医生   get
+    toolRxSendDoctors:'/m/v1/api/basics/common/toolRxSendDoctors',//1.21.5.处方发药医生   get
 }
