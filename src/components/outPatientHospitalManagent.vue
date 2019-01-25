@@ -18,8 +18,8 @@
 					</div>
 				</div>
 				<div class="online-clinic-middle">
-					<publicList :columns="onlineClinic.tableBody.columns" :tableData="onlineClinic.tableBody.tableData" :tableBtn="onlineClinic.tableBody.tableBtn" 
-					:cellColor="cellColor" @cellClickData="cellClickData">
+					<publicList :columns="onlineClinic.tableBody.columns" :tableData="onlineClinic.tableBody.tableData" :tableBtn="onlineClinic.tableBody.tableBtn"
+					 :cellColor="cellColor" @cellClickData="cellClickData">
 					</publicList>
 				</div>
 			</div>
@@ -66,19 +66,77 @@
 		</el-dialog>
 
 		<!-- 表一查看关联医生弹框 -->
-		<el-dialog class="evaluateBox" title=" 关联医生" :visible.sync="departVisible" width="503px" hight="470px" center>
-			<!-- <ul>
-						<li v-for="(text,index) in receptionDepartment" :key="index">
-								<div>
-										<img src="" />
-								</div>
-								<div class="evaluateCont">
-										<h5>{{text.hospital}}</h5>
-										<div>{{text.department}}</div>
-								</div>
-						</li>
-				</ul> -->
+		<el-dialog class="evaluateBox1" title=" 关联医生" :visible.sync="departVisible" width="503px" hight="470px" center>
+			<ul>
+				<li v-for="(text,index) in relationalDoctor" :key="index">
+					<div>
+						<!-- 待头像 -->
+						<img src="../assets/img/ME.png" />
+					</div>
+					<div class="evaluateCont">
+						<h5>{{text.doctorName}}</h5>
+						<div>{{text.doctorId}}</div>
+						<div>{{text.doctorStates}}</div>
+					</div>
+				</li>
+			</ul>
 		</el-dialog>
+
+		<!-- 查看记录弹框 -->
+		<el-dialog class="  " title="  " :visible.sync="recordVisible" width="602px" hight="356px" center>
+			<ul>
+				<li class="ohisList">
+					<h3>2018年4月4日</h3>
+					<ul>
+						<li class="ohisListMain">
+							<div>
+								<img src="../assets/img/a-6.png" />
+							</div>
+							<div class="ohisListRg">
+								<div>张某人
+									<span> 17:54:34</span>
+								</div>
+								<div>那就等带节后再说吧。</div>
+							</div>
+						</li>
+					</ul>
+				</li>
+				<li class="ohisList">
+					<h3>2018年4月4日</h3>
+					<ul>
+						<li class="ohisListMain">
+							<div>
+								<img src="../assets/img/a-6.png" />
+							</div>
+							<div class="ohisListRg">
+								<div>张某人
+									<span> 17:54:34</span>
+								</div>
+								<div>那就等带节后再说吧。</div>
+							</div>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</el-dialog>
+
+		<!-- 编辑 -->
+		<el-dialog title="编辑" :visible.sync="edit" center>
+			<ul>
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+			</ul>
+		</el-dialog>
+
+		<!-- 禁止 -->
+		<el-dialog title="禁用" :visible.sync="forbid" center>
+				<ul>
+					<li>1</li>
+					<li>2</li>
+					<li>3</li>
+				</ul>
+			</el-dialog>
 
 
 	</div>
@@ -133,7 +191,8 @@
 		data() {
 			return {
 				//显示隐藏
-				dialogFormVisible: false,//是否新增门诊
+				dialogFormVisible: false,//是否弹出新增门诊
+				recordVisible: false,//是否弹出查看详情
 
 				//函数传参
 				// 公共
@@ -146,8 +205,17 @@
 				time0: "",//统计筛选起始时间
 				time1: "",//统计筛选结束时间
 
-				//getList2查看关联医生弹框的参数
-				departVisible: false,
+
+				//getList2
+				string: "",//门诊订单号
+				sendDoctorId: "",//发药医生
+				reviewDoctorId: "",//审核医生
+				sendEnum: "",//配送状态（UNSEND, //未配送；SENDING, //配送中；SENDOVER, //已签收）
+				reviewEnum: "",//审核状态（REVIEWED, //已审核；UNREVIEWED, //未审核；FAILREVIEWED, //
+
+				//查看关联医生弹框的参数
+				departVisible: false,//是否弹出关联医生
+				relationalDoctor: [],//接收弹框内的数据
 				cellColor: [
 					{
 						cell: 4,
@@ -156,12 +224,11 @@
 					}
 				],
 
-				//getList2
-				string: "",//门诊订单号
-				sendDoctorId: "",//发药医生
-				reviewDoctorId: "",//审核医生
-				sendEnum: "",//配送状态（UNSEND, //未配送；SENDING, //配送中；SENDOVER, //已签收）
-				reviewEnum: "",//审核状态（REVIEWED, //已审核；UNREVIEWED, //未审核；FAILREVIEWED, //不通过）
+				//编辑弹框参数
+				edit: false,//是否弹出编辑
+
+				//禁用按钮参数
+				forbid:false,//是否禁用
 
 				//医生信息
 				doctorsInfo: {
@@ -247,10 +314,6 @@
 							{
 								prop: "updateTime",
 								label: "最近修改"
-							},
-							{
-								prop: "btns",
-								label: " "
 							}
 						],
 						tableData: [],
@@ -260,6 +323,20 @@
 								oclass: "recordBtn",
 								method: (index, row) => {
 									this.recordFun(index, row);
+								}
+							},
+							{
+								name: "编辑",
+								oclass: "recordBtn",
+								method: (index, row) => {
+									this.editFun(index, row);
+								}
+							},
+							{
+								name: "禁用",
+								oclass: "recordBtn",
+								method: (index, row) => {
+									this.forbidFun(index, row);
 								}
 							}
 						]
@@ -357,6 +434,10 @@
 								label: "发药医生"
 							},
 							{
+								prop: "sendTime",
+								label: "发药时间"
+							},
+							{
 								prop: "sendEnum",
 								label: "配送状态"
 							},
@@ -368,10 +449,6 @@
 								prop: "sendPrice",
 								label: "配送费"
 							},
-							{
-								prop: "btns",
-								label: " "
-							}
 						],
 						//2.2表体
 						tableData: [],
@@ -383,7 +460,8 @@
 								method: (index, row) => {
 									this.recordFun(index, row);
 								}
-							}
+							},
+
 						]
 					}
 				},
@@ -641,7 +719,9 @@
 				const res = await searchClinic(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表1+成功')
+					console.log(res)
 					$.each(res.data.body.data2.list, function (index, text) {
+						_this.relationalDoctor = res.data.body.data2.list[index].doctors;
 						text.totalPeople = "总: " + text.totalPeople + "  今日: " + text.todayPeople
 						text.doctors = "查看"
 					})
@@ -657,28 +737,35 @@
 			},
 			//getList1中查看的弹框事件
 			async cellClickData(data) {
-				alert(22)
-				console.log(data);
+				// console.log(data);
 				if ((data[1].label = "关联医生")) {
 					this.departVisible = true;
 					// let _this = this;
 					// let query = {
 					// 	token: this.userState.token,
-					// 	consultationId: data[0].id
+					// 	string: this.searchValue,
+					// 	pageNum: this.pageNum,
+					// 	pageSize: this.pageSize,
+					// 	departmentId: data[0].id,
+					// 	businessType: this.businessType,
+					// 	// 	token: this.userState.token,
+					// 	// 	consultationId: data[0].id
 					// };
-					// const res = await queryByDeptList(query);
+					// const res = await searchClinic(query);
 					// if (res.data && res.data.errCode === 0) {
-					// 	_this.receptionDepartment = res.data.body;
+					// 	console.log('查看关联医生列表请求+成功')
+					// 	// _this.relationalDoctor = res.data.body.data2.list[(data[1].level)].doctors;
+					// 	console.log(res)
+
 					// } else {
 					// 	//失败
+					// 	console.log('查看关联医生列表请求+失败')
 					// 	this.$notify.error({
 					// 		title: "警告",
 					// 		message: res.data.errMsg
 					// 	});
 					// }
 				}
-				// if ((data[1].label = "参与专家")) {
-				// }
 			},
 			// 7.11根据条件获取处方信息 
 			async getList2() {
@@ -748,7 +835,17 @@
 				// 		message: res.data.errMsg
 				// 	});
 				// }
-			}
+			},
+			//查看记录
+			recordFun() {
+				this.recordVisible = true;
+			},
+			editFun() {
+				this.edit = true;
+			},
+			forbidFun() {
+				this.forbid = true;
+			},
 		},
 		async created() {
 			this.filter0();//获取科室列表
@@ -763,7 +860,7 @@
 	}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 	.hospital-management-outpatient {}
 
 	.hospital-management-outpatient-nav {}
@@ -821,5 +918,87 @@
 
 	.hospital-management-outpatient-statistics-top>div {
 		flex: 1;
+	}
+
+	.evaluateBox1 {
+		ul {
+			li {
+				display: flex;
+				align-items: center;
+
+				div {
+					img {
+						width: 0.5rem;
+						border-radius: 50%;
+						margin: 0 0.2rem 0 0;
+					}
+				}
+			}
+
+		}
+	}
+
+	/* 查看记录 */
+	.hisMain {
+		padding: 10px 28px;
+	}
+
+	.ohisList {
+		margin-bottom: 25px;
+	}
+
+	.ohisList>h3 {
+		margin-bottom: 15px;
+		font-family: PingFangSC-Regular;
+		font-size: 14px;
+		color: #000000;
+		letter-spacing: -0.4px;
+		font-weight: normal;
+	}
+
+	.ohisListMain {
+		display: flex;
+		display: -webkit-flex;
+		margin-bottom: 15px;
+	}
+
+	.ohisListMain>div:first-child {
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		margin-right: 12px;
+	}
+
+	.ohisListMain>div:first-child>img {
+		width: 100%;
+		height: 100%;
+		border-radius: 50%;
+	}
+
+	.ohisListRg>div {
+		font-size: 0.14rem;
+		font-family: PingFangSC-Regular;
+		color: #323c47;
+	}
+
+	.ohisListRg>div:first-child {
+		color: #939eab;
+		font-size: 0.12rem;
+	}
+
+	.ooRed {
+		color: red !important;
+	}
+
+	.recordBtn {
+		width: 57px;
+		height: 20px;
+		background: rgba(66, 133, 244, 0.1);
+		border: 1px solid rgba(66, 133, 244, 0.6);
+		border-radius: 3px;
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #4d7cfe;
+		line-height: 3px;
 	}
 </style>
