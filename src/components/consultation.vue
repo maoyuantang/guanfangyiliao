@@ -63,7 +63,7 @@
             </el-form>
         </el-dialog>
         <!-- 打开评价 -->
-        <el-dialog class="evaluateBox" title=" " :visible.sync="evaluateVisible" width="602px" hight="356px" center>
+        <!-- <el-dialog class="evaluateBox" title=" " :visible.sync="evaluateVisible" width="602px" hight="356px" center>
             <el-form ref="form" :model="form" label-width="80px">
                 <el-form-item class="evaluateMargin evaluateMargin1">
                     <el-input class="evaluateInput" type="textarea" v-model="form.desc" placeholder="请选择活动区域"></el-input>
@@ -73,7 +73,7 @@
                     <el-button class="confirmBtn" type="primary">确认</el-button>
                 </el-form-item>
             </el-form>
-        </el-dialog>
+        </el-dialog> -->
         <!-- 接收科室 -->
         <el-dialog class="evaluateBox" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
             <ul>
@@ -119,7 +119,8 @@
         </el-dialog>
         <!-- 邀请弹框 -->
         <el-dialog class="evaluateBox evaluateBox2" title=" 邀请医生" :visible.sync="invitationVisible" width="602px" hight="356px" center>
-            <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChange" show-checkbox ></el-tree>
+            <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
+            <el-button type="primary" @click="sureInvitation()">确认邀请</el-button>
         </el-dialog>
         <!-- 查看记录 -->
         <el-dialog class="  " title="  " :visible.sync="recordVisible" width="602px" hight="356px" center>
@@ -234,7 +235,7 @@
                         <template slot-scope="scope">
                             <el-button @click="handleClick(scope.row)" type="text" size="small">病历</el-button>
                             <el-button @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
-                            <el-button v-show="scope.row.status=='OVER'" @click="handleClick(scope.row)" type="text" size="small">查看记录</el-button>
+                            <el-button v-show="scope.row.status=='OVER'" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
                             <el-button v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="toConsultation(scope.row)" type="text" size="small">进入会诊</el-button>
                             <el-button v-show="scope.row.departmentId==userState.userId" @click="handleClick(scope.row)" type="text" size="small">结束</el-button>
                         </template>
@@ -261,7 +262,9 @@ import {
     getAllHospital,
     addConsultation,
     queryByDeptList,
-    queryConsultationInformList
+    queryConsultationInformList,
+    sponsorConsultationInform,
+    fetchHistoryMessage
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -299,17 +302,7 @@ export default {
                     oclass: "ooRed"
                 }
             ],
-            invitationData: [
-                {
-                    label: "一级 1",
-                    children: [
-                        {
-                            label: "二级 1-1",
-                            id: "4545"
-                        }
-                    ]
-                }
-            ],
+            invitationData: [],
             defaultProps: {
                 children: "children",
                 label: "label"
@@ -379,7 +372,8 @@ export default {
                 title: "全部",
                 list: [
                     {
-                        text: "全部"
+                        text: "全部",
+                        value: ""
                     },
                     {
                         text: "未开始",
@@ -396,7 +390,8 @@ export default {
                 ]
             },
             //医生端
-            invitationSelectList:[],
+            consultationId: "",
+            invitationSelectList: [],
             doctorTime: "",
             oDocTime: "",
             startDate: "",
@@ -534,7 +529,7 @@ export default {
                     name: "查看记录",
                     oclass: "recordBtn",
                     method: (index, row) => {
-                        this.recordFun(index, row);
+                        this.historicalRecord(row);
                     }
                 }
             ],
@@ -598,7 +593,6 @@ export default {
         })
     },
     methods: {
-       
         // 管理端事件
         getOTab1(data) {
             this.applicationDeptId = data.index.value;
@@ -644,14 +638,74 @@ export default {
             this.recordVisible = true;
         },
         //医生端事件
-         handleCheckChange(data,odata) {
-             $.each(odata.checkedNodes,function(index,text){
-                 if(text.id){
-                     this.invitationSelectList.push(text.id)
-                 }
-             })
+
+        handleCheckChange(data, odata) {
+            this.invitationSelectList = [];
+            let _this = this;
+
+            $.each(odata.checkedNodes, function(index, text) {
+                if (text.id) {
+                    _this.invitationSelectList.push(text.id);
+                }
+            });
             console.log(this.invitationSelectList);
             console.log(odata);
+        },
+        //确认邀请
+        async sureInvitation() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                consultationId: this.consultationId,
+                depts: this.invitationSelectList
+            };
+            const res = await sponsorConsultationInform(query, options);
+            if (res.data && res.data.errCode === 0) {
+               this.$notify.error({
+                    title: "成功",
+                    message: "邀请成功"
+                });
+                setTimeout(function(){
+                _this.invitationVisible = false;
+                },1000)
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //查看记录
+        async historicalRecord(row) {
+            this.recordVisible=true;
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                userId: this.userSelfInfo.userId,
+                sessionId: [row.sessionId],
+                msgId: 0,
+                pageNums: 15
+            };
+            const res = await fetchHistoryMessage(query, options);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body, function(index, text) {
+                    _this.hospitalList.push({
+                        name: text.orgName,
+                        value: text.orgCode
+                    });
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
         },
         getOTab4(data) {
             console.log(data);
@@ -758,6 +812,8 @@ export default {
         },
         //获取邀请列表
         async Invitation(row) {
+            this.consultationId = row.id;
+            this.invitationData = [];
             this.invitationVisible = true;
             let _this = this;
             let query = {
@@ -839,10 +895,6 @@ export default {
             const res = await queryByManagerPage(options);
             if (res.data && res.data.errCode === 0) {
                 this.adminTableData = res.data.body.data2.list;
-                // $.each(this.adminTableData,function(index,text){
-                //     text.oclass="doctorDatial"
-                // })
-                this.adminTableData[0].oclass = "doctorDatial";
 
                 console.log(res);
             } else {

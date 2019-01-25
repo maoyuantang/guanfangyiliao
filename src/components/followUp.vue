@@ -215,9 +215,9 @@
                                     </el-form-item>
 
                                     <el-form-item label="所属分类">
-                                        <el-cascader :options="mydAddoptions" @active-item-change="handleChange" v-model="text.associationId" :props="props"></el-cascader>
-                                        <!-- <el-cascader :options="mydAddoptions" v-model="selectedOptions" expand-trigger="hover" @change="handleChange"> -->
-                                        <!-- </el-cascader> -->
+                                        {{associationId}}
+                                        <!-- <el-cascader :options="mydAddoptions" @active-item-change="handleChange" v-model="text.associationId" :props="props"></el-cascader> -->
+                                        <el-cascader :options="mydAddoptions" v-model="associationId" @active-item-change="handleChange" :props="props" :show-all-levels="false"></el-cascader>
                                     </el-form-item>
                                 </div>
                                 <span>
@@ -294,7 +294,7 @@
                         </div>
 
                         <el-button class="startConsul" v-show="addFollowVis" type="text" @click="mydAddTemplate = true">新增模板</el-button>
-
+                        <el-button v-show="mydTableChecked" class="startConsul" type="text" @click="sendBtn()">发送</el-button>
                     </div>
                     <div class="sendTemplateBox" v-show="sendTemplateListVis">
                         <ul>
@@ -307,14 +307,14 @@
                         </ul>
                         <div class="addTemplate">
                             <div @click="sendTemplateList()">
-                                加
+                                <img src="../assets/img/mydAdd.png" />
                             </div>
                             <div>
                                 此处可选择多个模板
                             </div>
                         </div>
                     </div>
-                    <el-button v-show="mydTableChecked" class="startConsul" type="text" @click="sendBtn()">发送</el-button>
+
                     <div>
 
                     </div>
@@ -349,7 +349,7 @@
                         <!-- <publicTime @timeValue="timeValueFun"></publicTime> -->
                         <statisticsWay @reBack="tjTimeValueFun"></statisticsWay>
                     </div>
-                    <div>
+                    <div style="display:flex">
                         <normalColumnChart :inData="drawData"> </normalColumnChart>
                         <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
 
@@ -849,6 +849,7 @@ export default {
                 }
             ],
             //满意度数据
+            associationId: [],
             sendTemplate1: [],
             mydAddData: {
                 type: "OUTPATIENT",
@@ -863,80 +864,6 @@ export default {
                 ]
             },
             selectedOptions: [],
-            // mydAddoptions: [
-            //     {
-            //         value: "OUTPATIENT",
-            //         label: "门诊调查",
-            //         children: [
-            //             {
-            //                 value: "shejiyuanze",
-            //                 label: "设计原则",
-            //                 children: [
-            //                     {
-            //                         value: "yizhi",
-            //                         label: "一致"
-            //                     },
-            //                     {
-            //                         value: "fankui",
-            //                         label: "反馈"
-            //                     },
-            //                     {
-            //                         value: "xiaolv",
-            //                         label: "效率"
-            //                     },
-            //                     {
-            //                         value: "kekong",
-            //                         label: "可控"
-            //                     }
-            //                 ]
-            //             }
-            //         ]
-            //     },
-            //     {
-            //         value: "MEDICALTECHNOLOGY",
-            //         label: "医技调查",
-            //         children: [
-            //             {
-            //                 value: "shejiyuanze",
-            //                 label: "设计原则",
-            //                 children: []
-            //             }
-            //         ]
-            //     },
-            //     {
-            //         value: "INHOSPITAL",
-            //         label: "住院调查",
-            //         children: [
-            //             {
-            //                 value: "shejiyuanze",
-            //                 label: "设计原则",
-            //                 children: []
-            //             }
-            //         ]
-            //     },
-            //     {
-            //         value: "ADMINISTRATION",
-            //         label: "行政调查",
-            //         children: [
-            //             {
-            //                 value: "shejiyuanze",
-            //                 label: "设计原则",
-            //                 children: []
-            //             }
-            //         ]
-            //     },
-            //     {
-            //         value: "URL",
-            //         label: "推送链接",
-            //         children: [
-            //             {
-            //                 value: "shejiyuanze",
-            //                 label: "设计原则",
-            //                 children: []
-            //             }
-            //         ]
-            //     }
-            // ],
             mydAddoptions: [
                 {
                     value: "OUTPATIENT",
@@ -1670,10 +1597,14 @@ export default {
                 });
             }
         },
-        //满意度发送模板3
+        //满意度调查发送模板3
         async sendTemplateList(value) {
-            // this.templateVisible = true;
-            this.mydType = value[0];
+            this.templateVisible = true;
+            if (value) {
+                this.mydType = value[0];
+                 this.templateVisible = false
+            }
+
             let _this = this;
             let query = {
                 token: this.userState.token,
@@ -1682,105 +1613,106 @@ export default {
             const res = await getTitleList(query);
             if (res.data && res.data.errCode === 0) {
                 this.mydTemplateTitle = res.data.body;
-
-                if (value[0] == "OUTPATIENT") {
-                    _this.mydAddoptions[0].cities = [];
-                    $.each(res.data.body, function(index, text) {
-                        _this.mydAddoptions[0].cities.push({
-                            value: text.associationId,
-                            label: text.title,
-                            cities: [
-                                {
-                                    value: "",
-                                    label: text.context
-                                }
-                            ]
+                if (value) {
+                    if (value[0] == "OUTPATIENT") {
+                        _this.mydAddoptions[0].cities = [];
+                        $.each(res.data.body, function(index, text) {
+                            _this.mydAddoptions[0].cities.push({
+                                value: text.associationId,
+                                label: text.title,
+                                cities: [
+                                    {
+                                        value: "",
+                                        label: text.context
+                                    }
+                                ]
+                            });
                         });
-                    });
-                } else if (value[0] == "MEDICALTECHNOLOGY") {
-                    _this.mydAddoptions[1].cities = [];
-                    $.each(res.data.body, function(index, text) {
-                        _this.mydAddoptions[1].cities.push({
-                            value: text.associationId,
-                            label: text.title,
-                            cities: [
-                                {
-                                    value: "",
-                                    label: text.context
-                                }
-                            ]
+                    } else if (value[0] == "MEDICALTECHNOLOGY") {
+                        _this.mydAddoptions[1].cities = [];
+                        $.each(res.data.body, function(index, text) {
+                            _this.mydAddoptions[1].cities.push({
+                                value: text.associationId,
+                                label: text.title,
+                                cities: [
+                                    {
+                                        value: "",
+                                        label: text.context
+                                    }
+                                ]
+                            });
                         });
-                    });
-                } else if (value[0] == "INHOSPITAL") {
-                    _this.mydAddoptions[2].cities = [];
-                    $.each(res.data.body, function(index, text) {
-                        _this.mydAddoptions[1].cities.push({
-                            value: text.associationId,
-                            label: text.title,
-                            cities: [
-                                {
-                                    value: "",
-                                    label: text.context
-                                }
-                            ]
+                    } else if (value[0] == "INHOSPITAL") {
+                        _this.mydAddoptions[2].cities = [];
+                        $.each(res.data.body, function(index, text) {
+                            _this.mydAddoptions[1].cities.push({
+                                value: text.associationId,
+                                label: text.title,
+                                cities: [
+                                    {
+                                        value: "",
+                                        label: text.context
+                                    }
+                                ]
+                            });
                         });
-                    });
-                } else if (value[0] == "ADMINISTRATION") {
-                    _this.mydAddoptions[3].cities = [];
-                    $.each(res.data.body, function(index, text) {
-                        _this.mydAddoptions[1].cities.push({
-                            value: text.associationId,
-                            label: text.title,
-                            cities: [
-                                {
-                                    value: "",
-                                    label: text.context
-                                }
-                            ]
+                    } else if (value[0] == "ADMINISTRATION") {
+                        _this.mydAddoptions[3].cities = [];
+                        $.each(res.data.body, function(index, text) {
+                            _this.mydAddoptions[1].cities.push({
+                                value: text.associationId,
+                                label: text.title,
+                                cities: [
+                                    {
+                                        value: "",
+                                        label: text.context
+                                    }
+                                ]
+                            });
                         });
-                    });
-                } else if (value[0] == "URL") {
-                    _this.mydAddoptions[4].cities = [];
-                    $.each(res.data.body, function(index, text) {
-                        _this.mydAddoptions[1].cities.push({
-                            value: text.associationId,
-                            label: text.title,
-                            cities: [
-                                {
-                                    value: "",
-                                    label: text.context
-                                }
-                            ]
+                    } else if (value[0] == "URL") {
+                        _this.mydAddoptions[4].cities = [];
+                        $.each(res.data.body, function(index, text) {
+                            _this.mydAddoptions[1].cities.push({
+                                value: text.associationId,
+                                label: text.title,
+                                cities: [
+                                    {
+                                        value: "",
+                                        label: text.context
+                                    }
+                                ]
+                            });
                         });
-                    });
-                } else if (value[0] == "MEDICALTECHNOLOGY") {
-                    _this.mydAddoptions[1].cities = [];
-                    $.each(res.data.body, function(index, text) {
-                        _this.mydAddoptions[1].cities.push({
-                            value: text.associationId,
-                            label: text.title,
-                            cities: [
-                                {
-                                    value: "",
-                                    label: text.context
-                                }
-                            ]
+                    } else if (value[0] == "MEDICALTECHNOLOGY") {
+                        _this.mydAddoptions[1].cities = [];
+                        $.each(res.data.body, function(index, text) {
+                            _this.mydAddoptions[1].cities.push({
+                                value: text.associationId,
+                                label: text.title,
+                                cities: [
+                                    {
+                                        value: "",
+                                        label: text.context
+                                    }
+                                ]
+                            });
                         });
-                    });
-                } else if (value[0] == "MEDICALTECHNOLOGY") {
-                    _this.mydAddoptions[1].cities = [];
-                    $.each(res.data.body, function(index, text) {
-                        _this.mydAddoptions[1].cities.push({
-                            value: text.associationId,
-                            label: text.title,
-                            cities: [
-                                {
-                                    value: "",
-                                    label: text.context
-                                }
-                            ]
+                    } else if (value[0] == "MEDICALTECHNOLOGY") {
+                        _this.mydAddoptions[1].cities = [];
+                        $.each(res.data.body, function(index, text) {
+                            _this.mydAddoptions[1].cities.push({
+                                value: text.associationId,
+                                label: text.title,
+                                cities: [
+                                    {
+                                        value: "",
+                                        label: text.context
+                                    }
+                                ]
+                            });
                         });
-                    });
+                    }
                 }
             } else {
                 //失败
@@ -1839,7 +1771,7 @@ export default {
                     title: "成功",
                     message: "发送成功"
                 });
-                this.sendTemplateList();
+                this.oGetMissileList();
             } else {
                 //失败
                 this.$notify.error({
@@ -1982,6 +1914,15 @@ export default {
 
         getConsulTabData(res) {
             this.oMainShow = res.i;
+             this.odepartment ="";
+            this.getFoList();
+            this.getfamiliList();
+
+            this.oGetModelList();
+            this.oGetResultList();
+            this.oGetMissileList();
+            this.oGetFollowupGraph();
+            this.oGetFollowupRemarks();
             if (res.i == 2) {
                 this.oManagerGetDeviceList(); //家用设备列表
             }
@@ -2403,6 +2344,7 @@ export default {
     margin-bottom: 10px;
 }
 .sendTemplateBox {
+    position: relative;
     margin: 20px 0;
     padding: 10px;
     width: 100%;
@@ -2435,5 +2377,22 @@ export default {
 .mydQuestList > div {
     display: flex;
     display: -webkit-flex;
+}
+.addTemplate {
+      width: 109px;
+    text-align: center;
+    position: absolute;
+    top:18px;
+    left: 50%;
+    margin-left: -55px;
+}
+.addTemplate > div:first-child {
+    display: inline-block;
+    width: 43px;
+    height: 43px;
+}
+.addTemplate > div:first-child > img {
+    width: 100%;
+    height: 100%;
 }
 </style>

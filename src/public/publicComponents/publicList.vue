@@ -12,7 +12,7 @@
                     </span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" v-show="tableBtn">
+            <el-table-column fixed="right" label="操作" v-if="handleVisiable">
                 <template slot-scope="scope">
                     <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method(index,scope.row)" :class="text.oclass" type="text" size="small" :key="index">
                         {{text.name}}
@@ -28,14 +28,11 @@ export default {
     data() {
         return {
             otrue: true,
-            multipleTable: []
+            multipleTable: [],
+            handleVisiable:false,
         };
     },
     methods: {
-        // reBackFn(index) {
-        //     this.inData.i = index;
-        //     this.$emit("reBack", this.inData);
-        // }
         reBackFn(val) {
             this.$emit("reBack", val);
         },
@@ -57,6 +54,15 @@ export default {
                     }
                 }
             }
+        },
+        //如果不传按钮则操作隐藏
+        hideHandle(){
+            if(this.tableBtn){
+                this.handleVisiable=true
+            }else{
+                this.handleVisiable=false
+            }
+
         }
     },
     props: {
@@ -72,6 +78,7 @@ export default {
     },
     async created() {
         this.reBackFn();
+        this.hideHandle()
     }
 };
 </script>
