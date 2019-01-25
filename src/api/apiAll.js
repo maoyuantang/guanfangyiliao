@@ -1602,3 +1602,14 @@ export const sponsorConsultationInform = (query,data)=>{//11.发起会诊通知
         }
     })
 }
+export const hospitalsByCloud = query=>{//8.21.6（仅用于云存储）获取所有医院机构码和医院名
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.hospitalsByCloud,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}

@@ -25,7 +25,7 @@ export default {
     // settingsList:'/m/v1/api/basics/hospital/fetchHospitalDepts',//8.9获取协作人员设置树
     // settingsUpdate:'/m/v1/api/synergySystem/settingsUpdate',//8.10超级管理员更新协作人员
     addCloud:'/m/v1/api/cloud/addCloud',//11.1.新增云存储业务
-    updateCloud:'/m/v1/api/cloud/updateCloud',//11.2.更新云存储业务
+    updateCloud:'/m/v1/api/cloud/cloud/updateCloud',//11.2.更新云存储业务
     cloudDetail:'/m/v1/api/cloud/cloudDetail',//11.3.查看云存储服务
     publishArticle:'/m/v1/api/inquiry/article/publishArticle',//13.1.1 文章发布【医生web】
     editArticle:'/m/v1/api/inquiry/article/editArticle',//13.1.2 文章编辑【医生web】
@@ -148,4 +148,5 @@ export default {
     updateConsultationTree:'/m/v1/api/basics/hospital/updateConsultationTree',//8.14更新会诊范围
     queryConsultationInformList:'/m/v1/api/consultation/queryConsultationInformList',//10.邀请会诊范围树
     sponsorConsultationInform:'/m/v1/api/consultation/sponsorConsultationInform',//11.发起会诊通知
+    hospitalsByCloud:'/m/v1/api/cloud/cloud/hospitalsByCloud',//8.21.6（仅用于云存储）获取所有医院机构码和医院名
 }

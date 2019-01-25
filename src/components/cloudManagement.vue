@@ -79,7 +79,7 @@
 					<span class="editing-business-alert-item-name">业务名称</span>
 					<div class="editing-business-alert-item-value">
 						<el-input
-						placeholder="请输入内容"
+						placeholder=""
 						size="mini"
 						v-model="editingBusiness.name"
 						clearable>
@@ -92,7 +92,7 @@
 						<div class="editing-business-price-item" v-for="(item,index) in editingBusiness.priceList" :key="index">
 							<div class="editing-business-alert-input-price">
 								<el-input
-								placeholder="请输入内容"
+								placeholder=""
 								size="mini"
 								v-model="item.price"
 								clearable>
@@ -101,38 +101,42 @@
 							<div class="editing-business-alert-selcert">
 								<el-dropdown>
 								<span class="el-dropdown-link">
-									<span>44</span><i class="el-icon-arrow-down el-icon--right"></i>
+									<span>{{item.year}}</span>年<i class="el-icon-arrow-down el-icon--right"></i>
 								</span>
 								<el-dropdown-menu slot="dropdown">
-									<el-dropdown-item v-for="i in [1,2,5]" :key="i">{{i}}年</el-dropdown-item>
-									<!-- <el-dropdown-item>2</el-dropdown-item>
-									<el-dropdown-item>5</el-dropdown-item> -->
+									<el-dropdown-item v-for="i in [1,2,5]" :key="i" :command="i" @click.native="handleCommand(i,index)">{{i}}年</el-dropdown-item>
 								</el-dropdown-menu>
 								</el-dropdown>
 							</div>
 						</div>
-						<el-button type="primary" icon="el-icon-plus" size="mini"></el-button>
 					</div>
+					<el-button type="primary" icon="el-icon-plus" size="mini" @click="addPriceItem"></el-button>
 				</div>
 				<div class="editing-business-alert-item">
 					<span class="editing-business-alert-item-name">医院配置</span>
 					<div class="editing-business-alert-item-value">
-						<el-select v-model="editingBusiness.configurations" multiple placeholder="请选择" size="mini">
+						<el-select v-model="editingBusiness.configurations" multiple placeholder="" size="mini">
 							<el-option
 							v-for="item in editingBusiness.configurationsList"
-							:key="item.value"
-							:label="item.label"
-							:value="item.value">
+							:key="item.code"
+							:label="item.hospitalName"
+							:value="item.code">
 							</el-option>
 						</el-select>
 					</div>
 				</div>
 				<div class="editing-business-alert-item">
-					<el-checkbox v-model="editingBusiness.agree">备选项</el-checkbox>
-					<span>用户协议</span>
+					<span class="editing-business-alert-item-name"></span>
+					<div class="editing-business-alert-item-right-set">
+						<span v-for="(item,index) in editingBusiness.configurationsObj" :key="index" class="editing-business-show-config">{{item.hospitalName}}</span>
+					</div>
 				</div>
 				<div class="editing-business-alert-item">
-					<el-button type="primary" size="mini">主要按钮</el-button>
+					<el-checkbox v-model="editingBusiness.agree">用户协议</el-checkbox>
+					<!-- <span>用户协议</span> -->
+				</div>
+				<div class="editing-business-alert-item editing-business-sub">
+					<el-button type="primary" @click="subHospitalConfig">确定</el-button>
 				</div>
 			</div>
 		</Modal>
@@ -144,12 +148,26 @@
 	import { mapState } from "vuex"
 	import addNewFrame from '../public/publicComponents/addNewFrame.vue'
 	import search from '../public/publicComponents/search.vue'
-	import {fetchUserCloud, viewCloud} from '../api/apiAll.js'
+	import {fetchUserCloud, viewCloud, hospitalsByCloud, updateCloud} from '../api/apiAll.js'
 	
 
 
 	import render from '../public/publicComponents/render.vue'
 	export default {
+		watch:{
+			'editingBusiness.configurations':{
+				handler(n){
+					console.log(n)
+					const setArr = [];
+					this.editingBusiness.configurationsList.forEach(item=>{
+						n.map(value=>{
+							value===item.code?setArr.push(item):null;
+						})
+					});
+					this.editingBusiness.configurationsObj = setArr;
+				}
+			}
+		},
 		components:{
 			search,
 			addNewFrame,
@@ -175,7 +193,7 @@
 					]
 				],
 				haveATry:{
-					show:false,
+					show:true,
 					type:'1',//1表示新增在线诊室，2表示新增家医业务
 					businessTypeList:[//新增在线诊室业务类型
 						{
@@ -232,21 +250,22 @@
 
 /*********************************************************************************************** */
 				
-				editingBusiness:{//编辑业务
+				editingBusiness:{//编辑业务  
 					show:false,//是否显示
 					name:'',//名称
 					configurations:[],//医院配置（已选择）
 					configurationsList:[],//医院配置（所有）
-					priceList:[//价格
+					configurationsObj:[],//医院配置（已选择）,坑爹的返回的只有id,手动改下 
+					priceList:[//价格 
 						{
 							price:'',
-							year:0
+							year:'1'
 						}
 					],
 					agree:false,//是否同意协议
 
 				},
-				cloudStorage:{//云存储 第一个表格数据
+				cloudStorage:{//云存储 第一个表格数据 
 					description:'',//这是云存储的描述
 					fullName:'',//云存储业务
 					hospital:[
@@ -412,6 +431,66 @@
 			 * 取消编辑
 			 */
 			editCancel(){},
+
+			/**
+			 * 编辑业务 -> 添加'价格'
+			 */
+			addPriceItem(){
+				console.log(this.editingBusiness.priceList)
+				if(this.editingBusiness.priceList.length>=3){
+					this.$notify({
+						title: '添加失败',
+						message: '最多只能添加三个!!',
+						type: 'error'
+					});
+				}else{
+					this.editingBusiness.priceList.push({price:'',year:'1'});
+				}
+				console.log(this.editingBusiness.priceList)
+				
+			},
+
+			/**
+			 * 用户选择年限
+			 */
+			handleCommand(i,index){
+				console.log(i)
+				console.log(index)
+				const newObj = this.editingBusiness.priceList[index];
+				newObj.year = i;
+				this.editingBusiness.priceList.splice(index,1,newObj);
+			},
+
+			/**
+			 * 8.21.6（仅用于云存储）获取所有医院机构码和医院名
+			 */
+			async getHospitalsByCloud(){
+				const res = await hospitalsByCloud({token: this.userState.token});
+				console.log(res)
+				if(res.data && res.data.errCode === 0){
+					this.editingBusiness.configurationsList = res.data.body
+					console.log(this.editingBusiness.configurationsList)
+				}else{
+					this.$notify({
+						title: '数据获取失败',
+						message: '医院机构码和医院名获取失败',
+						type: 'error'
+					});
+				}
+			},
+
+			/**
+			 * 提交医院配置
+			 */
+			async subHospitalConfig(){
+				const options = [
+					{token: this.userState.token},
+					{
+						cloudId:''
+					}
+				];
+				const res = await updateCloud({});
+			},
 			/******************** */
 			getData(data){
 				console.log(data)
@@ -420,11 +499,12 @@
 		async created(){
 			this.getTableInfo();
 			this.getBusinessInfo();
+			this.getHospitalsByCloud();
 		}
 	}
 </script>
 
-<style scoped>
+<style>
 	.cloud-management{
 
 	}
@@ -547,6 +627,7 @@
 		display: flex;
 		align-items: center;
 		padding-left: 0.2rem;
+		margin-bottom: 0.1rem;
 	}
 	.editing-business-alert-item-name{
 		padding-right: 0.2rem;
@@ -560,17 +641,43 @@
 	} */
 	.editing-business-alert-item-value{
 		display: flex;
-		flex: 1;
+		/* flex: 1; */
 	}
 	.editing-business-price-item{
 		display: flex;
+		align-items: center;
+		margin-right: 0.1rem;
 	}
 	.editing-business-alert-input-price .el-input{
 		width: 01rem;
 	}
-	.editing-business-alert-input-price .editing-business-alert-selcert{
+	.editing-business-price-item .editing-business-alert-selcert{
 		display: flex;
 		align-items: center;
 		background-color: var(--color8);
+		height: 100%;
+		/* background: red !important; */
+		display: flex;
+		align-items: center;
+		border-top-right-radius: 4px;
+		border-bottom-right-radius: 4px;
+		width: 0.42rem;
+	}
+	.editing-business-sub>.el-button--primary{
+		width: 100%;
+	}
+	.editing-business-alert-input-price>.el-input{ 
+		width: 0.6rem;
+	}
+	.editing-business-alert-input-price input{
+		margin: 0;
+		width:0.6rem;
+	}
+	.editing-business-alert-item-right-set{
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.editing-business-show-config{
+		margin-right: 0.1rem;
 	}
 </style>

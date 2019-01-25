@@ -579,8 +579,6 @@
                 // }
                 const postData = this.getAddSubData();
                 const postQuery = {token:this.userInfo.token}
-                console.log(postQuery,postData)
-                return
                 const res = await createUser(postQuery,postData);
                 console.log(res)
                 if(res.data.errCode === 0){
