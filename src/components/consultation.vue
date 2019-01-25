@@ -117,34 +117,9 @@
                 </li>
             </ul>
         </el-dialog>
-        <!-- 会诊评价 -->
-        <el-dialog class="evaluateBox evaluateBox2" title=" 会诊评价" :visible.sync="groupVisible" width="602px" hight="356px" center>
-            <ul>
-                <li>
-                    <div>
-                        <img src="" />
-                    </div>
-                    <div class="evaluateCont">
-                        <h5>西南医院第三附属医院</h5>
-                        <div>神经内科</div>
-                    </div>
-                    <div>
-                        文字
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        <img src="" />
-                    </div>
-                    <div class="evaluateCont">
-                        <h5>西南医院第三附属医院</h5>
-                        <div>神经内科</div>
-                    </div>
-                    <div>
-                        文字
-                    </div>
-                </li>
-            </ul>
+        <!-- 邀请弹框 -->
+        <el-dialog class="evaluateBox evaluateBox2" title=" 邀请医生" :visible.sync="invitationVisible" width="602px" hight="356px" center>
+            <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChange" show-checkbox ></el-tree>
         </el-dialog>
         <!-- 查看记录 -->
         <el-dialog class="  " title="  " :visible.sync="recordVisible" width="602px" hight="356px" center>
@@ -285,7 +260,8 @@ import {
     queryStatisticalBySponsor,
     getAllHospital,
     addConsultation,
-    queryByDeptList
+    queryByDeptList,
+    queryConsultationInformList
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -323,6 +299,22 @@ export default {
                     oclass: "ooRed"
                 }
             ],
+            invitationData: [
+                {
+                    label: "一级 1",
+                    children: [
+                        {
+                            label: "二级 1-1",
+                            id: "4545"
+                        }
+                    ]
+                }
+            ],
+            defaultProps: {
+                children: "children",
+                label: "label"
+            },
+            invitationVisible: false,
             receptionDepartment: [], //接收科室数据
             sessionId: "", //会诊id
             chatVisible: false, //聊天框
@@ -404,6 +396,7 @@ export default {
                 ]
             },
             //医生端
+            invitationSelectList:[],
             doctorTime: "",
             oDocTime: "",
             startDate: "",
@@ -605,6 +598,7 @@ export default {
         })
     },
     methods: {
+       
         // 管理端事件
         getOTab1(data) {
             this.applicationDeptId = data.index.value;
@@ -650,6 +644,15 @@ export default {
             this.recordVisible = true;
         },
         //医生端事件
+         handleCheckChange(data,odata) {
+             $.each(odata.checkedNodes,function(index,text){
+                 if(text.id){
+                     this.invitationSelectList.push(text.id)
+                 }
+             })
+            console.log(this.invitationSelectList);
+            console.log(odata);
+        },
         getOTab4(data) {
             console.log(data);
             this.oDocTime = data.index.value;
@@ -755,16 +758,23 @@ export default {
         },
         //获取邀请列表
         async Invitation(row) {
+            this.invitationVisible = true;
             let _this = this;
             let query = {
                 token: this.userState.token
             };
-            const res = await getAllHospital(query);
+            const res = await queryConsultationInformList(query);
             if (res.data && res.data.errCode === 0) {
                 $.each(res.data.body, function(index, text) {
-                    _this.hospitalList.push({
-                        name: text.orgName,
-                        value: text.orgCode
+                    _this.invitationData.push({
+                        label: text.name,
+                        children: []
+                    });
+                    $.each(text.children, function(oindex, otext) {
+                        _this.invitationData[oindex].children.push({
+                            label: text.name,
+                            id: otext.id
+                        });
                     });
                 });
             } else {
