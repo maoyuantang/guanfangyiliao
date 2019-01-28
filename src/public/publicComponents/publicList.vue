@@ -91,6 +91,16 @@ export default {
     color: #5e6875;
     letter-spacing: 0;
 }
+.public-list th .cell {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.public-list td .cell {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
 .tableHeadColor {
     font-family: PingFangSC-Semibold;
     font-size: var(--fontSize2);
