@@ -1658,3 +1658,108 @@ export const toolRxSendDoctors = query => {//1.21.5.处方发药医生
         }
     })
 }
+
+// 随访筛选列表
+
+export const toolFollowupType = query => { //随访类型
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolFollowupType,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolFollowupMode = query => { //随访方式
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolFollowupMode,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolFollowupContent = query => { //随访内容
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolFollowupContent,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolSurveyType = query => { //1.21.18.调查类型
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolSurveyType,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolSurveyMode = query => { //1.21.19.调查方式
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolSurveyMode,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolDeviceType = query => { //1.21.20.设备类型
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolDeviceType,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolFollowupHasPlan = query => { //1.21.21.有无随访计划
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolFollowupHasPlan,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
+//我的随风
+
+export const myFollowup = query => { //我的随访用户列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.myFollowup,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const phoneFollowupSwitch = query => { //改变电话随访开关【医生web】
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.phoneFollowupSwitch,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

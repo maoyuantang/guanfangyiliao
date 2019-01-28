@@ -289,7 +289,7 @@
                         <div>
                             <selftag :inData="oTab1" @reback="getOTab1"></selftag>
                             <selftag :inData="oTab6" @reback="getOTab6" v-show="wayVisible1"></selftag>
-                            <selftag :inData="oTab3" @reback="getOTab3" v-show="wayVisible2"></selftag>
+                            <selftag :inData="oTab8" @reback="getOTab8" v-show="wayVisible2"></selftag>
                             <selftag :inData="oTab7" @reback="getOTab7" v-show="wayVisible3"></selftag>
                         </div>
 
@@ -370,33 +370,17 @@
                     <div class="mainTab">
                         <div>
                             <selftag :inData="oTab1" @reback="docDeperment"></selftag>
-                            <selftag :inData="oTab2" v-show="doctorSxVisiable"></selftag>
-                            <selftag :inData="oTab3" v-show="doctorSxVisiable"></selftag>
-                            <selftag :inData="oTab4" v-show="doctorSxVisiable"></selftag>
+                            <selftag :inData="oTab9"  @reback="getOTab9" v-show="doctorSxVisiable"></selftag>
+                            <selftag :inData="oTab10"  @reback="getOTab10" v-show="doctorSxVisiable"></selftag>
+                            <selftag :inData="oTab11"  @reback="getOTab11" v-show="doctorSxVisiable"></selftag>
                         </div>
                         <search @searchValue="docSearchChange"></search>
                     </div>
                     <div>
-                        <tableList :tableData="doctorList" :columns="doctorColumns" :tableBtn="doctorBtn"></tableList>
+                        <tableList :tableData="doctorList" :columns="doctorColumns" :checkVisable="docTableChecked" :tableBtn="doctorBtn"></tableList>
                         <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
                         </el-pagination> -->
                     </div>
-                </div>
-                <!-- 随访模板 -->
-                <div v-show="odocVisable==1">
-                    随访模板
-                </div>
-                <!-- 门诊模板 -->
-                <div v-show="odocVisable==2">
-                    门诊模板
-                </div>
-                <!-- 宣教文章 -->
-                <div v-show="odocVisable==3">
-                    宣教文章
-                </div>
-                <!-- 疾病风险评估 -->
-                <div v-show="odocVisable==4">
-                    疾病风险评估
                 </div>
             </div>
         </div>
@@ -427,8 +411,16 @@ import {
     getFollowDetail, //查看随访模板详情
     getFollowUpPlan, //查看随访计划详情
     getTitleList, //选择模板发送
-    publishNotice //发送模板
-    // getTitleList
+    publishNotice, //发送模板
+    toolDept,
+    toolFollowupType,
+    toolFollowupMode,
+    toolFollowupContent,
+    myFollowup,
+    toolSurveyType,
+    toolSurveyMode,
+    toolDeviceType,
+    toolFollowupHasPlan
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -665,14 +657,24 @@ export default {
             oTab1: {
                 more: true,
                 title: "科室",
-                list: [
-                    {
-                        text: "全部",
-                        value: ""
-                    }
-                ]
+                list: []
             }, //管理端tab
             oTab2: {
+                list: []
+            }, //管理端tab
+            oTab3: {
+                list: []
+            }, //管理端tab
+            oTab4: {
+                list: []
+            }, //管理端tab
+            oTab5: {
+                list: []
+            }, //管理端tab
+            oTab6: {
+                list: []
+            },
+            oTab7: {
                 more: false,
                 title: "类型",
                 list: [
@@ -681,81 +683,37 @@ export default {
                         value: ""
                     },
                     {
-                        text: "门诊随访",
-                        value: "OUTPATIENT"
+                        text: "病人",
+                        value: "USER"
                     },
                     {
-                        text: "住院随访",
-                        value: "INHOSPITAL"
+                        text: "医生",
+                        value: "DOCTOR"
                     }
                 ]
-            }, //管理端tab
-            oTab3: {
+            },
+            oTab8: { list: [] },
+            oTab9: { list: [] }, //有无随访计划
+            oTab10: {
                 more: false,
-                title: "方式",
+                title: "随访时间",
                 list: [
                     {
                         text: "全部",
                         value: ""
                     },
                     {
-                        text: "App",
-                        value: "APP "
+                        text: "今天",
+                        value: "USER"
                     },
                     {
-                        text: "电话",
-                        value: "PHONE"
+                        text: "未来3天",
+                        value: "DOCTOR"
                     }
                 ]
-            }, //管理端tab
-            oTab4: {
-                more: false,
-                title: "内容",
-                list: [
-                    {
-                        text: "全部",
-                        value: ""
-                    },
-                    {
-                        text: "提醒",
-                        value: "REMIND"
-                    },
-                    {
-                        text: "问诊",
-                        value: "INQUIRY"
-                    },
-                    {
-                        text: "健康知识",
-                        value: "ESSAY"
-                    },
-                    {
-                        text: "疾病自评",
-                        value: "MEDICAL"
-                    },
-                    {
-                        text: "设备检测",
-                        value: "DEVICE"
-                    }
-                ]
-            }, //管理端tab
-            oTab5: {
-                more: false,
-                title: "设备类型",
-                list: [
-                    {
-                        text: "全部",
-                        value: ""
-                    },
-                    {
-                        text: "血压计",
-                        value: "TONOMETER"
-                    },
-                    {
-                        text: "血糖仪",
-                        value: "GLUCOSE"
-                    }
-                ]
-            }, //管理端tab
+            },
+            oTab11: { list: [] },
+            oTab12: { list: [] }, //我的随访分组
             odata: 1,
             columns: [
                 {
@@ -956,54 +914,7 @@ export default {
                     }
                 }
             ],
-            oTab6: {
-                more: false,
-                title: "类型",
-                list: [
-                    {
-                        text: "全部",
-                        value: ""
-                    },
-                    {
-                        text: "门诊调查",
-                        value: "OUTPATIENT"
-                    },
-                    {
-                        text: "医技调查",
-                        value: "MEDICALTECHNOLOGY"
-                    },
-                    {
-                        text: "住院调查",
-                        value: "INHOSPITAL"
-                    },
-                    {
-                        text: "行政调查",
-                        value: "ADMINISTRATION"
-                    },
-                    {
-                        text: "推送链接",
-                        value: "URL"
-                    }
-                ]
-            },
-            oTab7: {
-                more: false,
-                title: "类型",
-                list: [
-                    {
-                        text: "全部",
-                        value: ""
-                    },
-                    {
-                        text: "病人",
-                        value: "USER"
-                    },
-                    {
-                        text: "医生",
-                        value: "DOCTOR"
-                    }
-                ]
-            },
+
             userType: "",
             mydType: "",
             mydStartTime: "",
@@ -1030,7 +941,12 @@ export default {
             tjType: "DEPT",
             tjStartTime: "",
             tjEndTime: "",
-            //医生
+            //医生数据
+            docTableChecked:false,
+            hadFollowup: false, //有无随访计划
+            docStartTime: "",
+            docEndTime: "",
+            groupId: "",
             doctorSxVisiable: true,
             doctorList: [],
             doctorBtn: [
@@ -1044,34 +960,35 @@ export default {
             ],
             doctorColumns: [
                 {
-                    prop: "department",
-                    label: "科室"
-                },
-                {
-                    prop: "title",
-                    label: "随访模板名"
-                },
-                {
                     prop: "userName",
-                    label: "作者"
+                    label: "姓名"
                 },
                 {
-                    prop: "createTime",
-                    label: "创建时间"
+                    prop: "origin",
+                    label: "来源"
                 },
                 {
-                    prop: "updateTime",
-                    label: "最后修改时间"
+                    prop: "phone",
+                    label: "手机号"
                 },
                 {
-                    prop: "useNumber",
-                    label: "使用量"
+                    prop: "group",
+                    label: "分组"
                 },
                 {
-                    prop: "nearlyUpdater",
-                    label: "最近修改"
+                    prop: "nearlyFollowup",
+                    label: "近期随访"
+                },
+                {
+                    prop: "phoneFollowup",
+                    label: "电话随访"
+                },
+                {
+                    prop: "deviceAlert",
+                    label: "设备告警"
                 }
             ],
+
             docSearchData: "",
             docDepartment: "",
             followPlan: [
@@ -1133,7 +1050,8 @@ export default {
                         }
                     ]
                 }
-            ]
+            ],
+            partDoctorType: ""
         };
     },
     computed: {
@@ -1146,15 +1064,98 @@ export default {
     async created() {
         this.circularData(this.odata["header"]);
         this.getFoList(); //随访列表
-        this.getfamiliList(); //家用设备列表
-        this.getDepartment(); //科室列表
-        this.oGetFollowupGraph(); //住院随访统计图
-        this.oGetFollowupRemarks(); //门诊随访统计图
-        this.oGetResultList(); //满意度调查 调查管理列表
-        console.log(this.$store.state.user.viewRoot.now.name);
+        // this.getfamiliList(); //家用设备列表
+        // this.getDepartment(); //科室列表
+        // this.oGetFollowupGraph(); //住院随访统计图
+        // this.oGetFollowupRemarks(); //门诊随访统计图
+        // this.partDoctor();
+        // this.screenFollowType();
+        // this.screenFollowMode();
+        // this.screenFollowContent();
+        this.getUsFollow(); //我的随访
+        this.screenPublic(this.oTab2, toolFollowupType, "类型"); //随访类型
+        this.screenPublic(this.oTab3, toolFollowupMode, "方式"); //随访方式
+        this.screenPublic(this.oTab4, toolFollowupContent, "内容"); //随访内容
+
+        this.screenPublic(this.oTab6, toolSurveyType, "类型"); //调查类型
+        this.screenPublic(this.oTab8, toolSurveyMode, "方式"); //调查方式
+        this.screenPublic(this.oTab5, toolDeviceType, "设备类型"); //设备类型
+        this.screenPublic(this.oTab9, toolFollowupHasPlan, "随访计划"); //有无计划
+        // 医生
+        this.screenPublic(this.oTab11, toolFollowupMode, "随访类型"); //随访类型
     },
     mounted() {},
     methods: {
+        // 赛选条件接口
+        //获取科室列表
+        async getDepartment() {
+            let _this = this;
+            let query = {
+                type: this.partDoctorType,
+                token: this.userState.token
+            };
+            const res = await toolDept(query);
+            if (res.data && res.data.errCode === 0) {
+                console.log(res.data.body);
+                if (res.data.body.length > 6) {
+                    this.oTab1.more = true;
+                } else {
+                    this.oTab1.more = false;
+                }
+                $.each(res.data.body, function(index, text) {
+                    _this.oTab1.list.push({
+                        text: text.name,
+                        value: text.id
+                    });
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        async screenPublic(otab, getFollowScreen, otitle) {
+            otab.more = false;
+            otab.title = otitle;
+            otab.list = [];
+            console.log(this.oTab2);
+
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const res = await getFollowScreen(query);
+            if (res.data && res.data.errCode === 0) {
+                if (res.data.body.length > 6) {
+                    otab.more = true;
+                } else {
+                    otab.more = false;
+                }
+                $.each(res.data.body, function(index, text) {
+                    otab.list.push({
+                        text: text.name,
+                        value: text.id
+                    });
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+
+        //计算分别管理员和医生
+        partDoctor() {
+            if (this.userState.rooter || this.userState.manager) {
+                this.partDoctorType = "MANAGE";
+            } else {
+                this.partDoctorType = "DOCTOR";
+            }
+        },
         //满意度新增模板借口
         async handleChange(value) {
             console.log(value);
@@ -1229,7 +1230,7 @@ export default {
         getOTab1(data) {
             this.odepartment = data.index.value;
             this.getFoList();
-            this.getfamiliList();
+            // this.getfamiliList();
 
             this.oGetModelList();
             this.oGetResultList();
@@ -1240,25 +1241,22 @@ export default {
         getOTab2(data) {
             this.otype = data.index.value;
             this.getFoList();
-            this.getfamiliList();
-
-            this.oGetMissileList();
+            this.getUsFollow();
         },
         getOTab3(data) {
             this.oTheWay = data.index.value;
             this.getFoList();
-            this.getfamiliList();
-            this.oGetResultList();
+            this.getUsFollow();
         },
         getOTab4(data) {
             this.oContent = data.index.value;
             this.getFoList();
-            this.getfamiliList();
+            this.getUsFollow();
         },
         getOTab5(data) {
             this.equiType = data.index.value;
             this.getFoList();
-            this.getfamiliList();
+            // this.getfamiliList();
         },
         getOTab6(data) {
             this.mydType = data.index.value;
@@ -1269,36 +1267,22 @@ export default {
             this.userType = data.index.value;
             this.oGetMissileList();
         },
-        //获取科室列表
-        async getDepartment() {
-            let _this = this;
-            let query = {
-                orgCode: this.userSelfInfo.orgCode,
-                deptId: ""
-            };
-            const res = await fetchHospitalDepts(query);
-            if (res.data && res.data.errCode === 0) {
-                console.log(res.data.body);
-                if (res.data.body.length > 6) {
-                    this.oTab1.more = true;
-                } else {
-                    this.oTab1.more = false;
-                }
-                $.each(res.data.body, function(index, text) {
-                    _this.oTab1.list.push({
-                        text: text.deptName,
-                        value: text.deptId
-                    });
-                });
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
+        getOTab8() {},
+        //有无随访计划
+        getOTab9(data) {
+            this.houseDeviceType = data.index.value;
+            this.getUsFollow();
         },
-
+        //有无随访时间
+        getOTab10(data) {
+            this.houseDeviceType = data.index.value;
+            this.getUsFollow();
+        },
+        //有无随访类型
+        getOTab11(data) {
+            this.houseDeviceType = data.index.value;
+            this.getUsFollow();
+        },
         //随访计划接口
         //获取随访列表
         async getFoList() {
@@ -1345,88 +1329,56 @@ export default {
                 });
             }
         },
-        //获取家用设备列表
-        async getfamiliList() {
-            let _this = this;
-            const options = {
-                token: this.userState.token,
-                search: this.searchData,
-                department: this.odepartment,
-                houseDeviceType: this.equiType,
-                pageNum: 1,
-                pageSize: 10
-            };
-            const res = await managerGetDeviceList(options);
-            if (res.data && res.data.errCode === 0) {
-                // _this.tableDataListFa = res.data.body.data2.list;
-                // _this.tableDataListFa=[{
-                //     department:"ddd"
-                // }]
-                _this.tableDataListFa = res.data.body.data2.list;
-                console.log(_this.columns);
-
-                console.log(_this.columnsFa);
-                console.log(_this.tableDataListFa);
-                // alert(_this.tableDataListFa[0].alertInfo)
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
-        },
-
         //满意度接口
         // 满意度调查切换
         followUp2Fun(index) {
             this.indexTab2 = index;
-
             if (index == 0) {
+                this.oGetResultList();
                 this.addFollowVis = false;
                 (this.mydTableChecked = false),
                     (this.sendTemplateListVis = false),
                     (this.wayVisible1 = true);
                 this.wayVisible2 = true;
-                (this.wayVisible3 = false), this.oGetResultList();
-                this.satisfiedColumns = [
-                    {
-                        prop: "department",
-                        label: "科室"
-                    },
-                    {
-                        prop: "type",
-                        label: "类型"
-                    },
-                    {
-                        prop: "mode",
-                        label: "方式"
-                    },
-                    {
-                        prop: "title",
-                        label: "模板"
-                    },
-                    {
-                        prop: "sender",
-                        label: "调查人"
-                    },
-                    {
-                        prop: "sendNum",
-                        label: "调查数"
-                    },
-                    {
-                        prop: "receiveNum",
-                        label: "接受数"
-                    },
-                    {
-                        prop: "feedbackNum",
-                        label: "反馈数"
-                    },
-                    {
-                        prop: "feedbackPercent",
-                        label: "反馈率"
-                    }
-                ];
+                (this.wayVisible3 = false),
+                    (this.satisfiedColumns = [
+                        {
+                            prop: "department",
+                            label: "科室"
+                        },
+                        {
+                            prop: "type",
+                            label: "类型"
+                        },
+                        {
+                            prop: "mode",
+                            label: "方式"
+                        },
+                        {
+                            prop: "title",
+                            label: "模板"
+                        },
+                        {
+                            prop: "sender",
+                            label: "调查人"
+                        },
+                        {
+                            prop: "sendNum",
+                            label: "调查数"
+                        },
+                        {
+                            prop: "receiveNum",
+                            label: "接受数"
+                        },
+                        {
+                            prop: "feedbackNum",
+                            label: "反馈数"
+                        },
+                        {
+                            prop: "feedbackPercent",
+                            label: "反馈率"
+                        }
+                    ]);
                 this.SatisfiedBtn = [
                     {
                         name: "查看随访",
@@ -1437,13 +1389,14 @@ export default {
                     }
                 ];
             } else if (index == 1) {
+                this.oGetModelList();
                 (this.mydTableChecked = false),
                     (this.sendTemplateListVis = false),
                     (this.wayVisible1 = true);
                 this.wayVisible2 = false;
                 this.wayVisible3 = false;
                 this.addFollowVis = true;
-                this.oGetModelList();
+
                 this.satisfiedColumns = [
                     {
                         prop: "name",
@@ -1602,7 +1555,7 @@ export default {
             this.templateVisible = true;
             if (value) {
                 this.mydType = value[0];
-                 this.templateVisible = false
+                this.templateVisible = false;
             }
 
             let _this = this;
@@ -1914,17 +1867,16 @@ export default {
 
         getConsulTabData(res) {
             this.oMainShow = res.i;
-             this.odepartment ="";
-            this.getFoList();
-            this.getfamiliList();
-
-            this.oGetModelList();
-            this.oGetResultList();
-            this.oGetMissileList();
-            this.oGetFollowupGraph();
-            this.oGetFollowupRemarks();
-            if (res.i == 2) {
+            this.odepartment = "";
+            if (res.i == 0) {
+                this.getFoList();
+            } else if (res.i == 1) {
+                this.oGetResultList();
+            } else if (res.i == 2) {
                 this.oManagerGetDeviceList(); //家用设备列表
+            } else if (res.i == 3) {
+                this.oGetFollowupGraph();
+                this.oGetFollowupRemarks();
             }
         },
         // 表格分页
@@ -1933,20 +1885,12 @@ export default {
             alert(index);
         },
         //处理标题数据好方便传入子组件
-        circularData(data) {
-            // var _this = this;
-            // $.each(data, function(key, value) {
-            //     _this.columns.push({
-            //         prop: key,
-            //         label: data[key]
-            //     });
-            // });
-        },
+        circularData(data) {},
         //搜索框
         searchChange(data) {
             this.searchData = data;
             this.getFoList();
-            this.getfamiliList();
+            // this.getfamiliList();
             this.oGetModelList();
             this.oGetResultList();
         },
@@ -1961,11 +1905,26 @@ export default {
                 this.doctorSxVisiable = false;
             }
             if (oindex == 0) {
+                this.docTableChecked = true;
+                alert("dd");
                 this.getUsFollow();
-                this.oGetTemplate();
                 this.doctorBtn = [
                     {
-                        name: "删除",
+                        name: "查看档案",
+                        oclass: "viewFollow",
+                        method: row => {
+                            this.docFollowDelete0(0, row);
+                        }
+                    },
+                    {
+                        name: "发送",
+                        oclass: "viewFollow",
+                        method: row => {
+                            this.docFollowDelete0(0, row);
+                        }
+                    },
+                    {
+                        name: "查看详情",
                         oclass: "viewFollow",
                         method: row => {
                             this.docFollowDelete0(0, row);
@@ -1973,6 +1932,8 @@ export default {
                     }
                 ];
             } else if (oindex == 1) {
+                this.docTableChecked = false;
+                this.doctorColumns = this.doctorColumns1;
                 this.oGetTemplate();
                 this.doctorBtn = [
                     {
@@ -1984,6 +1945,8 @@ export default {
                     }
                 ];
             } else if (oindex == 2) {
+                this.docTableChecked = false;
+                this.doctorColumns = this.doctorColumns1;
                 this.oQueryList();
                 this.doctorBtn = [
                     {
@@ -1995,6 +1958,8 @@ export default {
                     }
                 ];
             } else if (oindex == 3) {
+                this.docTableChecked = false;
+                this.doctorColumns = this.doctorColumns1;
                 this.oQueryArticleList();
                 this.doctorBtn = [
                     {
@@ -2006,6 +1971,8 @@ export default {
                     }
                 ];
             } else if (oindex == 4) {
+                this.docTableChecked = false;
+                this.doctorColumns = this.doctorColumns1;
                 this.doctorBtn = [
                     {
                         name: "删除",
@@ -2073,15 +2040,16 @@ export default {
             let _this = this;
             const options = {
                 token: this.userState.token,
-                houseDeviceType: this.houseDeviceType,
+                hadFollowup: this.hadFollowup,
                 search: this.docSearchData,
-                department: this.docDepartment,
-                pageNum: 1,
-                pageSize: 10
+                groupId: this.docDepartment,
+                startTime: this.docStartTime,
+                endTime: this.docEndTime,
+                mode: ""
             };
-            const res = await managerGetDeviceList(options);
+            const res = await myFollowup(options);
             if (res.data && res.data.errCode === 0) {
-                _this.equipmentList = res.data.body.data2.list;
+                _this.doctorList = res.data.body.data2.list;
             } else {
                 //失败
                 this.$notify.error({
@@ -2157,29 +2125,29 @@ export default {
                     message: res.data.errMsg
                 });
             }
-        },
+        }
         //疾病风险评估模板
         //列表
-        async getUsFollow() {
-            let _this = this;
-            const options = {
-                token: this.userState.token,
-                search: this.docSearchData,
-                department: this.docDepartment,
-                pageNum: 1,
-                pageSize: 10
-            };
-            const res = await managerGetDeviceList(options);
-            if (res.data && res.data.errCode === 0) {
-                _this.doctorList = res.data.body.data2.list;
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
-        }
+        // async getUsFollow() {
+        //     let _this = this;
+        //     const options = {
+        //         token: this.userState.token,
+        //         search: this.docSearchData,
+        //         department: this.docDepartment,
+        //         pageNum: 1,
+        //         pageSize: 10
+        //     };
+        //     const res = await managerGetDeviceList(options);
+        //     if (res.data && res.data.errCode === 0) {
+        //         _this.doctorList = res.data.body.data2.list;
+        //     } else {
+        //         //失败
+        //         this.$notify.error({
+        //             title: "警告",
+        //             message: res.data.errMsg
+        //         });
+        //     }
+        // }
     }
 };
 </script>
@@ -2379,10 +2347,10 @@ export default {
     display: -webkit-flex;
 }
 .addTemplate {
-      width: 109px;
+    width: 109px;
     text-align: center;
     position: absolute;
-    top:18px;
+    top: 18px;
     left: 50%;
     margin-left: -55px;
 }

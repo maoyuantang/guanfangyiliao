@@ -123,9 +123,8 @@ export default {
     queryInquiryPlan:'/m/v1/api/inquiry/inquiryPlan/queryInquiryPlan',//10.6.10 查看问诊计划详情
     INHOSPITAL:'/m/v1/api/followup/followupPlan/getFollowupGraph/INHOSPITAL',//10.7.1 获取住院随访统计
     OUTPATIENT:'/m/v1/api/followup/followupPlan/getFollowupGraph/OUTPATIENT',//10.7.2 获取门诊随访统计
-    alertGet:'/m/v1/api/device/house/alertGet',//10.9.1 获取设备告警信息【医生web】
-    alertSwitch:'/m/v1/api/device/house/alertSwitch',//10.9.2 设备告警开关改变【医生web】
-    alertSet:'/m/v1/api/device/house/alertSet',//10.9.3 告警值修改【医生web】
+ 
+
     getSettingsList:'/m/v1/api/basics/synergySystem/settingsList',//8.9获取协作人员设置树
     fetchUserCloud:'/m/v1/api/cloud/cloud/fetchUserCloud',//11.4.云存储用户统计信息列表
     viewCloud:'/m/v1/api/cloud/cloud/cloudDetail',//11.3.查看云存储服务
@@ -155,4 +154,26 @@ export default {
     toolRxSendStatus:'/m/v1/api/basics/common/toolRxSendStatus',//1.21.3.处方配送状态  get
     toolRxReviewDoctors:'/m/v1/api/basics/common/toolRxReviewDoctors',//1.21.4.处方审核医生   get
     toolRxSendDoctors:'/m/v1/api/basics/common/toolRxSendDoctors',//1.21.5.处方发药医生   get
+
+
+    // 随访筛选列表--谭莹
+    toolFollowupType:'/m/v1/api/basics/common/toolFollowupType',//1.21.15.随访类型  get
+    toolFollowupMode:'/m/v1/api/basics/common/toolFollowupMode',//1.21.16.随访方式
+    toolFollowupContent:'/m/v1/api/basics/common/toolFollowupContent',//1.21.17.随访内容
+    toolSurveyType:'/m/v1/api/basics/common/toolSurveyType',//1.21.18.调查类型
+    toolSurveyMode:'/m/v1/api/basics/common/toolSurveyMode',//1.21.19.调查方式
+    toolDeviceType:'/m/v1/api/basics/common/toolDeviceType',//1.21.20.设备类型
+    toolFollowupHasPlan:'/m/v1/api/basics/common/toolFollowupHasPlan',//1.21.21.有无随访计划
+
+
+
+
+
+
+    // 我的随访
+    myFollowup:'/m/v1/api/followup/followupPlan/myFollowup',//我的随访用户列表
+    alertGet:'/m/v1/api/device/house/alertGet',//10.9.1 获取设备告警信息【医生web】
+    alertSwitch:'/m/v1/api/device/house/alertSwitch',//10.9.2 设备告警开关改变【医生web】
+    alertSet:'/m/v1/api/device/house/alertSet',//10.9.3 告警值修改【医生web】
+    phoneFollowupSwitch:' /m/v1/api /followup/followupPlan/phoneFollowupSwitch',//10.9.5 改变电话随访开关【医生web】
 }
