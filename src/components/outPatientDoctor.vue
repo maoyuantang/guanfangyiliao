@@ -69,7 +69,7 @@
             <span class="span">2018-12-23 10:32:24</span>
           </li>
           <li class="acceptTime">
-            <span>下单时间:</span>
+            <span>接诊时间:</span>
             <span class="span">2018-12-23 10:32:24</span>
           </li>
         </ul>
@@ -435,6 +435,34 @@
 </template>
 
 <script>
+  //引入接口
+  import {
+    // 已使用接口
+    addClinic,//7.1新增业务
+    searchClinic,//7.5门诊列表1
+    prescriptionDetailByCondition,//7.11出方列表2
+    disableClinic,//7.4禁用远程门诊业务和诊室
+
+    onlineRoomsByDoctor,//7.6(WEB医生)获取所有该医生的在线诊室
+    addPrescription,//7.8开处方
+    updatePrescription,//7.9审核处方
+
+    //未使用接口
+    updateClinic,//7.2更新远程门诊业务
+    clinicDetail,//7.3查看远程门诊业务详情
+    reviewList,//7.10按审方医生获取处方审核列表
+    prescriptionDetailById,//7.12根据处方id获取处方电子版
+    drugSendRecord,//7.13根据处方id获取处方发货记录
+    drugsByCondition,//7.16药品名称搜索药品信息
+    clinicOrders,//7.18(WEB医生)获取所有该诊室的订单信息
+
+    // 废弃接口
+    // fetchHospitalDepts,//2.2.获取医院科室列表
+  } from "../api/apiAll.js";
+
+  //引入token
+  import { mapState } from "vuex";
+
   import doctorTab from '../public/publicComponents/doctorTab.vue'
   import tableList from "../public/publicComponents/publicListNo.vue";
   import search from "../public/publicComponents/search.vue";
@@ -446,6 +474,43 @@
     },
     data() {
       return {
+        //函数传参
+        // 公共
+        pageNum: 1,//页数
+        pageSize: 10,//条数
+        searchValue: "", //搜索框接收参数
+        businessType: "",//业务类型接收参数
+
+        orgCode: '',// 医院机构码 
+        departmentId: "",//科室id
+        clinicId: '', //诊室id
+        secondDoctorId: '',// 审方医生id（为空） 
+        prescriptionId: '',//处方id
+        reviewEnum0: 'REVIEWED',// 7.9审核处方  审核状态（REVIEWED, //已审核；UNREVIEWED, //未审核；FAILREVIEWED, //不通过）
+        reviewEnum1: null, // 7.8开处方    审方状态（为空）
+        userId: '',      //7.8用户id（患者id）
+        lookType:'',//7.10查看类型(lookType ==0 待审核列表； lookType ==1 审核通过列表)
+        
+        // 7.8开处方 医生端列表2
+        // firstDoctorId: '',//开方医生id
+        // complained: '',// 主诉 
+        // medicalHistory: '',//现病史
+        // allergyHistory: '',//过敏史
+        // diagnosis: '',//门诊诊断
+        // report: true,// 疫情报告（true：勾选；false：不勾选） 
+        // review: false,// 复诊（true：勾选；false：不勾选） 
+        // occurTime: '',//发病日期
+        // reviewTime: '',//下次复查日期
+        // //药品详情（详情看返回值说明）
+        // drugId: '',                   //药品id
+        // drugPrice: '',                  //药品价格
+        // drugQuantity: '',                   //药品数量
+        // subtotal: '',                   //药品🐤小计
+        // doctorAsk: '', //医生嘱托
+
+        
+
+
         checked1: true,
         checked2: false,
         value1: '',
@@ -548,26 +613,170 @@
       }
 
     },
+    computed: {
+      //引入token
+      ...mapState({
+        userState: state => state.user.userInfo,
+        userSelfInfo: state => state.user.userSelfInfo
+      })
+    },
     methods: {
-      getConsulTabData(res) {
+      getConsulTabData(res) {//顶部切换返回函数
         // alert(res.i)
         this.oconsulVisable = res.i
       },
-      demonstration1(res) {
+      demonstration1(res) {//时间插件返回函数
         console.log(res)
       },
-      demonstration2(res) {
+      demonstration2(res) {//时间插件返回函数
         console.log(res)
       },
-      adminSearchChange(data) {
+      adminSearchChange(data) {//审核列表
         alert()
         this.searchValue = data;
         // console.log(data)
-      }
+      },
+
+      // 7.6(WEB医生)获取所有该医生的在线诊室(医生端列表1)
+      async myClinicList1() {
+        let query = {
+          token: this.userState.token,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+        };
+        const res = await onlineRoomsByDoctor(query);
+        if (res.data && res.data.errCode === 0) {
+          alert(22)
+          console.log('医生端列表1+成功')
+          console.log(res)
+        } else {
+          //失败
+          console.log('医生端列表1+失败')
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      // 7.10按审方医生获取处方审核列表 (医生列表2)
+      async myClinicList2() {
+        let query = {
+          token: this.userState.token,
+          lookType:this.lookType
+        };
+        const res = await reviewList(query);
+        if (res.data && res.data.errCode === 0) {
+          console.log('医生端列表2(审核)+成功')
+          console.log(res)
+        } else {
+          //失败
+          console.log('医生端列表1+失败')
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      // 7.12根据处方id获取处方电子版  (预览)
+      async preLook() {
+        alert()
+        let query = {
+          token: this.userState.token,
+          prescriptionId:this.prescriptionId
+        };
+        const res = await prescriptionDetailById(query);
+        if (res.data && res.data.errCode === 0) {
+          console.log('预览+成功')
+          console.log(res)
+        } else {
+          //失败
+          console.log('预览+失败')
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      // 7.9审核处方 
+      async checkPrescription() {
+        let _this = this;
+        let query = {
+          token: this.userState.token
+        };
+        let options = {
+          prescriptionId: this.prescriptionId,
+          secondDoctorId: this.secondDoctorId,
+          reviewEnum: this.reviewEnum0
+        };
+        const res = await updatePrescription(query, options);
+        if (res.data && res.data.errCode === 0) {
+          console.log('审核处方医生端+成功')
+          console.log(res)
+        } else {
+          console.log('审核处方医生端+失败')
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+
+
+      //7.8开处方 
+      // async addPrescription() {
+      //   let _this = this;
+      //   let query = {
+      //     token: this.userState.token
+      //   };
+      //   let options = {
+      //     id: this.prescriptionId,
+      //     clinicId: this.clinicId,
+      //     departmentId: this.departmentId,
+      //     userId: this.userId,
+      //     firstDoctorId: this.firstDoctorId,
+      //     secondDoctorId: this.secondDoctorId,
+      //     reviewEnum: this.reviewEnum,
+      //     orgCode: this.orgCode,
+      //     complained: this.complained,
+      //     medicalHistory: this.medicalHistory,
+      //     allergyHistory: this.allergyHistory,
+      //     diagnosis: this.diagnosis,
+      //     report: this.report,
+      //     review: this.review,
+      //     occurTime: this.occurTime,
+      //     reviewTime: this.reviewTime,
+      //     drugDetails:
+      //       [{
+      //         id: this.drugId,                   //药品id
+      //         drugPrice: this.drugPrice,                  //药品价格
+      //         drugQuantity: this.drugQuantity,                   //药品数量
+      //         subtotal: this.subtotal,                   //药品🐤小计
+      //         doctorAsk: this.doctorAsk //医生嘱托
+      //       }]
+      //   };
+      //   const res = await addPrescription(query, options);
+      //   if (res.data && res.data.errCode === 0) {
+      //     console.log('开处方医生列表2+成功')
+      //     console.log(res)
+      //   } else {
+      //     console.log('开处方医生列表2+失败')
+      //     this.$notify.error({
+      //       title: "警告",
+      //       message: res.data.errMsg
+      //     });
+      //   }
+      // },
+
+      
+
 
     },
     async created() {
-
+      this.myClinicList1();//7.6医生列表1
+      // this.myClinicList2();//7.10审核列表2
+      // this.preLook()//预览弹框
+      // this.checkPrescription();//7.9是否通过
+      // this.addPrescription();//7.8开处方
     }
   }
 </script>
