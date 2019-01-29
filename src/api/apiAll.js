@@ -1658,6 +1658,17 @@ export const toolRxSendDoctors = query => {//1.21.5.处方发药医生
         }
     })
 }
+export const hospitalsByCloud = query=>{//8.21.6（仅用于云存储）获取所有医院机构码和医院名
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.hospitalsByCloud,
+        params:query,
+        headers: {
+            sign
+        }
+    })
+}        
 
 // 随访筛选列表
 
@@ -1672,6 +1683,17 @@ export const toolFollowupType = query => { //随访类型
         }
     })
 }
+export const todayAlert = query=>{//2.5.7 今日告警【医生web】
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.todayAlert,
+        params:query,
+        headers:{
+            sign
+        }
+    })
+}
 export const toolFollowupMode = query => { //随访方式
     const sign = postQueryHandle(query);
     return axios({
@@ -1679,6 +1701,17 @@ export const toolFollowupMode = query => { //随访方式
         url: apiList.toolFollowupMode,
         params: query,
         headers: {
+            sign
+        }
+    })
+}
+export const alertHistory = query=>{//2.5.8 历史告警【医生web】
+    const sign = postQueryHandle(query);
+    return axios({
+        method:'get',
+        url:apiList.alertHistory,
+        params:query,
+        headers:{
             sign
         }
     })

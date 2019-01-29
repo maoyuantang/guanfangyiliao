@@ -238,7 +238,7 @@
 				time0: "",//统计筛选起始时间
 				time1: "",//统计筛选结束时间
 				clinicId: '',//门诊业务编号
-				status: false,//状态（禁用按钮）
+				status: [],//状态（禁用按钮）
 
 
 				//getList2
@@ -510,6 +510,30 @@
 			})
 		},
 		methods: {
+			/**
+			 * 禁用被点击
+			 */
+			async getDisableClick(item,index){
+				console.log('is enter')
+				const optios = [
+					{token:this.userState.token},
+					{
+						clinicId:item.id,
+						status:'test'
+					}
+				];
+				const res = await disableClinic(...optios);
+				console.log(res);
+				if(res.data && res.data.errCode === 0){
+					this.relationalDoctor = this.relationalDoctor.map(value=>{
+						if(value.code === item.code){
+							item.name==='解除禁用'?value.name="禁用":valve.name = '解除禁用';
+							return item
+						}
+					})
+				}
+				
+			},
 			//在线、处方审核、统计、切换插件返回值
 			getNav(data) {
 				// console.log(data)
@@ -709,6 +733,10 @@
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表1+成功')
 					console.log(res)
+					this.relationalDoctor = res.data.body.data2.list.map(item=>{
+						item.name = item.status?'禁用':'解除禁用';
+						return item
+					})
 					$.each(res.data.body.data2.list, function (index, text) {
 						if (res.data.body.data2.list[index].doctors[0].doctorStates === false) {
 							res.data.body.data2.list[index].doctors[0].doctorStates = '离线中'

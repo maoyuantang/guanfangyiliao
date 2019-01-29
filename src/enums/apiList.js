@@ -25,7 +25,7 @@ export default {
     // settingsList:'/m/v1/api/basics/hospital/fetchHospitalDepts',//8.9获取协作人员设置树
     // settingsUpdate:'/m/v1/api/synergySystem/settingsUpdate',//8.10超级管理员更新协作人员
     addCloud:'/m/v1/api/cloud/addCloud',//11.1.新增云存储业务
-    updateCloud:'/m/v1/api/cloud/updateCloud',//11.2.更新云存储业务
+    updateCloud:'/m/v1/api/cloud/cloud/updateCloud',//11.2.更新云存储业务
     cloudDetail:'/m/v1/api/cloud/cloudDetail',//11.3.查看云存储服务
     publishArticle:'/m/v1/api/inquiry/article/publishArticle',//13.1.1 文章发布【医生web】
     editArticle:'/m/v1/api/inquiry/article/editArticle',//13.1.2 文章编辑【医生web】
@@ -147,15 +147,14 @@ export default {
     updateConsultationTree:'/m/v1/api/basics/hospital/updateConsultationTree',//8.14更新会诊范围
     queryConsultationInformList:'/m/v1/api/consultation/queryConsultationInformList',//10.邀请会诊范围树
     sponsorConsultationInform:'/m/v1/api/consultation/sponsorConsultationInform',//11.发起会诊通知
-
-    //筛选列表--唐茂原
+    hospitalsByCloud:'/m/v1/api/cloud/cloud/hospitalsByCloud',//8.21.6（仅用于云存储）获取所有医院机构码和医院名
     toolDept:'/m/v1/api/basics/common/toolDept',//1.21.1.科室工具栏  get
     toolRxReviewStatus:'/m/v1/api/basics/common/toolRxReviewStatus',//1.21.2.处方审核状态  get
     toolRxSendStatus:'/m/v1/api/basics/common/toolRxSendStatus',//1.21.3.处方配送状态  get
     toolRxReviewDoctors:'/m/v1/api/basics/common/toolRxReviewDoctors',//1.21.4.处方审核医生   get
     toolRxSendDoctors:'/m/v1/api/basics/common/toolRxSendDoctors',//1.21.5.处方发药医生   get
-
-
+    todayAlert:'/m/v1/api/device/house/todayAlert',//2.5.7 今日告警【医生web】
+    alertHistory:'/m/v1/api/device/house/alertHistory',//2.5.8 历史告警【医生web】
     // 随访筛选列表--谭莹
     toolFollowupType:'/m/v1/api/basics/common/toolFollowupType',//1.21.15.随访类型  get
     toolFollowupMode:'/m/v1/api/basics/common/toolFollowupMode',//1.21.16.随访方式
@@ -164,12 +163,6 @@ export default {
     toolSurveyMode:'/m/v1/api/basics/common/toolSurveyMode',//1.21.19.调查方式
     toolDeviceType:'/m/v1/api/basics/common/toolDeviceType',//1.21.20.设备类型
     toolFollowupHasPlan:'/m/v1/api/basics/common/toolFollowupHasPlan',//1.21.21.有无随访计划
-
-
-
-
-
-
     // 我的随访
     myFollowup:'/m/v1/api/followup/followupPlan/myFollowup',//我的随访用户列表
     alertGet:'/m/v1/api/device/house/alertGet',//10.9.1 获取设备告警信息【医生web】

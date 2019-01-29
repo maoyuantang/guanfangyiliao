@@ -139,7 +139,7 @@
             @on-cancel="teamNumCancel">
             
         </Modal> -->
-        <Tree :data="data2" show-checkbox @on-check-change="iviewTest" ref="iviewTree"></Tree>
+        <!-- <Tree :data="data2" show-checkbox @on-check-change="iviewTest" ref="iviewTree"></Tree> -->
 	</div>
 </template>
 
@@ -291,10 +291,9 @@ export default {
     },
     methods: {
         getSelect(item){
-            // console.log(item)
+            console.log(item)
             const table = {
                 subSystemNum:async data=>{
-                    console.log('enter')
                     const res = await updateSubSystemRel({token:this.userState.token},{
                         hospitalId:this.nowItem.id||'',
                         subCodes:item.select
@@ -356,30 +355,95 @@ export default {
                     });
                     Promise.all(ask.map(item => settingsUpdate(...item)))
                     .then(res=>{
-                        if(res.data&&res.data.errCode===0){
-                            this.$notify({
-                                title: '成功',
-                                message: '修改成功',
-                                type: 'success'
-                            });
-                        }else{
-                            this.$notify({
-                                title: '失败',
-                                message: '修改失败',
-                                type: 'error'
-                            });
-                        }
-                        // console.log(res)
+                        res.forEach(v=>{
+                            if(v.data.errCode!==0){
+                                this.$notify({
+                                    title: '失败',
+                                    message: '修改失败',
+                                    type: 'error'
+                                });
+                            }
+                            return;
+                        });
+                        this.$notify({
+                            title: '成功',
+                            message: '修改成功',
+                            type: 'success'
+                        });
                     })
                     .catch(err=>{
                         // console.log(err)
-                         this.$notify({
+                        this.$notify({
                             title: 'err',
                             message: err,
                             type: 'error'
                         });
                     })
-                    
+                },
+                consNum: async data=>{
+                    const setMap = (arr,tag) => {//拷贝原数组，找出被选值
+                        return arr.map(item=>{
+                            tag.forEach(v=>item.ok = item.ok?item.ok:item.id === v.id);
+                            item.children?setMap(item.children,tag):null;
+                            return item
+                        })
+                    }
+                    const deleteNoOption = arr =>{//过滤掉未被选中的选项
+                        return arr.filter(item=>{
+                            item.children?item.children=deleteNoOption(item.children):null
+                            return item.ok
+                        })
+                    }
+                    const hintArr = arr =>{//递归映射数组
+                        return arr.map(item=>{
+                            const result = {};
+                            result.id = item.id;
+                            item.children&&item.children.length>0?result.children=hintArr(item.children):null;
+                            return result;
+                        })
+                    }
+                    const result = setMap(this.testData.data, item.select);
+                    let fanal = deleteNoOption(result);
+                    fanal = hintArr(fanal);
+                   
+                    const ask = fanal.map(item=>{//将格式调整成后端想要的结构
+                        const options = [//请求参数
+                            {token:this.userState.token},
+                            {
+                                orgCode:item.id,
+                                list:item.children
+                            }
+                        ];
+                        return options;
+                    });
+                    console.log(ask);
+                    Promise.all(ask.map(item => updateConsultationTree(...item)))
+                    .then(res=>{
+                        console.log(res);
+                        res.forEach(v=>{
+                            if(v.data.errCode!==0){
+                                this.$notify({
+                                    title: '失败',
+                                    message: '修改失败',
+                                    type: 'error'
+                                });
+                            }
+                            return;
+                        });
+                        this.$notify({
+                            title: '成功',
+                            message: '修改成功',
+                            type: 'success'
+                        });
+                    })
+                    .catch(err=>{
+                        console.log(err);
+                        this.$notify({
+                            title: 'err',
+                            message: err,
+                            type: 'error'
+                        });
+                    })
                 },
                 default:data=>{}
             }
@@ -580,7 +644,7 @@ export default {
         /**
          * 会诊范围
          */
-        async consNum(item){//接口暂时还没有
+        async consNum(item){
            console.log(item)
            const res = await getConsultationTree({
                token:this.userState.token,
@@ -588,7 +652,13 @@ export default {
            });
            console.log(res);
            if(res.data&&res.data.errCode===0){
-
+                this.testData.data = res.data.body;
+                this.testData.title = '子系统';
+                this.testData.canClick = true;
+                this.testData.show = true;
+                this.testData.tag = item;
+                // this.testData = Object.assign({},this.testData)
+                this.showAlertTree = true;
            }else{
                this.$notify.error({
                     title: "数据获取失败",

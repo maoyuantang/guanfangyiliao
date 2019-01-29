@@ -26,95 +26,392 @@
 				</infoBox>
 			</div>
 		</div>
+		{{auth}}
+		<!-- 今日计划 -->
+		<div class="doctor-table" v-if="auth['40000']">
+			<div class="table-border">
+				<infoListHead :inData="todayPlan" @reBack="getPlanHistory"></infoListHead>
+				<userInfoRow v-for="(item,index) in todayPlan.data" :key="index" :inData="item" @reback="getClick">
+					<div class="slot-time-introduction">
+						<span class="user-info-table-time">拟定时间:{{item.planStartTime || '丢失数据'}}</span>
+						<span class="user-info-table-introduction">{{item.content || '丢失数据'}}</span>
+					</div>
+				</userInfoRow>
+				<!-- <userInfoRow :inData="testBody" @reback="getClick">
+					<div class="slot-time-introduction">
+						<span class="user-info-table-time">拟定时间:2018-05.25</span>
+						<span class="user-info-table-introduction">拟定内容的内容有点多 自动换行并全部显示 打电话通知体检  检查尿酸值</span>
+					</div>
+				</userInfoRow> -->
+			</div>
+		</div>	
+		<!-- 告警 -->
+		<div class="doctor-table" v-if="auth['40000']">
+			<div class="table-border">
+				<infoListHead :inData="todayAlert" @reBack="getAlertHistory"></infoListHead>
+				<userInfoRow v-for="(item,index) in todayAlert.data" :key="index" :inData="item" @reback="getClick">
+					<div class="slot-item-info">
+						<span class="user-info-item-name">{{item.type || '丢失数据'}}</span>
+						<span class="user-info-item-info">{{item.value || '丢失数据'}}</span>
+						<!-- <span class="user-info-item-info">舒张压>90mmHg</span> -->
+					</div>
+				</userInfoRow>
+				<!-- <userInfoRow :inData="testBody" @reback="getClick">
+					<div class="slot-item-info">
+						<span class="user-info-item-name">血压项</span>
+						<span class="user-info-item-info">收缩压>180mmHg</span>
+						<span class="user-info-item-info">舒张压>90mmHg</span>
+					</div>
+				</userInfoRow> -->
+			</div>
+		</div>	
+		<!-- 近期随访 -->
+		<div class="doctor-table" v-if="auth['40000']">
+			<div class="table-border">
+				<infoListHead :inData="todayFollowup" @reBack="getHistoryFollowup"></infoListHead>
+				<userInfoRow v-for="(item,index) in todayFollowup.data" :key="index" :inData="testBody" @reback="getClick">
+					<div class="solt-follow-up">
+						<div class="solt-follow-up-time">
+							<span class="solt-follow-up-time-item">随访制定时间: {{item.createTime || '丢失数据'}}</span>
+							<span class="solt-follow-up-time-item">近期随访时间: {{item.followupTime || '丢失数据'}}</span>
+						</div>
+						<div class="solt-follow-up-status">
+							<span class="solt-follow-up-status-item">已完成随访: {{item.complete || '丢失数据'}}</span>
+							<span class="solt-follow-up-status-item undone">未完成随访: {{item.ongoing || '丢失数据'}}</span>
+						</div>
+						<div class="solt-follow-up-view">
+							<el-button>查看</el-button>
+						</div>
+					</div>
+				</userInfoRow>
+				<!-- <userInfoRow :inData="testBody" @reback="getClick">
+					<div class="solt-follow-up">
+						<div class="solt-follow-up-time">
+							<span class="solt-follow-up-time-item">随访制定时间: 2018-02-22</span>
+							<span class="solt-follow-up-time-item">近期随访时间: 2018-03-25</span>
+						</div>
+						<div class="solt-follow-up-status">
+							<span class="solt-follow-up-status-item">已完成随访: 2</span>
+							<span class="solt-follow-up-status-item undone">未完成随访: 8</span>
+						</div>
+						<div class="solt-follow-up-view">
+							<el-button>查看</el-button>
+						</div>
+					</div>
+				</userInfoRow> -->
+			</div>
+		</div>	
 		
-		<div class="doctor-table">
-			<div class="table-border">
-				<infoListHead :inData="testTitle" @reBack="letMeTest"></infoListHead>
-				<userInfoRow :inData="testBody" @reback="getClick">
-					<div class="slot-time-introduction">
-						<span class="user-info-table-time">拟定时间:2018-05.25</span>
-						<span class="user-info-table-introduction">拟定内容的内容有点多 自动换行并全部显示 打电话通知体检  检查尿酸值</span>
+		<!-- 查看历史计划 -->
+		<div class="history-alert">
+			<el-dialog
+			:title="planHistory.title"
+			:visible.sync="planHistory.show"
+			:before-close="planHistoryClose">
+			<div class="history-alert-div">
+				<div class="history-alert-findby-condition">
+					<div class="history-alert-findby-condition-item">
+						<el-button type="primary" size="mini">全部</el-button>
 					</div>
-				</userInfoRow>
-				<userInfoRow :inData="testBody" @reback="getClick">
-					<div class="slot-time-introduction">
-						<span class="user-info-table-time">拟定时间:2018-05.25</span>
-						<span class="user-info-table-introduction">拟定内容的内容有点多 自动换行并全部显示 打电话通知体检  检查尿酸值</span>
+					<div class="history-alert-findby-condition-item">
+						<el-button type="primary" size="mini">昨天</el-button>
 					</div>
-				</userInfoRow>
+					<div class="history-alert-findby-condition-item">
+						<el-button type="primary" size="mini">三天内</el-button>
+					</div>
+					<div class="history-alert-findby-condition-item">
+					<span class="history-alert-findby-condition-item-name">时间筛选</span>
+					<el-date-picker
+						v-model="planHistory.selectTime"
+						type="daterange"
+						start-placeholder="开始日期"
+						end-placeholder="结束日期"
+						size="mini"
+						:default-time="['00:00:00', '23:59:59']">
+						</el-date-picker>
+						<span class="history-alert-findby-condition-item-ok">确认</span>
+					</div>
+				</div>
+				<div class="history-alert-findby-name">
+					<el-button type="primary" icon="el-icon-search" size="mini"></el-button>
+					<el-input v-model="planHistory.selectName" placeholder="请输入内容" size="mini"></el-input>
+				</div>
+				<div class="history-alert-show-content">
+					<ul class="history-alert-show-content-ui">
+						<li class="history-alert-show-content-li">
+							<div class="history-alert-show-content-info">
+								<div class="history-alert-show-content-info-img">
+									<img src="../../assets/img/a-6.png" alt="">
+								</div>
+								<div class="history-alert-show-content-info-name"> 
+									<p>name</p>
+									<p>phone</p>
+								</div>
+								<div class="history-alert-show-content-info-time">
+									<span>time</span>
+								</div>
+								<div class="history-alert-show-content-info-status">
+									<span>status</span>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
 			</div>
-		</div>	
-		<div class="doctor-table">
-			<div class="table-border">
-				<infoListHead :inData="testTitle" @reBack="letMeTest"></infoListHead>
-				<userInfoRow :inData="testBody" @reback="getClick">
-					<div class="slot-item-info">
-						<span class="user-info-item-name">血压项</span>
-						<span class="user-info-item-info">收缩压>180mmHg</span>
-						<span class="user-info-item-info">舒张压>90mmHg</span>
-					</div>
-				</userInfoRow>
-				<userInfoRow :inData="testBody" @reback="getClick">
-					<div class="slot-item-info">
-						<span class="user-info-item-name">血压项</span>
-						<span class="user-info-item-info">收缩压>180mmHg</span>
-						<span class="user-info-item-info">舒张压>90mmHg</span>
-					</div>
-				</userInfoRow>
-			</div>
-		</div>	
+			</el-dialog>
+    	</div>
+			
 
+		<!-- 为后面的表格做准备 没心思封装组件 -->
 		<div class="doctor-table">
 			<div class="table-border">
-				<infoListHead :inData="testTitle" @reBack="letMeTest"></infoListHead>
-				<userInfoRow :inData="testBody" @reback="getClick">
-					<div class="solt-follow-up">
-						<div class="solt-follow-up-time">
-							<span class="solt-follow-up-time-item">随访制定时间: 2018-02-22</span>
-							<span class="solt-follow-up-time-item">近期随访时间: 2018-03-25</span>
-						</div>
-						<div class="solt-follow-up-status">
-							<span class="solt-follow-up-status-item">已完成随访: 2</span>
-							<span class="solt-follow-up-status-item undone">未完成随访: 8</span>
-						</div>
-						<div class="solt-follow-up-view">
-							<el-button>查看</el-button>
-						</div>
-					</div>
-				</userInfoRow>
-				<userInfoRow :inData="testBody" @reback="getClick">
-					<div class="solt-follow-up">
-						<div class="solt-follow-up-time">
-							<span class="solt-follow-up-time-item">随访制定时间: 2018-02-22</span>
-							<span class="solt-follow-up-time-item">近期随访时间: 2018-03-25</span>
-						</div>
-						<div class="solt-follow-up-status">
-							<span class="solt-follow-up-status-item">已完成随访: 2</span>
-							<span class="solt-follow-up-status-item undone">未完成随访: 8</span>
-						</div>
-						<div class="solt-follow-up-view">
-							<el-button>查看</el-button>
-						</div>
-					</div>
-				</userInfoRow>
+				<infoListHead :inData="todayFollowup" @reBack="getHistoryFollowup"></infoListHead>
+				<newModuleTable v-for="i in 4" :key="i">
+					<el-button size="mini" >查看</el-button>
+					<el-button size="mini" >查看</el-button>
+					<el-button size="mini" >查看</el-button>
+					<el-button size="mini" >查看</el-button>
+				</newModuleTable>
 			</div>
-		</div>	
+		</div>
+		
 	</div>
 </template>
 
 <script>
+	import { mapState } from 'vuex'
 	import infoBox from '../../public/publicComponents/infoBox.vue'
 	import infoEnter from '../../public/publicComponents/infoEnter.vue'
 	import infoList from '../../public/publicComponents/infoList.vue'
 	import plantTable from '../../public/publicComponents/plantTable.vue'
 	import infoListHead from '../../public/publicComponents/infoListHead.vue'
 	import userInfoRow from '../../public/publicComponents/userInfoRow.vue'
-
+	import newModuleTable from '../../public/publicComponents/newModuleTable.vue'
+	import historyAlert from '../../public/publicComponents/historyAlert.vue'
+	import { todayPlan, todayAlert, planHistory , todayFollowup , alertHistory , historyFollowup} from '../../api/apiAll.js'
 	
 	
 	export default {
+		computed:{
+			...mapState({
+                userInfo:state => state.user.userInfo,
+                userSelfInfo:state => state.user.userSelfInfo
+			})
+		},
 		data () {
 			return {
+
+				/**
+				 * 权限
+				 */
+				auth:{
+
+				},
+
+				/**
+				 * 今日计划
+				 */
+				todayPlan:{
+					name:"今日计划",
+					data:[
+						// {
+						// 	"infoId": "1d775f83bc254c62b7d32bb54a407b3d",
+						// 	"userId": "10000",   
+						// 	"headId": null, 
+						// 	"userName": "超级管理员",
+						// 	"phone": null,
+						// 	"planStatus": "进行中",
+						// 	"content": "一段亲切的问候哦",
+						// 	"planStartTime": "2019-01-04 18:00:00",
+						// 	"planCreateTime": "2019-01-04"
+						// }
+					]
+				},
+				/**
+				 * 今日告警
+				 */
+				todayAlert:{
+					name:"今日警告",
+					data:[
+						// {
+						// 	"infoId": "8aa52e6a08494403b34d41b226b0c8a3",
+						// 	"userId": "10000",
+						// 	"headId": null,
+						// 	"userName": "超级管理员",
+						// 	"phone": null,
+						// 	"createTime": "2019-01-10 14:38:11",
+						// 	"planStatus": "处理中",
+						// 	"type": "血压计",
+						// 	"value": "收缩压>140.0mmHg 舒张压>90.0mmHg 脉搏>100.0mmHg"
+						// }
+					]
+				},
+
+				/**
+				 * 历史计划
+				 */
+				planHistory:{
+					title:'查看历史计划',
+					show:true,
+					selectTime:[],
+					selectName:'',
+					allList:[],
+					showList:[]
+
+
+					// name:'历史计划',
+					// data:{
+					// 	// "pageNum": 1,
+					// 	// "pageSize": 10,
+					// 	// "size": 7,
+					// 	// "startRow": 1,
+					// 	// "endRow": 7,
+					// 	// "total": 7,
+					// 	// "pages": 1,
+					// 	// "prePage": 0,
+					// 	// "nextPage": 0,
+					// 	// "isFirstPage": true,
+					// 	// "isLastPage": true,
+					// 	// "hasPreviousPage": false,
+					// 	// "hasNextPage": false,
+					// 	// "navigatePages": 8,
+					// 	// "navigatepageNums": [
+					// 	// 	1
+					// 	// ],
+					// 	// "navigateFirstPage": 1,
+					// 	// "navigateLastPage": 1,
+					// 	// "firstPage": 1,
+					// 	// "lastPage": 1,
+					// 	// list:[
+					// 	// 	{
+					// 	// 		"infoId": "a7f6ef67eb6945e8b9ed0db208b18276",
+					// 	// 		"userId": "10000", 
+					// 	// 		"headId": null,
+					// 	// 		"userName": "超级管理员",
+					// 	// 		"phone": null,
+					// 	// 		"planStatus": "已超时",
+					// 	// 		"content": "一段亲切的问候哦",
+					// 	// 		"planStartTime": "2018-12-29 18:00:00",
+					// 	// 		"planCreateTime": "2018-12-29"
+					// 	// 	},
+					// 	// ]
+					// }
+				},
+
+				/**
+				 * 今日（近期）随访
+				 */
+				todayFollowup:{
+					name:'近期随访',
+					data:[
+						// {
+						// 	"infoId": "01745963527c4692ae1bb00dc0fe0a29",
+						// 	"userId": "10000",
+						// 	"headId": null,
+						// 	"userName": "超级管理员",
+						// 	"phone": null,
+						// 	"planStatus": "处理中",
+						// 	"createTime": "2019-01-04",
+						// 	"followupTime": "2019-01-05",
+						// 	"complete": "已完成随访: 2",
+						// 	"ongoing": "未完成随访: 1",
+						// 	"followupTitle": "第个随访模板",
+						// 	"followupPlanId": "63b8ce173ac94818a3cfc91fd327f7e2"
+						// },
+					]
+				},
+
+				/**
+				 * 历史随访
+				 */
+				historyFollowup:{
+					name:'历史随访',
+					data:{
+						// "pageNum": 1,
+						// "pageSize": 10,
+						// "size": 1,
+						// "startRow": 1,
+						// "endRow": 1,
+						// "total": 1,
+						// "pages": 1,
+						// "prePage": 0,
+						// "nextPage": 0,
+						// "isFirstPage": true,
+						// "isLastPage": true,
+						// "hasPreviousPage": false,
+						// "hasNextPage": false,
+						// "navigatePages": 8,
+						// "navigatepageNums": [
+						// 	1
+						// ],
+						// "navigateFirstPage": 1,
+						// "navigateLastPage": 1,
+						// "lastPage": 1,
+						// "firstPage": 1,
+						// list:[
+						// 	{
+						// 		"infoId": "dbe266bdb70348e19499a056da59f984",
+						// 		"userId": "10000",
+						// 		"headId": null,
+						// 		"userName": "超级管理员",
+						// 		"phone": null,
+						// 		"planStatus": "已处理",
+						// 		"createTime": "2019-01-04",
+						// 		"followupTime": "2019-01-05",
+						// 		"complete": null,
+						// 		"ongoing": null,
+						// 		"followupTitle": "第个随访模板",
+						// 		"followupPlanId": "cd6e6acfd66c4546ac0fd58ba6336041"
+						// 	}
+						// ]
+					}
+				},
+
+				/**
+				 * 历史警告
+				 */
+				alertHistory:{
+					name:'历史警告',
+					data:{
+						// "pageNum": 1,
+						// "pageSize": 10,
+						// "size": 10,
+						// "startRow": 1,
+						// "endRow": 10,
+						// "total": 19,
+						// "pages": 2,
+						// "prePage": 0,
+						// "nextPage": 2,
+						// "isFirstPage": true,
+						// "isLastPage": false,
+						// "hasPreviousPage": false,
+						// "hasNextPage": true,
+						// "navigatePages": 8,
+						// "navigatepageNums": [
+						// 	1,
+						// 	2
+						// ],
+						// "navigateFirstPage": 1,
+						// "navigateLastPage": 2,
+						// "lastPage": 2,
+						// "firstPage": 1,
+						// list:[
+						// 	{
+						// 		"infoId": "d60d6ed980b84f3caf4df18fd1bb3911",
+						// 		"userId": "10000",
+						// 		"headId": null,
+						// 		"userName": "超级管理员",
+						// 		"phone": null,
+						// 		"createTime": "2019-01-08 14:38:29",
+						// 		"planStatus": "已超时",
+						// 		"type": "血压计",
+						// 		"value": "收缩压>140.0mmHg 舒张压>90.0mmHg 脉搏>100.0mmHg",
+						// 		"currentTime": null
+						// 	},
+						// ]
+					}
+				},
+				/************* */
 				testTitle:{
 					name:"今日计划"
 				},
@@ -206,6 +503,173 @@
 			}
 		},
 		methods:{
+			/**
+			 * 获取今日计划
+			 */
+			async getTodayPlan(){
+				const res = await todayPlan({token:this.userInfo.token});
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+					this.todayPlan.data = res.data.body.map(item=>{
+						item.name = item.userName;
+						item.id = item.userId;
+						return item;
+					});
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '今日计划获取失败',
+						type: 'error'
+					});
+				}
+
+			},
+
+			/**
+			 * 获取历史计划
+			 */
+			async getPlanHistory(){
+				const res = await planHistory({token:this.userInfo.token});
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+					//这个位置可以判断是否有数据，长度是不是0，暂时不做
+					const countData = [...this.todayPlan.data,...res.data.body];//合并今日计划和历史计划
+					console.log(countData)
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '历史计划获取失败',
+						type: 'error'
+					});
+				}
+			},
+
+			/**
+			 * 获取今日警告
+			 */
+			async getTodayAlert(){
+				const res = await todayAlert({token:this.userInfo.token});
+				console.log(res)
+				if(res.data&&res.data.errCode===0){
+					this.todayAlert.data = res.data.body.map(item=>{
+						item.name = item.userName;
+						item.id = item.userId;
+						return item;
+					});
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '今日警告获取失败',
+						type: 'error'
+					});
+				}
+			},
+
+			/**
+			 * 获取历史警告
+			 */
+			async getAlertHistory(){
+				const res = await alertHistory({token:this.userInfo.token});
+				console.log(res)
+				if(res.data&&res.data.errCode===0){
+					alert('success')
+					console.log(this.alertHistory)
+					this.alertHistory.data = res.data.body 
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '今日警告获取失败',
+						type: 'error'
+					});
+				}
+			},
+
+			/**
+			 * 获取近期（今日）随访
+			 */
+			async getTodayFollowup(){
+				const res = await todayFollowup({token:this.userInfo.token});
+				console.log(res)
+				if(res.data&&res.data.errCode===0){
+					this.todayFollowup.data = res.data.body.map(item=>{
+						item.name = item.userName;
+						item.id = item.userId;
+						return item;
+					});
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '近期随访获取失败',
+						type: 'error'
+					});
+				}
+			},
+
+			/**
+			 * 获取历史随访
+			 */
+			async getHistoryFollowup(){
+				const res = await historyFollowup({token:this.userInfo.token});
+				console.log(res)
+				if(res.data&&res.data.errCode===0){
+					alert('success')
+					this.historyFollowup.data = res.data.body
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '历史随访获取失败',
+						type: 'error'
+					});
+				}
+			},
+
+			/**
+			 * 计算权限列表
+			 */
+			getAuth(){
+				const result = this.userInfo.hasAuth.filter(item=>item.type === '2');//挑出医生的权限
+				const table = {
+					'10000':{name:'远程门诊',code:'10000',has:false},
+					'20000':{name:'远程会诊',code:'20000',has:false},
+					'30000':{name:'远程协作',code:'30000',has:false},
+					'40000':{name:'智能随访',code:'40000',has:false},
+					'50000':{name:'健康档案',code:'50000',has:false},
+					'60000':{name:'远程教育',code:'60000',has:false},
+					'70000':{name:'分级诊疗',code:'70000',has:false},
+					'80000':{name:'双向转诊',code:'80000',has:false},
+					'90000':{name:'移动查房',code:'90000',has:false},
+					'100000':{name:'终端管理',code:'100000',has:false},
+					'11000':{name:'家医服务',code:'11000',has:false},
+				};
+				result.forEach(element => {
+					table[element.authorityId].has = true;
+				});
+				this.auth = table;
+				console.log(table)
+
+				// result = result.map(item=>table[item.authorityId]);
+				// console.log(result);
+				// this.auth = result;
+			},
+
+			/**
+			 * 计算ajax
+			 */
+			countAjax(){
+				if(this.auth['40000']){//随访下面的三个模块
+					Promise.all([this.getTodayPlan(),this.getTodayAlert(),this.getTodayFollowup()])
+					.then(res=>console.log(res))
+					.catch(err=>console.log(err))
+				}
+			},
+
+			/**
+			 * 查看历史计划弹窗被关闭前
+			 */
+			planHistoryClose(){
+				console.log('查看历史计划弹窗被关闭前')
+			},
+			/********* */
 			getReData(data){
 				console.log(data)
 			},
@@ -225,10 +689,19 @@
 			infoList,
 			plantTable,
 			infoListHead,
-			userInfoRow
+			userInfoRow,
+			newModuleTable,
+			historyAlert
 		},
 		async created(){
-
+			this.getAuth();
+			this.countAjax();
+			console.log(this.userSelfInfo.userId)
+			// this.getTodayPlan();
+			// this.getTodayAlert();
+			// this.getTodayFollowup();
+			// console.log(this.userInfo.hasAuth)
+			
 		}
 	}
 </script>
@@ -426,6 +899,51 @@
 	}
 	.undone{
 		color: var(--color17)
+	}
+	.history-alert-findby-condition{
+		display: flex;
+        align-items: center;
+	}
+	.history-alert-findby-condition-item{
+        flex:1;
+        display: flex;
+        align-items: center;
+    }
+    .history-alert-findby-condition-item>div{
+        flex: 3;
+    }
+    .history-alert-findby-condition-item-name{
+        flex: 1;
+        text-align: center;
+    }
+    .history-alert-findby-condition-item-ok{
+        flex: 1;
+        text-align: center;
+    }
+    .history-alert-findby-name{
+        display: flex;
+        flex-direction: row-reverse;
+    }
+    .history-alert-findby-name>div{
+        width: 200px;
+    }
+	.history-alert-show-content-info{
+		display: flex;
+		align-items: center;
+	}
+	.history-alert-show-content-info-img{
+		width:0.42rem;
+		height: 0.42rem;
+		margin-right: 0.14rem;
+	}
+	.history-alert-show-content-info-img>img{
+		display: block;
+		width: 100%;
+		height: 100%;
+		border-radius: 50%;
+	}
+	.history-alert-show-content-info-name , .history-alert-show-content-info-time , .history-alert-show-content-info-status {
+		flex: 1;
 	}
 </style>
 <!--

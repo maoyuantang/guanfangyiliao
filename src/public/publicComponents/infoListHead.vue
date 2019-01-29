@@ -1,7 +1,7 @@
 <template>
 	<div class="info-list-head">
         <span class="table-title">{{inData.name||""}}</span>
-        <el-button @click="$emit('reBack',{click:true})">查看历史计划</el-button>
+        <el-button @click="$emit('reBack',{click:true})">{{btnText || 'something wrong'}}</el-button>
     </div>
 </template>
 
@@ -12,14 +12,41 @@
         ],
 		data () {
 			return {
-				
+				btnText:""
 			}
 		},
 		methods:{
-			
+			/***
+			 * 设置按钮文字
+			 * 前期图纸都是一样，也没想到
+			 * 后来文字有改变
+			 * 添加个函数解决
+			 */
+			setBtnText(){
+				const table = [
+					{
+						entry:'今日计划',
+						output:'查看历史计划'
+					},
+					{
+						entry:'今日警告',
+						output:'查看历史告警'
+					},
+					{
+						entry:'近期随访',
+						output:'查看历史随访'
+					}
+				];
+				table.forEach(v=>{
+					if(v.entry === this.inData.name){
+						this.btnText = v.output;
+						return;
+					}
+				})
+			},
 		},
 		async created(){
-
+			this.setBtnText();
 		}
 	}
 </script>
