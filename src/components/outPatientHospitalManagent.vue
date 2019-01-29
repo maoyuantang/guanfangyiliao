@@ -104,8 +104,8 @@
 		</el-dialog>
 
 		<!-- 查看记录弹框 -->
-		<el-dialog class="  " title="查看记录" :visible.sync="isShowRecord" center>
-			<el-table :data="tableDataChat" border style="width: 100%;margin-top:100px" @cell-click="relateDoctors">
+		<el-dialog class="  " title="查看记录" :visible.sync="isShowRecord" center width=70%>
+			<el-table :data="tableDataChat" border style="width: 100%;" @cell-click="relateDoctors">
 				<el-table-column fixed prop="id" label="业务编号"></el-table-column>
 				<el-table-column prop="departmentName" label="科室"></el-table-column>
 				<el-table-column prop="fullName" label="业务名"></el-table-column>
@@ -115,7 +115,7 @@
 				<el-table-column prop="totalIncome" label="总收入"></el-table-column>
 				<el-table-column prop="queuePeople" label="当前排队"></el-table-column>
 				<el-table-column prop="updateTime" label="最近修改"></el-table-column>
-				<el-table-column fixed="right" label="" width="200">
+				<el-table-column fixed="right" label="" width="200px">
 					<template slot-scope="scope">
 						<el-button @click="isShowRecordChatFun(scope.row)" type="text" size="small">门诊交流</el-button>
 					</template>
