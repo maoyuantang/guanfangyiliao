@@ -79,7 +79,7 @@
 		async created(){
 			console.log(this.$store.state.user.viewRoot.now)
 			console.log(this.$route.path==='/');
-			this.setCanClic();
+			// this.setCanClic();
 		}
 	}
 </script>
