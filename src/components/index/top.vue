@@ -3,7 +3,7 @@
 	<div class="change-root" v-if="!userInfo.rooter">
 		<el-menu :default-active="viewRoot.now.type" class="el-menu-demo" mode="horizontal" @select="handleSelect">
 		<el-menu-item index="1">管理权限</el-menu-item>
-		<el-menu-item index="2">医生端</el-menu-item>
+		<el-menu-item index="2" :disabled="!canGotoDoctor">医生端</el-menu-item>
 	</el-menu>
 	</div>
 	
@@ -49,7 +49,9 @@
 		},
 		data(){
 			return {
-				marquee:'i is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fish'
+				marquee:'i is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fishi is fish',
+				canGotoManager:true,
+				canGotoDoctor:true,
 			}
 		},
 		methods:{
@@ -67,10 +69,17 @@
 				}
 				this.$store.commit("user/CHANGEVIEWAUTH",sendData);
 				sessionStorage.setItem('viewRoot',JSON.stringify(this.viewRoot));//存缓存,或者叫跟新缓存更合适
+			},
+			setCanClic(){
+				if(this.userInfo.manager && this.$route.path==='/'){
+					this.canGotoDoctor = false;
+				}
 			}
 		},
 		async created(){
 			console.log(this.$store.state.user.viewRoot.now)
+			console.log(this.$route.path==='/');
+			this.setCanClic();
 		}
 	}
 </script>

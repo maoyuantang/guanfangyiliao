@@ -21,8 +21,8 @@
 					<div class="config-module-content-config">
 						<p class="config-module-content-config-title">医院配置</p>
 						<div class="config-module-content-config-body">
-							<div class="business-item" v-for="(item,index) in cloudStorage.hospital" :key="index">
-								{{item.hospitalName}}
+							<div class="business-item" v-for="(item,index) in showsSelectList" :key="index" v-text="item.hospitalName || ''">
+								<!-- {{item.hospitalName}} -->
 								<!-- <p>
 									<span>重庆市西南医院</span>
 									<span>档案数(18)</span>
@@ -73,7 +73,7 @@
 			
 			footer-hide
 			@on-ok="editOk"
-			@on-cancel="editCancel">
+			@on-cancel="getBusinessInfo">
 			<div class="editing-business-alert">
 				<div class="editing-business-alert-item">
 					<span class="editing-business-alert-item-name">业务名称</span>
@@ -81,7 +81,7 @@
 						<el-input
 						placeholder=""
 						size="mini"
-						v-model="editingBusiness.name"
+						v-model="cloudStorage.fullName"
 						clearable>
 						</el-input>
 					</div>
@@ -89,19 +89,19 @@
 				<div class="editing-business-alert-item">
 					<span class="editing-business-alert-item-name">价格</span>
 					<div class="editing-business-alert-item-value">
-						<div class="editing-business-price-item" v-for="(item,index) in editingBusiness.priceList" :key="index">
+						<div class="editing-business-price-item" v-for="(item,index) in cloudStorage.price" :key="index">
 							<div class="editing-business-alert-input-price">
 								<el-input
 								placeholder=""
 								size="mini"
-								v-model="item.price"
+								v-model="item.worth"
 								clearable>
 								</el-input>
 							</div>
 							<div class="editing-business-alert-selcert">
 								<el-dropdown>
 								<span class="el-dropdown-link">
-									<span>{{item.year}}</span>年<i class="el-icon-arrow-down el-icon--right"></i>
+									<span>{{item.valueUnit}}</span>年<i class="el-icon-arrow-down el-icon--right"></i>
 								</span>
 								<el-dropdown-menu slot="dropdown">
 									<el-dropdown-item v-for="i in [1,2,5]" :key="i" :command="i" @click.native="handleCommand(i,index)">{{i}}年</el-dropdown-item>
@@ -115,26 +115,32 @@
 				<div class="editing-business-alert-item">
 					<span class="editing-business-alert-item-name">医院配置</span>
 					<div class="editing-business-alert-item-value">
-						<el-select v-model="editingBusiness.configurations" multiple placeholder="" size="mini">
+						<el-select v-model="cloudStorage.hospital" multiple placeholder="" size="mini">
 							<el-option
-							v-for="item in editingBusiness.configurationsList"
-							:key="item.code"
+							v-for="item in configurationsList"
+							:key="item.hospitalOrgCode"
 							:label="item.hospitalName"
-							:value="item.code">
+							:value="item.hospitalOrgCode">
 							</el-option>
 						</el-select>
 					</div>
 				</div>
+				<!-- {{cloudStorage.hospital}} -->
 				<div class="editing-business-alert-item">
 					<span class="editing-business-alert-item-name"></span>
 					<div class="editing-business-alert-item-right-set">
-						<span v-for="(item,index) in editingBusiness.configurationsObj" :key="index" class="editing-business-show-config">{{item.hospitalName}}</span>
+						<span v-for="(item,index) in showsSelectList" :key="index" class="editing-business-show-config" v-text="item.hospitalName || ''"></span>
 					</div>
 				</div>
 				<div class="editing-business-alert-item">
-					<el-checkbox v-model="editingBusiness.agree">用户协议</el-checkbox>
+					<el-checkbox v-model="cloudStorage.agree">用户协议</el-checkbox>
 					<!-- <span>用户协议</span> -->
 				</div>
+				<!-- {{configurationsList}}
+				</br>
+				{{cloudStorage.hospital}}
+				</br>
+				{{configurationsList}} -->
 				<div class="editing-business-alert-item editing-business-sub">
 					<el-button type="primary" @click="subHospitalConfig">确定</el-button>
 				</div>
@@ -155,18 +161,35 @@
 	import render from '../public/publicComponents/render.vue'
 	export default {
 		watch:{
-			'editingBusiness.configurations':{
+			'cloudStorage.hospital':{
 				handler(n){
-					console.log(n)
-					const setArr = [];
-					this.editingBusiness.configurationsList.forEach(item=>{
-						n.map(value=>{
-							value===item.code?setArr.push(item):null;
-						})
+					let newArr = [...new Set(n)];
+					newArr = newArr.map(v=>{
+						for(const i of this.configurationsList){
+							if(i.hospitalOrgCode === v){
+								return i
+							}
+						}
 					});
-					this.editingBusiness.configurationsObj = setArr;
+					this.showsSelectList = newArr
+					// let newArr = n.map(v=>typeof v === 'object' ? v.hospitalOrgCode : v);//打平数组
+					// newArr = [...new Set(newArr)];//去重
+					// newArr = newArr.map(v=>{//还原
+					// 	for(const i of this.configurationsList){
+					// 		if(i.hospitalOrgCode === v){
+					// 			return i
+					// 		}
+					// 	}
+					// 	// this.configurationsList.forEach(item=>{//forEach返回未定义，有空了查找下原因
+					// 	// 	if(item.hospitalOrgCode === v) {
+					// 	// 		return item;
+					// 	// 	}
+					// 	// })
+					// });
+					// this.showsSelectList = newArr;
+					// console.log(newArr)
 				}
-			}
+			},
 		},
 		components:{
 			search,
@@ -249,7 +272,7 @@
 				
 
 /*********************************************************************************************** */
-				
+				showsSelectList:[],
 				editingBusiness:{//编辑业务  
 					show:false,//是否显示
 					name:'',//名称
@@ -265,7 +288,7 @@
 					agree:false,//是否同意协议
 
 				},
-				cloudStorage:{//云存储 第一个表格数据 
+				cloudStorage:{//云存储 第一个表格数据  
 					description:'',//这是云存储的描述
 					fullName:'',//云存储业务
 					hospital:[
@@ -300,10 +323,16 @@
 						// 	valueUnit:0//价格单位值
 						// }
 					],
-					protocolContent:null,
+					protocolContent:null, 
 					protocolId:null,
-					protocolName:null
+					protocolName:null,
+					agree:false
 				},
+
+				/**
+				 * 医院配置
+				 */
+				configurationsList:[],
 
 				/**
 				 * 表格信息
@@ -371,11 +400,6 @@
 			}
 		},
 		methods:{
-
-
-
-
-
 			/**
 			 * 获取业务信息
 			 */
@@ -383,7 +407,10 @@
 				const res = await viewCloud({token: this.userState.token});
 				console.log(res);
 				if(res.data && res.data.errCode === 0){
+					res.data.body.agree = res.data.body.protocolId!=='';
+					res.data.body.hospital = res.data.body.hospital.map(item=>item.hospitalOrgCode);//拍平，只留下hospitalOrgCode
 					this.cloudStorage = res.data.body;
+					// this.showsSelectList = res.data.body.hospital;
 				}else{
 					this.$notify({
 						title: '失败',
@@ -444,7 +471,8 @@
 						type: 'error'
 					});
 				}else{
-					this.editingBusiness.priceList.push({price:'',year:'1'});
+					this.editingBusiness.priceList.push({worth: 0,unitEnum: "YEAR",valueUnit: 1 });
+					// this.editingBusiness.priceList.push({price:'',year:'1'});
 				}
 				console.log(this.editingBusiness.priceList)
 				
@@ -456,9 +484,11 @@
 			handleCommand(i,index){
 				console.log(i)
 				console.log(index)
-				const newObj = this.editingBusiness.priceList[index];
-				newObj.year = i;
-				this.editingBusiness.priceList.splice(index,1,newObj);
+				const newObj = this.cloudStorage.price[index];
+				// console.log(newObj)
+				newObj.valueUnit = i;
+				// // newObj.year = i;
+				this.cloudStorage.price.splice(index,1,newObj);
 			},
 
 			/**
@@ -468,8 +498,10 @@
 				const res = await hospitalsByCloud({token: this.userState.token});
 				console.log(res)
 				if(res.data && res.data.errCode === 0){
-					this.editingBusiness.configurationsList = res.data.body
-					console.log(this.editingBusiness.configurationsList)
+					this.configurationsList = res.data.body.map(item=>{
+						item.hospitalOrgCode = item.code;
+						return item;
+					})
 				}else{
 					this.$notify({
 						title: '数据获取失败',
@@ -483,13 +515,39 @@
 			 * 提交医院配置
 			 */
 			async subHospitalConfig(){
+				
 				const options = [
 					{token: this.userState.token},
 					{
-						cloudId:''
+						cloudId:this.cloudStorage.id,
+						cloudName:this.cloudStorage.fullName,
+						price:this.cloudStorage.price,
+						cloudDesc:this.cloudStorage.description,
+						protocolId:this.cloudStorage.protocolId,
+						protocolName:this.cloudStorage.protocolName,
+						protocolContent:this.cloudStorage.protocolContent,
+						phone:this.cloudStorage.phone,
+						hospital:this.showsSelectList
 					}
 				];
-				const res = await updateCloud({});
+				console.log(options)
+				const res = await updateCloud(...options);
+				console.log(res);
+				if(res.data && res.data.errCode === 0){
+					this.$notify({
+						title: '成功',
+						message: '修改成功',
+						type: 'success'
+					});
+					this.getBusinessInfo();
+					this.editingBusiness.show = false;
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '修改失败',
+						type: 'error'
+					});
+				}
 			},
 			/******************** */
 			getData(data){
