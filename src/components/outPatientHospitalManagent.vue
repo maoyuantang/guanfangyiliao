@@ -14,7 +14,7 @@
 					</div>
 					<div class="online-clinic-top-right">
 						<search @searchValue="adminSearchOne"></search>
-						<el-button type="primary" @click="isShowNewOutPatient = true">新增业务</el-button>
+						<el-button type="primary" @click="isShowNewOutPatientFun">新增业务</el-button>
 					</div>
 				</div>
 
@@ -78,11 +78,10 @@
 
 				</div>
 			</div>
+
 		</div>
 		<!-- 新增门诊弹框 -->
-		<el-dialog title="收货地址" :visible.sync="isShowNewOutPatient">
-			<!-- <addNewFrame></addNewFrame> -->
-		</el-dialog>
+		<addNewFrame :inData="addData" @reback="getData"></addNewFrame>
 
 		<!-- 表一查看关联医生弹框 -->
 		<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="503px" hight="470px"
@@ -125,7 +124,7 @@
 
 		<!-- 查看记录弹框中的聊天弹框 -->
 		<el-dialog class="  " title="聊天模块" :visible.sync="isShowRecordChat" center>
-				聊天模块
+			聊天模块
 		</el-dialog>
 
 		<!-- 编辑 -->
@@ -206,14 +205,61 @@
 			search,
 			publicList,
 			normalColumnChart,
-			statisticsWay, addNewFrame
+			statisticsWay,
+			addNewFrame,
 		},
 		data() {
 			return {
+				addData: {
+					show: false,//是否显示
+					type: '1',//1是表示新增家医，2是表示新增在线诊室业务
+					businessTypeList: [//新增在线诊室业务类型
+						{
+							label: '',
+							value: ''
+						}
+					],
+					businessTemplate: [//新增家医业务模板
+						{
+							label: '',
+							value: ''
+						}
+					],
+					departmentList: [//科室列表
+						{
+							label: '',
+							value: ''
+						}
+					],
+					doctorList: [//医生列表
+						{
+							label: '',
+							value: ''
+						}
+					],
+					agreement: [//协议
+						{
+							name: '',
+							content: ''
+						}
+					]
+				},
+				//7.1新增门诊参数
+				clinicType: "远程门诊业务",
+				clinicName: "新增远程门诊业务",
+				clinicPrice: 1,
+				clinicDepartmentId: "1398F2FBB8AA48518385F2486840FE17",
+				orgCode: "1545618639429",
+				clinicDoctors: ["EB237A1368A44A32B4070154C225C088"],
+				clinicDesc: "这是远程门诊的业务噢~",
+				clinicProtocolId: "",
+				clinicProtocolName: "收费协议",
+				clinicProtocolContent: "Oracle 将继续提供JDK 8 免费的公共更新和自动更新。",
+				clinicPhone: "18888888888",
+
+
 				//显示隐藏
 
-				//是否弹出新增门诊
-				isShowNewOutPatient: false,
 				//是否弹出关联医生
 				isShowrelationalDoctor: false,
 				//是否弹出查看详情
@@ -311,44 +357,44 @@
 				//聊天
 				tableDataChat: [
 					{
-								prop: "id",
-								label: "业务编号"
-							},
-							{
-								prop: "departmentName",
-								label: "科室"
-							},
-							{
-								prop: "fullName",
-								label: "业务名"
-							},
-							{
-								prop: "price",
-								label: "价格"
-							},
-							{
-								prop: "doctors",
-								label: "关联医生"
-							},
-							{
-								prop: "totalPeople",
-								label: "业务人次"
-							},
-							{
-								prop: "totalIncome",
-								label: "总收入"
-							},
-							{
-								prop: "queuePeople",
-								label: "当前排队"
-							},
-							{
-								prop: "updateTime",
-								label: "最近修改"
-							}
-						],
+						prop: "id",
+						label: "业务编号"
+					},
+					{
+						prop: "departmentName",
+						label: "科室"
+					},
+					{
+						prop: "fullName",
+						label: "业务名"
+					},
+					{
+						prop: "price",
+						label: "价格"
+					},
+					{
+						prop: "doctors",
+						label: "关联医生"
+					},
+					{
+						prop: "totalPeople",
+						label: "业务人次"
+					},
+					{
+						prop: "totalIncome",
+						label: "总收入"
+					},
+					{
+						prop: "queuePeople",
+						label: "当前排队"
+					},
+					{
+						prop: "updateTime",
+						label: "最近修改"
+					}
+				],
 
-				
+
 				//处方审核和配送
 				prescriptionAuditDistribution: {
 					// 1、筛选
@@ -513,26 +559,26 @@
 			/**
 			 * 禁用被点击
 			 */
-			async getDisableClick(item,index){
+			async getDisableClick(item, index) {
 				console.log('is enter')
 				const optios = [
-					{token:this.userState.token},
+					{ token: this.userState.token },
 					{
-						clinicId:item.id,
-						status:'test'
+						clinicId: item.id,
+						status: 'test'
 					}
 				];
 				const res = await disableClinic(...optios);
 				console.log(res);
-				if(res.data && res.data.errCode === 0){
-					this.relationalDoctor = this.relationalDoctor.map(value=>{
-						if(value.code === item.code){
-							item.name==='解除禁用'?value.name="禁用":valve.name = '解除禁用';
+				if (res.data && res.data.errCode === 0) {
+					this.relationalDoctor = this.relationalDoctor.map(value => {
+						if (value.code === item.code) {
+							item.name === '解除禁用' ? value.name = "禁用" : valve.name = '解除禁用';
 							return item
 						}
 					})
 				}
-				
+
 			},
 			//在线、处方审核、统计、切换插件返回值
 			getNav(data) {
@@ -733,8 +779,8 @@
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表1+成功')
 					console.log(res)
-					this.relationalDoctor = res.data.body.data2.list.map(item=>{
-						item.name = item.status?'禁用':'解除禁用';
+					this.relationalDoctor = res.data.body.data2.list.map(item => {
+						item.name = item.status ? '禁用' : '解除禁用';
 						return item
 					})
 					$.each(res.data.body.data2.list, function (index, text) {
@@ -828,39 +874,42 @@
 			},
 
 			//弹框
-			//7.1新增业务
-			// async newBusiness() {
-			//     let _this = this;
-			//     let query = {
-			//         token: this.userState.token
-			//     };
-			//     const options = {
-			//         clinicId: "",
-			//         clinicType: "远程门诊业务",
-			//         clinicName: "新增远程门诊业务",
-			//         clinicPrice: 1,
-			//         clinicDepartmentId: "1398F2FBB8AA48518385F2486840FE17",
-			//         orgCode: "1545618639429",
-			//         clinicDoctors: ["EB237A1368A44A32B4070154C225C088"],
-			//         clinicDesc: "这是远程门诊的业务噢~",
-			//         clinicProtocolId: "",
-			//         clinicProtocolName: "收费协议",
-			//         clinicProtocolContent: "Oracle 将继续提供JDK 8 免费的公共更新和自动更新。",
-			//         clinicPhone: "18888888888",
-			//         status: ""
-			//     };
-			//     const res = await addClinic(query,options);
-			//     if (res.data && res.data.errCode === 0) {
-			//         this.adminTableData = res.data.body.data2.list;
-			//     } else {
-			//         console.log(res)
-			//         //失败
-			//         this.$notify.error({
-			//             title: "警告",
-			//             message: res.data.errMsg
-			//         });
-			//     }
-			// }
+			// 7.1新增业务
+			async newBusiness() {
+				let _this = this;
+				let query = {
+					token: this.userState.token
+				};
+				const options = {
+					clinicId: this.clinicId,
+					clinicType: this.clinicType,
+					clinicName: this.clinicName,
+					clinicPrice: this.clinicPrice,
+					clinicDepartmentId:this.clinicDepartmentId,
+					orgCode:this.orgCode,
+					clinicDoctors:this.clinicDoctors,
+					clinicDesc: this.clinicDesc,
+					clinicProtocolId: this.clinicProtocolId,
+					clinicProtocolName:this.clinicProtocolName,
+					clinicProtocolContent:this.clinicProtocolContent,
+					clinicPhone:this.clinicPhone,
+					status: this.status
+				};
+				const res = await addClinic(query, options);
+				//继续，进了函数，但是没有请求到此函数
+				if (res.data && res.data.errCode === 0) {
+					alert(1)
+					console.log('7.1新增业务+成功')
+					// this.adminTableData = res.data.body.data2.list;
+				} else {
+					console.log('7.1新增业务+失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
 
 
 			//查看关联医生
@@ -925,6 +974,20 @@
 						message: res.data.errMsg
 					});
 				}
+			},
+
+
+
+			/*
+			 * 
+			 * 获取返回数据
+			 * 
+			 */
+			isShowNewOutPatientFun() {
+				this.addData.show = true
+			},
+			getData(data) {
+				console.log(data)
 			}
 		},
 		async created() {
@@ -936,6 +999,7 @@
 			this.getList1();//管理列表1
 			this.getList2();//管理列表2
 			this.getList3();//管理图表3（统计图表数据获取）
+			this.newBusiness();//管理图表3（统计图表数据获取）
 		}
 	}
 </script>
