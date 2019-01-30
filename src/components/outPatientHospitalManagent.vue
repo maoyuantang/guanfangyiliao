@@ -185,8 +185,8 @@
 		drugsByCondition,//7.16药品名称搜索药品信息
 		clinicOrders,//7.18(WEB医生)获取所有该诊室的订单信息
 
-		// 废弃接口
-		// fetchHospitalDepts,//2.2.获取医院科室列表
+		// 非筛选条件下的科室列表
+		fetchHospitalDepts,//2.2.获取医院科室列表
 	} from "../api/apiAll.js";
 	//引入组件
 	import normalTab from '../public/publicComponents/normalTab.vue'
@@ -226,10 +226,10 @@
 						}
 					],
 					departmentList: [//科室列表
-						{
-							label: '',
-							value: ''
-						}
+						// {
+						// 	label: '测试1',
+						// 	value: '测试1'
+						// }
 					],
 					doctorList: [//医生列表
 						{
@@ -552,8 +552,9 @@
 			//引入token
 			...mapState({
 				userState: state => state.user.userInfo,
-				userSelfInfo: state => state.user.userSelfInfo
-			})
+				userSelfInfo: state => state.user.userSelfInfo,
+				userInfo: state => state.user.userInfo,
+			}),
 		},
 		methods: {
 			/**
@@ -630,7 +631,7 @@
 			//筛选列表
 			//1.21.1.科室工具栏 (管理)
 			async filter0() {
-				let _this = this;
+				const _this = this
 				let query = {
 					token: this.userState.token,
 					type: 'MANAGE'
@@ -666,7 +667,7 @@
 			},
 			//1.21.2.处方审核状态
 			async filter1() {
-				let _this = this;
+				const _this = this
 				let query = {
 					token: this.userState.token,
 				};
@@ -691,7 +692,7 @@
 			},
 			//1.21.3.处方配送状态
 			async filter2() {
-				let _this = this;
+				const _this = this
 				let query = {
 					token: this.userState.token,
 				};
@@ -716,7 +717,7 @@
 			},
 			//1.21.4.处方审核医生
 			async filter3() {
-				let _this = this;
+				const _this = this
 				let query = {
 					token: this.userState.token,
 				};
@@ -741,7 +742,7 @@
 			},
 			//1.21.5.处方发药医生
 			async filter4() {
-				let _this = this;
+				const _this = this
 				let query = {
 					token: this.userState.token,
 				};
@@ -766,7 +767,7 @@
 			},
 			//7.5根据条件搜索在线诊室业务 获取列表
 			async getList1() {
-				let _this = this;
+
 				let query = {
 					token: this.userState.token,
 					string: this.searchValue,
@@ -789,11 +790,11 @@
 						} else if (res.data.body.data2.list[index].doctors[0].doctorStates === true) {
 							res.data.body.data2.list[index].doctors[0].doctorStates = '接诊中...'
 						}
-						_this.relationalDoctor = res.data.body.data2.list[index].doctors;
+						this.relationalDoctor = res.data.body.data2.list[index].doctors;
 						text.totalPeople = "总: " + text.totalPeople + "  今日: " + text.todayPeople
 						text.doctors = "查看"
 					})
-					_this.tableData = res.data.body.data2.list;
+					this.tableData = res.data.body.data2.list;
 				} else {
 					//失败
 					console.log('列表1+失败')
@@ -805,7 +806,7 @@
 			},
 			// 7.11根据条件获取处方信息 
 			async getList2() {
-				let _this = this;
+
 				let query = {
 					token: this.userState.token,
 					departmentId: this.departmentId,
@@ -854,7 +855,7 @@
 			//统计图表数据的获取
 			async getList3() {
 				console.log('统计接口还没出来')
-				// let _this = this;
+				// 
 				// let query = {
 				// 	token: this.userState.token
 				//	//筛选的时间条件参数待补充
@@ -873,32 +874,99 @@
 				// }
 			},
 
-			//弹框
-			// 7.1新增业务
-			async newBusiness() {
-				let _this = this;
+			//新增门诊弹框
+			//渲染
+			async newClinic() {
+				const _this = this;
+				//根据医院获取科室
+				let query = {
+					orgCode: this.userInfo.hospitalCode,	//String true 医院代码 
+					deptId: this.departmentId,	//String false 科室ID，无该参数则返回医院全部科室，有该参数则会过滤科室列表 
+				}
+				console.log(query)
+				const res = await fetchHospitalDepts(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('新增弹框渲染+科室+成功')
+					$.each(res.data.body, function (index, text) {
+						_this.addData.departmentList.push({
+							label: text.deptName,
+							value: text.deptId
+						});
+					});
+					console.log(this.addData.departmentList)
+					//根据科室获取关联医生
+					let query1 = {
+						token: this.userState.token,
+						string: this.searchValue,
+						pageNum: this.pageNum,
+						pageSize: this.pageSize,
+						departmentId: this.departmentId,
+						businessType: this.businessType
+					};
+					const res = await searchClinic(query1);
+					if (res.data && res.data.errCode === 0) {
+						console.log('新增弹框渲染+关联医生+成功')
+						console.log(res)
+						// this.relationalDoctor = res.data.body.data2.list[index].doctors;
+					} else {
+						//失败
+						console.log('新增弹框渲染+关联医生+成功')
+						this.$notify.error({
+							title: "警告",
+							message: res.data.errMsg
+						});
+					}
+				} else {
+					console.log('新增弹框渲染+新增业务+失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+				//根据科室获取定义协议（待补全）
+
+
+			},
+			// 7.1  确定  新增业务
+			/*
+			 * 
+			 * 获取返回数据
+			 * 
+			 */
+			isShowNewOutPatientFun() {
+				this.addData.show = true
+			},
+			async getData(data) {
+				console.log(data)
+				this.clinicType = data.businessType
+				this.businessName = data.businessName
+				this.businessPrice = data.businessPrice
+
+
 				let query = {
 					token: this.userState.token
 				};
 				const options = {
-					clinicId: this.clinicId,
-					clinicType: this.clinicType,
-					clinicName: this.clinicName,
-					clinicPrice: this.clinicPrice,
-					clinicDepartmentId:this.clinicDepartmentId,
-					orgCode:this.orgCode,
-					clinicDoctors:this.clinicDoctors,
-					clinicDesc: this.clinicDesc,
-					clinicProtocolId: this.clinicProtocolId,
-					clinicProtocolName:this.clinicProtocolName,
-					clinicProtocolContent:this.clinicProtocolContent,
-					clinicPhone:this.clinicPhone,
-					status: this.status
+					clinicId: '在线门诊',//String false 远程门诊id（新增为空，编辑不为空） 
+
+					clinicType: this.clinicType,//String true 远程门诊类型 
+					clinicName: this.clinicName,//String true 远程门诊名 
+					clinicPrice: this.clinicPrice,//long true 远程门诊价格 
+
+					clinicDepartmentId: this.clinicDepartmentId,//待请求的  String true 远程门诊科室id 
+					orgCode: this.orgCode,//医院代码
+					clinicDoctors: this.clinicDoctors,//List true 远程门诊医生 
+					clinicDesc: this.clinicDesc,//String true 远程门诊描述 
+					clinicProtocolId: this.clinicProtocolId,//String false 远程门诊协议id（选择协议时必传，非选择的协议可不传） 
+					clinicProtocolName: this.clinicProtocolName,//String true 远程门诊协议名 
+					clinicProtocolContent: this.clinicProtocolContent,//String true 远程门诊协议内容 
+					clinicPhone: this.clinicPhone,//String true 远程门诊电话 
+					status: this.status//boolean false 远程门诊状态（禁用操作时值必传） 
 				};
+				console.log(query, options)
 				const res = await addClinic(query, options);
-				//继续，进了函数，但是没有请求到此函数
 				if (res.data && res.data.errCode === 0) {
-					alert(1)
 					console.log('7.1新增业务+成功')
 					// this.adminTableData = res.data.body.data2.list;
 				} else {
@@ -910,6 +978,7 @@
 					});
 				}
 			},
+
 
 
 			//查看关联医生
@@ -948,7 +1017,7 @@
 			},
 			//禁用接口的调用
 			async isShowForbidFun() {
-				let _this = this;
+
 				let query = {
 					token: this.userState.token
 				};
@@ -959,13 +1028,13 @@
 				const res = await disableClinic(query, options);
 				if (res.data && res.data.errCode === 0) {
 					console.log(res)
-					console.log(_this.status)
-					if (_this.status == true) {
-						_this.onLineList.tableBody.tableBtn[2].name = '禁用'
-						_this.status = false;
+					console.log(this.status)
+					if (this.status == true) {
+						this.onLineList.tableBody.tableBtn[2].name = '禁用'
+						this.status = false;
 					} else {
-						_this.onLineList.tableBody.tableBtn[2].name = '解除禁用'
-						_this.status = true;
+						this.onLineList.tableBody.tableBtn[2].name = '解除禁用'
+						this.status = true;
 					}
 				} else {
 					console.log('禁用失败')
@@ -978,17 +1047,7 @@
 
 
 
-			/*
-			 * 
-			 * 获取返回数据
-			 * 
-			 */
-			isShowNewOutPatientFun() {
-				this.addData.show = true
-			},
-			getData(data) {
-				console.log(data)
-			}
+
 		},
 		async created() {
 			this.filter0();//获取科室列表
@@ -997,9 +1056,9 @@
 			this.filter3();//审核医生
 			this.filter4();//发药医生
 			this.getList1();//管理列表1
+			this.newClinic();//新增门诊弹框内容渲染
 			this.getList2();//管理列表2
 			this.getList3();//管理图表3（统计图表数据获取）
-			this.newBusiness();//管理图表3（统计图表数据获取）
 		}
 	}
 </script>
