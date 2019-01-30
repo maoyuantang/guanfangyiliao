@@ -1796,3 +1796,26 @@ export const phoneFollowupSwitch = query => { //改变电话随访开关【医�
         }
     })
 }
+export const queryPageByDoctorWeb = query => { //10.医生WEB查询评估模板分页列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.queryPageByDoctorWeb,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const doctorsByOrgCodeAndDeptId = query => { //1.22医院机构码和科室id获取医生集合
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.doctorsByOrgCodeAndDeptId,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
