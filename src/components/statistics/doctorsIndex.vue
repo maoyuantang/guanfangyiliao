@@ -37,6 +37,7 @@
 						<span class="user-info-table-introduction">{{item.content || '丢失数据'}}</span>
 					</div>
 				</userInfoRow>
+				<p v-if="todayPlan.data.length<1">暂无数据</p>
 				<!-- <userInfoRow :inData="testBody" @reback="getClick">
 					<div class="slot-time-introduction">
 						<span class="user-info-table-time">拟定时间:2018-05.25</span>
@@ -56,6 +57,7 @@
 						<!-- <span class="user-info-item-info">舒张压>90mmHg</span> -->
 					</div>
 				</userInfoRow>
+				<p v-if="todayAlert.data.length<1">暂无数据</p>
 				<!-- <userInfoRow :inData="testBody" @reback="getClick">
 					<div class="slot-item-info">
 						<span class="user-info-item-name">血压项</span>
@@ -84,6 +86,7 @@
 						</div>
 					</div>
 				</userInfoRow>
+				<p v-if="todayFollowup.data.length<1">暂无数据</p>
 				<!-- <userInfoRow :inData="testBody" @reback="getClick">
 					<div class="solt-follow-up">
 						<div class="solt-follow-up-time">
@@ -113,10 +116,10 @@
 						<el-button type="primary" size="mini" @click="planHistoryShow({type:'base',value:0})">全部</el-button>
 					</div>
 					<div class="history-alert-findby-condition-item">
-						<el-button type="primary" size="mini">昨天</el-button>
+						<el-button type="primary" size="mini" @click="planHistoryShow({type:'base',value:1})">昨天</el-button>
 					</div>
 					<div class="history-alert-findby-condition-item">
-						<el-button type="primary" size="mini">三天内</el-button>
+						<el-button type="primary" size="mini" @click="planHistoryShow({type:'base',value:3})">三天内</el-button>
 					</div>
 					<div class="history-alert-findby-condition-item">
 					<span class="history-alert-findby-condition-item-name">时间筛选</span>
@@ -130,9 +133,9 @@
 						</el-date-picker>
 						<span class="history-alert-findby-condition-item-ok" @click="planHistoryShow({type:'interval',value:planHistory.selectTime})">确认</span>
 					</div>
-				</div>
+				</div>   
 				<div class="history-alert-findby-name">
-					<el-button  icon="el-icon-search" size="mini" @click="planHistoryshowName({type:'name',value:planHistory.selectName})"></el-button>
+					<el-button  icon="el-icon-search" size="mini" @click="planHistoryShow({type:'name',value:planHistory.selectName})"></el-button>
 					<el-input v-model="planHistory.selectName" placeholder="请输入内容" size="mini"></el-input>
 				</div>
 				<div class="history-alert-show-content">
@@ -190,7 +193,7 @@
 	import userInfoRow from '../../public/publicComponents/userInfoRow.vue'
 	import newModuleTable from '../../public/publicComponents/newModuleTable.vue'
 	import historyAlert from '../../public/publicComponents/historyAlert.vue'
-	import { todayPlan, todayAlert, planHistory , todayFollowup , alertHistory , historyFollowup} from '../../api/apiAll.js'
+	import { todayPlan, todayAlert, planHistory , todayFollowup , alertHistory , historyFollowup ,queryByDoctorPage, onlineRoomsByDoctor} from '../../api/apiAll.js'
 	
 	
 	export default {
@@ -204,12 +207,14 @@
 			return {
 
 				/**
-				 * 权限
+				 * 权限列表
 				 */
-				auth:{
-
-				},
-
+				auth:{},
+				
+				/**
+				 * 权限列表（数组形式）
+				 */
+				authList:[],
 				/**
 				 * 今日计划
 				 */
@@ -413,6 +418,16 @@
 						// ]
 					}
 				},
+
+				/**
+				 * 远程门诊系统信息
+				 */
+				onlineRoomsByDoctor:[],
+
+				/**
+				 * 移动查房信息 （后端还没有接口）
+				 */
+				mobileRounds:{},
 				/************* */
 				testTitle:{
 					name:"今日计划"
@@ -535,7 +550,7 @@
 				console.log(res);
 				if(res.data&&res.data.errCode===0){
 					//这个位置可以判断是否有数据，长度是不是0，暂时不做
-					const countData = [...this.todayPlan.data,...res.data.body];//合并今日计划和历史计划
+					const countData = [...this.todayPlan.data,...res.data.body.list];//合并今日计划和历史计划
 					this.planHistory.allList = countData;
 					this.planHistory.showList = countData;
 					this.planHistory.show = true;
@@ -647,12 +662,15 @@
 					'11000':{name:'家医服务',code:'11000',has:false},
 				};
 				result.forEach(element => {
-					table[element.authorityId].has = true;
+					table[element.authorityId]?table[element.authorityId].has = true:null;
+					// table[element.authorityId] && table[element.authorityId].has = true;
+					
 				});
 				this.auth = table;
-				console.log(table)
-
-				// result = result.map(item=>table[item.authorityId]);
+				this.authList = result.filter(item=>table[item.authorityId]);
+				// this.authList = result.map(item=>table[item.authorityId]);
+				console.log(this.auth)
+				console.log(this.authList)
 				// console.log(result);
 				// this.auth = result;
 			},
@@ -661,21 +679,67 @@
 			 * 计算ajax
 			 */
 			countAjax(){
-				if(this.auth['40000']){//随访下面的三个模块
-					Promise.all([this.getTodayPlan(),this.getTodayAlert(),this.getTodayFollowup()])
-					.then(res=>console.log(res))
-					.catch(err=>console.log(err))
-				}
+				const table = [
+					{
+						code:'10000',//远程门诊
+						funs:[this.getOnlineRoomsByDoctor]
+					},
+					{
+						code:'20000',//远程会诊
+						funs:[function(){console.log('暂时还没写')}]
+					},
+					{
+						code:'30000',//远程协作
+						funs:[function(){console.log('暂时还没写')}]
+					},
+					{
+						code:'40000',//智能随访
+						funs:[
+							this.getTodayPlan,
+							this.getTodayAlert,
+							this.getTodayFollowup
+						]
+					},
+					{
+						code:'60000',//远程教育
+						funs:[function(){console.log('暂时还没写')}]
+					},
+					{
+						code:'80000',//双向转诊
+						funs:[function(){console.log('暂时还没写')}]
+					},
+					{
+						code:'90000',//移动查房
+						funs:[function(){console.log('暂时还没写')}]
+					},
+				];
+				// const runList = this.auth.filter(item=>item.has);//筛选出有权限的模块，并执行他下面需要调用的接口
+				console.log(this.authList)
+				this.authList.forEach(item=>{
+					table.forEach(v=>{
+						// console.log(`v.code => ${v.code}
+						// item.code => ${item.code}`)
+						if(item.authorityId === v.code){
+							console.log('==')
+							Promise.all(v.funs.map(item=>item()))
+							.then(res=>console.log(res))
+							.catch(err=>console.log(err))
+							// break;//注意这个问题  forEach不能使用break跳出循环
+						}
+					});
+				});
+
+				// if(this.auth['40000']){//随访下面的三个模块
+				// 	Promise.all([this.getTodayPlan(),this.getTodayAlert(),this.getTodayFollowup()])
+				// 	.then(res=>console.log(res))
+				// 	.catch(err=>console.log(err))
+				// }
 			},
 
 			/**
 			 * 设置历史计划显示内容
 			 */
 			planHistoryShow(select){
-				// const a = {
-				// 	type:'base',// Interval  name
-				// 	value:0// []  ''
-				// } 
 				console.log(select)
 				const table = {
 					base:this.planHistoryshowAll,
@@ -689,13 +753,15 @@
 			 * 显示全部历史计划 或者 昨天  或者 三天内
 			 */
 			planHistoryshowAll(num){
-				if(!num){
-					this.planHistory.showList = this.planHistory.allList.map(item=>item);
-				}else{
-					const nowTime = Number(new Date())
-					this.planHistory.showList = this.planHistory.allList.filter(item=>{
-						return Number(new Date(item.planCreateTime))+select*24*60*60*10000 > nowTime
-					})
+				try{
+					if(!num){
+						this.planHistory.showList = this.planHistory.allList.map(item=>item);
+					}else{
+						const nowTime = Number(new Date())
+						this.planHistory.showList = this.planHistory.allList.filter(item=>Number(new Date(item.planCreateTime))+num*24*60*60*10000 > nowTime)
+					}
+				}catch(e){
+					console.log(e)
 				}
 			},
 
@@ -723,6 +789,38 @@
 				}catch(e){
 					console.log(e)
 				}
+			},
+
+			/**
+			 * 获取远程会诊列表
+			 */
+			async getQueryByDoctorPage(){
+				const res = await queryByDoctorPage({
+					token:this.userInfo.token,
+					dateType:'TODAY',
+					pageNum:1,
+					pageSize:3
+				});
+				console.log(res);
+			},
+
+			/**
+			 * 获取远程门诊信息
+			 */
+			async getOnlineRoomsByDoctor(){
+				console.log('enter')
+				const res = await onlineRoomsByDoctor({
+					token:this.userInfo.token,
+					pageNum:1,
+					pageSize:2
+				});
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+
+				}else{
+
+				}
+
 			},
 			/********* */
 			getReData(data){

@@ -172,5 +172,6 @@ export default {
 
     //  疾病风险评估
     queryPageByDoctorWeb:'/m/v1/api/medical/queryPageByDoctorWeb',//10.医生WEB查询评估模板分页列表
+    doctorsByOrgCodeAndDeptId:'/m/v1/api/clinic/clinic/doctorsByOrgCodeAndDeptId',//1.22医院机构码和科室id获取医生集合
     
 }
