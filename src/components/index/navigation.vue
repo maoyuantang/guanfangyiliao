@@ -182,10 +182,10 @@ import { parse } from 'protobufjs';
 					const index = this.viewRoot[this.viewRoot.now.name].find(item=>{//该权限视图是否包含该页面
 						return item.code===rePage.code
 					});
-					console.log(index);
+					// console.log(index);
 					if(index){
 						this.navList = this.navList.map((item,key)=>{
-							console.log(item)
+							// console.log(item)
 							item.select = item.code===rePage.code;
 							return item;
 						});

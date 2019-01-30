@@ -187,6 +187,11 @@
 import sensitiveWordCheck from "../publicJs/sensitiveWordCheck.js";
 export default {
   watch:{
+        'info.department':{
+            handler(n){
+                this.$emit("department",n);
+            }
+        }
   },
   data() {
     return {

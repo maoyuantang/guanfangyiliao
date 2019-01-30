@@ -200,7 +200,7 @@ router.beforeEach((to, from, next) => {
 				userInfo =  JSON.parse(userInfo);
 				userSelfInfo =  JSON.parse(userSelfInfo);
 				viewRoot =  JSON.parse(viewRoot);
-				console.log(viewRoot.now)
+				// console.log(viewRoot.now)
 			}catch(e){
 				console.log(e);
 				next({path:'/login'});
@@ -209,7 +209,7 @@ router.beforeEach((to, from, next) => {
 			store.commit("user/SETUSERINFO",userInfo);
 			store.commit("user/SETUSERSELFINFO",userSelfInfo);
 			store.commit("user/SETVIEWROOT",viewRoot);
-			console.log(store.state.user.viewRoot)
+			// console.log(store.state.user.viewRoot)
 		}else{
 			next({path:'/login'});
 			return;

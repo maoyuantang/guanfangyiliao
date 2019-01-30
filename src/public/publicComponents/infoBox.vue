@@ -1,18 +1,18 @@
 <template>
 	<div class="info-box">
 		<div class="info-box-head">
-            <span class="info-box-title">{{inData.title}}</span>
+            <span class="info-box-title">{{inData}}</span>
             <Dropdown>
             <a href="javascript:void(0)">
                 <i class="iconfont info-box-expand">&#xe612;</i>
             </a>
-            <DropdownMenu slot="list">
-                <DropdownItem v-for="(item,index) in inData.selectList" :key="index" @click.native="sendData(item,index)">{{item.name}}</DropdownItem>
+            <!-- <DropdownMenu slot="list"> -->
+                <!-- <DropdownItem v-for="(item,index) in inData.selectList" :key="index" @click.native="sendData(item,index)">{{item.name}}</DropdownItem> -->
                 <!-- <DropdownItem>炸酱面</DropdownItem>
                 <DropdownItem disabled>豆汁儿</DropdownItem>
                 <DropdownItem>冰糖葫芦</DropdownItem>
                 <DropdownItem divided>北京烤鸭</DropdownItem> -->
-            </DropdownMenu>
+            <!-- </DropdownMenu> -->
         </Dropdown>
            
         </div>

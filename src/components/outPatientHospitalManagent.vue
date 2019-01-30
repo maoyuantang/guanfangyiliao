@@ -81,7 +81,7 @@
 
 		</div>
 		<!-- 新增门诊弹框 -->
-		<addNewFrame :inData="addData" @reback="getData"></addNewFrame>
+		<addNewFrame :inData="addData" @reback="getData" @department="getDepartment"></addNewFrame>
 
 		<!-- 表一查看关联医生弹框 -->
 		<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="503px" hight="470px"
@@ -1079,11 +1079,14 @@
 				}
 			},
 
-
+			getDepartment(data){
+				console.log(`data:${data}`)
+			}
 
 
 		},
 		async created() {
+			console.log('enter')
 			this.filter0();//获取科室列表
 			this.filter1();//审核状态
 			this.filter2();//配送状态

@@ -10,18 +10,18 @@
 			</div> -->
 
 			<div class="info-box-out">
-				<infoBox :inData="topInfo[0]" @reback="getReData">
-					<infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter>
-					<infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter>
+				<infoBox inData="远程门诊" @reback="getReData">
+					<infoEnter v-for="(item,index) in onlineRoomsByDoctor" :key="index" :inData="item" @reback="getInfoClick"></infoEnter>
+					<!-- <infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter> -->
 				</infoBox>
 			</div>
 			<div class="info-box-out">
-				<infoBox :inData="topInfo[1]" @reback="getReData">
+				<infoBox inData="移动查房" @reback="getReData">
 					<infoList :inData="infoListData"></infoList>	
 				</infoBox>
 			</div>
 			<div class="info-box-out">
-				<infoBox :inData="topInfo[2]" @reback="getReData">
+				<infoBox inData="远程教育" @reback="getReData">
 					<infoList :inData="infoListData"></infoList>	
 				</infoBox>
 			</div>
@@ -193,7 +193,10 @@
 	import userInfoRow from '../../public/publicComponents/userInfoRow.vue'
 	import newModuleTable from '../../public/publicComponents/newModuleTable.vue'
 	import historyAlert from '../../public/publicComponents/historyAlert.vue'
-	import { todayPlan, todayAlert, planHistory , todayFollowup , alertHistory , historyFollowup ,queryByDoctorPage, onlineRoomsByDoctor} from '../../api/apiAll.js'
+	import { 
+		todayPlan, todayAlert, planHistory , todayFollowup , alertHistory , historyFollowup ,queryByDoctorPage, onlineRoomsByDoctor,
+		queryByManagerPage	
+	} from '../../api/apiAll.js'
 	
 	
 	export default {
@@ -423,6 +426,11 @@
 				 * 远程门诊系统信息
 				 */
 				onlineRoomsByDoctor:[],
+
+				/**
+				 * 远程会诊系统信息
+				 */
+				queryByManagerPage:{},
 
 				/**
 				 * 移动查房信息 （后端还没有接口）
@@ -669,8 +677,8 @@
 				this.auth = table;
 				this.authList = result.filter(item=>table[item.authorityId]);
 				// this.authList = result.map(item=>table[item.authorityId]);
-				console.log(this.auth)
-				console.log(this.authList)
+				// console.log(this.auth)
+				// console.log(this.authList)
 				// console.log(result);
 				// this.auth = result;
 			},
@@ -686,7 +694,7 @@
 					},
 					{
 						code:'20000',//远程会诊
-						funs:[function(){console.log('暂时还没写')}]
+						funs:[this.getQueryByManagerPage]
 					},
 					{
 						code:'30000',//远程协作
@@ -717,10 +725,7 @@
 				console.log(this.authList)
 				this.authList.forEach(item=>{
 					table.forEach(v=>{
-						// console.log(`v.code => ${v.code}
-						// item.code => ${item.code}`)
 						if(item.authorityId === v.code){
-							console.log('==')
 							Promise.all(v.funs.map(item=>item()))
 							.then(res=>console.log(res))
 							.catch(err=>console.log(err))
@@ -808,7 +813,6 @@
 			 * 获取远程门诊信息
 			 */
 			async getOnlineRoomsByDoctor(){
-				console.log('enter')
 				const res = await onlineRoomsByDoctor({
 					token:this.userInfo.token,
 					pageNum:1,
@@ -816,11 +820,36 @@
 				});
 				console.log(res);
 				if(res.data&&res.data.errCode===0){
-
+					this.onlineRoomsByDoctor = res.data.body.data2.list
 				}else{
-
+					this.$notify({
+						title: '失败',
+						message: '获取远程门诊信息失败',
+						type: 'error'
+					});
 				}
 
+			},
+
+			/**
+			 * 获取远程会诊系统信息
+			 */
+			async getQueryByManagerPage(){
+				const res = await queryByManagerPage({
+					token:this.userInfo.token,
+					pageNum:1,
+					pageSize:2
+				});
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+					
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '获取远程会诊信息失败',
+						type: 'error'
+					});
+				}
 			},
 			/********* */
 			getReData(data){
@@ -849,7 +878,7 @@
 		async created(){
 			this.getAuth();
 			this.countAjax();
-			console.log(this.userSelfInfo.userId)
+			// console.log(this.userSelfInfo.userId)
 			// this.getTodayPlan();
 			// this.getTodayAlert();
 			// this.getTodayFollowup();
