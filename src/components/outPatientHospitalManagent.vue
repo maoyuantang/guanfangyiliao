@@ -9,20 +9,39 @@
 			<div class="online-clinic" v-if="navInfo.i===0">
 				<div class="online-clinic-top">
 					<div class="online-clinic-top-left">
-						<selftag :inData="onlineClinic.topFlag[0]" @reback="getFilter0"></selftag>
-						<selftag v-model="onlineClinic.topFlag[1]" @reback="getFilter1"></selftag>
+						<selftag :inData="onLineList.topFlag[0]" @reback="getFilter0"></selftag>
+						<selftag v-model="onLineList.topFlag[1]" @reback="getFilter1"></selftag>
 					</div>
 					<div class="online-clinic-top-right">
 						<search @searchValue="adminSearchOne"></search>
-						<el-button type="primary" @click="isShowNewOutPatient = true">新增业务</el-button>
+						<el-button type="primary" @click="isShowNewOutPatientFun">新增业务</el-button>
 					</div>
 				</div>
+
+
 				<div class="online-clinic-middle">
-					<publicList :columns="onlineClinic.tableBody.columns" :tableData="onlineClinic.tableBody.tableData" :tableBtn="onlineClinic.tableBody.tableBtn"
-					 :cellColor="cellColor" @cellClickData="cellClickData">
-					</publicList>
+					<el-table :data="tableData" border style="width: 100%;" @cell-click="relateDoctors">
+						<el-table-column fixed prop="id" label="业务编号"></el-table-column>
+						<el-table-column prop="departmentName" label="科室"></el-table-column>
+						<el-table-column prop="fullName" label="业务名"></el-table-column>
+						<el-table-column prop="price" label="价格"></el-table-column>
+						<el-table-column prop="doctors" label="关联医生"></el-table-column>
+						<el-table-column prop="totalPeople" label="业务人次"></el-table-column>
+						<el-table-column prop="totalIncome" label="总收入"></el-table-column>
+						<el-table-column prop="queuePeople" label="当前排队"></el-table-column>
+						<el-table-column prop="updateTime" label="最近修改"></el-table-column>
+						<el-table-column fixed="right" label="" width="300">
+							<template slot-scope="scope">
+								<el-button @click="isShowRecordFun(scope.row)" type="text" size="small">查看记录</el-button>
+								<el-button @click="isShowEditFun(scope.row)" type="text" size="small">编辑</el-button>
+								<el-button @click="isShowForbidFun(scope.row)" type="text" size="small">禁用</el-button>
+							</template>
+						</el-table-column>
+					</el-table>
 				</div>
 			</div>
+
+
 			<!-- 处方审核和配送 -->
 			<div v-else-if="navInfo.i===1">
 				<div class="online-clinic-top">
@@ -59,24 +78,24 @@
 
 				</div>
 			</div>
+
 		</div>
 		<!-- 新增门诊弹框 -->
-		<el-dialog title="收货地址" :visible.sync="isShowNewOutPatient">
-			<!-- <addNewFrame></addNewFrame> -->
-		</el-dialog>
+		<addNewFrame :inData="addData" @reback="getData"></addNewFrame>
 
 		<!-- 表一查看关联医生弹框 -->
-		<el-dialog class="evaluateBox1" title=" 关联医生" :visible.sync="isShowrelationalDoctor" width="503px" hight="470px"
+		<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="503px" hight="470px"
 		 center>
 			<ul>
 				<li v-for="(text,index) in relationalDoctor" :key="index">
-					<div>
+					<div class="evaluateCont1">
 						<!-- 待头像 -->
 						<img src="../assets/img/ME.png" />
-					</div>
-					<div class="evaluateCont">
 						<h5>{{text.doctorName}}</h5>
-						<div>{{text.doctorId}}</div>
+					</div>
+					<div class="evaluateCont2">
+						<!-- <div>{{text.doctorId}}</div> -->
+						<!-- 医生接诊状态 -->
 						<div>{{text.doctorStates}}</div>
 					</div>
 				</li>
@@ -84,41 +103,28 @@
 		</el-dialog>
 
 		<!-- 查看记录弹框 -->
-		<el-dialog class="  " title="  " :visible.sync="isShowRecord" width="602px" hight="356px" center>
-			<ul>
-				<li class="ohisList">
-					<h3>2018年4月4日</h3>
-					<ul>
-						<li class="ohisListMain">
-							<div>
-								<img src="../assets/img/a-6.png" />
-							</div>
-							<div class="ohisListRg">
-								<div>张某人
-									<span> 17:54:34</span>
-								</div>
-								<div>那就等带节后再说吧。</div>
-							</div>
-						</li>
-					</ul>
-				</li>
-				<li class="ohisList">
-					<h3>2018年4月4日</h3>
-					<ul>
-						<li class="ohisListMain">
-							<div>
-								<img src="../assets/img/a-6.png" />
-							</div>
-							<div class="ohisListRg">
-								<div>张某人
-									<span> 17:54:34</span>
-								</div>
-								<div>那就等带节后再说吧。</div>
-							</div>
-						</li>
-					</ul>
-				</li>
-			</ul>
+		<el-dialog class="  " title="查看记录" :visible.sync="isShowRecord" center width=70%>
+			<el-table :data="tableDataChat" border style="width: 100%;" @cell-click="relateDoctors">
+				<el-table-column fixed prop="id" label="业务编号"></el-table-column>
+				<el-table-column prop="departmentName" label="科室"></el-table-column>
+				<el-table-column prop="fullName" label="业务名"></el-table-column>
+				<el-table-column prop="price" label="价格"></el-table-column>
+				<el-table-column prop="doctors" label="关联医生"></el-table-column>
+				<el-table-column prop="totalPeople" label="业务人次"></el-table-column>
+				<el-table-column prop="totalIncome" label="总收入"></el-table-column>
+				<el-table-column prop="queuePeople" label="当前排队"></el-table-column>
+				<el-table-column prop="updateTime" label="最近修改"></el-table-column>
+				<el-table-column fixed="right" label="" width="200px">
+					<template slot-scope="scope">
+						<el-button @click="isShowRecordChatFun(scope.row)" type="text" size="small">门诊交流</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+		</el-dialog>
+
+		<!-- 查看记录弹框中的聊天弹框 -->
+		<el-dialog class="  " title="聊天模块" :visible.sync="isShowRecordChat" center>
+			聊天模块
 		</el-dialog>
 
 		<!-- 编辑 -->
@@ -199,18 +205,67 @@
 			search,
 			publicList,
 			normalColumnChart,
-			statisticsWay, addNewFrame
+			statisticsWay,
+			addNewFrame,
 		},
 		data() {
 			return {
+				addData: {
+					show: false,//是否显示
+					type: '1',//1是表示新增家医，2是表示新增在线诊室业务
+					businessTypeList: [//新增在线诊室业务类型
+						{
+							label: '',
+							value: ''
+						}
+					],
+					businessTemplate: [//新增家医业务模板
+						{
+							label: '',
+							value: ''
+						}
+					],
+					departmentList: [//科室列表
+						{
+							label: '',
+							value: ''
+						}
+					],
+					doctorList: [//医生列表
+						{
+							label: '',
+							value: ''
+						}
+					],
+					agreement: [//协议
+						{
+							name: '',
+							content: ''
+						}
+					]
+				},
+				//7.1新增门诊参数
+				clinicType: "远程门诊业务",
+				clinicName: "新增远程门诊业务",
+				clinicPrice: 1,
+				clinicDepartmentId: "1398F2FBB8AA48518385F2486840FE17",
+				orgCode: "1545618639429",
+				clinicDoctors: ["EB237A1368A44A32B4070154C225C088"],
+				clinicDesc: "这是远程门诊的业务噢~",
+				clinicProtocolId: "",
+				clinicProtocolName: "收费协议",
+				clinicProtocolContent: "Oracle 将继续提供JDK 8 免费的公共更新和自动更新。",
+				clinicPhone: "18888888888",
+
+
 				//显示隐藏
 
-				//是否弹出新增门诊
-				isShowNewOutPatient: false,
 				//是否弹出关联医生
 				isShowrelationalDoctor: false,
 				//是否弹出查看详情
 				isShowRecord: false,
+				//是否弹出查看详情中的聊天弹框
+				isShowRecordChat: false,
 				//是否弹出编辑
 				isShowEdit: false,
 				//是否物流状态
@@ -229,7 +284,7 @@
 				time0: "",//统计筛选起始时间
 				time1: "",//统计筛选结束时间
 				clinicId: '',//门诊业务编号
-				status: false,//状态（禁用按钮）
+				status: [],//状态（禁用按钮）
 
 
 				//getList2
@@ -273,7 +328,7 @@
 					]
 				},
 				//在线诊室管理 数据
-				onlineClinic: {
+				onLineList: {
 					topFlag: [
 						{
 							more: true,
@@ -296,71 +351,50 @@
 							]
 						}
 					],
-					tableBody: {
-						columns: [
-							{
-								prop: "id",
-								label: "业务编号"
-							},
-							{
-								prop: "departmentName",
-								label: "科室"
-							},
-							{
-								prop: "fullName",
-								label: "业务名"
-							},
-							{
-								prop: "price",
-								label: "价格"
-							},
-							{
-								prop: "doctors",
-								label: "关联医生"
-							},
-							{
-								prop: "totalPeople",
-								label: "业务人次"
-							},
-							{
-								prop: "totalIncome",
-								label: "总收入"
-							},
-							{
-								prop: "queuePeople",
-								label: "当前排队"
-							},
-							{
-								prop: "updateTime",
-								label: "最近修改"
-							}
-						],
-						tableData: [],
-						tableBtn: [
-							{
-								name: "查看记录",
-								oclass: "recordBtn",
-								method: (index, row) => {
-									this.isShowRecordFun(index, row);
-								}
-							},
-							{
-								name: "编辑",
-								oclass: "recordBtn",
-								method: (index, row) => {
-									this.isShowEditFun(index, row);
-								}
-							},
-							{
-								name: "禁用",
-								oclass: "recordBtn",
-								method: (index, row) => {
-									this.isShowForbidFun(index, row);
-								}
-							}
-						]
-					}
 				},
+				//在线诊室管理   
+				tableData: [],
+				//聊天
+				tableDataChat: [
+					{
+						prop: "id",
+						label: "业务编号"
+					},
+					{
+						prop: "departmentName",
+						label: "科室"
+					},
+					{
+						prop: "fullName",
+						label: "业务名"
+					},
+					{
+						prop: "price",
+						label: "价格"
+					},
+					{
+						prop: "doctors",
+						label: "关联医生"
+					},
+					{
+						prop: "totalPeople",
+						label: "业务人次"
+					},
+					{
+						prop: "totalIncome",
+						label: "总收入"
+					},
+					{
+						prop: "queuePeople",
+						label: "当前排队"
+					},
+					{
+						prop: "updateTime",
+						label: "最近修改"
+					}
+				],
+
+
 				//处方审核和配送
 				prescriptionAuditDistribution: {
 					// 1、筛选
@@ -522,6 +556,30 @@
 			})
 		},
 		methods: {
+			/**
+			 * 禁用被点击
+			 */
+			async getDisableClick(item, index) {
+				console.log('is enter')
+				const optios = [
+					{ token: this.userState.token },
+					{
+						clinicId: item.id,
+						status: 'test'
+					}
+				];
+				const res = await disableClinic(...optios);
+				console.log(res);
+				if (res.data && res.data.errCode === 0) {
+					this.relationalDoctor = this.relationalDoctor.map(value => {
+						if (value.code === item.code) {
+							item.name === '解除禁用' ? value.name = "禁用" : valve.name = '解除禁用';
+							return item
+						}
+					})
+				}
+
+			},
 			//在线、处方审核、统计、切换插件返回值
 			getNav(data) {
 				// console.log(data)
@@ -566,6 +624,9 @@
 				this.getList3();
 			},
 
+
+
+
 			//筛选列表
 			//1.21.1.科室工具栏 (管理)
 			async filter0() {
@@ -579,7 +640,7 @@
 					console.log('1.21.1.科室工具栏 +成功')
 					$.each(res.data.body, function (index, text) {
 						//在线诊室筛选列表渲染
-						_this.onlineClinic.topFlag[0].list.push({
+						_this.onLineList.topFlag[0].list.push({
 							text: text.name,
 							value: text.id
 						});
@@ -718,12 +779,21 @@
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表1+成功')
 					console.log(res)
+					this.relationalDoctor = res.data.body.data2.list.map(item => {
+						item.name = item.status ? '禁用' : '解除禁用';
+						return item
+					})
 					$.each(res.data.body.data2.list, function (index, text) {
+						if (res.data.body.data2.list[index].doctors[0].doctorStates === false) {
+							res.data.body.data2.list[index].doctors[0].doctorStates = '离线中'
+						} else if (res.data.body.data2.list[index].doctors[0].doctorStates === true) {
+							res.data.body.data2.list[index].doctors[0].doctorStates = '接诊中...'
+						}
 						_this.relationalDoctor = res.data.body.data2.list[index].doctors;
 						text.totalPeople = "总: " + text.totalPeople + "  今日: " + text.todayPeople
 						text.doctors = "查看"
 					})
-					_this.onlineClinic.tableBody.tableData = res.data.body.data2.list;
+					_this.tableData = res.data.body.data2.list;
 				} else {
 					//失败
 					console.log('列表1+失败')
@@ -804,56 +874,70 @@
 			},
 
 			//弹框
-			//7.1新增业务
-			// async newBusiness() {
-			//     let _this = this;
-			//     let query = {
-			//         token: this.userState.token
-			//     };
-			//     const options = {
-			//         clinicId: "",
-			//         clinicType: "远程门诊业务",
-			//         clinicName: "新增远程门诊业务",
-			//         clinicPrice: 1,
-			//         clinicDepartmentId: "1398F2FBB8AA48518385F2486840FE17",
-			//         orgCode: "1545618639429",
-			//         clinicDoctors: ["EB237A1368A44A32B4070154C225C088"],
-			//         clinicDesc: "这是远程门诊的业务噢~",
-			//         clinicProtocolId: "",
-			//         clinicProtocolName: "收费协议",
-			//         clinicProtocolContent: "Oracle 将继续提供JDK 8 免费的公共更新和自动更新。",
-			//         clinicPhone: "18888888888",
-			//         status: ""
-			//     };
-			//     const res = await addClinic(query,options);
-			//     if (res.data && res.data.errCode === 0) {
-			//         this.adminTableData = res.data.body.data2.list;
-			//     } else {
-			//         console.log(res)
-			//         //失败
-			//         this.$notify.error({
-			//             title: "警告",
-			//             message: res.data.errMsg
-			//         });
-			//     }
-			// }
+			// 7.1新增业务
+			async newBusiness() {
+				let _this = this;
+				let query = {
+					token: this.userState.token
+				};
+				const options = {
+					clinicId: this.clinicId,
+					clinicType: this.clinicType,
+					clinicName: this.clinicName,
+					clinicPrice: this.clinicPrice,
+					clinicDepartmentId:this.clinicDepartmentId,
+					orgCode:this.orgCode,
+					clinicDoctors:this.clinicDoctors,
+					clinicDesc: this.clinicDesc,
+					clinicProtocolId: this.clinicProtocolId,
+					clinicProtocolName:this.clinicProtocolName,
+					clinicProtocolContent:this.clinicProtocolContent,
+					clinicPhone:this.clinicPhone,
+					status: this.status
+				};
+				const res = await addClinic(query, options);
+				//继续，进了函数，但是没有请求到此函数
+				if (res.data && res.data.errCode === 0) {
+					alert(1)
+					console.log('7.1新增业务+成功')
+					// this.adminTableData = res.data.body.data2.list;
+				} else {
+					console.log('7.1新增业务+失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
 
-			//点击表格1（门诊）中内容 控制是否弹出的事件
+
 			//查看关联医生
-			async cellClickData(data) {
-				console.log(data);
-				if ((data[1].label = "关联医生")) {
+			// cell-click当某个单元格被点击时会触发该事件row, column, cell, event
+			relateDoctors(row, column, cell, event) {
+
+				console.log(row, column)
+				// this.clinicId
+				// if(row.id === 'f8c40fbaf0fc4a9e94e50ebcda415c81' && column.label === "关联医生"){
+				if (column.label === "关联医生") {
 					this.isShowrelationalDoctor = true;
 				}
 			},
 			//查看记录
-			isShowRecordFun() {
+			isShowRecordFun(row) {
 				this.isShowRecord = true;
 			},
 			//查看编辑
-			isShowEditFun() {
+			isShowEditFun(row) {
 				this.isShowEdit = true;
 			},
+			//查看记录再中发起会谈
+			isShowRecordChatFun() {
+				this.isShowRecordChat = true;
+			},
+
+
+
 			//查看处方详情
 			isShowPrescriptionDetailFun() {
 				this.isShowPrescriptionDetail = true;
@@ -863,9 +947,7 @@
 				this.isShowLogisticsStatus = true;
 			},
 			//禁用接口的调用
-			async isShowForbidFun(index,row) {
-				console.log(index,row)
-				this.clinicId = row.id;
+			async isShowForbidFun() {
 				let _this = this;
 				let query = {
 					token: this.userState.token
@@ -878,20 +960,34 @@
 				if (res.data && res.data.errCode === 0) {
 					console.log(res)
 					console.log(_this.status)
-					if(_this.status == true){
-						_this.onlineClinic.tableBody.tableBtn[2].name = '禁用'
+					if (_this.status == true) {
+						_this.onLineList.tableBody.tableBtn[2].name = '禁用'
 						_this.status = false;
-					}else{
-						_this.onlineClinic.tableBody.tableBtn[2].name = '解除禁用'
+					} else {
+						_this.onLineList.tableBody.tableBtn[2].name = '解除禁用'
 						_this.status = true;
 					}
 				} else {
-					失败
+					console.log('禁用失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
 					});
 				}
+			},
+
+
+
+			/*
+			 * 
+			 * 获取返回数据
+			 * 
+			 */
+			isShowNewOutPatientFun() {
+				this.addData.show = true
+			},
+			getData(data) {
+				console.log(data)
 			}
 		},
 		async created() {
@@ -903,6 +999,7 @@
 			this.getList1();//管理列表1
 			this.getList2();//管理列表2
 			this.getList3();//管理图表3（统计图表数据获取）
+			this.newBusiness();//管理图表3（统计图表数据获取）
 		}
 	}
 </script>
@@ -973,12 +1070,20 @@
 				display: flex;
 				align-items: center;
 
-				div {
+				.evaluateCont1 {
+					display: flex;
+					justify-content: space-around;
+					align-items: center;
+
 					img {
 						width: 0.5rem;
 						border-radius: 50%;
 						margin: 0 0.2rem 0 0;
 					}
+				}
+
+				.evaluateCont2 {
+					margin: 0 0 0 1.5rem;
 				}
 			}
 

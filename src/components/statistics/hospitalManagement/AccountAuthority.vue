@@ -127,10 +127,10 @@
                             <span class="invite-input-name">协作范围:</span>
                             <el-select v-model="CollaborationScopeOk" placeholder="请选择科室">
                                 <el-option
-                                    v-for="item in CollaborationScope"
-                                    :key="item.name"
-                                    :label="item.name"
-                                    :value="item.name">
+                                    v-for="item in departmentlist"
+                                    :key="item.deptId"
+                                    :label="item.deptName"
+                                    :value="item.deptId">
                                 </el-option>
                             </el-select>
                             <Icon type="md-star" />
@@ -157,7 +157,7 @@
     import publicList from '../../../public/publicComponents/publicList.vue'
     import selectTree from '../../../public/publicComponents/selectTree.vue'
     import sensitiveWordCheck from '../../../public/publicJs/sensitiveWordCheck.js'
-    import { fetchHospitalDepts , fetchDoctorSubSystems , hospitalDepartmentManagementSubsystemList , createUser } from '../../../api/apiAll.js'
+    import { fetchHospitalDepts , fetchDoctorSubSystems , hospitalDepartmentManagementSubsystemList , createUser , synergyManageList} from '../../../api/apiAll.js'
     
 	export default {
         watch:{
@@ -579,8 +579,6 @@
                 // }
                 const postData = this.getAddSubData();
                 const postQuery = {token:this.userInfo.token}
-                console.log(postQuery,postData)
-                return
                 const res = await createUser(postQuery,postData);
                 console.log(res)
                 if(res.data.errCode === 0){
@@ -605,7 +603,7 @@
                 });
                 if(res.data.errCode === 0){
                     this.departmentlist = res.data.body;
-                    // console.log(this.departmentlist)
+                    console.log(this.departmentlist)
                 }else{
                     this.$notify.error({
                         title: '数据获取失败',
@@ -643,7 +641,7 @@
                     token:this.userInfo.token,
                     orgCode:this.userSelfInfo.orgCode
                 });
-                if(res.data.errCode === 0){
+                if(res.data && res.data.errCode === 0){
                     this.DepartmentManagementAuthority = res.data.body.map(item=>{
                         return Object.assign({},{
                            children:[],
@@ -660,7 +658,22 @@
                         message: res.data.errMsg
                     });
                 }
-               
+            },
+
+            /**
+             * 15.1首页-账号及权限-院外协作列表
+             */
+            async getSynergyManageList(){
+                const res = await synergyManageList({
+                    token:this.userInfo.token,
+                    pageNum:1
+                });
+                console.log(res);
+                if(res.data && res.data.errCode === 0){
+
+                }else{
+
+                }
             },
             /******************** */
             gitIndex(index){
@@ -692,7 +705,7 @@
             this.getDepartmentList();
             this.fetchDoctorSubSystems();
             this.hospitalDepartmentManagementSubsystemList();
-           
+            this.getSynergyManageList();
             // console.log(this.$store.state.user)
 		}
 	}

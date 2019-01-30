@@ -1,7 +1,7 @@
 <template>
 	<div class="info-list-row">
         <div class="head-img-div">
-            <!-- <img :src="inData.img||''" alt="" class="head-img"> -->
+            <img :src="inData.headId||''" alt="" class="head-img">
         </div>
         <span class="user-info-name">{{inData.name||""}}</span>
         <span class="user-info-phone"><i class="iconfont">&#xe61f;</i>{{inData.phone||""}}</span>

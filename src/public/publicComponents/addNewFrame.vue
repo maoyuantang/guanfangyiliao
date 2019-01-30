@@ -304,7 +304,9 @@ export default {
 </script>
 
 <style>
-    .add-new-frame{}
+    .add-new-frame{
+        
+    }
     .input-item-div{
         display: flex;
         align-items: center;
@@ -401,3 +403,119 @@ export default {
         text-align: center;
     }
 </style>
+<!--
+    使用先知：
+        新增在线诊室 和 新增家医业务 比较类似，所以直接写成一个
+    使用方法： 
+        1:传入参数 {
+            show:false,//是否显示
+            type:'1',//1是表示新增家医，2是表示新增在线诊室业务
+            businessTypeList:[//新增在线诊室业务类型
+                {
+                    label:'',
+                    value:''
+                }
+            ],
+            businessTemplate:[//新增家医业务模板
+                {
+                    label:'',
+                    value:''
+                }
+            ],
+           departmentList:[//科室列表
+                {
+                    label:'',
+                    value:''
+                }
+           ],
+           doctorList:[//医生列表
+                {
+                    label:'',
+                    value:''
+                }
+           ],
+           agreement:[//协议
+                {
+                    name:'',
+                    content:''
+                }
+           ]
+        }
+        2:返回结果
+            2.1:新增在线诊室
+                {
+                    businessType:'',//业务类型
+                    businessName:'',//业务名称
+                    businessPrice:'',//业务定价
+                    department:'',//科室
+                    doctors:[],//医生
+
+                }
+            2.2:新增家医业务
+                {
+                    businessType:'',//业务类型,
+                    businessTemplate:'',//业务模板
+                    businessName:'',//业务名称,
+                    businessPrice:'',//业务定价
+                    department:'',//科室
+                    doctors:[],//医生
+                }
+        实例： 
+        
+        <template>
+            <addNewFrame :inData="testData" @reback="getData"></addNewFrame>
+        </template>
+        
+        import addNewFrame from 'xxx/addNewFrame.vue'
+        <script>
+            export default{
+                data(){
+                    return testData{
+                        show:false,//是否显示
+                        type:'1',//1是表示新增家医，2是表示新增在线诊室业务
+                        businessTypeList:[//新增在线诊室业务类型
+                            {
+                                label:'',
+                                value:''
+                            }
+                        ],
+                        businessTemplate:[//新增家医业务模板
+                            {
+                                label:'',
+                                value:''
+                            }
+                        ],
+                    departmentList:[//科室列表
+                            {
+                                label:'',
+                                value:''
+                            }
+                    ],
+                    doctorList:[//医生列表
+                            {
+                                label:'',
+                                value:''
+                            }
+                    ],
+                    agreement:[//协议
+                            {
+                                name:'',
+                                content:''
+                            }
+                    ]
+                    }
+                }
+            },
+            methods:{
+                getData(data){
+                    console.log(data)
+                }
+            }
+            
+        </script>
+
+
+
+
+
+-->
