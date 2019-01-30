@@ -57,7 +57,7 @@ export default {
         },
         //如果不传按钮则操作隐藏
         hideHandle(){
-            if(this.tableBtn){
+            if(this.tableBtn || this.tableBtn.length<1){
                 this.handleVisiable=true
             }else{
                 this.handleVisiable=false

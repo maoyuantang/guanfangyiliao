@@ -176,4 +176,8 @@ export default {
     alertSwitch:'/m/v1/api/device/house/alertSwitch',//10.9.2 设备告警开关改变【医生web】
     alertSet:'/m/v1/api/device/house/alertSet',//10.9.3 告警值修改【医生web】
     phoneFollowupSwitch:' /m/v1/api /followup/followupPlan/phoneFollowupSwitch',//10.9.5 改变电话随访开关【医生web】
+
+    //  疾病风险评估
+    queryPageByDoctorWeb:'/m/v1/api/medical/queryPageByDoctorWeb',//10.医生WEB查询评估模板分页列表
+    
 }

@@ -1763,3 +1763,15 @@ export const phoneFollowupSwitch = query => { //改变电话随访开关【医�
         }
     })
 }
+export const queryPageByDoctorWeb = query => { //10.医生WEB查询评估模板分页列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.queryPageByDoctorWeb,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+

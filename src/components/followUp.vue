@@ -13,23 +13,32 @@
                         <el-radio label="OUTPATIENT">门诊随访</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <!-- <div class="addFollowM-bot">
-                    <el-radio v-model="addFollowData.type" label="INHOSPITAL">住院随访</el-radio>
-                    <el-radio v-model="addFollowData.type" label="OUTPATIENT">门诊随访</el-radio>
-                </div> -->
                 <div class="addFollowMain">
                     <el-form-item class="addFollowM-bot" label="首次治疗">
-                        <el-date-picker class="oTime" type="date" placeholder="选择日期">
+                        <el-date-picker class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
                         </el-date-picker>
                     </el-form-item>
                     <ul>
-                        <li v-for="(text,index) in addFollowData.itemModels" :key="index" @mouseover="addFollowBtnVis=true" @mouseout="addFollowBtnVis=false">
-                            <div class="addFollowM-bot">
-                                距离首次治疗
-                                <el-select class="addFollowHou" v-model="followSelectTime" placeholder="请选择">
-                                    <el-option v-for="item in addFollowTime" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
+                        <li v-for="(text,index) in addFollowData.itemModels" :key="index">
+                            <div class="addFollowM-bot" style="display:flex">
+                                <el-form-item class="addFollowM-bot" label="距离首次治疗">
+                                    <div class="DistanceFirst">
+                                        <el-form-item label=" ">
+                                            <el-select v-model="text.calcVal" placeholder=" ">
+                                                <el-option v-for="(text,index) in 21" :label="text" :value="text" :key="index"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                        <el-form-item label=" ">
+                                            <el-select v-model="text.calcUnit" placeholder=" ">
+                                                <el-option label="日" value="日"></el-option>
+                                                <el-option label="周" value="周"></el-option>
+                                                <el-option label="月" value="月"></el-option>
+                                                <el-option label="年" value="年"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </div>
+                                </el-form-item>
+
                             </div>
                             <ul class="questBox">
                                 <li v-for="(otext,oindex) in text.contentModels" :key="oindex">
@@ -42,13 +51,13 @@
                                         <span class="questTableName">{{otext.title}}</span>
                                     </div>
 
-                                    <span @click="deleteQuest(oindex)" class="questDelete">
+                                    <span @click="deleteQuest(index,oindex)" class="questDelete">
                                         <img src="../assets/img/addFollowDelete2.png" />
                                     </span>
                                 </li>
                             </ul>
                             <div class="addFollowBtn" v-show="addFollowBtnVis">
-                                <div @click="addQuest()">
+                                <div @click="addQuest(index)">
                                     <span class="questDelete"><img src="../assets/img/addFollowJa2.png" /></span> 问诊表/健康知识
                                 </div>
                                 <div>
@@ -65,7 +74,7 @@
                     <div class="addFollowM-bot">
                         提醒时间
                         <el-select class="addFollowHou" v-model="addFollowData.remindDays" placeholder="请选择">
-                            <el-option v-for="item in addFollowTimeTx" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="(text,index) in 100" :key="index" :label="text" :value="text">
                             </el-option>
                         </el-select>
                     </div>
@@ -78,10 +87,90 @@
 
             </el-form>
         </el-dialog>
+        <!-- 添加问诊或文章 -->
+        <el-dialog title="添加问诊或文章" :visible.sync="questVisible" center append-to-body>
+            <el-tabs v-model="activeName" @tab-click="addQueatOrArticle">
+                <el-tab-pane label="问诊" name="first">
+                    <el-checkbox-group v-model="questCheckList">
+                        <el-checkbox v-for="(text,index) in questList" :key="index" :label="text.id">{{text.title}}</el-checkbox><br />
+                    </el-checkbox-group>
+
+                </el-tab-pane>
+                <el-tab-pane label="文章" name="second">
+                    <el-checkbox-group v-model="articleCheckList">
+                        <el-checkbox v-for="(text,index) in articleList" :key="index" :label="text.id">{{text.title}}</el-checkbox>
+                    </el-checkbox-group>
+                </el-tab-pane>
+            </el-tabs>
+            <button @click="sureAddQuest()">确认</button>
+        </el-dialog>
+        <!--新增问诊模板 -->
+        <el-dialog class="evaluateBox addQuestBox" title=" " :visible.sync="QuestTableVisible" width="602px" hight="356px" center>
+            <el-form ref="form" :model="addQuestData" label-width="80px">
+
+                <el-form-item>
+                    <el-input class="addFollowTitle" v-model="addQuestData.title" placeholder="请输入问诊标题"></el-input>
+                </el-form-item>
+                <div class="addFollowMain">
+                    <ul class="addQuestUl">
+                        <li v-for="(text,index) in addQuestData.bankModels" :key="index">
+                            <span class="deleteQuestList" @click="deleteQuestList(index)">
+                                删除某一个问题
+                            </span>
+                            <div v-show="text.questionType=='RADIO'">
+                                <el-form-item :label="index+1">
+                                    <el-input class="" v-model="text.title" placeholder="请输入问诊标题"></el-input>
+                                </el-form-item>
+                                <el-radio-group class="redioSingle">
+                                    <el-radio v-for="(text1,index1) in text.solutionModels" :key="index1" :label="index1">
+                                        <span>{{text1.tag}}</span>
+                                        <el-input class="" v-model="text1.answerDescribe" placeholder="请输入问诊标题"></el-input>
+                                        <span @click="deleteQuestText(index,index1)">
+                                            删除
+                                        </span>
+                                    </el-radio>
+                                </el-radio-group>
+                                <div class="itemChoiceItemBox" @click="itemChoiceItemFun(index,text.questionType)">
+                                    添加一项
+                                    <!-- <span v-for="(text2,index2) in choiceItem" :key="index2" @click="choiceItemFun(index,index2)">{{text2}}</span> -->
+                                </div>
+                            </div>
+                            <div v-show="text.questionType=='CHECKBOX'">
+                                <el-form-item :label="index+1">
+                                    <el-input class="" v-model="text.title" placeholder="请输入问诊标题"></el-input>
+                                </el-form-item>
+                                <el-checkbox-group class="redioSingle">
+                                    <el-checkbox v-for="(text1,index1) in text.solutionModels" :key="index1" :label="index1">
+                                        <span>{{text1.tag}}</span>
+                                        <el-input class="" v-model="text1.answerDescribe" placeholder="请输入问诊标题"></el-input>
+                                        <span @click="deleteQuestText(index,index1)">
+                                            删除
+                                        </span>
+                                    </el-checkbox>
+                                </el-checkbox-group>
+                                <div class="itemChoiceItemBox" @click="itemChoiceItemFun(index,text.questionType)">
+                                    添加一项
+                                    <!-- <span v-for="(text2,index2) in choiceItem" :key="index2" @click="choiceItemFun(index,index2)">{{text2}}</span> -->
+                                </div>
+                            </div>
+                            <div v-show="text.questionType=='TEXT'">
+                                <el-form-item :label="index+1">
+                                    <el-input class="" v-model="text.title" placeholder="请输入问诊标题"></el-input>
+                                </el-form-item>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="choiceItemBox">
+                        <span v-for="(text2,index2) in choiceItem" :key="index2" @click="choiceItemFun(index2)">{{text2}}11</span>
+                    </div>
+                    <el-button @click="addQuestTable()" type="primary">保存</el-button>
+                </div>
+
+            </el-form>
+        </el-dialog>
         <!-- 随访计划详情 -->
         <el-dialog class="evaluateBox addFollowBox" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
             <el-form ref="form" :model="followPlanData" label-width="80px">
-
                 <el-form-item>
                     <el-input class="addFollowTitle" v-model="followPlanData.title" placeholder="请输入随访标题"></el-input>
                 </el-form-item>
@@ -116,7 +205,7 @@
                                         <span class="questTableName">{{otext.title}}</span>
                                     </div>
 
-                                    <span @click="deleteQuest(oindex)" class="questDelete">
+                                    <span @click="deleteQuest(index,oindex)" class="questDelete">
                                         <img src="../assets/img/addFollowDelete2.png" />
                                     </span>
                                 </li>
@@ -154,38 +243,41 @@
         </el-dialog>
         <!-- 新增文章 -->
         <el-dialog class="evaluateBox" title=" " :visible.sync="articleTableVisible" width="770px" hight="356px" center>
-            <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="文章标题"></el-input>
-            <div class="addFollowM-bot">
-                <el-radio v-model="addFollowData.type" label="INHOSPITAL">住院随访</el-radio>
-                <el-radio v-model="addFollowData.type" label="OUTPATIENT">门诊随访</el-radio>
-            </div>
-            <div class="addArticleImg">
-                <div>
-                    <img src="../assets/img/日照宝宝.jpg" />
+            <el-form ref="form" :model="addArticleData" label-width="80px">
+                <el-form-item>
+                    <el-input class="addFollowTitle" v-model="addArticleData.title" placeholder="请输入随访标题"></el-input>
+                </el-form-item>
+                <!-- <el-input class="addFollowTitle" v-model="addArticleData.title" placeholder="请输入文章标题"></el-input> -->
+                <div class="addArticleImg">
+                    <!-- <div>
+                        <img src="../assets/img/日照宝宝.jpg" />
+                    </div>
+                    <div>
+                        文章配图
+                    </div> -->
+                    <el-upload class="avatar-uploader" action="/m/v1/api/hdfs/fs/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
                 </div>
                 <div>
-                    文章配图
+                    <div>
+                        您可以通过自编原创、URL转载、从Word导入完成文章编辑
+                    </div>
+                    <div class="addArticleEditor">
+                        <quill-editor v-model="addArticleData.content" ref="myQuillEditor" class="editer" :options="infoForm.editorOption" @ready="onEditorReady($event)">
+                        </quill-editor>
+                    </div>
+                    <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
                 </div>
-            </div>
-            <div>
-                <div>
-                    您可以通过自编原创、URL转载、从Word导入完成文章编辑
+                <div class="addFollowMain">
+                    <div>
+                        <el-checkbox v-model="addArticleData.visible">所有人可见</el-checkbox>
+                        <el-checkbox v-model="addArticleData.openComment">开放讨论</el-checkbox>
+                    </div>
+                    <el-button @click="addArticleTable()" type="primary">保存</el-button>
                 </div>
-                <div class="addArticleEditor">
-                    <quill-editor v-model="infoForm.a_content" ref="myQuillEditor" class="editer" :options="infoForm.editorOption" @ready="onEditorReady($event)">
-                    </quill-editor>
-                </div>
-                <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
-            </div>
-            <div class="addFollowMain">
-
-                <div>
-                    <el-checkbox v-model="addFollowData.remindMe">所有人可见</el-checkbox>
-                    <el-checkbox v-model="addFollowData.remindHe">开放讨论</el-checkbox>
-                </div>
-                <el-button @click="addFollowTable()" type="primary">保存</el-button>
-            </div>
-
+            </el-form>
         </el-dialog>
         <!-- 满意度新增模板 -->
         <el-dialog class="evaluateBox" title=" " :visible.sync="mydAddTemplate" width="770px" hight="356px" center>
@@ -239,15 +331,6 @@
             <ul>
                 <li v-for="(text,index) in mydTemplateTitle" :key="index" @click="selectTemplate(index,text)">
                     {{text.title}}
-                </li>
-            </ul>
-        </el-dialog>
-        <!-- 问诊等等列表 -->
-        <el-dialog title="随访" :visible.sync="questVisible" center append-to-body>
-            <ul>
-                <li class="followBox" v-for="(text,index) in questList" :key="index">
-                    <span>{{text.title}}</span>
-                    <span @click="followDetail(text.id)"> > </span>
                 </li>
             </ul>
         </el-dialog>
@@ -370,11 +453,13 @@
                     <div class="mainTab">
                         <div>
                             <selftag :inData="oTab1" @reback="docDeperment"></selftag>
-                            <selftag :inData="oTab9"  @reback="getOTab9" v-show="doctorSxVisiable"></selftag>
-                            <selftag :inData="oTab10"  @reback="getOTab10" v-show="doctorSxVisiable"></selftag>
-                            <selftag :inData="oTab11"  @reback="getOTab11" v-show="doctorSxVisiable"></selftag>
+                            <selftag :inData="oTab2" @reback="getOTab2" v-show="doctorTemplateVisiable"></selftag>
+                            <selftag :inData="oTab9" @reback="getOTab9" v-show="doctorSxVisiable"></selftag>
+                            <selftag :inData="oTab10" @reback="getOTab10" v-show="doctorSxVisiable"></selftag>
+                            <selftag :inData="oTab11" @reback="getOTab11" v-show="doctorSxVisiable"></selftag>
                         </div>
                         <search @searchValue="docSearchChange"></search>
+                        <el-button class="startConsul" v-show="docAddTemplate" type="text" @click="docAddTemplateFun()">新增模板</el-button>
                     </div>
                     <div>
                         <tableList :tableData="doctorList" :columns="doctorColumns" :checkVisable="docTableChecked" :tableBtn="doctorBtn"></tableList>
@@ -420,7 +505,11 @@ import {
     toolSurveyType,
     toolSurveyMode,
     toolDeviceType,
-    toolFollowupHasPlan
+    toolFollowupHasPlan,
+    getModelTitleList,
+    queryPageByDoctorWeb,
+    createInquiry,
+    publishArticle
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -456,8 +545,8 @@ export default {
                 editorOption: {}
             },
             questList: [],
-            articleTableVisible: false,
-            addFollowBtnVis: false,
+            articleTableVisible: true,
+            addFollowBtnVis: true,
             questVisible: false,
             addFollowData: {
                 department: [""],
@@ -465,72 +554,28 @@ export default {
                 type: "INHOSPITAL",
                 remindMe: true,
                 remindHe: true,
-                remindDays: 1,
+                remindDays: "",
                 itemModels: [
                     {
                         calcVal: 1,
                         calcUnit: "天",
                         state: true,
                         contentModels: [
-                            {
-                                followUpType: "REMIND",
-                                title: "天气转凉注意吃药",
-                                contentId: null
-                            },
-                            {
-                                followUpType: "ESSAY",
-                                title: "他改变了中国(上)",
-                                contentId: "5b162dbd6132c62d846fb793"
-                            },
-                            {
-                                followUpType: "INQUIRY",
-                                title: "问诊模板修改标题",
-                                contentId: "282b6e6499104c538fc98df1cc3ee072"
-                            }
-                        ]
-                    },
-                    {
-                        calcVal: 2,
-                        calcUnit: "天",
-                        state: true,
-                        contentModels: [
-                            {
-                                followUpType: "REMIND",
-                                title: "天气转凉注意吃药",
-                                contentId: null
-                            },
-                            {
-                                followUpType: "ESSAY",
-                                title: "他改变了中国(中)",
-                                contentId: "5b162dbd6132c62d846fb794"
-                            },
-                            {
-                                followUpType: "INQUIRY",
-                                title: "问诊模板修改标题",
-                                contentId: "282b6e6499104c538fc98df1cc3ee072"
-                            }
-                        ]
-                    },
-                    {
-                        calcVal: 3,
-                        calcUnit: "天",
-                        state: true,
-                        contentModels: [
-                            {
-                                followUpType: "REMIND",
-                                title: "天气转凉注意吃药",
-                                contentId: null
-                            },
-                            {
-                                followUpType: "ESSAY",
-                                title: "他改变了中国(下)",
-                                contentId: "5b162dbd6132c62d846fb795"
-                            },
-                            {
-                                followUpType: "INQUIRY",
-                                title: "问诊模板修改标题",
-                                contentId: "282b6e6499104c538fc98df1cc3ee072"
-                            }
+                            // {
+                            //     followUpType: "REMIND",
+                            //     title: "天气转凉注意吃药",
+                            //     contentId: null
+                            // },
+                            // {
+                            //     followUpType: "ESSAY",
+                            //     title: "他改变了中国(上)",
+                            //     contentId: "5b162dbd6132c62d846fb793"
+                            // },
+                            // {
+                            //     followUpType: "INQUIRY",
+                            //     title: "问诊模板修改标题",
+                            //     contentId: "282b6e6499104c538fc98df1cc3ee072"
+                            // }
                         ]
                     }
                 ]
@@ -942,7 +987,15 @@ export default {
             tjStartTime: "",
             tjEndTime: "",
             //医生数据
-            docTableChecked:false,
+            activeName: "first",
+            questOindex: "",
+            articleCheckList: [],
+            questCheckList: [],
+            articleList: [],
+            questList: [],
+            docAddTemplate: false,
+            doctorTemplateVisiable: false,
+            docTableChecked: false,
             hadFollowup: false, //有无随访计划
             docStartTime: "",
             docEndTime: "",
@@ -953,7 +1006,7 @@ export default {
                 {
                     name: "删除",
                     oclass: "viewFollow",
-                    method: row => {
+                    method: (index, row) => {
                         this.docFollowDelete(row);
                     }
                 }
@@ -1051,7 +1104,49 @@ export default {
                     ]
                 }
             ],
-            partDoctorType: ""
+            partDoctorType: "",
+            addQuestData: {
+                departmentList: [""],
+                title: "",
+                bankModels: [
+                    {
+                        title: "这是个文字问题",
+                        questionType: "TEXT"
+                    },
+                    {
+                        title: "这是选项",
+                        questionType: "CHECKBOX",
+                        solutionModels: [
+                            {
+                                sortId: 1,
+                                tag: "a",
+                                answerDescribe: "对"
+                            },
+                            {
+                                sortId: 2,
+                                tag: "b",
+                                answerDescribe: "不对"
+                            }
+                        ]
+                    }
+                ]
+            },
+            QuestTableVisible: true,
+            choiceItem: ["单选", "多选", "问答"],
+            addArticleData: {
+                title: "",
+                articleType: "HEALTH",
+                subtitle: "孙悟空有几个妖精女朋友啊",
+                department: ["枪毙科"],
+                content: "英国两千年文化浓缩起来就是骑士文化.....",
+                summary: "摘要",
+                pictureId: "2",
+                pictureDownPath: "？？",
+                url: "",
+                visible: true,
+                openComment: true
+            },
+             imageUrl: ''
         };
     },
     computed: {
@@ -1164,68 +1259,7 @@ export default {
             console.log(this.mydTemplateTitle);
         },
         onEditorReady(editor) {},
-        // 新增随访表接口
-        //添加问诊表
-        addQuest() {
-            this.questVisible = true;
-        },
-        //删除问诊表
-        deleteQuest(index, oindex) {
-            this.addFollowData.itemModels[index].contentModels.splice(
-                oindex,
-                1
-            );
-        },
-        //添加一项
-        addFollowTimeList() {
-            this.addFollowData.itemModels.push({
-                calcVal: 1,
-                calcUnit: "天",
-                state: true,
-                contentModels: [
-                    {
-                        followUpType: "REMIND",
-                        title: "天气转凉注意吃药",
-                        contentId: null
-                    },
-                    {
-                        followUpType: "ESSAY",
-                        title: "他改变了中国(上)",
-                        contentId: "5b162dbd6132c62d846fb793"
-                    },
-                    {
-                        followUpType: "INQUIRY",
-                        title: "问诊模板修改标题",
-                        contentId: "282b6e6499104c538fc98df1cc3ee072"
-                    }
-                ]
-            });
-        },
-        //删除当前项
-        deleteFollowTimeList(index) {
-            this.addFollowData.itemModels.splice(index, 1);
-        },
-        //新增随访表
-        async addFollowTable() {
-            let _this = this;
-            let query = {
-                token: this.userState.token
-            };
-            const options = this.addFollowData;
-            const res = await add(query, options);
-            if (res.data && res.data.errCode === 0) {
-                this.$notify.success({
-                    title: "成功",
-                    message: "新增成功"
-                });
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
-        },
+
         //筛选
         getOTab1(data) {
             this.odepartment = data.index.value;
@@ -1898,92 +1932,251 @@ export default {
         //医生端tab切换
         docTab(oindex) {
             this.oDocThis = oindex;
-            // this.odocVisable = oindex;
+            this.docSearchData = "";
             if (oindex == 0) {
                 this.doctorSxVisiable = true;
             } else {
                 this.doctorSxVisiable = false;
             }
             if (oindex == 0) {
+                this.docAddTemplate = false;
+                (this.doctorColumns = [
+                    {
+                        prop: "userName",
+                        label: "姓名"
+                    },
+                    {
+                        prop: "origin",
+                        label: "来源"
+                    },
+                    {
+                        prop: "phone",
+                        label: "手机号"
+                    },
+                    {
+                        prop: "group",
+                        label: "分组"
+                    },
+                    {
+                        prop: "nearlyFollowup",
+                        label: "近期随访"
+                    },
+                    {
+                        prop: "phoneFollowup",
+                        label: "电话随访"
+                    },
+                    {
+                        prop: "deviceAlert",
+                        label: "设备告警"
+                    }
+                ]),
+                    (this.doctorTemplateVisiable = false);
                 this.docTableChecked = true;
-                alert("dd");
                 this.getUsFollow();
                 this.doctorBtn = [
                     {
                         name: "查看档案",
                         oclass: "viewFollow",
-                        method: row => {
-                            this.docFollowDelete0(0, row);
+                        method: (index, row) => {
+                            this.docFollowDelete0(index, row);
                         }
                     },
                     {
                         name: "发送",
                         oclass: "viewFollow",
-                        method: row => {
-                            this.docFollowDelete0(0, row);
+                        method: (index, row) => {
+                            this.docFollowDelete0(index, row);
                         }
                     },
                     {
                         name: "查看详情",
                         oclass: "viewFollow",
-                        method: row => {
-                            this.docFollowDelete0(0, row);
+                        method: (index, row) => {
+                            this.docFollowDelete0(index, row);
                         }
                     }
                 ];
             } else if (oindex == 1) {
+                this.docAddTemplate = true;
+                (this.doctorColumns = [
+                    {
+                        prop: "id",
+                        label: "编号"
+                    },
+                    {
+                        prop: "department",
+                        label: "科室"
+                    },
+                    {
+                        prop: "title",
+                        label: "随访模板名"
+                    },
+                    {
+                        prop: "userName",
+                        label: "作者"
+                    },
+                    {
+                        prop: "createTime",
+                        label: "创建时间"
+                    },
+                    {
+                        prop: "updateTime",
+                        label: "最后修改时间"
+                    },
+                    {
+                        prop: "useNumber",
+                        label: "使用量"
+                    }
+                ]),
+                    (this.doctorTemplateVisiable = false);
                 this.docTableChecked = false;
-                this.doctorColumns = this.doctorColumns1;
                 this.oGetTemplate();
                 this.doctorBtn = [
                     {
                         name: "删除",
                         oclass: "viewFollow",
-                        method: row => {
-                            this.docFollowDelete1(1, row);
+                        method: (index, row) => {
+                            this.docFollowDelete(deleteTemplate, index, row);
                         }
                     }
                 ];
             } else if (oindex == 2) {
+                this.docAddTemplate = true;
+                (this.doctorColumns = [
+                    {
+                        prop: "id",
+                        label: "编号"
+                    },
+                    {
+                        prop: "department",
+                        label: "科室"
+                    },
+                    {
+                        prop: "title",
+                        label: "问诊模板名"
+                    },
+                    {
+                        prop: "userName",
+                        label: "作者"
+                    },
+                    {
+                        prop: "createTime",
+                        label: "创建时间"
+                    },
+                    {
+                        prop: "updateTime",
+                        label: "最后修改时间"
+                    },
+                    {
+                        prop: "useNumber",
+                        label: "使用量"
+                    }
+                ]),
+                    (this.doctorTemplateVisiable = true);
                 this.docTableChecked = false;
-                this.doctorColumns = this.doctorColumns1;
                 this.oQueryList();
                 this.doctorBtn = [
                     {
                         name: "删除",
                         oclass: "viewFollow",
-                        method: row => {
-                            this.docFollowDelete2(2, row);
+                        method: (index, row) => {
+                            this.docFollowDelete(deleteInquiry, index, row);
                         }
                     }
                 ];
             } else if (oindex == 3) {
+                this.docAddTemplate = true;
+                (this.doctorColumns = [
+                    {
+                        prop: "id",
+                        label: "编号"
+                    },
+                    {
+                        prop: "department",
+                        label: "科室"
+                    },
+                    {
+                        prop: "title",
+                        label: "文章名"
+                    },
+                    {
+                        prop: "userName",
+                        label: "作者"
+                    },
+                    {
+                        prop: "createTime",
+                        label: "创建时间"
+                    },
+                    {
+                        prop: "updateTime",
+                        label: "最后修改时间"
+                    },
+                    {
+                        prop: "useNumber",
+                        label: "使用量"
+                    }
+                ]),
+                    (this.doctorTemplateVisiable = false);
                 this.docTableChecked = false;
-                this.doctorColumns = this.doctorColumns1;
                 this.oQueryArticleList();
                 this.doctorBtn = [
                     {
                         name: "删除",
                         oclass: "viewFollow",
-                        method: row => {
-                            this.docFollowDelete3(3, row);
+                        method: (index, row) => {
+                            this.docFollowDelete(deleteArticle, index, row);
                         }
                     }
                 ];
             } else if (oindex == 4) {
-                this.docTableChecked = false;
-                this.doctorColumns = this.doctorColumns1;
-                this.doctorBtn = [
+                this.docAddTemplate = false;
+                (this.doctorColumns = [
                     {
-                        name: "删除",
-                        oclass: "viewFollow",
-                        method: row => {
-                            this.docFollowDelete4(4, row);
-                        }
+                        prop: "id",
+                        label: "编号"
+                    },
+                    {
+                        prop: "department",
+                        label: "科室"
+                    },
+                    {
+                        prop: "title",
+                        label: "评估表名"
+                    },
+                    {
+                        prop: "userName",
+                        label: "作者"
+                    },
+                    {
+                        prop: "createTime",
+                        label: "创建时间"
+                    },
+                    {
+                        prop: "updateTime",
+                        label: "最后修改时间"
+                    },
+                    {
+                        prop: "useNumber",
+                        label: "使用量"
                     }
-                ];
+                ]),
+                    this.getQueryPageByDoctorWeb();
+                this.doctorTemplateVisiable = false;
+                this.docTableChecked = false;
+                this.doctorBtn = [];
             }
         },
+        // 新增模板
+        docAddTemplateFun() {
+            if (this.oDocThis == 1) {
+                this.followTableVisible = true;
+            } else if (this.oDocThis == 2) {
+                this.QuestTableVisible = true;
+            } else if (this.oDocThis == 3) {
+                this.articleTableVisible = true;
+            }
+        },
+
         //搜索
         docSearchChange(data) {
             this.docSearchData = data;
@@ -1993,7 +2186,7 @@ export default {
             this.oQueryArticleList();
         },
         //删除
-        async docFollowDelete(index, row) {
+        async docFollowDelete(deleteFunName, index, row) {
             let _this = this;
             const query = {
                 token: this.userState.token
@@ -2001,18 +2194,8 @@ export default {
             const options = {
                 id: row.id
             };
-            if (index == 0) {
-                const res = await managerGetDeviceList(query, options);
-            } else if (index == 1) {
-                const res = await deleteTemplate(query, options);
-            } else if (index == 2) {
-                const res = await deleteInquiry(query, options);
-            } else if (index == 3) {
-                const res = await deleteArticle(query, options);
-            } else if (index == 4) {
-                const res = await managerGetDeviceList(query, options);
-            }
 
+            const res = await deleteFunName(query, options);
             if (res.data && res.data.errCode === 0) {
                 this.$notify.success({
                     title: "成功",
@@ -2026,7 +2209,7 @@ export default {
                 });
             }
         },
-
+        addQueatOrArticle() {},
         //切换
         docDeperment(data) {
             this.docDepartment = data.index.value;
@@ -2034,6 +2217,7 @@ export default {
             this.oGetTemplate();
             this.oQueryList();
             this.oQueryArticleList();
+            this.getQueryPageByDoctorWeb();
         },
         //我的随访
         async getUsFollow() {
@@ -2125,29 +2309,245 @@ export default {
                     message: res.data.errMsg
                 });
             }
-        }
+        },
         //疾病风险评估模板
         //列表
-        // async getUsFollow() {
-        //     let _this = this;
-        //     const options = {
-        //         token: this.userState.token,
-        //         search: this.docSearchData,
-        //         department: this.docDepartment,
-        //         pageNum: 1,
-        //         pageSize: 10
-        //     };
-        //     const res = await managerGetDeviceList(options);
-        //     if (res.data && res.data.errCode === 0) {
-        //         _this.doctorList = res.data.body.data2.list;
-        //     } else {
-        //         //失败
-        //         this.$notify.error({
-        //             title: "警告",
-        //             message: res.data.errMsg
-        //         });
-        //     }
-        // }
+        async getQueryPageByDoctorWeb() {
+            let _this = this;
+            const query = {
+                token: this.userState.token,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await queryPageByDoctorWeb(query);
+            if (res.data && res.data.errCode === 0) {
+                _this.doctorList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        // 新增随访表接口
+        //添加问诊表
+        async addQuest(index) {
+            this.questOindex = index;
+            this.questVisible = true;
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await getModelTitleList(query);
+            if (res.data && res.data.errCode === 0) {
+                _this.questList = res.data.body.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //添加文章表
+        async addAricle(index) {
+            this.questOindex = index;
+            this.questVisible = true;
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                search: "",
+                department: "",
+                pageNum: 1,
+                pageSize: 111110
+            };
+            const res = await queryArticleList(query);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body.list, function(index, text) {
+                    _this.articleList.push({
+                        id: text.id,
+                        title: text.title
+                    });
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //删除问诊表
+        deleteQuest(index, oindex) {
+            this.addFollowData.itemModels[index].contentModels.splice(
+                oindex,
+                1
+            );
+        },
+        //添加一项
+        addFollowTimeList() {
+            this.addFollowData.itemModels.push({
+                calcVal: 1,
+                calcUnit: "天",
+                state: true,
+                contentModels: []
+            });
+        },
+        //删除当前项
+        deleteFollowTimeList(index) {
+            this.addFollowData.itemModels.splice(index, 1);
+        },
+        //新增随访表
+        async addFollowTable() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const options = this.addFollowData;
+            const res = await add(query, options);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "新增成功"
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //确认添加问诊表和文章
+        sureAddQuest() {
+            let _this = this;
+            $.each(this.questList, function(index, text) {
+                $.each(_this.questCheckList, function(index1, text1) {
+                    if (text.id == text1) {
+                        _this.addFollowData.itemModels[
+                            _this.questOindex
+                        ].contentModels.push({
+                            followUpType: "INQUIRY",
+                            title: text.title,
+                            contentId: text.id
+                        });
+                    }
+                });
+            });
+            $.each(this.articleList, function(index2, text2) {
+                $.each(_this.articleCheckList, function(index3, text3) {
+                    if (text2.id == text3) {
+                        _this.addFollowData.itemModels[
+                            _this.questOindex
+                        ].contentModels.push({
+                            followUpType: "ESSAY",
+                            title: text2.title,
+                            contentId: text2.id
+                        });
+                    }
+                });
+            });
+        },
+        // 单选or多选or问答
+        choiceItemFun(index2) {
+            if (index2 == 0) {
+                this.addQuestData.bankModels.push({
+                    title: "",
+                    questionType: "RADIO",
+                    solutionModels: [
+                        {
+                            sortId: 1,
+                            tag: "a",
+                            answerDescribe: ""
+                        }
+                    ]
+                });
+            } else if (index2 == 1) {
+                this.addQuestData.bankModels.push({
+                    title: "",
+                    questionType: "CHECKBOX",
+                    solutionModels: [
+                        {
+                            sortId: 1,
+                            tag: "a",
+                            answerDescribe: ""
+                        }
+                    ]
+                });
+            } else if (index2 == 2) {
+                this.addQuestData.bankModels.push({
+                    title: " ",
+                    questionType: "TEXT"
+                });
+            }
+        },
+        // 添加一项问题
+        itemChoiceItemFun(index, type) {
+            this.addQuestData.bankModels[index].solutionModels.push({
+                sortId: 1,
+                tag: "a",
+                answerDescribe: ""
+            });
+        },
+        //删除某一个选择
+        deleteQuestText(index, index1) {
+            this.addQuestData.bankModels[index].solutionModels.splice(
+                index1,
+                1
+            );
+        },
+        // 删除某一个问题
+        deleteQuestList(index) {
+            this.addQuestData.bankModels.splice(index, 1);
+        },
+        // 新增问诊模板保存
+        async addQuestTable() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const options = this.addQuestData;
+            const res = await createInquiry(query, options);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "新增成功"
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        async addArticleTable() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const options = this.addQuestData;
+            const res = await publishArticle(query, options);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "新增成功"
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        // 上传图片
+         handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+      }
     }
 };
 </script>
@@ -2224,9 +2624,11 @@ export default {
 
 /* 新增随访表 */
 .addFollowTitle > input {
-    margin-bottom: 20px;
     width: 338px;
     height: 27px;
+}
+.el-dialog--center .el-dialog__body {
+    padding: 0px 25px 30px;
 }
 .questTableName {
     color: red;
@@ -2237,9 +2639,6 @@ export default {
 .addFollowMain li {
     margin-bottom: 10px;
 }
-.addFollowM-bot {
-    margin-bottom: 20px;
-}
 .addFollowMain .oTime input {
     width: 158px;
     height: 27px;
@@ -2248,13 +2647,12 @@ export default {
     display: flex;
     display: -webkit-flex;
     justify-content: space-between;
-    padding-left: 20px;
+    padding-left: 40px;
 }
 .addFollowBtn {
     display: flex;
     display: -webkit-flex;
     justify-content: space-between;
-    width: 555px;
     height: 27px;
     background: white;
 }
@@ -2277,18 +2675,24 @@ export default {
 .addFollowBox .el-form-item__content {
     margin-left: 0 !important;
 }
-
+.el-form-item {
+    margin-bottom: 0;
+}
 .addArticleImg {
     position: relative;
     margin-bottom: 33px;
     width: 100px;
     height: 82px;
 }
-.addArticleImg > div:first-child {
+.addArticleImg .avatar-uploader .el-upload{
     width: 100%;
     height: 100%;
 }
-.addArticleImg > div:first-child > img {
+.addArticleImg > div:first-child {
+    width: 100% !important;
+    height: 100% !important;
+}
+.addArticleImg   img {
     width: 100%;
     height: 100%;
 }
@@ -2363,4 +2767,64 @@ export default {
     width: 100%;
     height: 100%;
 }
+.DistanceFirst {
+    display: flex;
+    display: -webkit-flex;
+}
+.DistanceFirst > div {
+    width: 70px;
+}
+.addFollowBox .el-dialog__body {
+    padding: 25px 26px;
+}
+
+/* 新增问诊模板 */
+.addQuestBox .el-form-item__label {
+    width: 20px !important;
+}
+.addQuestBox .el-form-item__content {
+    margin-left: 20px !important;
+}
+.redioSingle > label {
+    display: block;
+}
+.redioSingle > label:first-child {
+    margin-left: 30px;
+}
+.choiceItemBox > span {
+    padding: 0 5px;
+    cursor: pointer;
+}
+.addQuestUl > li {
+    position: relative;
+    padding-top: 10px;
+}
+.deleteQuestList {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 </style>
