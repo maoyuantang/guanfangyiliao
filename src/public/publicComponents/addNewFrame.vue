@@ -304,7 +304,9 @@ export default {
 </script>
 
 <style>
-    .add-new-frame{}
+    .add-new-frame{
+        
+    }
     .input-item-div{
         display: flex;
         align-items: center;
@@ -511,6 +513,8 @@ export default {
             }
             
         </script>
+
+
 
 
 
