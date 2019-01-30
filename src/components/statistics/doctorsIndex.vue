@@ -106,12 +106,11 @@
 		<div class="history-alert">
 			<el-dialog
 			:title="planHistory.title"
-			:visible.sync="planHistory.show"
-			:before-close="planHistoryClose">
+			:visible.sync="planHistory.show">
 			<div class="history-alert-div">
 				<div class="history-alert-findby-condition">
 					<div class="history-alert-findby-condition-item">
-						<el-button type="primary" size="mini">全部</el-button>
+						<el-button type="primary" size="mini" @click="planHistoryShow({type:'base',value:0})">全部</el-button>
 					</div>
 					<div class="history-alert-findby-condition-item">
 						<el-button type="primary" size="mini">昨天</el-button>
@@ -129,29 +128,32 @@
 						size="mini"
 						:default-time="['00:00:00', '23:59:59']">
 						</el-date-picker>
-						<span class="history-alert-findby-condition-item-ok">确认</span>
+						<span class="history-alert-findby-condition-item-ok" @click="planHistoryShow({type:'interval',value:planHistory.selectTime})">确认</span>
 					</div>
 				</div>
 				<div class="history-alert-findby-name">
-					<el-button type="primary" icon="el-icon-search" size="mini"></el-button>
+					<el-button  icon="el-icon-search" size="mini" @click="planHistoryshowName({type:'name',value:planHistory.selectName})"></el-button>
 					<el-input v-model="planHistory.selectName" placeholder="请输入内容" size="mini"></el-input>
 				</div>
 				<div class="history-alert-show-content">
 					<ul class="history-alert-show-content-ui">
-						<li class="history-alert-show-content-li">
+						<li class="history-alert-show-content-li" v-for="(item,index) in planHistory.showList" :key="index">
 							<div class="history-alert-show-content-info">
 								<div class="history-alert-show-content-info-img">
 									<img src="../../assets/img/a-6.png" alt="">
 								</div>
 								<div class="history-alert-show-content-info-name"> 
-									<p>name</p>
-									<p>phone</p>
+									<p>{{item.name || 'null'}}</p>
+									<p>{{item.phone || 'null'}}</p>
 								</div>
 								<div class="history-alert-show-content-info-time">
-									<span>time</span>
+									<span>定制时间:{{item.planCreateTime || ''}}</span>
+								</div>
+								<div class="history-alert-show-content-info-time">
+									<span>开始时间:{{item.planStartTime || ''}}</span>
 								</div>
 								<div class="history-alert-show-content-info-status">
-									<span>status</span>
+									<span>{{item.planStatus || ''}}</span>
 								</div>
 							</div>
 						</li>
@@ -251,12 +253,12 @@
 				 * 历史计划
 				 */
 				planHistory:{
-					title:'查看历史计划',
-					show:true,
-					selectTime:[],
-					selectName:'',
-					allList:[],
-					showList:[]
+					title:'查看历史计划',//弹窗标题
+					show:true,//是否显示
+					selectTime:[],//选择的时间
+					selectName:'',//选择的名称
+					allList:[],//所有列表
+					showList:[]//根据选择计算过后需要显示的列表
 
 
 					// name:'历史计划',
@@ -534,7 +536,10 @@
 				if(res.data&&res.data.errCode===0){
 					//这个位置可以判断是否有数据，长度是不是0，暂时不做
 					const countData = [...this.todayPlan.data,...res.data.body];//合并今日计划和历史计划
-					console.log(countData)
+					this.planHistory.allList = countData;
+					this.planHistory.showList = countData;
+					this.planHistory.show = true;
+					console.log(this.planHistory.allList)
 				}else{
 					this.$notify({
 						title: '失败',
@@ -664,10 +669,60 @@
 			},
 
 			/**
-			 * 查看历史计划弹窗被关闭前
+			 * 设置历史计划显示内容
 			 */
-			planHistoryClose(){
-				console.log('查看历史计划弹窗被关闭前')
+			planHistoryShow(select){
+				// const a = {
+				// 	type:'base',// Interval  name
+				// 	value:0// []  ''
+				// } 
+				console.log(select)
+				const table = {
+					base:this.planHistoryshowAll,
+					interval:this.planHistoryshowInterval,
+					name:this.planHistoryshowName
+				};
+				table[select.type](select.value);
+			},
+
+			/**
+			 * 显示全部历史计划 或者 昨天  或者 三天内
+			 */
+			planHistoryshowAll(num){
+				if(!num){
+					this.planHistory.showList = this.planHistory.allList.map(item=>item);
+				}else{
+					const nowTime = Number(new Date())
+					this.planHistory.showList = this.planHistory.allList.filter(item=>{
+						return Number(new Date(item.planCreateTime))+select*24*60*60*10000 > nowTime
+					})
+				}
+			},
+
+			/**
+			 * 显示历史计划 一段时间范围内
+			 */
+			planHistoryshowInterval(interval){
+				try{
+					const startTime = Number(new Date(interval[0]));
+					const endTime = Number(new Date(interval[1]));
+					this.planHistory.showList = this.planHistory.allList.filter(item=>Number(new Date(item.planCreateTime)) > startTime && Number(new Date(item.planCreateTime)) < endTime);
+					console.log(this.planHistory.showList)
+				}catch(e){
+					console.log(e)
+				}
+				
+			},
+
+			/**
+			 * 显示历史计划 按名字查找
+			 */
+			planHistoryshowName(name){
+				try{
+					this.planHistory.showList = this.planHistory.allList.filter(item=>item.name.includes(name));
+				}catch(e){
+					console.log(e)
+				}
 			},
 			/********* */
 			getReData(data){
@@ -917,19 +972,38 @@
         text-align: center;
     }
     .history-alert-findby-condition-item-ok{
-        flex: 1;
+        /* flex: 1; */
+		width:0.4rem;
+		margin-left: 0.1rem;
+		color: white;
+		cursor: pointer;
         text-align: center;
+		background: #4398fd;
     }
     .history-alert-findby-name{
         display: flex;
         flex-direction: row-reverse;
     }
+	.history-alert-findby-name>button{
+		margin-left: 0.1rem;
+		background-color: #ea70b8;
+		border-color: #ea70b8;
+		color:white;
+	}
+	.history-alert-findby-name>button:hover{
+		opacity: .8;
+		background-color: #ea70b8;
+		border-color: #ea70b8;
+	}
     .history-alert-findby-name>div{
         width: 200px;
     }
 	.history-alert-show-content-info{
 		display: flex;
 		align-items: center;
+		border-top: 1px #EBF0F4 solid;
+		padding-top: 0.14rem;
+		padding-bottom: 0.16rem;
 	}
 	.history-alert-show-content-info-img{
 		width:0.42rem;
@@ -942,8 +1016,20 @@
 		height: 100%;
 		border-radius: 50%;
 	}
-	.history-alert-show-content-info-name , .history-alert-show-content-info-time , .history-alert-show-content-info-status {
+	.history-alert-show-content-info-name{
 		flex: 1;
+	} 
+	.history-alert-show-content-info-time {
+		flex: 2;
+	} 
+	.history-alert-show-content-info-status {
+		flex: 1;
+	}
+	.history-alert-findby-name{
+		margin-top: 0.2rem;
+	}
+	.history-alert-show-content{
+		margin-top: 0.2rem;
 	}
 </style>
 <!--
