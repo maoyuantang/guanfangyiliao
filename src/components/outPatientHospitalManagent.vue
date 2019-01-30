@@ -162,6 +162,7 @@
 	//引入接口
 	import {
 		// 已使用接口
+		doctorsByOrgCodeAndDeptId,//1.22医院机构码和科室id获取医生集合
 		addClinic,//7.1新增业务
 		searchClinic,//7.5门诊列表1
 		prescriptionDetailByCondition,//7.11出方列表2
@@ -876,16 +877,16 @@
 
 			//新增门诊弹框
 			//渲染
-			async newClinic() {
+			//根据医院获取科室
+			async newClinic0() {
 				const _this = this;
-				//根据医院获取科室
 				let query = {
 					orgCode: this.userInfo.hospitalCode,	//String true 医院代码 
 					deptId: this.departmentId,	//String false 科室ID，无该参数则返回医院全部科室，有该参数则会过滤科室列表 
 				}
-				console.log(query)
 				const res = await fetchHospitalDepts(query);
 				if (res.data && res.data.errCode === 0) {
+					console.log(res)
 					console.log('新增弹框渲染+科室+成功')
 					$.each(res.data.body, function (index, text) {
 						_this.addData.departmentList.push({
@@ -893,29 +894,7 @@
 							value: text.deptId
 						});
 					});
-					console.log(this.addData.departmentList)
-					//根据科室获取关联医生
-					let query1 = {
-						token: this.userState.token,
-						string: this.searchValue,
-						pageNum: this.pageNum,
-						pageSize: this.pageSize,
-						departmentId: this.departmentId,
-						businessType: this.businessType
-					};
-					const res = await searchClinic(query1);
-					if (res.data && res.data.errCode === 0) {
-						console.log('新增弹框渲染+关联医生+成功')
-						console.log(res)
-						// this.relationalDoctor = res.data.body.data2.list[index].doctors;
-					} else {
-						//失败
-						console.log('新增弹框渲染+关联医生+成功')
-						this.$notify.error({
-							title: "警告",
-							message: res.data.errMsg
-						});
-					}
+					this.newClinic1();
 				} else {
 					console.log('新增弹框渲染+新增业务+失败')
 					//失败
@@ -924,10 +903,65 @@
 						message: res.data.errMsg
 					});
 				}
-				//根据科室获取定义协议（待补全）
-
-
 			},
+			//根据科室获取关联医生
+			async newClinic1() {
+				const _this = this;
+				let query = {
+					token: this.userState.token,
+					orgCode: this.userInfo.hospitalCode,	//String true 医院代码 
+					deptId: this.departmentId,//String false 科室id 
+				};
+				const res = await doctorsByOrgCodeAndDeptId(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('新增弹框渲染+关联医生+成功')
+					console.log(res)
+					res.data.body.map(item=>console.log(item))
+					$.each(res.data.body, function (index, text) {
+						_this.addData.doctorList.push({
+							label: text.doctorName,
+							value: text.doctorId
+						});
+					});
+					this.newClinic2();
+				} else {
+					//失败
+					console.log('新增弹框渲染+关联医生+成功')
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
+			//根据科室获取定义协议（待补全）
+			async newClinic2() {
+				// const _this = this;
+				// let query = {
+				// 	token: this.userState.token,
+				// 	orgCode: this.userInfo.hospitalCode,	//String true 医院代码 
+				// 	deptId: this.departmentId,//String false 科室id 
+				// };
+				// const res = await doctorsByOrgCodeAndDeptId(query);
+				// if (res.data && res.data.errCode === 0) {
+				// 	console.log('新增弹框渲染+关联医生+成功')
+				// 	console.log(res)
+				// 	$.each(res.data.body, function (index, text) {
+				// 		_this.addData.doctorList.push({
+				// 			label: text.doctorName,
+				// 			value: text.doctorId
+				// 		});
+				// 	});
+				// } else {
+				// 	//失败
+				// 	console.log('新增弹框渲染+关联医生+成功')
+				// 	this.$notify.error({
+				// 		title: "警告",
+				// 		message: res.data.errMsg
+				// 	});
+				// }
+			},
+
+
 			// 7.1  确定  新增业务
 			/*
 			 * 
@@ -1056,7 +1090,7 @@
 			this.filter3();//审核医生
 			this.filter4();//发药医生
 			this.getList1();//管理列表1
-			this.newClinic();//新增门诊弹框内容渲染
+			this.newClinic0();//新增门诊弹框内容渲染
 			this.getList2();//管理列表2
 			this.getList3();//管理图表3（统计图表数据获取）
 		}

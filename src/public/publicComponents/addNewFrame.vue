@@ -96,8 +96,8 @@
                 <div class="input-item-value-div">
                     <el-select v-model="info.doctors" multiple placeholder="请选择" size="mini">
                         <el-option
-                        v-for="item in inData.doctorList||[]"
-                        :key="item.value"
+                        v-for="(item,index) in inData.doctorList||[]"
+                        :key="index"
                         :label="item.label"
                         :value="item.value">
                         </el-option>
@@ -305,7 +305,7 @@ export default {
 
 <style>
     .add-new-frame{
-        
+
     }
     .input-item-div{
         display: flex;
