@@ -894,7 +894,7 @@
 							value: text.deptId
 						});
 					});
-					this.newClinic1();
+					this.getDepartment();
 				} else {
 					console.log('新增弹框渲染+新增业务+失败')
 					//失败
@@ -902,6 +902,13 @@
 						title: "警告",
 						message: res.data.errMsg
 					});
+				}
+			},
+			//获取新增门诊弹框内所选科室返回的id
+			getDepartment(data) {
+				console.log(data)
+				if(data){
+					this.newClinic1();
 				}
 			},
 			//根据科室获取关联医生
@@ -916,7 +923,7 @@
 				if (res.data && res.data.errCode === 0) {
 					console.log('新增弹框渲染+关联医生+成功')
 					console.log(res)
-					res.data.body.map(item=>console.log(item))
+					// res.data.body.map(item => console.log(item))
 					$.each(res.data.body, function (index, text) {
 						_this.addData.doctorList.push({
 							label: text.doctorName,
@@ -935,30 +942,29 @@
 			},
 			//根据科室获取定义协议（待补全）
 			async newClinic2() {
-				// const _this = this;
-				// let query = {
-				// 	token: this.userState.token,
-				// 	orgCode: this.userInfo.hospitalCode,	//String true 医院代码 
-				// 	deptId: this.departmentId,//String false 科室id 
-				// };
-				// const res = await doctorsByOrgCodeAndDeptId(query);
-				// if (res.data && res.data.errCode === 0) {
-				// 	console.log('新增弹框渲染+关联医生+成功')
-				// 	console.log(res)
-				// 	$.each(res.data.body, function (index, text) {
-				// 		_this.addData.doctorList.push({
-				// 			label: text.doctorName,
-				// 			value: text.doctorId
-				// 		});
-				// 	});
-				// } else {
-				// 	//失败
-				// 	console.log('新增弹框渲染+关联医生+成功')
-				// 	this.$notify.error({
-				// 		title: "警告",
-				// 		message: res.data.errMsg
-				// 	});
-				// }
+				const _this = this;
+				let query = {
+					token: this.userState.token,
+					deptId: this.departmentId,//String false 科室id 
+				};
+				const res = await doctorsByOrgCodeAndDeptId(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('新增弹框渲染+协议+成功')
+					console.log(res)
+					$.each(res.data.body, function (index, text) {
+						_this.addData.doctorList.push({
+							label: text.protocolName,
+							value: text.protocolId
+						});
+					});
+				} else {
+					//失败
+					console.log('新增弹框渲染+协议+成功')
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
 			},
 
 
@@ -1051,7 +1057,6 @@
 			},
 			//禁用接口的调用
 			async isShowForbidFun() {
-
 				let query = {
 					token: this.userState.token
 				};
@@ -1079,14 +1084,11 @@
 				}
 			},
 
-			getDepartment(data){
-				console.log(`data:${data}`)
-			}
+			
 
 
 		},
 		async created() {
-			console.log('enter')
 			this.filter0();//获取科室列表
 			this.filter1();//审核状态
 			this.filter2();//配送状态
