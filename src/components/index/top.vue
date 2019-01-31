@@ -69,6 +69,7 @@
 				}
 				this.$store.commit("user/CHANGEVIEWAUTH",sendData);
 				sessionStorage.setItem('viewRoot',JSON.stringify(this.viewRoot));//存缓存,或者叫跟新缓存更合适
+				console.log(this.$store.state.user.viewRoot.now)
 			},
 			setCanClic(){
 				if(this.userInfo.manager && this.$route.path==='/'){
@@ -77,8 +78,8 @@
 			}
 		},
 		async created(){
-			console.log(this.$store.state.user.viewRoot.now)
-			console.log(this.$route.path==='/');
+			// console.log(this.$store.state.user.viewRoot.now)
+			// console.log(this.$route.path==='/');
 			// this.setCanClic();
 		}
 	}

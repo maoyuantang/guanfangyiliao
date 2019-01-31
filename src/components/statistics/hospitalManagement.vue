@@ -7,21 +7,26 @@
 			<!-- <statisticsTable></statisticsTable> -->
 			<!-- <AccountAuthority></AccountAuthority> -->
 		</div>
+		<steps></steps>
 	</div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import normalTab from '../../public/publicComponents/normalTab.vue'
+
 import statisticsTable from './hospitalManagement/statisticsTable.vue'
 import AccountAuthority from './hospitalManagement/AccountAuthority.vue'
 // import {fetchHospitalDepts} from '../../api/apiAll.js'
+/****************************************************** */
+import steps from '../../public/publicComponents/steps.vue'
 	export default {
 		watch:{
 		},
 		computed:{
 			...mapState({
-				userInfo:state => state.user.userInfo
+				userInfo:state => state.user.userInfo,
+				userSelfInfo:state => state.user.userSelfInfo
 			})
 		},
 		data () {
@@ -63,9 +68,12 @@ import AccountAuthority from './hospitalManagement/AccountAuthority.vue'
 			normalTab,
 			statisticsTable,
 			AccountAuthority,
+			steps
 		},
 		async created(){
 			this.getViewRoot();
+			console.log(this.userSelfInfo.userId)
+			console.log(this.userInfo.token)
 		}
 	}
 </script>

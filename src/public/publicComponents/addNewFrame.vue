@@ -96,8 +96,8 @@
                 <div class="input-item-value-div">
                     <el-select v-model="info.doctors" multiple placeholder="请选择" size="mini">
                         <el-option
-                        v-for="item in inData.doctorList||[]"
-                        :key="item.value"
+                        v-for="(item,index) in inData.doctorList||[]"
+                        :key="index"
                         :label="item.label"
                         :value="item.value">
                         </el-option>
@@ -146,18 +146,18 @@
                 <div class="input-item-value-div agreement-div">
                     <div class="make-agreement">
                         <div class="agreement-list">
-                            <span class="select-agreement-name">{{info.selectAgreement.name||''}}</span>
+                            <span class="select-agreement-name">{{inData.agreement.list[inData.agreement.defaultItem].name ||''}}</span>  
                             <Dropdown>
                                 <p>
                                     <Icon type="ios-arrow-down" class="agreement-arrow-down"></Icon>
                                 </p>
                                 <DropdownMenu slot="list">
-                                    <DropdownItem v-for="(item,index) in inData.agreement" :key="index" @click.native="chooseAgreement(item)">{{item.name}}</DropdownItem>
+                                    <DropdownItem v-for="(item,index) in inData.agreement.list" :key="index" @click.native="chooseAgreement(item,index)">{{item.name}}</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </div>
                         <div class="show-agreement">
-                           {{info.selectAgreement.content||''}}
+                           {{inData.agreement.showContent||''}}
                         </div>
                     </div>
                 </div>
@@ -187,6 +187,11 @@
 import sensitiveWordCheck from "../publicJs/sensitiveWordCheck.js";
 export default {
   watch:{
+        'info.department':{
+            handler(n){
+                this.$emit("department",n);
+            }
+        }
   },
   data() {
     return {
@@ -199,12 +204,12 @@ export default {
             department:'',//科室
             doctors:[],//医生
             businessDescription:'',//业务描述
-            selectAgreement:{//协议
-                name:'',
-                content:''
-            },
+            selectAgreement:this.inData.agreement,
+            // {//协议
+            //     name:'',
+            //     content:''
+            // },
             servicePhone:'',//服务电话
-            
 
         },
         data:{
@@ -289,8 +294,10 @@ export default {
         this.$emit("reback",resData);
         this.inData.show = false;
     },
-    chooseAgreement(item){
-        this.info.selectAgreement = item;
+    chooseAgreement(item,index){
+        this.info.selectAgreement = index;
+        this.$emit("getAgreementSelect",{item , index});
+
     }
   },
   props:[
@@ -305,7 +312,7 @@ export default {
 
 <style>
     .add-new-frame{
-        
+
     }
     .input-item-div{
         display: flex;
@@ -434,12 +441,18 @@ export default {
                     value:''
                 }
            ],
-           agreement:[//协议
+           agreement:{ 
+               list:[{name:'1'},{name:'2'},],
+               defaultItem:0,
+               showContent:''
+           }
+           /*
+           [//协议
                 {
                     name:'',
                     content:''
                 }
-           ]
+           ]*/
         }
         2:返回结果
             2.1:新增在线诊室

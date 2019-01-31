@@ -529,6 +529,7 @@
              * 获取新增用户提交数据
              */
             getAddSubData(){
+                // debugger
                 const options = {//提交数据
                     account:this.addData.account,
                     name:this.addData.name,

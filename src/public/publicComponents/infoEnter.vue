@@ -1,11 +1,11 @@
 <template>
 	<div class="info-enter">
 		<div class="info-enter-top">
-            <span class="info-enter-name">{{inData.name}}</span>
+            <span class="info-enter-name">{{inData.orgName}}</span>
             <el-button type="primary" @click.native="sendData(inData)">点击进入</el-button>
         </div>
         <div class="info-enter-bottom">
-            <span class="unprocessed">未处理{{inData.unprocessed}}人</span>
+            <span class="unprocessed">未处理{{inData.unProcess}}人</span>
             <span class="processed">/ 已处理{{inData.processed}}人</span>
             
         </div>

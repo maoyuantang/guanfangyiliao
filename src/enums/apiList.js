@@ -172,8 +172,14 @@ export default {
 
     //  疾病风险评估
     queryPageByDoctorWeb:'/m/v1/api/medical/queryPageByDoctorWeb',//10.医生WEB查询评估模板分页列表
+<<<<<<< HEAD
 
     getResultGraph:'/m/v1/api/satisfaction/send/getResultGraph',//10.3.1.3 统计
     
     
+=======
+    doctorsByOrgCodeAndDeptId:'/m/v1/api/clinic/clinic/doctorsByOrgCodeAndDeptId',//1.22医院机构码和科室id获取医生集合
+    protocols:'/m/v1/api/family/family/protocols',//17.12 获取该科室的协议
+    protocolById:'/m/v1/api/family/family/protocolById',//17.13 根据协议id获取协议
+>>>>>>> 42f3a8a110737e612bd791b61065376445eac475
 }
