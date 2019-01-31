@@ -430,7 +430,10 @@
 				/**
 				 * 远程会诊系统信息
 				 */
-				queryByManagerPage:{},
+				queryByManagerPage:{
+					name:'远程会诊',
+					data:[]
+				},
 
 				/**
 				 * 移动查房信息 （后端还没有接口）
@@ -687,6 +690,7 @@
 			 * 计算ajax
 			 */
 			countAjax(){
+				console.log('enter') 
 				const table = [
 					{
 						code:'10000',//远程门诊
@@ -799,15 +803,16 @@
 			/**
 			 * 获取远程会诊列表
 			 */
-			async getQueryByDoctorPage(){
-				const res = await queryByDoctorPage({
-					token:this.userInfo.token,
-					dateType:'TODAY',
-					pageNum:1,
-					pageSize:3
-				});
-				console.log(res);
-			},
+			// async getQueryByDoctorPage(){
+			// 	// console.log('enter')
+			// 	const res = await queryByDoctorPage({
+			// 		token:this.userInfo.token,
+			// 		dateType:'TODAY',
+			// 		pageNum:1,
+			// 		pageSize:3
+			// 	});
+			// 	console.log(res);
+			// },
 
 			/**
 			 * 获取远程门诊信息
@@ -842,7 +847,24 @@
 				});
 				console.log(res);
 				if(res.data&&res.data.errCode===0){
-					
+					// {
+						// 	"infoId": "01745963527c4692ae1bb00dc0fe0a29",
+						// 	"userId": "10000",
+						// 	"headId": null,
+						// 	"userName": "超级管理员",
+						// 	"phone": null,
+						// 	"planStatus": "处理中",
+						// 	"createTime": "2019-01-04",
+						// 	"followupTime": "2019-01-05",
+						// 	"complete": "已完成随访: 2",
+						// 	"ongoing": "未完成随访: 1",
+						// 	"followupTitle": "第个随访模板",
+						// 	"followupPlanId": "63b8ce173ac94818a3cfc91fd327f7e2"
+						// },
+					this.queryByManagerPage = res.data.body.data2.list.map(item=>{
+						item.userName = item.doctor;
+						
+					})
 				}else{
 					this.$notify({
 						title: '失败',
