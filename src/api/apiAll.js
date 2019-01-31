@@ -1807,7 +1807,7 @@ export const queryPageByDoctorWeb = query => { //10.医生WEB查询评估模板�
         }
     })
 }
-<<<<<<< HEAD
+
 
 
 export const getResultGraph = query => { //10.3.1.3 统计
@@ -1815,7 +1815,14 @@ export const getResultGraph = query => { //10.3.1.3 统计
     return axios({
         method: 'get',
         url: apiList.getResultGraph,
-=======
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
+
 export const doctorsByOrgCodeAndDeptId = query => { //1.22医院机构码和科室id获取医生集合
     const sign = postQueryHandle(query);
     return axios({
@@ -1843,15 +1850,11 @@ export const protocolById = query => { //17.13 根据协议id获取协议
     return axios({
         method: 'get',
         url: apiList.protocolById,
->>>>>>> 42f3a8a110737e612bd791b61065376445eac475
         params: query,
         headers: {
             sign
         }
     })
 }
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 42f3a8a110737e612bd791b61065376445eac475
