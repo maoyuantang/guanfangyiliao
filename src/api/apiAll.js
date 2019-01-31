@@ -1818,4 +1818,14 @@ export const doctorsByOrgCodeAndDeptId = query => { //1.22医院机构码和科�
         }
     })
 }
-
+export const protocols = query => { //17.12 获取该科室的协议
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.protocols,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
