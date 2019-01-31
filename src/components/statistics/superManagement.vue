@@ -296,7 +296,7 @@ export default {
                 subSystemNum:async data=>{
                     const res = await updateSubSystemRel({token:this.userState.token},{
                         hospitalId:this.nowItem.id||'',
-                        subCodes:item.select
+                        subCodes:item.select.map(item=>item.id)
                     });
                     console.log(res);
                     if(res.data && res.data.errCode === 0){

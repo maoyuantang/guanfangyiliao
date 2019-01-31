@@ -126,6 +126,12 @@ import { parse } from 'protobufjs';
 						path:'/management',
 						code:'100000'
 					},
+					{
+						name:'家医服务',
+						select:false,
+						path:'/familyMedicine',   
+						code:'110000'
+					},
 				],
 
 			}

@@ -174,4 +174,5 @@ export default {
     queryPageByDoctorWeb:'/m/v1/api/medical/queryPageByDoctorWeb',//10.医生WEB查询评估模板分页列表
     doctorsByOrgCodeAndDeptId:'/m/v1/api/clinic/clinic/doctorsByOrgCodeAndDeptId',//1.22医院机构码和科室id获取医生集合
     protocols:'/m/v1/api/family/family/protocols',//17.12 获取该科室的协议
+    protocolById:'/m/v1/api/family/family/protocolById',//17.13 根据协议id获取协议
 }

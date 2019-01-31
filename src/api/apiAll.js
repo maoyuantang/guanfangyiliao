@@ -1829,3 +1829,14 @@ export const protocols = query => { //17.12 获取该科室的协议
         }
     })
 }
+export const protocolById = query => { //17.13 根据协议id获取协议
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.protocolById,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
