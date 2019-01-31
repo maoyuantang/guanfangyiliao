@@ -81,7 +81,7 @@
 
 		</div>
 		<!-- 新增门诊弹框 -->
-		<addNewFrame :inData="addData" @reback="getData" @department="getDepartment"></addNewFrame>
+		<addNewFrame :inData="addData" @reback="getData" @department="getDepartment" @getAgreementSelect="getSelectInfo"></addNewFrame>
 
 		<!-- 表一查看关联医生弹框 -->
 		<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="503px" hight="470px"
@@ -167,6 +167,8 @@
 		searchClinic,//7.5门诊列表1
 		prescriptionDetailByCondition,//7.11出方列表2
 		disableClinic,//7.4禁用远程门诊业务和诊室
+		protocols, //17.12 获取该科室的协议
+		protocolById,//17.13 根据协议id获取协议 
 		//筛选接口
 		toolDept,//1.21.1.科室工具栏  get
 		toolRxReviewStatus,//1.21.2.处方审核状态  get
@@ -238,12 +240,21 @@
 							value: ''
 						}
 					],
-					agreement: [//协议
-						{
-							name: '',
-							content: ''
-						}
-					]
+					agreement: {
+						list: [
+							{ name: '1' },
+							{ name: '2' },
+							{ name: '3' },
+						],
+						defaultItem: 0,
+						showContent: '65465465465'
+					}
+					// [//协议
+					// 	{
+					// 		name: '',
+					// 		content: ''
+					// 	}
+					// ]
 				},
 				//7.1新增门诊参数
 				clinicType: "远程门诊业务",
@@ -907,7 +918,8 @@
 			//获取新增门诊弹框内所选科室返回的id
 			getDepartment(data) {
 				console.log(data)
-				if(data){
+				if (data) {
+					this.departmentId = data;
 					this.newClinic1();
 				}
 			},
@@ -940,33 +952,63 @@
 					});
 				}
 			},
-			//根据科室获取定义协议（待补全）
+
+
+			//根据科室获取定义协议
 			async newClinic2() {
+				// console.log(this.userState.token)
+				// console.log(this.userSelfInfo.userId)
 				const _this = this;
 				let query = {
 					token: this.userState.token,
-					deptId: this.departmentId,//String false 科室id 
+					departmentId: this.departmentId,//String false 科室id 
 				};
-				const res = await doctorsByOrgCodeAndDeptId(query);
+				const res = await protocols(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('新增弹框渲染+协议+成功')
 					console.log(res)
 					$.each(res.data.body, function (index, text) {
-						_this.addData.doctorList.push({
-							label: text.protocolName,
-							value: text.protocolId
+						_this.addData.agreement.list.push({
+							name: text.protocolName,
+							value: text.protocolId,
 						});
 					});
+					console.log(this.addData.agreement.list)
+					// this.getSelectInfo();
 				} else {
 					//失败
-					console.log('新增弹框渲染+协议+成功')
+					console.log('新增弹框渲染+协议+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
 					});
 				}
 			},
-
+			/**
+			 * 
+			 * 获取协议选择情况
+			 * */
+			async getSelectInfo(data) {
+				// console.log(`选择内容：${data.item};选择索引：${data.index}`)
+				console.log(data.item.value)//插件返回值//获取协议选择情况
+				//根据协议id获取协议内容
+				let query = {
+					token: this.userState.token,
+					protocolId: data.item.value//String true 协议id 
+				};
+				const res = await protocolById(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('新增弹框渲染+协议内容+成功')
+					console.log(res)
+				} else {
+					//失败
+					console.log('新增弹框渲染+协议内容+成功')
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
 
 			// 7.1  确定  新增业务
 			/*
@@ -1084,7 +1126,6 @@
 				}
 			},
 
-			
 
 
 		},
