@@ -1808,3 +1808,17 @@ export const queryPageByDoctorWeb = query => { //10.医生WEB查询评估模板�
     })
 }
 
+
+export const getResultGraph = query => { //10.3.1.3 统计
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.getResultGraph,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
+
