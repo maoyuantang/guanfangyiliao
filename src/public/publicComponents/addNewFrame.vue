@@ -204,10 +204,11 @@ export default {
             department:'',//科室
             doctors:[],//医生
             businessDescription:'',//业务描述
-            selectAgreement:{//协议
-                name:'',
-                content:''
-            },
+            selectAgreement:this.inData.agreement,
+            // {//协议
+            //     name:'',
+            //     content:''
+            // },
             servicePhone:'',//服务电话
 
         },
