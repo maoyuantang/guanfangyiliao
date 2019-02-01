@@ -46,7 +46,7 @@
 				</div>
 			</div>
 		</div>
-		<addNewFrame :inData="testData" @reback="getAddData"></addNewFrame>
+		<addNewFrame :inData="testData" @reback="getAddData" @getAgreementSelect="getAgreementSelect"></addNewFrame>
 	</div>
 </template>
 
@@ -156,7 +156,7 @@
 					businessDescription:'业务描述',//业务描述
 					servicePhone:'服务电话',//服务电话
 					agreement:{  
-						default:{
+						default:{ 
 							label:'协议1',
 							value:'1'
 						},
@@ -282,6 +282,7 @@
 			getAddData(data){
 				console.log(data)
 			},
+			getAgreementSelect(data){console.log(data)},
 
 			/****************** */
 			/**
