@@ -172,7 +172,13 @@ export default {
 
     //  疾病风险评估
     queryPageByDoctorWeb:'/m/v1/api/medical/queryPageByDoctorWeb',//10.医生WEB查询评估模板分页列表
+
+    getResultGraph:'/m/v1/api/satisfaction/send/getResultGraph',//10.3.1.3 统计
     doctorsByOrgCodeAndDeptId:'/m/v1/api/clinic/clinic/doctorsByOrgCodeAndDeptId',//1.22医院机构码和科室id获取医生集合
     protocols:'/m/v1/api/family/family/protocols',//17.12 获取该科室的协议
     protocolById:'/m/v1/api/family/family/protocolById',//17.13 根据协议id获取协议
+    stencilName:'/m/v1/api/family/family/stencilName',//17.1获取所有业务模版名
+    fetchOrderInfo:'/m/v1/api/order/fetchOrderInfo',//6.7.家医系统中订单列表（WEB端使用）
+    updateOrderServices:'/m/v1/api/order/updateOrderServices',//6.5.更新订单服务地址和服务时间
+    fetchMzOrderInfo:'/m/v1/api/order/fetchMzOrderInfo',//6.8.远程门诊订单列表弹框数据（WEB端使用）
 }

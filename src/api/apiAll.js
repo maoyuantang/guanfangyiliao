@@ -1807,6 +1807,22 @@ export const queryPageByDoctorWeb = query => { //10.医生WEB查询评估模板�
         }
     })
 }
+
+
+
+export const getResultGraph = query => { //10.3.1.3 统计
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.getResultGraph,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
+
 export const doctorsByOrgCodeAndDeptId = query => { //1.22医院机构码和科室id获取医生集合
     const sign = postQueryHandle(query);
     return axios({
@@ -1840,3 +1856,49 @@ export const protocolById = query => { //17.13 根据协议id获取协议
         }
     })
 }
+export const stencilName = query => { //17.1获取所有业务模版名
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.stencilName,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const fetchOrderInfo = query => { //6.7.家医系统中订单列表（WEB端使用）
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.fetchOrderInfo,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const updateOrderServices = (query, data) => {//11.发起会诊通知
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.updateOrderServices,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const fetchMzOrderInfo = query => { //6.8.远程门诊订单列表弹框数据（WEB端使用）
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.fetchMzOrderInfo,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+

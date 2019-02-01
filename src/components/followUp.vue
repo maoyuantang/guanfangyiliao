@@ -115,7 +115,7 @@
                     <ul class="addQuestUl">
                         <li v-for="(text,index) in addQuestData.bankModels" :key="index">
                             <span class="deleteQuestList" @click="deleteQuestList(index)">
-                                删除某一个问题
+                                <img src="../assets/img/questDelete.png" />
                             </span>
                             <div v-show="text.questionType=='RADIO'">
                                 <el-form-item :label="index+1">
@@ -125,14 +125,13 @@
                                     <el-radio v-for="(text1,index1) in text.solutionModels" :key="index1" :label="index1">
                                         <span>{{text1.tag}}</span>
                                         <el-input class="" v-model="text1.answerDescribe" placeholder="请输入问诊标题"></el-input>
-                                        <span @click="deleteQuestText(index,index1)">
-                                            删除
+                                        <span class="questItemDelete" @click="deleteQuestText(index,index1)">
+                                            <img src="../assets/img/questDelete.png" />
                                         </span>
                                     </el-radio>
                                 </el-radio-group>
                                 <div class="itemChoiceItemBox" @click="itemChoiceItemFun(index,text.questionType)">
                                     添加一项
-                                    <!-- <span v-for="(text2,index2) in choiceItem" :key="index2" @click="choiceItemFun(index,index2)">{{text2}}</span> -->
                                 </div>
                             </div>
                             <div v-show="text.questionType=='CHECKBOX'">
@@ -143,14 +142,13 @@
                                     <el-checkbox v-for="(text1,index1) in text.solutionModels" :key="index1" :label="index1">
                                         <span>{{text1.tag}}</span>
                                         <el-input class="" v-model="text1.answerDescribe" placeholder="请输入问诊标题"></el-input>
-                                        <span @click="deleteQuestText(index,index1)">
-                                            删除
+                                        <span class="questItemDelete" @click="deleteQuestText(index,index1)">
+                                            <img src="../assets/img/questDelete.png" />
                                         </span>
                                     </el-checkbox>
                                 </el-checkbox-group>
                                 <div class="itemChoiceItemBox" @click="itemChoiceItemFun(index,text.questionType)">
                                     添加一项
-                                    <!-- <span v-for="(text2,index2) in choiceItem" :key="index2" @click="choiceItemFun(index,index2)">{{text2}}</span> -->
                                 </div>
                             </div>
                             <div v-show="text.questionType=='TEXT'">
@@ -161,7 +159,7 @@
                         </li>
                     </ul>
                     <div class="choiceItemBox">
-                        <span v-for="(text2,index2) in choiceItem" :key="index2" @click="choiceItemFun(index2)">{{text2}}11</span>
+                        <span v-for="(text2,index2) in choiceItem" :key="index2" @click="choiceItemFun(index2)">{{text2}}</span>
                     </div>
                     <el-button @click="addQuestTable()" type="primary">保存</el-button>
                 </div>
@@ -170,7 +168,9 @@
         </el-dialog>
         <!-- 随访计划详情 -->
         <el-dialog class="evaluateBox addFollowBox" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
+
             <el-form ref="form" :model="followPlanData" label-width="80px">
+
                 <el-form-item>
                     <el-input class="addFollowTitle" v-model="followPlanData.title" placeholder="请输入随访标题"></el-input>
                 </el-form-item>
@@ -182,17 +182,30 @@
                 </el-form-item>
                 <div class="addFollowMain">
                     <el-form-item class="addFollowM-bot" label="首次治疗">
-                        <el-date-picker class="oTime" type="date" placeholder="选择日期">
+                        <el-date-picker class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
                         </el-date-picker>
                     </el-form-item>
                     <ul>
-                        <li v-for="(text,index) in followPlanData.planItemResults" :key="index" @mouseover="addFollowBtnVis=true" @mouseout="addFollowBtnVis=false">
-                            <div class="addFollowM-bot">
-                                距离首次治疗
-                                <el-select class="addFollowHou" v-model="followSelectTime" placeholder="请选择">
-                                    <el-option v-for="item in addFollowTime" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
+                        <li v-for="(text,index) in followPlanData.planItemResults" :key="index">
+                            <div class="addFollowM-bot" style="display:flex">
+                                <el-form-item class="addFollowM-bot" label="距离首次治疗">
+                                    <div class="DistanceFirst">
+                                        <el-form-item label=" ">
+                                            <el-select v-model="text.calcVal" placeholder=" ">
+                                                <el-option v-for="(text,index) in 21" :label="text" :value="text" :key="index"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                        <el-form-item label=" ">
+                                            <el-select v-model="text.calcUnit" placeholder=" ">
+                                                <el-option label="日" value="日"></el-option>
+                                                <el-option label="周" value="周"></el-option>
+                                                <el-option label="月" value="月"></el-option>
+                                                <el-option label="年" value="年"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </div>
+                                </el-form-item>
+
                             </div>
                             <ul class="questBox">
                                 <li v-for="(otext,oindex) in text.itemContentResults" :key="oindex">
@@ -205,57 +218,48 @@
                                         <span class="questTableName">{{otext.title}}</span>
                                     </div>
 
-                                    <span @click="deleteQuest(index,oindex)" class="questDelete">
+                                    <!-- <span @click="deleteQuest(index,oindex)" class="questDelete">
                                         <img src="../assets/img/addFollowDelete2.png" />
-                                    </span>
+                                    </span> -->
                                 </li>
                             </ul>
                             <div class="addFollowBtn" v-show="addFollowBtnVis">
-                                <div @click="addQuest()">
+                                <!-- <div @click="addQuest(index)">
                                     <span class="questDelete"><img src="../assets/img/addFollowJa2.png" /></span> 问诊表/健康知识
-                                </div>
-                                <div>
+                                </div> -->
+                                <!-- <div>
                                     <span @click="addFollowTimeList()">
                                         <span class="questDelete"><img src="../assets/img/addFollowJa1.png" /> </span> 添加一项</span>
                                     <span @click="deleteFollowTimeList(index)">
                                         <span class="questDelete"> <img src="../assets/img/addFollowDelete.png" /> </span>
                                         此项</span>
-                                </div>
+                                </div> -->
                             </div>
 
                         </li>
                     </ul>
-                    <div class="addFollowM-bot">
-                        提醒时间
-                        <el-select class="addFollowHou" v-model="followPlanData.remindDays" placeholder="请选择">
-                            <el-option v-for="item in addFollowTimeTx" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div>
-                        <el-checkbox v-model="followPlanData.remindMe">提醒我</el-checkbox>
-                        <el-checkbox v-model="followPlanData.remindHe">提醒他</el-checkbox>
-                    </div>
-                    <!-- <el-button @click="addFollowTable()" type="primary">保存</el-button> -->
                 </div>
 
             </el-form>
         </el-dialog>
+
         <!-- 新增文章 -->
         <el-dialog class="evaluateBox" title=" " :visible.sync="articleTableVisible" width="770px" hight="356px" center>
             <el-form ref="form" :model="addArticleData" label-width="80px">
+                <!-- {{addArticleData}} -->
                 <el-form-item>
                     <el-input class="addFollowTitle" v-model="addArticleData.title" placeholder="请输入随访标题"></el-input>
                 </el-form-item>
-                <!-- <el-input class="addFollowTitle" v-model="addArticleData.title" placeholder="请输入文章标题"></el-input> -->
+                <el-form-item label="">
+                    <el-select v-model="addArticleData.articleType" placeholder="请选择活动区域">
+
+                        <el-option v-for="(text1,index) in oTab14.list " :label="text1.text" :value="text1.value" :key="index">
+
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <div class="addArticleImg">
-                    <!-- <div>
-                        <img src="../assets/img/日照宝宝.jpg" />
-                    </div>
-                    <div>
-                        文章配图
-                    </div> -->
-                    <el-upload class="avatar-uploader" action="/m/v1/api/hdfs/fs/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                    <el-upload class="avatar-uploader" :action="articleImg" :show-file-list="false" :on-success="articleImgSuccess">
                         <img v-if="imageUrl" :src="imageUrl" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
@@ -307,9 +311,25 @@
                                     </el-form-item>
 
                                     <el-form-item label="所属分类">
-                                        {{associationId}}
-                                        <!-- <el-cascader :options="mydAddoptions" @active-item-change="handleChange" v-model="text.associationId" :props="props"></el-cascader> -->
-                                        <el-cascader :options="mydAddoptions" v-model="associationId" @active-item-change="handleChange" :props="props" :show-all-levels="false"></el-cascader>
+                                        <el-input v-model="mydTemlateName.title">dfdfdfd</el-input>
+                                        <div class="mydAddSuosuClass">
+                                            <ul>
+                                                <li v-for="(text1,index1) in oTab66.list" :key="index1" :value="text1.value" @click="sendTemplateList('',text1.value)">
+                                                    {{text1.text}}>
+                                                </li>
+
+                                            </ul>
+                                            <ul>
+                                                <li v-for="(text2,index2) in mydTemlateName.nameList" :key="index2" :value="text2.associationId" @click="sendTemplateContext(text2.title,index2,text2.associationId)">
+                                                    {{text2.title}}
+                                                </li>
+
+                                            </ul>
+                                            <div>
+                                                {{mydTemlateName.context}}
+                                            </div>
+                                        </div>
+                                        <!-- <el-cascader :options="mydAddoptions" v-model="associationId" @active-item-change="handleChange" :props="props" ></el-cascader> -->
                                     </el-form-item>
                                 </div>
                                 <span>
@@ -317,11 +337,17 @@
                                 </span>
                             </li>
                         </ul>
-                        <span>
+                        <span @click="addMydList()">
                             添加
                         </span>
                     </div>
                 </div>
+                <el-form-item>
+                    <!-- 新增完成按钮 -->
+                    <el-button type="primary" @click="addMydTemplate()" v-if="addMydTemplateVis">完成</el-button>
+                    <!-- 编辑完成按钮 -->
+                    <el-button type="primary" @click="editMydTemplate()" v-else>完成</el-button>
+                </el-form-item>
             </el-form>
 
         </el-dialog>
@@ -376,7 +402,7 @@
                             <selftag :inData="oTab7" @reback="getOTab7" v-show="wayVisible3"></selftag>
                         </div>
 
-                        <el-button class="startConsul" v-show="addFollowVis" type="text" @click="mydAddTemplate = true">新增模板</el-button>
+                        <el-button class="startConsul" v-show="addFollowVis" type="text" @click="mydAddTemplate = true;addMydTemplateVis=true">新增模板</el-button>
                         <el-button v-show="mydTableChecked" class="startConsul" type="text" @click="sendBtn()">发送</el-button>
                     </div>
                     <div class="sendTemplateBox" v-show="sendTemplateListVis">
@@ -428,11 +454,10 @@
                         <div>
                             <selftag :inData="oTab1" @reback="getOTab1"></selftag>
                         </div>
-
-                        <!-- <publicTime @timeValue="timeValueFun"></publicTime> -->
                         <statisticsWay @reBack="tjTimeValueFun"></statisticsWay>
                     </div>
                     <div style="display:flex">
+                        {{drawData}}
                         <normalColumnChart :inData="drawData"> </normalColumnChart>
                         <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
 
@@ -509,7 +534,12 @@ import {
     getModelTitleList,
     queryPageByDoctorWeb,
     createInquiry,
-    publishArticle
+    publishArticle,
+    queryTypeList,
+    getResultGraph,
+    modelInsert,
+    getTemplateInfo,
+    editModel
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -545,7 +575,7 @@ export default {
                 editorOption: {}
             },
             questList: [],
-            articleTableVisible: true,
+            articleTableVisible: false,
             addFollowBtnVis: true,
             questVisible: false,
             addFollowData: {
@@ -560,23 +590,7 @@ export default {
                         calcVal: 1,
                         calcUnit: "天",
                         state: true,
-                        contentModels: [
-                            // {
-                            //     followUpType: "REMIND",
-                            //     title: "天气转凉注意吃药",
-                            //     contentId: null
-                            // },
-                            // {
-                            //     followUpType: "ESSAY",
-                            //     title: "他改变了中国(上)",
-                            //     contentId: "5b162dbd6132c62d846fb793"
-                            // },
-                            // {
-                            //     followUpType: "INQUIRY",
-                            //     title: "问诊模板修改标题",
-                            //     contentId: "282b6e6499104c538fc98df1cc3ee072"
-                            // }
-                        ]
+                        contentModels: []
                     }
                 ]
             },
@@ -719,6 +733,9 @@ export default {
             oTab6: {
                 list: []
             },
+            oTab66: {
+                list: []
+            },
             oTab7: {
                 more: false,
                 title: "类型",
@@ -759,6 +776,7 @@ export default {
             },
             oTab11: { list: [] },
             oTab12: { list: [] }, //我的随访分组
+            oTab14: { list: [] },
             odata: 1,
             columns: [
                 {
@@ -852,17 +870,23 @@ export default {
                 }
             ],
             //满意度数据
+            addMydTemplateVis:true,
+            mydTemlateName: {
+                title: "",
+                context: "",
+                nameList: []
+            },
             associationId: [],
             sendTemplate1: [],
             mydAddData: {
                 type: "OUTPATIENT",
-                name: "需要被实验修改的模板",
-                context: "孙悟空有几个妖精女朋友啊？",
-                deptId: ["1111111111111"],
+                name: "",
+                context: " ",
+                deptId: [" "],
                 associations: [
                     {
-                        answer: "0",
-                        associationId: "5e34d5bb8aaf445794e56998e21587e8"
+                        answer: " ",
+                        associationId: " "
                     }
                 ]
             },
@@ -950,15 +974,7 @@ export default {
                     label: "反馈率"
                 }
             ],
-            SatisfiedBtn: [
-                {
-                    name: "查看随访",
-                    oclass: "viewFollow",
-                    method: (index, row) => {
-                        this.handleDel(index, row);
-                    }
-                }
-            ],
+            SatisfiedBtn: [],
 
             userType: "",
             mydType: "",
@@ -1131,22 +1147,23 @@ export default {
                     }
                 ]
             },
-            QuestTableVisible: true,
+            QuestTableVisible: false,
             choiceItem: ["单选", "多选", "问答"],
             addArticleData: {
                 title: "",
-                articleType: "HEALTH",
-                subtitle: "孙悟空有几个妖精女朋友啊",
-                department: ["枪毙科"],
-                content: "英国两千年文化浓缩起来就是骑士文化.....",
-                summary: "摘要",
-                pictureId: "2",
-                pictureDownPath: "？？",
+                articleType: " ",
+                subtitle: " ",
+                department: [" "],
+                content: "",
+                summary: " ",
+                pictureId: " ",
+                pictureDownPath: " ",
                 url: "",
                 visible: true,
                 openComment: true
             },
-             imageUrl: ''
+            imageUrl: "",
+            articleImg: ""
         };
     },
     computed: {
@@ -1157,30 +1174,32 @@ export default {
         })
     },
     async created() {
+        this.articleImg =
+            "/m/v1/api/hdfs/fs/upload?token=" + this.userState.token;
         this.circularData(this.odata["header"]);
         this.getFoList(); //随访列表
-        // this.getfamiliList(); //家用设备列表
-        // this.getDepartment(); //科室列表
-        // this.oGetFollowupGraph(); //住院随访统计图
-        // this.oGetFollowupRemarks(); //门诊随访统计图
-        // this.partDoctor();
-        // this.screenFollowType();
-        // this.screenFollowMode();
-        // this.screenFollowContent();
         this.getUsFollow(); //我的随访
         this.screenPublic(this.oTab2, toolFollowupType, "类型"); //随访类型
         this.screenPublic(this.oTab3, toolFollowupMode, "方式"); //随访方式
         this.screenPublic(this.oTab4, toolFollowupContent, "内容"); //随访内容
 
         this.screenPublic(this.oTab6, toolSurveyType, "类型"); //调查类型
+        this.screenPublic(this.oTab66, toolSurveyType, "类型"); //调查类型
+        this.oTab66Remove();
         this.screenPublic(this.oTab8, toolSurveyMode, "方式"); //调查方式
         this.screenPublic(this.oTab5, toolDeviceType, "设备类型"); //设备类型
         this.screenPublic(this.oTab9, toolFollowupHasPlan, "随访计划"); //有无计划
         // 医生
         this.screenPublic(this.oTab11, toolFollowupMode, "随访类型"); //随访类型
+        this.screenPublic(this.oTab14, queryTypeList, "文章类型"); //随访类型
     },
     mounted() {},
     methods: {
+        oTab66Remove() {
+            console.log(this.oTab66.list);
+            this.oTab66.list = this.oTab6.list.slice(0);
+            console.log(this.oTab66.list);
+        },
         // 赛选条件接口
         //获取科室列表
         async getDepartment() {
@@ -1255,7 +1274,7 @@ export default {
         async handleChange(value) {
             console.log(value);
 
-            this.sendTemplateList(value);
+            this.sendTemplateList(value, "");
             console.log(this.mydTemplateTitle);
         },
         onEditorReady(editor) {},
@@ -1276,6 +1295,7 @@ export default {
             this.otype = data.index.value;
             this.getFoList();
             this.getUsFollow();
+            this.oQueryList();
         },
         getOTab3(data) {
             this.oTheWay = data.index.value;
@@ -1369,6 +1389,7 @@ export default {
             this.indexTab2 = index;
             if (index == 0) {
                 this.oGetResultList();
+                this.oGetResultGraph();
                 this.addFollowVis = false;
                 (this.mydTableChecked = false),
                     (this.sendTemplateListVis = false),
@@ -1413,15 +1434,7 @@ export default {
                             label: "反馈率"
                         }
                     ]);
-                this.SatisfiedBtn = [
-                    {
-                        name: "查看随访",
-                        oclass: "viewFollow",
-                        method: (index, row) => {
-                            this.handleDel(index, row);
-                        }
-                    }
-                ];
+                this.SatisfiedBtn = [];
             } else if (index == 1) {
                 this.oGetModelList();
                 (this.mydTableChecked = false),
@@ -1478,13 +1491,13 @@ export default {
                         name: "编辑",
                         oclass: "viewFollow",
                         method: (index, row) => {
-                            this.handleDel(index, row);
+                            this.editModel(index, row);
                         }
                     },
                     {
                         name: "删除",
                         oclass: "viewFollow",
-                        method: row => {
+                        method: (index,row) => {
                             this.deleteModel(row.id);
                         }
                     }
@@ -1585,24 +1598,29 @@ export default {
             }
         },
         //满意度调查发送模板3
-        async sendTemplateList(value) {
+        async sendTemplateList(value, mydTemplateType) {
             this.templateVisible = true;
             if (value) {
                 this.mydType = value[0];
+                this.templateVisible = false;
+            }
+            if (mydTemplateType) {
                 this.templateVisible = false;
             }
 
             let _this = this;
             let query = {
                 token: this.userState.token,
-                type: this.mydType
+                type: mydTemplateType
             };
             const res = await getTitleList(query);
             if (res.data && res.data.errCode === 0) {
                 this.mydTemplateTitle = res.data.body;
+                this.mydTemlateName.nameList = res.data.body;
                 if (value) {
                     if (value[0] == "OUTPATIENT") {
                         _this.mydAddoptions[0].cities = [];
+
                         $.each(res.data.body, function(index, text) {
                             _this.mydAddoptions[0].cities.push({
                                 value: text.associationId,
@@ -1610,7 +1628,8 @@ export default {
                                 cities: [
                                     {
                                         value: "",
-                                        label: text.context
+                                        label: text.context,
+                                        disabled: true
                                     }
                                 ]
                             });
@@ -1709,6 +1728,14 @@ export default {
                 });
             }
         },
+        //模板内容
+        sendTemplateContext(title, index, oid) {
+            this.mydTemlateName.context = this.mydTemlateName.nameList[
+                index
+            ].context;
+            this.mydTemlateName.title = title;
+            this.mydAddData.associations[index].associationId = oid;
+        },
         addMydAddoptions(oBody, num) {
             console.log(num);
             $.each(oBody, function(index, text) {
@@ -1782,6 +1809,9 @@ export default {
                     title: "成功",
                     message: "删除成功"
                 });
+                 setTimeout(function() {
+                    _this.oGetModelList();
+                }, 1000);
             } else {
                 //失败
                 this.$notify.error({
@@ -1827,7 +1857,7 @@ export default {
             };
             const res = await managerGetDeviceList(options);
             if (res.data && res.data.errCode === 0) {
-                _this.equipmentList = res.data.body.data2.list;
+                _this.tableDataListFa = res.data.body.data2.list;
             } else {
                 //失败
                 this.$notify.error({
@@ -1851,9 +1881,10 @@ export default {
             };
             const res = await INHOSPITAL(options);
             if (res.data && res.data.errCode === 0) {
+                _this.drawData.totalNumber = res.data.body.total;
                 $.each(res.data.body.data, function(index, text) {
-                    _this.drawData.dataAxis.push(text.unit);
-                    _this.drawData.data.push(text.number);
+                    _this.drawData.dataAxis.push(text.x);
+                    _this.drawData.data.push(text.y);
                 });
             } else {
                 //失败
@@ -1877,9 +1908,10 @@ export default {
             };
             const res = await OUTPATIENT(options);
             if (res.data && res.data.errCode === 0) {
+                _this.drawDataStart.totalNumber = res.data.body.total;
                 $.each(res.data.body.data, function(index, text) {
-                    _this.drawDataStart.dataAxis.push(text.unit);
-                    _this.drawDataStart.data.push(text.number);
+                    _this.drawDataStart.dataAxis.push(text.x);
+                    _this.drawDataStart.data.push(text.y);
                 });
             } else {
                 //失败
@@ -1916,7 +1948,6 @@ export default {
         // 表格分页
         seeCurrentChange() {},
         handleDel(index, row) {
-            alert(index);
         },
         //处理标题数据好方便传入子组件
         circularData(data) {},
@@ -2201,6 +2232,11 @@ export default {
                     title: "成功",
                     message: "删除成功"
                 });
+                setTimeout(function() {
+                    _this.oGetTemplate();
+                    _this.oQueryList();
+                    _this.oQueryArticleList();
+                }, 1000);
             } else {
                 //失败
                 this.$notify.error({
@@ -2529,7 +2565,7 @@ export default {
             let query = {
                 token: this.userState.token
             };
-            const options = this.addQuestData;
+            const options = this.addArticleData;
             const res = await publishArticle(query, options);
             if (res.data && res.data.errCode === 0) {
                 this.$notify.success({
@@ -2545,9 +2581,108 @@ export default {
             }
         },
         // 上传图片
-         handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
-      }
+        articleImgSuccess(res, file) {
+            this.imageUrl = URL.createObjectURL(file.raw);
+            this.addArticleData.pictureId = res.body;
+            console.log(this.addArticleData.pictureId);
+        },
+        //满意度饼图
+        async oGetResultGraph() {
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                type: this.mydType,
+                mode: this.mydMode,
+                search: this.mydSearchData,
+                department: this.odepartment
+            };
+            const res = await getResultGraph(query);
+            if (res.data && res.data.errCode === 0) {
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //满意度模板添加项
+        addMydList() {
+            this.mydAddData.associations.push({
+                answer: "0",
+                associationId: "5e34d5bb8aaf445794e56998e21587e8"
+            });
+        },
+        //创建满意度模板
+        async addMydTemplate() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const options = this.mydAddData;
+            const res = await modelInsert(query, options);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "新增成功"
+                });
+                setTimeout(function() {
+                    _this.mydAddTemplate = false;
+                    _this.oGetModelList();
+                }, 1000);
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //编辑满意度调查模板
+        async editModel(index, row) {
+            this.addMydTemplateVis=false;
+            this.mydAddTemplate = true;
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                id: row.id
+            };
+            const res = await getTemplateInfo(query);
+            if (res.data && res.data.errCode === 0) {
+                this.mydAddData = res.data.body;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //编辑满意度模板成功
+         async editMydTemplate() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const options = this.mydAddData;
+            const res = await editModel(query, options);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "编辑成功"
+                });
+                setTimeout(function() {
+                    _this.mydAddTemplate = false;
+                    _this.oGetModelList();
+                }, 1000);
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
     }
 };
 </script>
@@ -2684,7 +2819,7 @@ export default {
     width: 100px;
     height: 82px;
 }
-.addArticleImg .avatar-uploader .el-upload{
+.addArticleImg .avatar-uploader .el-upload {
     width: 100%;
     height: 100%;
 }
@@ -2692,7 +2827,7 @@ export default {
     width: 100% !important;
     height: 100% !important;
 }
-.addArticleImg   img {
+.addArticleImg img {
     width: 100%;
     height: 100%;
 }
@@ -2801,30 +2936,60 @@ export default {
 }
 .deleteQuestList {
     position: absolute;
-    right: 0;
-    top: 0;
+    right: -19px;
+    top: 20px;
+    width: 13px;
+    height: 13px;
+    cursor: pointer;
 }
-  .avatar-uploader .el-upload {
+.deleteQuestList > img {
+    width: 100%;
+    height: 100%;
+}
+.avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
+}
+.avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+}
+.avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
     width: 178px;
     height: 178px;
     line-height: 178px;
     text-align: center;
-  }
-  .avatar {
+}
+.avatar {
     width: 178px;
     height: 178px;
     display: block;
-  }
+}
+.questItemDelete {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+}
+.questItemDelete > img {
+    width: 100%;
+    height: 100%;
+}
+.mydAddSuosuClass {
+    display: flex;
+    display: -webkit-flex;
+    box-shadow: 3px 3px 3px #666;
+}
+.mydAddSuosuClass > ul:first-child {
+    width: 100px;
+}
+.mydAddSuosuClass > ul:nth-child(2) {
+    width: 100px;
+}
+.mydAddSuosuClass > div:last-child {
+    width: 100px;
+}
 </style>
