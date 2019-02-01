@@ -1043,7 +1043,7 @@
 				console.log(this.clickId)
 				let query = {
 					token: this.userState.token,
-					clinicId: this.clickId,//String true 远程门诊业务id 
+					clinicId: row.id,//String true 远程门诊业务id 
 				};
 				const res = await clinicDetail(query);
 				console.log(query)
