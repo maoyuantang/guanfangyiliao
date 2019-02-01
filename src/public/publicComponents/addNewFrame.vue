@@ -187,7 +187,7 @@
 import sensitiveWordCheck from "../publicJs/sensitiveWordCheck.js";
 export default {
   watch:{
-        'info.department':{
+        'inData.departmentList.default.value':{
             handler(n){
                 this.$emit("department",n);
             }
