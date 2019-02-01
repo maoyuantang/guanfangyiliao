@@ -1,7 +1,6 @@
 <template>
 	<div class="family-medicine" >
 		<div :is="$store.state.user.viewRoot.now.type==='1'?'familyMedicineManagement':'familyMedicineDoctor'"></div>
-		{{$store.state.user.viewRoot.now.type}}
 	</div>
 	
 </template>
@@ -23,16 +22,12 @@ import familyMedicineDoctor from './familyMedicine/familyMedicineDoctor.vue'
 		},
 		data () {
 			return {
-				viewCurrent:{
-
-				}
 			}
 		},
 		methods:{
 			
 		},
 		async created(){
-			console.log(this.$store.state.user.viewRoot.now.type)
 		}
 	}
 </script>

@@ -20,7 +20,7 @@
 
 
 				<div class="online-clinic-middle">
-					<el-table :data="tableData" border style="width: 100%;" @cell-click="relateDoctors">
+					<el-table :data="tableData" border style="width: 100%;" @cell-click="relateDoctors1">
 						<el-table-column fixed prop="id" label="业务编号"></el-table-column>
 						<el-table-column prop="departmentName" label="科室"></el-table-column>
 						<el-table-column prop="fullName" label="业务名"></el-table-column>
@@ -102,18 +102,18 @@
 			</ul>
 		</el-dialog>
 
-		<!-- 查看详情弹框 -->
+		<!-- 总+今日+订单详情+弹框 -->
 		<el-dialog class="  " title="订单详情" :visible.sync="isShowRecord" center width=70%>
-			<el-table :data="tableDataChat" border style="width: 100%;" @cell-click="relateDoctors">
-				<el-table-column fixed prop="id" label="订单号"></el-table-column>
-				<el-table-column prop="departmentName" label="接诊医生"></el-table-column>
-				<el-table-column prop="fullName" label="接诊方式"></el-table-column>
-				<el-table-column prop="price" label="门诊费"></el-table-column>
-				<el-table-column prop="doctors" label="处方订单号"></el-table-column>
-				<el-table-column prop="totalPeople" label="状态"></el-table-column>
-				<el-table-column prop="totalIncome" label="病人"></el-table-column>
-				<el-table-column prop="queuePeople" label="问诊时间"></el-table-column>
-				<el-table-column prop="updateTime" label="问诊费"></el-table-column>
+			<el-table :data="tableDataChat" border style="width: 100%;" @cell-click="relateDoctors2">
+				<el-table-column fixed prop="orderNo" label="订单号"></el-table-column>
+				<el-table-column prop="doctorName" label="接诊医生"></el-table-column>
+				<el-table-column prop="mode" label="接诊方式"></el-table-column>
+				<el-table-column prop="fee" label="门诊费"></el-table-column>
+				<el-table-column prop="rxOrderNo" label="处方订单号"></el-table-column>
+				<el-table-column prop="status" label="状态"></el-table-column>
+				<el-table-column prop="userName" label="病人"></el-table-column>
+				<el-table-column prop="orderTime" label="问诊时间"></el-table-column>
+				<el-table-column prop="rxFee" label="问诊费"></el-table-column>
 				<el-table-column fixed="right" label="" width="200px">
 					<template slot-scope="scope">
 						<el-button @click="isShowRecordChatFun(scope.row)" type="text" size="small">门诊交流</el-button>
@@ -169,6 +169,7 @@
 		disableClinic,//7.4禁用远程门诊业务和诊室
 		protocols, //17.12 获取该科室的协议
 		protocolById,//17.13 根据协议id获取协议 
+		fetchMzOrderInfo,//6.8.远程门诊订单列表弹框数据（WEB端使用）
 		//筛选接口
 		toolDept,//1.21.1.科室工具栏  get
 		toolRxReviewStatus,//1.21.2.处方审核状态  get
@@ -290,7 +291,7 @@
 				time1: "",//统计筛选结束时间
 				clinicId: '',//门诊业务编号
 				status: [],//状态（禁用按钮）
-				clickId:'',//表格被点击所在行的id
+				clickId: '',//表格被点击所在行的id
 
 
 				//getList2
@@ -778,7 +779,7 @@
 					});
 				}
 			},
-			
+
 			// 7.11根据条件获取处方信息 
 			async getList2() {
 
@@ -1025,22 +1026,54 @@
 			},
 
 
-
-			//查看关联医生
+			//表一点击事件
 			// cell-click当某个单元格被点击时会触发该事件row, column, cell, event
-			relateDoctors(row, column, cell, event) {
-				console.log(row, column)
+			async relateDoctors1(row, column, cell, event) {
+				// console.log(row, column)
 				this.clickId = row.id
-				console.log(this.clickId)
+				//查看关联医生
 				if (column.label === "关联医生") {
 					this.isShowrelationalDoctor = true;
 				}
+				//查看订单详情
+				if (column.label === "业务人次") {
+					this.isShowRecord = true;
+					// fetchMzOrderInfo,6.8.远程门诊订单列表弹框数据（WEB端使用） 
+					let query = {
+						token: this.userState.token,
+						businessId: row.id,//String true 远程门诊业务id 
+						pageNum: this.pageNum,
+						pageSize: this.pageSize
+					};
+					const res = await fetchMzOrderInfo(query);
+					console.log(query)
+					if (res.data && res.data.errCode === 0) {
+						console.log('总，今日，获取订单详情+成功')
+						console.log(res)
+						// this.tableDataChat = res.data.body.data2.list;//订单详情没有数据
+					} else {
+						//失败
+						console.log('总，今日，获取订单详情+失败')
+						this.$notify.error({
+							title: "警告",
+							message: res.data.errMsg
+						});
+					}
+
+
+				}
 			},
+
+
+			// cell-click当某个单元格被点击时会触发该事件row, column, cell, event
+			async relateDoctors2(row, column, cell, event) {
+				console.log(row, column)
+			},
+
 			//查看详情内的表格内容获取
 			async isShowRecordFunList(row) {
-				this.isShowRecord = true;
+				this.addData.show = true
 				// clinicDetail,//7.3查看远程门诊业务详情
-				console.log(this.clickId)
 				let query = {
 					token: this.userState.token,
 					clinicId: row.id,//String true 远程门诊业务id 
@@ -1049,7 +1082,24 @@
 				console.log(query)
 				if (res.data && res.data.errCode === 0) {
 					console.log('查看详情表格内容+成功')
-					console.log(res)
+					console.log(res, this.showContent)
+					// this.addData.doctorList = res.data.body.departmentId;
+					// this.addData.doctorList = res.data.body.desc;
+					// this.addData.doctorList = res.data.body.doctors;
+					// this.addData.doctorList = res.data.body.fullName;
+					// this.addData.doctorList = res.data.body.id;
+					// this.addData.doctorList = res.data.body.phone;
+
+					// this.addData.doctorList = res.data.body.price.priceId;
+					// this.addData.doctorList = res.data.body.price.unitEnum;
+					// this.addData.doctorList = res.data.body.price.valueUnit;
+					// this.addData.doctorList = res.data.body.price.worth;
+
+					// this.addData.doctorList = res.data.body.protocolContent;//协议内容
+					// this.addData.doctorList = res.data.body.protocolId;//协议id
+					// this.addData.doctorList = res.data.body.protocolName;//协议标题
+					// this.addData.doctorList = res.data.body.type;//类型
+
 				} else {
 					//失败
 					console.log('查看详情表格内容+失败')
