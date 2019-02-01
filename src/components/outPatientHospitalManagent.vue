@@ -260,7 +260,7 @@
 				//7.1新增门诊参数
 				clinicProtocolId: "",//String false 远程门诊协议id（选择协议时必传，非选择的协议可不传）
 				clinicProtocolName: "",//String true 远程门诊协议名 
-				clinicStatus: null,//boolean false 远程门诊状态（禁用操作时值必传） 
+				clinicStatus: false,//boolean false 远程门诊状态（禁用操作时值必传） 
 
 
 
@@ -364,7 +364,7 @@
 				//聊天		接收表格内所需数据
 				tableDataChat: [
 					{
-						prop: "id",
+						prop: "orderNo",
 						label: "订单号"
 					}
 				],
@@ -754,7 +754,7 @@
 				const res = await searchClinic(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表1+成功')
-					// console.log(res)
+					console.log(res)
 					this.relationalDoctor = res.data.body.data2.list.map(item => {
 						item.name = item.status ? '禁用' : '解除禁用';
 						return item
@@ -990,6 +990,8 @@
 			},
 			async getData(data) {
 				console.log(data)
+				// this.clinicId = data.
+				// this.clinicStatus = data.
 				let query = {
 					token: this.userState.token
 				};
@@ -1035,7 +1037,7 @@
 				if (column.label === "关联医生") {
 					this.isShowrelationalDoctor = true;
 				}
-				//查看订单详情
+				//查看详情	//订单详情	
 				if (column.label === "业务人次") {
 					this.isShowRecord = true;
 					// fetchMzOrderInfo,6.8.远程门诊订单列表弹框数据（WEB端使用） 
@@ -1050,7 +1052,7 @@
 					if (res.data && res.data.errCode === 0) {
 						console.log('总，今日，获取订单详情+成功')
 						console.log(res)
-						// this.tableDataChat = res.data.body.data2.list;//订单详情没有数据
+						this.tableDataChat = res.data.body.data2.list;//订单详情没有数据
 					} else {
 						//失败
 						console.log('总，今日，获取订单详情+失败')
@@ -1129,12 +1131,12 @@
 				this.isShowLogisticsStatus = true;
 			},
 			//禁用接口的调用
-			async isShowForbidFun() {
+			async isShowForbidFun(row) {
 				let query = {
 					token: this.userState.token
 				};
 				let options = {
-					clinicId: this.clinicId,
+					clinicId: row.id,
 					status: this.status
 				};
 				const res = await disableClinic(query, options);
