@@ -12,9 +12,9 @@
             <div class="input-item-div" v-if="inData.type==='2'">
                 <span class="input-item-name">业务类型:</span>
                 <div class="input-item-value-div">
-                    <el-select v-model="info.businessType2" clearable placeholder="请选择" size="mini">
+                    <el-select v-model="inData.businessTypeList.default.value" clearable placeholder="请选择" size="mini">
                         <el-option
-                        v-for="item in inData.businessTypeList||[]"
+                        v-for="item in inData.businessTypeList.list||[]"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -30,7 +30,7 @@
                     <el-input
                         placeholder="请输入内容"
                         size="mini"
-                        v-model="info.businessType1"
+                        v-model="inData.businessTypeList.default.label"
                         clearable>
                     </el-input>
                 </div>
@@ -39,9 +39,9 @@
             <div class="input-item-div" v-if="inData.type==='2'">
                 <span class="input-item-name">业务模板:</span>
                 <div class="input-item-value-div">
-                    <el-select v-model="info.businessTemplate" clearable placeholder="请选择" size="mini">
+                    <el-select v-model="inData.businessTemplate.default.value" clearable placeholder="请选择" size="mini">
                         <el-option
-                        v-for="item in inData.businessTemplate||[]"
+                        v-for="item in inData.businessTemplate.list||[]"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -56,7 +56,7 @@
                     <el-input
                         placeholder="请输入内容"
                         size="mini"
-                        v-model="info.businessName"
+                        v-model="inData.businessName.label"
                         clearable>
                     </el-input>
                     <i class="iconfont required-icon" v-if="inData.type==='1'">&#xe7b0;</i>
@@ -69,7 +69,7 @@
                     <el-input
                         placeholder="请输入内容"
                         size="mini"
-                        v-model="info.businessPrice"
+                        v-model="inData.businessPrice.label"
                         clearable>
                     </el-input>
                     <i class="iconfont required-icon" v-if="inData.type==='1'">&#xe7b0;</i>
@@ -79,9 +79,9 @@
             <div class="input-item-div">
                 <span class="input-item-name">选择科室:</span>
                 <div class="input-item-value-div">
-                    <el-select v-model="info.department" clearable placeholder="请选择" size="mini">
+                    <el-select v-model="inData.departmentList.default.value" clearable placeholder="请选择" size="mini">
                         <el-option
-                        v-for="item in inData.departmentList||[]"
+                        v-for="item in inData.departmentList.list||[]"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -94,9 +94,9 @@
             <div class="input-item-div">
                 <span class="input-item-name">关联医生:</span>
                 <div class="input-item-value-div">
-                    <el-select v-model="info.doctors" multiple placeholder="请选择" size="mini">
+                    <el-select v-model="inData.doctorList.default" multiple placeholder="请选择" size="mini">
                         <el-option
-                        v-for="(item,index) in inData.doctorList||[]"
+                        v-for="(item,index) in inData.doctorList.list||[]"
                         :key="index"
                         :label="item.label"
                         :value="item.value">
@@ -118,12 +118,12 @@
                 <span class="input-item-name"></span>
                 <div class="input-item-value-div">
                     <div class="show-select-doctores-list">
-                        <div class="select-doctores-list-item" v-for="(item,index) in info.doctors" :key="index">
+                        <div class="select-doctores-list-item" v-for="(item,index) in inData.doctorList.default" :key="index">
                             <div class="select-doctores-list-item-pic">
                                 <img src="../../assets/img/a-6.png" alt="">
                                 <i class="iconfont cancel-doctor" >&#xe611;</i>
                             </div>
-                            <p>{{inData.doctorList.find(i=>i.value===item).label}}</p>
+                            <p>{{inData.doctorList.list.find(i=>i.value===item).label}}</p>
                         </div>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
                     type="textarea"
                     autosize
                     placeholder="请输入内容"
-                    v-model="info.businessDescription">
+                    v-model="inData.businessDescription">
                     </el-input>
                 </div>
             </div>
@@ -146,13 +146,13 @@
                 <div class="input-item-value-div agreement-div">
                     <div class="make-agreement">
                         <div class="agreement-list">
-                            <span class="select-agreement-name">{{inData.agreement.list[inData.agreement.defaultItem].name ||''}}</span>  
+                            <span class="select-agreement-name">{{inData.agreement.default.label||''}}</span>  
                             <Dropdown>
                                 <p>
                                     <Icon type="ios-arrow-down" class="agreement-arrow-down"></Icon>
                                 </p>
                                 <DropdownMenu slot="list">
-                                    <DropdownItem v-for="(item,index) in inData.agreement.list" :key="index" @click.native="chooseAgreement(item,index)">{{item.name}}</DropdownItem>
+                                    <DropdownItem v-for="(item,index) in inData.agreement.list" :key="index" @click.native="chooseAgreement(item,index)">{{item.label}}</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </div>
@@ -169,7 +169,7 @@
                 <div class="input-item-value-div">
                     <el-input
                         placeholder="请输入内容"
-                        v-model="info.servicePhone"
+                        v-model="inData.servicePhone"
                         size="mini"
                         clearable>
                     </el-input>
@@ -258,44 +258,44 @@ export default {
     },
     cancel(){},
     saveInfo(){
-        const resData = {};
-        if(this.inData.type==='1'){//新增在线诊室
-            resData.businessType = this.info.businessType1;
-            resData.businessName = this.info.businessName;
-            resData.businessPrice = this.info.businessPrice;
-            resData.department = this.info.department;
-            resData.doctors = this.info.doctors;
-            const isPass = [sensitiveWordCheck(resData.businessName),sensitiveWordCheck(resData.businessPrice)];
-            for(const i of isPass){
-                if(!i.ok){
-                    this.$notify({
-                        title: '输入验证失败',
-                        message: i.msg,
-                        type: 'error'
-                    });
-                    return;
-                }
-            }
-        }else if(this.inData.type==='2'){//新增家医业务
-            resData.businessType = this.info.businessType2,
-            resData.businessTemplate = this.info.businessTemplate,
-            resData.businessName = this.info.businessName,
-            resData.businessPrice = this.info.businessPrice,
-            resData.department = this.info.department,
-            resData.doctors = this.info.doctors
-            console.log(resData)
-        }else{
-            console.log('传入参数格式错误');
-            return;
-        }
-        resData.businessDescription = this.info.businessDescription;
-        resData.selectAgreement = this.info.selectAgreement;
-        resData.servicePhone = this.info.servicePhone;
-        this.$emit("reback",resData);
-        this.inData.show = false;
+        // const resData = {};
+        // if(this.inData.type==='1'){//新增在线诊室
+        //     resData.businessType = this.info.businessType1;
+        //     resData.businessName = this.info.businessName;
+        //     resData.businessPrice = this.info.businessPrice;
+        //     resData.department = this.info.department;
+        //     resData.doctors = this.info.doctors;
+        //     const isPass = [sensitiveWordCheck(resData.businessName),sensitiveWordCheck(resData.businessPrice)];
+        //     for(const i of isPass){
+        //         if(!i.ok){
+        //             this.$notify({
+        //                 title: '输入验证失败',
+        //                 message: i.msg,
+        //                 type: 'error'
+        //             });
+        //             return;
+        //         }
+        //     }
+        // }else if(this.inData.type==='2'){//新增家医业务
+        //     resData.businessType = this.info.businessType2,
+        //     resData.businessTemplate = this.info.businessTemplate,
+        //     resData.businessName = this.info.businessName,
+        //     resData.businessPrice = this.info.businessPrice,
+        //     resData.department = this.info.department,
+        //     resData.doctors = this.info.doctors
+        //     console.log(resData)
+        // }else{
+        //     console.log('传入参数格式错误');
+        //     return;
+        // }
+        // resData.businessDescription = this.info.businessDescription;
+        // resData.selectAgreement = this.info.selectAgreement;
+        // resData.servicePhone = this.info.servicePhone;
+        this.$emit("reback",this.inData);
+        // this.inData.show = false;
     },
     chooseAgreement(item,index){
-        this.info.selectAgreement = index;
+        this.inData.agreement.default = item;
         this.$emit("getAgreementSelect",{item , index});
 
     }
@@ -415,45 +415,94 @@ export default {
         新增在线诊室 和 新增家医业务 比较类似，所以直接写成一个
     使用方法： 
         1:传入参数 {
-            show:false,//是否显示
-            type:'1',//1是表示新增家医，2是表示新增在线诊室业务
-            businessTypeList:[//新增在线诊室业务类型
-                {
-                    label:'',
-                    value:''
-                }
-            ],
-            businessTemplate:[//新增家医业务模板
-                {
-                    label:'',
-                    value:''
-                }
-            ],
-           departmentList:[//科室列表
-                {
-                    label:'',
-                    value:''
-                }
-           ],
-           doctorList:[//医生列表
-                {
-                    label:'',
-                    value:''
-                }
-           ],
-           agreement:{ 
-               list:[{name:'1'},{name:'2'},],
-               defaultItem:0,
-               showContent:''
-           }
-           /*
-           [//协议
-                {
-                    name:'',
-                    content:''
-                }
-           ]*/
-        }
+					show:true,
+					type:'1',//1是表示新增家医，2是表示新增在线诊室业务
+					businessTypeList:{//新增在线诊室业务类型 
+						default:{
+							label:'新增在线诊室业务类型1',
+							value:'1'
+						},
+						list:[
+							{
+								label:'新增在线诊室业务类型1',
+								value:'1'
+							},
+							{
+								label:'新增在线诊室业务类型2',
+								value:'2'
+							}
+						]
+					},
+					businessTemplate:{//新增家医业务模板
+						default:{
+							label:'新增家医业务模板1', 
+							value:'1'
+						},
+						list:[
+							{
+								label:'新增家医业务模板1',
+								value:'1'
+							},
+							{
+								label:'新增家医业务模板2',
+								value:'2'
+							}
+						]
+					},
+					businessName:{//业务名称
+						label:'kkkk'
+					},
+					businessPrice:{//业务定价
+						label:'6666'
+					},
+					departmentList:{//科室列表 
+							default:{
+								label:'',
+								value:'1'
+							},
+							list:[
+								{
+									label:'科室列表1',
+									value:'1'
+								},
+								{
+									label:'科室列表2',
+									value:'2'
+								}
+							]
+					}, 
+					doctorList:{//医生列表
+							default:[],
+							list:[
+								{
+									label:'医生1',
+									value:'1'
+								},
+								{
+									label:'医生2',
+									value:'2'
+								},
+								{
+									label:'医生3',
+									value:'3'
+								}   
+							]
+					},
+					businessDescription:'业务描述',//业务描述
+					servicePhone:'服务电话',//服务电话
+					agreement:{  
+						default:{ 
+							label:'协议1',
+							value:'1'
+						},
+
+						list:[
+							{label:'协议1',value:'1'},
+							{label:'协议2',value:'2'},
+						],
+						showContent:''
+					}
+				},
         2:返回结果
             2.1:新增在线诊室
                 {
@@ -483,42 +532,95 @@ export default {
         <script>
             export default{
                 data(){
-                    return testData{
-                        show:false,//是否显示
-                        type:'1',//1是表示新增家医，2是表示新增在线诊室业务
-                        businessTypeList:[//新增在线诊室业务类型
-                            {
-                                label:'',
-                                value:''
-                            }
-                        ],
-                        businessTemplate:[//新增家医业务模板
-                            {
-                                label:'',
-                                value:''
-                            }
-                        ],
-                    departmentList:[//科室列表
-                            {
-                                label:'',
-                                value:''
-                            }
-                    ],
-                    doctorList:[//医生列表
-                            {
-                                label:'',
-                                value:''
-                            }
-                    ],
-                    agreement:[//协议
-                            {
-                                name:'',
-                                content:''
-                            }
-                    ]
-                    }
-                }
-            },
+                    return testData:{
+					show:true,
+					type:'1',//1是表示新增家医，2是表示新增在线诊室业务
+					businessTypeList:{//新增在线诊室业务类型 
+						default:{
+							label:'新增在线诊室业务类型1',
+							value:'1'
+						},
+						list:[
+							{
+								label:'新增在线诊室业务类型1',
+								value:'1'
+							},
+							{
+								label:'新增在线诊室业务类型2',
+								value:'2'
+							}
+						]
+					},
+					businessTemplate:{//新增家医业务模板
+						default:{
+							label:'新增家医业务模板1', 
+							value:'1'
+						},
+						list:[
+							{
+								label:'新增家医业务模板1',
+								value:'1'
+							},
+							{
+								label:'新增家医业务模板2',
+								value:'2'
+							}
+						]
+					},
+					businessName:{//业务名称
+						label:'kkkk'
+					},
+					businessPrice:{//业务定价
+						label:'6666'
+					},
+					departmentList:{//科室列表 
+							default:{
+								label:'',
+								value:'1'
+							},
+							list:[
+								{
+									label:'科室列表1',
+									value:'1'
+								},
+								{
+									label:'科室列表2',
+									value:'2'
+								}
+							]
+					}, 
+					doctorList:{//医生列表
+							default:[],
+							list:[
+								{
+									label:'医生1',
+									value:'1'
+								},
+								{
+									label:'医生2',
+									value:'2'
+								},
+								{
+									label:'医生3',
+									value:'3'
+								}   
+							]
+					},
+					businessDescription:'业务描述',//业务描述
+					servicePhone:'服务电话',//服务电话
+					agreement:{  
+						default:{ 
+							label:'协议1',
+							value:'1'
+						},
+
+						list:[
+							{label:'协议1',value:'1'},
+							{label:'协议2',value:'2'},
+						],
+						showContent:''
+					}
+				},
             methods:{
                 getData(data){
                     console.log(data)
