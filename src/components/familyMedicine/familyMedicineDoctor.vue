@@ -36,7 +36,7 @@
                         <th>{{item.status || 'null'}}</th>
                         <th><el-button type="danger" plain size="mini" @click="changeStatus(item,index)">服务变更</el-button></th>
                         <th class="family-medicine-doctor-body-spe">
-                            <el-button type="warning" size="mini" plain>查看档案</el-button>
+                            <el-button type="warning" size="mini" plain @click="checkDoc(item,index)">查看档案</el-button>
                             <el-button type="success" size="mini" plain>发送</el-button>
                         </th>
                     </tr>
@@ -320,6 +320,13 @@
 						type: 'error'
 					});
                 }
+            },
+
+            /**
+             * 查看档案
+             */
+            checkDoc(item,index){
+                console.log(item)
             },
 		},
 		async created(){

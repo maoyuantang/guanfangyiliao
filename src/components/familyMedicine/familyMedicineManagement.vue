@@ -12,8 +12,8 @@
 						<selftag v-model="bussTypeList" @reback="bussTypeSelect"></selftag>
 					</div>
 					<div class="family-medicine-management-middle-right">
-						<search></search>
-						<el-button type="primary">新增业务</el-button>
+						<div class="family-medicine-search"><search></search></div>
+						<div><el-button type="primary">新增业务</el-button></div>
 					</div>
 				</div>
 				<div class="family-medicine-management-content">
@@ -46,6 +46,7 @@
 				</div>
 			</div>
 		</div>
+		<addNewFrame :inData="testData" @reback="getAddData"></addNewFrame>
 	</div>
 </template>
 
@@ -57,7 +58,7 @@
 	import publicInfoModule from './../../public/publicComponents/publicInfoModule.vue'
 	import publicTime from './../../public/publicComponents/publicTime.vue'
 	import normalColumnChart from './../../public/publicComponents/normalColumnChart.vue'
-	
+	import addNewFrame from './../../public/publicComponents/addNewFrame.vue'
 	
 	// import {  } from '../../api/apiAll.js'
 	export default {
@@ -67,7 +68,8 @@
 			search,
 			publicInfoModule,
 			publicTime,
-			normalColumnChart
+			normalColumnChart,
+			addNewFrame
         },
         computed:{
 			...mapState({
@@ -77,6 +79,112 @@
 		},
 		data () {
 			return {
+				testData:{
+					show:true,
+					type:'1',//1是表示新增家医，2是表示新增在线诊室业务
+					businessTypeList:{//新增在线诊室业务类型 
+						default:{
+							label:'新增在线诊室业务类型1',
+							value:'1'
+						},
+						list:[
+							{
+								label:'新增在线诊室业务类型1',
+								value:'1'
+							},
+							{
+								label:'新增在线诊室业务类型2',
+								value:'2'
+							}
+						]
+					},
+					businessTemplate:{//新增家医业务模板
+						default:{
+							label:'新增家医业务模板1', 
+							value:'1'
+						},
+						list:[
+							{
+								label:'新增家医业务模板1',
+								value:'1'
+							},
+							{
+								label:'新增家医业务模板2',
+								value:'2'
+							}
+						]
+					},
+					businessName:{//业务名称
+						label:'kkkk'
+					},
+					businessPrice:{//业务定价
+						label:'6666'
+					},
+					departmentList:{//科室列表 
+							default:{
+								label:'',
+								value:'1'
+							},
+							list:[
+								{
+									label:'科室列表1',
+									value:'1'
+								},
+								{
+									label:'科室列表2',
+									value:'2'
+								}
+							]
+					}, 
+					doctorList:{//医生列表
+							default:[],
+							list:[
+								{
+									label:'医生1',
+									value:'1'
+								},
+								{
+									label:'医生2',
+									value:'2'
+								},
+								{
+									label:'医生3',
+									value:'3'
+								}   
+							]
+					},
+					businessDescription:'业务描述',//业务描述
+					servicePhone:'服务电话',//服务电话
+					agreement:{  
+						default:{
+							label:'协议1',
+							value:'1'
+						},
+
+						list:[
+							{label:'协议1',value:'1'},
+							{label:'协议2',value:'2'},
+						],
+						showContent:''
+					}
+				},
+
+
+
+
+
+
+
+
+
+
+
+/********************************************************* */
+
+
+
+
+
 				/**
 				 * bar 数据
 				 */
@@ -171,6 +279,11 @@
 			}
 		},
 		methods:{
+			getAddData(data){
+				console.log(data)
+			},
+
+			/****************** */
 			/**
 			 * bar 切换数据
 			 */
@@ -210,14 +323,18 @@
 	.family-medicine-management{
 
 	}
+	.family-medicine-management-top{
+		margin-bottom: 0.3rem;
+	}
 	.family-medicine-management-middle{
 		display: flex;
 	}
 	.family-medicine-management-middle > div{
 		flex: 1;
 	}
-	.family-medicine-management-middle-right{
-		
+	.family-medicine-management-middle-right{	
+		display: flex;
+		justify-content: space-around;	
 	}
 	.family-medicine-management-middle-right>div{
 		display: inline-block;
@@ -233,6 +350,10 @@
 	}
 	.part-two-head{
 		display: flex;
+		padding-top: 0.2rem;
+	}
+	.part-two-body{
+		padding-top: 0.2rem;
 	}
 	.part-two-head>div{
 		flex: 1;
