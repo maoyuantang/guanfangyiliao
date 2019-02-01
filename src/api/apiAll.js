@@ -1807,6 +1807,22 @@ export const queryPageByDoctorWeb = query => { //10.医生WEB查询评估模板�
         }
     })
 }
+
+
+
+export const getResultGraph = query => { //10.3.1.3 统计
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.getResultGraph,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
+
 export const doctorsByOrgCodeAndDeptId = query => { //1.22医院机构码和科室id获取医生集合
     const sign = postQueryHandle(query);
     return axios({
@@ -1885,3 +1901,4 @@ export const fetchMzOrderInfo = query => { //6.8.远程门诊订单列表弹框�
         }
     })
 }
+
