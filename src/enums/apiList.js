@@ -181,4 +181,5 @@ export default {
     fetchOrderInfo:'/m/v1/api/order/fetchOrderInfo',//6.7.家医系统中订单列表（WEB端使用）
     updateOrderServices:'/m/v1/api/order/updateOrderServices',//6.5.更新订单服务地址和服务时间
     fetchMzOrderInfo:'/m/v1/api/order/fetchMzOrderInfo',//6.8.远程门诊订单列表弹框数据（WEB端使用）
+    toolBusinessType:'/m/v1/api/basics/common/toolBusinessType',//1.21.14.业务类型
 }

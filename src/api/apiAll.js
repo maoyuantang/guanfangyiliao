@@ -1901,4 +1901,14 @@ export const fetchMzOrderInfo = query => { //6.8.远程门诊订单列表弹框�
         }
     })
 }
-
+export const toolBusinessType = query => { //1.21.14.业务类型
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolBusinessType,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

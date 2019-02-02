@@ -13,7 +13,7 @@
 					</div>
 					<div class="family-medicine-management-middle-right">
 						<div class="family-medicine-search"><search></search></div>
-						<div><el-button type="primary">新增业务</el-button></div>
+						<div><el-button type="primary" @click="addBuss">新增业务</el-button></div>
 					</div>
 				</div>
 				<div class="family-medicine-management-content">
@@ -60,7 +60,7 @@
 	import normalColumnChart from './../../public/publicComponents/normalColumnChart.vue'
 	import addNewFrame from './../../public/publicComponents/addNewFrame.vue'
 	
-	// import {  } from '../../api/apiAll.js'
+	import { stencilName } from '../../api/apiAll.js'
 	export default {
 		components:{
 			normalTab,
@@ -80,8 +80,8 @@
 		data () {
 			return {
 				testData:{
-					show:true,
-					type:'1',//1是表示新增家医，2是表示新增在线诊室业务
+					show:false,
+					type:'2',//1是表示新增家医，2是表示新增在线诊室业务 
 					businessTypeList:{//新增在线诊室业务类型 
 						default:{
 							label:'新增在线诊室业务类型1',
@@ -313,6 +313,26 @@
 				console.log(item)
 			},
 
+			/**
+			 * 新增业务
+			 */
+			addBuss(){
+				this.testData.show = true;
+			},
+
+			/**
+			 * 17.1获取所有业务模版名
+			 */
+			async stencilName(){
+				const res = await stencilName({token:this.userInfo.token});
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+					
+				}else{
+
+				}
+				return res;
+			},
 		},
 		async created(){
 
