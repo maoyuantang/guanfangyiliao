@@ -334,6 +334,7 @@
 				pageNum: 1,//页数
 				pageSize: 10,//条数
 				searchValue: "", //搜索框接收参数
+				// departmentId0: "",//科室id
 				departmentId: "",//科室id接收参数
 				businessType: "",//业务类型接收参数
 				selectType: "",//统计时筛选的类型
@@ -342,7 +343,7 @@
 				clinicId: '',//门诊业务编号
 				status: [],//状态（禁用按钮）
 				clickId: '',//表格被点击所在行的id
-
+				type:'MONTH', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天 
 
 				//getList2
 				string: "",//门诊订单号
@@ -644,9 +645,11 @@
 				this.getList1();
 				this.getList2();
 			},
-			getFilterTime(data) {
-				this.time0 = '';//待补充
-				this.time0 = '';//待补充
+			getFilterTime(data) {//统计		//时间选择器返回函数
+				console.log(data)
+				this.time0 = data.time[0];//统计筛选开始时间
+				this.time1 = data.time[1];//统计筛选结束时间
+				this.type = data.select.value
 				this.getList3();
 			},
 
@@ -881,23 +884,28 @@
 			//统计图表数据的获取
 			async getList3() {
 				console.log('统计接口还没出来')
-				// 
-				// let query = {
-				// 	token: this.userState.token
-				//	//筛选的时间条件参数待补充
-				// };
-				// const res = await searchClinic(query);
-				// if (res.data && res.data.errCode === 0) {
-				// 	console.log('统计图标数据+成功')
-				// 	this.adminTableData = res.data.body.data2.list;
-				// } else {
-				// 	//失败
-				// 	console.log('统计图标数据+失败')
-				// 	this.$notify.error({
-				// 		title: "警告",
-				// 		message: res.data.errMsg
-				// 	});
-				// }
+
+				let query = {
+					token: this.userState.token,
+					deptId: this.departmentId, //String false 科室ID 
+					starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
+					endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
+					type: this.type //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
+				};
+				console.log(query)
+				const res = await searchClinic(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('统计图标数据+成功')
+					console.log(res)
+					// this.adminTableData = res.data.body.data2.list;
+				} else {
+					//失败
+					console.log('统计图标数据+失败')
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
 			},
 
 			//新增门诊弹框
@@ -930,7 +938,7 @@
 				}
 			},
 			//获取新增门诊弹框内所选科室返回的id
-			getDepartment(data) {	
+			getDepartment(data) {
 				if (data) {
 					this.departmentId = data;
 					this.newClinic1();

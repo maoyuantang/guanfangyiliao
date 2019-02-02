@@ -34,7 +34,7 @@
                     {name:'按月统计',value:"MONTH"},
                     {name:'按年统计',value:"YEAR"}
                 ],
-                defaultSelect:{name:'按月统计'}
+                defaultSelect:{name:'按月统计',value:'MONTH'}
 			}
         },
         watch:{
