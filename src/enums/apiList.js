@@ -182,4 +182,6 @@ export default {
     updateOrderServices:'/m/v1/api/order/updateOrderServices',//6.5.更新订单服务地址和服务时间
     fetchMzOrderInfo:'/m/v1/api/order/fetchMzOrderInfo',//6.8.远程门诊订单列表弹框数据（WEB端使用）
     toolBusinessType:'/m/v1/api/basics/common/toolBusinessType',//1.21.14.业务类型
+    orderYcmzCharts:'/m/v1/api/order/orderYcmzCharts',//6.9.远程门诊订单统计柱状图
+    orderRxCharts:'/m/v1/api/order/orderRxCharts',//6.10.处方订单统计柱状图
 }

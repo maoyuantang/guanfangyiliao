@@ -1912,3 +1912,25 @@ export const toolBusinessType = query => { //1.21.14.业务类型
         }
     })
 }
+export const orderYcmzCharts = query => { //6.9.远程门诊订单统计柱状图
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.orderYcmzCharts,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const orderRxCharts = query => { //6.10.处方订单统计柱状图
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.orderRxCharts,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

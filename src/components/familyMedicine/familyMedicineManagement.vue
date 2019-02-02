@@ -46,7 +46,7 @@
 				</div>
 			</div>
 		</div>
-		<addNewFrame :inData="testData" @reback="getAddData" @getAgreementSelect="getAgreementSelect"></addNewFrame>
+		<addNewFrame :inData="testData" @reback="getAddData" @getAgreementSelect="getAgreementSelect" @department="getSelectDepartment"></addNewFrame>
 	</div>
 </template>
 
@@ -60,7 +60,7 @@
 	import normalColumnChart from './../../public/publicComponents/normalColumnChart.vue'
 	import addNewFrame from './../../public/publicComponents/addNewFrame.vue'
 	
-	import { stencilName } from '../../api/apiAll.js'
+	import { stencilName, toolBusinessType } from '../../api/apiAll.js'
 	export default {
 		components:{
 			normalTab,
@@ -81,7 +81,7 @@
 			return {
 				testData:{
 					show:false,
-					type:'2',//1是表示新增家医，2是表示新增在线诊室业务 
+					type:'2',//1是表示新增家医，2是表示新增在线诊室业务  
 					businessTypeList:{//新增在线诊室业务类型 
 						default:{
 							label:'新增在线诊室业务类型1',
@@ -98,7 +98,7 @@
 							}
 						]
 					},
-					businessTemplate:{//新增家医业务模板
+					businessTemplate:{//新增家医业务模板  
 						default:{
 							label:'新增家医业务模板1', 
 							value:'1'
@@ -317,22 +317,101 @@
 			 * 新增业务
 			 */
 			addBuss(){
-				this.testData.show = true;
+				Promise.all([
+					this.getToolBusinessType(),
+					this.getStencilName()
+				])
+				.then(res=>{
+					console.log(res)
+					for(const i of res){
+						if(!i){
+							console.log('defaile');
+							return;
+						}
+					}
+					this.testData.show = true;
+				})
+				.catch(err=>{
+
+				})
+				
 			},
 
 			/**
 			 * 17.1获取所有业务模版名
 			 */
-			async stencilName(){
+			async getStencilName(){
 				const res = await stencilName({token:this.userInfo.token});
 				console.log(res);
 				if(res.data&&res.data.errCode===0){
-					
+					const modulesMap = [
+                        {
+                            text:'家庭医生',
+                            en:'JTYS'
+                        },
+                        {
+                            text:'上门服务',
+                            en:'SMFW'
+                        },
+                        {
+                            text:'智能陪检',
+                            en:'ZNPJ'
+                        },
+                        {
+                            text:'远程监护',
+                            en:'YCJH'
+                        },
+                        {
+                            text:'在线咨询',
+                            en:'ZXZX'
+                        },
+                        {
+                            text:'家用设备',
+                            en:'JYSB'
+                        },
+                        {
+                            text:'陪护服务',
+                            en:'PHFW'
+                        }
+					];
+					this.testData.businessTemplate.list = res.data.body.map(item=>{
+						for(const i of modulesMap){
+							if(i.en === item)return {label:i.text,value:item};
+						}
+					});
+					return true;
 				}else{
-
+					return false;
 				}
-				return res;
+				
 			},
+
+			/**
+			 * 获取 1.21.14.业务类型
+			 */
+			async getToolBusinessType(){
+				const res = await toolBusinessType({token:this.userInfo.token});
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+					const middle = res.data.body.map(item=>{
+						item.label = item.name;
+						item.value = item.id;
+						return item;
+					});
+					middle.push()
+					this.testData.businessTypeList.list = middle;
+					return true;
+				}else{
+					return false;
+				}
+				
+			},
+			/**
+			 * 获取选择科室
+			 */
+			getSelectDepartment(data){
+				console.log(data);
+			}
 		},
 		async created(){
 
