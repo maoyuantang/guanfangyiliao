@@ -12,15 +12,26 @@
             <div class="input-item-div" v-if="inData.type==='2'">
                 <span class="input-item-name">业务类型:</span>
                 <div class="input-item-value-div">
-                    <el-select v-model="inData.businessTypeList.default.value" clearable placeholder="请选择" size="mini">
-                        <el-option
-                        v-for="item in inData.businessTypeList.list||[]"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                   
+                    <div class="particular-handle">
+                        <el-select v-model="inData.businessTypeList.default.value" clearable placeholder="请选择" size="mini" v-if="inData.businessTypeList.default.value!=='-1'">
+                            <el-option
+                            v-for="item in inData.businessTypeList.list||[]"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    <el-input
+                            placeholder="请输入内容"
+                            size="mini"
+                            v-else
+                            @mouseover.native="showClose=true"
+                            @mouseout.native="showClose=false"
+                            v-model="inData.businessTypeList.default.label">
+                        </el-input>
+                        <i class="iconfont particular-handle-icon" @mouseover="showClose=true" :style="{display:showClose?'inline-block':'none'}" @click="changeStatus" v-if="inData.businessTypeList.default.value==='-1'">&#xe7b7;</i>
+                        <!-- <span >454</span> -->
+                    </div>
                 </div>
             </div>
             <!-- 新增在线诊室业务类型 -->
@@ -195,6 +206,7 @@ export default {
   },
   data() {
     return {
+        showClose:false,
         info:{
             businessType1:'',//业务类型1,1表示新增家医
             businessType2:'',//业务类型2，2表示新增在线诊室业务
@@ -249,64 +261,72 @@ export default {
     };
   },
   methods:{
-    ok(){
-        // this.$emit("reback",'666');
-        // setTimeout(() => {
-        //     this.$Modal.remove();
-        //     this.$Message.info('Asynchronously close the dialog box');
-        // }, 2000);
-    },
-    cancel(){},
-    saveInfo(){
-        // const resData = {};
-        // if(this.inData.type==='1'){//新增在线诊室
-        //     resData.businessType = this.info.businessType1;
-        //     resData.businessName = this.info.businessName;
-        //     resData.businessPrice = this.info.businessPrice;
-        //     resData.department = this.info.department;
-        //     resData.doctors = this.info.doctors;
-        //     const isPass = [sensitiveWordCheck(resData.businessName),sensitiveWordCheck(resData.businessPrice)];
-        //     for(const i of isPass){
-        //         if(!i.ok){
-        //             this.$notify({
-        //                 title: '输入验证失败',
-        //                 message: i.msg,
-        //                 type: 'error'
-        //             });
-        //             return;
-        //         }
-        //     }
-        // }else if(this.inData.type==='2'){//新增家医业务
-        //     resData.businessType = this.info.businessType2,
-        //     resData.businessTemplate = this.info.businessTemplate,
-        //     resData.businessName = this.info.businessName,
-        //     resData.businessPrice = this.info.businessPrice,
-        //     resData.department = this.info.department,
-        //     resData.doctors = this.info.doctors
-        //     console.log(resData)
-        // }else{
-        //     console.log('传入参数格式错误');
-        //     return;
-        // }
-        // resData.businessDescription = this.info.businessDescription;
-        // resData.selectAgreement = this.info.selectAgreement;
-        // resData.servicePhone = this.info.servicePhone;
-        this.$emit("reback",this.inData);
-        // this.inData.show = false;
-    },
-    chooseAgreement(item,index){
-        this.inData.agreement.default = item;
-        this.$emit("getAgreementSelect",{item , index});
+        test(){console.log(555)},
+        ok(){
+            // this.$emit("reback",'666');
+            // setTimeout(() => {
+            //     this.$Modal.remove();
+            //     this.$Message.info('Asynchronously close the dialog box');
+            // }, 2000);
+        },
+        changeStatus(){
+            this.inData.businessTypeList.default={label:'',value:''}
+        },
+        cancel(){},
+        saveInfo(){
+            // const resData = {};
+            // if(this.inData.type==='1'){//新增在线诊室
+            //     resData.businessType = this.info.businessType1;
+            //     resData.businessName = this.info.businessName;
+            //     resData.businessPrice = this.info.businessPrice;
+            //     resData.department = this.info.department;
+            //     resData.doctors = this.info.doctors;
+            //     const isPass = [sensitiveWordCheck(resData.businessName),sensitiveWordCheck(resData.businessPrice)];
+            //     for(const i of isPass){
+            //         if(!i.ok){
+            //             this.$notify({
+            //                 title: '输入验证失败',
+            //                 message: i.msg,
+            //                 type: 'error'
+            //             });
+            //             return;
+            //         }
+            //     }
+            // }else if(this.inData.type==='2'){//新增家医业务
+            //     resData.businessType = this.info.businessType2,
+            //     resData.businessTemplate = this.info.businessTemplate,
+            //     resData.businessName = this.info.businessName,
+            //     resData.businessPrice = this.info.businessPrice,
+            //     resData.department = this.info.department,
+            //     resData.doctors = this.info.doctors
+            //     console.log(resData)
+            // }else{
+            //     console.log('传入参数格式错误');
+            //     return;
+            // }
+            // resData.businessDescription = this.info.businessDescription;
+            // resData.selectAgreement = this.info.selectAgreement;
+            // resData.servicePhone = this.info.servicePhone;
+            this.$emit("reback",this.inData);
+            // this.inData.show = false;
+        },
+        chooseAgreement(item,index){
+            this.inData.agreement.default = item;
+            this.$emit("getAgreementSelect",{item , index});
 
+        }
+    },
+    props:[
+        'inData'
+    ],
+    created() {
+            this.inData.businessTypeList.list.push({
+                label:'自定义',
+                value:'-1'
+            })
+    },
+    beforeDestroy(){
     }
-  },
-  props:[
-    'inData'
-  ],
-  created() {
-  },
-  beforeDestroy(){
-  }
 };
 </script>
 
@@ -408,6 +428,20 @@ export default {
     }
     .save-btn{
         text-align: center;
+    }
+    .particular-handle>.el-input{
+        display: inline-block;
+        width: auto;
+    }
+    /* .particular-handle>.el-input:hover .particular-handle-icon{
+        display: inline-block;
+    } */
+    .particular-handle-icon{
+        transform:translate( -180%);
+        display: inline-block;
+        color:#909399;
+        font-size: 12px;
+        cursor: pointer;
     }
 </style>
 <!--
