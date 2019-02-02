@@ -132,7 +132,7 @@
 	import normalColumnChart from "../public/publicComponents/normalColumnChart.vue";
 	import search from "../public/publicComponents/search.vue";
 	import statisticsWay from "../public/publicComponents/statisticsWay.vue";
-	
+
 	export default {
 		components: {
 			selftag,
@@ -160,7 +160,7 @@
 				adminType: "",//协作科室
 				statisticsType: "DEPT",//统计筛选某类
 				departmentsId: "",//弹框内参数
-				time:'',
+				time: '',
 				startHz: {
 					type: "SPECIALIST",
 					deptId: " ",
@@ -203,15 +203,15 @@
 				},
 				//申请科室统计图
 				drawData: {
-					dataAxis: ['点', '击', '柱', '子','点', '击', '柱', '子','点', '击', '柱', '子'], //每个柱子代表的类名
-					data: [220, 182, 191, 234,220, 182, 191, 234,220, 182, 191, 234], //具体数值
+					dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
+					data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
 					title: "申请科室统计图", //图表标题
 					// totalNumber: "555"
 				},
 				//发起科室统计图
 				drawDataStart: {
-					dataAxis: ['点', '击', '柱', '子','点', '击', '柱', '子','点', '击', '柱', '子'], //每个柱子代表的类名
-					data: [220, 182, 191, 234,220, 182, 191, 234,220, 182, 191, 234], //具体数值
+					dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
+					data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
 					title: "发起科室统计图", //图表标题
 					// totalNumber: "555"
 				},
@@ -668,7 +668,7 @@
 							value: text.deptId
 						});
 					});
-					
+
 				} else {
 					//失败
 					this.$notify.error({
@@ -693,6 +693,7 @@
 							name: text.orgName,
 							value: text.orgCode
 						});
+						
 					});
 					console.log(res)
 				} else {
@@ -817,7 +818,7 @@
 	.cooperation .doc-title {
 		display: flex;
 		display: -webkit-flex;
-		justify-content:space-evenly;
+		justify-content: space-evenly;
 		align-items: baseline;
 		margin-bottom: 52px;
 	}
