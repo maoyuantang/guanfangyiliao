@@ -47,11 +47,12 @@
 		<div class="cooperation" v-else>
 			<div class="doc-title">
 				<selftag :inData="oTab4" @reback="getOTab4"></selftag>
-				<div class="statistics-way">
+				<statisticsWay1 @reBack="getTjData"></statisticsWay1>
+				<!-- <div class="statistics-way">
 					<span>时间段：</span>
-					<el-date-picker v-model="time" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期">
+						<el-date-picker v-model="time" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期">
 					</el-date-picker>
-				</div>
+				</div> -->
 				<el-button class="startConsul" type="text" @click="centerDialogVisible = true">发起协作</el-button>
 			</div>
 			<div>
@@ -132,6 +133,7 @@
 	import normalColumnChart from "../public/publicComponents/normalColumnChart.vue";
 	import search from "../public/publicComponents/search.vue";
 	import statisticsWay from "../public/publicComponents/statisticsWay.vue";
+	import statisticsWay1 from "../public/publicComponents/statisticsWay1.vue";
 
 	export default {
 		components: {
@@ -141,6 +143,7 @@
 			normalColumnChart,
 			search,
 			statisticsWay,
+			statisticsWay1,
 			chat
 		},
 		data() {
@@ -818,7 +821,7 @@
 	.cooperation .doc-title {
 		display: flex;
 		display: -webkit-flex;
-		justify-content: space-evenly;
+		/* justify-content: space-evenly; */
 		align-items: baseline;
 		margin-bottom: 52px;
 	}
