@@ -1991,3 +1991,36 @@ export const toolSynergyStatus = query => { //1.21.8.协作状态
         }
     })
 }
+export const toolMedicalType = query => { //1.21.26.分级诊疗-类型
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolMedicalType,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolMedicalGrading = query => { //1.21.27.分级诊疗-分级
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolMedicalGrading,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolReferralType = query => { //1.21.28.双向转诊-方向
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolReferralType,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
