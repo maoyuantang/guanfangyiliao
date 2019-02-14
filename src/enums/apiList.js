@@ -184,4 +184,9 @@ export default {
     toolBusinessType:'/m/v1/api/basics/common/toolBusinessType',//1.21.14.业务类型
     orderYcmzCharts:'/m/v1/api/order/orderYcmzCharts',//6.9.远程门诊订单统计柱状图
     orderRxCharts:'/m/v1/api/order/orderRxCharts',//6.10.处方订单统计柱状图
+    businessType:'/m/v1/api/family/family/businessType',//17.3(管理、APP患者)获取所有业务类型
+    addBusiness:'/m/v1/api/family/family/addBusiness',//17.4新增业务
+    stencilModel:'/m/v1/api/family/family/stencilModel',//17.2传入模版名获取模版
+    updateHospitalRel:'/m/v1/api/basics/hospital/updateHospitalRel',//8.12.更新医院上下级医院关系
+    toolSynergyStatus:'/m/v1/api/basics/common/toolSynergyStatus',//1.21.8.协作状态
 }

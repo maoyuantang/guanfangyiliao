@@ -134,7 +134,7 @@
                                 <img src="../../assets/img/a-6.png" alt="">
                                 <i class="iconfont cancel-doctor" >&#xe611;</i>
                             </div>
-                            <p>{{inData.doctorList.list.find(i=>i.value===item).label}}</p>
+                            <p>{{inData.doctorList.list.find(i=>i.value===item)&&inData.doctorList.list.find(i=>i.value===item).label}}</p>
                         </div>
                     </div>
                 </div>
@@ -260,6 +260,15 @@ export default {
         }
     };
   },
+  computed:{
+    //   testData(){
+    //     this.inData.businessTypeList.list.push({
+    //         label:'自定义',
+    //         value:'-1'
+    //     });
+        
+    //   }
+  },
   methods:{
         test(){console.log(555)},
         ok(){
@@ -274,41 +283,7 @@ export default {
         },
         cancel(){},
         saveInfo(){
-            // const resData = {};
-            // if(this.inData.type==='1'){//新增在线诊室
-            //     resData.businessType = this.info.businessType1;
-            //     resData.businessName = this.info.businessName;
-            //     resData.businessPrice = this.info.businessPrice;
-            //     resData.department = this.info.department;
-            //     resData.doctors = this.info.doctors;
-            //     const isPass = [sensitiveWordCheck(resData.businessName),sensitiveWordCheck(resData.businessPrice)];
-            //     for(const i of isPass){
-            //         if(!i.ok){
-            //             this.$notify({
-            //                 title: '输入验证失败',
-            //                 message: i.msg,
-            //                 type: 'error'
-            //             });
-            //             return;
-            //         }
-            //     }
-            // }else if(this.inData.type==='2'){//新增家医业务
-            //     resData.businessType = this.info.businessType2,
-            //     resData.businessTemplate = this.info.businessTemplate,
-            //     resData.businessName = this.info.businessName,
-            //     resData.businessPrice = this.info.businessPrice,
-            //     resData.department = this.info.department,
-            //     resData.doctors = this.info.doctors
-            //     console.log(resData)
-            // }else{
-            //     console.log('传入参数格式错误');
-            //     return;
-            // }
-            // resData.businessDescription = this.info.businessDescription;
-            // resData.selectAgreement = this.info.selectAgreement;
-            // resData.servicePhone = this.info.servicePhone;
             this.$emit("reback",this.inData);
-            // this.inData.show = false;
         },
         chooseAgreement(item,index){
             this.inData.agreement.default = item;
@@ -320,10 +295,11 @@ export default {
         'inData'
     ],
     created() {
-            this.inData.businessTypeList.list.push({
-                label:'自定义',
-                value:'-1'
-            })
+        // this.inData.businessTypeList.list.push({
+        //     label:'自定义',
+        //     value:'-1'
+        // });
+       
     },
     beforeDestroy(){
     }

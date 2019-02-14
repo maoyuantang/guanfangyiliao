@@ -1934,3 +1934,60 @@ export const orderRxCharts = query => { //6.10.处方订单统计柱状图
         }
     })
 }
+export const businessType = query => { //17.3(管理、APP患者)获取所有业务类型
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.businessType,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const addBusiness = (query, data) => {//17.4新增业务
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.addBusiness,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const stencilModel = query => { //17.2传入模版名获取模版
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.stencilModel,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const updateHospitalRel = (query, data) => {//8.12.更新医院上下级医院关系
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.updateHospitalRel,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolSynergyStatus = query => { //1.21.8.协作状态
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolSynergyStatus,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

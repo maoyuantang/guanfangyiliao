@@ -146,7 +146,7 @@
 <script>
 import { 
     fetchHospitalList, fetchAllSubSystem ,fetchHospitalDepts,fetchHospitalRel,getSettingsList,initializeTheCreationOfHospital,deleteHospitalDept,
-    createHospitalDept, updateSubSystemRel, updateHospital, settingsUpdate, getConsultationTree, updateConsultationTree
+    createHospitalDept, updateSubSystemRel, updateHospital, settingsUpdate, getConsultationTree, updateConsultationTree, updateHospitalRel
 } from "../../api/apiAll.js"; 
 import { mapState } from "vuex";
 import search from "../../public/publicComponents/search.vue";
@@ -318,6 +318,24 @@ export default {
                         });
                     }
                 },
+                superOrgNum:async data=>{
+                    console.log('make');
+                    const postData = [
+                        {token:this.userState.token},
+                        {
+                            hospitalId:item.tag.value.id,
+                            superHospitalId:item.select.map(v=>v.id)
+                        }
+                    ];
+                    const res = await updateHospitalRel(...postData);
+                    console.log(res);
+                    if(res.data && res.data.errCode === 0){
+                        console.log('success');
+                        this.getTableData();
+                    }else{
+                        console.log('error')
+                    }
+                },
                 teamNum:async data =>{
                     const setMap = (arr,tag) => {//拷贝原数组，找出被选值
                         return arr.map(item=>{
@@ -445,6 +463,7 @@ export default {
                         });
                     })
                 },
+                
                 default:data=>{}
             }
             if(table[item.tag.type]){
@@ -463,6 +482,7 @@ export default {
          * 获取表格数据
          */
         async getTableData(data){
+            console.log(1)
             const options = {
                 token: this.userState.token,
                 search: "",
@@ -589,6 +609,7 @@ export default {
          * 上级医院，下级医院(后端说这两个其实就是一个玩意)
          */
         async superOrgNum(item){
+            console.log('enter')
             const res = await fetchHospitalRel({
                 hospitalId:item.value.id,
                 token:this.userState.token
