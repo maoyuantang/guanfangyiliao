@@ -427,7 +427,7 @@
 							]
 						},
 						{
-							more: false,
+							more: true,
 							title: '类型',
 							list: [
 								{

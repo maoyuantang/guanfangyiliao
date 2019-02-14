@@ -189,6 +189,7 @@
   import {
     // 已使用接口
     //筛选接口
+		toolDept,//1.21.1.管理  科室列表
 
     //未使用接口
     fetchHospitalDepts,//2.2.获取医院科室列表
@@ -278,7 +279,7 @@
               ]
             },
             {
-              more: false,
+              more: true,
               title: '类型',
               list: [
                 {
@@ -288,7 +289,7 @@
               ]
             },
             {
-              more: false,
+              more: true,
               title: '分级',
               list: [
                 {
@@ -391,7 +392,51 @@
       getNav(data) {
         console.log(data)
       },
-      //筛选返回值管理端）
+      
+      //筛选列表  管理端
+      //1.21.1.科室工具栏 (管理)
+			async getDepartment(oindex) {
+				let _this = this;
+				let query = {
+					token: this.userState.token,
+					type: 'MANAGE'
+				};
+				const res = await toolDept(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('1.21.1.科室工具栏 +成功')
+					console.log(res.data.body);
+					$.each(res.data.body, function (index, text) {
+            if (text.length > 6) {
+              _this.onLineList.topFlag[index].more = true;
+            } else {
+              _this.onLineList.topFlag[index].more = false;
+            }
+            //双向转诊   科室   筛选列表
+						_this.onLineList.topFlag[0].list.push({
+							text: text.name,
+							value: text.id
+						});
+						//双向转诊   类型   筛选列表
+						_this.onLineList.topFlag[1].list.push({
+							text: text.name,
+							value: text.id
+            });
+            //双向转诊   分级   筛选列表
+						_this.onLineList.topFlag[2].list.push({
+							text: text.name,
+							value: text.id
+						});
+					});
+				} else {
+					console.log('1.21.1.科室工具栏 +失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+        }
+      },
+      //筛选返回值  管理端
       getFilter0(data) {//科室筛选
         this.departmentId = data.index.value;
         console.log(this.departmentId)
@@ -508,6 +553,7 @@
       }
     },
     async created() {
+      this.getDepartment()
       this.count()
     }
   }
