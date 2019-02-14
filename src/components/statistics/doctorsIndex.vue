@@ -170,12 +170,12 @@
 		<!-- 为后面的表格做准备 没心思封装组件 -->
 		<div class="doctor-table">
 			<div class="table-border">
-				<infoListHead :inData="todayFollowup" @reBack="getHistoryFollowup"></infoListHead>
-				<newModuleTable v-for="i in 4" :key="i">
-					<el-button size="mini" >查看</el-button>
-					<el-button size="mini" >查看</el-button>
-					<el-button size="mini" >查看</el-button>
-					<el-button size="mini" >查看</el-button>
+				<infoListHead :inData="queryByManagerPage" @reBack="getHistoryFollowup"></infoListHead>
+				<newModuleTable v-for="(item,index) in queryByManagerPage.data" :key="index" :inData="item">
+					<el-button size="mini" type="warning" plain>查看档案</el-button>
+					<el-button size="mini" type="primary" plain>转诊详情</el-button>
+					<el-button size="mini" type="success" plain>编辑</el-button>
+					<el-button size="mini" type="danger" plain>删除</el-button>
 				</newModuleTable>
 			</div>
 		</div>
@@ -195,7 +195,7 @@
 	import historyAlert from '../../public/publicComponents/historyAlert.vue'
 	import { 
 		todayPlan, todayAlert, planHistory , todayFollowup , alertHistory , historyFollowup ,queryByDoctorPage, onlineRoomsByDoctor,
-		queryByManagerPage	
+		queryByManagerPage, synergyPage	
 	} from '../../api/apiAll.js'
 	
 	
@@ -702,7 +702,7 @@
 					},
 					{
 						code:'30000',//远程协作
-						funs:[function(){console.log('暂时还没写')}]
+						funs:[this.getSynergyPage]
 					},
 					{
 						code:'40000',//智能随访
@@ -803,16 +803,16 @@
 			/**
 			 * 获取远程会诊列表
 			 */
-			// async getQueryByDoctorPage(){
-			// 	// console.log('enter')
-			// 	const res = await queryByDoctorPage({
-			// 		token:this.userInfo.token,
-			// 		dateType:'TODAY',
-			// 		pageNum:1,
-			// 		pageSize:3
-			// 	});
-			// 	console.log(res);
-			// },
+			async getQueryByDoctorPage(){
+				// console.log('enter')
+				const res = await queryByDoctorPage({
+					token:this.userInfo.token,
+					dateType:'TODAY',
+					pageNum:1,
+					pageSize:3
+				});
+				console.log(res);
+			},
 
 			/**
 			 * 获取远程门诊信息
@@ -861,10 +861,13 @@
 						// 	"followupTitle": "第个随访模板",
 						// 	"followupPlanId": "63b8ce173ac94818a3cfc91fd327f7e2"
 						// },
-					this.queryByManagerPage = res.data.body.data2.list.map(item=>{
+					this.queryByManagerPage.data = res.data.body.data2.list.map(item=>{
 						item.userName = item.doctor;
-						
-					})
+						item.num = item.consultationId;
+						item.time = item.applicationTime.split('.')[0];
+						return item;
+					});
+					console.log(this.queryByManagerPage)
 				}else{
 					this.$notify({
 						title: '失败',
@@ -872,6 +875,18 @@
 						type: 'error'
 					});
 				}
+			},
+
+			/**
+			 * 获取医生协作列表
+			 */
+			async getSynergyPage(){
+				const res = await synergyPage({
+					token:this.userInfo.token,
+					pageNum:1,
+					pageSize:3,
+				});
+				console.log(res)
 			},
 			/********* */
 			getReData(data){
