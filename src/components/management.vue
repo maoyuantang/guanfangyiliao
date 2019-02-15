@@ -1,6 +1,11 @@
 <!--终端管理系统-->
 <template>
 	<div class="management">
+		<!--弹框1  查看 -->
+		<el-dialog title="" :visible.sync="isShowmoveUser" width="40%" center>
+		</el-dialog>
+
+
 		<!-- 管理端 -->
 		<div v-if="$store.state.user.viewRoot.now.name==='manager'">
 			<div>
@@ -16,27 +21,28 @@
 							<search @searchValue="adminSearchOne"></search>
 						</div>
 						<!-- <div style="display:flex;justify-content: flex-start;align-items: center;"> -->
-							<selftag v-model="onLineList.topFlag[1]" @reback="getFilter1"></selftag>
-							<selftag v-model="onLineList.topFlag[2]" @reback="getFilter2"></selftag>
+						<selftag v-model="onLineList.topFlag[1]" @reback="getFilter1"></selftag>
+						<selftag v-model="onLineList.topFlag[2]" @reback="getFilter2"></selftag>
 						<!-- </div> -->
 					</div>
 					<!-- 表体 -->
 					<div class="dataBody">
 						<el-table :data="manageBodyData" border style="width: 100%">
 							<el-table-column prop="name" label="科室"></el-table-column>
-							<el-table-column fixed prop="date" label="查房医生"></el-table-column>
-							<el-table-column prop="province" label="病区"></el-table-column>
-							<el-table-column prop="city" label="床号"></el-table-column>
-							<el-table-column prop="address" label="病人"></el-table-column>
-							<el-table-column prop="zip" label="病人ID"></el-table-column>
-							<el-table-column prop="zip" label="最后查看时间"></el-table-column>
-							<el-table-column prop="zip" label="基本信息"></el-table-column>
-							<el-table-column prop="zip" label="医嘱"></el-table-column>
-							<el-table-column prop="zip" label="体征报表"></el-table-column>
-							<el-table-column prop="zip" label="检验检查"></el-table-column>
-							<el-table-column prop="zip" label="影像"></el-table-column>
-							<el-table-column prop="zip" label="医嘱执行"></el-table-column>
-							<el-table-column prop="zip" label="录音录像"></el-table-column>
+							<el-table-column fixed prop="date" label="类型"></el-table-column>
+							<el-table-column prop="province" label="使用者"></el-table-column>
+							<el-table-column prop="city" label="账号"></el-table-column>
+							<el-table-column prop="address" label="软件系统"></el-table-column>
+							<el-table-column prop="zip" label="软件版本"></el-table-column>
+							<el-table-column prop="zip" label="最近登录时间"></el-table-column>
+							<el-table-column prop="zip" label="使用频率"></el-table-column>
+							<el-table-column prop="zip" label="联网状态"></el-table-column>
+							<el-table-column prop="zip" label="总使用时长"></el-table-column>
+							<el-table-column fixed="right" label="操作">
+								<template slot-scope="scope">
+									<el-button @click="viewFile(scope.row)" type="text" size="small">查看</el-button>
+								</template>
+							</el-table-column>
 						</el-table>
 					</div>
 				</div>
@@ -94,9 +100,8 @@
 	import {
 		// 已使用接口
 		//筛选接口
-
-		//未使用接口
-		fetchHospitalDepts,//2.2.获取医院科室列表
+		toolDept,//1.21.1.管理  科室列表
+		toolMedicalType,//1.21.26.分级诊疗-类型
 	} from "../api/apiAll.js";
 	//引入组件
 	import normalTab from '../public/publicComponents/normalTab.vue'
@@ -118,55 +123,42 @@
 		},
 		data() {
 			return {
+				//管理1表 查看  弹框
+				isShowmoveUser: false,//显示转诊记录
 
-				//统计
-				//申请科室统计图
-				monthToYear: [],
-				drawData: {
-					dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-					data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-					title: "申请科室统计图", //图表标题
-					totalNumber: "555"
-				},
-				//发起科室统计图
-				drawDataStart: {
-					dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-					data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-					title: "发起科室统计图", //图表标题
-					totalNumber: "555"
-				},
 
-				// 常用参数
+				//筛选返回值接收
+				//管理1端  筛选工具栏  筛选返回值  接收参数
+				departmentId: "",//筛选科室id   selftag
+				typeId: "",//筛选类型id   selftag
+				area: "",//区域id    selftag
+				searchValue: "",//返回搜索框输入   search
+				//管理统计端  筛选工具栏  统计筛选返回值  接收参数
 				time0: "",///统计筛选开始时间
 				time1: "",//统计筛选结束时间
 				type: 'MONTH', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天 
-				doctorDate: '',//接收医生端的日期筛选
+				//医生端  筛选工具栏  日期筛选返回值  接收参数
+				// doctorDate: '',//日期筛选
 
-				// 表格参数（自定义）
-				docTableData: [], //医生端列表
+				// element
 
-
-				//组件参数
-				departmentId: "",//科室id      筛选组件   selftag
-				typeId: "",//类型id   筛选组件   selftag
-				gradeId: "",//分级id   筛选组件   selftag
-				searchValue: "",//搜索框   搜索组件   search
+				// 必备参数
 				time: null, // 时间筛选组件    statisticsWay
-
+				//管理切换（复用组件 ）
 				navInfo: {
 					i: 0,
 					list: [
 						{
-							en: 'Mobile terminal management',//选项英文，类型 string
+							en: 'MMOBILE TERMINAL MANAGEMENT',//选项英文，类型 string
 							zh: '移动终端管理'//选项中文，类型string
 						},
 						{
-							en: 'statistics',
+							en: 'STATISTICS',
 							zh: '统计'
 						},
 					]
 				},
-				//在线诊室管理 数据
+				//筛选工具栏  管理1（自定义）
 				onLineList: {
 					topFlag: [
 						{
@@ -180,18 +172,8 @@
 							]
 						},
 						{
-							more: false,
+							more: true,
 							title: '类型',
-							list: [
-								{
-									text: '移动查房终端',
-									value: ''
-								}
-							]
-						},
-						{
-							more: false,
-							title: '区域',
 							list: [
 								{
 									text: '测试',
@@ -199,6 +181,16 @@
 								}
 							]
 						},
+						{
+							more: true,
+							title: '区域',
+							list: [
+								{
+									text: '测试',
+									value: ''
+								}
+							]
+						}
 					],
 				},
 				//统计 数据
@@ -216,7 +208,6 @@
 						},
 					]
 				},
-
 				oTab4: {
 					more: false,
 					title: "日期",
@@ -231,39 +222,44 @@
 						}
 					]
 				},
-
-				// element组件参数
-
-				// 管理表体
-				manageBodyData: [{
-					date: '2016-05-03',
-					name: '王小虎',
-					province: '上海',
-					city: '普陀区',
-					address: '上海市普陀区金沙江路 1518 弄',
-					zip: 200333
-				}, {
-					date: '2016-05-02',
-					name: '王小虎',
-					province: '上海',
-					city: '普陀区',
-					address: '上海市普陀区金沙江路 1518 弄',
-					zip: 200333
-				}, {
-					date: '2016-05-04',
-					name: '王小虎',
-					province: '上海',
-					city: '普陀区',
-					address: '上海市普陀区金沙江路 1518 弄',
-					zip: 200333
-				}, {
-					date: '2016-05-01',
-					name: '王小虎',
-					province: '上海',
-					city: '普陀区',
-					address: '上海市普陀区金沙江路 1518 弄',
-					zip: 200333
-				}]
+				// 管理表体（自定义组件 ）
+				manageBodyData: [
+					{
+						date: '2016-05-03',
+						name: '王小虎',
+						province: '上海',
+						city: '普陀区',
+						address: '上海市普陀区金沙江路 1518 弄',
+						zip: 200333
+					}
+				],
+				//统计
+				//申请科室统计图
+				monthToYear: [],
+				drawData: {
+					dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
+					data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
+					title: "申请科室统计图", //图表标题
+					totalNumber: "555"
+				},
+				//发起科室统计图
+				drawDataStart: {
+					dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
+					data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
+					title: "发起科室统计图", //图表标题
+					totalNumber: "555"
+				},
+				//医生端列表（自定义组件 ）
+				docTableData: [
+					{
+						date: '2016-05-03',
+						name: '王小虎',
+						province: '上海',
+						city: '普陀区',
+						address: '上海市普陀区金沙江路 1518 弄',
+						zip: 200333
+					}
+				],
 			}
 		},
 		computed: {
@@ -275,11 +271,10 @@
 			}),
 		},
 		methods: {
-			//查房、统计、切换插件返回值（管理端）
-			getNav(data) {
-				console.log(data)
-			},
-			//筛选返回值管理端）
+			//自调用组件函数
+			//终端管理、统计、切换插件返回值（管理端）
+			getNav(data) { console.log(data) },
+			//筛选返回值  管理端
 			getFilter0(data) {//科室筛选
 				this.departmentId = data.index.value;
 				console.log(this.departmentId)
@@ -291,12 +286,13 @@
 				// this.getList1();
 			},
 			getFilter2(data) {//区域筛选
-				this.typeId = data.index.value;
-				console.log(this.typeId)
+				this.area = data.index.value;
+				console.log(this.area)
 				// this.getList1();
 			},
 			adminSearchOne(data) {//搜索（筛选右边）
 				this.searchValue = data;
+				console.log(this.searchValue)
 				// this.getList1();
 			},
 			getFilterTime(data) {//统计		//时间选择器返回函数
@@ -306,16 +302,125 @@
 				this.type = data.select.value
 				this.count();
 			},
-			// 点击表体返回行信息
-			handleClick(row) {
-				console.log(row);
+
+
+
+			//筛选列表  管理端
+			//1.21.1.科室筛选  工具栏 (管理) (管理)
+			async getSelect1(oindex) {
+				let _this = this;
+				let query = {
+					token: this.userState.token,
+					type: 'MANAGE'
+				};
+				const res = await toolDept(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('1.21.1.科室工具栏 +成功')
+					// console.log(res.data.body);
+					if (res.data.body.length > 6) {
+						this.onLineList.topFlag[0].more = true;
+						this.statistics.topFlag[0].more = true;
+					} else {
+						this.onLineList.topFlag[0].more = false;
+						this.statistics.topFlag[0].more = false;
+					}
+					$.each(res.data.body, function (index, text) {
+						//终端系统   科室   筛选列表   管理1
+						_this.onLineList.topFlag[0].list.push({
+							text: text.name,
+							value: text.id
+						});
+						//终端系统   科室   筛选列表   管理统计
+						_this.statistics.topFlag[0].list.push({
+							text: text.name,
+							value: text.id
+						});
+					});
+				} else {
+					console.log('1.21.1.科室工具栏 +失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
+			//1.21.26.类型筛选  工具栏 (管理)
+			async getSelect2(oindex) {
+				let _this = this;
+				let query = {
+					token: this.userState.token,
+					// type: 'MANAGE'
+				};
+				const res = await toolMedicalType(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('1.21.26.类型筛选  工具栏 +成功')
+					// console.log(res.data.body);
+					if (res.data.body.length > 6) {
+						this.onLineList.topFlag[1].more = true;
+					} else {
+						this.onLineList.topFlag[1].more = false;
+					}
+					$.each(res.data.body, function (index, text) {
+						//终端系统   类型   筛选列表   管理1
+						_this.onLineList.topFlag[1].list.push({
+							text: text.name,
+							value: text.id
+						});
+					});
+				} else {
+					console.log('1.21.26.类型筛选  工具栏 +失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
+			//1.21.27.区域筛选  工具栏 (终端系统)
+			async getSelect3(oindex) {
+				let _this = this;
+				let query = {
+					token: this.userState.token,
+					// type: 'MANAGE'
+				};
+				const res = await toolMedicalGrading(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('1.21.27.分级筛选  工具栏 移动查房管理+成功')
+					// console.log(res.data.body);
+					if (res.data.body.length > 6) {
+						this.onLineList.topFlag[2].more = true;
+					} else {
+						this.onLineList.topFlag[2].more = false;
+					}
+					$.each(res.data.body, function (index, text) {
+						//终端系统   区域   筛选列表   管理1
+						_this.onLineList.topFlag[2].list.push({
+							text: text.name,
+							value: text.id
+						});
+					});
+				} else {
+					console.log('1.21.27.分级筛选  工具栏 移动查房管理+失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
 			},
 
-			//医生端  查看记录		已完成
-			isShowForbidFun() {
-
+			// 管理1表
+			async getList1() {
+				console.log('管理1表接口还没出来')
 			},
-			//统计图表数据的获取
+			// 管理1表   操作区  
+			//查看
+			viewFile() {
+				this.isShowmoveUser = !this.isShowmoveUser
+				console.log(this.isShowmoveUser)
+			},
+			//管理2表（统计）
 			async count() {
 				console.log('统计接口还没出来')
 				// const _this = this
@@ -345,53 +450,14 @@
 				// 	});
 				// }
 			},
-
-
-			//移动查房（医生端）
-			async getDocList() {
-				// let _this = this;
-				// const options = {
-				// 	token: this.userState.token,
-				// 	query: "",
-				// 	pageNum: 1,
-				// 	pageSize: 15,
-				// 	status: this.adminStatus,
-				// 	applyDeptId: this.applyDepartmentId,
-				// 	synergyDeptId: this.acceptDepartmentId,
-				// 	startTime: this.startingTime,
-				// 	endTime: this.endingTime,
-				// };
-				// const res = await synergyPage(options);
-				// if (res.data && res.data.errCode === 0) {
-				// 	this.docTableData = res.data.body.data2.list;
-				// 	if (res.data.body.data2.list.length == 0) {
-				// 		console.log(res)
-				// 		console.log('移动查房（医生端）List无数据')
-				// 	}
-				// } else {
-				// 	//失败
-				// 	this.$notify.error({
-				// 		title: "警告",
-				// 		message: res.data.errMsg
-				// 	});
-				// }
-			},
-
-
-
-			//医生事件
-			//点击筛选日期
-			getOTab4(data) {
-				this.doctorDate = data.index.value;
-				this.getDocList();//医生端列表
-			},
-			//点击确定    新增门诊
-			yesMove() {
-				alert('确定新增门诊')
-			}
 		},
 		async created() {
+			this.getSelect1()
+			this.getSelect2()
+			this.getSelect3()
+			this.getList1()
 			this.count()
+			// this.DoctorList()
 		}
 	}
 </script>

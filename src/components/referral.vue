@@ -158,7 +158,7 @@
         <el-button class="startConsul" type="text" @click="addMove">新增转诊</el-button>
       </div>
       <div>
-        <el-table :data="manageBodyData" border style="width: 100%">
+        <el-table :data="docTableData" border style="width: 100%">
           <el-table-column fixed prop="date" label="编号"></el-table-column>
           <el-table-column fixed prop="name" label="申请医院"></el-table-column>
           <el-table-column fixed prop="province" label="申请科室"></el-table-column>
@@ -171,10 +171,10 @@
           <el-table-column fixed prop="zip" label="转诊状态"></el-table-column>
           <el-table-column fixed="right" label="" width="300">
             <template slot-scope="scope">
-              <el-button @click="isShowEditFun(scope.row)" type="text" size="small">查看档案</el-button>
-              <el-button @click="isShowEditFun(scope.row)" type="text" size="small">转诊记录</el-button>
-              <el-button @click="isShowEditFun(scope.row)" type="text" size="small">编辑</el-button>
-              <el-button @click="isShowEditFun(scope.row)" type="text" size="small">删除</el-button>
+              <el-button @click="doctorListFun1(scope.row)" type="text" size="small">查看档案</el-button>
+              <el-button @click="doctorListFun2(scope.row)" type="text" size="small">转诊记录</el-button>
+              <el-button @click="doctorListFun3(scope.row)" type="text" size="small">编辑</el-button>
+              <el-button @click="doctorListFun4(scope.row)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -189,10 +189,10 @@
   import {
     // 已使用接口
     //筛选接口
-		toolDept,//1.21.1.管理  科室列表
-
-    //未使用接口
-    fetchHospitalDepts,//2.2.获取医院科室列表
+    toolDept,//1.21.1.管理  科室列表
+    toolMedicalType,//1.21.26.分级诊疗-类型
+    toolMedicalGrading,//1.21.27.分级诊疗-分级
+    toolReferralType,//1.21.28.双向转诊-方向
   } from "../api/apiAll.js";
   //引入组件
   import normalTab from '../public/publicComponents/normalTab.vue'
@@ -216,56 +216,44 @@
     },
     data() {
       return {
-
-        //统计
-        //申请科室统计图
-        monthToYear: [],
-        drawData: {
-          dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-          data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-          title: "申请科室统计图", //图表标题
-          totalNumber: "555"
-        },
-        //发起科室统计图
-        drawDataStart: {
-          dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-          data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-          title: "发起科室统计图", //图表标题
-          totalNumber: "555"
-        },
-
         // 常用参数
+        //管理1表 查看记录  弹框
+        isShowmoveUser: false,//显示转诊记录
+
+        //筛选返回值接收
+        //管理1端  筛选工具栏  筛选返回值  接收参数
+        departmentId: "",//筛选科室id   selftag
+        typeId: "",//筛选类型id   selftag
+        gradeId: "",//筛选分级id    selftag
+        searchValue: "",//返回搜索框输入   search
+        //管理统计端  筛选工具栏  统计筛选返回值  接收参数
         time0: "",///统计筛选开始时间
         time1: "",//统计筛选结束时间
         type: 'MONTH', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天 
-        doctorDate: '',//接收医生端的日期筛选
-        isShowmoveUser: false,//显示转诊记录
-
-        // 表格参数（自定义）
-        docTableData: [], //医生端列表
+        //医生端  筛选工具栏  日期筛选返回值  接收参数
+        doctorDate: '',//日期筛选
 
 
-        //组件参数
-        departmentId: "",//科室id      筛选组件   selftag
-        typeId: "",//类型id   筛选组件   selftag
-        gradeId: "",//分级id   筛选组件   selftag
-        searchValue: "",//搜索框   搜索组件   search
+
+        // element
+
+        // 必备参数
         time: null, // 时间筛选组件    statisticsWay
-
+        //管理切换（复用组件 ）
         navInfo: {
           i: 0,
           list: [
             {
-              en: 'two-way referral',//选项英文，类型 string
+              en: 'TWO-WAY REFERRAL',//选项英文，类型 string
               zh: '转诊管理'//选项中文，类型string
             },
             {
-              en: 'count',
+              en: 'STATISTICS',
               zh: '统计'
             },
           ]
         },
-        //在线诊室管理 数据
+        //筛选工具栏  管理1（自定义）
         onLineList: {
           topFlag: [
             {
@@ -315,7 +303,6 @@
             },
           ]
         },
-
         oTab4: {
           more: false,
           title: "日期",
@@ -330,10 +317,18 @@
             }
           ]
         },
-
-        // element组件参数
-
-        //新增转诊
+        // 管理表体（自定义组件 ）
+        manageBodyData: [
+          {
+            date: '2016-05-03',
+            name: '王小虎',
+            province: '上海',
+            city: '普陀区',
+            address: '上海市普陀区金沙江路 1518 弄',
+            zip: 200333
+          }
+        ],
+        //新增转诊（自定义组件 ）
         isShowaddMove: false,
         form: {
           name: '',
@@ -346,37 +341,33 @@
           desc: ''
         },
         formLabelWidth: '120px',
-
-        // 管理表体
-        manageBodyData: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }]
+        //统计
+        //申请科室统计图
+        monthToYear: [],
+        drawData: {
+          dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
+          data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
+          title: "申请科室统计图", //图表标题
+          totalNumber: "555"
+        },
+        //发起科室统计图
+        drawDataStart: {
+          dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
+          data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
+          title: "发起科室统计图", //图表标题
+          totalNumber: "555"
+        },
+        //医生端列表（自定义组件 ）
+        docTableData: [
+          {
+            date: '2016-05-03',
+            name: '王小虎',
+            province: '上海',
+            city: '普陀区',
+            address: '上海市普陀区金沙江路 1518 弄',
+            zip: 200333
+          }
+        ],
       }
     },
     computed: {
@@ -388,54 +379,9 @@
       }),
     },
     methods: {
+      //自调用组件函数
       //转诊管理、统计、切换插件返回值（管理端）
-      getNav(data) {
-        console.log(data)
-      },
-      
-      //筛选列表  管理端
-      //1.21.1.科室工具栏 (管理)
-			async getDepartment(oindex) {
-				let _this = this;
-				let query = {
-					token: this.userState.token,
-					type: 'MANAGE'
-				};
-				const res = await toolDept(query);
-				if (res.data && res.data.errCode === 0) {
-					console.log('1.21.1.科室工具栏 +成功')
-					console.log(res.data.body);
-					$.each(res.data.body, function (index, text) {
-            if (text.length > 6) {
-              _this.onLineList.topFlag[index].more = true;
-            } else {
-              _this.onLineList.topFlag[index].more = false;
-            }
-            //双向转诊   科室   筛选列表
-						_this.onLineList.topFlag[0].list.push({
-							text: text.name,
-							value: text.id
-						});
-						//双向转诊   类型   筛选列表
-						_this.onLineList.topFlag[1].list.push({
-							text: text.name,
-							value: text.id
-            });
-            //双向转诊   分级   筛选列表
-						_this.onLineList.topFlag[2].list.push({
-							text: text.name,
-							value: text.id
-						});
-					});
-				} else {
-					console.log('1.21.1.科室工具栏 +失败')
-					//失败
-					this.$notify.error({
-						title: "警告",
-						message: res.data.errMsg
-					});
-        }
-      },
+      getNav(data) { console.log(data) },
       //筛选返回值  管理端
       getFilter0(data) {//科室筛选
         this.departmentId = data.index.value;
@@ -454,30 +400,143 @@
       },
       adminSearchOne(data) {//搜索（筛选右边）
         this.searchValue = data;
+        console.log(this.searchValue)
         // this.getList1();
       },
       getFilterTime(data) {//统计		//时间选择器返回函数
-        console.log(data)
         this.time0 = data.time[0];//统计筛选开始时间
         this.time1 = data.time[1];//统计筛选结束时间
         this.type = data.select.value
         this.count();
       },
-      //查看档案
+      //点击筛选日期    医生端
+      getOTab4(data) {
+        this.doctorDate = data.index.value;
+        this.DoctorList();//医生端列表
+      },
+
+
+
+
+      //筛选列表  管理端
+      //1.21.1.科室筛选  工具栏 (管理) (管理)
+      async getSelect1(oindex) {
+        let _this = this;
+        let query = {
+          token: this.userState.token,
+          type: 'MANAGE'
+        };
+        const res = await toolDept(query);
+        if (res.data && res.data.errCode === 0) {
+          console.log('1.21.1.科室工具栏 +成功')
+          // console.log(res.data.body);
+          if (res.data.body.length > 6) {
+            this.onLineList.topFlag[0].more = true;
+            this.statistics.topFlag[0].more = true;
+          } else {
+            this.onLineList.topFlag[0].more = false;
+            this.statistics.topFlag[0].more = false;
+          }
+          $.each(res.data.body, function (index, text) {
+            //双向转诊   科室   筛选列表   管理1
+            _this.onLineList.topFlag[0].list.push({
+              text: text.name,
+              value: text.id
+            });
+            //双向转诊   科室   筛选列表   管理统计
+            _this.statistics.topFlag[0].list.push({
+              text: text.name,
+              value: text.id
+            });
+          });
+        } else {
+          console.log('1.21.1.科室工具栏 +失败')
+          //失败
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      //1.21.26.类型筛选  工具栏 (管理)
+      async getSelect2(oindex) {
+        let _this = this;
+        let query = {
+          token: this.userState.token,
+          // type: 'MANAGE'
+        };
+        const res = await toolMedicalType(query);
+        if (res.data && res.data.errCode === 0) {
+          console.log('1.21.26.类型筛选  工具栏 +成功')
+          // console.log(res.data.body);
+          if (res.data.body.length > 6) {
+            this.onLineList.topFlag[1].more = true;
+          } else {
+            this.onLineList.topFlag[1].more = false;
+          }
+          $.each(res.data.body, function (index, text) {
+            //双向转诊   类型   筛选列表   管理1
+            _this.onLineList.topFlag[1].list.push({
+              text: text.name,
+              value: text.id
+            });
+          });
+        } else {
+          console.log('1.21.26.类型筛选  工具栏 +失败')
+          //失败
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      //1.21.27.分级筛选  工具栏 (双向转诊管理)
+      async getSelect3(oindex) {
+        let _this = this;
+        let query = {
+          token: this.userState.token,
+          // type: 'MANAGE'
+        };
+        const res = await toolMedicalGrading(query);
+        if (res.data && res.data.errCode === 0) {
+          console.log('1.21.27.分级筛选  工具栏 双向转诊管理+成功')
+          // console.log(res.data.body);
+          if (res.data.body.length > 6) {
+            this.onLineList.topFlag[2].more = true;
+          } else {
+            this.onLineList.topFlag[2].more = false;
+          }
+          $.each(res.data.body, function (index, text) {
+            //双向转诊   分级   筛选列表   管理1
+            _this.onLineList.topFlag[2].list.push({
+              text: text.name,
+              value: text.id
+            });
+          });
+        } else {
+          console.log('1.21.27.分级筛选  工具栏 双向转诊管理+失败')
+          //失败
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+
+
+
+
+      // 管理1表
+      async getList1() {
+        console.log('管理1表接口还没出来')
+      },
+      // 管理1表   操作区  
+      //查看记录
       viewFile() {
         this.isShowmoveUser = !this.isShowmoveUser
         console.log(this.isShowmoveUser)
       },
-      //新增转诊
-      addMove() {
-        this.isShowaddMove = !this.isShowaddMove
-      },
-      // 点击表体返回行信息
-      handleClick(row) {
-        console.log(row);
-      },
-
-      //统计图表数据的获取
+      //管理2表（统计）
       async count() {
         console.log('统计接口还没出来')
         // const _this = this
@@ -507,10 +566,9 @@
         // 	});
         // }
       },
-
-
-      //双向转诊（医生端）
-      async getDocList() {
+      // 医生表
+      async DoctorList() {
+        console.log('医生表  接口还没出来')
         // let _this = this;
         // const options = {
         // 	token: this.userState.token,
@@ -538,14 +596,27 @@
         // 	});
         // }
       },
+      // 医生表  操作区  点击事件
+      //查看档案
+      doctorListFun1(data) {
+        console.log(data)
+      },
+      //转诊记录
+      doctorListFun2(data) {
+        console.log(data)
+      },
+      //编辑
+      doctorListFun3(data) {
+        console.log(data)
+      },
+      //删除
+      doctorListFun4(data) {
+        console.log(data)
+      },
 
-
-
-      //医生事件
-      //点击筛选日期
-      getOTab4(data) {
-        this.doctorDate = data.index.value;
-        this.getDocList();//医生端列表
+      //新增转诊
+      addMove() {
+        this.isShowaddMove = !this.isShowaddMove
       },
       //点击确定    新增门诊
       yesMove() {
@@ -553,8 +624,12 @@
       }
     },
     async created() {
-      this.getDepartment()
+      this.getSelect1()
+      this.getSelect2()
+      this.getSelect3()
+      this.getList1()
       this.count()
+      this.DoctorList()
     }
   }
 </script>
@@ -679,9 +754,10 @@
     color: #646464;
     line-height: 21px;
   }
+
   .mainTab {
-		display: flex;
-		display: -webkit-flex;
-		justify-content: space-between;
-	}
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
+  }
 </style>

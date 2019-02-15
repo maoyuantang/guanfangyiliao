@@ -835,7 +835,7 @@
 				const res = await searchClinic(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表1+成功')
-					// console.log(res)
+					console.log(res)
 					const lists = res.data.body.data2.list
 					for (let j = 0; j < lists.length; j++) {
 						for (let i = 0; i < lists[j].doctors.length; i++) {
