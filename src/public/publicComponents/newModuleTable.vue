@@ -9,22 +9,22 @@
             <li class="new-module-table-li" v-for="i in 4" :key="i"> -->
                 <div class="new-module-table-li-item">
                     <div class="new-module-table-li-item-img">
-                        <img src="../../assets/img/a-6.png" alt="" srcset="">
+                        <img :src="inData.headimg || '../../assets/img/a-6.png' " alt="" srcset="">
                     </div>
                     <div class="new-module-table-li-item-name">
-                        <span>发起人姓名</span>
+                        <span>{{inData.userName || '发起人姓名'}}</span>
                     </div>
                     <div class="new-module-table-li-item-group">
-                        <span>重庆市西南医院 | 神经内科</span>
+                        <span>{{inData.hospital || '医院'}} | {{inData.department || '科室'}}</span>
                     </div>
                     <div class="new-module-table-li-item-num">
-                        <span>ZZ021501(转诊编号)</span>
+                        <span>{{inData.num || '转诊编号'}}</span>
                     </div>
-                    <div class="new-module-table-li-item-time">
-                        <span>2018-12-25 10:00</span>
+                    <div class="new-module-table-li-item-time new-module-table-li-item-time-spe">
+                        <span>{{inData.time || '时间'}}</span>
                     </div>
-                    <div class="new-module-table-li-item-status">
-                        <span>未开始</span>
+                    <div class="new-module-table-li-item-status new-module-table-li-item-time-spe">
+                        <span>{{inData.status || '状态'}}</span>
                     </div>
                     <div class="new-module-table-li-item-btns">
                         <slot></slot>
@@ -38,7 +38,10 @@
 
 <script>
 	export default {
-		name : 'newModuleTable',
+        name : 'newModuleTable',
+        props:[
+            'inData'
+        ],
 		computed:{
 		},
 		data(){
@@ -134,13 +137,14 @@
     letter-spacing: 0;
 }
 .new-module-table-li-item-num{
-    flex: 1;
+    flex: 1; 
     display: flex;
     align-items: center;
     font-family: PingFangSC-Regular;
     font-size: 14px;
     color: #626262;
     letter-spacing: 0;
+    overflow: hidden;
 }
 .new-module-table-li-item-status{
     flex: 1;
@@ -165,5 +169,8 @@
     font-size: 14px;
     color: #626262;
     letter-spacing: 0;
+}
+.new-module-table-li-item-time-spe{
+    padding-left: 0.1rem;
 }
 </style>

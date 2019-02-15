@@ -25,7 +25,7 @@ export default str => {
             msg:'请传入字符串格式数据' 
         }
     }
-    const words = ['&','<','>','"',"'",'/','javascript','http','https',' '];
+    const words = ['&','<','>','"',"'",'/','javascript','http','https',' ','null'];
     for(const i of words){
         if(str.indexOf(i) != -1 ){
             return {

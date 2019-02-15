@@ -189,6 +189,14 @@ export default {
 
     // 健康档案系统
     getFamilyMemberInfo:'/m/v1/api/familyMember/getFamilyMemberInfo',//
+
+
+    businessType:'/m/v1/api/family/family/businessType',//17.3(管理、APP患者)获取所有业务类型
+    addBusiness:'/m/v1/api/family/family/addBusiness',//17.4新增业务
+    stencilModel:'/m/v1/api/family/family/stencilModel',//17.2传入模版名获取模版
+    updateHospitalRel:'/m/v1/api/basics/hospital/updateHospitalRel',//8.12.更新医院上下级医院关系
+    toolSynergyStatus:'/m/v1/api/basics/common/toolSynergyStatus',//1.21.8.协作状态
+    toolMedicalType:'/m/v1/api/basics/common/toolMedicalType',//1.21.26.分级诊疗-类型
+    toolMedicalGrading:'/m/v1/api/basics/common/toolMedicalGrading',//1.21.27.分级诊疗-分级
+    toolReferralType:'/m/v1/api/basics/common/toolReferralType',//1.21.28.双向转诊-方向
 }
-
-
