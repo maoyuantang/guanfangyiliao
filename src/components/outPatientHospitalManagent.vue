@@ -87,9 +87,9 @@
 
 		</div>
 		<!-- 新增门诊弹框 -->
-		<addNewFrame :inData="addData" @reback="getData" @department="getDepartment" @getAgreementSelect="getSelectInfo"></addNewFrame>
+		<addNewFrame :inData="addData" @reback="getData" @department="getDepartment" @getAgreementSelect="getSelectInfo" :sureVisiable="sureVisiable"></addNewFrame>
 		<!-- 编辑 -->
-		<addNewFrame :inData="addData" @reback="getData1" @department="getDepartment" @getAgreementSelect="getSelectInfo"></addNewFrame>
+		<!-- <addNewFrame :inData="addData" @reback="getData1" @department="getDepartment" @getAgreementSelect="getSelectInfo"></addNewFrame> -->
 		<!-- 表一查看关联医生弹框 -->
 		<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="503px" hight="470px"
 		 center>
@@ -222,6 +222,7 @@
 		},
 		data() {
 			return {
+				sureVisiable:0,
 				disabled1: '禁用',
 				//申请科室统计图
 				monthToYear: [],
@@ -1100,7 +1101,9 @@
 
 			//新增业务  点击
 			isShowNewOutPatientFun() {
+
 				this.addData.show = true
+				this.sureVisiable=0;
 				this.newClinic0();//新增门诊弹框  数据渲染
 				this.getList1()
 			},
