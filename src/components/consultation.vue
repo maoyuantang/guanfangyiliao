@@ -245,7 +245,7 @@
 
         </div>
         <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-            <chat :sessionId="sessionId"></chat>
+            <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
         </el-dialog>
 
     </div>
@@ -290,6 +290,7 @@ export default {
     },
     data() {
         return {
+            doctorVis:0,//0是医生跟医生聊天
             cellColor: [
                 {
                     cell: 7,

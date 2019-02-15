@@ -184,4 +184,11 @@ export default {
     toolBusinessType:'/m/v1/api/basics/common/toolBusinessType',//1.21.14.业务类型
     orderYcmzCharts:'/m/v1/api/order/orderYcmzCharts',//6.9.远程门诊订单统计柱状图
     orderRxCharts:'/m/v1/api/order/orderRxCharts',//6.10.处方订单统计柱状图
+
+
+
+    // 健康档案系统
+    getFamilyMemberInfo:'/m/v1/api/familyMember/getFamilyMemberInfo',//
 }
+
+

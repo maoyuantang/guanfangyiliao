@@ -21,6 +21,7 @@
                 <span class="login-btn" @click="loginMethod">登录</span>
             </div>
         </div>
+<websocket1 ref="mychild"></websocket1>
 	</div>
 </template>
 
@@ -29,12 +30,14 @@
     import sensitiveWordCheck from '../public/publicJs/sensitiveWordCheck.js'
     import { Base64 } from 'js-base64'
     import jsonSort from '../public/publicJs/jsonSort.js'
-    import websocket from "../common/websocket.js"
+    // import websocket from "../common/websocket.js"
     import { mapState } from 'vuex'
     import {getLoginCode,login,userInfo} from '../api/apiAll.js'//api
     import createUUID from '../public/publicJs/createUUID.js'
+    import websocket1 from '../common/websocket.vue'
 	export default {
         components:{
+            websocket1
         },
         watch:{
             way(n){console.log(n)},
@@ -276,7 +279,8 @@
                     // console.log(this.$store.state.user.viewRoot)
                     this.getUserInfo();//使用登录页、过后的token，请求用户个人信息
                     this.setViewRoot(res.data.body);//计算用户权限
-                    websocket.initWebSocket(this.userState.token)
+                    // websocket.initWebSocket(this.userState.token)
+                    this.$refs.mychild.initWebSocket(this.userState.token);
                 }else{//失败
                     this.$notify.error({
                         title: '登录失败',
