@@ -31,26 +31,29 @@
                                 </div>
                                 <!-- 显示随访表 -->
                                 <!-- 自己发的随访表 -->
-                                <div v-show="text.from==userSelfInfo.userId && text.childMessageType=='FOLLOWUP'" class="followOrQuest" @click="followDetailClick(text.content.id)">
-                                    <div>
-                                        <img src="../../assets/img/followQuest1.png" />
-                                    </div>
-                                    <div>
-                                        <h3>{{text.content.title}}</h3>
-                                        <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
-                                    </div>
+                                <div v-show="text.childMessageType=='FOLLOWUP' || text.childMessageType=='INTERROGATION' || text.childMessageType=='ARTICLE'">
+                                    <div v-show="text.from==userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.id,text.childMessageType)">
+                                        <div>
+                                            <img src="../../assets/img/followQuest1.png" />
+                                        </div>
+                                        <div>
+                                            <h3>{{text.content.title}}</h3>
+                                            <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                        </div>
 
-                                </div>
-                                <!-- 对方发的随访表 -->
-                                <div v-show="text.from!=userSelfInfo.userId && text.childMessageType=='FOLLOWUP'" class="followOrQuest" @click="followDetailClick(text.content.id)">
-                                    <div>
-                                        <img src="../../assets/img/followQuest2.png" />
                                     </div>
-                                    <div>
-                                        <h3>{{text.content.title}}</h3>
-                                        <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                    <!-- 对方发的随访表 -->
+                                    <div v-show="text.from!=userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.id,text.childMessageType)">
+                                        <div>
+                                            <img src="../../assets/img/followQuest2.png" />
+                                        </div>
+                                        <div>
+                                            <h3>{{text.content.title}}</h3>
+                                            <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                        </div>
                                     </div>
                                 </div>
+
                             </div>
 
                         </div>
@@ -104,7 +107,7 @@
             <span v-show="oDoctorVis" @click="addRemarks()" title="添加备注">
                 <img src="../../assets/img/sendNew6.png" />
             </span>
-            <span v-show="oDoctorVis" title="药品处方">
+            <span v-show="oDoctorVis" title="药品处方" @click="addDrugs()">
                 <img src="../../assets/img/sendNew8.png" />
             </span>
             <span v-show="oDoctorVis" @click="addPlan()" title="计划">
@@ -192,11 +195,11 @@
             <ul>
                 <li class="followBox" v-for="(text,index) in articleList" :key="index">
                     <span>{{text.title}}</span>
-                    <span @click="QuestDetail(text.id)"> > </span>
+                    <span @click="articleDetail(text.id)"> > </span>
                 </li>
             </ul>
         </el-dialog>
-        
+
         <!-- 药品处方 -->
         <el-dialog title="药品处方" :visible.sync="drugsVisible" width="100%" center append-to-body>
             <drugs></drugs>
@@ -247,7 +250,8 @@ import {
     getModelTitleList,
     queryInquiryPlan,
     queryInquiry,
-    queryArticleList
+    queryArticleList,
+    getArticleDetails
 } from "../../api/apiAll.js";
 import ovideo from "../../video/video.vue";
 import { setTimeout } from "timers";
@@ -266,8 +270,8 @@ export default {
             questDetailData: {},
             questDetailVisible: false,
             questVisible: false,
-            articleVisible:false,
-            articleList:[],
+            articleVisible: false,
+            articleList: [],
             questList: [],
             followList: [],
             drugsVisible: false,
@@ -327,10 +331,6 @@ export default {
         this.messageTicket = this.$store.state.socket.messageTicket;
     },
     methods: {
-        // getMessageTicket(data){
-        //     console.log(data)
-        //     this.messageTicket=data
-        // },
         getSendMessageChat(oMessage) {
             this.messageBody = JSON.stringify(oMessage);
             this.childMessageType = 20;
@@ -402,9 +402,13 @@ export default {
             this.getFollowDetail(oid);
         },
         //随访消息点击详情
-        followDetailClick(oid) {
-            this.followDetailVisible = true;
-            this.getFollowDetail(oid);
+        followDetailClick(oid, otype) {
+            if (otype == "FOLLOWUP") {
+                this.followDetailVisible = true;
+                this.getFollowDetail(oid);
+            } else if (otype == "INTERROGATION") {
+            } else if (otype == "ARTICLE") {
+            }
         },
         sendMessage2() {
             //  websocket = require("../../common/websocket.js");
@@ -614,11 +618,15 @@ export default {
                         //本人发
                         if (odata[i].childMessageType == "INTERROGATION") {
                             //问诊
-                            this.messageList[i].content =
-                                '<div class=" followCon"> <div> </div> <div> <h3>问诊表/随访表的标题</h3> <div>2018中医国际标准</div>  </div> </div>';
+                            this.messageList[i].content = JSON.parse(
+                                odata[i].body
+                            );
                         } else if (odata[i].childMessageType == "ARTICLE") {
                             //文章
-                            this.messageList[i].content = "文章";
+                            // this.messageList[i].content = "文章";
+                            this.messageList[i].content = JSON.parse(
+                                odata[i].body
+                            );
                         } else if (odata[i].childMessageType == "CRVIDEO") {
                             //视频
                             this.messageList[i].content = "视频";
@@ -801,6 +809,37 @@ export default {
                     message: res.data.errMsg
                 });
             }
+        },
+        async articleDetail(oid) {
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                articleId: oid
+            };
+            const res = await getArticleDetails(query);
+            if (res.data && res.data.errCode === 0) {
+                let oMessage = {
+                    id: res.data.body.id,
+                    title: res.data.body.title,
+                    firstTreatmentTime: res.data.body.createTime
+                };
+                this.messageBody = JSON.stringify(oMessage);
+                this.childMessageType = 19;
+                this.sendMessageChat();
+                setTimeout(function() {
+                    _this.articleVisible = false;
+                    _this.messageBody = "";
+                }, 1000);
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        addDrugs() {
+            this.drugsVisible = true;
         },
         //创建计划
         async setPlan() {
