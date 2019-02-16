@@ -7,8 +7,8 @@
                         <img src="../../assets/img/sendNew2.png" />
                     </div>
                     <div>
-                        <h4>道明寺</h4>
-                        性别: 男<br /> 年龄: 23<br /> 出生日期: 1988-02-26 <br />联系方式: 18952645896 <br />常用地址: 黑龙江省哈尔滨市绥化地区<br />
+                        <h4>{{familyMessage.name}}</h4>
+                        性别: {{familyMessage.sex}}<br /> 年龄: {{familyMessage.age}}<br /> 出生日期: {{familyMessage.birthday}} <br />联系方式: {{familyMessage.phone}} <br />常用地址: {{familyMessage.address}}<br />
                     </div>
                 </div>
                 <div>
@@ -30,7 +30,7 @@
                         <el-form-item label="活动名称">
                             <el-input v-model="form.name"></el-input>
                         </el-form-item>
-                        <el-form-item >
+                        <el-form-item>
                             <el-checkbox-group v-model="form.type">
                                 <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
                                 <el-checkbox label="地推活动" name="type"></el-checkbox>
@@ -42,18 +42,24 @@
                 <div>
                     <search></search>
                     <div>
-                        <el-table :data="tableData" border style="width: 100%">
-                            <el-table-column fixed prop="date" label="日期" width="150">
+                        <el-table :data="drugsData" border style="width: 100%">
+                            <el-table-column fixed prop="date" label="序号" width="150">
                             </el-table-column>
-                            <el-table-column prop="name" label="姓名" width="120">
+                            <el-table-column prop="drugName" label="药品名称" width="120">
                             </el-table-column>
-                            <el-table-column prop="province" label="省份" width="120">
+                            <el-table-column prop="drugUse" label="用法" width="120">
                             </el-table-column>
-                            <el-table-column prop="city" label="市区" width="120">
+                            <el-table-column prop="drugTimes" label="频率" width="120">
                             </el-table-column>
-                            <el-table-column prop="address" label="地址" width="300">
+                            <el-table-column prop="drugDosage" label="用量" width="300">
                             </el-table-column>
-                            <el-table-column prop="zip" label="邮编" width="120">
+                            <el-table-column prop="drugPrice" label="单价" width="120">
+                            </el-table-column>
+                            <el-table-column prop="drugQuantity" label="数量" width="120">
+                            </el-table-column>
+                            <el-table-column prop="drugPriceAll" label="合计" width="120">
+                            </el-table-column>
+                            <el-table-column prop="ask" label="医生嘱托" width="120">
                             </el-table-column>
                             <el-table-column fixed="right" label="操作" width="100">
                                 <template slot-scope="scope">
@@ -65,7 +71,7 @@
                     </div>
                     <div>
                         <div>
-                        总金额：199
+                            总金额：199
                         </div>
                         <div>
                             <el-button type="primary">预览</el-button>
@@ -82,9 +88,7 @@
 import search from "../../public/publicComponents/search.vue";
 import apiBaseURL from "../../enums/apiBaseURL.js";
 import { mapState } from "vuex";
-import {
-   getFamilyMemberInfo
-} from "../../api/apiAll.js";
+import { getFamilyMemberInfo, drugsByCondition } from "../../api/apiAll.js";
 export default {
     components: {
         search
@@ -93,10 +97,19 @@ export default {
         return {
             form: {
                 name: ""
-            }
+            },
+            familyMessage: {
+                name: "",
+                age: "",
+                sex: "",
+                birthday: "",
+                phone: "",
+                address: ""
+            },
+            drugsData:[]
         };
     },
-        computed: {
+    computed: {
         ...mapState({
             userState: state => state.user.userInfo,
             userSelfInfo: state => state.user.userSelfInfo
@@ -105,14 +118,20 @@ export default {
     methods: {
         //获取处方信息
         async getDrugsMessage() {
-            this.followVisible = true;
             let query = {
                 token: this.userState.token,
-                familyMemberId:''
+                familyMemberId: ""
             };
             const res = await getFamilyMemberInfo(query);
             if (res.data && res.data.errCode === 0) {
-                alert('dd')
+                this.familyMessage = {
+                    name: res.data.body.name,
+                    age: res.data.body.age,
+                    sex: res.data.body.sex,
+                    birthday: res.data.body.birthday,
+                    phone: res.data.body.phone,
+                    address: res.data.body.address
+                };
             } else {
                 //失败
                 this.$notify.error({
@@ -121,10 +140,29 @@ export default {
                 });
             }
         },
+        //获取处方信息
+        async getDrugsByCondition() {
+            let query = {
+                token: this.userState.token,
+                drugName:""
+            };
+            const res = await drugsByCondition(query);
+            if (res.data && res.data.errCode === 0) {
+                // console.log()
+                this.drugsData=res.data.body
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        }
     },
     props: ["inData"],
     created() {
-        this.getDrugsMessage() 
+        this.getDrugsMessage();
+        this.getDrugsByCondition()
     },
     beforeDestroy() {}
 };
@@ -141,9 +179,9 @@ export default {
     line-height: 20px;
 }
 .drugs_box_lf {
-    width:333px;
+    width: 30%;
     box-sizing: border-box;
-    margin-right:10px;
+    margin-right: 10px;
     padding: 18px;
     padding-top: 79px;
     background: #ffffff;
@@ -162,8 +200,11 @@ export default {
     color: #212223;
     line-height: 20px;
 }
+.drugs_box_rg{
+     width: 70%;
+}
 .drugs_box_rg > div:first-child {
-    padding-top:30px;
+    padding-top: 30px;
     background: #ffffff;
     border: 1px solid #e4e8eb;
     border-radius: 3px;
@@ -176,19 +217,19 @@ export default {
 .drugs_box_rg > div:first-child .el-input__inner {
     height: 32px !important;
 }
-.drugs_box_rg > div:nth-child(2){
-    padding-top:15px;
+.drugs_box_rg > div:nth-child(2) {
+    padding-top: 15px;
 }
-.drugs_box_rg > div:nth-child(2) .search{
-    margin-bottom:15px;
+.drugs_box_rg > div:nth-child(2) .search {
+    margin-bottom: 15px;
 }
-.drugs_box_lf_headImg{
-    width:40px;
+.drugs_box_lf_headImg {
+    width: 40px;
     height: 40px;
     border-radius: 50%;
 }
-.drugs_box_lf_headImg>img{
-    width:100%;
+.drugs_box_lf_headImg > img {
+    width: 100%;
     height: 100%;
 }
 </style>

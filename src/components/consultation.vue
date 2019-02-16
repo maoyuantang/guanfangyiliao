@@ -664,7 +664,7 @@ export default {
             };
             const res = await sponsorConsultationInform(query, options);
             if (res.data && res.data.errCode === 0) {
-               this.$notify.error({
+               this.$notify.success({
                     title: "成功",
                     message: "邀请成功"
                 });
