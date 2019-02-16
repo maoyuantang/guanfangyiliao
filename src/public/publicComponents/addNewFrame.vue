@@ -1,5 +1,6 @@
 <template>
     <div class="add-new-frame">
+        
         <Modal :styles="{width: '850px'}" v-model="inData.show" title=" " footer-hide @on-ok="ok" @on-cancel="cancel">
             <div class="alert-body">
                 <!-- 新增家医业务类型 -->
@@ -11,7 +12,7 @@
                                 <el-option v-for="item in inData.businessTypeList.list||[]" :key="item.value" :label="item.label" :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-input placeholder="请输入内容" size="mini" v-else @mouseover.native="showClose=true" @mouseout.native="showClose=false" v-model="inData.businessTypeList.default.label">
+                            <el-input placeholder="请输入内容" size="mini" v-else @mouseover.native="showClose=true" @mouseout.native="showClose=false" v-model="inData.businessTypeList.default.label" >
                             </el-input>
                             <i class="iconfont particular-handle-icon" @mouseover="showClose=true" :style="{display:showClose?'inline-block':'none'}" @click="changeStatus" v-if="inData.businessTypeList.default.value==='-1'">&#xe7b7;</i>
 
@@ -22,7 +23,7 @@
                 <div class="input-item-div" v-if="inData.type==='1'">
                     <span class="input-item-name">业务类型:</span>
                     <div class="input-item-value-div">
-                        <el-input placeholder="请输入内容" size="mini" v-model="inData.businessTypeList.default.label" clearable>
+                        <el-input placeholder="请输入内容" size="mini" v-model="inData.businessTypeList.default.label" clearable :disabled="sureVisiable===1">
                         </el-input>
                     </div>
                 </div>
@@ -40,7 +41,7 @@
                 <div class="input-item-div">
                     <span class="input-item-name">业务名称:</span>
                     <div class="input-item-value-div">
-                        <el-input placeholder="请输入内容" size="mini" v-model="inData.businessName.label" clearable>
+                        <el-input placeholder="请输入内容" size="mini" v-model="inData.businessName.label" clearable :disabled="sureVisiable===1">
                         </el-input>
                         <i class="iconfont required-icon" v-if="inData.type==='1'">&#xe7b0;</i>
                     </div>
@@ -49,7 +50,7 @@
                 <div class="input-item-div">
                     <span class="input-item-name">业务定价:</span>
                     <div class="input-item-value-div">
-                        <el-input placeholder="请输入内容" size="mini" v-model="inData.businessPrice.label" clearable>
+                        <el-input placeholder="请输入内容" size="mini" v-model="inData.businessPrice.label" clearable :disabled="sureVisiable===1">
                         </el-input>
                         <i class="iconfont required-icon" v-if="inData.type==='1'">&#xe7b0;</i>
                     </div>
@@ -59,7 +60,7 @@
                     <span class="input-item-name">选择科室:</span>
                     <div class="input-item-value-div">
                         <el-select v-model="inData.departmentList.default.value" clearable placeholder="请选择" size="mini">
-                            <el-option v-for="item in inData.departmentList.list||[]" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="item in inData.departmentList.list||[]" :key="item.value" :label="item.label" :value="item.value" :disabled="sureVisiable===1">
                             </el-option>
                         </el-select>
                         <i class="iconfont required-icon" v-if="inData.type==='1'">&#xe7b0;</i>
@@ -70,7 +71,7 @@
                     <span class="input-item-name">关联医生:</span>
                     <div class="input-item-value-div">
                         <el-select v-model="inData.doctorList.default" multiple placeholder="请选择" size="mini">
-                            <el-option v-for="(item,index) in inData.doctorList.list||[]" :key="index" :label="item.label" :value="item.value">
+                            <el-option v-for="(item,index) in inData.doctorList.list||[]" :key="index" :label="item.label" :value="item.value" :disabled="sureVisiable===1">
                             </el-option>
                         </el-select>
                         <i class="iconfont required-icon" v-if="inData.type==='1'">&#xe7b0;</i>
@@ -94,7 +95,7 @@
                                     <img src="../../assets/img/a-6.png" alt="">
                                     <i class="iconfont cancel-doctor">&#xe611;</i>
                                 </div>
-                                <p>{{inData.doctorList.list.find(i=>i.value===item).label}}</p>
+                                <p>{{inData.doctorList.list.find(i=>i.value===item) && inData.doctorList.list.find(i=>i.value===item).label}}</p>
                             </div>
                         </div>
                     </div>
@@ -103,7 +104,7 @@
                 <div class="input-item-div">
                     <span class="input-item-name">业务描述:</span>
                     <div class="input-item-value-div">
-                        <el-input type="textarea" autosize placeholder="请输入内容" v-model="inData.businessDescription">
+                        <el-input type="textarea" autosize placeholder="请输入内容" v-model="inData.businessDescription" :disabled="sureVisiable===1">
                         </el-input>
                     </div>
                 </div>
@@ -119,7 +120,7 @@
                                         <Icon type="ios-arrow-down" class="agreement-arrow-down"></Icon>
                                     </p>
                                     <DropdownMenu slot="list">
-                                        <DropdownItem v-for="(item,index) in inData.agreement.list" :key="index" @click.native="chooseAgreement(item,index)">{{item.label}}</DropdownItem>
+                                        <DropdownItem v-for="(item,index) in inData.agreement.list" :key="index" @click.native="chooseAgreement(item,index)" :disabled="sureVisiable===1">{{item.label}}</DropdownItem>
                                     </DropdownMenu>
                                 </Dropdown>
                             </div>
@@ -134,16 +135,16 @@
                 <div class="input-item-div">
                     <span class="input-item-name">服务电话:</span>
                     <div class="input-item-value-div">
-                        <el-input placeholder="请输入内容" v-model="inData.servicePhone" size="mini" clearable>
+                        <el-input placeholder="请输入内容" v-model="inData.servicePhone" size="mini" clearable :disabled="sureVisiable===1">
                         </el-input>
                     </div>
                 </div>
                 <div class="save-btn">
-                    <el-button type="primary" size="mini" @click="saveInfo" v-show="sureVisiable==0">保存0</el-button>
+                    <el-button type="primary" size="mini" @click="saveInfo0" v-show="sureVisiable==0">新增完成</el-button>
                     <!-- 新增 -->
-                    <el-button type="primary" size="mini" @click="saveInfo" v-show="sureVisiable==1">保存1</el-button>
+                    <el-button type="primary" size="mini" @click="saveInfo1" v-show="sureVisiable==1">查看完成</el-button>
                     <!-- 详情 -->
-                    <el-button type="primary" size="mini" @click="saveInfo" v-show="sureVisiable==2">保存2</el-button>
+                    <el-button type="primary" size="mini" @click="saveInfo2" v-show="sureVisiable==2">编辑完成</el-button>
                     <!-- 编辑 -->
                 </div>
             </div>
@@ -239,42 +240,14 @@ export default {
             this.inData.businessTypeList.default = { label: "", value: "" };
         },
         cancel() {},
-        saveInfo() {
-            // const resData = {};
-            // if(this.inData.type==='1'){//新增在线诊室
-            //     resData.businessType = this.info.businessType1;
-            //     resData.businessName = this.info.businessName;
-            //     resData.businessPrice = this.info.businessPrice;
-            //     resData.department = this.info.department;
-            //     resData.doctors = this.info.doctors;
-            //     const isPass = [sensitiveWordCheck(resData.businessName),sensitiveWordCheck(resData.businessPrice)];
-            //     for(const i of isPass){
-            //         if(!i.ok){
-            //             this.$notify({
-            //                 title: '输入验证失败',
-            //                 message: i.msg,
-            //                 type: 'error'
-            //             });
-            //             return;
-            //         }
-            //     }
-            // }else if(this.inData.type==='2'){//新增家医业务
-            //     resData.businessType = this.info.businessType2,
-            //     resData.businessTemplate = this.info.businessTemplate,
-            //     resData.businessName = this.info.businessName,
-            //     resData.businessPrice = this.info.businessPrice,
-            //     resData.department = this.info.department,
-            //     resData.doctors = this.info.doctors
-            //     console.log(resData)
-            // }else{
-            //     console.log('传入参数格式错误');
-            //     return;
-            // }
-            // resData.businessDescription = this.info.businessDescription;
-            // resData.selectAgreement = this.info.selectAgreement;
-            // resData.servicePhone = this.info.servicePhone;
+        saveInfo0() {
             this.$emit("reback", this.inData);
-            // this.inData.show = false;
+        },
+        saveInfo1() {
+            this.$emit("reback", this.inData);
+        },
+        saveInfo2() {
+            this.$emit("reback", this.inData);
         },
         chooseAgreement(item, index) {
             this.inData.agreement.default = item;
@@ -283,7 +256,7 @@ export default {
     },
     props: {
         inData: Object,
-        sureVisiable:Number
+        sureVisiable:Number,
     },
     model: {
         prop: ["inData","sureVisiable"],

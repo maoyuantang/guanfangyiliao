@@ -570,6 +570,10 @@
 			},
 
 
+
+
+
+
 			//管理2表（统计表）
 			async getList2() {
 				this.drawDataStart.dataAxis = [];
@@ -627,6 +631,9 @@
 					});
 				}
 			},
+
+
+
 
 
 			// 医生表
