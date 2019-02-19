@@ -142,6 +142,8 @@ export default {
 		
 				// }
 			};
+			// sessionStorage.setItem('userSelfInfo',option);
+			sessionStorage.clear()
 			state.userInfo = option;
 		},
 
@@ -181,7 +183,10 @@ export default {
 					}
 				]
 			};
+			// sessionStorage.setItem('userSelfInfo',userSelfInfo);
+			sessionStorage.clear()
 			state.userSelfInfo = userSelfInfo;
+
 		}
 	},
 	actions:{//异步提交

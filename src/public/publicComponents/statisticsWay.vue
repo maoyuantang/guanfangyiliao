@@ -34,7 +34,7 @@
                     {name:'按月统计',value:"MONTH"},
                     {name:'按年统计',value:"YEAR"}
                 ],
-                defaultSelect:{name:'按月统计',value:'MONTH'}
+                defaultSelect:{name:'按日统计',value:'DAY'}
 			}
         },
         watch:{
@@ -51,6 +51,7 @@
                 })
             },
             getIndex(index){//点击调用该函数
+                console.log(this.testData[index])
                 this.defaultSelect = this.testData[index];
                 this.sendData();
             }

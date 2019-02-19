@@ -210,7 +210,7 @@
                 dataAxis:this.inData.dataAxis,
                 data:this.inData.data,
                 title:this.inData.title,
-                total:this.inData.total+'4544464'
+                total:this.inData.total
             });
         },
         async beforeMount(){

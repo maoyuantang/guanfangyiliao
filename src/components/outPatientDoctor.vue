@@ -1,76 +1,80 @@
 <!--
 门诊系统医院管理页面
 
+我的门诊-其他医生-不知如何显示
+点击生成处方，7.9审核处方，后台返回审方医生id未null，无法请求
+处方单 未获取成功  预览
 
 -->
 <template>
   <div class="outPatientDoctor">
-
+    <!-- 45465465465
+<img :src="imgChuFangDan" alt=""> -->
     <doctorTab :inData="oAdminTab" @reBack="getConsulTabData"></doctorTab>
     <!-- 我的诊室-循环 -->
-    <ul v-for="" v-if="oconsulVisable==0" class="outpatient_s">
+    <ul v-for="(text,index) in myHomes" :key="index" v-if="oconsulVisable==0" class="outpatient_s">
       <li class="outpatient_left">
-        <p class="title">冠方医疗2.0-健康管理中心</p>
+        <p class="title">{{text.orgName}}</p>
         <div class="outpatient_user">
           <img src="../assets/img/ME.png" alt="">
           <div class="outpatient_name">
-            <p class="p1">Alejandro Garza</p>
-            <p class="p2">接诊中…</p>
+            <p class="p1">{{text.orgName}}</p>
+            <!-- <p class="p1">{{text.doctor.doctorName}}</p> -->
+            <p class="p2">{{text.doctor.doctorStates?'没接诊':'接诊中...'}}</p>
           </div>
         </div>
         <i></i>
-        <tableList class="tableList" :tableData="adminTableData" :columns="columns"></tableList>
+        <div v-for="(text,index) in tableDataList1" :key="index" v-show='myHomesBiao[index]==index'>
+          <el-table :data="text">
+            <el-table-column prop="unProcess" label="未处理"></el-table-column>
+            <el-table-column prop="process" label="已处理"></el-table-column>
+            <el-table-column prop="otherDocter" label="其他医生"></el-table-column>
+          </el-table>
+        </div>
         <el-button class="startConsul" type="text" @click="centerDialogVisible = true">进入门诊</el-button>
       </li>
       <li class="outpatient_right">
         <!-- 病人个数循环 -->
-        <ul v-for="" class="patientDetail">
-          <li class="name">
-            张某某(患者)
+        <ul v-for="(text,index) in text.clinicOrders" :key="index" class="patientDetail">
+          <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
+            <h1>{{text.userName}}</h1>
+            <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
+              <el-button type="success" plain>查看档案</el-button>
+              <el-button type="danger">发送</el-button>
+              <el-button type="info" plain>未开始</el-button>
+            </div>
           </li>
           <li class="medicalExpenses">
-            问诊费用<span><span>￥</span>8.00</span>
+            问诊费用<span><span>￥</span>{{text.askPrice}}</span>
           </li>
           <li class="drug">
-            <div class="fee">处方费用 ¥ <span>8.00</span></div>
+            <div class="fee">处方费用 ¥ <span>{{text.prescriptionPrice}}</span></div>
             <ul>
               <li class="drugTitle">Rx:</li>
               <li>
-                <ul v-for="" class="drugDetail">
+                <ul class="drugDetail">
                   <li>
-                    <ul>
-                      <li>(1)</li>
-                      <li>祛痰止咳胶囊</li>
-                      <li>0.45g*24粒/盒</li>
-                      <li>1盒</li>
-                      <li>用法: 4粒</li>
-                      <li>口服</li>
-                      <li>每天二次</li>
+                    <ul v-for="(text,index) in text.drugDetail" :key="index">
+                      <li>（{{index+1}}）</li>
+                      <li>{{text.drugName}}</li>
+                      <li>{{text.norm}}</li>
+                      <li>{{text.drugQuantity}}</li>
+                      <li>{{text.drugDosage}}</li>
+                      <li>{{text.drugUse}}</li>
+                      <li>{{text.drugTimes}}</li>
                     </ul>
                   </li>
-                  <li>
-                    <ul>
-                      <li>(2)</li>
-                      <li>祖卡木</li>
-                      <li>12g*6袋</li>
-                      <li>1盒</li>
-                      <li>用法: 3片</li>
-                      <li>口服</li>
-                      <li>每天二次</li>
-                    </ul>
-                  </li>
-                  <li></li>
                 </ul>
               </li>
             </ul>
           </li>
           <li class="orderTime">
             <span>下单时间:</span>
-            <span class="span">2018-12-23 10:32:24</span>
+            <span class="span">{{text.clinicOrderTime}}</span>
           </li>
           <li class="acceptTime">
             <span>接诊时间:</span>
-            <span class="span">2018-12-23 10:32:24</span>
+            <span class="span">{{text.askTime}}</span>
           </li>
         </ul>
 
@@ -84,31 +88,18 @@
           <span class="title1">审核列表</span>
           <span class="title2">...</span>
         </div>
-        <ul>
+        <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index,text)' :class="whichUser==index?'backgroundUser':''">
           <li>
             <img src="../assets/img/ME.png" alt="头像">
             <div>
-              <p class="name">Sally Castro</p>
-              <p class="depart">问诊医生: <span>王医生</span> | <span>健康中心患者</span></p>
-            </div>
-          </li>
-          <li>
-            <img src="../assets/img/ME.png" alt="头像">
-            <div>
-              <p class="name">Sally Castro</p>
-              <p class="depart">问诊医生: <span>王医生</span> | <span>健康中心患者</span></p>
-            </div>
-          </li>
-          <li>
-            <img src="../assets/img/ME.png" alt="头像">
-            <div>
-              <p class="name">Sally Castro</p>
-              <p class="depart">问诊医生: <span>王医生</span> | <span>健康中心患者</span></p>
+              <p class="name">{{text.userName}}</p>
+              <p class="depart">问诊医生: <span>{{text.createDoctor}}</span> | <span>{{text.clinicName}}</span></p>
             </div>
           </li>
         </ul>
       </li>
-      <li class="waitPeople">
+      <li v-for="(text,index) in bcd" :key="index+ '-label'" v-show='whichUser==index' class="waitPeople">
+
         <ul>
           <li>
             <ul class="title">
@@ -116,63 +107,64 @@
                 <i class="iconfont">&#xe8c0;</i>
                 <span>等待审方人数</span>
               </li>
-              <li class="num">15</li>
+              <li class="num">{{text.number}}</li>
             </ul>
           </li>
           <li class="wait1">
             <ul>
-              <li class="name">道明寺</li>
-              <li class="gender">性别: <span>男</span></li>
-              <li class="age">年龄: <span>23</span></li>
-              <li class="birthday">出生日期: <span>1988-02-26</span></li>
-              <li class="phoneNumber">联系方式: <span>18952645896</span></li>
-              <li class="address">常用地址: <span>黑龙江省哈尔滨市绥化地区</span></li>
+              <li class="name">{{text.userName}}</li>
+              <li class="gender">性别: <span>{{text.userSex}}</span></li>
+              <li class="age">年龄: <span>{{text.userAge}}</span></li>
+              <li class="birthday">出生日期: <span>{{text.birthday}}</span></li>
+              <li class="phoneNumber">联系方式: <span>{{text.birthday}}</span></li>
+              <li class="address">常用地址: <span>{{text.address}}</span></li>
 
             </ul>
           </li>
           <li class="wait2">
             <ul>
-              <li class="patientNumber">门诊号: <span>23568459</span></li>
-              <li class="feeType">费别: <span>自费</span></li>
-              <li class="medicalInsurance">医保类型: <span>职工医保</span></li>
+              <li class="patientNumber">门诊号: <span>{{text.clinicId}}</span></li>
+              <li class="feeType">费别: <span>{{text.priceDesc}}</span></li>
+              <li class="medicalInsurance">医保类型: <span>{{text.medicalInsurance}}</span></li>
             </ul>
           </li>
           <li class="wait3">
             <ul>
-              <li class="healDoctor">开方医生: <span>黄某人</span></li>
-              <li class="checkDoctor">审方医生: <span>李某人</span></li>
-              <li class="giveDoctor">发药医生: <span>sdafdas</span></li>
+              <li class="healDoctor">开方医生: <span>{{text.createDoctor}}</span></li>
+              <li class="checkDoctor">审方医生: <span>{{text.reviewDoctor}}</span></li>
+              <li class="giveDoctor">发药医生: <span>{{text.sendDoctor}}</span></li>
             </ul>
           </li>
         </ul>
       </li>
-      <li class="prescriptionDetail">
+      <li v-for="(text,index) in bcd" :key="index" v-show='whichUser==index' class="prescriptionDetail">
         <ul>
           <li class="detailHead">
-
           </li>
           <li class="detailCount">
             <div class="sign">
               <ul>
-                <li>主诉: <span>四岁宝宝偶尔干咳,没有其他任何症状</span></li>
-                <li>现病史: <span>干咳一个月 白天咳嗽 夜晚不咳嗽 干咳无痰 检查喉咙无红肿</span></li>
-                <li>过敏史: <span>无</span></li>
-                <li>门诊诊断: <span>气候变化引起的支气管过敏</span></li>
+                <li>主诉: <span>{{text.pb.complained}}</span></li>
+                <li>现病史: <span>{{text.pb.medicalHistory}}</span></li>
+                <li>过敏史: <span>{{text.pb.allergyHistory}}</span></li>
+                <li>门诊诊断: <span>{{text.pb.diagnosis}}</span></li>
               </ul>
             </div>
             <div class="result">
               <div class="front">
                 <ul>
                   <li>
-                    <el-checkbox v-model="checked1">疫情报告</el-checkbox>
+                    <el-checkbox v-model="text.pb.report">疫情报告</el-checkbox>
                   </li>
                   <li>
-                    <el-checkbox v-model="checked2">复诊</el-checkbox>
+                    <el-checkbox v-model="text.pb.report">复诊</el-checkbox>
                   </li>
                   <li>
+
                     <div class="block">
-                      <span class="demonstration">发病日期： </span>
-                      <el-date-picker @blur="demonstration1" v-model="value1" align="right" type="date" placeholder="选择日期">
+                      <span class="demonstration">发病日期：</span>
+                      <el-date-picker @blur="demonstration1" v-model="text.pb.occurTime" align="right" type="date"
+                        placeholder="选择日期">
                       </el-date-picker>
                     </div>
                   </li>
@@ -180,8 +172,9 @@
               </div>
               <div class="behind">
                 <div class="block">
-                  <span class="demonstration">下次复查日期: </span>
-                  <el-date-picker @blur="demonstration2" v-model="value2" align="right" type="date" placeholder="选择日期">
+                  <span class="demonstration">下次复查日期:</span>
+                  <el-date-picker @blur="demonstration2" v-model="text.pb.reviewTime" align="right" type="date"
+                    placeholder="选择日期">
                   </el-date-picker>
                 </div>
               </div>
@@ -190,11 +183,11 @@
               <ul>
                 <li class="orderTime">
                   <span>下单时间:</span>
-                  <span class="span">2018-12-23 10:32:24</span>
+                  <span class="span">{{text.pb.createTime}}</span>
                 </li>
                 <li class="acceptTime">
                   <span>接诊时间:</span>
-                  <span class="span">2018-12-23 10:32:24</span>
+                  <span class="span">{{text.pb.createTime}}</span>
                 </li>
               </ul>
             </div>
@@ -202,40 +195,47 @@
           <li class="detailList">
             <search @searchValue="adminSearchChange"></search>
             <div class="listBao">
-              <div class="lists">
-                <el-table :data="tableData" style="width: 100%">
-                  <el-table-column prop="serialNumber" label="序号">
+              <div class="lists" v-for="(text,index) in ARR" :key="index" v-show='whichUser==index'>
+                <el-table :data="text" style="width: 100%">
+                  <el-table-column prop="index" label="序号"></el-table-column>
+                  <el-table-column prop="drugName" label="药品名称">
                   </el-table-column>
-                  <el-table-column prop="DrugName" label="药品名称">
+                  <el-table-column prop="drugUse" label="用法">
                   </el-table-column>
-                  <el-table-column prop="usage" label="用法">
+                  <el-table-column prop="drugTimes" label="频率">
                   </el-table-column>
-                  <el-table-column prop="frequency" label="频率">
+                  <el-table-column prop="drugDosage" label="用量">
                   </el-table-column>
-                  <el-table-column prop="dose" label="用量">
+                  <el-table-column prop="drugPrice" label="单价">
                   </el-table-column>
-                  <el-table-column prop="unitPrice" label="单价">
+                  <el-table-column prop="drugQuantity" label="数量">
                   </el-table-column>
-                  <el-table-column prop="quantity" label="数量">
+                  <el-table-column prop="subtotal" label="合计">
                   </el-table-column>
-                  <el-table-column prop="total" label="合计">
-                  </el-table-column>
-                  <el-table-column prop="suggest" label="医生嘱托">
-                  </el-table-column>
-                  <el-table-column prop="delect" label="删除">
+                  <el-table-column prop="doctorAsk" label="医生嘱托">
                   </el-table-column>
                 </el-table>
               </div>
               <div class="totals">
-                <div class="totalMoney">总金额: <span>109</span></div>
+                <div class="totalMoney">总金额: <span>{{text.pb.drugPrice}}</span></div>
               </div>
             </div>
           </li>
           <li class="detailFooter">
-            <el-button class="preview" type="primary" @click="dialogTableVisible = true" plain>预览</el-button>
+            <el-button class="preview" type="primary" @click="dialogTableVisibleFun" plain>预览</el-button>
             <el-button class="fail" type="info">不通过</el-button>
-            <el-button class="success" type="success">生成电子处方</el-button>
+            <el-button class="success" type="success" @click='checkPrescription'>生成电子处方</el-button>
           </li>
+          <!-- <div>
+            4555
+            <div>
+              <span v-for="(item,index) in testData.list" :key="index" @click="getData(item,index)">{{item.name}}</span>
+            </div>
+            <div>
+              <p>{{testData.select.name}}</p>
+            </div>
+
+          </div> -->
         </ul>
       </li>
     </ul>
@@ -248,31 +248,17 @@
           <span class="title1">审核列表</span>
           <span class="title2">...</span>
         </div>
-        <ul>
+        <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index)' :class="whichUser==index?'backgroundUser':''">
           <li>
             <img src="../assets/img/ME.png" alt="头像">
             <div>
-              <p class="name">Sally Castro</p>
-              <p class="depart">问诊医生: <span>王医生</span> | <span>健康中心患者</span></p>
-            </div>
-          </li>
-          <li>
-            <img src="../assets/img/ME.png" alt="头像">
-            <div>
-              <p class="name">Sally Castro</p>
-              <p class="depart">问诊医生: <span>王医生</span> | <span>健康中心患者</span></p>
-            </div>
-          </li>
-          <li>
-            <img src="../assets/img/ME.png" alt="头像">
-            <div>
-              <p class="name">Sally Castro</p>
-              <p class="depart">问诊医生: <span>王医生</span> | <span>健康中心患者</span></p>
+              <p class="name">{{text.userName}}</p>
+              <p class="depart">问诊医生: <span>{{text.createDoctor}}</span> | <span>{{text.clinicName}}</span></p>
             </div>
           </li>
         </ul>
       </li>
-      <li class="waitPeople">
+      <li v-for="(text,index) in bcd" :key="index+ '-label'" v-show='whichUser==index' class="waitPeople">
         <ul>
           <li>
             <ul class="title">
@@ -280,63 +266,64 @@
                 <i class="iconfont">&#xe8c0;</i>
                 <span>等待发药人数</span>
               </li>
-              <li class="num">15</li>
+              <li class="num">{{text.number}}</li>
             </ul>
           </li>
           <li class="wait1">
             <ul>
-              <li class="name">道明寺</li>
-              <li class="gender">性别: <span>男</span></li>
-              <li class="age">年龄: <span>23</span></li>
-              <li class="birthday">出生日期: <span>1988-02-26</span></li>
-              <li class="phoneNumber">联系方式: <span>18952645896</span></li>
-              <li class="address">常用地址: <span>黑龙江省哈尔滨市绥化地区</span></li>
+              <li class="name">{{text.userName}}</li>
+              <li class="gender">性别: <span>{{text.userSex}}</span></li>
+              <li class="age">年龄: <span>{{text.userAge}}</span></li>
+              <li class="birthday">出生日期: <span>{{text.birthday}}</span></li>
+              <li class="phoneNumber">联系方式: <span>{{text.birthday}}</span></li>
+              <li class="address">常用地址: <span>{{text.address}}</span></li>
 
             </ul>
           </li>
           <li class="wait2">
             <ul>
-              <li class="patientNumber">门诊号: <span>23568459</span></li>
-              <li class="feeType">费别: <span>自费</span></li>
-              <li class="medicalInsurance">医保类型: <span>职工医保</span></li>
+              <li class="patientNumber">门诊号: <span>{{text.clinicId}}</span></li>
+              <li class="feeType">费别: <span>{{text.priceDesc}}</span></li>
+              <li class="medicalInsurance">医保类型: <span>{{text.medicalInsurance}}</span></li>
             </ul>
           </li>
           <li class="wait3">
             <ul>
-              <li class="healDoctor">开方医生: <span>黄某人</span></li>
-              <li class="checkDoctor">审方医生: <span>李某人</span></li>
-              <li class="giveDoctor">发药医生: <span>sdafdas</span></li>
+              <li class="healDoctor">开方医生: <span>{{text.createDoctor}}</span></li>
+              <li class="checkDoctor">审方医生: <span>{{text.reviewDoctor}}</span></li>
+              <li class="giveDoctor">发药医生: <span>{{text.sendDoctor}}</span></li>
             </ul>
           </li>
         </ul>
       </li>
-      <li class="prescriptionDetail">
+      <li v-for="(text,index) in bcd" :key="index" v-show='whichUser==index' class="prescriptionDetail">
         <ul>
           <li class="detailHead">
-
           </li>
           <li class="detailCount">
             <div class="sign">
               <ul>
-                <li>主诉: <span>四岁宝宝偶尔干咳,没有其他任何症状</span></li>
-                <li>现病史: <span>干咳一个月 白天咳嗽 夜晚不咳嗽 干咳无痰 检查喉咙无红肿</span></li>
-                <li>过敏史: <span>无</span></li>
-                <li>门诊诊断: <span>气候变化引起的支气管过敏</span></li>
+                <li>主诉: <span>{{text.pb.complained}}</span></li>
+                <li>现病史: <span>{{text.pb.medicalHistory}}</span></li>
+                <li>过敏史: <span>{{text.pb.allergyHistory}}</span></li>
+                <li>门诊诊断: <span>{{text.pb.diagnosis}}</span></li>
               </ul>
             </div>
             <div class="result">
               <div class="front">
                 <ul>
                   <li>
-                    <el-checkbox v-model="checked1">疫情报告</el-checkbox>
+                    <el-checkbox v-model="text.pb.report">疫情报告</el-checkbox>
                   </li>
                   <li>
-                    <el-checkbox v-model="checked2">复诊</el-checkbox>
+                    <el-checkbox v-model="text.pb.review">复诊</el-checkbox>
                   </li>
                   <li>
+
                     <div class="block">
-                      <span class="demonstration">发病日期： </span>
-                      <el-date-picker @blur="demonstration1" v-model="value1" align="right" type="date" placeholder="选择日期">
+                      <span class="demonstration">发病日期：</span>
+                      <el-date-picker @blur="demonstration1" v-model="text.pb.occurTime" align="right" type="date"
+                        placeholder="选择日期">
                       </el-date-picker>
                     </div>
                   </li>
@@ -344,8 +331,9 @@
               </div>
               <div class="behind">
                 <div class="block">
-                  <span class="demonstration">下次复查日期: </span>
-                  <el-date-picker @blur="demonstration2" v-model="value2" align="right" type="date" placeholder="选择日期">
+                  <span class="demonstration">下次复查日期:</span>
+                  <el-date-picker @blur="demonstration2" v-model="text.pb.reviewTime" align="right" type="date"
+                    placeholder="选择日期">
                   </el-date-picker>
                 </div>
               </div>
@@ -354,11 +342,11 @@
               <ul>
                 <li class="orderTime">
                   <span>下单时间:</span>
-                  <span class="span">2018-12-23 10:32:24</span>
+                  <span class="span">{{text.pb.createTime}}</span>
                 </li>
                 <li class="acceptTime">
                   <span>接诊时间:</span>
-                  <span class="span">2018-12-23 10:32:24</span>
+                  <span class="span">{{text.pb.createTime}}</span>
                 </li>
               </ul>
             </div>
@@ -366,37 +354,34 @@
           <li class="detailList">
             <search @searchValue="adminSearchChange"></search>
             <div class="listBao">
-              <div class="lists">
-                <el-table :data="tableData" style="width: 100%">
-                  <el-table-column prop="serialNumber" label="序号">
+              <div class="lists" v-for="(text,index) in ARR" :key="index" v-show='whichUser==index'>
+                <el-table :data="text" style="width: 100%">
+                  <el-table-column prop="index" label="序号"></el-table-column>
+                  <el-table-column prop="drugName" label="药品名称">
                   </el-table-column>
-                  <el-table-column prop="DrugName" label="药品名称">
+                  <el-table-column prop="drugUse" label="用法">
                   </el-table-column>
-                  <el-table-column prop="usage" label="用法">
+                  <el-table-column prop="drugTimes" label="频率">
                   </el-table-column>
-                  <el-table-column prop="frequency" label="频率">
+                  <el-table-column prop="drugDosage" label="用量">
                   </el-table-column>
-                  <el-table-column prop="dose" label="用量">
+                  <el-table-column prop="drugPrice" label="单价">
                   </el-table-column>
-                  <el-table-column prop="unitPrice" label="单价">
+                  <el-table-column prop="drugQuantity" label="数量">
                   </el-table-column>
-                  <el-table-column prop="quantity" label="数量">
+                  <el-table-column prop="subtotal" label="合计">
                   </el-table-column>
-                  <el-table-column prop="total" label="合计">
-                  </el-table-column>
-                  <el-table-column prop="suggest" label="医生嘱托">
-                  </el-table-column>
-                  <el-table-column prop="delect" label="删除">
+                  <el-table-column prop="doctorAsk" label="医生嘱托">
                   </el-table-column>
                 </el-table>
               </div>
               <div class="totals">
-                <div class="totalMoney">总金额: <span>109</span></div>
+                <div class="totalMoney">总金额: <span>{{text.pb.drugPrice}}</span></div>
               </div>
             </div>
           </li>
           <li class="detailFooter">
-            <el-button class="preview" type="primary" @click="dialogTableVisible = true" plain>预览</el-button>
+            <el-button class="preview" type="primary" @click="dialogTableVisibleFun" plain>预览</el-button>
             <el-button class="ship" type="primary" plain>发货</el-button>
           </li>
         </ul>
@@ -410,27 +395,9 @@
     </el-dialog>
     <!-- 预览弹窗 -->
     <el-dialog title="预览" :visible.sync="dialogTableVisible">
-      <el-table :data="gridData">
-        <el-table-column property="serialNumber" label="序号">
-        </el-table-column>
-        <el-table-column property="DrugName" label="药品名称">
-        </el-table-column>
-        <el-table-column property="usage" label="用法">
-        </el-table-column>
-        <el-table-column property="frequency" label="频率">
-        </el-table-column>
-        <el-table-column property="dose" label="用量">
-        </el-table-column>
-        <el-table-column property="unitPrice" label="单价">
-        </el-table-column>
-        <el-table-column property="quantity" label="数量">
-        </el-table-column>
-        <el-table-column property="total" label="合计">
-        </el-table-column>
-        <el-table-column property="suggest" label="医生嘱托">
-        </el-table-column>
-      </el-table>
+      <img src='' alt="">
     </el-dialog>
+
   </div>
 </template>
 
@@ -440,17 +407,19 @@
     // 已使用接口
     addClinic,//7.1新增业务
     searchClinic,//7.5门诊列表1
-    prescriptionDetailByCondition,//7.11出方列表2
     disableClinic,//7.4禁用远程门诊业务和诊室
+    updatePrescription,//7.9审核处方
 
     onlineRoomsByDoctor,//7.6(WEB医生)获取所有该医生的在线诊室
+    reviewList,//7.10按审方医生获取处方审核列表
+    prescriptionDetailByCondition,//7.11出方列表2
+
     addPrescription,//7.8开处方
-    updatePrescription,//7.9审核处方
+    fsDownload,//1.9.文件下载 
 
     //未使用接口
     updateClinic,//7.2更新远程门诊业务
     clinicDetail,//7.3查看远程门诊业务详情
-    reviewList,//7.10按审方医生获取处方审核列表
     prescriptionDetailById,//7.12根据处方id获取处方电子版
     drugSendRecord,//7.13根据处方id获取处方发货记录
     drugsByCondition,//7.16药品名称搜索药品信息
@@ -459,21 +428,53 @@
     // 废弃接口
     // fetchHospitalDepts,//2.2.获取医院科室列表
   } from "../api/apiAll.js";
+  // import {  prescriptionDetailById } from '../enums/apiList.js'
 
   //引入token
   import { mapState } from "vuex";
 
   import doctorTab from '../public/publicComponents/doctorTab.vue'
-  import tableList from "../public/publicComponents/publicListNo.vue";
   import search from "../public/publicComponents/search.vue";
   export default {
     components: {
       doctorTab,
-      tableList,
       search
     },
     data() {
       return {
+        // testData: {
+        //   select: {
+        //     name: 2
+        //   },
+        //   list: [
+        //     { name: 1 },
+        //     { name: 2 },
+        //     { name: 3 },
+        //   ]
+        // },
+
+
+
+        // new
+        myHomes: [],
+        tableDataList1: [
+          // [
+          //   {
+          //     unProcess: '1',
+          //     process: '2',
+          //     otherDocter: '3'
+          //   }
+          // ],
+        ],
+        whichUser: 0,
+        myHomesBiao:[],
+        imgChuFangDan: '',
+
+
+
+
+
+
         //函数传参
         // 公共
         pageNum: 1,//页数
@@ -485,12 +486,12 @@
         departmentId: "",//科室id
         clinicId: '', //诊室id
         secondDoctorId: '',// 审方医生id（为空） 
-        prescriptionId: '',//处方id
+        prescriptionId: '0',//处方id     // 7.12根据处方id获取处方电子版  (预览)
         reviewEnum0: 'REVIEWED',// 7.9审核处方  审核状态（REVIEWED, //已审核；UNREVIEWED, //未审核；FAILREVIEWED, //不通过）
         reviewEnum1: null, // 7.8开处方    审方状态（为空）
         userId: '',      //7.8用户id（患者id）
-        lookType:'',//7.10查看类型(lookType ==0 待审核列表； lookType ==1 审核通过列表)
-        
+        lookType: 0,//7.10查看类型(lookType ==0 待审核列表； lookType ==1 审核通过列表)
+
         // 7.8开处方 医生端列表2
         // firstDoctorId: '',//开方医生id
         // complained: '',// 主诉 
@@ -508,14 +509,14 @@
         // subtotal: '',                   //药品🐤小计
         // doctorAsk: '', //医生嘱托
 
-        
 
 
-        checked1: true,
-        checked2: false,
-        value1: '',
-        value2: '',
-        searchValue: "",
+
+        // checked1: true,
+        // checked2: false,
+        // value1: '',
+        // value2: '',
+        // searchValue: "",
         oAdminTab: {
           i: 0, //选中的是第几项，类型为int(注意：从0开始计数)
           list: [
@@ -559,58 +560,333 @@
         centerDialogVisible: false,
         oconsulVisable: 0,
         //药物详情
-        tableData: [
-          {
-            serialNumber: '01',
-            DrugName: '阿莫西林胶囊',
-            usage: '口服',
-            frequency: '一天两次',
-            dose: '一粒',
-            unitPrice: '25',
-            quantity: '1',
-            total: '25',
-            suggest: '饭后使用',
-            delect: '删除',
-          }, {
-            serialNumber: '01',
-            DrugName: '阿莫西林胶囊',
-            usage: '口服',
-            frequency: '一天两次',
-            dose: '一粒',
-            unitPrice: '25',
-            quantity: '1',
-            total: '25',
-            suggest: '饭后使用',
-            delect: '删除',
-          },
+        ARR: [
+
         ],
-        //预览
-        gridData: [
-          {
-            serialNumber: '01',
-            DrugName: '阿莫西林胶囊',
-            usage: '口服',
-            frequency: '一天两次',
-            dose: '一粒',
-            unitPrice: '25',
-            quantity: '1',
-            total: '25',
-            suggest: '饭后使用',
-            delect: '删除',
-          }, {
-            serialNumber: '01',
-            DrugName: '阿莫西林胶囊',
-            usage: '口服',
-            frequency: '一天两次',
-            dose: '一粒',
-            unitPrice: '25',
-            quantity: '1',
-            total: '25',
-            suggest: '饭后使用',
-          },
+
+        tableDataList3: [
+          // {
+          //   serialNumber: '01',
+          //   DrugName: '',
+          //   usage: '口服',
+          //   frequency: '一天两次',
+          //   dose: '一粒',
+          //   unitPrice: '25',
+          //   quantity: '1',
+          //   total: '25',
+          //   suggest: '饭后使用',
+          // }, {
+          //   serialNumber: '01',
+          //   DrugName: '阿莫西林胶囊',
+          //   usage: '口服',
+          //   frequency: '一天两次',
+          //   dose: '一粒',
+          //   unitPrice: '25',
+          //   quantity: '1',
+          //   total: '25',
+          //   suggest: '饭后使用',
+          // },
         ],
+
         dialogTableVisible: false,
+        // 我的诊室列表假数据
+        abc: {
+          "errCode": 0,
+          "errMsg": "",
+          "body": {
+            "header": {
+              "clinicName": "在线诊室名",
+              "clinicOrders": "该诊室的订单",
+              "doctor": "医生信息",
+              "id": "业务id",
+              "orgName": "医院名",
+              "process": "已处理",
+              "unProcess": "未处理",
+              "clinicOrders": "门诊业务订单集合",
+            },
+            "data1": null,
+            "data2": {
+              "pageNum": 1,
+              "pageSize": 10,
+              "size": 2,
+              "startRow": 1,
+              "endRow": 2,
+              "total": 2,
+              "pages": 1,
+              "list": [
+                {
+                  "id": "4783f95679a9412ba6da41b636dc102e",
+                  "orgName": "测试医院",
+                  "clinicName": "在线咨询业务",
+                  "process": 8,
+                  "unProcess": 6,
+                  "doctor": [
+                    {
+                      "doctorId": "EB237A1368A44A32B4070154C225C088",
+                      "doctorName": "张三",
+                      "doctorStates": false
+                    }
+                  ],
+                  "clinicOrders":
+                    [
+                      {
+                        "clinicOrderId": "ADD0DCC3ABC24C82A4925E4F6EE41D00",
+                        "userName": "aa",
+                        "drugDetail": [
+                          {
+                            "drugName": "复方氨酚烷胺胶囊1",         //药品名
+                            "norm": "24粒/盒",                           //药品规则
+                            "drugQuantity": 2,
+                            "drugUse": "口服",                        //药品用法
+                            "drugTimes": "一日2次",                    //药品次数
+                            "drugDosage": "一次1粒"                    //药品剂量
+                          },
+                          {
+                            "drugName": "阿莫西林胶囊",         //药品名
+                            "norm": "24粒/盒",                           //药品规则
+                            "drugQuantity": 2,
+                            "drugUse": "口服",                        //药品用法
+                            "drugTimes": "一日2次",                    //药品次数
+                            "drugDosage": "一次1粒"                    //药品剂量
+                          }
+                        ],
+                        "clinicOrderTime": "2019-01-16 18:56:03",
+                        "askTime": "2019-01-16 18:56:03",
+                        "askPrice": "2.00",
+                        "prescriptionPrice": "60.00"
+                      },
+                      {
+                        "clinicOrderId": "ADD0DCC3ABC24C82A4925E4F6EE41D00",
+                        "userName": "bb",
+                        "drugDetail": [
+                          {
+                            "drugName": "复方氨酚烷胺胶囊2",         //药品名
+                            "norm": "24粒/盒",                           //药品规则
+                            "drugQuantity": 2,
+                            "drugUse": "口服",                        //药品用法
+                            "drugTimes": "一日2次",                    //药品次数
+                            "drugDosage": "一次1粒"                    //药品剂量
+                          }
+                        ],
+                        "clinicOrderTime": "2019-01-16 18:56:03",
+                        "askTime": "2019-01-16 18:56:03",
+                        "askPrice": "2.00",
+                        "prescriptionPrice": "60.00"
+                      }
+                    ]
+                },
+
+
+
+
+
+
+
+
+
+
+
+                {
+                  "id": "a196b491f158484c9231370cc2712d75",
+                  "orgName": "测试医院",
+                  "clinicName": "远程门诊业务",
+                  "process": 9,
+                  "unProcess": 5,
+                  "doctor": [
+                    {
+                      "doctorId": "EB237A1368A44A32B4070154C225C088",
+                      "doctorName": "张三",
+                      "doctorStates": false
+                    }
+                  ],
+                  "clinicOrders":
+                    [
+                      {
+                        "clinicOrderId": "ADD0DCC3ABC24C82A4925E4F6EE41D00",
+                        "userName": "aa",
+                        "drugDetail": [
+                          {
+                            "drugName": "复方氨酚烷胺胶囊1",         //药品名
+                            "norm": "24粒/盒",                           //药品规则
+                            "drugUse": "口服",                        //药品用法
+                            "drugTimes": "一日2次",                    //药品次数
+                            "drugDosage": "一次1粒"                    //药品剂量
+                          },
+                          {
+                            "drugName": "复方氨酚烷胺胶囊1",         //药品名
+                            "norm": "24粒/盒",                           //药品规则
+                            "drugQuantity": 2,
+                            "drugUse": "口服",                        //药品用法
+                            "drugTimes": "一日2次",                    //药品次数
+                            "drugDosage": "一次1粒"                    //药品剂量
+                          }
+                        ],
+                        "clinicOrderTime": "2019-01-16 18:56:03",
+                        "askTime": "2019-01-16 18:56:03",
+                        "askPrice": "2.00",
+                        "prescriptionPrice": "60.00"
+                      },
+                      {
+                        "clinicOrderId": "ADD0DCC3ABC24C82A4925E4F6EE41D00",
+                        "userName": "bb",
+                        "drugDetail": [
+                          {
+                            "drugName": "复方氨酚烷胺胶囊2",         //药品名
+                            "norm": "24粒/盒",                           //药品规则
+                            "drugQuantity": 2,
+                            "drugUse": "口服",                        //药品用法
+                            "drugTimes": "一日2次",                    //药品次数
+                            "drugDosage": "一次1粒"                    //药品剂量
+
+                          }
+                        ],
+                        "clinicOrderTime": "2019-01-16 18:56:03",
+                        "askTime": "2019-01-16 18:56:03",
+                        "askPrice": "2.00",
+                        "prescriptionPrice": "60.00"
+                      }
+                    ]
+                }
+              ],
+              "prePage": 0,
+              "nextPage": 0,
+              "isFirstPage": true,
+              "isLastPage": true,
+              "hasPreviousPage": false,
+              "hasNextPage": false,
+              "navigatePages": 8,
+              "navigatepageNums": [
+                1
+              ],
+              "navigateFirstPage": 1,
+              "navigateLastPage": 1,
+              "firstPage": 1,
+              "lastPage": 1
+            }
+          },
+          "cause": null
+        },
+        // 处方什么列表假数据
+        bcd: [
+          {
+            "prescriptionOrderId": null,
+            "userId": "09f0ce04d92243108928bac31a13c7e9",
+            "userName": "丽丽大王1",
+            "clinicName": "远程门诊业务",
+            "userSex": "女",
+            "userAge": 18,
+            "birthday": "2005-01-01",
+            "phone": "18323495567",
+            "address": '潼南',
+            "clinicId": "a196b491f158484c9231370cc2712d75",
+            "priceDesc": "自费",
+            "medicalInsurance": "职工医保",
+            "createDoctor": "开方医生",
+            "reviewDoctor": '审核医生',
+            "sendDoctor": '发药医生',
+            "number": 0,
+            "orderTime": null,
+            "prescriptionTime": "2019-01-17 16:10:54.21",
+            "pb": {
+              "id": "c52207379cdd46bb810bd75c3d884a6c",                                                       //处方id
+              "complained": "偶尔咳嗽，无其他症状",                                                         //主诉
+              "medicalHistory": "干咳一个月，白天咳嗽，夜晚不咳嗽，干咳无痰，检查喉咙无红肿",                  //现病史
+              "allergyHistory": "无",                                                                          //过敏史
+              "diagnosis": "气候变化引起的支气管过敏",                                                        //门诊诊断
+              "report": true,                                                                                 //疫情报告（true:勾选；false：不勾选）
+              "review": true,                                                                                //复诊（true:勾选；false：不勾选）
+              "occurTime": "2019-01-14",                                                                      //发病日期
+              "reviewTime": "2019-02-14",                                                                     //下次复查日期
+              "createTime": "2019-01-17 16:10:54",                                                            //创建时间
+              "prescriptionDrugs": [
+                {
+                  "id": null,
+                  "drugName": "复方氨酚烷胺胶囊",                                                         //药品名称
+                  "drugUse": "口服",                                                                        //药品用法
+                  "drugTimes": "一日2次",                                                                    //药品次数
+                  "drugDosage": "一次1粒",                                                               //药品剂量
+                  "drugPrice": "30.00",                                                                   //药品单价
+                  "drugQuantity": 2,                                                                      //数量
+                  "subtotal": "60.00",                                                                    //合计
+                  "doctorAsk": "一定要按时按量吃药"                                                        //医生嘱托
+                },
+                {
+                  "id": null,
+                  "drugName": "阿莫西林胶囊",                                                         //药品名称
+                  "drugUse": "口服",                                                                        //药品用法
+                  "drugTimes": "一日2次",                                                                    //药品次数
+                  "drugDosage": "一次1粒",                                                               //药品剂量
+                  "drugPrice": "30.00",                                                                   //药品单价
+                  "drugQuantity": 2,                                                                      //数量
+                  "subtotal": "60.00",                                                                    //合计
+                  "doctorAsk": "一定要按时按量吃药"                                                        //医生嘱托
+                }
+              ],
+              "drugPrice": "60.00"
+            }
+
+          },
+          {
+            "prescriptionOrderId": null,
+            "userId": "09f0ce04d92243108928bac31a13c7e9",
+            "userName": "丽丽大王2",
+            "clinicName": "远程门诊业务",
+            "userSex": "男",
+            "userAge": 25,
+            "birthday": "2005-01-01",
+            "phone": "18323495567",
+            "address": null,
+            "clinicId": "a196b491f158484c9231370cc2712d75",
+            "priceDesc": "自费",
+            "medicalInsurance": "职工医保",
+            "createDoctor": "张三",
+            "reviewDoctor": null,
+            "sendDoctor": null,
+            "number": 1,
+            "orderTime": null,
+            "prescriptionTime": "2019-01-17 16:10:54.21",
+            "pb": {
+              "id": "c52207379cdd46bb810bd75c3d884a6c",                                                       //处方id
+              "complained": "我没事，医生说我有事",                                                         //主诉
+              "medicalHistory": "干咳一个月，白天咳嗽，夜晚不咳嗽，干咳无痰，检查喉咙无红肿",                  //现病史
+              "allergyHistory": "无",                                                                          //过敏史
+              "diagnosis": "气候变化引起的支气管过敏",                                                        //门诊诊断
+              "report": false,                                                                                 //疫情报告（true:勾选；false：不勾选）
+              "review": false,                                                                                //复诊（true:勾选；false：不勾选）
+              "occurTime": "2019-01-14",                                                                      //发病日期
+              "reviewTime": "2019-02-14",                                                                     //下次复查日期
+              "createTime": "2019-01-17 16:10:54",                                                            //创建时间
+              "prescriptionDrugs": [
+                {
+                  "id": null,
+                  "drugName": "复方",                                                         //药品名称
+                  "drugUse": "口服",                                                                        //药品用法
+                  "drugTimes": "一日2次",                                                                    //药品次数
+                  "drugDosage": "一次1粒",                                                               //药品剂量
+                  "drugPrice": "30.00",                                                                   //药品单价
+                  "drugQuantity": 2,                                                                      //数量
+                  "subtotal": "60.00",                                                                    //合计
+                  "doctorAsk": "一定要按时按量吃药"                                                        //医生嘱托
+                },
+                {
+                  "id": null,
+                  "drugName": "西胶囊",                                                         //药品名称
+                  "drugUse": "口服",                                                                        //药品用法
+                  "drugTimes": "一日2次",                                                                    //药品次数
+                  "drugDosage": "一次1粒",                                                               //药品剂量
+                  "drugPrice": "30.00",                                                                   //药品单价
+                  "drugQuantity": 2,                                                                      //数量
+                  "subtotal": "60.00",                                                                    //合计
+                  "doctorAsk": "一定要按时按量吃药"                                                        //医生嘱托
+                }
+              ],
+              "drugPrice": "60.00"
+            }
+
+          },
+        ],
       }
+
 
     },
     computed: {
@@ -621,24 +897,48 @@
       })
     },
     methods: {
+      //返回赋值函数
       getConsulTabData(res) {//顶部切换返回函数
-        // alert(res.i)
         this.oconsulVisable = res.i
       },
       demonstration1(res) {//时间插件返回函数
-        console.log(res)
+        // console.log(res)
       },
       demonstration2(res) {//时间插件返回函数
-        console.log(res)
+        // console.log(res)
       },
       adminSearchChange(data) {//审核列表
-        alert()
         this.searchValue = data;
         // console.log(data)
       },
+      whichUserFun(index, data) {
+        this.whichUser = index;
+        this.prescriptionId = data.pb.id
+        this.secondDoctorId = data.reviewDoctor
+        console.log(this.whichUser)
+        console.log(this.prescriptionId)
+        console.log(this.secondDoctorId)
+      },
+      dialogTableVisibleFun() {
+        this.dialogTableVisible = true;
+        this.preLook()
+      },
+      // getData(item, index) {
+      //   this.testData.select = item
+      // },
 
+
+
+
+
+
+
+
+
+      //列表
       // 7.6(WEB医生)获取所有该医生的在线诊室(医生端列表1)
-      async myClinicList1() {
+      async getList1() {
+        const _this = this
         let query = {
           token: this.userState.token,
           pageNum: this.pageNum,
@@ -646,9 +946,25 @@
         };
         const res = await onlineRoomsByDoctor(query);
         if (res.data && res.data.errCode === 0) {
-          alert(22)
-          console.log('医生端列表1+成功')
           console.log(res)
+          console.log('医生端列表1+成功')
+          // const lists = res.data.body.data2.list;
+          // this.myHomes = lists
+          this.myHomes = this.abc.body.data2.list
+          // this.tableData1 = this.myHomes
+          $.each(this.abc.body.data2.list, function (index, text) {
+            _this.myHomesBiao.push(index);
+            _this.tableDataList1.push(
+              [
+                {
+                  process: text.process,
+                  unProcess: text.unProcess,
+                  // process: text.otherDocter,
+                }
+              ]
+            )
+          })
+          console.log(this.tableDataList1)
         } else {
           //失败
           console.log('医生端列表1+失败')
@@ -658,19 +974,53 @@
           });
         }
       },
-      // 7.10按审方医生获取处方审核列表 (医生列表2)
-      async myClinicList2() {
+      // 7.10.1按审方医生获取处方审核列表 (医生列表2)
+      async getList2() {
+        const _this = this;
         let query = {
           token: this.userState.token,
-          lookType:this.lookType
+          lookType: this.lookType
         };
         const res = await reviewList(query);
         if (res.data && res.data.errCode === 0) {
           console.log('医生端列表2(审核)+成功')
           console.log(res)
+          // this.bcd = res.data.body;
+          console.log(this.bcd)
+          this.prescriptionId = this.bcd[0].pb.id
+          $.each(this.bcd, function (index, text) {
+            _this.ARR.push(text.pb.prescriptionDrugs)
+          })
         } else {
           //失败
           console.log('医生端列表1+失败')
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      // 7.10.2药品配送列表 (医生列表3)
+      async getList3() {
+        const _this = this;
+        let query = {
+          token: this.userState.token,
+          lookType: 1
+        };
+        const res = await reviewList(query);
+        if (res.data && res.data.errCode === 0) {
+          console.log('医生端列表3(发药)+成功')
+          console.log(res)
+          // this.bcd = res.data.body;
+          console.log(this.bcd)
+          $.each(this.bcd, function (index, text) {
+            _this.ARR.length = 0
+            _this.ARR.push(text.pb.prescriptionDrugs)
+          })
+          console.log(this.tableDataList3)
+        } else {
+          //失败
+          console.log('医生端列表3+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -679,12 +1029,13 @@
       },
       // 7.12根据处方id获取处方电子版  (预览)
       async preLook() {
-        alert()
+        console.log(this.prescriptionId)
         let query = {
           token: this.userState.token,
-          prescriptionId:this.prescriptionId
+          prescriptionId: this.prescriptionId
         };
         const res = await prescriptionDetailById(query);
+        console.log(res.data)
         if (res.data && res.data.errCode === 0) {
           console.log('预览+成功')
           console.log(res)
@@ -697,23 +1048,22 @@
           });
         }
       },
-      // 7.9审核处方 
-      async checkPrescription() {
-        let _this = this;
+      // 1.9.文件下载 
+      async getList3() {
+        const _this = this;
         let query = {
-          token: this.userState.token
+          id: xxxxx,
+          fileName: '门诊处方签',
+          width: 600,
+          height: 800
         };
-        let options = {
-          prescriptionId: this.prescriptionId,
-          secondDoctorId: this.secondDoctorId,
-          reviewEnum: this.reviewEnum0
-        };
-        const res = await updatePrescription(query, options);
+        const res = await fsDownload(query);
         if (res.data && res.data.errCode === 0) {
-          console.log('审核处方医生端+成功')
+          console.log('1.9.文件下载 +成功')
           console.log(res)
         } else {
-          console.log('审核处方医生端+失败')
+          //失败
+          console.log('1.9.文件下载 +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -722,7 +1072,22 @@
       },
 
 
-      //7.8开处方 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      // 7.8开处方 
       // async addPrescription() {
       //   let _this = this;
       //   let query = {
@@ -766,17 +1131,36 @@
       //     });
       //   }
       // },
-
-      
-
-
+      // 7.9审核处方   点击生成处方
+      async checkPrescription() {
+        let _this = this;
+        let query = {
+          token: this.userState.token
+        };
+        let options = {
+          prescriptionId: this.prescriptionId,
+          secondDoctorId: this.secondDoctorId,
+          reviewEnum: this.reviewEnum0//等待
+        };
+        const res = await updatePrescription(query, options);
+        if (res.data && res.data.errCode === 0) {
+          console.log('审核处方医生端+成功')
+          console.log(res)
+        } else {
+          console.log('审核处方医生端+失败')
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
     },
     async created() {
-      this.myClinicList1();//7.6医生列表1
-      // this.myClinicList2();//7.10审核列表2
-      // this.preLook()//预览弹框
-      // this.checkPrescription();//7.9是否通过
+      this.getList1();//7.6医生列表1
+      this.getList2();//7.10.1审核列表2
+      this.getList2();//7.10.2审核列表3
       // this.addPrescription();//7.8开处方
+      // this.checkPrescription();//7.9是否通过
     }
   }
 </script>
@@ -848,10 +1232,6 @@
         margin: 0 0 0 7%;
       }
 
-      .tableList {
-        width: 70%;
-        margin: 0px 0 0 6%;
-      }
 
       .startConsul {
         width: 60%;
@@ -881,7 +1261,7 @@
         justify-content: space-around;
         margin: 0.18rem 0 0 0;
 
-        .name {
+        h1 {
           ont-family: PingFangSC-Regular;
           font-size: 13px;
           color: #002257;
@@ -996,374 +1376,380 @@
     }
   }
 
-  .prescriptionCheck {
-    display: flex;
+  .checkList {
+    width: 23%;
+    background: #FFFFFF;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.14);
+    border-radius: 3px 3px 0 0;
     height: 100%;
-    margin: 0.4rem 0 0 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0.1rem 0;
+    height: 100%;
 
-    .checkList {
-      width: 23%;
-      background: #FFFFFF;
-      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.14);
-      border-radius: 3px 3px 0 0;
-      height: 100%;
+    .title {
       display: flex;
-      flex-direction: column;
-      padding: 0.1rem 0.2rem;
-      height: 100%;
+      justify-content: space-between;
+      align-content: center;
+      padding: 0 0.2rem;
 
-      .title {
-        display: flex;
-        justify-content: space-between;
-        align-content: center;
-
-        .title1 {
-          font-family: PingFangSC-Regular;
-          font-size: 14px;
-          color: #5C5C5C;
-          padding-top: 0.1rem;
-        }
-
-        .title2 {
-          font-family: PingFangSC-Regular;
-          font-size: 20px;
-          color: #5C5C5C;
-          letter-spacing: 0;
-          font-weight: bold;
-        }
+      .title1 {
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #5C5C5C;
+        padding-top: 0.1rem;
       }
 
-      ul {
+      .title2 {
+        font-family: PingFangSC-Regular;
+        font-size: 20px;
+        color: #5C5C5C;
+        letter-spacing: 0;
+        font-weight: bold;
+      }
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      margin: 0.1rem 0;
+      padding: 0.17rem 0.2rem;
+
+      li {
         display: flex;
-        flex-direction: column;
-        padding: 0.17rem 0;
+        align-items: center;
 
-        li {
+
+        img {
+          width: 0.5rem;
+          height: 0.5rem;
+          border-radius: 50%;
+          margin: 0 0.1rem 0 0;
+        }
+
+        div {
           display: flex;
-          margin: 0.1rem 0;
-          align-items: center;
+          flex-direction: column;
 
-
-          img {
-            width: 0.36rem;
-            height: 0.36rem;
-            border-radius: 50%;
-            margin: 0 0.1rem 0 0;
+          .name {
+            font-family: PingFangSC-Regular;
+            font-size: 14px;
+            color: #000;
           }
 
-          div {
-            display: flex;
-            flex-direction: column;
-
-            .name {
-              font-family: PingFangSC-Regular;
-              font-size: 14px;
-              color: #1B1E24;
-            }
-
-            .depart {
-              font-family: PingFangSC-Regular;
-              font-size: 14px;
-              color: #98A9BC;
-              letter-spacing: 0.2px;
-              line-height: 21px;
-            }
+          .depart {
+            font-family: PingFangSC-Regular;
+            font-size: 14px;
+            color: #000;
+            letter-spacing: 0.2px;
+            line-height: 21px;
           }
         }
       }
     }
+  }
 
-    .waitPeople {
-      width: 15%;
-      height: 95%;
-      background: #FFFFFF;
-      border: 1px solid #E4E8EB;
-      border-radius: 0 0 3px 3px;
-      margin: 0 0 0 0.3rem;
+  .waitPeople {
+    width: 15%;
+    height: 95%;
+    background: #FFFFFF;
+    border: 1px solid #E4E8EB;
+    border-radius: 0 0 3px 3px;
+    margin: 0 0 0 0.3rem;
+    display: flex;
+    flex-direction: column;
+
+    .title {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.12rem;
+      border-left: 3px solid #4285F4;
 
-      .title {
+      .wait {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.12rem;
-        border-left: 3px solid #4285F4;
 
-        .wait {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-
-          i {
-            font-size: 20px;
-            color: blue;
-          }
-
-          span {
-            font-family: PingFangSC-Regular;
-            font-size: 14px;
-            color: #4285F4;
-            letter-spacing: 0;
-            margin: 0 0 0 0.05rem;
-          }
+        i {
+          font-size: 20px;
+          color: blue;
         }
 
-        .num {
+        span {
           font-family: PingFangSC-Regular;
-          font-size: 22px;
+          font-size: 14px;
           color: #4285F4;
           letter-spacing: 0;
-          line-height: 22px;
+          margin: 0 0 0 0.05rem;
         }
       }
 
-      .wait1 {
-        margin: 0.1rem 0.15rem;
-        padding: 0 0 0.05rem 0;
-        border-bottom: 1px solid #E4E8EB;
-
-        ul {
-          li {
-            opacity: 0.8;
-            font-family: PingFangSC-Light;
-            font-size: 12px;
-            color: #212223;
-            line-height: 20px;
-            margin: 0 0 0.1rem 0;
-            letter-spacing: 0.005rem;
-          }
-
-          .name {
-            font-family: PingFangSC-Medium;
-            font-size: 14px;
-            color: black;
-            line-height: 20px;
-          }
-        }
+      .num {
+        font-family: PingFangSC-Regular;
+        font-size: 22px;
+        color: #4285F4;
+        letter-spacing: 0;
+        line-height: 22px;
       }
-
-      .wait2 {
-        padding: 0.1rem 0.15rem;
-        border-bottom: 1px solid #E4E8EB;
-
-        ul {
-          li {
-            opacity: 0.8;
-            font-family: PingFangSC-Light;
-            font-size: 12px;
-            color: #212223;
-            line-height: 20px;
-            margin: 0 0 0.1rem 0;
-          }
-
-        }
-      }
-
-      .wait3 {
-        padding: 0.1rem 0.15rem;
-
-        ul {
-          li {
-            opacity: 0.8;
-            font-family: PingFangSC-Light;
-            font-size: 12px;
-            color: #212223;
-            line-height: 20px;
-            margin: 0 0 0.1rem 0;
-          }
-
-        }
-      }
-
     }
 
-    .prescriptionDetail {
-      width: 55%;
-      height: 95%;
-      /* background: #FFFFFF; */
-      /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.20); */
-      margin: 0 0 0 0.2rem;
+    .wait1 {
+      margin: 0.1rem 0.15rem;
+      padding: 0 0 0.05rem 0;
+      border-bottom: 1px solid #E4E8EB;
 
       ul {
-        height: 100%;
-
-        .detailHead {
-          width: 100%;
-          height: 5%;
-          background: #FFFFFF;
-          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.20);
-          margin: 0 0 2% 0;
+        li {
+          opacity: 0.8;
+          font-family: PingFangSC-Light;
+          font-size: 12px;
+          color: #212223;
+          line-height: 20px;
+          margin: 0 0 0.1rem 0;
+          letter-spacing: 0.005rem;
         }
 
-        .detailCount {
-          width: 100%;
-          height: 38%;
-          background: #FFFFFF;
-          border: 1px solid #E4E8EB;
-          border-radius: 3px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-around;
-          padding: 0 0.25rem 0 0.35rem;
+        .name {
+          font-family: PingFangSC-Medium;
+          font-size: 14px;
+          color: black;
+          line-height: 20px;
+        }
+      }
+    }
 
-          .sign {
-            ul {
-              display: flex;
-              flex-direction: column;
-              justify-content: space-around;
+    .wait2 {
+      padding: 0.1rem 0.15rem;
+      border-bottom: 1px solid #E4E8EB;
 
-              li {
-                font-family: PingFangSC-Medium;
+      ul {
+        li {
+          opacity: 0.8;
+          font-family: PingFangSC-Light;
+          font-size: 12px;
+          color: #212223;
+          line-height: 20px;
+          margin: 0 0 0.1rem 0;
+
+          span {
+            word-wrap: break-word;
+            word-break: normal;
+          }
+        }
+
+      }
+    }
+
+    .wait3 {
+      padding: 0.1rem 0.15rem;
+
+      ul {
+        li {
+          opacity: 0.8;
+          font-family: PingFangSC-Light;
+          font-size: 12px;
+          color: #212223;
+          line-height: 20px;
+          margin: 0 0 0.1rem 0;
+        }
+
+      }
+    }
+
+  }
+
+  .prescriptionDetail {
+    width: 55%;
+    height: 95%;
+    /* background: #FFFFFF; */
+    /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.20); */
+    margin: 0 0 0 0.2rem;
+
+    ul {
+      height: 100%;
+
+      .detailHead {
+        width: 100%;
+        height: 5%;
+        background: #FFFFFF;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.20);
+        margin: 0 0 2% 0;
+      }
+
+      .detailCount {
+        width: 100%;
+        height: 38%;
+        background: #FFFFFF;
+        border: 1px solid #E4E8EB;
+        border-radius: 3px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 0 0.25rem 0 0.35rem;
+
+        .sign {
+          ul {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+
+            li {
+              font-family: PingFangSC-Medium;
+              font-size: 14px;
+              color: #212223;
+              line-height: 0.25rem;
+              font-weight: bold;
+
+              span {
+                font-family: PingFangSC-Light;
                 font-size: 14px;
-                color: #212223;
-                line-height: 0.25rem;
-                font-weight: bold;
-
-                span {
-                  font-family: PingFangSC-Light;
-                  font-size: 14px;
-                  color: #0F1011;
-                  line-height: 30px;
-                  font-weight: normal;
-                }
+                color: #0F1011;
+                line-height: 30px;
+                font-weight: normal;
               }
             }
           }
+        }
 
-          .result {
-            display: flex;
-            justify-content: space-between;
+        .result {
+          display: flex;
+          justify-content: space-between;
 
-            .front {
-              ul {
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
+          .front {
+            ul {
+              display: flex;
+              justify-content: space-around;
+              align-items: center;
 
-                li {
-                  margin: 0 0.25rem 0 0;
-                  font-family: PingFangSC-Light;
-                  font-size: 14px;
-                  color: #212223;
-                  line-height: 20px;
-
-                  .demonstration {
-                    font-family: PingFangSC-Light;
-                    font-size: 14px;
-                    color: #212223;
-                    line-height: 20px;
-                  }
-                }
-              }
-            }
-
-            .behind {
-              .demonstration {
+              li {
+                margin: 0 0.25rem 0 0;
                 font-family: PingFangSC-Light;
                 font-size: 14px;
                 color: #212223;
                 line-height: 20px;
+
+                .demonstration {
+                  font-family: PingFangSC-Light;
+                  font-size: 14px;
+                  color: #212223;
+                  line-height: 20px;
+                }
               }
             }
           }
 
-          .dates {
-            ul {
-              .orderTime {
-                margin: 0 0 0.1rem 0;
-
-                span {
-                  font-family: PingFangSC-Regular;
-                  font-size: 13px;
-                  color: #97A3B4;
-                  line-height: 22px;
-                }
-
-                .span {
-                  color: red;
-                }
-              }
-
-              .acceptTime {
-                span {
-                  font-family: PingFangSC-Regular;
-                  font-size: 13px;
-                  color: #97A3B4;
-                  line-height: 22px;
-                  margin: 0 0 0.1rem 0;
-                }
-
-                .span {
-                  color: red;
-                }
-              }
+          .behind {
+            .demonstration {
+              font-family: PingFangSC-Light;
+              font-size: 14px;
+              color: #212223;
+              line-height: 20px;
             }
           }
         }
 
-        .detailList {
-          width: 100%;
-          height: 41%;
-          /* background: #FFFFFF; */
-          border-radius: 3px;
-          margin: 3% 0 0 0;
+        .dates {
+          ul {
+            .orderTime {
+              margin: 0 0 0.1rem 0;
 
-          .listBao {
-            margin: 3% 0 0 0;
-            height: 85%;
-            overflow-y: scroll;
+              span {
+                font-family: PingFangSC-Regular;
+                font-size: 13px;
+                color: #97A3B4;
+                line-height: 22px;
+              }
 
-            .lists {
-              margin: 0.3rem 0 0 0;
-            }
-
-            .totals {
-              height: 0.5rem;
-              position: relative;
-
-              .totalMoney {
+              .span {
                 color: red;
-                font-family: PingFangSC-Semibold;
-                font-size: 14px;
-                color: #5E6875;
-                letter-spacing: 0;
-                margin: 0 0 0 0;
-                position: absolute;
-                right: 20%;
-                bottom: 20%;
               }
             }
-          }
-        }
 
-        .detailFooter {
-          width: 100%;
-          height: 8%;
-          margin: 2.5% 0 0 0;
-          background: #FFFFFF;
-          border: 1px solid #E4E8EB;
-          display: flex;
-          align-items: center;
-          position: relative;
+            .acceptTime {
+              span {
+                font-family: PingFangSC-Regular;
+                font-size: 13px;
+                color: #97A3B4;
+                line-height: 22px;
+                margin: 0 0 0.1rem 0;
+              }
 
-          .preview {
-            position: absolute;
-            right: 3rem;
-          }
-
-          .fail {
-            position: absolute;
-            right: 2rem;
-          }
-
-          .success {
-            position: absolute;
-            right: 0.5rem;
+              .span {
+                color: red;
+              }
+            }
           }
         }
       }
+
+      .detailList {
+        width: 100%;
+        height: 41%;
+        /* background: #FFFFFF; */
+        border-radius: 3px;
+        margin: 3% 0 0 0;
+
+        .listBao {
+          margin: 3% 0 0 0;
+          height: 85%;
+          overflow-y: scroll;
+
+          .lists {
+            margin: 0.3rem 0 0 0;
+          }
+
+          .totals {
+            height: 0.5rem;
+            position: relative;
+
+            .totalMoney {
+              color: red;
+              font-family: PingFangSC-Semibold;
+              font-size: 14px;
+              color: #5E6875;
+              letter-spacing: 0;
+              margin: 0 0 0 0;
+              position: absolute;
+              right: 20%;
+              bottom: 20%;
+            }
+          }
+        }
+      }
+
+      .detailFooter {
+        width: 100%;
+        height: 8%;
+        margin: 2.5% 0 0 0;
+        background: #FFFFFF;
+        border: 1px solid #E4E8EB;
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        .preview {
+          position: absolute;
+          right: 3rem;
+        }
+
+        .fail {
+          position: absolute;
+          right: 2rem;
+        }
+
+        .success {
+          position: absolute;
+          right: 0.5rem;
+        }
+      }
     }
+  }
+
+  .prescriptionCheck {
+    display: flex;
+    height: 100%;
+    margin: 0.4rem 0 0 0;
   }
 
   .transport {
@@ -1379,13 +1765,14 @@
       height: 100%;
       display: flex;
       flex-direction: column;
-      padding: 0.1rem 0.2rem;
+      padding: 0.1rem 0;
       height: 100%;
 
       .title {
         display: flex;
         justify-content: space-between;
         align-content: center;
+        padding: 0 0.2rem;
 
         .title1 {
           font-family: PingFangSC-Regular;
@@ -1406,17 +1793,17 @@
       ul {
         display: flex;
         flex-direction: column;
-        padding: 0.17rem 0;
+        margin: 0.1rem 0;
+        padding: 0.17rem 0.2rem;
 
         li {
           display: flex;
-          margin: 0.1rem 0;
           align-items: center;
 
 
           img {
-            width: 0.36rem;
-            height: 0.36rem;
+            width: 0.5rem;
+            height: 0.5rem;
             border-radius: 50%;
             margin: 0 0.1rem 0 0;
           }
@@ -1428,13 +1815,13 @@
             .name {
               font-family: PingFangSC-Regular;
               font-size: 14px;
-              color: #1B1E24;
+              color: #000;
             }
 
             .depart {
               font-family: PingFangSC-Regular;
               font-size: 14px;
-              color: #98A9BC;
+              color: #000;
               letter-spacing: 0.2px;
               line-height: 21px;
             }
@@ -1729,5 +2116,9 @@
         }
       }
     }
+  }
+
+  .backgroundUser {
+    background: #eeeaea;
   }
 </style>

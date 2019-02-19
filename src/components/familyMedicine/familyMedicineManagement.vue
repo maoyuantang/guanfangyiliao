@@ -1,5 +1,5 @@
 <template>
-	<div class="family-medicine-management">
+	<div class="family-medicine-management" ref="familymedicinemanagement">
 		<div class="family-medicine-management-top">
 			<normalTab v-model="barInfo" @reBack="getBar"></normalTab>
 		</div>
@@ -18,20 +18,34 @@
 				</div>
 				<div class="family-medicine-management-content">
 					<div class="family-medicine-management-content-layout">
-						<publicInfoModule v-for="i in 8" :key="i"></publicInfoModule>
+						<publicInfoModule 
+						v-for="(item,index) in showInfo.list" 
+						:key="index" 
+						@edit="editItem"
+						@changeStatus="setStatus"
+						:inData="item"></publicInfoModule>
 					</div>
+					<el-pagination
+					background
+					layout="prev, pager, next"
+					:page-size="9"
+					@current-change="selectPage"
+					@prev-click="prePage"
+					@next-click="nextPage"
+					:total="searchCondition.maxPage*9">
+					</el-pagination>
 				</div>
 			</div>
 			<div class="family-medicine-management-body-part-two" v-show="barInfo.i===1">
 				<div class="part-two-head">
 					<div class="part-two-head-left">
-						<selftag v-model="departmentList" @reback="getDepartmentSelect"></selftag>
+						<selftag v-model="statisticsInfo.departmentList" @reback="getDepartmentSelect"></selftag>
 					</div>
 					<div class="part-two-head-right">
-						<publicTime></publicTime>
-						<el-select v-model="countMethod.select" clearable placeholder="请选择">
+						<publicTime @timeValue="timeValueFun"></publicTime>
+						<el-select v-model="statisticsInfo.countMethod.select" clearable placeholder="请选择">
 							<el-option
-							v-for="(item,index) in countMethod.list"
+							v-for="(item,index) in statisticsInfo.countMethod.list"
 							:key="index"
 							:label="item.name"
 							:value="item.name">
@@ -50,18 +64,19 @@
         :styles="{width: '850px'}"
         v-model="testData.show"
         title=" "
+		@on-cancel="cancelSet"
         footer-hide>
 			<div class="family-new-alert">
-
 				<!-- 业务类型 -->
 				<div class="family-new-alert-normal-item" v-if="testData.businessTypeList.show">
 					<div class="family-new-alert-normal-item-name">
 						<span>业务类型:</span>
 					</div>
 					<div class="family-new-alert-normal-item-value">
-						<el-select v-model="testData.businessTypeList.default.value" clearable placeholder="请选择" size="mini" v-if="testData.businessTypeList.default.value!=='-1'">
+						<el-select v-model="testData.businessTypeList.default.value" clearable placeholder="请选择" size="mini" v-if="testData.businessTypeList.default.value!=='customize'">
 							<el-option
 							v-for="item in testData.businessTypeList.list"
+							:disabled="!testData.state"
 							:key="item.value"
 							:label="item.label"
 							:value="item.value">
@@ -87,6 +102,7 @@
 						<el-select v-model="testData.businessTemplate.default.value" clearable placeholder="请选择" size="mini" @change="byStencilModel(testData.businessTemplate.default.value)">
 							<el-option
 							v-for="item in testData.businessTemplate.list"
+							:disabled="!testData.state"
 							:key="item.value"
 							:label="item.label"
 							:value="item.value">
@@ -104,6 +120,7 @@
 						<el-input
 						placeholder="请输入内容"
 						v-model="testData.businessName.label"
+						:disabled="!testData.state"
 						size="mini"
 						clearable>
 						</el-input>
@@ -119,6 +136,7 @@
 						<el-input
 						placeholder="请输入内容"
 						v-model="testData.businessPrice.data[0].worth"
+						:disabled="!testData.state"
 						size="mini"
 						clearable>
 						</el-input>
@@ -134,6 +152,7 @@
 						<el-select v-model="testData.departmentList.default.value" clearable placeholder="请选择" size="mini">
 							<el-option
 							v-for="item in testData.departmentList.list"
+							:disabled="!testData.state"
 							:key="item.value"
 							:label="item.label"
 							:value="item.value">
@@ -151,6 +170,7 @@
 						<el-select v-model="testData.doctorList.default" clearable placeholder="请选择" size="mini" multiple>
 							<el-option
 							v-for="item in testData.doctorList.list"
+							:disabled="!testData.state"
 							:key="item.value"
 							:label="item.label"
 							:value="item.value">
@@ -251,6 +271,7 @@
 						 <div class="input-item-value-div">
 							<el-input
 							type="textarea"
+							:disabled="!testData.state"
 							autosize
 							placeholder="请输入内容"
 							v-model="testData.businessDescription.label">
@@ -267,19 +288,19 @@
 					<div class="family-new-alert-normal-item-value family-new-alert-normal-item-value-spe">
 						 <div class="input-item-value-div input-item-value-div-spe">
 							<div class="family-new-alert-agreement-head">
-								<input type="text" v-model="testData.agreement.default.label" class="family-new-alert-edit-agreement">
+								<input type="text" v-model="testData.agreement.default.label" class="family-new-alert-edit-agreement" @change="clearAgreementId">
 								<!-- <span>{{testData.agreement.default.label||''}}</span> -->
 								<Dropdown>
 									<p>
 										<Icon type="ios-arrow-down" class="agreement-arrow-down"></Icon>
 									</p>
 									<DropdownMenu slot="list">
-										<DropdownItem v-for="(item,index) in testData.agreement.list" :key="index" @click.native="getAgreementSelect(item,index)">{{item.label}}</DropdownItem>
+										<DropdownItem v-for="(item,index) in testData.agreement.list" :disabled="!testData.state" :key="index" @click.native="getAgreementSelect(item,index)">{{item.label}}</DropdownItem>
 									</DropdownMenu>
 								</Dropdown>
 							</div>
 							<div class="family-new-alert-agreement-content">
-								<textarea name="" id="" cols="15" rows="5" v-model="testData.agreement.showContent" class="family-new-alert-edit-agreement-content"></textarea>
+								<textarea name="" id="" cols="15" rows="5" :disabled="!testData.state" v-model="testData.agreement.showContent" class="family-new-alert-edit-agreement-content" @change="clearAgreementId"></textarea>
 								<!-- {{testData.agreement.showContent||''}} -->
 							</div>
 						</div>
@@ -295,6 +316,7 @@
 						<el-input
 						placeholder="请输入内容"
 						v-model="testData.servicePhone.label"
+						:disabled="!testData.state"
 						size="mini"
 						clearable>
 						</el-input>
@@ -306,12 +328,16 @@
 				</div>
 			</div>
 		</Modal>
+		<p>{{global.departmentList}}</p>
+		<p>{{departmentList}}</p>
+		
 		<!-- <addNewFrame :inData="testData" @reback="getAddData" @getAgreementSelect="getAgreementSelect" @department="getSelectDepartment"></addNewFrame> -->
 	</div>
 </template>
 
 <script>
 	import { mapState } from 'vuex'
+	import { Loading } from 'element-ui'
 	import normalTab from './../../public/publicComponents/normalTab.vue'
 	import selftag from './../../public/publicComponents/selftag.vue'
 	import search from './../../public/publicComponents/search.vue'
@@ -321,7 +347,7 @@
 	import addNewFrame from './../../public/publicComponents/addNewFrame.vue'
 	import { 
 		stencilName, toolBusinessType, toolDept, doctorsByOrgCodeAndDeptId, fetchHospitalDepts, businessType, protocols, protocolById,
-		addBusiness, stencilModel
+		addBusiness, stencilModel, getChildrenByDepartmentId, businessCondition, disableClinic, updateBusiness
 	} from '../../api/apiAll.js'
 	export default {
 		watch:{
@@ -347,15 +373,60 @@
         computed:{
 			...mapState({
 				userInfo:state => state.user.userInfo,
-				userSelfInfo:state => state.user.userSelfInfo 
+				userSelfInfo:state => state.user.userSelfInfo,
+				global: state => state.global 
 			}),
 		},
 		data () {
 			return {
-				testData:{
-					show:false,//是否显示新增弹窗
-					businessId:'',//业务id(新增为空，编辑不为空)
-					// type:'2',//1是表示新增家医，2是表示新增在线诊室业务    
+				loadingInstance:0,//loading
+				listenTimmer:null,//侦听定时器
+				searchCondition:{//搜索条件  
+					department:{
+						id:''
+					},//科室   
+					bussModule:{
+						id:''
+					},//业务模块 
+					bussType:{
+						id:''   
+					},//业务类型
+					pageNum:1,
+					maxPage:1
+				},
+				statisticsInfo:{//统计  
+					departmentList:{
+						more:false,
+						title:'科室',
+						list:[]
+					},
+					period:[],//时间段
+					tableList:[],//图标
+					countMethod:{//统计模块 统计方式
+						select:{name:'按科室统计'}, 
+						list:[
+							{name:'按科室统计'},
+							{name:'按日统计'},
+							{name:'按月统计'},
+							{name:'按年统计'},
+						]
+					},
+				},
+				showInfo:{//显示的业务列表
+					pageNum:1, //当前页
+					pageSize:9, //每页的数量
+					size:1,//当前页的数量
+					startRow:1,//当前页面第一个元素在数据库中的行号
+					endRow:1,//当前页面最后一个元素在数据库中的行号
+					total:4,//总记录数
+					pages:1,//总页数 
+					list:[],
+					logoName:''
+				},
+				testData:{ 
+					show:false,//是否显示新增弹窗 
+					type:'1',//'1'为新增 '2'为编辑
+					businessId:'',//业务id(新增为空，编辑不为空)  
 					businessTypeList:{//新增在线诊室业务类型  
 						show:true,//是否显示
 						default:{//默认选项
@@ -418,7 +489,7 @@
 						// 		value:-1
 						// 	}
 						// ],
-						data:[
+						data:[ 
 							{
 								worth:0,//价格数值    
 								unitEnum:'',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
@@ -490,7 +561,7 @@
 						]
 					},
 					departmentList:{//科室列表   
-							show:true,
+							show:false,
 							default:{
 								label:'',
 								value:''
@@ -532,7 +603,7 @@
 						show:false,
 						label:''
 					},//服务电话
-					agreement:{ 
+					agreement:{  
 						show:false, 
 						default:{ 
 							label:'', 
@@ -547,22 +618,7 @@
 					}
 				},
 
-
-
-
-
-
-
-
-
-
-
 /********************************************************* */
-
-
-
-
-
 				/**
 				 * bar 数据
 				 */
@@ -583,16 +639,16 @@
 				/**
 				 * 科室标签信息
 				 */
-				departmentList:{
+				departmentList:{ 
 					more:false,
                     title:'科室',
                     list:[
-                        {
-                            text:'全部'
-                        },
-                        {
-                            text:'今日'
-                        }
+                        // {
+                        //     text:'全部'
+                        // },
+                        // {
+                        //     text:'今日'
+                        // }
                     ]
 				},
 
@@ -633,18 +689,7 @@
 				 */
 				countTime:[],
 
-				/**
-				 * 统计模块 统计方式
-				 */
-				countMethod:{
-					select:{name:'按科室统计'}, 
-					list:[
-						{name:'按科室统计'},
-						{name:'按日统计'},
-						{name:'按月统计'},
-						{name:'按年统计'},
-					]
-				},
+				
 
 				/***
 				 * 统计模块  图表
@@ -657,6 +702,13 @@
 			}
 		},
 		methods:{
+			/**
+			 * 获取用户选择时间段
+			 */
+			timeValueFun(data){
+				console.log(data);
+				this.statisticsInfo.period = data;
+			},
 			
 			/**
 			 * 协议被选择，重新获取具体协议内容
@@ -666,7 +718,6 @@
 				console.log(item);
 			},
 
-			/****************** */
 			/**
 			 * 获取科室列表
 			 */
@@ -682,7 +733,8 @@
 						element.text = element.deptName;
 						initArr.push(element);
 					});
-					this.departmentList.list = initArr;
+					this.departmentList.list = initArr.slice(0,initArr.length);
+					this.statisticsInfo.departmentList.list = initArr.slice(0,initArr.length);
 					this.testData.departmentList.list = res.data.body.map(item => {
 						return {
 							label:item.deptName,
@@ -710,13 +762,19 @@
 			 */
 			getDepartmentSelect(item){
 				console.log(item)
+				this.searchCondition.department.id = item.index.deptId || '';
+				this.searchCondition.pageNum = 1;
+				this.getBussByCondition();
 			},
 
 			/**
 			 * 业务模块 被点击
 			 */
 			bussModuleSelect(item){
-				console.log(item)
+				console.log(item)   
+				this.searchCondition.bussModule.id = item.index.authorityId || '';
+				this.searchCondition.pageNum = 1;
+				this.getBussByCondition();
 			},
 
 			/**
@@ -724,6 +782,9 @@
 			 */
 			bussTypeSelect(item){
 				console.log(item)
+				this.searchCondition.bussType.id = item.index.text === '全部'?'':item.index.text;
+				this.searchCondition.pageNum = 1;
+				this.getBussByCondition();
 			},
 
 			/**
@@ -738,12 +799,13 @@
 				])
 				.then(res=>{
 					console.log(res)
-					for(const i of res){
-						if(!i){
-							console.log('defaile');
-							return;
-						}
-					}
+					// for(const i of res){
+					// 	if(!i){
+					// 		console.log('defaile');
+					// 		return;
+					// 	}
+					// }
+					this.testData.type = '1';
 					this.testData.show = true;
 				})
 				.catch(err=>{
@@ -813,7 +875,7 @@
 						item.value = item.id;
 						return item;
 					});
-					middle.push({label:'自定义',value:'-1'})
+					middle.push({label:'自定义',value:'customize'})
 					this.testData.businessTypeList.list = middle;
 					// this.testData.businessTypeList.default = {
 					// 	label:this.testData.businessTypeList.list[0].label,
@@ -832,7 +894,8 @@
 			async getSelectDepartment(data){
 				
 				console.log(data);
-				this.getProtocols(data)
+				this.getProtocols(data);
+				this.getChildrenBuss(data);
 				const res = await doctorsByOrgCodeAndDeptId({
 					token:this.userInfo.token,
 					orgCode:this.userInfo.hospitalCode,
@@ -944,10 +1007,10 @@
 						item.value = item.protocolId;
 						return item;
 					});
-					this.testData.agreement.default = {
-						label:this.testData.agreement.list[0].label,
-						value:this.testData.agreement.list[0].value,
-					};
+					// this.testData.agreement.default = {
+					// 	label:this.testData.agreement.list[0].label,
+					// 	value:this.testData.agreement.list[0].value,
+					// };
 					this.getProtocolById(this.testData.agreement.default.value)
 				}else{
 
@@ -1016,6 +1079,7 @@
 						phoneExist:'servicePhone',//模版业务电话 (true 表示有；false表示无)
 						priceExist:'businessPrice',//模版业务价格 (true 表示有；false表示无)
 					};
+					console.log(this.testData.type)
 					for(const i in res.data.body){
 						// resMap[i] && res.data.body[i]===true ? this.testData[resMap[i]].show = true : null
 						if(resMap[i]){
@@ -1025,6 +1089,7 @@
 								this.testData[resMap[i]].show = false
 							}
 						}
+						console.log(this.testData.type)
 					}
 					console.log(this.testData)
 					
@@ -1034,7 +1099,7 @@
 			},
 
 			/**
-			 * 保存信息(新增业务)
+			 * 保存信息
 			 */
 			async saveInfo(){
 				console.log(this.testData);
@@ -1042,7 +1107,7 @@
 					{token:this.userInfo.token},
 					{
 						businessId:this.testData.businessId,//业务id
-						businessType:this.testData.businessTypeList.default.value,//业务类型
+						// businessType:this.testData.businessTypeList.default.value,//业务类型
 						stencilEnum:this.testData.businessTemplate.default.value,//业务模版
 						businessName:this.testData.businessName.label,//业务名
 						businessDepartmentId:this.testData.departmentList.default.value,//业务科室id
@@ -1087,56 +1152,633 @@
 						childList:[]
 					})
 				}
-				const res = await addBusiness(...postData);
+				//下面注意下，value=customize说明是自定义，需要取label，其他取value
+				postData[1].businessType = this.testData.businessTypeList.default.value==='customize' ?this.testData.businessTypeList.default.label:this.testData.businessTypeList.default.value;
+				console.log(this.testData.type)
+				return
+				const res = this.testData.type==='1'? await addBusiness(...postData):await updateBusiness(...postData);
+
 				console.log(res);
 				if(res.data&&res.data.errCode===0){
+					this.testData = {
+						show:false,//是否显示新增弹窗 
+						businessId:'',//业务id(新增为空，编辑不为空)   
+						businessTypeList:{//新增在线诊室业务类型  
+							show:true,//是否显示
+							default:{//默认选项
+								label:'', //名称  
+								value:''//值
+							},
+							list:[]//所有选择项
+						},
+						businessTemplate:{//新增家医业务模板  
+							show:true,
+							default:{
+								label:'', 
+								value:''
+							},
+							list:[]
+						},
+						businessName:{//业务名称 
+							show:false,
+							label:''
+						}, 
+						businessPrice:{//业务定价  为何如此坑  
+							show:false, 
+							data:[
+								{
+									worth:0,//价格数值    
+									unitEnum:'',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
+									valueUnit:1,//价格单位值
+									childList:[]//该价格下的子业务 
+								},
+								{
+									worth:0,//价格数值   
+									unitEnum:'MONTH',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
+									valueUnit:1,//价格单位值
+									childList:[]//该价格下的子业务
+								},
+								{
+									worth:0,//价格数值
+									unitEnum:'QUARTER',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
+									valueUnit:1,//价格单位值
+									childList:[]//该价格下的子业务
+								},
+								{
+									worth:0,//价格数值
+									unitEnum:'YEAR',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
+									valueUnit:1,//价格单位值
+									childList:[]//该价格下的子业务
+								},
+							]
+						},
+						departmentList:{//科室列表   
+								show:true,
+								default:{
+									label:'',
+									value:''
+								},
+								list:[]
+						}, 
+						doctorList:{//医生列表    
+								show:false,
+								default:[], 
+								list:[]
+						},
+						businessDescription:{ 
+							show:false,
+							label:''
+						},//业务描述
+						servicePhone:{ 
+							show:false,
+							label:''
+						},//服务电话
+						agreement:{ 
+							show:false, 
+							default:{ 
+								label:'', 
+								value:''
+							},
+							list:[],
+							showContent:''
+						}
+					};
+					// await this.getBussByCondition({
+					// 	token:this.userInfo.token,
+					// 	stencilName:'',
+					// 	departmentId:'',
+					// 	businessType:'',
+					// 	pageNum:1,
+					// 	pageSize:9
+					// });
+					this.$notify({
+						title: '成功',
+						message: '设置成功',
+						type: 'success'
+					});
 					console.log('success')
 				}else{
 					console.log('error')
+					this.$notify({
+						title: '失败',
+						message: '设置失败',
+						type: 'error'
+					});
 				}
 			},
 
 			/**
-			 * 新增业务被提交
+			 * 通过科室获取子业务
 			 */
-			async getAddData(data){
-				console.log(data);
-				// const postData = [
-				// 	{token:this.userInfo.token},
-				// 	{
-				// 		businessId:'',//业务id
-				// 		businessType:'',//业务类型
-				// 		stencilEnum:data.businessTemplate.default.value,//业务模版
-				// 		businessName:data.businessName.label,//业务名
-				// 		businessDepartmentId:data.departmentList.default.value,//业务科室id
-				// 		orgCode:'',//业务医院id
-				// 		businessDoctors:data.doctorList.default,//业务医生
-				// 		businessDesc:data.businessDescription,//业务描述
-				// 		businessProtocolId:agreement.default.value,//业务协议id
-				// 		businessProtocolName:agreement.default.label,//业务协议名
-				// 		businessProtocolContent:agreement.showContent,//业务协议内容
-				// 		businessPhone:data.servicePhone,//业务电话
-				// 		status:false,//业务状态
-				// 		businessPrice:[],//业务价格
-				// 		childList:[],//业务子业务
-				// 	}
-				// ];
-				// const res = await addBusiness();
+			async getChildrenBuss(id){
+				if(this.testData.businessTemplate.default.value!=='JTYS')return;//只有家庭医生才会有,不是家庭医生直接返回
+				const res = await getChildrenByDepartmentId({
+					token:this.userInfo.token,
+					departmentId:id,
+					businessId:this.testData.businessId
+				});
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+					let i = 1;
+					for(i;i<4;i++){
+						// this.testData.businessPrice.data[i].childList = res.data.body.map(item=>Object({},item));
+						this.testData.businessPrice.data[i].childList = JSON.parse(JSON.stringify(res.data.body))
+					}
+					// this.testData.businessPrice.data[1].childList[0].times= 99
+					// this.testData.businessPrice.data[2].childList[0].times= 100
+					// console.log(this.testData.businessPrice.data[1].childList[0].times)
+					// console.log(this.testData.businessPrice.data[2].childList[0].times)
+					console.log(this.testData.businessPrice.data)
+				}else{
+					console.log('error') 
+				}
 			},
 
+			/**
+			 * 17.7按条件筛选业务
+			 */
+			async getBussByCondition(data){
+				const res = await businessCondition({
+					token:this.userInfo.token,
+					stencilName:this.searchCondition.bussModule.id ,    
+					departmentId:this.searchCondition.department.id,
+					businessType:this.searchCondition.bussType.id,
+					pageNum:this.searchCondition.pageNum,
+					pageSize:9
+				});
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+					const modulesMap = [
+                        {
+							text:'家生',
+							color:'#4285F4',
+							bgColor:'rgba(66,133,244,0.20)',
+                            en:'JTYS'
+                        },
+                        {
+							text:'上门',
+							color:'#F4265B',
+							bgColor:'rgba(244,38,91,0.20)',
+                            en:'SMFW'
+                        },
+                        {
+							text:'陪检',
+							color:'#DF42F4',
+							bgColor:'rgba(223,66,244,0.20)',
+                            en:'ZNPJ'
+                        },
+                        {
+							text:'监护',
+							color:'#0F9D58',
+							bgColor:'rgba(15,157,88,0.20)',
+                            en:'YCJH'
+                        },
+                        {
+							text:'咨询',
+							color:'#9D2A0F',
+							bgColor:'rgba(157,42,15,0.20)',
+                            en:'ZXZX'
+                        },
+                        {
+							text:'设备',
+							color:'#8800F4',
+							bgColor:'rgba(157,42,15,0.20)',
+                            en:'JYSB'
+                        },
+                        {
+							text:'陪护',
+							color:'#F4B400',
+							bgColor:'rgba(136,0,244,0.20)',
+                            en:'PHFW'
+                        }
+					];
+					this.showInfo.pages = res.data.body.data2.page;
+					let midData = res.data.body.data2.list.map(item=>{
+						for(const i of modulesMap){
+							if(i.en === item.stencilEnum){
+								item.logoName = i.text;
+								item.color = i.color;
+								item.bgColor = i.bgColor;
+								return item;
+							}
+						}
+					});
+					midData = midData.filter(item=>item!==undefined); 
+					this.showInfo.list = midData;
+					console.log('this.showInfo.list');
+					console.log(this.showInfo.list);
+					this.searchCondition.maxPage = res.data.body.data2.pages;
+					console.log(res.data.body.data2.pages)
+					// this.showInfo.list = res.data.body.data2.list
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '业务列表获取失败',
+						type: 'error'
+					});
+				}
+			},
+
+			// /**
+			//  * 下拉加载业务
+			//  */
+			// pullLoading(){
+				
+			// 	if(this.searchCondition.pageNum>=this.searchCondition.maxPage){
+			// 		this.$message({
+			// 			message: '没有更多数据',
+			// 			type: 'warning'
+			// 		});
+			// 		return;
+			// 	}
+			// 	this.searchCondition.pageNum++;
+			// 	this.getBussByCondition();
+
+			// },
+			
+			
+			/**
+			 * 禁用，解除禁用
+			 */
+			async setStatus(info){
+				let loadingInstance = Loading.service({ fullscreen: true });
+				setTimeout(() => {
+					this.$nextTick(e=>loadingInstance.close())
+				}, 5000);
+				this.loadingInstance++;
+				const res = await disableClinic({token:this.userInfo.token},{
+					clinicId:info.item.businessId,
+					status:info.tagStatus
+				});
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+					for(const i of this.showInfo.list){
+						if(i.businessId === info.item.businessId){
+							i.state = info.tagStatus;
+							return;
+						}
+					}
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '修改失败',
+						type: 'error'
+					});
+				}
+				this.loadingInstance>0?this.loadingInstance--:null;
+				if(this.loadingInstance<=0){this.$nextTick(e=>loadingInstance.close())}
+			},
+
+			/**
+			 * 某个业务编辑被点击
+			 */
+			async editItem(item){
+				console.log('get')
+				console.log(item);
+				const option = {
+					show:false,//是否显示新增弹窗 
+					type:'2',//'1'为新增 '2'为编辑
+					businessId:item.businessId,//业务id(新增为空，编辑不为空)   
+					businessTypeList:{//新增在线诊室业务类型  
+						show:true,//是否显示
+						default:{//默认选项
+							label:'', //名称  
+							value:item.businessType//值
+						},
+						list:[]//所有选择项
+					},
+					businessTemplate:{//新增家医业务模板  
+						show:true,
+						default:{
+							label:'', 
+							value:item.stencilEnum
+						},
+						list:[
+							// {
+							// 	label:'新增家医业务模板1', 
+							// 	value:'1'
+							// },
+							// {
+							// 	label:'新增家医业务模板2',
+							// 	value:'2'
+							// }
+						]
+					},
+					businessName:{//业务名称 
+						show:false,
+						label:item.businessName
+					}, 
+					businessPrice:{//业务定价  为何如此坑  
+						show:false, 
+						data:item.price
+					},
+					departmentList:{//科室列表   
+							show:false,
+							default:{
+								label:item.departmentName,
+								value:item.departmentId
+							},
+							list:[
+							]
+					}, 
+					doctorList:{//医生列表    
+							show:false,
+							default:item.businessDoctors.map(element=>element.doctorId), 
+							list:[ 
+							]
+					},
+					businessDescription:{ 
+						show:false,
+						label:item.description
+					},//业务描述
+					servicePhone:{ 
+						show:false,
+						label:item.phone
+					},//服务电话
+					agreement:{ 
+						show:false, 
+						default:{ 
+							label:item.protocolName, 
+							value:item.protocolId
+						},
+
+						list:[
+						],
+						showContent:item.protocolContent
+					}
+				};
+				this.testData = option;
+				// console.log(this.testData.type)
+				Promise.all([this.addBuss(), this.byStencilModel(item.stencilEnum), this.getFetchHospitalDepts()])
+				.then(res=>{
+					this.testData.show = true
+				})
+				// await this.addBuss();
+				// console.log(this.testData.type)
+				
+				// await this.byStencilModel(item.stencilEnum);
+				// // console.log(this.testData.type)
+				// // return 
+				// await this.getFetchHospitalDepts()
+				
+				// console.log('enter')
+			},
+
+			/**
+			 * 清空协议id
+			 * 这个设定私以为很坑
+			 */
+			clearAgreementId(){
+				this.testData.agreement.default.value = ''
+			},
+
+			/**
+			 * 取消编辑或新增业务
+			 */
+			cancelSet(){
+				console.log('cancelSet');
+				this.testData = {
+					show:false,//是否显示新增弹窗 
+					type:'1',//'1'为新增 '2'为编辑
+					businessId:'',//业务id(新增为空，编辑不为空)  
+					businessTypeList:{//新增在线诊室业务类型  
+						show:true,//是否显示
+						default:{//默认选项
+							label:'', //名称  
+							value:''//值
+						},
+						list:[]//所有选择项
+					},
+					businessTemplate:{//新增家医业务模板  
+						show:true,
+						default:{
+							label:'', 
+							value:''
+						},
+						list:[]
+					},
+					businessName:{//业务名称 
+						show:false,
+						label:''
+					}, 
+					businessPrice:{//业务定价  为何如此坑  
+						show:false, 
+						data:[ 
+							{
+								worth:0,//价格数值    
+								unitEnum:'',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
+								valueUnit:1,//价格单位值
+								childList:[//该价格下的子业务 
+									// {
+									// 	childId:'',//子业务id
+									// 	childName:'',//子业务名称
+									// 	childDepName:'',//子业务科室名
+									// 	childDoctors:'',//子业务人员
+									// 	stencilEnum:'',//子业务模版（"JTYS", //家庭医生；"SMFW", //上门服务；"ZNPJ", //智能陪检；"YCJH", //远程监护；"ZXZX", //在线咨询；"JYSB", //家用设备； "PHFW" //陪护服务；）
+									// 	times:0//子业务次数
+									// }
+								]
+							},
+							{
+								worth:0,//价格数值   
+								unitEnum:'MONTH',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
+								valueUnit:1,//价格单位值
+								childList:[//该价格下的子业务
+									// {
+									// 	childId:'',//子业务id
+									// 	childName:'新华医院健康诊室',//子业务名称
+									// 	childDepName:'',//子业务科室名
+									// 	childDoctors:'',//子业务人员
+									// 	stencilEnum:'',//子业务模版（"JTYS", //家庭医生；"SMFW", //上门服务；"ZNPJ", //智能陪检；"YCJH", //远程监护；"ZXZX", //在线咨询；"JYSB", //家用设备； "PHFW" //陪护服务；）
+									// 	times:0//子业务次数
+									// },
+									// {
+									// 	childId:'',//子业务id
+									// 	childName:'新华医院健康诊室',//子业务名称
+									// 	childDepName:'',//子业务科室名
+									// 	childDoctors:'',//子业务人员
+									// 	stencilEnum:'',//子业务模版（"JTYS", //家庭医生；"SMFW", //上门服务；"ZNPJ", //智能陪检；"YCJH", //远程监护；"ZXZX", //在线咨询；"JYSB", //家用设备； "PHFW" //陪护服务；）
+									// 	times:0//子业务次数
+									// }
+								]
+							},
+							{
+								worth:0,//价格数值
+								unitEnum:'QUARTER',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
+								valueUnit:1,//价格单位值
+								childList:[//该价格下的子业务
+									// {
+									// 	childId:'',//子业务id
+									// 	childName:'',//子业务名称
+									// 	childDepName:'',//子业务科室名
+									// 	childDoctors:'',//子业务人员
+									// 	stencilEnum:'',//子业务模版（"JTYS", //家庭医生；"SMFW", //上门服务；"ZNPJ", //智能陪检；"YCJH", //远程监护；"ZXZX", //在线咨询；"JYSB", //家用设备； "PHFW" //陪护服务；）
+									// 	times:0//子业务次数
+									// }
+								]
+							},
+							{
+								worth:0,//价格数值
+								unitEnum:'YEAR',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
+								valueUnit:1,//价格单位值
+								childList:[//该价格下的子业务
+									// {
+									// 	childId:'',//子业务id
+									// 	childName:'',//子业务名称
+									// 	childDepName:'',//子业务科室名
+									// 	childDoctors:'',//子业务人员
+									// 	stencilEnum:'',//子业务模版（"JTYS", //家庭医生；"SMFW", //上门服务；"ZNPJ", //智能陪检；"YCJH", //远程监护；"ZXZX", //在线咨询；"JYSB", //家用设备； "PHFW" //陪护服务；）
+									// 	times:0//子业务次数
+									// }
+								]
+							},
+						]
+					},
+					departmentList:{//科室列表   
+							show:false,
+							default:{
+								label:'',
+								value:''
+							},
+							list:[
+								// {
+								// 	label:'科室列表1',
+								// 	value:'1'
+								// },
+								// {
+								// 	label:'科室列表2',
+								// 	value:'2'
+								// }
+							]
+					}, 
+					doctorList:{//医生列表    
+							show:false,
+							default:[], 
+							list:[
+								// {
+								// 	label:'医生1',
+								// 	value:'1'
+								// },
+								// {
+								// 	label:'医生2',
+								// 	value:'2'
+								// },
+								// {
+								// 	label:'医生3',
+								// 	value:'3'
+								// }   
+							]
+					},
+					businessDescription:{ 
+						show:false,
+						label:''
+					},//业务描述
+					servicePhone:{ 
+						show:false,
+						label:''
+					},//服务电话
+					agreement:{  
+						show:false, 
+						default:{ 
+							label:'', 
+							value:''
+						},
+
+						list:[
+							// {label:'协议1',value:'1'},
+							// {label:'协议2',value:'2'},
+						],
+						showContent:''
+					}
+				}
+			},
+
+			/**
+			 * 选择分页
+			 */
+			selectPage(data){
+				console.log(data);
+				this.searchCondition.pageNum = data;
+				this.getBussByCondition();
+			},
+
+			/**
+			 * 前一页
+			 */
+			prePage(){
+				if(this.searchCondition.pageNum<=1){
+					this.$message({
+						message: '当前已经是第一页',
+						type: 'warning'
+					});
+					return;
+				}
+				this.searchCondition.pageNum--;
+				this.getBussByCondition();
+			},
+
+			/**
+			 * 后一页
+			 */
+			nextPage(){
+				if(this.searchCondition.pageNum>=this.searchCondition.maxPage){
+					this.$message({
+						message: '当前已经是最后一页',
+						type: 'warning'
+					});
+					return;
+				}
+				this.searchCondition.pageNum++;
+				this.getBussByCondition();
+			},
+			// /**
+			//  * 每隔一定时间，检查是否触底
+			//  */
+			// listenBoundingClientRect(){
+			// 	this.$nextTick(e=>{
+			// 		this.listenTimmer = setTimeout(() => {
+			// 			console.log(`document.body.clientHeight:${document.body.clientHeight}`)
+			// 			console.log(`this.$refs.familymedicinemanagement.getBoundingClientRect().bottom:${this.$refs.familymedicinemanagement.getBoundingClientRect().bottom}`)
+			// 			// console.log(document.body.clientHeight - this.$refs.familymedicinemanagement.getBoundingClientRect().bottom)
+			// 			// if(document.body.clientHeight - this.$refs.familymedicinemanagement.getBoundingClientRect().bottom >=0){
+			// 			// 	console.log( 'get');
+			// 			// 	this.pullLoading();
+			// 			// }
+						
+			// 			// console.log(this.$refs.familymedicinemanagement.clientHeight)
+			// 			this.listenBoundingClientRect();
+			// 		}, 200);
+			// 	});
+			// },
 			test(){console.log('click')},
 		},
 		async created(){
+			
 			this.getFetchHospitalDepts();
 			this.getBussModuleList();
 			this.getBussTypeList();
+			this.getBussByCondition();
+			
+			// this.listenBoundingClientRect();
+			
+			// this.$nextTick(e=>{
+			// 	console.log(document.body.clientHeight)
+			// 	console.log(this.$refs.familymedicinemanagement.getBoundingClientRect().bottom)
+			// 	console.log(document.body.clientHeight - this.$refs.familymedicinemanagement.getBoundingClientRect().bottom)
+			// })
+			// setTimeout(() => {
+			// 		console.log('ok')
+			// 		// console.log(this.$refs.familymedicinemanagement.getBoundingClientRect().bottom)
+			// 	}, 2000);
+			
+			
 		}
 	}
 </script>
 
 <style scoped>
 	.family-medicine-management{
-
+		min-height: 100%;
 	}
 	.family-medicine-management-top{
 		margin-bottom: 0.3rem;

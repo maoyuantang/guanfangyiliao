@@ -51,20 +51,10 @@
             <el-option label="下转" value="beijing"></el-option>
           </el-select>
         </el-form-item>
-        <div style="display:flex;align-items: center;margin-bottom: 20px">
-          <el-form-item label="转入医院:" :label-width="formLabelWidth" style="margin:0;">
-            <el-select v-model="form.region" placeholder="请选择" style="margin:0;">
-              <el-option label="上转" value="shanghai"></el-option>
-              <el-option label="下转" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-          <!-- <el-form-item label="" :label-width="formLabelWidth"> -->
-          <el-select v-model="form.region" placeholder="科室" style="margin:0 0 0 20px;height: 45px;">
-            <el-option label="上转" value="shanghai"></el-option>
-            <el-option label="下转" value="beijing"></el-option>
-          </el-select>
-          <!-- </el-form-item> -->
-          <span style="margin:0 0 7px 20px;color: #00D983;letter-spacing: 0;">上转/下转</span>
+        <div class="block" style="margin-bottom: 22px;">
+          <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
+          <el-cascader :options="options" v-model="selectedOptions" @change="handleChange">
+          </el-cascader>
         </div>
         <el-form-item label="病历授权:" :label-width="formLabelWidth">
           <el-input v-model="form.name" autocomplete="off" placeholder="请选择"></el-input>
@@ -193,6 +183,11 @@
     toolMedicalType,//1.21.26.分级诊疗-类型
     toolMedicalGrading,//1.21.27.分级诊疗-分级
     toolReferralType,//1.21.28.双向转诊-方向
+
+
+    
+
+
   } from "../api/apiAll.js";
   //引入组件
   import normalTab from '../public/publicComponents/normalTab.vue'
@@ -368,6 +363,71 @@
             zip: 200333
           }
         ],
+        options: [
+          {
+            value: 'zhinan',
+            label: '指南',
+            children: [
+              {
+                value: 'shejiyuanze',
+                label: '设计原则',
+              },
+              {
+                value: 'daohang',
+                label: '导航',
+              }
+            ]
+          },
+          {
+            value: 'zujian',
+            label: '组件',
+            children: [
+              {
+                value: 'basic',
+                label: 'Basic',
+              },
+              {
+                value: 'form',
+                label: 'Form',
+              },
+              {
+                value: 'data',
+                label: 'Data',
+              },
+              {
+                value: 'notice',
+                label: 'Notice',
+              },
+              {
+                value: 'navigation',
+                label: 'Navigation',
+              },
+              {
+                value: 'others',
+                label: 'Others',
+              }
+            ]
+          },
+          {
+            value: 'ziyuan',
+            label: '资源',
+            children: [
+              {
+                value: 'axure',
+                label: 'Axure Components'
+              },
+              {
+                value: 'sketch',
+                label: 'Sketch Templates'
+              },
+              {
+                value: 'jiaohu',
+                label: '组件交互文档'
+              }
+            ]
+          }
+        ],
+        selectedOptions: [],
       }
     },
     computed: {
@@ -413,6 +473,9 @@
       getOTab4(data) {
         this.doctorDate = data.index.value;
         this.DoctorList();//医生端列表
+      },
+      handleChange(value) {
+        console.log(value);
       },
 
 
