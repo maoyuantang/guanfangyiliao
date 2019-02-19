@@ -946,13 +946,14 @@
         };
         const res = await onlineRoomsByDoctor(query);
         if (res.data && res.data.errCode === 0) {
-          console.log(res)
           console.log('医生端列表1+成功')
           // const lists = res.data.body.data2.list;
           // this.myHomes = lists
-          this.myHomes = res.body.data2.list
+          console.log(res)
+          this.myHomes = res.data.body.data2.list
+          console.log(this.myHomes)
           // this.tableData1 = this.myHomes
-          $.each(res.body.data2.list, function (index, text) {
+          $.each(res.data.body.data2.list, function (index, text) {
             _this.myHomesBiao.push(index);
             _this.tableDataList1.push(
               [
@@ -985,7 +986,7 @@
         if (res.data && res.data.errCode === 0) {
           console.log('医生端列表2(审核)+成功')
           console.log(res)
-          this.bcd = res.body;
+          this.bcd = res.data.body;
           console.log(this.bcd)
           this.prescriptionId = this.bcd[0].pb.id
           $.each(this.bcd, function (index, text) {
