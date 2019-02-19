@@ -259,9 +259,7 @@ export default {
 
             createVideoRoomData: {
                 conferenceId: "",
-                conferenceNumber: "",
-                ownerPassword: "",
-                meetPassword: ""
+                conferenceNumber: ""
             },
             createVideoVisable: false, //是否已有视频
             userMemberNum: "",
@@ -381,7 +379,10 @@ export default {
                         );
                     });
                     this.videoVisible = true;
-                    this.createVideoRoomData = res.data.body;
+                    this.createVideoRoomData = {
+                        conferenceId: res.data.body.conferenceId,
+                        conferenceNumber: res.data.body.conferenceNumber
+                    };
                     this.createVideoVisable = true;
                 } else {
                     //失败
