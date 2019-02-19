@@ -6,8 +6,9 @@
                 <button @click="refuseVideo()">拒绝</button>
             </div>
         </el-dialog>
-        <el-dialog title="提示" :visible.sync="VideoVisable" width="30%" :before-close="handleClose">
-            <ovideo></ovideo>
+           <!-- 视频聊天 -->
+        <el-dialog title="视频" :visible.sync="VideoVisable" center append-to-body fullscreen @close="closeVideo()">
+            <ovideo :createVideoRoomData="createVideoRoomData"></ovideo>
         </el-dialog>
     </div>
 </template>
@@ -44,7 +45,7 @@ export default {
             oMsgId: "",
             content: "",
             heartCheck: {},
-            oConferenceId: "" //房间号
+            createVideoRoomData:{}
         };
     },
     computed: {
@@ -98,7 +99,7 @@ export default {
                 token: this.userState.token
             };
             const options = {
-                conferenceId: this.oConferenceId,
+                conferenceId: this.createVideoRoomData.conferenceId,
                 state: oState
             };
             const res = await storageUsers(query, options);
@@ -900,7 +901,10 @@ export default {
                     };
                     this.sendMessage(Iessage);
                     let _this = this;
-                    this.oConferenceId = odata.info.body.split("&")[2];
+                    this.createVideoRoomData = {
+                        conferenceId: odata.info.body.split("&")[2],
+                        conferenceNumber: odata.info.body.split("&")[1]
+                    };
                     if (odata.info.childMessageType == 6) {
                         this.$notify({
                             title: "请注意",
