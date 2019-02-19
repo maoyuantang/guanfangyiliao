@@ -185,7 +185,23 @@
     toolReferralType,//1.21.28.双向转诊-方向
 
 
-    
+    readMedicals,//14.1.双向转诊-WEB医生端-疾病名称下拉框
+    readMedicalsOfHospitalAndDept,//14.2.双向转诊-WEB医生端-医院与科室下拉框联动
+    dualReferralManagePage,//14.3.双向转诊-WEB管理端-管理列表
+    statistics,//14.4.双向转诊-WEB管理端-统计
+    dualReferralPage,//14.5.双向转诊-WEB医生端-列表
+    //点击保存
+    dualReferralAdd,//14.6.双向转诊-WEB医生端-申请转诊
+    //管理的 查看记录 和医生的 转诊记录   点击
+    dualReferralRecord,//14.7.双向转诊-WEB医生端-查询记录
+    //编辑（申请方）
+    dualReferralUpdate,//14.8.双向转诊-WEB医生端-修改
+
+    applicantCANCEL,//14.9.双向转诊-WEB医生端-申请人操作
+    dualReferralReception,//3.3首页-账号及权限-创建用户      //14.10.双向转诊-WEB医生端-接诊人操作
+
+    //审核通过  点击（接收方）
+    receptionAudit,//14.11.双向转诊-WEB医生端-审核
 
 
   } from "../api/apiAll.js";

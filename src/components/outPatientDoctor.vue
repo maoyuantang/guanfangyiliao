@@ -950,9 +950,9 @@
           console.log('医生端列表1+成功')
           // const lists = res.data.body.data2.list;
           // this.myHomes = lists
-          this.myHomes = this.abc.body.data2.list
+          this.myHomes = res.body.data2.list
           // this.tableData1 = this.myHomes
-          $.each(this.abc.body.data2.list, function (index, text) {
+          $.each(res.body.data2.list, function (index, text) {
             _this.myHomesBiao.push(index);
             _this.tableDataList1.push(
               [
@@ -985,7 +985,7 @@
         if (res.data && res.data.errCode === 0) {
           console.log('医生端列表2(审核)+成功')
           console.log(res)
-          // this.bcd = res.data.body;
+          this.bcd = res.body;
           console.log(this.bcd)
           this.prescriptionId = this.bcd[0].pb.id
           $.each(this.bcd, function (index, text) {
@@ -1011,7 +1011,7 @@
         if (res.data && res.data.errCode === 0) {
           console.log('医生端列表3(发药)+成功')
           console.log(res)
-          // this.bcd = res.data.body;
+          this.bcd = res.data.body;
           console.log(this.bcd)
           $.each(this.bcd, function (index, text) {
             _this.ARR.length = 0
