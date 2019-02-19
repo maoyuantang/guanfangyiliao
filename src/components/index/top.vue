@@ -20,11 +20,11 @@
 					<i class="iconfont user-select">&#xe65a;</i>
 				</a>
 				<DropdownMenu slot="list">
-					<DropdownItem @click.native="switchStatus">驴打滚</DropdownItem>
-					<DropdownItem>炸酱面</DropdownItem>
+					<DropdownItem @click.native="logout">退出</DropdownItem>
+					<!-- <DropdownItem>炸酱面</DropdownItem>
 					<DropdownItem>豆汁儿</DropdownItem>
 					<DropdownItem>冰糖葫芦</DropdownItem>
-					<DropdownItem divided>北京烤鸭</DropdownItem>
+					<DropdownItem divided>北京烤鸭</DropdownItem> -->
 				</DropdownMenu>
 			</Dropdown>
 		</div>
@@ -68,8 +68,18 @@
 					type:index
 				}
 				this.$store.commit("user/CHANGEVIEWAUTH",sendData);
-				sessionStorage.setItem('viewRoot',JSON.stringify(this.viewRoot));//存缓存,或者叫跟新缓存更合适
+				sessionStorage.setItem('viewRoot',JSON.stringify(this.viewRoot));
+				console.log(index)
+				// sessionStorage.setItem('page',JSON.stringify(item));
 				console.log(this.$store.state.user.viewRoot.now)
+			},
+			/**
+			 * 注销
+			 */
+			logout(){
+				this.$store.commit("user/CLEARUSERINFO");
+				this.$store.commit("user/CLAERUSERSELFINFO");
+				location.reload()
 			},
 			setCanClic(){
 				if(this.userInfo.manager && this.$route.path==='/'){

@@ -195,7 +195,7 @@ import { parse } from 'protobufjs';
 							item.select = item.code===rePage.code;
 							return item;
 						});
-						this.$router.push({path:rePage.path});
+						this.$router.push({path:rePage.path,query:this.$route.query});//将原先的query也带上
 					}else{
 
 					}
