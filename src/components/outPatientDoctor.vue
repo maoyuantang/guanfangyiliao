@@ -606,6 +606,15 @@
       //返回赋值函数
       getConsulTabData(res) {//顶部切换返回函数
         this.oconsulVisable = res.i
+        console.log(res.i)
+        if(res.i == 0){
+          this.getList1();
+        }else if(res.i == 1){
+          this.getList2();
+        }
+        else if(res.i == 2){
+          this.getList3();
+        }
       },
       demonstration1(res) {//时间插件返回函数
         // console.log(res)
@@ -695,7 +704,7 @@
           })
         } else {
           //失败
-          console.log('医生端列表1+失败')
+          console.log('医生端列表2(审核)+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -722,7 +731,7 @@
           console.log(this.tableDataList3)
         } else {
           //失败
-          console.log('医生端列表3+失败')
+          console.log('医生端列表3(发药)+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -751,7 +760,7 @@
         }
       },
       // 1.9.文件下载 
-      async getList3() {
+      async getList4() {
         const _this = this;
         let query = {
           id: xxxxx,
@@ -859,8 +868,6 @@
     },
     async created() {
       this.getList1();//7.6医生列表1
-      this.getList2();//7.10.1审核列表2
-      this.getList2();//7.10.2审核列表3
       // this.addPrescription();//7.8开处方
       // this.checkPrescription();//7.9是否通过
     }
