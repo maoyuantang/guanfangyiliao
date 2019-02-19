@@ -9,7 +9,7 @@
 			<div class="online-clinic" v-if="navInfo.i===0">
 				<div class="online-clinic-top mainTab">
 					<div class="online-clinic-top-left">
-						<selftag :inData="onLineList.topFlag[0]" @reback="getFilter0"></selftag>
+						<selftag :inData="onLineList.topFlag[0]" @reback="getFilter"></selftag>
 					</div>
 					<div class="online-clinic-top-right">
 						<search @searchValue="adminSearchOne"></search>
@@ -47,11 +47,11 @@
 			<div v-else-if="navInfo.i===1">
 				<div class="online-clinic-top">
 					<div class="online-clinic-top-left">
-						<selftag v-model="prescriptionAuditDistribution.topFlag[0]" @reback="getFilter0"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[1]" @reback="getFilter1"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[2]" @reback="getFilter2"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[3]" @reback="getFilter3"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[4]" @reback="getFilter4"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[0]" @reback="getFilter"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[1]" @reback="getFilter"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[2]" @reback="getFilter"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[3]" @reback="getFilter"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[4]" @reback="getFilter"></selftag>
 					</div>
 					<div class="online-clinic-top-right">
 						<search></search>
@@ -69,7 +69,7 @@
 			<div v-else-if="navInfo.i===2" class="statistics">
 				<div class="hospital-management-outpatient-statistics-top">
 					<div class="hospital-management-outpatient-statistics-top-left">
-						<selftag v-model="statistics.topFlag[0]" @reback="getFilter0"></selftag>
+						<selftag v-model="statistics.topFlag[0]" @reback="getFilter"></selftag>
 					</div>
 					<div class="hospital-management-outpatient-statistics-top-right">
 						<statisticsWay v-model="time" @reBack="getFilterTime"></statisticsWay>
@@ -77,8 +77,7 @@
 				</div>
 				<div class="hospital-management-outpatient-statistics-midle">
 					<div style="display:flex">
-						<normalColumnChart :inData="drawData"> </normalColumnChart>
-						<!-- <normalColumnChart :inData="drawDataStart"> </normalColumnChart> -->
+						<normalColumnChart v-for="(item,index) in testdata" :key="index" :inData="item"> </normalColumnChart>
 					</div>
 				</div>
 			</div>
@@ -139,49 +138,45 @@
 
 		<!-- 物流状态 -->
 		<el-dialog title="物流状态" :visible.sync="roadStatusList2" center>
-			<ul>
-				<li>1</li>
-				<li>2</li>
-				<li>3</li>
-			</ul>
+			待引入组件
 		</el-dialog>
 		<!-- 查看记录 -->
 		<el-dialog class="  " title="  " :visible.sync="viewRecordList2" width="602px" hight="356px" center>
 			<ul>
-					<li class="ohisList">
-							<h3>2018年4月4日</h3>
-							<ul>
-									<li class="ohisListMain">
-											<div>
-													<img src="../assets/img/a-6.png" />
-											</div>
-											<div class="ohisListRg">
-													<div>张某人
-															<span> 17:54:34</span>
-													</div>
-													<div>那就等带节后再说吧。</div>
-											</div>
-									</li>
-							</ul>
-					</li>
-					<li class="ohisList">
-							<h3>2018年4月4日</h3>
-							<ul>
-									<li class="ohisListMain">
-											<div>
-													<img src="../assets/img/a-6.png" />
-											</div>
-											<div class="ohisListRg">
-													<div>张某人
-															<span> 17:54:34</span>
-													</div>
-													<div>那就等带节后再说吧。</div>
-											</div>
-									</li>
-							</ul>
-					</li>
+				<li class="ohisList">
+					<h3>2018年4月4日</h3>
+					<ul>
+						<li class="ohisListMain">
+							<div>
+								<img src="../assets/img/a-6.png" />
+							</div>
+							<div class="ohisListRg">
+								<div>张某人
+									<span> 17:54:34</span>
+								</div>
+								<div>那就等带节后再说吧。</div>
+							</div>
+						</li>
+					</ul>
+				</li>
+				<li class="ohisList">
+					<h3>2018年4月4日</h3>
+					<ul>
+						<li class="ohisListMain">
+							<div>
+								<img src="../assets/img/a-6.png" />
+							</div>
+							<div class="ohisListRg">
+								<div>张某人
+									<span> 17:54:34</span>
+								</div>
+								<div>那就等带节后再说吧。</div>
+							</div>
+						</li>
+					</ul>
+				</li>
 			</ul>
-	</el-dialog>
+		</el-dialog>
 
 
 	</div>
@@ -244,6 +239,7 @@
 		},
 		data() {
 			return {
+
 				// 显示隐藏
 				isShowrelationalDoctor: false,//关联医生
 				isShowRecord: false,//查看详情
@@ -301,10 +297,15 @@
 				reviewDoctorId: "",//审核医生
 				sendEnum: "",//配送状态（UNSEND, //未配送；SENDING, //配送中；SENDOVER, //已签收）
 				//管理统计端  统计筛选返回值  接收参数
-				time0: "",//统计筛选起始时间
-				time1: "",//统计筛选结束时间
-				type: 'MONTH', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天 
-				monthToYear: [],//月年转换
+				time0: "2017-06-01",//统计筛选起始时间
+				time1: "2019-01-25",//统计筛选结束时间
+				type: 'DAY', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天 
+				monthToYearDoor: {
+					months: [],
+					years: []
+				},//门诊   月年转换
+				monthToYearway: [],//处方   月年转换
+				monthToYearPeople: [],//就诊人次    月年转换
 				//7.1新增门诊参数
 				clinicProtocolId: "",//String false 远程门诊协议id（选择协议时必传，非选择的协议可不传）
 				clinicProtocolName: "",//String true 远程门诊协议名 
@@ -586,20 +587,31 @@
 						},
 					]
 				},
-				//申请科室统计图
-				drawData: {
-					dataAxis: [], //每个柱子代表的类名
-					data: [], //具体数值
-					title: " ", //图表标题
-					totalNumber: "555"
-				},
-				//发起科室统计图
-				drawDataStart: {
-					dataAxis: [], //每个柱子代表的类名
-					data: [], //具体数值
-					title: " ", //图表标题
-					totalNumber: "555"
-				},
+
+
+				//科室统计图
+				testdata: [
+					{
+						dataAxis: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],//每个柱子代表的类名
+						data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234],//具体数值
+						title: '测试测试,修改修改',//图表标题
+						total: 'i is fish'
+					},
+					{
+						dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'],//每个柱子代表的类名
+						data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234],//具体数值
+						title: '测试测试,修改修改',//图表标题
+						total: 'i is fish'
+					},
+					{
+						dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'],//每个柱子代表的类名
+						data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234],//具体数值
+						title: '测试测试,修改修改',//图表标题
+						total: 'i is fish'
+					},
+
+				],
+
 			}
 		},
 		computed: {
@@ -615,30 +627,30 @@
 			//在线、处方审核、统计、切换插件返回值
 			getNav(data) { console.log(data) },
 			//筛选返回值
-			getFilter0(data) {//科室筛选
+			getFilter(data) {//科室筛选
 				this.departmentId = data.index.value;
 				console.log(this.departmentId)
 				this.getList1();
 				this.getList2();
 				this.getList3();
 			},
-			getFilter1(data) {//审核状态
+			getFilter(data) {//审核状态
 				this.reviewEnum = data.index.value;
 				console.log(this.reviewEnum)
 				this.getList1();
 				this.getList2();
 			},
-			getFilter2(data) {//配送状态
+			getFilter(data) {//配送状态
 				this.sendEnum = data.index.value;
 				this.getList1();
 				this.getList2();
 			},
-			getFilter3(data) {//审核医生
+			getFilter(data) {//审核医生
 				this.reviewDoctorId = data.index.value;
 				this.getList1();
 				this.getList2();
 			},
-			getFilter4(data) {//发药医生
+			getFilter(data) {//发药医生
 				this.sendDoctorId = data.index.value;
 				this.getList1();
 				this.getList2();
@@ -649,18 +661,23 @@
 				this.getList2();
 			},
 			getFilterTime(data) {//统计		//时间选择器返回函数
-				console.log(data)
-				this.time0 = data.time[0];//统计筛选开始时间
-				this.time1 = data.time[1];//统计筛选结束时间
-				this.type = data.select.value
-				this.getList3();
+				console.log(this.time)
+				if (data.time == null) {
+					this.type = data.select.value
+					this.getList3();
+				} else {
+					this.time0 = data.time[0];//统计筛选开始时间
+					this.time1 = data.time[1];//统计筛选结束时间
+					this.type = data.select.value
+					this.getList3();
+				}
 			},
 
 
 
 			//筛选列表  管理端
 			//1.21.1.科室工具栏 (管理)
-			async getFilter0() {
+			async getFilter0(data) {
 				const _this = this
 				let query = {
 					token: this.userState.token,
@@ -1018,7 +1035,7 @@
 			//管理3表（统计表）
 			//统计图表数据的获取
 			async getList3() {
-				console.log('统计接口还没出来')
+
 				const _this = this
 				let query = {
 					token: this.userState.token,
@@ -1031,12 +1048,24 @@
 				const res = await orderYcmzCharts(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('统计图标数据+成功')
-					// console.log(res)
-					$.each(res.data.body.data, function (index, text) {
-						//继续//把所有月份分成一年一年的，保存的参数意见建好了monthToYear
-						// _this.drawData.dataAxis.push(text.x);
-						// _this.drawData.data.push(text.y);
+					const lists = res.data.body.data
+					console.log(lists)
+					console.log(this.type)
+					$.each(lists, function (index, text) {
+						//把所有月份分成一年一年的，保存的参数意见建好了monthToYear
+
+						//等待 
+						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
+
+						// _this.monthToYearDoor.months.push(text.x)
+						// _this.monthToYearDoor.years.push(text.y)
 					});
+					// this.testdata.push({
+					// 	dataAxis: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],//每个柱子代表的类名
+					// 	data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234],//具体数值
+					// 	title: '测试测试,修改修改',//图表标题
+					// 	total: 'i is fish'
+					// })
 				} else {
 					//失败
 					console.log('统计图标数据+失败')
@@ -1261,7 +1290,6 @@
 			async isShowEditFun(row) {
 				let _this = this
 				this.addData.show = true
-				// return
 				this.sureVisiable = 2;
 				this.newClinic0();//新增门诊弹框内容渲染
 				let query0 = {
@@ -1335,9 +1363,9 @@
 				this.roadStatusList2 = true;
 			},
 			//查看记录   管理2表
-			viewRecordList2Fun(index, row){
+			viewRecordList2Fun(index, row) {
 				this.viewRecordList2 = true;
-				console.log(index,row)
+				console.log(index, row)
 			},
 
 
