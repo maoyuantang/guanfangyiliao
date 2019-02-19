@@ -14,8 +14,8 @@ let serverTime;//服务器时间
 let oMsgId;
 //初始化websocket
 // alert(this.$store.state.token)
-function initWebSocket(otoken, ofun) {
-    // console.log(otoken)
+function initWebSocket(otoken) {
+    console.log(otoken)
     //封装自定义的消息协议
     // protobuf.load('../common/imessage.json', (error, root) => {
     let root = protobuf.Root.fromJSON(imessage);
@@ -51,7 +51,7 @@ function initWebSocket(otoken, ofun) {
     //接受消息
     webSocket.onmessage = function (e) {
 
-        // console.log(IMessage.decode(new Uint8Array(e.data)));
+        console.log(IMessage.decode(new Uint8Array(e.data)));
         let odata = IMessage.decode(new Uint8Array(e.data));
 
         webSocketonmessage(odata);
@@ -874,7 +874,7 @@ function webSocketonclose(e) {
 
 function webSocketonopen(buffer) {
     if (webSocket.readyState === 1) {
-        // console.log("连接成功");
+        console.log("连接成功");
 
         webSocket.send(buffer);
     } else {

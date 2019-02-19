@@ -1,5 +1,7 @@
 <template>
     <div class="chat">
+        <websocket1 ref="mychild" @reloaddata="addMessageK">
+        </websocket1>
         <div>
             {{chatUser}}
         </div>
@@ -27,7 +29,32 @@
                                     </span>
                                     <img :src="text.imgUrl" />
                                 </div>
-                                {{text.content}} </div>
+                                <!-- 显示随访表 -->
+                                <!-- 自己发的随访表 -->
+                                <div v-show="text.childMessageType=='FOLLOWUP' || text.childMessageType=='INTERROGATION' || text.childMessageType=='ARTICLE'">
+                                    <div v-show="text.from==userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.id,text.childMessageType)">
+                                        <div>
+                                            <img src="../../assets/img/followQuest1.png" />
+                                        </div>
+                                        <div>
+                                            <h3>{{text.content.title}}</h3>
+                                            <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                        </div>
+
+                                    </div>
+                                    <!-- 对方发的随访表 -->
+                                    <div v-show="text.from!=userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.id,text.childMessageType)">
+                                        <div>
+                                            <img src="../../assets/img/followQuest2.png" />
+                                        </div>
+                                        <div>
+                                            <h3>{{text.content.title}}</h3>
+                                            <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
 
                         </div>
                     </div>
@@ -59,7 +86,7 @@
         </div>
         <div class="sendIcon">
             <span title="发送图片">
-                <el-upload class="upload-demo upload-demo-chat" :action="ourl" :on-success="imgUpload"  :limit="1">
+                <el-upload class="upload-demo upload-demo-chat" :action="ourl" :on-success="imgUpload" :limit="1">
                     <el-button size="small" type="primary">点击上传</el-button>
 
                 </el-upload>
@@ -68,31 +95,31 @@
             <span @click="setVideo()" title="发送视频">
                 <img src="../../assets/img/sendNew2.png" />
             </span>
-            <span title="发送文章">
+            <span v-show="oDoctorVis" @click="addArticle()" title="发送文章">
                 <img src="../../assets/img/sendNew3.png" />
             </span>
-            <span @click="addFollow()" title="发送随访">
+            <span v-show="oDoctorVis" @click="addFollow()" title="发送随访">
                 <img src="../../assets/img/sendNew4.png" />
             </span>
-            <span title="发送问诊">
+            <span v-show="oDoctorVis" @click="addQuest()" title="发送问诊">
                 <img src="../../assets/img/sendNew5.png" />
             </span>
-            <span @click="addRemarks()" title="添加备注">
+            <span v-show="oDoctorVis" @click="addRemarks()" title="添加备注">
                 <img src="../../assets/img/sendNew6.png" />
             </span>
-            <span title="药品处方">
+            <span v-show="oDoctorVis" title="药品处方" @click="addDrugs()">
                 <img src="../../assets/img/sendNew8.png" />
             </span>
-            <span @click="addPlan()" title="计划">
+            <span v-show="oDoctorVis" @click="addPlan()" title="计划">
                 <img src="../../assets/img/sendNew9.png" />
             </span>
-            <span title="录入档案">
+            <span v-show="oDoctorVis" title="录入档案">
                 <img src="../../assets/img/sendNew10.png" />
             </span>
-            <span title="健康处方">
+            <span v-show="oDoctorVis" title="健康处方">
                 <img src="../../assets/img/sendNew11.png" />
             </span>
-            <span title="转诊">
+            <span v-show="oDoctorVis" title="转诊">
                 <img src="../../assets/img/sendNew12.png" />
             </span>
             <span title="聊天记录">
@@ -120,7 +147,7 @@
         <el-dialog title="计划" :visible.sync="planVisible" center append-to-body>
             <el-form ref="form" :model="planData" label-width="80px">
                 <el-form-item label="计划时间">
-                    <el-date-picker v-model="planData.planTime" type="datetime" placeholder="选择日期时间">
+                    <el-date-picker v-model="planData.planTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
                     </el-date-picker>
                 </el-form-item>
 
@@ -128,13 +155,13 @@
                     <el-input type="textarea" v-model="planData.planCon"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="onSubmit">确认</el-button>
+                    <el-button type="primary" @click="setPlan()">确认</el-button>
                     <el-button>取消</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
         <!-- 随访 -->
-        <el-dialog title="随访" :visible.sync="followVisible" center append-to-body>
+        <el-dialog title="发送随访" :visible.sync="followVisible" center append-to-body>
             <ul>
                 <li class="followBox" v-for="(text,index) in followList" :key="index">
                     <span>{{text.title}}</span>
@@ -144,13 +171,40 @@
         </el-dialog>
         <!-- 随访计划详情 -->
         <el-dialog title="随访" :visible.sync="followListVisible" center append-to-body>
+            <follow :addFollowData="followDetailData" @osendmessagechat="getSendMessageChat"></follow>
+        </el-dialog>
+        <!-- 随访消息点击详情 -->
+        <el-dialog title="随访" :visible.sync="followDetailVisible" center append-to-body>
+            <followDetail :addFollowData="followDetailData"></followDetail>
+        </el-dialog>
+        <!-- 问诊 -->
+        <el-dialog title="发送问诊" :visible.sync="questVisible" center append-to-body>
             <ul>
-                <li class="followBox" v-for="(text,index) in followList" :key="index">
+                <li class="followBox" v-for="(text,index) in questList" :key="index">
                     <span>{{text.title}}</span>
-                    <span @click="followDetail(text.id)"> > </span>
+                    <span @click="QuestDetail(text.id)"> > </span>
                 </li>
             </ul>
         </el-dialog>
+        <!-- 问诊详情 -->
+        <el-dialog title="问诊详情" :visible.sync="questDetailVisible" center append-to-body>
+            <quest :addQuestData="questDetailData" @osendmessagechat="getSendMessageChat"></quest>
+        </el-dialog>
+        <!-- 文章 -->
+        <el-dialog title="发送文章" :visible.sync="articleVisible" center append-to-body>
+            <ul>
+                <li class="followBox" v-for="(text,index) in articleList" :key="index">
+                    <span>{{text.title}}</span>
+                    <span @click="articleDetail(text.id)"> > </span>
+                </li>
+            </ul>
+        </el-dialog>
+
+        <!-- 药品处方 -->
+        <el-dialog title="药品处方" :visible.sync="drugsVisible" width="100%" center append-to-body>
+            <drugs></drugs>
+        </el-dialog>
+
         <!-- 视频聊天 -->
         <el-dialog title="视频" :visible.sync="videoVisible" center append-to-body fullscreen>
             <ovideo></ovideo>
@@ -179,23 +233,48 @@
 import apiBaseURL from "../../enums/apiBaseURL.js";
 import protobuf from "protobufjs";
 import { mapState } from "vuex";
-// import websocket from "../../common/websocket.js";
 import filesJs from "../../common/files.js";
+import websocket1 from "../../common/websocket.vue";
+import drugs from "../../components/chat/drugs.vue";
+import follow from "../../components/chat/follow.vue";
+import quest from "../../components/chat/quest.vue";
+import followDetail from "../../components/chat/followDetail.vue";
+
 import {
     fetchHistoryMessage,
     fetchSessionMembers,
     fetchReadMessageId,
-    webGetTitleList
+    webGetTitleList,
+    getFollowDetail,
+    savePlan,
+    getModelTitleList,
+    queryInquiryPlan,
+    queryInquiry,
+    queryArticleList,
+    getArticleDetails
 } from "../../api/apiAll.js";
 import ovideo from "../../video/video.vue";
-let websocket = require("../../common/websocket.js");
+import { setTimeout } from "timers";
 
 export default {
     components: {
-        ovideo
+        ovideo,
+        websocket1,
+        drugs,
+        follow,
+        followDetail,
+        quest
     },
     data() {
         return {
+            questDetailData: {},
+            questDetailVisible: false,
+            questVisible: false,
+            articleVisible: false,
+            articleList: [],
+            questList: [],
+            followList: [],
+            drugsVisible: false,
             remarkVisible: false, //备注是否显示
             remarkData: {
                 remarkCon: ""
@@ -225,8 +304,14 @@ export default {
             childMessageType: "", //发送的消息类型
             messageBody: "", //发送的文字消息内容
             chatType: "", //单聊或群聊
-            to: "B43F34E1D4014D4F98ED57BA86B2239F" //接受者Id
+            to: "B43F34E1D4014D4F98ED57BA86B2239F", //接受者Id
             // sessionId: "" //会话Id
+            messageTicket: {},
+            oDoctorVis: true,
+            followDetailData: {},
+            otitle: "",
+            oFollowId: "",
+            followDetailVisible: false
         };
     },
     computed: {
@@ -236,16 +321,22 @@ export default {
         })
     },
     created() {
+        this.getDoctorVis();
         this.getHisRecord();
         this.getMemberMess();
         this.alreadyRead();
+
         this.ourl = "/m/v1/api/hdfs/fs/upload?token=" + this.userState.token;
         console.log(this.sessionId);
+        this.messageTicket = this.$store.state.socket.messageTicket;
     },
     methods: {
-        onSubmit(){
-
+        getSendMessageChat(oMessage) {
+            this.messageBody = JSON.stringify(oMessage);
+            this.childMessageType = 20;
+            this.sendMessageChat();
         },
+        onSubmit() {},
         //图片上传成功
         imgUpload(res) {
             console.log(res);
@@ -306,14 +397,41 @@ export default {
         },
 
         //随访详情
-        followDetail() {
+        followDetail(oid) {
             this.followListVisible = true;
+            this.getFollowDetail(oid);
+        },
+        //随访消息点击详情
+        followDetailClick(oid, otype) {
+            if (otype == "FOLLOWUP") {
+                this.followDetailVisible = true;
+                this.getFollowDetail(oid);
+            } else if (otype == "INTERROGATION") {
+            } else if (otype == "ARTICLE") {
+            }
         },
         sendMessage2() {
-            websocket = require("../../common/websocket.js");
-            let ohtml = websocket.default.getContent();
+            //  websocket = require("../../common/websocket.js");
+            let ohtml = this.messageTicket.content;
         },
-
+        //随访详情
+        async getFollowDetail(oid) {
+            console.log(this.userSelfInfo.userId);
+            let query = {
+                token: this.userState.token,
+                followupId: oid
+            };
+            const res = await getFollowDetail(query);
+            if (res.data && res.data.errCode === 0) {
+                this.followDetailData = res.data.body;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         //已读未读
         async alreadyRead() {
             console.log(this.userSelfInfo.userId);
@@ -368,6 +486,7 @@ export default {
         },
         //获取历史记录
         async getHisRecord() {
+            console.log("历史消息");
             console.log(this.sessionId);
             let query = {
                 token: this.userState.token
@@ -375,7 +494,7 @@ export default {
             const options = {
                 userId: this.userSelfInfo.userId,
                 sessionId: [this.sessionId],
-                msgId: websocket.default.getMsgId(),
+                msgId: this.messageTicket.msgId,
                 pageNums: 15
             };
             console.log(Object.prototype.toString.call([this.sessionId]));
@@ -434,6 +553,7 @@ export default {
                 //     }
                 // ];
                 let odata = res.data.body.reverse();
+                // let odata = res.data.body;
                 this.messageList = odata;
                 $.each(this.messageList, function(index, text) {
                     let timestamp4 = new Date(text.serverTime);
@@ -457,7 +577,7 @@ export default {
                     } else {
                         this.messageList[i].oRead = false;
                     }
-
+                    // 不是本人发
                     if (odata[i].from != this.userSelfInfo.userId) {
                         if (odata[i].childMessageType == "INTERROGATION") {
                             //问诊
@@ -495,19 +615,28 @@ export default {
                             this.messageList[i].content = odata[i].body;
                         }
                     } else {
+                        //本人发
                         if (odata[i].childMessageType == "INTERROGATION") {
                             //问诊
-                            this.messageList[i].content =
-                                '<div class=" followCon"> <div> </div> <div> <h3>问诊表/随访表的标题</h3> <div>2018中医国际标准</div>  </div> </div>';
+                            this.messageList[i].content = JSON.parse(
+                                odata[i].body
+                            );
                         } else if (odata[i].childMessageType == "ARTICLE") {
                             //文章
-                            this.messageList[i].content = "文章";
+                            // this.messageList[i].content = "文章";
+                            this.messageList[i].content = JSON.parse(
+                                odata[i].body
+                            );
                         } else if (odata[i].childMessageType == "CRVIDEO") {
                             //视频
                             this.messageList[i].content = "视频";
                         } else if (odata[i].childMessageType == "FOLLOWUP") {
                             //随访
-                            this.messageList[i].content = "随访";
+                            // this.messageList[i].content = "随访";
+                            console.log(odata[i].body);
+                            this.messageList[i].content = JSON.parse(
+                                odata[i].body
+                            );
                         } else if (odata[i].childMessageType == "IMAGE") {
                             //图片
                             this.messageList[i].imgUrl =
@@ -558,11 +687,12 @@ export default {
             if (oMinite <= 9) {
                 oMinite = "0" + oMinite;
             }
-            this.messageList.push({
-                from: this.userSelfInfo.userId,
-                content: this.messageBody,
-                serverTime: oHour + ":" + oMinite
-            });
+            // this.messageList.push({
+            //     from: this.userSelfInfo.userId,
+            //     content: this.messageBody,
+            //     serverTime: oHour + ":" + oMinite
+            // });
+
             let timestamp = Date.parse(new Date());
             // let tag = "img"; //辨识图片
             // if (this.messageBody.indexOf(tag) != -1) {
@@ -573,7 +703,7 @@ export default {
             console.log(this.userSelfInfo);
             let Iessage = {
                 RequestType: 4,
-                ticket: websocket.default.getTicket(),
+                ticket: this.messageTicket.ticket,
                 info: {
                     messageType: 0, //消息
                     childMessageType: this.childMessageType, //文本
@@ -582,29 +712,171 @@ export default {
                     toNickName: "管理员",
                     to: this.sessionId, //发给谁，接收者的用户ID
                     body: this.messageBody, //消息内容
-                    // groupId: this.seccionId,
-                    // sessionId:this.sessionId,
-                    sequence: websocket.default.getSequence(), //消息发送序号。
+                    sequence: this.messageTicket.sequence, //消息发送序号。
                     chatType: 0, //单聊  GROUP 群聊
                     clientTime: timestamp,
-                    serverTime: websocket.default.getServerTime()
+                    serverTime: this.messageTicket.serverTime
                 }
             };
             console.log(Iessage);
-            console.log(websocket);
-            websocket.default.sendMessage(Iessage);
+            // websocket.default.sendMessage(Iessage);
+            if (this.messageBody) {
+                this.$refs.mychild.sendMessage(Iessage);
+                this.addMessageK(this.messageBody, oHour + ":" + oMinite);
+            } else {
+                alert("消息不能为空");
+            }
 
             // let aaa=websocket.dadaTransfer
         },
+
+        // 添加消息到发送框
+        addMessageK(oMessage, oMessageTime) {
+            alert("dd");
+            this.messageList.push({
+                from: this.userSelfInfo.userId,
+                content: oMessage,
+                serverTime: oMessageTime
+            });
+        },
         searchBtn() {
             this.$emit("searchValue", this.input);
+        },
+        getDoctorVis() {
+            //    if(this.doctorVis==0){
+            //        this.oDoctorVis=false
+            //    } else if(this.doctorVis==1){
+            //        this.oDoctorVis=true
+            //    }
+        },
+        //发送问诊
+        async addQuest() {
+            this.questVisible = true;
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                pageNum: 1,
+                pageSize: 100
+            };
+            const res = await getModelTitleList(query);
+            if (res.data && res.data.errCode === 0) {
+                _this.questList = res.data.body.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //问诊详情
+        async QuestDetail(oid) {
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                id: oid
+            };
+            const res = await queryInquiry(query);
+            if (res.data && res.data.errCode === 0) {
+                _this.questDetailVisible = true;
+                _this.questDetailData = res.data.body;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //发送文章
+        async addArticle() {
+            this.articleVisible = true;
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                search: "",
+                department: "",
+                pageNum: 1,
+                pageSize: 100
+            };
+            const res = await queryArticleList(query);
+            if (res.data && res.data.errCode === 0) {
+                _this.articleList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        async articleDetail(oid) {
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                articleId: oid
+            };
+            const res = await getArticleDetails(query);
+            if (res.data && res.data.errCode === 0) {
+                let oMessage = {
+                    id: res.data.body.id,
+                    title: res.data.body.title,
+                    firstTreatmentTime: res.data.body.createTime
+                };
+                this.messageBody = JSON.stringify(oMessage);
+                this.childMessageType = 19;
+                this.sendMessageChat();
+                setTimeout(function() {
+                    _this.articleVisible = false;
+                    _this.messageBody = "";
+                }, 1000);
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        addDrugs() {
+            this.drugsVisible = true;
+        },
+        //创建计划
+        async setPlan() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const options = {
+                userId: this.userSelfInfo.userId,
+                content: this.planData.planCon,
+                executeTime: this.planData.planTime
+            };
+            const res = await savePlan(query, options);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "创建成功！"
+                });
+                setTimeout(function() {
+                    _this.planVisible = false;
+                }, 1000);
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
         }
     },
     props: {
-        sessionId: String //会话Id
+        sessionId: String, //会话Id
+        doctorVis: Number
     },
     model: {
-        prop: ["seccionId"],
+        prop: ["seccionId", "doctorVis"],
         event: "reBack"
     }
 };
@@ -816,6 +1088,35 @@ export default {
 .imgUrlBig > img {
     width: 100%;
     height: 100%;
+}
+
+.followOrQuest {
+    display: flex;
+    display: -webkit-flex;
+    padding: 6px 12px;
+    box-sizing: border-box;
+    width: 260px;
+    height: 65px;
+    border: 1px solid #e5e7e9;
+    border-radius: 3px;
+}
+.followOrQuest > div:last-child h3 {
+    font-family: PingFangSC-Semibold;
+    font-size: 14px;
+    color: #323c47;
+    letter-spacing: 0;
+    line-height: 27px;
+}
+.followOrQuest > div:first-child {
+    margin-right: 10px;
+    padding-top: 10px;
+}
+.followOrQuest > div:last-child > div {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #939eab;
+    letter-spacing: 0;
+    line-height: 22px;
 }
 /* 备注
 

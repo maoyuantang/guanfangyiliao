@@ -184,6 +184,13 @@ export default {
     toolBusinessType:'/m/v1/api/basics/common/toolBusinessType',//1.21.14.业务类型
     orderYcmzCharts:'/m/v1/api/order/orderYcmzCharts',//6.9.远程门诊订单统计柱状图
     orderRxCharts:'/m/v1/api/order/orderRxCharts',//6.10.处方订单统计柱状图
+
+
+
+    // 健康档案系统
+    getFamilyMemberInfo:'/m/v1/api/familyMember/getFamilyMemberInfo',//
+
+
     businessType:'/m/v1/api/family/family/businessType',//17.3(管理、APP患者)获取所有业务类型
     addBusiness:'/m/v1/api/family/family/addBusiness',//17.4新增业务
     stencilModel:'/m/v1/api/family/family/stencilModel',//17.2传入模版名获取模版
@@ -217,3 +224,4 @@ export default {
     dualReferralReception:'/m/v1/api/referral/dualReferral/reception/',//14.10.双向转诊-WEB医生端-接诊人操作
     receptionAudit:'/m/v1/api/referral/dualReferral/reception/audit',//14.11.双向转诊-WEB医生端-审核
 }
+

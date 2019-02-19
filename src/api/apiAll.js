@@ -1934,6 +1934,20 @@ export const orderRxCharts = query => { //6.10.处方订单统计柱状图
         }
     })
 }
+
+// 健康档案系统
+
+export const getFamilyMemberInfo = query => { //6.10.处方订单统计柱状图
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.getFamilyMemberInfo,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
 export const businessType = query => { //17.3(管理、APP患者)获取所有业务类型
     const sign = postQueryHandle(query);
     return axios({

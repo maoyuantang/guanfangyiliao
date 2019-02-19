@@ -431,6 +431,8 @@
                         <tableList :tableData="satisfiedList" :columns="satisfiedColumns" :tableBtn="SatisfiedBtn" :checkVisable="mydTableChecked" @reBack="getUserId"></tableList>
 
                     </div>
+                    123
+                    <pieChart></pieChart>
                 </div>
                 <!-- 家用设备检测 -->
                 <div v-show="2==oMainShow">
@@ -550,6 +552,8 @@ import selftag from "../public/publicComponents/selftag.vue";
 import statisticsWay from "../public/publicComponents/statisticsWay.vue";
 import publicTime from "../public/publicComponents/publicTime.vue";
 import normalColumnChart from "../public/publicComponents/normalColumnChart.vue";
+import pieChart from "./followUpBox/pieChart.vue";
+
 import { quillEditor } from "vue-quill-editor";
 
 export default {
@@ -561,7 +565,8 @@ export default {
         statisticsWay,
         publicTime,
         normalColumnChart,
-        quillEditor
+        quillEditor,
+        pieChart
     },
     data() {
         return {

@@ -245,7 +245,7 @@
 
         </div>
         <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-            <chat :sessionId="sessionId"></chat>
+            <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
         </el-dialog>
 
     </div>
@@ -290,6 +290,7 @@ export default {
     },
     data() {
         return {
+            doctorVis:0,//0是医生跟医生聊天
             cellColor: [
                 {
                     cell: 7,
@@ -663,7 +664,7 @@ export default {
             };
             const res = await sponsorConsultationInform(query, options);
             if (res.data && res.data.errCode === 0) {
-               this.$notify.error({
+               this.$notify.success({
                     title: "成功",
                     message: "邀请成功"
                 });
