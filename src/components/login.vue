@@ -231,7 +231,6 @@
                 if(res.data.errCode === 0){//登录成功
                     this.$store.commit("user/SETUSERSELFINFO",res.data.body);
                     sessionStorage.setItem('userSelfInfo',JSON.stringify(res.data.body));//将用户个人信息写入缓存
-                    console.log(' is run')
                     this.getHospitalDepts();
                     // this.$router.push({path:'/'})
                 }else{
