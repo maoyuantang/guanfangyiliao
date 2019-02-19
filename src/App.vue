@@ -14,6 +14,7 @@ import "./video/assets/css/bootstrap.original.css"
 import { mapState } from "vuex";
 
 import websocket from "./common/websocket.js";
+import {fetchHospitalDepts} from './api/apiAll.js'
 import "./public/publicCss/base.css";
 export default {
   
@@ -25,12 +26,14 @@ export default {
     },
     computed: {
         ...mapState({
-            userState: state => state.user.userInfo
+            userState: state => state.user.userInfo,
+            userSelfInfo:state => state.user.userSelfInfo, 
+            global: state => state.global
         })
     },
     created() {
         const test = this.lianjie();
-        console.log(window.Manis)
+        console.log(window.Manis);
         // console.log(this.$store.state.user.userInfo.hasAuth)
         // console.log(this.$store.state.user.userInfo.rooter)
         //  console.log(this.$store.state.user.userInfo.manager)
@@ -44,7 +47,7 @@ export default {
             window.websocket = websocket.initWebSocket(this.userState.token);
         
             // console.log(window.websocket)
-        }
+        },
     },
     watch: {
     },

@@ -34,6 +34,8 @@ import familyMedicineDoctor from './familyMedicine/familyMedicineDoctor.vue'
 
 <style scoped>
 	.family-medicine{
-
+		/* height: 100%; */
+		min-height: 100%;
+		overflow-y: auto;
     }
 </style>

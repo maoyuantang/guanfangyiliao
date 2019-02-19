@@ -10,7 +10,7 @@
            <div class="left-model" v-show="tabPosition==='left'">
                <div class="left-model-head">
                     <div class="left-model-head-flag">
-                        <selftag v-model="leftListDepartment" @reback="test111"></selftag>
+                        <selftag v-model="ourStaff.department" @reback="ourStaffDepartmentSelect"></selftag>
                     </div>
                     <div class="left-model-head-operating">
                         <el-input
@@ -23,6 +23,20 @@
                <div class="left-model-body">
                     <publicList :tableData="newModules.tableData" :columns="newModules.columns" :tableBtn="newModules.tableBtn"></publicList>
                </div>
+               <div>
+                   <!-- :page-size="10"
+                @current-change="listSelectPage"
+                :current-page="parseInt(listCondition.page.pageNum)"
+                v-if="listCondition.page.total!=0"
+                :total="listCondition.page.total" -->
+                <el-pagination
+                background
+                layout="prev, pager, next"
+                :page-size="10" 
+                :current-page="2" 
+                :total="99"
+                ></el-pagination>
+            </div>
            </div>
            <div class="right-model" v-show="tabPosition==='right'">
                <div class="right-model-head">
@@ -186,6 +200,21 @@
                 departmentlist:[//科室列表
 					// {deptId:'',deptName:''}
                 ],
+                ourStaff:{//本院人员 数据 
+                    department:{
+                        index:0,
+                        more:true,
+                        title:'科室',
+                        list:[]
+                    },
+                    departmentSelect:{}, 
+                    searchKey:{},
+                    page:{  
+                        pageSize:10,
+                        currentPage:1,
+                        total:0
+                    }
+                },
                 /********************************** */
                 otrue:false,
                 tabPosition: 'left',
@@ -603,7 +632,12 @@
                     orgCode:this.userSelfInfo.orgCode
                 });
                 if(res.data.errCode === 0){
-                    this.departmentlist = res.data.body;
+                    this.departmentlist = JSON.parse(JSON.stringify(res.data.body));
+                    this.ourStaff.department.list = JSON.parse(JSON.stringify(res.data.body.map(item=>{
+                        item.text = item.deptName;
+                        return item;
+                    })));
+                    
                     console.log(this.departmentlist)
                 }else{
                     this.$notify.error({
@@ -667,11 +701,12 @@
             async getSynergyManageList(){
                 const res = await synergyManageList({
                     token:this.userInfo.token,
-                    pageNum:1
+                    pageNum:this.ourStaff.page.currentPage,
+                    pageSize:this.ourStaff.page.pageSize,
                 });
                 console.log(res);
                 if(res.data && res.data.errCode === 0){
-
+                    
                 }else{
 
                 }
@@ -691,8 +726,8 @@
                 num===1||num===2?this.otrue=true:this.otrue=false;
                 this.isAdd = num;
             },
-            test111(data){
-               
+            ourStaffDepartmentSelect(data){
+               this.ourStaff.departmentSelect = data.index
                 console.log(data)
             }
         },

@@ -2024,3 +2024,273 @@ export const toolReferralType = query => { //1.21.28.双向转诊-方向
         }
     })
 }
+export const getChildrenByDepartmentId = query => { //1.21.28.双向转诊-方向
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.getChildrenByDepartmentId,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const businessCondition = query => { //17.7按条件筛选业务
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.businessCondition,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const updateBusiness = (query, data) => {//17.5更新业务
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.updateBusiness,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const queryPageByPushAndQuery = query => { //1.查询提取和推送档案分页列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.queryPageByPushAndQuery,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const queryStatisticalData = query => { //2.查询提取和推送档案统计
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.queryStatisticalData,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolMemberGroup = query => { //1.21.25.健康档案/随访-用户分组
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolMemberGroup,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolArchivesType = query => { //1.21.10.档案分类
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolArchivesType,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolUserSource = query => { //1.21.11.用户来源
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolUserSource,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolArchivesInside = query => { //1.21.12.院内档案
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolArchivesInside,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolConsultationType = query => { //1.21.6.会诊类型
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolConsultationType,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolConsultationStatus = query => { //1.21.7.会诊状态
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolConsultationStatus,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolArchivesSource = query => { //1.21.9.档案来源
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolArchivesSource,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolBusinessModel = query => { //1.21.13.业务模块
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolBusinessModel,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const readMedicals = query => { //14.1.双向转诊-WEB医生端-疾病名称下拉框
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.readMedicals,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const readMedicalsOfHospitalAndDept = query => { //14.2.双向转诊-WEB医生端-医院与科室下拉框联动
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.readMedicalsOfHospitalAndDept,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const dualReferralManagePage = query => { //14.3.双向转诊-WEB管理端-管理列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.dualReferralManagePage,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const statistics = query => { //14.4.双向转诊-WEB管理端-统计
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.statistics,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const dualReferralPage = query => { //14.5.双向转诊-WEB医生端-列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.dualReferralPage,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const dualReferralAdd = (query, data) => {//14.6.双向转诊-WEB医生端-申请转诊
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.dualReferralAdd,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const dualReferralRecord = query => { //14.7.双向转诊-WEB医生端-查询记录
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.dualReferralRecord,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const dualReferralUpdate = (query, data) => {//14.8.双向转诊-WEB医生端-修改
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.dualReferralUpdate,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const applicantCANCEL = (query, data) => {//14.9.双向转诊-WEB医生端-申请人操作
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.applicantCANCEL,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const dualReferralReception = (query, data) => {//3.3首页-账号及权限-创建用户
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: `${apiList.dualReferralReception}${query.operate}`,
+        params:query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const receptionAudit = (query, data) => {//14.11.双向转诊-WEB医生端-审核
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.receptionAudit,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}

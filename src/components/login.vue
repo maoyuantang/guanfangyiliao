@@ -31,7 +31,7 @@
     import jsonSort from '../public/publicJs/jsonSort.js'
     import websocket from "../common/websocket.js"
     import { mapState } from 'vuex'
-    import {getLoginCode,login,userInfo} from '../api/apiAll.js'//api
+    import {getLoginCode,login, userInfo, fetchHospitalDepts} from '../api/apiAll.js'//api
     import createUUID from '../public/publicJs/createUUID.js'
 	export default {
         components:{
@@ -130,6 +130,8 @@
         computed:{
             ...mapState({
                 userState: state => state.user.userInfo,
+                userSelfInfo:state => state.user.userSelfInfo, 
+                global: state => state.global
             }),
         },
 		methods:{
@@ -229,6 +231,8 @@
                 if(res.data.errCode === 0){//登录成功
                     this.$store.commit("user/SETUSERSELFINFO",res.data.body);
                     sessionStorage.setItem('userSelfInfo',JSON.stringify(res.data.body));//将用户个人信息写入缓存
+                    console.log(' is run')
+                    this.getHospitalDepts();
                     // this.$router.push({path:'/'})
                 }else{
                     this.$message({
@@ -276,7 +280,8 @@
                     // console.log(this.$store.state.user.viewRoot)
                     this.getUserInfo();//使用登录页、过后的token，请求用户个人信息
                     this.setViewRoot(res.data.body);//计算用户权限
-                    websocket.initWebSocket(this.userState.token)
+                    websocket.initWebSocket(this.userState.token);
+                    
                 }else{//失败
                     this.$notify.error({
                         title: '登录失败',
@@ -352,7 +357,28 @@
                 }
                 this.$store.commit("user/SETVIEWROOT",reData);
                 sessionStorage.setItem('viewRoot',JSON.stringify(reData));//缓存将权限下来
-            }
+            },
+
+            /**
+             * 获取科室列表
+             */
+            async getHospitalDepts(){
+                const res = await fetchHospitalDepts({
+                    orgCode:this.userSelfInfo.orgCode,
+                    deptId:''
+                });
+                console.log(res)
+                if(res.data&&res.data.errCode===0){
+                    this.$store.commit("global/SETDEPARTENTLIST", res.data.body)
+                    console.log(this.global.departmentList)
+                }else{
+                    this.$notify({
+                        title: '失败',
+                        message: '科室列表获取失败',
+                        type: 'error'
+                    });
+                } 
+            },
         },
         
 		async created(){
@@ -365,7 +391,8 @@
 	.login{
         width: 100%;
         height: 100%;
-        background: url(../assets/img/login_background.png) no-repeat;
+        /* background: url(../assets/img/login_background.png) no-repeat; */
+        background: url(../../static/assets/img/login_background.png) no-repeat;
         background-size: cover;
     }
     .login-content{

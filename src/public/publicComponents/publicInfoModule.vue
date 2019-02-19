@@ -1,14 +1,30 @@
 <template>
 	<div class="public-info-module" >
 		<div class="public-info-module-layout">
-            <i class="iconfont public-info-module-icon">&#xe612;</i>
+            <!-- <i class="iconfont public-info-module-icon">&#xe612;</i> -->
+            <div class="public-info-module-icon">
+                <Dropdown>
+                    <a href="javascript:void(0)">
+                        <i class="iconfont">&#xe612;</i>
+                    </a>
+                    <DropdownMenu slot="list">
+                        <DropdownItem @click.native="edit">编辑</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
+            </div>
+            
+            
             <div class="public-info-module-layout-top">
-                <div class="public-info-module-logo"><span class="public-info-module-logo-content">家医</span></div>
+                <div class="public-info-module-logo"><span class="public-info-module-logo-content" :style="{color:inData.color,borderColor:inData.color,background:inData.bgColor}">{{inData.logoName}}</span></div>
                 <div class="public-info-module-Introduction">
-                    <h2 class="public-info-module-name">业务名称占位符</h2>
+                    <h2 class="public-info-module-name">{{inData.businessName}}</h2>
                     <div class="public-info-module-Introduction-bottom">
-                        <span>业务类型占位符</span>
-                        <span>GF1254126(业务编号)</span>
+                        <span>{{inData.businessType}}</span>
+                        <span class="public-info-module-Introduction-bottom-span">
+                            <el-tooltip class="item" effect="light" :content="inData.departmentId" placement="top">
+                                <el-button>{{inData.departmentId.substring(0,12)}}...</el-button>
+                            </el-tooltip>  
+                        </span>
                     </div>
                 </div>
             </div>
@@ -25,11 +41,15 @@
                     </thead>
                     <tbody class="public-info-module-tbody">
                         <tr>
-                            <th class="public-info-item-price">¥ 288/月</th>
-                            <th class="public-info-item-num">11</th>
-                            <th class="public-info-item-count"> 总 13 | <span class="public-info-item-count-spe">今 0</span></th>
-                            <th class="public-info-item-total">28,256</th>
-                            <th class="public-info-item-disable">禁用</th>
+                            <th class="public-info-item-price">
+                                <el-tooltip class="item" effect="light" :content="inData.price.map(item=>item.priceDesc).join('\n')" placement="top">
+                                    <el-button>{{inData.price[0].priceDesc}}</el-button>
+                                </el-tooltip> 
+                            </th>
+                            <th class="public-info-item-num">{{inData.businessDoctors[0].doctorName}}</th>
+                            <th class="public-info-item-count"> 总 {{inData.totalNumber}} | <span class="public-info-item-count-spe">今 {{inData.todayNumber}}</span></th>
+                            <th class="public-info-item-total">{{inData.totalPrice}}</th>
+                            <th class="public-info-item-disable" @click="changeStatus">{{inData.state?'禁用':'解除禁用'}}</th> 
                         </tr>
                     </tbody>
                 </table>
@@ -40,6 +60,9 @@
 
 <script>
 	export default {
+        props:[
+            'inData'
+        ],
 		components:{
 			
 		},
@@ -51,7 +74,19 @@
 			}
 		},
 		methods:{
-			
+			changeStatus(){
+                this.$emit("changeStatus",{
+                    item:Object.assign({},this.inData),
+                    tagStatus:!this.inData.state
+                });
+            },
+            /**
+             * 编辑被点击
+             */
+            edit(){
+                this.$emit("edit",Object.assign({},this.inData));
+                console.log(Object.assign({},this.inData))
+            },
 		},
 		async created(){
 		}
@@ -114,6 +149,10 @@
         justify-content: space-between;
         padding-top: 10px;
     }
+    .public-info-module-Introduction-bottom>span{
+        flex: 1;
+        overflow: hidden;
+    }
     .public-info-module-Introduction{
         flex: 1;
     }
@@ -160,5 +199,18 @@
         font-size: 14px;
         color: #FE4D97;
         text-align: center;
+        cursor: pointer;
+    }
+    .public-info-module-Introduction-bottom-span>button{
+        display: inline;
+        border: none;
+        background-color: transparent;
+        padding: 0;
+    }
+    .public-info-item-price>button{
+        display: inline;
+        border: none;
+        background-color: transparent;
+        padding: 0;
     }
 </style>

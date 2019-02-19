@@ -192,4 +192,28 @@ export default {
     toolMedicalType:'/m/v1/api/basics/common/toolMedicalType',//1.21.26.分级诊疗-类型
     toolMedicalGrading:'/m/v1/api/basics/common/toolMedicalGrading',//1.21.27.分级诊疗-分级
     toolReferralType:'/m/v1/api/basics/common/toolReferralType',//1.21.28.双向转诊-方向
+    getChildrenByDepartmentId:'/m/v1/api//family/family/children',//17.15获取子业务
+    businessCondition:'/m/v1/api/family/family/businessCondition',//17.7按条件筛选业务
+    updateBusiness:'/m/v1/api/family/family/updateBusiness',//17.5更新业务
+    queryPageByPushAndQuery:'/m/v1/api/record/recordCase/queryPageByPushAndQuery',//1.查询提取和推送档案分页列表
+    queryStatisticalData:'/m/v1/api/record/recordCase/queryStatisticalData',//2.查询提取和推送档案统计
+    toolMemberGroup:'/m/v1/api/basics/common/toolMemberGroup',//1.21.25.健康档案/随访-用户分组
+    toolArchivesType:'/m/v1/api/basics/common/toolArchivesType',//1.21.10.档案分类
+    toolUserSource:'/m/v1/api/basics/common/toolUserSource',//1.21.11.用户来源
+    toolArchivesInside:'/m/v1/api/basics/common/toolArchivesInside',//1.21.12.院内档案
+    toolConsultationType:'/m/v1/api/basics/common/toolConsultationType',//1.21.6.会诊类型
+    toolConsultationStatus:'/m/v1/api/basics/common/toolConsultationStatus',//1.21.7.会诊状态
+    toolArchivesSource:'/m/v1/api/basics/common/toolArchivesSource',//1.21.9.档案来源
+    toolBusinessModel:'/m/v1/api/basics/common/toolBusinessModel',//1.21.13.业务模块
+    readMedicals:'/m/v1/api/referral/dualReferral/reception/readMedicals',//14.1.双向转诊-WEB医生端-疾病名称下拉框
+    readMedicalsOfHospitalAndDept:'/m/v1/api/referral/dualReferral/reception/readMedicalsOfHospitalAndDept',//14.2.双向转诊-WEB医生端-医院与科室下拉框联动
+    dualReferralManagePage:'/m/v1/api/referral/dualReferral/manage/page',//14.3.双向转诊-WEB管理端-管理列表
+    statistics:'/m/v1/api/referral/dualReferral/manage/statistics',//14.4.双向转诊-WEB管理端-统计
+    dualReferralPage:'/m/v1/api/referral/dualReferral/page',//14.5.双向转诊-WEB医生端-列表
+    dualReferralAdd:'/m/v1/api/referral/dualReferral/add',//14.6.双向转诊-WEB医生端-申请转诊
+    dualReferralRecord:'/m/v1/api/referral/dualReferral/record',//14.7.双向转诊-WEB医生端-查询记录
+    dualReferralUpdate:'/m/v1/api/referral/dualReferral/update',//14.8.双向转诊-WEB医生端-修改
+    applicantCANCEL:'/m/v1/api/referral/dualReferral/applicant/CANCEL',//14.9.双向转诊-WEB医生端-申请人操作
+    dualReferralReception:'/m/v1/api/referral/dualReferral/reception/',//14.10.双向转诊-WEB医生端-接诊人操作
+    receptionAudit:'/m/v1/api/referral/dualReferral/reception/audit',//14.11.双向转诊-WEB医生端-审核
 }

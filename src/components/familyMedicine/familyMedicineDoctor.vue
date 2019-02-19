@@ -96,7 +96,8 @@
         computed:{
 			...mapState({
 				userInfo:state => state.user.userInfo,
-				userSelfInfo:state => state.user.userSelfInfo
+                userSelfInfo:state => state.user.userSelfInfo,
+                global: state => state.global 
 			})
 		},
 		data () {
