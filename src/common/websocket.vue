@@ -1,17 +1,30 @@
 <template>
     <div>
+        <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose">
+            <div>
+                <button @click="receiveVideo()">接收</button>
+                <button @click="refuseVideo()">拒绝</button>
+            </div>
+        </el-dialog>
+
     </div>
 </template>
 
 <script>
+import apiBaseURL from "../enums/apiBaseURL.js";
 import { mapState } from "vuex";
 import protobuf from "protobufjs";
+import {
+    storageUsers
+} from "../api/apiAll.js";
+
 export default {
     name: "steps",
     props: ["inData"],
     computed: {},
     data() {
         return {
+            receiveVideoVisable: false,
             webSocket: null,
             //let global_callback = null;
             lockReconnect: false, //避免重复连接
@@ -25,7 +38,9 @@ export default {
             serverTime: "", //服务器时间
             oMsgId: "",
             content: "",
-            heartCheck: {}
+            heartCheck: {},
+            oConferenceId: "",
+            oState: ""
         };
     },
     computed: {
@@ -38,7 +53,7 @@ export default {
         let self = this;
         this.imessage = require("./imessage.json");
         //心跳检测
-        this.heartCheck = {                             
+        this.heartCheck = {
             timeout: 20000,
             timeoutObj: null,
             serverTimeoutObj: null,
@@ -53,9 +68,11 @@ export default {
                 this.serverTimeoutObj && clearTimeout(this.serverTimeoutObj);
                 this.timeoutObj = setTimeout(function() {
                     //这里发送一个心跳，后端收到后，返回一个心跳消息，
-                    console.log(self)
-                    let buffer =self.$store.state.socket.IMessage.encode(data).finish();
-                   self.$store.state.socket.socketObj.send(buffer); //心跳的内容需要根据实际情况进行自己定义
+                    console.log(self);
+                    let buffer = self.$store.state.socket.IMessage.encode(
+                        data
+                    ).finish();
+                    self.$store.state.socket.socketObj.send(buffer); //心跳的内容需要根据实际情况进行自己定义
                     // console.log('send-heart', data);
                 }, this.timeout);
             }
@@ -63,6 +80,41 @@ export default {
         // this.getMessageTicket();
     },
     methods: {
+        receiveVideo() {
+            this.closeVideo("ON");
+        },
+        refuseVideo() {
+            this.closeVideo("OFF");
+        },
+        handleClose() {
+            this.closeVideo("OFF");
+        },
+        // 进入或退出视频
+        async closeVideo(oState) {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const options = {
+                conferenceId: this.oConferenceId,
+                state: oState
+            };
+            const res = await storageUsers(query, options);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "退出成功！"
+                });
+                _this.createVideoVisable = false;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         initWebSocket(otoken) {
             //封装自定义的消息协议
             // protobuf.load('../common/imessage.json', (error, root) => {
@@ -90,7 +142,7 @@ export default {
             this.$store.state.socket.socketObj.binaryType = "arraybuffer";
             //接受消息
             this.$store.state.socket.socketObj.onmessage = e => {
-                console.log('dd')
+                console.log("dd");
 
                 let odata = this.$store.state.socket.IMessage.decode(
                     new Uint8Array(e.data)
@@ -116,7 +168,6 @@ export default {
         },
         // 实际调用的方法 ,按照协议生辰一个data数据agentData
         sendMessage(agentData) {
-            
             if (
                 this.$store.state.socket.socketObj.readyState ===
                 this.$store.state.socket.socketObj.OPEN
@@ -128,13 +179,13 @@ export default {
                 this.$store.state.socket.socketObj.CONNECTING
             ) {
                 // 若是 正在开启状态，则等待1s后重新调用
-                let _this=this
+                let _this = this;
                 setTimeout(function() {
                     _this.sendMessage(agentData);
                 }, 1000);
             } else {
                 // 若未开启 ，则等待1s后重新调用
-                let _this=this
+                let _this = this;
                 setTimeout(function() {
                     _this.sendMessage(agentData);
                 }, 1000);
@@ -142,7 +193,7 @@ export default {
         },
         // 数据接收
         webSocketonmessage(odata) {
-            console.log(odata)
+            console.log(odata);
             let RequestType = odata.RequestType;
             if (RequestType == 101 || RequestType == 104) {
                 console.log("登录成功");
@@ -189,15 +240,15 @@ export default {
                 };
                 this.sendMessage(Iessage);
                 return false;
-            }else if (RequestType == 0) {
+            } else if (RequestType == 0) {
                 //同步
             } else if (RequestType == 6) {
-                console.log('run')
-                this.$emit('reloaddata')
-            console.log(odata.info.body)
+                console.log("run");
+                this.$emit("reloaddata");
+                console.log(odata.info.body);
                 let fromL = odata.info.from;
                 if (fromL == this.userSelfInfo.userId) {
-                    //判断是不是本人发的消息
+                    //判断是本人发的消息
                     let msgId = odata.info.msgId;
                     let childMessageType = odata.info.childMessageType;
                     let bodyVideo = odata.info.body;
@@ -210,7 +261,7 @@ export default {
                         ticket: this.$store.state.socket.messageTicket.ticket,
                         status: {
                             state: true,
-                            msgId: msgId, //客户端上接收到最后一条消息的ID号
+                            msgId: msgId //客户端上接收到最后一条消息的ID号
                         }
                     };
                     this.sendMessage(Iessage);
@@ -827,6 +878,7 @@ export default {
                         }
                     }
                 } else {
+                    // 不是本人发的消息
                     //判断当前接受的会话是否在当前列表中
                     //  let msgId = odata.info.msgId;
                     // let childMessageType = odata.info.childMessageType;
@@ -836,29 +888,34 @@ export default {
                     // let toL = odata.info.to;
                     // let toNickNameL = odata.info.toNickName;
 
-
-
                     let msgId = odata.info.msgId;
-                    console.log(odata)
+                    console.log(odata);
                     var Iessage = {
                         RequestType: 106,
                         ticket: this.$store.state.socket.messageTicket.ticket,
                         status: {
                             state: true,
-                            msgId: msgId, //客户端上接收到最后一条消息的ID号
+                            msgId: msgId //客户端上接收到最后一条消息的ID号
                         }
                     };
                     this.sendMessage(Iessage);
+                    let _this = this;
+                    if (odata.info.childMessageType == 6) {
+                        this.$notify({
+                            title: "请注意",
+                            message: "您有一条视频消息请点开查看！",
+                            position: "bottom-right",
+                            duration: 0,
+                            onClick() {
+                                _this.receiveVideoVisable = true;
+                            }
+                        });
+                    }
+
                     try {
-                        var bodyls = JSON.parse(
-                           odata.info
-                                .body
-                        );
+                        var bodyls = JSON.parse(odata.info.body);
                         var botest = bodyls.body;
-                        var bodyPo = JSON.parse(
-                            odata.info
-                                .body
-                        );
+                        var bodyPo = JSON.parse(odata.info.body);
                         var childMessageType = odata.info.childMessageType;
                         if (childMessageType == 21) {
                             // var notification = new Notification(""+bodyPo.title+"", {
@@ -934,7 +991,6 @@ export default {
         },
         // 数据发送
         websocketsend(data) {
-             
             //websock.send(JSON.stringify(agentData));
             // let Message = {
             //     RequestType: 4,

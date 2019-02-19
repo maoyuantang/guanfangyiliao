@@ -25,6 +25,7 @@
                                 <!-- 显示图片 -->
                                 <div v-show="text.childMessageType=='IMAGE'" class="imgUrlBig">
                                     <span>
+
                                     </span>
                                     <img :src="text.imgUrl" />
                                 </div>
@@ -68,18 +69,6 @@
 
                 </el-upload>
                 <img src="../../assets/img/sendNew1.png" />
-            </span>
-            <span title="发送视频" class="sendVideo" @click="showVideoBtn()">
-                <img src="../../assets/img/sendNew2.png" />
-                <div class="userMember" v-show="showVideoBtnVisable">
-                    <h4>视频窗口最多拉取3个人</h4>
-                    <el-checkbox-group v-model="checkList">
-                        <el-checkbox v-for="(text,index) in userMemberNum" :label="text.userId" :key="index">
-                            {{text.userName}}
-                        </el-checkbox>
-                    </el-checkbox-group>
-                    <el-button class="setVideoBtn" @click="setVideo()" type="primary">确认</el-button>
-                </div>
             </span>
             <span v-show="oDoctorVis" @click="addArticle()" title="发送文章">
                 <img src="../../assets/img/sendNew3.png" />
@@ -192,8 +181,8 @@
         </el-dialog>
 
         <!-- 视频聊天 -->
-        <el-dialog title="视频" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo()">
-            <ovideo :createVideoRoomData="createVideoRoomData"></ovideo>
+        <el-dialog title="视频" :visible.sync="videoVisible" center append-to-body fullscreen>
+            <ovideo></ovideo>
         </el-dialog>
         <!-- 录入档案 -->
         <!-- <el-dialog title="录入新档案" :visible.sync="planVisible"   center append-to-body>
@@ -237,9 +226,7 @@ import {
     queryInquiryPlan,
     queryInquiry,
     queryArticleList,
-    getArticleDetails,
-    createVideoRoom,
-    storageUsers
+    getArticleDetails
 } from "../../api/apiAll.js";
 import ovideo from "../../video/video.vue";
 import { setTimeout } from "timers";
@@ -255,17 +242,6 @@ export default {
     },
     data() {
         return {
-            showVideoBtnVisable: false,
-
-            createVideoRoomData: {
-                conferenceId: "",
-                conferenceNumber: "",
-                ownerPassword: "",
-                meetPassword: ""
-            },
-            createVideoVisable: false, //是否已有视频
-            userMemberNum: "",
-            checkList: [],
             questDetailData: {},
             questDetailVisible: false,
             questVisible: false,
@@ -348,74 +324,22 @@ export default {
                 alert("失败");
             }
         },
-        showVideoBtn() {
-            this.showVideoBtnVisable = true;
-        },
         //创建视频
         async setVideo() {
-            let _this = this;
-            if (!this.createVideoVisable) {
-                let query = {
-                    token: this.userState.token
-                };
-                let options = {
-                    type: "NORMAL",
-                    time: ""
-                };
-                const res = await createVideoRoom(query, options);
-                if (res.data && res.data.errCode === 0) {
-                    let childMessageType = 6;
-                    $.each(this.checkList, function(index, text) {
-                        let body =
-                            "sendroom&" +
-                            res.data.body.conferenceNumber +
-                            "&" +
-                            res.data.body.conferenceId +
-                            "&" +
-                            text;
-                        _this.sendVideoMessage(
-                            childMessageType,
-                            body,
-                            res.data.body.conferenceNumber,
-                            ""
-                        );
-                    });
-                    this.videoVisible = true;
-                    this.createVideoRoomData = res.data.body;
-                    this.createVideoVisable = true;
-                } else {
-                    //失败
-                    this.$notify.error({
-                        title: "警告",
-                        message: res.data.errMsg
-                    });
-                }
-            } else {
-                alert("已有视频");
-            }
-        },
-        // 发送视频消息
-        sendVideoMessage(childMessageType, body, conferenceNumber, toNickName) {
-            var Iessage = {
-                RequestType: 4,
-                ticket: this.messageTicket.ticket,
-                info: {
-                    messageType: 0, //消息
-                    childMessageType: childMessageType, //文本
-                    from: this.userSelfInfo.userId, //userid
-                    fromNickName: this.userSelfInfo.name, //昵称
-                    toNickName: toNickName,
-                    to: this.sessionId, //发给谁，接收者的用户ID
-                    body: body, //消息内容
-                    sequence: this.messageTicket.sequence, //消息发送序号。
-                    chatType: 2, //单聊  GROUP 群聊
-                    clientTime: "",
-                    serverTime: "",
-                    conferenceId: conferenceNumber
-                }
-            };
-            console.log(Iessage);
-            this.$refs.mychild.sendMessage(Iessage);
+            this.videoVisible = true;
+            // let query = {
+            //     token: this.userState.token
+            // };
+            // const res = await createVideoRoom(query);
+            // if (res.data && res.data.errCode === 0) {
+            //     this.videoVisible = true;
+            // } else {
+            //     //失败
+            //     this.$notify.error({
+            //         title: "警告",
+            //         message: res.data.errMsg
+            //     });
+            // }
         },
         //添加备注
         addRemarks() {
@@ -520,7 +444,6 @@ export default {
             console.log(res);
             if (res.data && res.data.errCode === 0) {
                 console.log(res.data.body);
-                _this.userMemberNum = res.data.body;
                 $.each(res.data.body, function(index, text) {
                     if (_this.chatUser == "") {
                         _this.chatUser = text.userName;
@@ -547,17 +470,70 @@ export default {
                 userId: this.userSelfInfo.userId,
                 sessionId: [this.sessionId],
                 msgId: this.messageTicket.msgId,
-                pageNums: 157
+                pageNums: 15
             };
             console.log(Object.prototype.toString.call([this.sessionId]));
             const res = await fetchHistoryMessage(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
+                console.log(res.data.body);
+                // let odata = [
+                //     {
+                //         id: "5b8f7eb42bfacc279cea20cc",
+                //         sessionId: "#9b7b21c703044d78a83b2f459e746411",
+                //         messageType: "SESSION",
+                //         childMessageType: "DEFAULT",
+                //         from: "b462c046b0bd11e8ba2f000c29bf158c",
+                //         fromNickName: "唐宇",
+                //         to: "",
+                //         toNickName: "",
+                //         title: "",
+                //         summary: "",
+                //         body: "456",
+                //         clientTime: 0,
+                //         serverTime: 1536130740864,
+                //         unReadNum: 0,
+                //         sequence: 59,
+                //         msgId: 99,
+                //         chatType: "DOCTOR",
+                //         at: [],
+                //         instruct: [],
+                //         conferenceId: "",
+                //         deleteType: false,
+                //         new: false
+                //     },
+                //     {
+                //         id: "5b8f7eb32bfacc279cea20cb",
+                //         sessionId: "#9b7b21c703044d78a83b2f459e746411",
+                //         messageType: "SESSION",
+                //         childMessageType: "DEFAULT",
+                //         from: "b462c046b0bd11e8ba2f000c29bf158c",
+                //         fromNickName: "唐宇",
+                //         to: "",
+                //         toNickName: "",
+                //         title: "",
+                //         summary: "",
+                //         body: "123",
+                //         clientTime: 0,
+                //         serverTime: 1536130739827,
+                //         unReadNum: 0,
+                //         sequence: 58,
+                //         msgId: 98,
+                //         chatType: "DOCTOR",
+                //         at: [],
+                //         instruct: [],
+                //         conferenceId: "",
+                //         deleteType: false,
+                //         new: false
+                //     }
+                // ];
                 let odata = res.data.body.reverse();
+                // let odata = res.data.body;
                 this.messageList = odata;
                 $.each(this.messageList, function(index, text) {
                     let timestamp4 = new Date(text.serverTime);
                     let y = timestamp4.getHours();
+                    // let m = timestamp4.getMonth() + 1;
                     let d = timestamp4.getMinutes();
                     if (y <= 9) {
                         y = "0" + y;
@@ -686,8 +662,19 @@ export default {
             if (oMinite <= 9) {
                 oMinite = "0" + oMinite;
             }
+            // this.messageList.push({
+            //     from: this.userSelfInfo.userId,
+            //     content: this.messageBody,
+            //     serverTime: oHour + ":" + oMinite
+            // });
 
             let timestamp = Date.parse(new Date());
+            // let tag = "img"; //辨识图片
+            // if (this.messageBody.indexOf(tag) != -1) {
+            //     this.childMessageType = 5;
+            // } else {
+            //     this.childMessageType = 0;
+            // }
             console.log(this.userSelfInfo);
             let Iessage = {
                 RequestType: 4,
@@ -697,7 +684,7 @@ export default {
                     childMessageType: this.childMessageType, //文本
                     from: this.userSelfInfo.userId, //userid
                     fromNickName: this.userSelfInfo.name, //昵称
-                    toNickName: "",
+                    toNickName: "管理员",
                     to: this.sessionId, //发给谁，接收者的用户ID
                     body: this.messageBody, //消息内容
                     sequence: this.messageTicket.sequence, //消息发送序号。
@@ -720,6 +707,7 @@ export default {
 
         // 添加消息到发送框
         addMessageK(oMessage, oMessageTime) {
+            alert("dd");
             this.messageList.push({
                 from: this.userSelfInfo.userId,
                 content: oMessage,
@@ -856,32 +844,6 @@ export default {
                     message: res.data.errMsg
                 });
             }
-        },
-        //退出视频
-        async closeVideo() {
-            let _this = this;
-            let query = {
-                token: this.userState.token
-            };
-            const options = {
-                conferenceId: this.createVideoRoomData.conferenceId,
-                state: "OFF"
-            };
-            const res = await storageUsers(query, options);
-            console.log(res);
-            if (res.data && res.data.errCode === 0) {
-                this.$notify.success({
-                    title: "成功",
-                    message: "退出成功！"
-                });
-                _this.createVideoVisable = false;
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
         }
     },
     props: {
@@ -889,7 +851,7 @@ export default {
         doctorVis: Number
     },
     model: {
-        prop: ["sessionId", "doctorVis"],
+        prop: ["seccionId", "doctorVis"],
         event: "reBack"
     }
 };
@@ -1130,31 +1092,6 @@ export default {
     color: #939eab;
     letter-spacing: 0;
     line-height: 22px;
-}
-.sendVideo {
-    position: relative;
-    display: block;
-}
-.sendVideo .userMember {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    box-shadow: 4px 4px 4px #cccccc;
-    overflow-y: scroll;
-}
-.sendVideo .userMember .el-checkbox {
-    display: block;
-    text-align: left;
-}
-.sendVideo .userMember h4 {
-    font-family: PingFangSC-Regular;
-    font-size: 14px;
-    color: #5c5c5c;
-    letter-spacing: 0;
-}
-.setVideoBtn {
-    width: 80px;
-    height: 30px;
 }
 /* 备注
 

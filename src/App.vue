@@ -32,7 +32,7 @@ export default {
         })
     },
     created() {
-        this.lianjie()
+        this.lianjie();
         // const test = this.lianjie();
         // console.log(window.Manis);
         // console.log(this.$store.state.user.userInfo.hasAuth)
@@ -45,17 +45,15 @@ export default {
             // console.log(this.userState.token)
 
             // window.websocket = websocket.initWebSocket(this.userState.token);
-            
-            
-             
-            this.$nextTick(ev=>{ 
-                console.log(this.$refs)
-                console.log(this.$refs.mychild)
+
+            this.$nextTick(ev => {
+                console.log(this.$refs);
+                console.log(this.$refs.mychild);
                 this.$refs.mychild.initWebSocket(this.userState.token);
-            })
+            });
 
             // console.log(window.websocket)
-        }
+        },
     },
     watch: {}
 };
