@@ -6,25 +6,30 @@
                 <button @click="refuseVideo()">拒绝</button>
             </div>
         </el-dialog>
-
+        <el-dialog title="提示" :visible.sync="VideoVisable" width="30%" :before-close="handleClose">
+            <ovideo></ovideo>
+        </el-dialog>
     </div>
 </template>
 
 <script>
+import ovideo from "../video/video.vue";
 import apiBaseURL from "../enums/apiBaseURL.js";
 import { mapState } from "vuex";
 import protobuf from "protobufjs";
-import {
-    storageUsers
-} from "../api/apiAll.js";
+import { storageUsers } from "../api/apiAll.js";
 
 export default {
+    components: {
+        ovideo
+    },
     name: "steps",
     props: ["inData"],
     computed: {},
     data() {
         return {
             receiveVideoVisable: false,
+            VideoVisable: false,
             webSocket: null,
             //let global_callback = null;
             lockReconnect: false, //避免重复连接
@@ -39,8 +44,7 @@ export default {
             oMsgId: "",
             content: "",
             heartCheck: {},
-            oConferenceId: "",
-            oState: ""
+            oConferenceId: "" //房间号
         };
     },
     computed: {
@@ -84,10 +88,8 @@ export default {
             this.closeVideo("ON");
         },
         refuseVideo() {
-            this.closeVideo("OFF");
         },
         handleClose() {
-            this.closeVideo("OFF");
         },
         // 进入或退出视频
         async closeVideo(oState) {
@@ -102,11 +104,9 @@ export default {
             const res = await storageUsers(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
-                this.$notify.success({
-                    title: "成功",
-                    message: "退出成功！"
-                });
-                _this.createVideoVisable = false;
+                if ((oState = "ON")) {
+                    _this.VideoVisable = true;
+                }
             } else {
                 //失败
                 this.$notify.error({
@@ -900,6 +900,7 @@ export default {
                     };
                     this.sendMessage(Iessage);
                     let _this = this;
+                    this.oConferenceId = odata.info.body.split("&")[2];
                     if (odata.info.childMessageType == 6) {
                         this.$notify({
                             title: "请注意",
