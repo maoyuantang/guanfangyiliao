@@ -22,6 +22,10 @@
 
                                 <span class="allReadColor" v-if="text.oRead">已读 </span>
                                 <span class="noReadColor" v-else>未读</span>
+                                {{text.content}}
+                                <!-- <div v-show="text.childMessageType=='DEFAULT'">
+                                    {{text.content}}
+                                </div> -->
                                 <!-- 显示图片 -->
                                 <div v-show="text.childMessageType=='IMAGE'" class="imgUrlBig">
                                     <span>
@@ -78,7 +82,7 @@
                             {{text.userName}}
                         </el-checkbox>
                     </el-checkbox-group>
-                    <el-button class="setVideoBtn" @click="setVideo()" type="primary">确认</el-button>
+                    <el-button class="setVideoBtn" @click="setVideo(1)" type="primary">确认</el-button>
                 </div>
             </span>
             <span v-show="oDoctorVis" @click="addArticle()" title="发送文章">
@@ -347,10 +351,15 @@ export default {
             }
         },
         showVideoBtn() {
-            this.showVideoBtnVisable = true;
+            if (this.userMemberNum.length > 1) {
+                this.showVideoBtnVisable = true;
+            } else {
+                this.showVideoBtnVisable = false;
+                this.setVideo(0);//单聊
+            }
         },
         //创建视频
-        async setVideo() {
+        async setVideo(num) {
             let _this = this;
             if (!this.createVideoVisable) {
                 let query = {
@@ -363,21 +372,38 @@ export default {
                 const res = await createVideoRoom(query, options);
                 if (res.data && res.data.errCode === 0) {
                     let childMessageType = 6;
-                    $.each(this.checkList, function(index, text) {
+                    if (num == 1) {//群聊
+                        $.each(this.checkList, function(index, text) {
+                            let body =
+                                "sendroom&" +
+                                res.data.body.conferenceNumber +
+                                "&" +
+                                res.data.body.conferenceId +
+                                "&" +
+                                text;
+                            _this.sendVideoMessage(
+                                childMessageType,
+                                body,
+                                res.data.body.conferenceNumber,
+                                ""
+                            );
+                        });
+                    } else if (num == 0) {//单聊
                         let body =
                             "sendroom&" +
                             res.data.body.conferenceNumber +
                             "&" +
                             res.data.body.conferenceId +
                             "&" +
-                            text;
+                            _this.userMemberNum[0].userId;
                         _this.sendVideoMessage(
                             childMessageType,
                             body,
                             res.data.body.conferenceNumber,
                             ""
                         );
-                    });
+                    }
+
                     this.videoVisible = true;
                     this.createVideoRoomData = {
                         conferenceId: res.data.body.conferenceId,
@@ -598,17 +624,13 @@ export default {
                         } else if (odata[i].childMessageType == "VIDEO") {
                             //视频
                             if (odata[i].body.indexOf("refuse") > -1) {
-                                this.messageList[i].content =
-                                    "<span>挂断了视频</span>";
+                                this.messageList[i].content = "挂断了视频";
                             } else if (odata[i].body.indexOf("sendroom") > -1) {
-                                this.messageList[i].content =
-                                    "<span>发起了视频聊天</span>";
+                                this.messageList[i].content = "发起了视频聊天";
                             } else if (odata[i].body.indexOf("complete") > -1) {
-                                this.messageList[i].content =
-                                    "<span>视频通话已结束</span>";
+                                this.messageList[i].content = "视频通话已结束";
                             } else if (odata[i].body.indexOf("cancle") > -1) {
-                                this.messageList[i].content =
-                                    "<span>取消了视频</span>";
+                                this.messageList[i].content = "取消了视频";
                             }
                         } else if (odata[i].childMessageType == "IMAGE") {
                         } else {
@@ -650,17 +672,13 @@ export default {
                         } else if (odata[i].childMessageType == "VIDEO") {
                             //视频
                             if (odata[i].body.indexOf("refuse") > -1) {
-                                this.messageList[i].content =
-                                    "<span>挂断了视频</span>";
+                                this.messageList[i].content = "挂断了视频";
                             } else if (odata[i].body.indexOf("sendroom") > -1) {
-                                this.messageList[i].content =
-                                    "<span>发起了视频聊天</span>";
+                                this.messageList[i].content = "发起了视频聊天";
                             } else if (odata[i].body.indexOf("complete") > -1) {
-                                this.messageList[i].content =
-                                    "<span>视频通话已结束</span>";
+                                this.messageList[i].content = "视频通话已结束";
                             } else if (odata[i].body.indexOf("cancle") > -1) {
-                                this.messageList[i].content =
-                                    "<span>取消了视频</span>";
+                                this.messageList[i].content = "取消了视频";
                             }
                         } else if (odata[i].childMessageType == "IMAGE") {
                         } else {
@@ -712,6 +730,7 @@ export default {
             if (this.messageBody) {
                 this.$refs.mychild.sendMessage(Iessage);
                 this.addMessageK(this.messageBody, oHour + ":" + oMinite);
+                this.messageBody = "";
             } else {
                 alert("消息不能为空");
             }
@@ -1012,9 +1031,11 @@ export default {
 }
 .recordRg .messageCon {
     float: right;
+    display: flex;
 }
 .recordLf .messageCon {
     float: left;
+    display: flex;
 }
 .otherCon {
     width: 86%;
