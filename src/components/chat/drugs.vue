@@ -88,7 +88,7 @@
 import search from "../../public/publicComponents/search.vue";
 import apiBaseURL from "../../enums/apiBaseURL.js";
 import { mapState } from "vuex";
-import { getFamilyMemberInfo, drugsByCondition } from "../../api/apiAll.js";
+import { getFamilyMemberInfoByDoctor, drugsByCondition } from "../../api/apiAll.js";
 export default {
     components: {
         search
@@ -106,7 +106,7 @@ export default {
                 phone: "",
                 address: ""
             },
-            drugsData:[]
+            drugsData: []
         };
     },
     computed: {
@@ -120,9 +120,9 @@ export default {
         async getDrugsMessage() {
             let query = {
                 token: this.userState.token,
-                familyMemberId: ""
+                familyMemberId: this.sendToUserId
             };
-            const res = await getFamilyMemberInfo(query);
+            const res = await getFamilyMemberInfoByDoctor(query);
             if (res.data && res.data.errCode === 0) {
                 this.familyMessage = {
                     name: res.data.body.name,
@@ -144,12 +144,12 @@ export default {
         async getDrugsByCondition() {
             let query = {
                 token: this.userState.token,
-                drugName:""
+                drugName: ""
             };
             const res = await drugsByCondition(query);
             if (res.data && res.data.errCode === 0) {
                 // console.log()
-                this.drugsData=res.data.body
+                this.drugsData = res.data.body;
             } else {
                 //失败
                 this.$notify.error({
@@ -159,10 +159,17 @@ export default {
             }
         }
     },
-    props: ["inData"],
+    props: {
+        sendToUserId: String
+    },
+    model: {
+        prop: ["sendToUserId"],
+        event: "reBack"
+    },
     created() {
         this.getDrugsMessage();
-        this.getDrugsByCondition()
+        this.getDrugsByCondition();
+        alert(this.sendToUserId)
     },
     beforeDestroy() {}
 };
@@ -200,8 +207,8 @@ export default {
     color: #212223;
     line-height: 20px;
 }
-.drugs_box_rg{
-     width: 70%;
+.drugs_box_rg {
+    width: 70%;
 }
 .drugs_box_rg > div:first-child {
     padding-top: 30px;

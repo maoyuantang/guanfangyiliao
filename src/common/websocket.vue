@@ -6,7 +6,7 @@
                 <button @click="refuseVideo()">拒绝</button>
             </div>
         </el-dialog>
-           <!-- 视频聊天 -->
+        <!-- 视频聊天 -->
         <el-dialog title="视频" :visible.sync="VideoVisable" center append-to-body fullscreen @close="closeVideo()">
             <ovideo :createVideoRoomData="createVideoRoomData"></ovideo>
         </el-dialog>
@@ -45,7 +45,7 @@ export default {
             oMsgId: "",
             content: "",
             heartCheck: {},
-            createVideoRoomData:{}
+            createVideoRoomData: {}
         };
     },
     computed: {
@@ -86,14 +86,15 @@ export default {
     },
     methods: {
         receiveVideo() {
-            this.closeVideo("ON");
+            this.closeVideoOr("ON");
         },
-        refuseVideo() {
-        },
-        handleClose() {
+        refuseVideo() {},
+        handleClose() {},
+        closeVideo() {
+            this.closeVideoOr("OFF");
         },
         // 进入或退出视频
-        async closeVideo(oState) {
+        async closeVideoOr(oState) {
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -107,6 +108,12 @@ export default {
             if (res.data && res.data.errCode === 0) {
                 if ((oState = "ON")) {
                     _this.VideoVisable = true;
+                } else {
+                    this.$notify.success({
+                        title: "成功",
+                        message: "退出成功！"
+                    });
+                    _this.VideoVisable=false
                 }
             } else {
                 //失败

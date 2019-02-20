@@ -110,6 +110,7 @@
 import apiBaseURL from "../../enums/apiBaseURL.js";
 import { mapState } from "vuex";
 import { getFamilyMemberInfo, getModelTitleList,createFollowUpPlan } from "../../api/apiAll.js";
+import { setTimeout } from 'timers';
 export default {
     components: {},
     data() {
@@ -194,19 +195,17 @@ export default {
             let query = {
                 token: this.userState.token
             };
+            this.addFollowData.userId=this.sendToUserId
             const options = this.addFollowData;
             const res = await createFollowUpPlan(query, options);
             if (res.data && res.data.errCode === 0) {
-                this.$notify.success({
-                    title: "成功",
-                    message: "编辑成功"
-                });
                 let oMessage={
                     id:res.data.body.planId,
                     title:this.addFollowData.title,
                     firstTreatmentTime:this.addFollowData.firstTreatmentTime
                 }
                 this.$emit('osendmessagechat',oMessage)
+                
             } else {
                 //失败
                 this.$notify.error({
@@ -218,10 +217,11 @@ export default {
         },
     },
       props: {
-        addFollowData: Object
+        addFollowData: Object,
+        sendToUserId:String
     },
      model: {
-        prop: ["addFollowData"],
+        prop: ["addFollowData","sendToUserId"],
         event: "reBack"
     },
     created() {

@@ -2308,3 +2308,17 @@ export const receptionAudit = (query, data) => {//14.11.双向转诊-WEB医生�
         }
     })
 }
+
+export const getFamilyMemberInfoByDoctor = query => { //14.7.双向转诊-WEB医生端-查询记录
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.getFamilyMemberInfoByDoctor,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
+

@@ -7,6 +7,7 @@
                         <div id="remoteVideos"></div>
                         <div class="videoChatBtn">
                             问诊工具
+                            {{createVideoRoomData}}
                         </div>
                     </div>
                     <div class="col-xs-12 media-box us-media">
@@ -641,7 +642,6 @@ export default {
          * 加入到房间
          */
         joinRoomBtn() {
-            alert(this.createVideoRoomData.conferenceNumber)
             let _this = this;
             // var conferenceName = $("#conferenceName").val();
             let conferenceName = this.createVideoRoomData.conferenceNumber;
@@ -672,6 +672,7 @@ export default {
          * 匿名加入到房间
          */
         anonymousJoinRoomBtn() {
+            alert(this.createVideoRoomData.conferenceNumber)
             let _this = this;
             // var conferenceName = $("#anonymousConferenceName").val();
             let conferenceName = this.createVideoRoomData.conferenceNumber;
