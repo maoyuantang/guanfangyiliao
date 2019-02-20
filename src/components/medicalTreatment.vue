@@ -1,5 +1,7 @@
 <template>
-	<div :is="viewCurrent.page"></div>
+	<div :is="viewCurrent.page">
+		阿斯顿发顺丰
+	</div>
 </template>
 
 <script>

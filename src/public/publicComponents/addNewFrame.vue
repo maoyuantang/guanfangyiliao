@@ -15,7 +15,6 @@
                             <el-input placeholder="请输入内容" size="mini" v-else @mouseover.native="showClose=true" @mouseout.native="showClose=false" v-model="inData.businessTypeList.default.label" >
                             </el-input>
                             <i class="iconfont particular-handle-icon" @mouseover="showClose=true" :style="{display:showClose?'inline-block':'none'}" @click="changeStatus" v-if="inData.businessTypeList.default.value==='-1'">&#xe7b7;</i>
-
                         </div>
                     </div>
                 </div>
