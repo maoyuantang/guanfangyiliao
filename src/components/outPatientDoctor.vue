@@ -24,7 +24,7 @@
           </div>
         </div>
         <i></i>
-        <div v-for="(text,index) in tableDataList1" :key="index" v-show='myHomesBiao[index]==index'>
+        <div v-for="(text,index) in tableDataList1" :key="index" v-show='myHomesBiao[index]==index' style="width: 90%;margin: auto;">
           <el-table :data="text">
             <el-table-column prop="unProcess" label="未处理"></el-table-column>
             <el-table-column prop="process" label="已处理"></el-table-column>
@@ -467,7 +467,7 @@
           // ],
         ],
         whichUser: 0,
-        myHomesBiao:[],
+        myHomesBiao: [],
         imgChuFangDan: '',
 
 
@@ -589,302 +589,8 @@
         ],
 
         dialogTableVisible: false,
-        // 我的诊室列表假数据
-        abc: {
-          "errCode": 0,
-          "errMsg": "",
-          "body": {
-            "header": {
-              "clinicName": "在线诊室名",
-              "clinicOrders": "该诊室的订单",
-              "doctor": "医生信息",
-              "id": "业务id",
-              "orgName": "医院名",
-              "process": "已处理",
-              "unProcess": "未处理",
-              "clinicOrders": "门诊业务订单集合",
-            },
-            "data1": null,
-            "data2": {
-              "pageNum": 1,
-              "pageSize": 10,
-              "size": 2,
-              "startRow": 1,
-              "endRow": 2,
-              "total": 2,
-              "pages": 1,
-              "list": [
-                {
-                  "id": "4783f95679a9412ba6da41b636dc102e",
-                  "orgName": "测试医院",
-                  "clinicName": "在线咨询业务",
-                  "process": 8,
-                  "unProcess": 6,
-                  "doctor": [
-                    {
-                      "doctorId": "EB237A1368A44A32B4070154C225C088",
-                      "doctorName": "张三",
-                      "doctorStates": false
-                    }
-                  ],
-                  "clinicOrders":
-                    [
-                      {
-                        "clinicOrderId": "ADD0DCC3ABC24C82A4925E4F6EE41D00",
-                        "userName": "aa",
-                        "drugDetail": [
-                          {
-                            "drugName": "复方氨酚烷胺胶囊1",         //药品名
-                            "norm": "24粒/盒",                           //药品规则
-                            "drugQuantity": 2,
-                            "drugUse": "口服",                        //药品用法
-                            "drugTimes": "一日2次",                    //药品次数
-                            "drugDosage": "一次1粒"                    //药品剂量
-                          },
-                          {
-                            "drugName": "阿莫西林胶囊",         //药品名
-                            "norm": "24粒/盒",                           //药品规则
-                            "drugQuantity": 2,
-                            "drugUse": "口服",                        //药品用法
-                            "drugTimes": "一日2次",                    //药品次数
-                            "drugDosage": "一次1粒"                    //药品剂量
-                          }
-                        ],
-                        "clinicOrderTime": "2019-01-16 18:56:03",
-                        "askTime": "2019-01-16 18:56:03",
-                        "askPrice": "2.00",
-                        "prescriptionPrice": "60.00"
-                      },
-                      {
-                        "clinicOrderId": "ADD0DCC3ABC24C82A4925E4F6EE41D00",
-                        "userName": "bb",
-                        "drugDetail": [
-                          {
-                            "drugName": "复方氨酚烷胺胶囊2",         //药品名
-                            "norm": "24粒/盒",                           //药品规则
-                            "drugQuantity": 2,
-                            "drugUse": "口服",                        //药品用法
-                            "drugTimes": "一日2次",                    //药品次数
-                            "drugDosage": "一次1粒"                    //药品剂量
-                          }
-                        ],
-                        "clinicOrderTime": "2019-01-16 18:56:03",
-                        "askTime": "2019-01-16 18:56:03",
-                        "askPrice": "2.00",
-                        "prescriptionPrice": "60.00"
-                      }
-                    ]
-                },
-
-
-
-
-
-
-
-
-
-
-
-                {
-                  "id": "a196b491f158484c9231370cc2712d75",
-                  "orgName": "测试医院",
-                  "clinicName": "远程门诊业务",
-                  "process": 9,
-                  "unProcess": 5,
-                  "doctor": [
-                    {
-                      "doctorId": "EB237A1368A44A32B4070154C225C088",
-                      "doctorName": "张三",
-                      "doctorStates": false
-                    }
-                  ],
-                  "clinicOrders":
-                    [
-                      {
-                        "clinicOrderId": "ADD0DCC3ABC24C82A4925E4F6EE41D00",
-                        "userName": "aa",
-                        "drugDetail": [
-                          {
-                            "drugName": "复方氨酚烷胺胶囊1",         //药品名
-                            "norm": "24粒/盒",                           //药品规则
-                            "drugUse": "口服",                        //药品用法
-                            "drugTimes": "一日2次",                    //药品次数
-                            "drugDosage": "一次1粒"                    //药品剂量
-                          },
-                          {
-                            "drugName": "复方氨酚烷胺胶囊1",         //药品名
-                            "norm": "24粒/盒",                           //药品规则
-                            "drugQuantity": 2,
-                            "drugUse": "口服",                        //药品用法
-                            "drugTimes": "一日2次",                    //药品次数
-                            "drugDosage": "一次1粒"                    //药品剂量
-                          }
-                        ],
-                        "clinicOrderTime": "2019-01-16 18:56:03",
-                        "askTime": "2019-01-16 18:56:03",
-                        "askPrice": "2.00",
-                        "prescriptionPrice": "60.00"
-                      },
-                      {
-                        "clinicOrderId": "ADD0DCC3ABC24C82A4925E4F6EE41D00",
-                        "userName": "bb",
-                        "drugDetail": [
-                          {
-                            "drugName": "复方氨酚烷胺胶囊2",         //药品名
-                            "norm": "24粒/盒",                           //药品规则
-                            "drugQuantity": 2,
-                            "drugUse": "口服",                        //药品用法
-                            "drugTimes": "一日2次",                    //药品次数
-                            "drugDosage": "一次1粒"                    //药品剂量
-
-                          }
-                        ],
-                        "clinicOrderTime": "2019-01-16 18:56:03",
-                        "askTime": "2019-01-16 18:56:03",
-                        "askPrice": "2.00",
-                        "prescriptionPrice": "60.00"
-                      }
-                    ]
-                }
-              ],
-              "prePage": 0,
-              "nextPage": 0,
-              "isFirstPage": true,
-              "isLastPage": true,
-              "hasPreviousPage": false,
-              "hasNextPage": false,
-              "navigatePages": 8,
-              "navigatepageNums": [
-                1
-              ],
-              "navigateFirstPage": 1,
-              "navigateLastPage": 1,
-              "firstPage": 1,
-              "lastPage": 1
-            }
-          },
-          "cause": null
-        },
-        // 处方什么列表假数据
-        bcd: [
-          {
-            "prescriptionOrderId": null,
-            "userId": "09f0ce04d92243108928bac31a13c7e9",
-            "userName": "丽丽大王1",
-            "clinicName": "远程门诊业务",
-            "userSex": "女",
-            "userAge": 18,
-            "birthday": "2005-01-01",
-            "phone": "18323495567",
-            "address": '潼南',
-            "clinicId": "a196b491f158484c9231370cc2712d75",
-            "priceDesc": "自费",
-            "medicalInsurance": "职工医保",
-            "createDoctor": "开方医生",
-            "reviewDoctor": '审核医生',
-            "sendDoctor": '发药医生',
-            "number": 0,
-            "orderTime": null,
-            "prescriptionTime": "2019-01-17 16:10:54.21",
-            "pb": {
-              "id": "c52207379cdd46bb810bd75c3d884a6c",                                                       //处方id
-              "complained": "偶尔咳嗽，无其他症状",                                                         //主诉
-              "medicalHistory": "干咳一个月，白天咳嗽，夜晚不咳嗽，干咳无痰，检查喉咙无红肿",                  //现病史
-              "allergyHistory": "无",                                                                          //过敏史
-              "diagnosis": "气候变化引起的支气管过敏",                                                        //门诊诊断
-              "report": true,                                                                                 //疫情报告（true:勾选；false：不勾选）
-              "review": true,                                                                                //复诊（true:勾选；false：不勾选）
-              "occurTime": "2019-01-14",                                                                      //发病日期
-              "reviewTime": "2019-02-14",                                                                     //下次复查日期
-              "createTime": "2019-01-17 16:10:54",                                                            //创建时间
-              "prescriptionDrugs": [
-                {
-                  "id": null,
-                  "drugName": "复方氨酚烷胺胶囊",                                                         //药品名称
-                  "drugUse": "口服",                                                                        //药品用法
-                  "drugTimes": "一日2次",                                                                    //药品次数
-                  "drugDosage": "一次1粒",                                                               //药品剂量
-                  "drugPrice": "30.00",                                                                   //药品单价
-                  "drugQuantity": 2,                                                                      //数量
-                  "subtotal": "60.00",                                                                    //合计
-                  "doctorAsk": "一定要按时按量吃药"                                                        //医生嘱托
-                },
-                {
-                  "id": null,
-                  "drugName": "阿莫西林胶囊",                                                         //药品名称
-                  "drugUse": "口服",                                                                        //药品用法
-                  "drugTimes": "一日2次",                                                                    //药品次数
-                  "drugDosage": "一次1粒",                                                               //药品剂量
-                  "drugPrice": "30.00",                                                                   //药品单价
-                  "drugQuantity": 2,                                                                      //数量
-                  "subtotal": "60.00",                                                                    //合计
-                  "doctorAsk": "一定要按时按量吃药"                                                        //医生嘱托
-                }
-              ],
-              "drugPrice": "60.00"
-            }
-
-          },
-          {
-            "prescriptionOrderId": null,
-            "userId": "09f0ce04d92243108928bac31a13c7e9",
-            "userName": "丽丽大王2",
-            "clinicName": "远程门诊业务",
-            "userSex": "男",
-            "userAge": 25,
-            "birthday": "2005-01-01",
-            "phone": "18323495567",
-            "address": null,
-            "clinicId": "a196b491f158484c9231370cc2712d75",
-            "priceDesc": "自费",
-            "medicalInsurance": "职工医保",
-            "createDoctor": "张三",
-            "reviewDoctor": null,
-            "sendDoctor": null,
-            "number": 1,
-            "orderTime": null,
-            "prescriptionTime": "2019-01-17 16:10:54.21",
-            "pb": {
-              "id": "c52207379cdd46bb810bd75c3d884a6c",                                                       //处方id
-              "complained": "我没事，医生说我有事",                                                         //主诉
-              "medicalHistory": "干咳一个月，白天咳嗽，夜晚不咳嗽，干咳无痰，检查喉咙无红肿",                  //现病史
-              "allergyHistory": "无",                                                                          //过敏史
-              "diagnosis": "气候变化引起的支气管过敏",                                                        //门诊诊断
-              "report": false,                                                                                 //疫情报告（true:勾选；false：不勾选）
-              "review": false,                                                                                //复诊（true:勾选；false：不勾选）
-              "occurTime": "2019-01-14",                                                                      //发病日期
-              "reviewTime": "2019-02-14",                                                                     //下次复查日期
-              "createTime": "2019-01-17 16:10:54",                                                            //创建时间
-              "prescriptionDrugs": [
-                {
-                  "id": null,
-                  "drugName": "复方",                                                         //药品名称
-                  "drugUse": "口服",                                                                        //药品用法
-                  "drugTimes": "一日2次",                                                                    //药品次数
-                  "drugDosage": "一次1粒",                                                               //药品剂量
-                  "drugPrice": "30.00",                                                                   //药品单价
-                  "drugQuantity": 2,                                                                      //数量
-                  "subtotal": "60.00",                                                                    //合计
-                  "doctorAsk": "一定要按时按量吃药"                                                        //医生嘱托
-                },
-                {
-                  "id": null,
-                  "drugName": "西胶囊",                                                         //药品名称
-                  "drugUse": "口服",                                                                        //药品用法
-                  "drugTimes": "一日2次",                                                                    //药品次数
-                  "drugDosage": "一次1粒",                                                               //药品剂量
-                  "drugPrice": "30.00",                                                                   //药品单价
-                  "drugQuantity": 2,                                                                      //数量
-                  "subtotal": "60.00",                                                                    //合计
-                  "doctorAsk": "一定要按时按量吃药"                                                        //医生嘱托
-                }
-              ],
-              "drugPrice": "60.00"
-            }
-
-          },
-        ],
+        // 处方审核列表
+        bcd: [],
       }
 
 
@@ -900,6 +606,15 @@
       //返回赋值函数
       getConsulTabData(res) {//顶部切换返回函数
         this.oconsulVisable = res.i
+        console.log(res.i)
+        if(res.i == 0){
+          this.getList1();
+        }else if(res.i == 1){
+          this.getList2();
+        }
+        else if(res.i == 2){
+          this.getList3();
+        }
       },
       demonstration1(res) {//时间插件返回函数
         // console.log(res)
@@ -947,12 +662,8 @@
         const res = await onlineRoomsByDoctor(query);
         if (res.data && res.data.errCode === 0) {
           console.log('医生端列表1+成功')
-          // const lists = res.data.body.data2.list;
-          // this.myHomes = lists
-          console.log(res)
           this.myHomes = res.data.body.data2.list
           console.log(this.myHomes)
-          // this.tableData1 = this.myHomes
           $.each(res.data.body.data2.list, function (index, text) {
             _this.myHomesBiao.push(index);
             _this.tableDataList1.push(
@@ -985,7 +696,6 @@
         const res = await reviewList(query);
         if (res.data && res.data.errCode === 0) {
           console.log('医生端列表2(审核)+成功')
-          console.log(res)
           this.bcd = res.data.body;
           console.log(this.bcd)
           this.prescriptionId = this.bcd[0].pb.id
@@ -994,7 +704,7 @@
           })
         } else {
           //失败
-          console.log('医生端列表1+失败')
+          console.log('医生端列表2(审核)+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1021,7 +731,7 @@
           console.log(this.tableDataList3)
         } else {
           //失败
-          console.log('医生端列表3+失败')
+          console.log('医生端列表3(发药)+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1050,7 +760,7 @@
         }
       },
       // 1.9.文件下载 
-      async getList3() {
+      async getList4() {
         const _this = this;
         let query = {
           id: xxxxx,
@@ -1158,8 +868,6 @@
     },
     async created() {
       this.getList1();//7.6医生列表1
-      this.getList2();//7.10.1审核列表2
-      this.getList2();//7.10.2审核列表3
       // this.addPrescription();//7.8开处方
       // this.checkPrescription();//7.9是否通过
     }
@@ -1229,8 +937,8 @@
 
       i {
         border: 1px solid #E4E8EE;
-        width: 70%;
-        margin: 0 0 0 7%;
+        width: 90%;
+        margin: auto;
       }
 
 
