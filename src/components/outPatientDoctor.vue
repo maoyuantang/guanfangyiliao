@@ -24,7 +24,7 @@
           </div>
         </div>
         <i></i>
-        <div v-for="(text,index) in tableDataList1" :key="index" v-show='myHomesBiao[index]==index'>
+        <div v-for="(text,index) in tableDataList1" :key="index" v-show='myHomesBiao[index]==index' style="width: 90%;margin: auto;">
           <el-table :data="text">
             <el-table-column prop="unProcess" label="未处理"></el-table-column>
             <el-table-column prop="process" label="已处理"></el-table-column>
@@ -937,8 +937,8 @@
 
       i {
         border: 1px solid #E4E8EE;
-        width: 70%;
-        margin: 0 0 0 7%;
+        width: 90%;
+        margin: auto;
       }
 
 

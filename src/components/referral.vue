@@ -1,8 +1,8 @@
 <!--双向转诊系统-->
 <template>
   <div class="referral">
-    <!--弹框1  管理查看记录 -->
-    <el-dialog title="" :visible.sync="isShowmoveUser" width="40%" center>
+    <!--弹框1.1  管理查看记录 -->
+    <el-dialog title="" :visible.sync="isShowmoveUser1" width="40%" center>
       <div class="moved">
         <!-- 头像姓名 -->
         <div class="moved_top">
@@ -26,6 +26,10 @@
         </div>
       </div>
     </el-dialog>
+    <!--弹框1.2  管理查看反馈-->
+    <el-dialog title="" :visible.sync="isShowmoveUser2" width="40%" center>
+        查看反馈
+      </el-dialog>
 
     <!-- <button @click='addMove'>新增转诊</button> -->
     <!-- 弹框2 新增转诊 -->
@@ -108,9 +112,10 @@
               <el-table-column prop="" label="方向"></el-table-column>
               <el-table-column prop="receiveTime" label="接诊时间"></el-table-column>
               <el-table-column prop="stateName" label="转诊状态"></el-table-column>
-              <el-table-column fixed="right" label="操作">
+              <el-table-column fixed="right" label="操作" width="250">
                 <template slot-scope="scope">
-                  <el-button @click="viewFile(scope.row)" type="text" size="small">查看记录</el-button>
+                  <el-button @click="viewFile1(scope.row)" type="success" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">查看记录</el-button>
+                  <el-button @click="viewFile2(scope.row)" type="warning" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">查看反馈</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -160,16 +165,16 @@
           <el-table-column fixed prop="typeName" label="转诊类型"></el-table-column>
           <el-table-column fixed prop="stateName" label="转诊状态"></el-table-column>
           <el-table-column fixed="right" label="" width="400">
-            <template slot-scope="scope" style="flex">
-              <el-button @click="doctorListFun1(scope.row)" type="primary" plain size="mini">查看档案</el-button>
-              <el-button @click="doctorListFun2(scope.row)" type="success" plain size="mini">转诊记录</el-button>
-              <el-button @click="doctorListFun3(scope.row)" type="info" plain size="mini">编辑</el-button>
-              <el-button @click="doctorListFun4(scope.row)" type="warning" plain size="mini">删除</el-button>
-              <el-button @click="doctorListFun5(scope.row)" type="danger" plain size="mini">取消</el-button>
-              <el-button @click="doctorListFun6(scope.row)" type="primary" plain size="mini">审核通过</el-button>
-              <el-button @click="doctorListFun7(scope.row)" type="success" plain size="mini">接诊</el-button>
-              <el-button @click="doctorListFun8(scope.row)" type="warning" plain size="mini">出院</el-button>
-              <el-button @click="doctorListFun9(scope.row)" type="danger" plain size="mini">转诊</el-button>
+            <template slot-scope="scope">
+              <el-button @click="doctorListFun1(scope.row)" type="primary" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">查看档案</el-button>
+              <el-button @click="doctorListFun2(scope.row)" type="success" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">转诊记录</el-button>
+              <el-button @click="doctorListFun3(scope.row)" type="info" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">编辑</el-button>
+              <el-button @click="doctorListFun4(scope.row)" type="warning" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">删除</el-button>
+              <el-button @click="doctorListFun5(scope.row)" type="danger" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">取消</el-button>
+              <el-button @click="doctorListFun6(scope.row)" type="primary" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">审核通过</el-button>
+              <el-button @click="doctorListFun7(scope.row)" type="success" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">接诊</el-button>
+              <el-button @click="doctorListFun8(scope.row)" type="warning" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">出院</el-button>
+              <el-button @click="doctorListFun9(scope.row)" type="danger" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">转诊</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -234,7 +239,9 @@
       return {
         // 常用参数
         //管理1表 查看记录  弹框
-        isShowmoveUser: false,//显示转诊记录
+        isShowmoveUser1: false,//显示  转诊记录
+        //管理1表 查看反馈  弹框
+        isShowmoveUser2: false,//显示  反馈详情
 
         //筛选返回值接收
         //管理1端  筛选工具栏  筛选返回值  接收参数
@@ -550,7 +557,7 @@
           direction: this.direction,
           query: this.searchValue,
         };
-        const res = await dualReferralManagePage(query);//14.3.双向转诊-WEB管理端-管理列表
+        const res = await dualReferralManagePage(query);            //14.3.双向转诊-WEB管理端-管理列表
         if (res.data && res.data.errCode === 0) {
           console.log('管理1表+成功')
           console.log(res)
@@ -564,12 +571,6 @@
           });
         }
       },
-      // 管理1表   操作区  
-      //查看记录
-      viewFile() {
-        this.isShowmoveUser = !this.isShowmoveUser
-        console.log(this.isShowmoveUser)
-      },
       //管理2表（统计）
       async getList2() {
         const _this = this
@@ -581,7 +582,7 @@
           startTime: this.time0,
           endTime: this.time1
         };
-        const res = await statistics(query);
+        const res = await statistics(query);            //14.4.双向转诊-WEB管理端-统计 
         if (res.data && res.data.errCode === 0) {
           console.log('统计+成功')
           console.log(res)
@@ -602,12 +603,12 @@
           token: this.userState.token,
           pageNum: 1,
           pageSize: 15,
-          direction: this.direction,//方向：into转入，转出out
-          startTime: this.time0,
+          startTime: this.time0,//时间段返回值
           endTime: this.time1,
-          query: this.searchValue,
+          query: this.doctorDate,//查询数据  用的日期筛选返回值
+          direction: this.direction,//方向：into转入，转出out
         };
-        const res = await dualReferralPage(options);//14.5.双向转诊-WEB医生端-列表
+        const res = await dualReferralPage(options);                  //14.5.双向转诊-WEB医生端-列表
         if (res.data && res.data.errCode === 0) {
           console.log('医生表+成功')
           console.log(res)
@@ -622,7 +623,27 @@
           });
         }
       },
-      // 医生表  操作区  点击事件
+
+
+
+
+      // 管理1表      操作区  
+      //查看记录
+      viewFile1(data) {
+        this.isShowmoveUser1 = !this.isShowmoveUser1
+        console.log(data)
+      },
+      //查看反馈
+      viewFile2(data) {
+        this.isShowmoveUser2 = !this.isShowmoveUser2
+        console.log(data)
+      },
+
+
+
+
+
+      // 医生表     操作区 
       //查看档案
       doctorListFun1(data) {
         console.log(data)
@@ -661,15 +682,25 @@
       },
 
 
+
+
+
+
       //新增转诊
       addMove() {
         this.isShowaddMove = !this.isShowaddMove
       },
       //点击确定    新增门诊
       yesMove() {
-        alert('确定新增门诊')
+        // alert('确定新增门诊')
+        this.isShowaddMove = !this.isShowaddMove
       }
     },
+
+
+
+
+
     async created() {
       this.getSelect1()
       this.getSelect2()
