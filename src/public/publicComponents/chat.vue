@@ -22,25 +22,36 @@
 
                                 <span class="allReadColor" v-if="text.oRead">已读 </span>
                                 <span class="noReadColor" v-else>未读</span>
-                                {{text.content}}
-                                <!-- <div v-show="text.childMessageType=='DEFAULT'">
+                                <!-- 显示文本 -->
+                                <div v-show="text.childMessageType=='DEFAULT'">
                                     {{text.content}}
-                                </div> -->
+                                </div>
                                 <!-- 显示图片 -->
                                 <div v-show="text.childMessageType=='IMAGE'" class="imgUrlBig">
                                     <span>
                                     </span>
                                     <img :src="text.imgUrl" />
                                 </div>
+                                <!-- 显示视频 -->
+                                <div v-show="text.childMessageType=='VIDEO'">
+                                    {{text.content}}
+                                </div>
+
                                 <!-- 显示随访表 -->
                                 <!-- 自己发的随访表 -->
                                 <div v-show="text.childMessageType=='FOLLOWUP' || text.childMessageType=='INTERROGATION' || text.childMessageType=='ARTICLE'">
                                     <div v-show="text.from==userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.id,text.childMessageType)">
+
                                         <div>
                                             <img src="../../assets/img/followQuest1.png" />
                                         </div>
                                         <div>
-                                            <h3>{{text.content.title}}</h3>
+                                            <h3>
+                                                <span v-show="text.childMessageType=='FOLLOWUP'">随访</span>
+                                                <span v-show="text.childMessageType=='INTERROGATION'">问诊</span>
+                                                <span v-show="text.childMessageType=='ARTICLE'">文章</span>
+                                                / {{text.content.title}}
+                                            </h3>
                                             <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
                                         </div>
 
@@ -51,7 +62,11 @@
                                             <img src="../../assets/img/followQuest2.png" />
                                         </div>
                                         <div>
-                                            <h3>{{text.content.title}}</h3>
+                                            <h3>
+                                                <span v-show="text.childMessageType=='FOLLOWUP'">随访</span>
+                                                <span v-show="text.childMessageType=='INTERROGATION'">问诊</span>
+                                                <span v-show="text.childMessageType=='ARTICLE'">文章</span>
+                                                /{{text.content.title}}</h3>
                                             <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
                                         </div>
                                     </div>
@@ -119,86 +134,112 @@
         <div>
             <el-input class="chatInputK" type="textarea" :rows="2" placeholder="请输入内容" v-model="messageBody">
             </el-input>
-            <button class="sendMessage" @click="sendMessageChat()">发送</button>
+            <button class="sendMessage" @click="sendMessageChat(0,messageBody,'DEFAULT')">发送</button>
         </div>
         <!-- 备注 -->
-        <el-dialog title="备注" :visible.sync="remarkVisible" center append-to-body>
-            <el-form ref="form" :model="remarkData" label-width="80px">
-                <el-form-item label="活动形式">
-                    <el-input type="textarea" v-model="remarkData.remarkCon"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="onSubmit">确认</el-button>
-                    <el-button>取消</el-button>
-                </el-form-item>
-            </el-form>
-        </el-dialog>
+        <div v-if="remarkVisible">
+            <el-dialog title="备注" :visible.sync="remarkVisible" center append-to-body>
+                <el-form ref="form" :model="remarkData" label-width="80px">
+                    <el-form-item label="活动形式">
+                        <el-input type="textarea" v-model="remarkData.remarkCon"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="onSubmit">确认</el-button>
+                        <el-button>取消</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-dialog>
+        </div>
         <!-- 计划 -->
-        <el-dialog title="计划" :visible.sync="planVisible" center append-to-body>
-            <el-form ref="form" :model="planData" label-width="80px">
-                <el-form-item label="计划时间">
-                    <el-date-picker v-model="planData.planTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
-                    </el-date-picker>
-                </el-form-item>
+        <div v-if="planVisible">
+            <el-dialog title="计划" :visible.sync="planVisible" center append-to-body>
+                <el-form ref="form" :model="planData" label-width="80px">
+                    <el-form-item label="计划时间">
+                        <el-date-picker v-model="planData.planTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
+                        </el-date-picker>
+                    </el-form-item>
 
-                <el-form-item label="计划内容">
-                    <el-input type="textarea" v-model="planData.planCon"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="setPlan()">确认</el-button>
-                    <el-button>取消</el-button>
-                </el-form-item>
-            </el-form>
-        </el-dialog>
+                    <el-form-item label="计划内容">
+                        <el-input type="textarea" v-model="planData.planCon"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="setPlan()">确认</el-button>
+                        <el-button>取消</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-dialog>
+        </div>
         <!-- 随访 -->
-        <el-dialog title="发送随访" :visible.sync="followVisible" center append-to-body>
-            <ul>
-                <li class="followBox" v-for="(text,index) in followList" :key="index">
-                    <span>{{text.title}}</span>
-                    <span @click="followDetail(text.id)"> > </span>
-                </li>
-            </ul>
-        </el-dialog>
+        <div v-if="followVisible">
+            <el-dialog title="发送随访" :visible.sync="followVisible" center append-to-body>
+                <ul>
+                    <li class="followBox" v-for="(text,index) in followList" :key="index">
+                        <span>{{text.title}}</span>
+                        <span @click="followDetail(text.id)"> > </span>
+                    </li>
+                </ul>
+            </el-dialog>
+        </div>
         <!-- 随访计划详情 -->
-        <el-dialog title="随访" :visible.sync="followListVisible" center append-to-body>
-            <follow :addFollowData="followDetailData" @osendmessagechat="getSendMessageChat"></follow>
-        </el-dialog>
+        <div v-if="followListVisible">
+            <el-dialog title="随访" :visible.sync="followListVisible" center append-to-body>
+                <follow :addFollowData="followDetailData" @osendmessagechat="getSendMessageChat" :sendToUserId="sendToUserId"></follow>
+            </el-dialog>
+        </div>
         <!-- 随访消息点击详情 -->
-        <el-dialog title="随访" :visible.sync="followDetailVisible" center append-to-body>
-            <followDetail :addFollowData="followDetailData"></followDetail>
-        </el-dialog>
+        <div v-if="followDetailVisible">
+            <el-dialog title="随访" :visible.sync="followDetailVisible" center append-to-body>
+                <followDetail :addFollowData="followDetailData"></followDetail>
+            </el-dialog>
+        </div>
         <!-- 问诊 -->
-        <el-dialog title="发送问诊" :visible.sync="questVisible" center append-to-body>
-            <ul>
-                <li class="followBox" v-for="(text,index) in questList" :key="index">
-                    <span>{{text.title}}</span>
-                    <span @click="QuestDetail(text.id)"> > </span>
-                </li>
-            </ul>
-        </el-dialog>
+        <div v-if="questVisible">
+            <el-dialog title="发送问诊" :visible.sync="questVisible" center append-to-body>
+                <ul>
+                    <li class="followBox" v-for="(text,index) in questList" :key="index">
+                        <span>{{text.title}}</span>
+                        <span @click="QuestDetail(text.id)"> > </span>
+                    </li>
+                </ul>
+            </el-dialog>
+        </div>
         <!-- 问诊详情 -->
-        <el-dialog title="问诊详情" :visible.sync="questDetailVisible" center append-to-body>
-            <quest :addQuestData="questDetailData" @osendmessagechat="getSendMessageChat"></quest>
-        </el-dialog>
+        <div v-if="questDetailVisible">
+            <el-dialog title="问诊详情" :visible.sync="questDetailVisible" center append-to-body>
+                <quest :addQuestId="addQuestId" @osendmessagechat="getSendMessageChat1" :sendToUserId="sendToUserId"></quest>
+            </el-dialog>
+        </div>
         <!-- 文章 -->
-        <el-dialog title="发送文章" :visible.sync="articleVisible" center append-to-body>
-            <ul>
-                <li class="followBox" v-for="(text,index) in articleList" :key="index">
-                    <span>{{text.title}}</span>
-                    <span @click="articleDetail(text.id)"> > </span>
-                </li>
-            </ul>
-        </el-dialog>
-
+        <div v-if="articleVisible">
+            <el-dialog title="发送文章" :visible.sync="articleVisible" center append-to-body>
+                <ul>
+                    <li class="followBox" v-for="(text,index) in articleList" :key="index">
+                        <span>{{text.title}}</span>
+                        <span @click="articleDetail(text.id)"> > </span>
+                    </li>
+                </ul>
+                <nohave v-show="articleListLength"></nohave>
+            </el-dialog>
+        </div>
+        <!-- 文章详情 -->
+        <div v-if="articleDetailVisible">
+            <el-dialog title="文章详情" :visible.sync="articleDetailVisible" center append-to-body>
+                <articleDetail :articleClickId="articleClickId"></articleDetail>
+            </el-dialog>
+        </div>
         <!-- 药品处方 -->
-        <el-dialog title="药品处方" :visible.sync="drugsVisible" width="100%" center append-to-body>
-            <drugs></drugs>
-        </el-dialog>
-
+        <div v-if="drugsVisible">
+            <el-dialog title="药品处方" :visible.sync="drugsVisible" width="100%" center append-to-body>
+                {{sendToUserId}}
+                <drugs :sendToUserId="sendToUserId"></drugs>
+            </el-dialog>
+        </div>
         <!-- 视频聊天 -->
-        <el-dialog title="视频" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo()">
-            <ovideo :createVideoRoomData="createVideoRoomData"></ovideo>
-        </el-dialog>
+        <div v-if="drugsVisible">
+            <el-dialog title="视频" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo()">
+                <ovideo :createVideoRoomData="createVideoRoomData"></ovideo>
+            </el-dialog>
+        </div>
         <!-- 录入档案 -->
         <!-- <el-dialog title="录入新档案" :visible.sync="planVisible"   center append-to-body>
             <el-form ref="form" :model="planData" label-width="80px">
@@ -229,7 +270,9 @@ import drugs from "../../components/chat/drugs.vue";
 import follow from "../../components/chat/follow.vue";
 import quest from "../../components/chat/quest.vue";
 import followDetail from "../../components/chat/followDetail.vue";
+import articleDetail from "../../components/chat/articleDetail.vue";
 
+import nohave from "./noData.vue";
 import {
     fetchHistoryMessage,
     fetchSessionMembers,
@@ -255,10 +298,17 @@ export default {
         drugs,
         follow,
         followDetail,
-        quest
+        quest,
+        articleDetail,
+        nohave
     },
     data() {
         return {
+            addQuestId: "",
+            sendToUserId: "",
+            articleClickId: "",
+            articleDetailVisible: false,
+            articleListLength: false,
             showVideoBtnVisable: false,
 
             createVideoRoomData: {
@@ -291,12 +341,6 @@ export default {
             ourl: "",
             imgId: "", //上传图片后得到的id
             imgUrl: "/m/v1/api/hdfs/fs/download/",
-            // fileList: [
-            //     {
-            //         name:"ddd",
-            //         fileName:'ddd'
-            //     }
-            // ], //上传图片
             videoVisible: false, //视频是否显示
             areadyReadNum: "", //已读
             chatUser: "", //参与聊天的成员
@@ -332,10 +376,21 @@ export default {
         this.messageTicket = this.$store.state.socket.messageTicket;
     },
     methods: {
+        // 随访
         getSendMessageChat(oMessage) {
-            this.messageBody = JSON.stringify(oMessage);
-            this.childMessageType = 20;
-            this.sendMessageChat();
+            let messageBody = JSON.stringify(oMessage);
+            // this.childMessageType = 20;
+            this.sendMessageChat(20, messageBody, "FOLLOWUP");
+            this.followDetailVisible = false;
+            this.followListVisible = fasle;
+        },
+        // 问诊
+        getSendMessageChat1(oMessage) {
+            let messageBody = JSON.stringify(oMessage);
+            // this.childMessageType = 20;
+            this.sendMessageChat(18, messageBody, "INTERROGATION");
+            this.questDetailVisible = false;
+            this.questVisible = fasle;
         },
         onSubmit() {},
         //图片上传成功
@@ -343,9 +398,10 @@ export default {
             console.log(res);
             if (res.body && res.errCode === 0) {
                 this.imgId = res.body;
-                this.messageBody = res.body;
-                this.childMessageType = 5;
-                this.sendMessageChat();
+                // this.messageBody = res.body;
+                // this.childMessageType = 5;
+                // this.sendMessageChat();
+                this.sendMessageChat(5, res.body, "IMAGE");
             } else {
                 alert("失败");
             }
@@ -355,7 +411,7 @@ export default {
                 this.showVideoBtnVisable = true;
             } else {
                 this.showVideoBtnVisable = false;
-                this.setVideo(0);//单聊
+                this.setVideo(0); //单聊
             }
         },
         //创建视频
@@ -372,7 +428,8 @@ export default {
                 const res = await createVideoRoom(query, options);
                 if (res.data && res.data.errCode === 0) {
                     let childMessageType = 6;
-                    if (num == 1) {//群聊
+                    if (num == 1) {
+                        //群聊
                         $.each(this.checkList, function(index, text) {
                             let body =
                                 "sendroom&" +
@@ -388,7 +445,8 @@ export default {
                                 ""
                             );
                         });
-                    } else if (num == 0) {//单聊
+                    } else if (num == 0) {
+                        //单聊
                         let body =
                             "sendroom&" +
                             res.data.body.conferenceNumber +
@@ -485,11 +543,13 @@ export default {
                 this.followDetailVisible = true;
                 this.getFollowDetail(oid);
             } else if (otype == "INTERROGATION") {
+                this.questDetailVisible = true;
             } else if (otype == "ARTICLE") {
+                this.articleDetailVisible = true;
+                this.articleClickId = oid;
             }
         },
         sendMessage2() {
-            //  websocket = require("../../common/websocket.js");
             let ohtml = this.messageTicket.content;
         },
         //随访详情
@@ -548,6 +608,7 @@ export default {
             if (res.data && res.data.errCode === 0) {
                 console.log(res.data.body);
                 _this.userMemberNum = res.data.body;
+                _this.sendToUserId = res.data.body[0].userId;
                 $.each(res.data.body, function(index, text) {
                     if (_this.chatUser == "") {
                         _this.chatUser = text.userName;
@@ -637,7 +698,7 @@ export default {
                             this.messageList[i].content = odata[i].body;
                         }
                     } else {
-                        //本人发
+                        // //本人发
                         if (odata[i].childMessageType == "INTERROGATION") {
                             //问诊
                             this.messageList[i].content = JSON.parse(
@@ -695,7 +756,8 @@ export default {
             }
         },
         //发送
-        sendMessageChat() {
+        sendMessageChat(childMessageType, messageBody, childMessageType1) {
+            alert(messageBody);
             let odate = new Date();
             let oHour = odate.getHours();
             let oMinite = odate.getMinutes();
@@ -713,12 +775,12 @@ export default {
                 ticket: this.messageTicket.ticket,
                 info: {
                     messageType: 0, //消息
-                    childMessageType: this.childMessageType, //文本
+                    childMessageType: childMessageType, //文本
                     from: this.userSelfInfo.userId, //userid
                     fromNickName: this.userSelfInfo.name, //昵称
                     toNickName: "",
                     to: this.sessionId, //发给谁，接收者的用户ID
-                    body: this.messageBody, //消息内容
+                    body: messageBody, //消息内容
                     sequence: this.messageTicket.sequence, //消息发送序号。
                     chatType: 0, //单聊  GROUP 群聊
                     clientTime: timestamp,
@@ -727,9 +789,15 @@ export default {
             };
             console.log(Iessage);
             // websocket.default.sendMessage(Iessage);
-            if (this.messageBody) {
+            if (messageBody) {
                 this.$refs.mychild.sendMessage(Iessage);
-                this.addMessageK(this.messageBody, oHour + ":" + oMinite);
+                messageBody = JSON.parse(messageBody);
+
+                this.addMessageK(
+                    messageBody,
+                    oHour + ":" + oMinite,
+                    childMessageType1
+                );
                 this.messageBody = "";
             } else {
                 alert("消息不能为空");
@@ -739,22 +807,23 @@ export default {
         },
 
         // 添加消息到发送框
-        addMessageK(oMessage, oMessageTime) {
+        addMessageK(oMessage, oMessageTime, childMessageType) {
             this.messageList.push({
                 from: this.userSelfInfo.userId,
                 content: oMessage,
-                serverTime: oMessageTime
+                serverTime: oMessageTime,
+                childMessageType: childMessageType
             });
         },
         searchBtn() {
             this.$emit("searchValue", this.input);
         },
         getDoctorVis() {
-            //    if(this.doctorVis==0){
-            //        this.oDoctorVis=false
-            //    } else if(this.doctorVis==1){
-            //        this.oDoctorVis=true
-            //    }
+            if (this.doctorVis == 0) {
+                this.oDoctorVis = false;
+            } else if (this.doctorVis == 1) {
+                this.oDoctorVis = true;
+            }
         },
         //发送问诊
         async addQuest() {
@@ -776,24 +845,9 @@ export default {
                 });
             }
         },
-        //问诊详情
-        async QuestDetail(oid) {
-            let _this = this;
-            let query = {
-                token: this.userState.token,
-                id: oid
-            };
-            const res = await queryInquiry(query);
-            if (res.data && res.data.errCode === 0) {
-                _this.questDetailVisible = true;
-                _this.questDetailData = res.data.body;
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
+        QuestDetail(oid) {
+            this.questDetailVisible = true;
+            this.addQuestId = oid;
         },
         //发送文章
         async addArticle() {
@@ -809,6 +863,11 @@ export default {
             const res = await queryArticleList(query);
             if (res.data && res.data.errCode === 0) {
                 _this.articleList = res.data.body.data2.list;
+                if (res.data.body.data2.list.length < 1) {
+                    _this.articleListLength = true;
+                } else {
+                    _this.articleListLength = false;
+                }
             } else {
                 //失败
                 this.$notify.error({
@@ -830,9 +889,9 @@ export default {
                     title: res.data.body.title,
                     firstTreatmentTime: res.data.body.createTime
                 };
-                this.messageBody = JSON.stringify(oMessage);
-                this.childMessageType = 19;
-                this.sendMessageChat();
+                let messageBody = JSON.stringify(oMessage);
+                // this.childMessageType = 19;
+                this.sendMessageChat(19, messageBody, "ARTICLE");
                 setTimeout(function() {
                     _this.articleVisible = false;
                     _this.messageBody = "";
