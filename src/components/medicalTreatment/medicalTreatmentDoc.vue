@@ -7,6 +7,7 @@
 
 <script>
 	import normalTab from './../../public/publicComponents/normalTab.vue'
+	
 	export default {
 		components:{
 			normalTab

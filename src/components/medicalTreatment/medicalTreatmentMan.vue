@@ -4,7 +4,9 @@
             <normalTab v-model="barInfo" @reBack="getBar"></normalTab>
         </div>
         <div class="medical-treatment-man-body">
-            <div class="medical-treatment-man-body-nav">
+            <div :is="barInfo.list[barInfo.i].tem"></div>
+            <!-- <div :is="viewCurrent.page"> -->
+            <!-- <div class="medical-treatment-man-body-nav">
                 <div class="medical-treatment-man-body-nav-left">
                     <selftag v-model="departmentList" @reback="getDepartmentSelect"></selftag>
                     <selftag v-model="departmentList" @reback="getDepartmentSelect"></selftag>
@@ -42,7 +44,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div> -->
         </div>
 	</div>
 </template>
@@ -51,11 +53,17 @@
     import normalTab from './../../public/publicComponents/normalTab.vue'
     import selftag from './../../public/publicComponents/selftag.vue'
     import search from './../../public/publicComponents/search.vue'
+    import administration from './medicalTreatmentMan/administration'
+	import control from './medicalTreatmentMan/control'
+	import statistics from './medicalTreatmentMan/statistics'
 	export default {
         components:{
             normalTab,
             selftag,
-            search
+            search,
+            administration,
+            control,
+            statistics
 		},
 		data () {
 			return {
@@ -67,15 +75,18 @@
 					list:[
 						{
 							en:'Classification of diseases',
-							zh:'疾病分级分类管理'
+                            zh:'疾病分级分类管理',
+                            tem:'administration'
 						},
 						{
 							en:'Process & privilege control',
-							zh:'流程和权限控制'
+                            zh:'流程和权限控制',
+                            tem:'control'
                         },
                         {
 							en:'statistics',
-							zh:'统计'
+                            zh:'统计',
+                            tem:'statistics'
 						},
 					]	
                 },

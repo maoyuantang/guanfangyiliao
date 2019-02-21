@@ -424,6 +424,7 @@
 					logoName:''
 				},
 				testData:{ 
+					state:true,
 					show:false,//是否显示新增弹窗 
 					type:'1',//'1'为新增 '2'为编辑
 					businessId:'',//业务id(新增为空，编辑不为空)  
@@ -694,11 +695,7 @@
 				/***
 				 * 统计模块  图表
 				 */
-				drawData:{
-					dataAxis:['点', '击', '柱', '子','点', '击', '柱', '子','点', '击', '柱', '子'],//每个柱子代表的类名
-					data:[220, 182, 191, 234,220, 182, 191, 234,220, 182, 191, 234],//具体数值
-					title:'测试测试,修改修改'//图表标题
-				}
+				drawData:{}
 			}
 		},
 		methods:{
@@ -1758,7 +1755,13 @@
 			this.getBussModuleList();
 			this.getBussTypeList();
 			this.getBussByCondition();
-			
+			setTimeout(() => {
+				this.drawData = {
+					dataAxis:['点', '击', '柱', '子','点', '击', '柱', '子','点', '击', '柱', '子'],//每个柱子代表的类名
+					data:[220, 182, 191, 234,220, 182, 191, 234,220, 182, 191, 234],//具体数值
+					title:'测试测试,修改修改'//图表标题
+				}
+			}, 5000);
 			// this.listenBoundingClientRect();
 			
 			// this.$nextTick(e=>{
