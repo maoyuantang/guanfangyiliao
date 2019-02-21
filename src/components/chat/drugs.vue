@@ -7,7 +7,7 @@
                         <img src="../../assets/img/sendNew2.png" />
                     </div>
                     <div>
-                        <h4>{{familyMessage.name}}</h4>
+                        <h4>姓名：{{familyMessage.name}}</h4>
                         性别: {{familyMessage.sex}}<br /> 年龄: {{familyMessage.age}}<br /> 出生日期: {{familyMessage.birthday}} <br />联系方式: {{familyMessage.phone}} <br />常用地址: {{familyMessage.address}}<br />
                     </div>
                 </div>
@@ -17,24 +17,32 @@
             </div>
             <div class="drugs_box_rg">
                 <div>
-                    <el-form ref="form" :model="form" label-width="80px">
-                        <el-form-item label="活动名称">
-                            <el-input v-model="form.name"></el-input>
+                    <el-form ref="form" :model="chufangData" label-width="80px">
+                        <el-form-item label="主    诉: ">
+                            <el-input v-model="chufangData.complained"></el-input>
                         </el-form-item>
-                        <el-form-item label="活动形式">
-                            <el-input type="textarea" v-model="form.name"></el-input>
+                        <el-form-item label="现 病 史: ">
+                            <el-input type="textarea" v-model="chufangData.medicalHistory"></el-input>
                         </el-form-item>
-                        <el-form-item label="活动名称">
-                            <el-input v-model="form.name"></el-input>
+                        <el-form-item label="过 敏 史: ">
+                            <el-input v-model="chufangData.allergyHistory"></el-input>
                         </el-form-item>
-                        <el-form-item label="活动名称">
-                            <el-input v-model="form.name"></el-input>
+                        <el-form-item label="门诊诊断: ">
+                            <el-input v-model="chufangData.diagnosis"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-checkbox-group v-model="form.type">
-                                <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-                                <el-checkbox label="地推活动" name="type"></el-checkbox>
+                            <el-checkbox-group v-model="chufangData.report">
+                                <el-checkbox label="疫情报告" name="type"></el-checkbox>
                             </el-checkbox-group>
+                            <el-checkbox-group v-model="chufangData.review">
+                                <el-checkbox label="复诊" name="type"></el-checkbox>
+                            </el-checkbox-group>
+                        </el-form-item>
+                        <el-form-item label="发病日期: ">
+                            <el-date-picker type="date" placeholder="选择日期" v-model="chufangData.occurTime" style="width: 100%;"></el-date-picker>
+                        </el-form-item>
+                        <el-form-item label="下次复查日期: ">
+                            <el-date-picker type="date" placeholder="选择日期" v-model="chufangData.reviewTime" style="width: 100%;"></el-date-picker>
                         </el-form-item>
                     </el-form>
 
@@ -42,7 +50,7 @@
                 <div>
                     <search></search>
                     <div>
-                        <el-table :data="drugsData" border style="width: 100%">
+                        <el-table :data="chufangData.drugDetails" border style="width: 100%">
                             <el-table-column fixed prop="date" label="序号" width="150">
                             </el-table-column>
                             <el-table-column prop="drugName" label="药品名称" width="120">
@@ -56,6 +64,11 @@
                             <el-table-column prop="drugPrice" label="单价" width="120">
                             </el-table-column>
                             <el-table-column prop="drugQuantity" label="数量" width="120">
+                                <template slot-scope="scope">
+                                    <el-popover trigger="hover" placement="top">
+                                        <p>姓名: {{ scope.row.drugQuantity }}</p>
+                                    </el-popover>
+                                </template>
                             </el-table-column>
                             <el-table-column prop="drugPriceAll" label="合计" width="120">
                             </el-table-column>
@@ -63,8 +76,7 @@
                             </el-table-column>
                             <el-table-column fixed="right" label="操作" width="100">
                                 <template slot-scope="scope">
-                                    <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                                    <el-button type="text" size="small">编辑</el-button>
+                                    <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -75,7 +87,7 @@
                         </div>
                         <div>
                             <el-button type="primary">预览</el-button>
-                            <el-button type="primary">提交审核</el-button>
+                            <el-button type="primary" @click="submitAudit()">提交审核</el-button>
                         </div>
                     </div>
                 </div>
@@ -88,7 +100,11 @@
 import search from "../../public/publicComponents/search.vue";
 import apiBaseURL from "../../enums/apiBaseURL.js";
 import { mapState } from "vuex";
-import { getFamilyMemberInfoByDoctor, drugsByCondition } from "../../api/apiAll.js";
+import {
+    getDoctorMessage1,
+    drugsByCondition,
+    addPrescription
+} from "../../api/apiAll.js";
 export default {
     components: {
         search
@@ -106,7 +122,36 @@ export default {
                 phone: "",
                 address: ""
             },
-            drugsData: []
+            drugsData: [],
+            chufangData: {
+                id: "", //空
+                clinicId: "4783f95679a9412ba6da41b636dc102e",
+                departmentId: "1398F2FBB8AA48518385F2486840FE17",
+                userId: "",
+                firstDoctorId: "",
+                secondDoctorId: "", //空
+                reviewEnum: null, //空
+                orgCode: "1545618639429",
+                complained: "偶尔咳嗽，无其他症状",
+                medicalHistory:
+                    "干咳一个月，白天咳嗽，夜晚不咳嗽，干咳无痰，检查喉咙无红肿",
+                allergyHistory: "无",
+                diagnosis: "气候变化引起的支气管过敏",
+                report: true,
+                review: false,
+                occurTime: "2019-01-14",
+                reviewTime: "2019-02-14",
+                remark: "备注",
+                drugDetails: [
+                    {
+                        id: "H33020485", //药品id
+                        drugPrice: 30.0, //药品价格
+                        drugQuantity: 2, //药品数量
+                        subtotal: 60.0, //药品🐤小计
+                        doctorAsk: "一定要按时按量吃药" //医生嘱托
+                    }
+                ]
+            }
         };
     },
     computed: {
@@ -118,13 +163,15 @@ export default {
     methods: {
         //获取处方信息
         async getDrugsMessage() {
+            let _this = this;
             let query = {
                 token: this.userState.token,
                 familyMemberId: this.sendToUserId
             };
-            const res = await getFamilyMemberInfoByDoctor(query);
+            const res = await getDoctorMessage1(query);
+
             if (res.data && res.data.errCode === 0) {
-                this.familyMessage = {
+                _this.familyMessage = {
                     name: res.data.body.name,
                     age: res.data.body.age,
                     sex: res.data.body.sex,
@@ -140,7 +187,7 @@ export default {
                 });
             }
         },
-        //获取处方信息
+        //获取处方表格信息
         async getDrugsByCondition() {
             let query = {
                 token: this.userState.token,
@@ -149,7 +196,7 @@ export default {
             const res = await drugsByCondition(query);
             if (res.data && res.data.errCode === 0) {
                 // console.log()
-                this.drugsData = res.data.body;
+                this.chufangData.drugDetails = res.data.body;
             } else {
                 //失败
                 this.$notify.error({
@@ -157,19 +204,46 @@ export default {
                     message: res.data.errMsg
                 });
             }
+        },
+        //提交审核
+        async submitAudit() {
+            let query = {
+                token: this.userState.token
+            };
+            let options = this.chufangData;
+            const res = await addPrescription(query, options);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "审核成功"
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        setMessage(){
+            this.chufangData.firstDoctorId=this.userSelfInfo.userId;
+            this.chufangData.clinicId=this.userMessage.clinicId
+            this.chufangData.departmentId=this.userMessage.departmentId
+            this.chufangData.userId=this.userMessage.userId
+            this.chufangData.orgCode=this.userMessage.orgCode
         }
     },
     props: {
-        sendToUserId: String
+        sendToUserId: String,
+        userMessage:Object
     },
     model: {
-        prop: ["sendToUserId"],
+        prop: ["sendToUserId","userMessage"],
         event: "reBack"
     },
     created() {
         this.getDrugsMessage();
         this.getDrugsByCondition();
-        alert(this.sendToUserId)
     },
     beforeDestroy() {}
 };

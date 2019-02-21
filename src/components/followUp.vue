@@ -460,7 +460,9 @@
                     </div>
                     <div style="display:flex">
                         {{drawData}}
+                        {{drawData1}}
                         <normalColumnChart :inData="drawData"> </normalColumnChart>
+                        <normalColumnChart :inData="drawData1"> </normalColumnChart>
                         <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
 
                     </div>
@@ -995,14 +997,14 @@ export default {
                 dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
                 title: " ", //图表标题
-                totalNumber: "555"
+                total: "555"
             },
             //发起科室统计图
             drawDataStart: {
                 dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
                 title: " ", //图表标题
-                totalNumber: "555"
+                total: "555"
             },
             tjType: "DEPT",
             tjStartTime: "",

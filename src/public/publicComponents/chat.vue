@@ -230,12 +230,11 @@
         <!-- 药品处方 -->
         <div v-if="drugsVisible">
             <el-dialog title="药品处方" :visible.sync="drugsVisible" width="100%" center append-to-body>
-                {{sendToUserId}}
                 <drugs :sendToUserId="sendToUserId"></drugs>
             </el-dialog>
         </div>
         <!-- 视频聊天 -->
-        <div v-if="drugsVisible">
+        <div v-if="videoVisible">
             <el-dialog title="视频" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo()">
                 <ovideo :createVideoRoomData="createVideoRoomData"></ovideo>
             </el-dialog>
@@ -288,7 +287,7 @@ import {
     createVideoRoom,
     storageUsers
 } from "../../api/apiAll.js";
-import ovideo from "../../video/video.vue";
+import ovideo from "../../video/oVideo.vue";
 import { setTimeout } from "timers";
 
 export default {
@@ -379,7 +378,6 @@ export default {
         // 随访
         getSendMessageChat(oMessage) {
             let messageBody = JSON.stringify(oMessage);
-            // this.childMessageType = 20;
             this.sendMessageChat(20, messageBody, "FOLLOWUP");
             this.followDetailVisible = false;
             this.followListVisible = fasle;
@@ -409,6 +407,7 @@ export default {
         showVideoBtn() {
             if (this.userMemberNum.length > 1) {
                 this.showVideoBtnVisable = true;
+                this.setVideo(1); //群聊
             } else {
                 this.showVideoBtnVisable = false;
                 this.setVideo(0); //单聊
@@ -417,7 +416,7 @@ export default {
         //创建视频
         async setVideo(num) {
             let _this = this;
-            if (!this.createVideoVisable) {
+            // if (!this.createVideoVisable) {
                 let query = {
                     token: this.userState.token
                 };
@@ -475,9 +474,9 @@ export default {
                         message: res.data.errMsg
                     });
                 }
-            } else {
-                alert("已有视频");
-            }
+            // } else {
+            //     alert("已有视频");
+            // }
         },
         // 发送视频消息
         sendVideoMessage(childMessageType, body, conferenceNumber, toNickName) {
@@ -757,7 +756,6 @@ export default {
         },
         //发送
         sendMessageChat(childMessageType, messageBody, childMessageType1) {
-            alert(messageBody);
             let odate = new Date();
             let oHour = odate.getHours();
             let oMinite = odate.getMinutes();
@@ -782,7 +780,7 @@ export default {
                     to: this.sessionId, //发给谁，接收者的用户ID
                     body: messageBody, //消息内容
                     sequence: this.messageTicket.sequence, //消息发送序号。
-                    chatType: 0, //单聊  GROUP 群聊
+                    chatType: 2, //医生端标识
                     clientTime: timestamp,
                     serverTime: this.messageTicket.serverTime
                 }

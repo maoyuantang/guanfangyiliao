@@ -223,5 +223,8 @@ export default {
     applicantCANCEL:'/m/v1/api/referral/dualReferral/applicant/CANCEL',//14.9.双向转诊-WEB医生端-申请人操作
     dualReferralReception:'/m/v1/api/referral/dualReferral/reception/',//14.10.双向转诊-WEB医生端-接诊人操作
     receptionAudit:'/m/v1/api/referral/dualReferral/reception/audit',//14.11.双向转诊-WEB医生端-审核
+
+    getDoctorMessage1:'/m/v1/api/familyMember/getFamilyMemberInfoByDoctor',
+    queryConsultationDoctorList:'/m/v1/api/consultation/queryConsultationDoctorList',
 }
 

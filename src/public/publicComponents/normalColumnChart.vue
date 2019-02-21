@@ -206,6 +206,7 @@
 			event:'reBack'
 		},
 		async created(){
+            console.log(this.inData)
             this.draw({
                 dataAxis:this.inData.dataAxis,
                 data:this.inData.data,
