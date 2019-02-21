@@ -2342,5 +2342,17 @@ export const queryListByUserId = query => { //2.医生端获取家庭成员列�
         }
     })
 }
+export const queryConsultationDoctorList = query => { //2.医生端获取家庭成员列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.queryConsultationDoctorList,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
 
 

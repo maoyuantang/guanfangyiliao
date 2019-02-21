@@ -125,23 +125,23 @@ export default {
             drugsData: [],
             chufangData: {
                 id: "", //空
-                clinicId: "4783f95679a9412ba6da41b636dc102e",
-                departmentId: "1398F2FBB8AA48518385F2486840FE17",
+                clinicId: "",
+                departmentId: "",
                 userId: "",
                 firstDoctorId: "",
                 secondDoctorId: "", //空
                 reviewEnum: null, //空
-                orgCode: "1545618639429",
-                complained: "偶尔咳嗽，无其他症状",
+                orgCode: "",
+                complained: "",
                 medicalHistory:
-                    "干咳一个月，白天咳嗽，夜晚不咳嗽，干咳无痰，检查喉咙无红肿",
-                allergyHistory: "无",
-                diagnosis: "气候变化引起的支气管过敏",
+                    "",
+                allergyHistory: "",
+                diagnosis: "",
                 report: true,
                 review: false,
-                occurTime: "2019-01-14",
-                reviewTime: "2019-02-14",
-                remark: "备注",
+                occurTime: "",
+                reviewTime: "",
+                remark: "",
                 drugDetails: [
                     {
                         id: "H33020485", //药品id
@@ -244,6 +244,7 @@ export default {
     created() {
         this.getDrugsMessage();
         this.getDrugsByCondition();
+        this.setMessage()
     },
     beforeDestroy() {}
 };

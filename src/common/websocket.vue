@@ -895,7 +895,9 @@ export default {
 
                     // let toL = odata.info.to;
                     // let toNickNameL = odata.info.toNickName;
-
+                     console.log('不是本人发的消息');
+                     this.$emit("reback",'nihao');
+                     console.log('555555555555555555');
                     let msgId = odata.info.msgId;
                     console.log(odata);
                     var Iessage = {

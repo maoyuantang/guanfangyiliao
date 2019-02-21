@@ -1,6 +1,6 @@
 <template>
     <div class="chat">
-        <websocket1 ref="mychild" @reloaddata="addMessageK">
+        <websocket1 ref="mychild" @reback="addMessageK1">
         </websocket1>
         <div>
             {{chatUser}}
@@ -132,7 +132,7 @@
             </span>
         </div>
         <div>
-            <el-input class="chatInputK" type="textarea" :rows="2" placeholder="请输入内容" v-model="messageBody">
+            <el-input class="chatInputK" type="textarea" :rows="2" placeholder="请输入内容" v-model="messageBody" @keyup.enter="sendMessageChat(0,messageBody,'DEFAULT')">
             </el-input>
             <button class="sendMessage" @click="sendMessageChat(0,messageBody,'DEFAULT')">发送</button>
         </div>
@@ -230,7 +230,7 @@
         <!-- 药品处方 -->
         <div v-if="drugsVisible">
             <el-dialog title="药品处方" :visible.sync="drugsVisible" width="100%" center append-to-body>
-                <drugs :sendToUserId="sendToUserId"></drugs>
+                <drugs :sendToUserId="sendToUserId" :userMessage="userMessage"></drugs>
             </el-dialog>
         </div>
         <!-- 视频聊天 -->
@@ -407,7 +407,6 @@ export default {
         showVideoBtn() {
             if (this.userMemberNum.length > 1) {
                 this.showVideoBtnVisable = true;
-                this.setVideo(1); //群聊
             } else {
                 this.showVideoBtnVisable = false;
                 this.setVideo(0); //单聊
@@ -416,67 +415,61 @@ export default {
         //创建视频
         async setVideo(num) {
             let _this = this;
-            // if (!this.createVideoVisable) {
-                let query = {
-                    token: this.userState.token
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                type: "NORMAL",
+                time: ""
+            };
+            const res = await createVideoRoom(query, options);
+            if (res.data && res.data.errCode === 0) {
+                this.createVideoRoomData = {
+                    conferenceId: res.data.body.conferenceId,
+                    conferenceNumber: res.data.body.conferenceNumber
                 };
-                let options = {
-                    type: "NORMAL",
-                    time: ""
-                };
-                const res = await createVideoRoom(query, options);
-                if (res.data && res.data.errCode === 0) {
-                    let childMessageType = 6;
-                    if (num == 1) {
-                        //群聊
-                        $.each(this.checkList, function(index, text) {
-                            let body =
-                                "sendroom&" +
-                                res.data.body.conferenceNumber +
-                                "&" +
-                                res.data.body.conferenceId +
-                                "&" +
-                                text;
-                            _this.sendVideoMessage(
-                                childMessageType,
-                                body,
-                                res.data.body.conferenceNumber,
-                                ""
-                            );
-                        });
-                    } else if (num == 0) {
-                        //单聊
+                let childMessageType = 6;
+                if (num == 1) {
+                    //群聊
+                    $.each(this.checkList, function(index, text) {
                         let body =
                             "sendroom&" +
                             res.data.body.conferenceNumber +
                             "&" +
                             res.data.body.conferenceId +
                             "&" +
-                            _this.userMemberNum[0].userId;
+                            text;
                         _this.sendVideoMessage(
                             childMessageType,
                             body,
                             res.data.body.conferenceNumber,
                             ""
                         );
-                    }
-
-                    this.videoVisible = true;
-                    this.createVideoRoomData = {
-                        conferenceId: res.data.body.conferenceId,
-                        conferenceNumber: res.data.body.conferenceNumber
-                    };
-                    this.createVideoVisable = true;
-                } else {
-                    //失败
-                    this.$notify.error({
-                        title: "警告",
-                        message: res.data.errMsg
                     });
+                } else if (num == 0) {
+                    //单聊
+                    let body =
+                        "sendroom&" +
+                        res.data.body.conferenceNumber +
+                        "&" +
+                        res.data.body.conferenceId +
+                        "&" +
+                        _this.userMemberNum[0].userId;
+                    _this.sendVideoMessage(
+                        childMessageType,
+                        body,
+                        res.data.body.conferenceNumber,
+                        ""
+                    );
                 }
-            // } else {
-            //     alert("已有视频");
-            // }
+                this.videoVisible = true;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
         },
         // 发送视频消息
         sendVideoMessage(childMessageType, body, conferenceNumber, toNickName) {
@@ -813,6 +806,9 @@ export default {
                 childMessageType: childMessageType
             });
         },
+        addMessageK1(data){
+alert(data)
+        },
         searchBtn() {
             this.$emit("searchValue", this.input);
         },
@@ -963,10 +959,11 @@ export default {
     },
     props: {
         sessionId: String, //会话Id
-        doctorVis: Number
+        doctorVis: Number,
+        userMessage: Object
     },
     model: {
-        prop: ["sessionId", "doctorVis"],
+        prop: ["sessionId", "doctorVis", "userMessage"],
         event: "reBack"
     }
 };
@@ -1172,6 +1169,9 @@ export default {
     visibility: hidden;
     width: 100%;
     height: 100%;
+}
+.upload-demo-chat .el-upload__input {
+    display: none;
 }
 .imgUrlBig {
     width: 50px;
