@@ -14,7 +14,6 @@ import "./video/assets/css/bootstrap.original.css";
 import { mapState } from "vuex";
 
 import websocket from "./common/websocket.js";
-import {fetchHospitalDepts} from './api/apiAll.js'
 // import websocket from "./common/websocket.js";
 import "./public/publicCss/base.css";
 import websocket1 from "./common/websocket.vue";

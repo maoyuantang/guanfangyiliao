@@ -1492,6 +1492,7 @@
 	.online-clinic-top {
 		display: flex;
 		justify-content: space-between;
+		margin: 0 0 0.2rem 0;
 	}
 
 	.online-clinic-top>div {

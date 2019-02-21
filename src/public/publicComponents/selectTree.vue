@@ -14,6 +14,7 @@
                     :data="inData"
                     show-checkbox
                     node-key="id"
+                    :default-checked-keys="select.map(item=>item.id)"
                     ref="tree"
                     @check="selectItem">
                 </el-tree>
@@ -36,7 +37,7 @@ export default {
     },
     selectItem(){
         console.log(this.$refs.tree.getCheckedKeys())
-        this.$emit("reback",this.$refs.tree.getCheckedKeys());
+        this.$emit("reback",this.$refs.tree.getCheckedNodes(false,true));
     },
     unShow(){
         this.show = false;
@@ -49,7 +50,8 @@ export default {
     }
   },
   props:[
-    'inData'
+    'inData',
+    'select'
   ],
   created() {
     this.documentClick();
