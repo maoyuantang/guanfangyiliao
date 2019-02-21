@@ -15,9 +15,10 @@
 <img :src="imgChuFangDan" alt=""> -->
     <doctorTab :inData="oAdminTab" @reBack="getConsulTabData"></doctorTab>
     <!-- 我的诊室-循环 -->
-    <ul v-for="(text,index) in myHomes" :key="index" v-if="oconsulVisable==0" class="outpatient_s" >
+    
+    <ul v-for="(text,index) in myHomes" :key="index" v-if="oconsulVisable==0" class="outpatient_s">
       <li class="outpatient_left">
-        <p class="title">{{text.orgName}}</p>
+        <p class="title">{{text.orgName}}-{{text.clinicName}}</p>
         <div class="outpatient_user">
           <img src="../assets/img/ME.png" alt="">
           <div class="outpatient_name">
@@ -38,23 +39,23 @@
       </li>
       <li class="outpatient_right">
         <!-- 病人个数循环 -->
-        <ul v-for="(text,index) in text.clinicOrders" :key="index" class="patientDetail">
+        <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail">
           <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
-            <h1>{{text.userName}}</h1>
+            <h1>{{text1.userName}}</h1>
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
               <el-button type="success" plain>查看档案</el-button>
-              <el-button type="danger" @click="sendMessage(text.userId)">发送</el-button>
+              <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button>
               <el-button type="info" plain>未开始</el-button>
             </div>
           </li>
           <li class="medicalExpenses">
             问诊费用
             <span>
-              <span>￥</span>{{text.askPrice}}</span>
+              <span>￥</span>{{text1.askPrice}}</span>
           </li>
           <li class="drug">
             <div class="fee">处方费用 ¥
-              <span>{{text.prescriptionPrice}}</span>
+              <span>{{text1.prescriptionPrice}}</span>
             </div>
             <ul>
               <li class="drugTitle">Rx:</li>
@@ -77,11 +78,11 @@
           </li>
           <li class="orderTime">
             <span>下单时间:</span>
-            <span class="span">{{text.clinicOrderTime}}</span>
+            <span class="span">{{text1.clinicOrderTime}}</span>
           </li>
           <li class="acceptTime">
             <span>接诊时间:</span>
-            <span class="span">{{text.askTime}}</span>
+            <span class="span">{{text1.askTime}}</span>
           </li>
         </ul>
 
@@ -468,13 +469,12 @@
     </el-dialog>
 
     <!-- 谭莹聊天弹窗 -->
-    
+
     <div v-if="chatVisible">
-      <el-dialog class="chatDialog" title="" :visible.sync="chatVisible"  width="680px">
-      <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
-    </el-dialog>
+      <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+        <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage"></chat>
+      </el-dialog>
     </div>
-    
 
   </div>
 </template>
@@ -523,10 +523,11 @@ export default {
     data() {
         return {
             //谭莹变量
-            chatVisible1:true,
+            chatVisible1: true,
             doctorVis: 1, //医生跟患者单聊
             sessionId: "", //会话id
-            chatVisible:false,
+            chatVisible: false,
+            userMessage:{},
             //谭莹变量
             // testData: {
             //   select: {
@@ -677,18 +678,27 @@ export default {
     methods: {
         // 谭莹事件
         // 我的诊室发送消息
-        async sendMessage(oid) {
+        async sendMessage(text,text1) {
+          console.log(text)
+          console.log(text1)
+          this.userMessage={
+            clinicId:text.id,
+            departmentId:text.departmentId,
+            userId:text1.userId,
+            orgCode:text.orgCode
+          }
+          console.log(this.userMessage)
             let _this = this;
             let query = {
-                token: this.userState.token,
+                token: this.userState.token
             };
-            let options={
-              to:oid
-            }
-            const res = await fetchChatSession(query,options);
+            let options = {
+                to: text1.userId
+            };
+            const res = await fetchChatSession(query, options);
             if (res.data && res.data.errCode === 0) {
-              _this.sessionId=res.data.body
-              _this.chatVisible=true;
+                _this.sessionId = res.data.body;
+                _this.chatVisible = true;
             } else {
                 this.$notify.error({
                     title: "警告",
