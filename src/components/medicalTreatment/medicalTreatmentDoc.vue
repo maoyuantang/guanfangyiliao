@@ -7,6 +7,7 @@
 <script>
 	import normalTab from './../../public/publicComponents/normalTab.vue'
 	import noData from './../../public/publicComponents/noData.vue'
+	
 	export default {
 		components:{
 			normalTab,

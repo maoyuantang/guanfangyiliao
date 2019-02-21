@@ -8,7 +8,7 @@
             <el-table-column v-for="(column, index) in columns" :prop="column.prop" :key="index" :label="column.label" :width="column.width" label-class-name="tableHeadColor">
                 <template slot-scope="scope">
                     <span :class="scope.row.oclass">
-                        {{scope.row[column.prop]}}
+                        {{scope.row[column.prop]?scope.row[column.prop]:0}}
                     </span>
                 </template>
             </el-table-column>

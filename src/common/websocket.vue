@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import ovideo from "../video/video.vue";
+import ovideo from "../video/oVideo.vue";
 import apiBaseURL from "../enums/apiBaseURL.js";
 import { mapState } from "vuex";
 import protobuf from "protobufjs";

@@ -15,6 +15,16 @@
         model:{
             prop:['inData']
         },
+        watch:{
+            inData(n){
+                this.draw({
+                    dataAxis:n.dataAxis,
+                    data:n.data,
+                    title:n.title,
+                    total:n.total
+                });
+            }
+        },
 		methods:{
             getNum(num){//高位加一，其余位置0
                 if(Object.prototype.toString.call(num)!=="[object Number]"){
@@ -206,6 +216,7 @@
 			event:'reBack'
 		},
 		async created(){
+            console.log(this.inData)
             this.draw({
                 dataAxis:this.inData.dataAxis,
                 data:this.inData.data,

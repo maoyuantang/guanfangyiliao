@@ -18,11 +18,75 @@ export default {
         businessType:[],//业务类型
         followupType:[],//随访类型
         followupMode:[],//随访方式
-
-
+        followupContents:[],//随访内容
+        surveyTypes:[],//调查类型 
+        investigationMethod:[],//调查方式
+        equipmentType:[],//设备类型
+        followupPlan:[],//随访计划
+        articleListTypes:[],//文章类型列表
+        teachingMethodsScreeningList:[],//授课方式筛选列表(接口还没出)
+        classifiedTreatmentDiagnosisTypes:[],//分级诊疗 类型
+        classificationDiagnosisTreatment:[],//分级诊疗 分级
+        TwoReferralDirection:[],//双向转诊 方向
+        
 
 	},
 	mutations:{
+        /**
+         * 设置 双向转诊 方向
+         */
+        SETTWOREFERRALDIRECTION(state,data){
+            state.TwoReferralDirection = data;
+        },
+         /**
+         * 设置 分级诊疗 分级
+         */
+        SETCLASSIFICATIONDIAGNOSISTREATMENT(state,data){
+            state.classificationDiagnosisTreatment = data;
+        },
+        /**
+         * 设置 分级诊疗 类型
+         */
+        SETLASSIFEDTREATMNTDIAGNOSISTYPES(state,data){
+            state.classifiedTreatmentDiagnosisTypes = data;
+        },
+        
+        /**
+         * 设置 文章类型列表
+         */
+        SETARTCLELISTTYPES(state,data){
+            state.articleListTypes = data;
+        },
+        /**
+         * 设置 随访计划
+         */
+        SETFOLLOWUPPLAN(state,data){
+            state.followupPlan = data;
+        },
+        /**
+         * 设置 设备类型
+         */
+        SETEQUIPMENTTYPE(state,data){
+            state.equipmentType = data;
+        },
+        /**
+         * 设置 调查方式
+         */
+        SETINVESTIGATIONMETHOD(state,data){
+            state.investigationMethod = data;
+        },
+        /**
+         * 设置 调查类型
+         */
+        SETSURVEYTYPES(state,data){
+            state.surveyTypes = data;
+        },
+        /**
+         * 设置 随访方式
+         */
+        SETFOLLOWUPCONTENT(state,data){
+            state.followupContents = data;
+        },
          
         /**
          * 设置 随访方式

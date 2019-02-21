@@ -21,7 +21,8 @@
 	import { 
 		fetchHospitalDepts, toolMemberGroup, toolArchivesType, toolUserSource, toolArchivesInside, toolRxReviewStatus,
 		toolRxSendStatus, toolRxReviewDoctors, toolRxSendDoctors, toolConsultationType, toolConsultationStatus, toolSynergyStatus, 	
-		toolArchivesSource, toolBusinessModel, toolBusinessType, toolFollowupType, toolFollowupMode
+		toolArchivesSource, toolBusinessModel, toolBusinessType, toolFollowupType, toolFollowupMode, toolFollowupContent, toolSurveyType,
+		toolSurveyMode, toolDeviceType, toolFollowupHasPlan, queryTypeList, toolMedicalType, toolMedicalGrading, toolReferralType
 	} from '../api/apiAll.js'//api
 	
 export default {
@@ -31,6 +32,162 @@ export default {
     }
   },
   methods:{
+		/**
+		 * 获取 双向转诊 方向 
+		 */
+		async getToolReferralType(){
+			const res = await toolReferralType({token:this.userState.token});
+			console.log(res);
+			if(res.data&&res.data.errCode===0){
+				this.$store.commit("global/SETTWOREFERRALDIRECTION", res.data.body);
+				console.log(this.global.TwoReferralDirection)
+			}else{
+				this.$notify({
+						title: '失败',
+						message: '双向转诊方向获取失败', 
+						type: 'error'
+				});
+			}
+		},
+		/**
+		 * 获取 分级诊疗 分级
+		 */
+		async getToolMedicalGrading(){
+			const res = await toolMedicalGrading({token:this.userState.token});
+			console.log(res);
+			if(res.data&&res.data.errCode===0){
+				this.$store.commit("global/SETCLASSIFICATIONDIAGNOSISTREATMENT", res.data.body);
+				console.log(this.global.classificationDiagnosisTreatment)
+			}else{
+				this.$notify({
+						title: '失败',
+						message: '分级诊疗分级获取失败', 
+						type: 'error'
+				});
+			}
+		},
+		/**
+		 * 获取 分级诊疗 类型
+		 */
+		async getToolMedicalType(){
+			const res = await toolMedicalType({token:this.userState.token});
+			console.log(res);
+			if(res.data&&res.data.errCode===0){
+				this.$store.commit("global/SETLASSIFEDTREATMNTDIAGNOSISTYPES", res.data.body);
+				console.log(this.global.classifiedTreatmentDiagnosisTypes)
+			}else{
+				this.$notify({
+						title: '失败',
+						message: '分级诊疗类型获取失败', 
+						type: 'error'
+				});
+			}
+		},
+		
+		/**
+		 * 获取 文章类型列表
+		 */
+		async getQueryTypeList(){
+			const res = await queryTypeList({token:this.userState.token});
+			console.log(res);
+			if(res.data&&res.data.errCode===0){
+				this.$store.commit("global/SETARTCLELISTTYPES", res.data.body);
+				console.log(this.global.articleListTypes)
+			}else{
+				this.$notify({
+						title: '失败',
+						message: '文章类型列表获取失败', 
+						type: 'error'
+				});
+			}
+		},
+		/**
+		 * 获取 随访计划
+		 */
+		async getToolFollowupHasPlan(){
+			const res = await toolFollowupHasPlan({token:this.userState.token});
+			console.log(res);
+			if(res.data&&res.data.errCode===0){
+				this.$store.commit("global/SETFOLLOWUPPLAN", res.data.body);
+				console.log(this.global.followupPlan)
+			}else{
+				this.$notify({
+						title: '失败',
+						message: '随访计划获取失败', 
+						type: 'error'
+				});
+			}
+		},
+		/**
+		 * 获取 设备类型
+		 */
+		async getToolDeviceType(){
+			const res = await toolDeviceType({token:this.userState.token});
+			console.log(res);
+			if(res.data&&res.data.errCode===0){
+				this.$store.commit("global/SETEQUIPMENTTYPE", res.data.body);
+				console.log(this.global.equipmentType)
+			}else{
+				this.$notify({
+						title: '失败',
+						message: '设备类型获取失败', 
+						type: 'error'
+				});
+			}
+		},
+		/**
+		 * 获取 调查方式
+		 */
+		async getToolSurveyMode(){
+			const res = await toolSurveyMode({token:this.userState.token});
+			console.log(res);
+			if(res.data&&res.data.errCode===0){
+				this.$store.commit("global/SETINVESTIGATIONMETHOD", res.data.body);
+				console.log(this.global.investigationMethod)
+			}else{
+				this.$notify({
+						title: '失败',
+						message: '调查方式获取失败',
+						type: 'error'
+				});
+			}
+		},
+
+		/**
+		 * 获取 调查类型
+		 */
+		async getToolSurveyType(){
+			const res = await toolSurveyType({token:this.userState.token});
+			console.log(res);
+			if(res.data&&res.data.errCode===0){
+				this.$store.commit("global/SETSURVEYTYPES", res.data.body);
+				console.log(this.global.surveyTypes)
+			}else{
+				this.$notify({
+						title: '失败',
+						message: '调查类型获取失败',
+						type: 'error'
+				});
+			}
+		},
+
+		/**
+		 * 获取 随访内容
+		 */
+		async getToolFollowupContent(){
+			const res = await toolFollowupContent({token:this.userState.token});
+			console.log(res);
+			if(res.data&&res.data.errCode===0){
+				this.$store.commit("global/SETFOLLOWUPCONTENT", res.data.body);
+				console.log(this.global.followupContents)
+			}else{
+				this.$notify({
+						title: '失败',
+						message: '随访内容获取失败',
+						type: 'error'
+				});
+			}
+		},
 		/**
 		 * 获取 随访方式
 		 */
@@ -370,6 +527,15 @@ export default {
 			this.getToolBusinessType(),
 			this.getToolFollowupType(),
 			this.getToolFollowupMode(),
+			this.getToolFollowupContent(),
+			this.getToolSurveyType(),
+			this.getToolSurveyMode(),
+			this.getToolDeviceType(),
+			this.getToolFollowupHasPlan(),
+			this.getQueryTypeList(),
+			this.getToolMedicalType(),
+			this.getToolMedicalGrading(),
+			this.getToolReferralType(),
 		]);
 		
   }

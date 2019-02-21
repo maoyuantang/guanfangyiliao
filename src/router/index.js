@@ -18,6 +18,8 @@ import referral from '@/components/referral'//双向转诊系统
 import rounds from '@/components/rounds'//移动查房系统
 import cloudManagement from '@/components/cloudManagement'//移动查房系统
 import familyMedicine from '@/components/familyMedicine'//移动查房系统
+import docDetailed from '@/components/docDetailed'//健康档案系统 - 患者详情（由于多个地方用得着，提出来放在路由里）
+
 import notFound from '@/components/notFound'//404页面
 
 
@@ -139,6 +141,14 @@ const router = new Router({
 		      component: familyMedicine,
 		      meta: {
 		        title: '家医生系统'
+		      }
+				},
+				{
+      		path: '/docDetailed',
+		      name: 'docDetailed',
+		      component: docDetailed,
+		      meta: {
+		        title: '健康档案系统-患者详情'
 		      }
 				},
       ]
