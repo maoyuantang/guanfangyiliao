@@ -1,5 +1,6 @@
 <template>
     <!-- 远程会诊系统 -->
+    
     <div class="consultation">
         <!-- 发起会诊弹窗 -->
         <el-dialog class="startGroup" title="发起会诊" :visible.sync="centerDialogVisible" width="602px" hight="607px" center>

@@ -223,13 +223,10 @@ export default {
     applicantCANCEL:'/m/v1/api/referral/dualReferral/applicant/CANCEL',//14.9.双向转诊-WEB医生端-申请人操作
     dualReferralReception:'/m/v1/api/referral/dualReferral/reception/',//14.10.双向转诊-WEB医生端-接诊人操作
     receptionAudit:'/m/v1/api/referral/dualReferral/reception/audit',//14.11.双向转诊-WEB医生端-审核
-<<<<<<< HEAD
 
     getDoctorMessage1:'/m/v1/api/familyMember/getFamilyMemberInfoByDoctor',
     queryConsultationDoctorList:'/m/v1/api/consultation/queryConsultationDoctorList',
-=======
     queryByPage:'/m/v1/api/record/patientRecord/queryByPage',//1.患者分页列表
     queryListByUserId:'/m/v1/api/familyMember/queryListByUserId',//2.医生端获取家庭成员列表
->>>>>>> be77bca14172ec265744141c63865b1a75283064
 }
 
