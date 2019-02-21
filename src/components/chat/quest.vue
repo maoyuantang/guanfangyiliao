@@ -49,14 +49,13 @@
 <script>
 import apiBaseURL from "../../enums/apiBaseURL.js";
 import { mapState } from "vuex";
-import {
-    generateInquiryPlan
-} from "../../api/apiAll.js";
+import { generateInquiryPlan,queryInquiry } from "../../api/apiAll.js";
 export default {
     data() {
         return {
             addFollowBtnVis: true,
-            questVisible: false
+            questVisible: false,
+            addQuestData:{}
         };
     },
     computed: {
@@ -71,17 +70,16 @@ export default {
             let query = {
                 token: this.userState.token
             };
-            const options = this.addFollowData;
+            const options = {
+                id: this.addQuestId,
+                userId: this.sendToUserId
+            };
             const res = await generateInquiryPlan(query, options);
             if (res.data && res.data.errCode === 0) {
-                this.$notify.success({
-                    title: "成功",
-                    message: "编辑成功"
-                });
                 let oMessage = {
-                    id: res.data.body.planId,
-                    title: this.addFollowData.title,
-                    firstTreatmentTime: this.addFollowData.firstTreatmentTime
+                    id: res.data.body.id,
+                    title: this.addQuestData.title,
+                    firstTreatmentTime: this.addQuestData.createTime
                 };
                 this.$emit("osendmessagechat", oMessage);
             } else {
@@ -91,16 +89,38 @@ export default {
                     message: res.data.errMsg
                 });
             }
-        }
+        },
+        //问诊详情
+        async QuestDetail(oid) {
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                id: this.addQuestId
+            };
+            const res = await queryInquiry(query);
+            if (res.data && res.data.errCode === 0) {
+                
+                // _this.questDetailData = res.data.body;
+                this.addQuestData=res.data.body
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
     },
     props: {
-        addQuestData: Object
+        addQuestId: String,
+        sendToUserId:String
     },
     model: {
-        prop: ["addQuestData"],
+        prop: ["addQuestId","sendToUserId"],
         event: "reBack"
     },
     created() {
+        this.QuestDetail()
     }
 };
 </script>

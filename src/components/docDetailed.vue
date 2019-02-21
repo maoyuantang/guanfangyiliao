@@ -203,4 +203,13 @@ export default {
     color: #002257;
     margin-top: 0.28rem;
 }
+.doc-detailed-content-medical-record-item-time{
+    font-family: PingFangSC-Regular;
+font-size: 13px;
+color: #97A3B4;
+line-height: 22px;
+}
+.doc-detailed-content-medical-record-item-text{
+
+}
 </style>

@@ -244,9 +244,11 @@
             </div>
 
         </div>
-        <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-            <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
-        </el-dialog>
+        <div v-if="chatVisible">
+            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+                <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
+            </el-dialog>
+        </div>
 
     </div>
 </template>
@@ -290,7 +292,7 @@ export default {
     },
     data() {
         return {
-            doctorVis:0,//0是医生跟医生聊天
+            doctorVis: 0, //0是医生跟医生聊天
             cellColor: [
                 {
                     cell: 7,
@@ -664,13 +666,13 @@ export default {
             };
             const res = await sponsorConsultationInform(query, options);
             if (res.data && res.data.errCode === 0) {
-               this.$notify.success({
+                this.$notify.success({
                     title: "成功",
                     message: "邀请成功"
                 });
-                setTimeout(function(){
-                _this.invitationVisible = false;
-                },1000)
+                setTimeout(function() {
+                    _this.invitationVisible = false;
+                }, 1000);
             } else {
                 //失败
                 this.$notify.error({
@@ -681,7 +683,7 @@ export default {
         },
         //查看记录
         async historicalRecord(row) {
-            this.recordVisible=true;
+            this.recordVisible = true;
             let _this = this;
             let query = {
                 token: this.userState.token

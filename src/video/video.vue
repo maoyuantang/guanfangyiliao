@@ -1,207 +1,569 @@
 <template>
     <div>
-        <div class="bs-docs-header" id="content">
-            <div class="container-fluid text-center">
-                <h3>Welcome to manis meeting system!</h3>
-                <p>Manis web sdk</p>
-                <p class="bg-danger hidden">Get error callback</p>
-                <p class="bg-success hidden">Get success callback</p>
-            </div>
-        </div>
         <div class="container-fluid bs-docs-container">
             <div class="row">
-                <div class="col-xs-2">
-                    <div class="bs-docs-sidebar hidden-print  affix-top" role="complementary">
-                        <ol class="nav bs-docs-side-nav">
-                            <li>
-                                <select name="type" id="connect_type" class="form-control">
-                                    <option value="conference">会议室</option>
-                                    <option value="p2p">点对点</option>
-                                </select>
-                            </li>
-                            <li>
-                                <input type="text" placeholder="服务器地址" id="server" class="form-control" value="meet.xiaoqiangio.com">
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-default" id="initBtn" @click="firstSet()">初始化配置</button>
-                            </li>
-                            <li>
-                                <input type="text" placeholder="用户名" id="username" class="form-control" value="gfkj">
-                            </li>
-                            <li>
-                                <input type="password" placeholder="密码" id="password" class="form-control" value="1qaz@WSX">
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-default" id="signInBtn">登录</button>
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-default" id="createRoomBtn">创建会议室</button>
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-danger" id="leaveRoomBtn">离开会议室</button>
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-default" id="memberList">用户列表</button>
-                                <ul id="members" class="list-group">
-                                </ul>
-                            </li>
-                            <li>
-                                <input type="text" placeholder="管理员密码" id="fetchAdminPass" class="form-control">
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-default" id="fetchAdminBtn">获取管理权限</button>
-                            </li>
-                            <!--<li>
-              <button class="btn btn-block btn-default" id="replaceScreenShareBtn">屏幕分享(替换模式)</button>
-          </li>-->
-                            <li>
-                                <button class="btn btn-block btn-default" id="whiteboardShareBtn">共享白板</button>
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-default" id="screenShareBtn">屏幕分享(双流模式)</button>
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-default" id="getFriendsBtn">我的好友列表</button>
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-danger" id="lockRoomBtn">锁定房间</button>
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="bs-docs-sidebar chart-list">
-                        <div class="alert alert-info" role="alert">
-                            <h3>会议室消息</h3>
-                            <div id="text-messages"></div>
+                <div class="col-xs-12 mani-media-box">
+                    <div class="col-xs-12 media-box other-media">
+                        <div id="remoteVideos"></div>
+                        <div class="videoChatBtn">
+                            问诊工具
+                            {{createVideoRoomData}}
                         </div>
                     </div>
-                </div>
-                <div class="col-xs-8 mani-media-box">
-                    <div id="presentation" class="col-xs-12"></div>
-                    <div class="col-xs-12 media-box">
-                        <h4>本地视频</h4>
+                    <div class="col-xs-12 media-box us-media">
                         <div id="localVideos"></div>
+                        <div>
+                            <!-- <video-chat></video-chat> -->
+                        </div>
+
                     </div>
-                    <div class="col-xs-12 media-box">
-                        <h4>遠端视频</h4>
-                        <div id="remoteVideos"></div>
-                    </div>
-                </div>
-                <div class="col-xs-2">
-                    <div class="bs-docs-sidebar hidden-print  affix-top" role="complementary">
-                        <ol class="nav bs-docs-side-nav">
-                            <li>
-                                <input type="text" placeholder="会议室号" id="checkRoomExistNum" class="form-control">
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-warning" id="isRoomExistBtn">查询会议室</button>
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="bs-docs-sidebar hidden-print  affix-top" role="complementary">
-                        <ol class="nav bs-docs-side-nav">
-                            <li>
-                                <input type="text" placeholder="会议室号" id="conferenceName" class="form-control">
-                            </li>
-                            <li>
-                                <input type="text" placeholder="会议室密码" id="conferencePassword" class="form-control">
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-default" id="joinRoomBtn">进入会议室</button>
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="bs-docs-sidebar hidden-print  affix-top" role="complementary">
-                        <ol class="nav bs-docs-side-nav">
-                            <li>
-                                <input type="text" placeholder="会议室号" id="anonymousConferenceName" class="form-control">
-                            </li>
-                            <li>
-                                <input type="text" placeholder="会议室密码" id="anonymousConferencePassword" class="form-control">
-                            </li>
-                            <li>
-                                <input type="text" placeholder="参会昵称" id="anonymousNickname" class="form-control">
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-default" id="anonymousJoinRoomBtn">匿名加入会议</button>
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="bs-docs-sidebar hidden-print  affix-top" role="complementary">
-                        <ol class="nav bs-docs-side-nav">
-                            <li>
-                                <input type="text" placeholder="收件人" id="receiver" class="form-control">
-                            </li>
-                            <li>
-                                <input type="text" placeholder="消息" id="messageText" class="form-control">
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-default" id="sendTextMessageBtn">发送消息</button>
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="bs-docs-sidebar hidden-print  affix-top" role="complementary">
-                        <ol class="nav bs-docs-side-nav">
-                            <li>
-                                <input type="text" placeholder="Sip" id="sip" class="form-control" value="">
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-default" id="sendSipBtn">呼叫SIP</button>
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="bs-docs-sidebar hidden-print  affix-top" role="complementary">
-                        <ol class="nav bs-docs-side-nav">
-                            <li>
-                                <input type="text" placeholder="record" id="recordRule" class="form-control" value="07">
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-danger" id="recordBtn">SIP录制</button>
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="bs-docs-sidebar hidden-print  affix-top" role="complementary">
-                        <ol class="nav bs-docs-side-nav">
-                            <li>
-                                <input type="text" placeholder="被叫人JID" id="InvitePerson" class="form-control">
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-success" id="ringUpBtn">拨号</button>
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="bs-docs-sidebar hidden-print  affix-top" role="complementary">
-                        <ol class="nav bs-docs-side-nav">
-                            <li>
-                                <input type="text" placeholder="主持人JID" id="operatorJid" class="form-control" value="">
-                            </li>
-                            <li>
-                                <input type="text" placeholder="申请人昵称" id="requestNickname" class="form-control" value="举手人">
-                            </li>
-                            <li>
-                                <button class="btn btn-block btn-default" id="handsUp">举手</button>
-                            </li>
-                        </ol>
-                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-// import "../../static/assets/css/bootstrap.original.css"
-// import "Manis-Meetings-Chrome-Extension_v0.0.9.crx"
 import "../../static/assets/css/jquery-impromptu.css";
-// import oVideo from "../../static/oVideo.js"
+import videoChat from "../public/publicComponents/videoChat.vue";
 
 export default {
     name: "video",
+    components: {
+        videoChat
+    },
     data() {
-        return {};
+        return {
+            oSeaver: "meet.xiaoqiangio.com",
+            oUser: "gfki",
+            oPassWord: "1qaz@WSX"
+        };
     },
     methods: {
+        generateVideoDeviceSelectElement(resource) {
+            var VideoInputSelectForm = document.createElement("div");
+            VideoInputSelectForm.className = "form-group";
+            var VideoInputSelectDiv = document.createElement("div");
+            var VideoDevicesSelect = document.createElement("select");
+            VideoDevicesSelect.id = "video_input_select_" + resource;
+            VideoDevicesSelect.className = "form-control";
+            Manis.getVideoInputDevices(function(result) {
+                console.info("get video input devices : ", result);
+                if (result.code == 200) {
+                    var devices = result.response;
+                    for (var i = 0; i != devices.length; i++) {
+                        var deviceOption = document.createElement("option");
+                        deviceOption.value = devices[i].value;
+                        deviceOption.innerHTML = devices[i].label;
+                        VideoDevicesSelect.appendChild(deviceOption);
+                    }
+                }
+            });
+            VideoDevicesSelect.onchange = function() {
+                var currentVideoInputDevice = $(this).val();
+                console.log(
+                    "video input device will change to :",
+                    currentVideoInputDevice
+                );
+                Manis.changeVideoInputDevice(currentVideoInputDevice, function(
+                    result
+                ) {
+                    console.info("change video input complete : ", result);
+                    if (result.code == 200) {
+                        $("#localVideos").find("video")[0].srcObject =
+                            result.response.stream;
+                    }
+                });
+            };
+            VideoInputSelectDiv.appendChild(VideoDevicesSelect);
+            VideoInputSelectForm.appendChild(VideoInputSelectDiv);
+            return VideoInputSelectForm;
+        },
+        generateAudioInputDevicesSelect(resource) {
+            var audioInputSelectForm = document.createElement("div");
+            audioInputSelectForm.className = "form-group";
+            var audioInputSelectDiv = document.createElement("div");
+            var audioDevicesSelect = document.createElement("select");
+            audioDevicesSelect.id = "audio_input_select_" + resource;
+            audioDevicesSelect.className = "form-control";
+            Manis.audioInputDevices(function(result) {
+                console.info("get audio input devices : ", result);
+                if (result.code == 200) {
+                    var devices = result.response;
+                    for (var i = 0; i != devices.length; i++) {
+                        var deviceOption = document.createElement("option");
+                        deviceOption.value = devices[i].value;
+                        deviceOption.innerHTML = devices[i].label;
+                        audioDevicesSelect.appendChild(deviceOption);
+                    }
+                }
+            });
+            audioDevicesSelect.onchange = function() {
+                var currentAudioInputDevice = $(this).val();
+                console.log(
+                    "audio input device will change to :",
+                    currentAudioInputDevice
+                );
+                Manis.audioInputChange(currentAudioInputDevice, function(
+                    result
+                ) {
+                    console.info("change audio input complete : ", result);
+                    if (result.code == 200) {
+                        $("#localVideos").find("video")[0].srcObject =
+                            result.response.stream;
+                    }
+                });
+            };
+            audioInputSelectDiv.appendChild(audioDevicesSelect);
+            audioInputSelectForm.appendChild(audioInputSelectDiv);
+            return audioInputSelectForm;
+        },
+        generateResolutionSelectElement(response, resource) {
+            var resolutionDiv = document.createElement("div");
+            var resolutionSelect = document.createElement("select");
+            resolutionSelect.className = "form-control";
+            resolutionSelect.id = "resolution_select_" + resource;
+            var qvgaOption = document.createElement("option");
+            qvgaOption.innerHTML = "QVGA (320x180)";
+            qvgaOption.value = "180";
+            if (qvgaOption.value == response.constraints.video.height.exact) {
+                qvgaOption.selected = true;
+            }
+            resolutionSelect.appendChild(qvgaOption);
+            var vgaOption = document.createElement("option");
+            vgaOption.innerHTML = "VGA (960x540)";
+            vgaOption.value = "540";
+            if (vgaOption.value == response.constraints.video.height.exact) {
+                vgaOption.selected = true;
+            }
+            resolutionSelect.appendChild(vgaOption);
+
+            var xgaOption = document.createElement("option");
+            xgaOption.innerHTML = "XGA (1024x758)";
+            xgaOption.value = "768";
+            if (xgaOption.value == response.constraints.video.height.exact) {
+                xgaOption.selected = true;
+            }
+            resolutionSelect.appendChild(xgaOption);
+
+            var xgaOption_480 = document.createElement("option");
+            xgaOption_480.innerHTML = "XGA (640x480)";
+            xgaOption_480.value = "480";
+            if (
+                xgaOption_480.value == response.constraints.video.height.exact
+            ) {
+                xgaOption_480.selected = true;
+            }
+            resolutionSelect.appendChild(xgaOption_480);
+
+            var xgaOption_240 = document.createElement("option");
+            xgaOption_240.innerHTML = "XGA (320x240)";
+            xgaOption_240.value = "240";
+            if (
+                xgaOption_240.value == response.constraints.video.height.exact
+            ) {
+                xgaOption_240.selected = true;
+            }
+            resolutionSelect.appendChild(xgaOption_240);
+
+            var hdOption = document.createElement("option");
+            hdOption.innerHTML = "HD (1280x720)";
+            hdOption.value = "720";
+            if (hdOption.value == response.constraints.video.height.exact) {
+                hdOption.selected = true;
+            }
+            resolutionSelect.appendChild(hdOption);
+            var fullHdOption = document.createElement("option");
+            fullHdOption.innerHTML = "Full HD (1920x1080)";
+            fullHdOption.value = "1080";
+            if (fullHdOption.value == response.constraints.video.height.exact) {
+                fullHdOption.selected = true;
+            }
+            resolutionSelect.appendChild(fullHdOption);
+            resolutionSelect.onchange = function() {
+                Manis.changeResolution($(this).val(), function(result) {
+                    console.log("got modify resolution response : ", result);
+                    if (result.code == 200) {
+                        if (result.response.replace == true) {
+                            $("#localVideos").find("video")[0].srcObject =
+                                result.response.stream;
+                        }
+                    }
+                });
+            };
+            resolutionDiv.appendChild(resolutionSelect);
+            return resolutionDiv;
+        },
+        generateToggleLocalVideoElement(resource) {
+            var videoMuteToggleDiv = document.createElement("div");
+            var videoMuteToggleElement = document.createElement("button");
+            videoMuteToggleElement.className = "btn btn-default";
+            videoMuteToggleElement.innerHTML = "关闭视频(本端)";
+            videoMuteToggleElement.id = "video_mute_status_btn_" + resource;
+            videoMuteToggleElement.onclick = function() {
+                Manis.videoToggleMute(
+                    function(success) {
+                        console.info(
+                            "video mute complete , status now is : ",
+                            success
+                        );
+                        if (success.code == 200) {
+                            if (success.response) {
+                                // video muted
+                                $("#video_mute_status_btn_" + resource).html(
+                                    "开启视频(本端)"
+                                );
+                            } else {
+                                // video dose not muted
+                                $("#video_mute_status_btn_" + resource).html(
+                                    "关闭视频(本端)"
+                                );
+                            }
+                        }
+                    },
+                    function(error) {
+                        console.error(
+                            "video mute toggle failed with error : ",
+                            error
+                        );
+                    }
+                );
+            };
+            videoMuteToggleDiv.appendChild(videoMuteToggleElement);
+            return videoMuteToggleDiv;
+        },
+        generateToggleLocalAudioElement(resource) {
+            var audioMuteToggleDiv = document.createElement("div");
+            var audioMuteToggleElement = document.createElement("button");
+            audioMuteToggleElement.className = "btn btn-default";
+            audioMuteToggleElement.innerHTML = "静音(本端)";
+            audioMuteToggleElement.id = "audio_mute_status_btn_" + resource;
+            audioMuteToggleElement.onclick = function() {
+                Manis.audioToggleMute(
+                    function(success) {
+                        console.info(
+                            "audio mute complete , status now is : ",
+                            success
+                        );
+                        if (success.code == 200) {
+                            if (success.response) {
+                                // audio muted
+                                $("#audio_mute_status_btn_" + resource).html(
+                                    "取消静音(本端)"
+                                );
+                            } else {
+                                // audio dose not muted
+                                $("#audio_mute_status_btn_" + resource).html(
+                                    "静音(本端)"
+                                );
+                            }
+                        }
+                    },
+                    function(error) {
+                        console.error(
+                            "audio mute toggle failed with error : ",
+                            error
+                        );
+                    }
+                );
+            };
+            audioMuteToggleDiv.appendChild(audioMuteToggleElement);
+            return audioMuteToggleDiv;
+        },
+        generateStatusElements(response, resource) {
+            var baseInfoDiv = document.createElement("div");
+            baseInfoDiv.className = "col-xs-6 base-info-box hidden";
+            baseInfoDiv.id = "participant_base_info_" + resource;
+            var nicknameDiv = document.createElement("div");
+            nicknameDiv.innerHTML = "Nickname : ";
+            var nicknameElement = document.createElement("span");
+            nicknameElement.id = "nickname_" + resource;
+            nicknameElement.innerHTML = response.info.nickname;
+            nicknameDiv.appendChild(nicknameElement);
+            baseInfoDiv.appendChild(nicknameDiv);
+
+            var resolutionDiv = document.createElement("div");
+            resolutionDiv.innerHTML = "Resolution : ";
+            var resolutionElement = document.createElement("span");
+            resolutionElement.id = response.status.resolutionId;
+            resolutionDiv.appendChild(resolutionElement);
+            baseInfoDiv.appendChild(resolutionDiv);
+
+            var uploadPackageLostDiv = document.createElement("div");
+            uploadPackageLostDiv.innerHTML = "Upload package lost : ";
+            var uploadPackageLostElement = document.createElement("span");
+            uploadPackageLostElement.id = response.status.uploadPackageLostId;
+            uploadPackageLostDiv.appendChild(uploadPackageLostElement);
+            baseInfoDiv.appendChild(uploadPackageLostDiv);
+
+            var downloadPackageLostDiv = document.createElement("div");
+            downloadPackageLostDiv.innerHTML = "Download package lost : ";
+            var downloadPackageLostElement = document.createElement("span");
+            downloadPackageLostElement.id =
+                response.status.downloadPackageLostId;
+            downloadPackageLostDiv.appendChild(downloadPackageLostElement);
+            baseInfoDiv.appendChild(downloadPackageLostDiv);
+
+            var uploadBitrateDiv = document.createElement("div");
+            uploadBitrateDiv.innerHTML = "Upload bitrate : ";
+            var uploadBitrateElement = document.createElement("span");
+            uploadBitrateElement.id = response.status.uploadBitrateId;
+            uploadBitrateDiv.appendChild(uploadBitrateElement);
+            baseInfoDiv.appendChild(uploadBitrateDiv);
+
+            var downloadBitrateDiv = document.createElement("div");
+            downloadBitrateDiv.innerHTML = "Download bitrate : ";
+            var downloadBitrateElement = document.createElement("span");
+            downloadBitrateElement.id = response.status.downloadBitrateId;
+            downloadBitrateDiv.appendChild(downloadBitrateElement);
+            baseInfoDiv.appendChild(downloadBitrateDiv);
+            console.info("1111111111111111111111111111", baseInfoDiv);
+            return baseInfoDiv;
+        },
+        generateAudioControlElement(resource) {
+            var audioToggleControlDiv = document.createElement("div");
+            var audioToggleControlElement = document.createElement("button");
+            audioToggleControlElement.className = "btn btn-default";
+            audioToggleControlElement.innerHTML = "静音";
+            audioToggleControlElement.id =
+                "control_audio_mute_status_btn_" + resource;
+            audioToggleControlElement.onclick = function() {
+                var mute = $(this).html() == "静音" ? true : false;
+                Manis.setSomeoneAudioMute(
+                    resource,
+                    mute,
+                    function(success) {
+                        if (success.response === true) {
+                            $(
+                                "#control_audio_mute_status_btn_" + resource
+                            ).html("取消静音");
+                        } else {
+                            $(
+                                "#control_audio_mute_status_btn_" + resource
+                            ).html("静音");
+                        }
+                    },
+                    function(error) {
+                        console.error("compere set audio mute failed :", error);
+                    }
+                );
+            };
+            audioToggleControlDiv.appendChild(audioToggleControlElement);
+            return audioToggleControlDiv;
+        },
+        generateTransferCompereElement(resource) {
+            var transferCompereDiv = document.createElement("div");
+            var transferCompereElement = document.createElement("button");
+            transferCompereElement.className = "btn btn-default";
+            transferCompereElement.innerHTML = "移交主持人";
+            transferCompereElement.id = "transfer_compere_btn_" + resource;
+            transferCompereElement.onclick = function() {
+                Manis.grantAdmin(
+                    resource,
+                    function(success) {
+                        console.log("get transfer compere success :", success);
+                    },
+                    function(error) {
+                        console.error("get transfer compere failed :", error);
+                    }
+                );
+            };
+            transferCompereDiv.appendChild(transferCompereElement);
+            return transferCompereDiv;
+        },
+        generateRemoveElement(resource) {
+            var removeDiv = document.createElement("div");
+            var removeElement = document.createElement("button");
+            removeElement.className = "btn btn-danger";
+            removeElement.innerHTML = "踢出";
+            removeElement.id = "transfer_compere_btn_" + resource;
+            removeElement.onclick = function() {
+                Manis.eject(
+                    resource,
+                    function(success) {
+                        console.info("remove participant success", success);
+                    },
+                    function(error) {
+                        console.error("remove participant failed", error);
+                    }
+                );
+            };
+            removeDiv.appendChild(removeElement);
+            return removeDiv;
+        },
+        generateParticipant(result, isSelf, isAdmin) {
+            if (result.code == 200) {
+                var response = result.response;
+                var resource = response.info.resource;
+                /** start base info **/
+                var participantDiv = document.createElement("div");
+                participantDiv.className =
+                    "row participant participant_container_" + resource;
+                participantDiv.id = "participant_" + resource;
+
+                participantDiv.onmouseover = function() {
+                    $(this)
+                        .find(".col-xs-6")
+                        .removeClass("hidden");
+                };
+                participantDiv.onmouseout = function() {
+                    $(this)
+                        .find(".col-xs-6")
+                        .addClass("hidden");
+                };
+                var ssrc = response.stream.ssrc ? response.stream.ssrc : "";
+                /** start stream **/
+                var streamDiv = document.createElement("div");
+                streamDiv.id = "participant_stream_" + ssrc;
+                streamDiv.className = "col-xs-12 stream-box";
+
+                var streamElement = document.createElement("video");
+                streamElement.autoplay = true;
+                streamElement.id = "stream_" + ssrc;
+                streamElement.srcObject = response.stream;
+                if (isSelf) {
+                    streamElement.volume = 0;
+                }
+                streamDiv.appendChild(streamElement);
+                participantDiv.appendChild(streamDiv);
+                /** start status **/
+                var baseInfoDiv = this.generateStatusElements(
+                    response,
+                    resource
+                );
+                participantDiv.appendChild(baseInfoDiv);
+
+                var controlDiv = document.createElement("div");
+                controlDiv.className = "col-xs-6 control-box hidden";
+                controlDiv.id = "participant_control_" + resource;
+
+                /** start self control **/
+                if (isSelf) {
+                    /** toggle audio mute **/
+                    var audioMuteToggleDiv = this.generateToggleLocalAudioElement(
+                        resource
+                    );
+                    controlDiv.appendChild(audioMuteToggleDiv);
+                    /** toggle video mute**/
+                    var videoMuteToggleDiv = this.generateToggleLocalVideoElement(
+                        resource
+                    );
+                    controlDiv.appendChild(videoMuteToggleDiv);
+                    /** modify video resolution **/
+                    var resolutionDiv = this.generateResolutionSelectElement(
+                        response,
+                        resource
+                    );
+                    controlDiv.appendChild(resolutionDiv);
+                    /** Devices selection **/
+                    var VideoInputSelectForm = this.generateVideoDeviceSelectElement(
+                        resource
+                    );
+                    controlDiv.appendChild(VideoInputSelectForm);
+                    /** Audio input devices selection **/
+                    var audioInputSelectForm = this.generateAudioInputDevicesSelect(
+                        resource
+                    );
+                    controlDiv.appendChild(audioInputSelectForm);
+                }
+                /** end self control **/
+
+                /** admin control **/
+                if (!isSelf) {
+                    var audioToggleControlDiv = this.generateAudioControlElement(
+                        resource
+                    );
+                    controlDiv.appendChild(audioToggleControlDiv);
+
+                    var transferCompereDiv = this.generateTransferCompereElement(
+                        resource
+                    );
+                    controlDiv.appendChild(transferCompereDiv);
+
+                    var removeDiv = this.generateRemoveElement(resource);
+                    controlDiv.appendChild(removeDiv);
+                }
+                participantDiv.appendChild(controlDiv);
+                return participantDiv;
+            }
+            return;
+        },
+        generateRingUpNotice(response) {
+            var ringUpContainer = document.createElement("div");
+            ringUpContainer.className = "container-fluid over";
+            var ringUpLayout = document.createElement("div");
+            ringUpLayout.className = "layout";
+            var noticeDiv = document.createElement("div");
+            noticeDiv.className = "row";
+            var noticeElement = document.createElement("h2");
+            noticeElement.innerHTML =
+                '"' +
+                response.nickname +
+                '" 邀请您加入到 "' +
+                response.roomName +
+                '" 会议室';
+            noticeDiv.appendChild(noticeElement);
+            ringUpLayout.appendChild(noticeDiv);
+            var ringUpCtlBox = document.createElement("div");
+            ringUpCtlBox.className = "row";
+            var acceptBox = document.createElement("div");
+            acceptBox.className = "col-xs-6";
+            var acceptElement = document.createElement("div");
+            acceptElement.className = "btn btn-lg btn-success";
+            acceptElement.innerHTML = "接听";
+            acceptElement.onclick = function() {
+                Manis.responseRingUp(
+                    response.roomName,
+                    response.password,
+                    true,
+                    response.uuid,
+                    function(success) {
+                        console.info("get accept invite result", success);
+                        if (success.code == 200 && success.response) {
+                            $("#createRoomBtn").toggleClass(
+                                "btn-primary disabled"
+                            );
+                            $("#conferenceName").val(response.roomName);
+                            $("#conferencePassword").val(response.password);
+                        } else {
+                            console.error(success);
+                        }
+                    }
+                );
+                $(".over").remove();
+            };
+            acceptBox.appendChild(acceptElement);
+            ringUpCtlBox.appendChild(acceptBox);
+            var rejectBox = document.createElement("div");
+            rejectBox.className = "col-xs-6";
+            var rejectElement = document.createElement("div");
+            rejectElement.className = "btn btn-lg btn-danger";
+            rejectElement.innerHTML = "拒绝";
+            rejectElement.onclick = function() {
+                Manis.responseRingUp(
+                    response.roomName,
+                    response.password,
+                    false,
+                    response.uuid,
+                    function(result) {
+                        console.log("get reject invite result ", result);
+                    }
+                );
+                $(".over").remove();
+            };
+            rejectBox.appendChild(rejectElement);
+            ringUpCtlBox.appendChild(rejectBox);
+            ringUpLayout.appendChild(ringUpCtlBox);
+            ringUpContainer.appendChild(ringUpLayout);
+            return ringUpContainer;
+        },
         //初始化配置
         firstSet() {
+            let _this = this;
             var server = $("#server").val();
+            // var server=this.oSeaver
+            var server = "meet.xiaoqiangio.com";
+            alert(server);
             if (!server) {
                 alert("请输入服务器地址");
                 return false;
@@ -216,6 +578,7 @@ export default {
                 function(result) {
                     if (result.code == 200) {
                         $("#initBtn").toggleClass("btn-primary disabled");
+                        _this.videoLogin();
                     } else {
                         alert(result.msg);
                     }
@@ -224,12 +587,17 @@ export default {
         },
         //登录
         videoLogin() {
-            var username = $("#username").val();
+            let _this = this;
+            // var username = $("#username").val();
+            // var username=this.oUser
+            var username = "gfkj";
             if (!username) {
                 alert("请输入用户名");
                 return false;
             }
-            var password = $("#password").val();
+            // var password = $("#password").val();
+            // var password=this.oPassWord
+            var password = "1qaz@WSX";
             if (!password) {
                 alert("请输入密码");
                 return false;
@@ -240,6 +608,7 @@ export default {
                 "",
                 function(connection) {
                     console.log("sign success : ", connection);
+                    _this.anonymousJoinRoomBtn();
                 },
                 function(error) {
                     console.error("sign error : ", error);
@@ -250,6 +619,7 @@ export default {
         },
         //创建会议室
         createRoomBtn() {
+            let _this = this;
             $("#localVideos").html("");
             Manis.createConference(
                 "",
@@ -259,7 +629,7 @@ export default {
                         $("#createRoomBtn").toggleClass("btn-primary disabled");
                         console.info("generate conference complete : ", result);
                         $("#localVideos").append(
-                            generateParticipant(result, true)
+                            _this.anonymousJoinRoomBtn(result, true)
                         );
                     }
                 },
@@ -267,19 +637,451 @@ export default {
                     console.error("get error : ", error);
                 }
             );
+        },
+        /**
+         * 加入到房间
+         */
+        joinRoomBtn() {
+            let _this = this;
+            // var conferenceName = $("#conferenceName").val();
+            let conferenceName = this.createVideoRoomData.conferenceNumber;
+            if (!conferenceName) {
+                alert("请输入会议室号");
+                return;
+            }
+            $("#localVideos").html("");
+            window.roomName = conferenceName;
+            var conferencePassword = $("#conferencePassword").val();
+            Manis.joinConference(
+                conferenceName,
+                conferencePassword,
+                function(result) {
+                    console.log("join conference success : ", result);
+                    $("#localVideos").append(
+                        _this.generateParticipant(result, true)
+                    );
+                },
+                function(error) {
+                    console.log("join conference failure , error : ", error);
+                }
+            );
+            $(this).toggleClass("btn-primary disabled");
+        },
+
+        /**
+         * 匿名加入到房间
+         */
+        anonymousJoinRoomBtn() {
+            alert(this.createVideoRoomData.conferenceNumber)
+            let _this = this;
+            // var conferenceName = $("#anonymousConferenceName").val();
+            let conferenceName = this.createVideoRoomData.conferenceNumber;
+            if (!conferenceName) {
+                alert("请输入会议室号");
+                return;
+            }
+            // var anonymousNickname = $("#anonymousNickname").val();
+            let anonymousNickname="于波"
+            if (!anonymousNickname) {
+                alert("请输入昵称");
+                return;
+            }
+            $("#localVideos").html("");
+            window.roomName = conferenceName;
+            var conferencePassword = $("#conferencePassword").val();
+            Manis.joinByAnonymous(
+                conferenceName,
+                anonymousNickname,
+                conferencePassword,
+                false,
+                function(result) {
+                    console.log("join conference success : ", result);
+                    $("#localVideos").append(
+                        _this.generateParticipant(result, true)
+                    );
+                },
+                function(error) {
+                    console.log("join conference failure , error : ", error);
+                }
+            );
+            $(this).toggleClass("btn-primary disabled");
+        },
+
+        /**
+         * 离开房间
+         */
+        leaveRoomBtn() {
+            Manis.leaveConference(function(conference) {
+                console.log("leave conference success : ", conference);
+                document.querySelector("#remoteVideos").innerHTML = "";
+                document.querySelector("#localVideos").innerHTML = "";
+                location.reload();
+            });
+            $("button").removeClass("btn-primary disabled");
+        },
+
+        /**
+         * 呼叫SIP录播
+         */
+        recordBtn() {
+            var sip = $("#sip").val();
+            var recordRule = $("#recordRule").val();
+            Manis.callSip(
+                sip,
+                function(success) {
+                    console.info("send sip success : ", success);
+                },
+                function(error) {
+                    console.error("send sip error : ", error);
+                },
+                recordRule
+            );
+        },
+
+        /**
+         * 参会人员列表
+         */
+        memberList() {
+            Manis.memberList(function(result) {
+                if (result.code == 200) {
+                    var li = "";
+                    result.response.forEach(function(m) {
+                        console.info("permember :", m);
+                        li +=
+                            '<li class="list-group-item">' +
+                            m.nickname +
+                            "</li>";
+                    });
+                    $("#members").html(li);
+                }
+            });
+        },
+        /**
+         * 发送文字信息
+         */
+        sendSipBtn() {
+            var receiver = $("#receiver").val();
+            var messageText = $("#messageText").val();
+            Manis.sendTextMessage(
+                messageText,
+                receiver,
+                function(success) {
+                    console.info("send text message success : ", success);
+                    $("#receiver").val("");
+                    $("#messageText").val("");
+                },
+                function(error) {
+                    console.error("send text message error : ", error);
+                }
+            );
+        },
+
+        /**
+         * 呼叫SIP终端
+         */
+        sendSipBtn() {
+            var sip = $("#sip").val();
+            Manis.callSip(
+                sip,
+                function(success) {
+                    console.info("send sip success : ", success);
+                },
+                function(error) {
+                    console.error("send sip error : ", error);
+                }
+            );
+        },
+        /**
+         * 获取主持人权限
+         */
+        fetchAdminBtn() {
+            var pass = $("#fetchAdminPass").val();
+            Manis.fetchAdmin(
+                pass,
+                function(success) {
+                    console.info("fetch admin success : ", success);
+                },
+                function(error) {
+                    console.error("fetch admin error : ", error);
+                }
+            );
+        },
+
+        /**
+         * 拨号
+         */
+        ringUpBtn() {
+            var receiver = $("#InvitePerson").val();
+            var room = config.cNumber;
+            var password = "";
+            Manis.ringUp(
+                receiver,
+                room,
+                password,
+                function(success) {
+                    window.withReply = false;
+                    console.info("send invite success : ", success);
+                },
+                function(error) {
+                    console.error("send invite error : ", error);
+                }
+            );
+        },
+
+        /**
+         * 检查会议室是否已经开启
+         */
+        isRoomExistBtn() {
+            var roomNum = $("#checkRoomExistNum").val();
+            if (!roomNum) {
+                alert("请输入需要查询的会议室房间号");
+            }
+            Manis.isRoomExist(roomNum, function(result) {
+                if (result.code == 200) {
+                    console.info(result.msg);
+                } else {
+                    console.warn(result.msg);
+                }
+            });
+        },
+        /**
+         * 白板共享
+         */
+        whiteboardShareBtn() {
+            Manis.whiteboardShare(function(result) {
+                if (result.code !== 200) {
+                    console.error(result);
+                }
+                console.info(result);
+            });
+        },
+
+        screenShareBtn() {
+            Manis.addScreenSourceToConnection(function(result) {
+                if (result.code == 200) {
+                    console.info(
+                        "success add screen source to connection : ",
+                        result
+                    );
+                } else {
+                    console.error(result);
+                }
+            });
+        },
+
+        getFriendsBtn() {
+            Manis.getFriends(function(result) {
+                if (result.code == 200) {
+                    console.info("get my friends  : ", result);
+                } else {
+                    console.error(result);
+                }
+            });
+        },
+
+        lockRoomBtn() {
+            Manis.lockRoom(function(result) {
+                if (result.code == 200) {
+                    if (result.response) {
+                        $("#lockRoomBtn")
+                            .html("解锁房间")
+                            .removeClass("btn-danger")
+                            .addClass("btn-success");
+                    } else {
+                        $("#lockRoomBtn")
+                            .html("锁定房间")
+                            .removeClass("btn-success")
+                            .addClass("btn-danger");
+                    }
+                } else {
+                    console.error(result);
+                }
+            });
         }
     },
     created() {
-        // console.log(oVideo)
+        let _this = this;
+        this.firstSet();
+        /**
+         * 收到有人进入房间
+         */
+        Manis.onJoinConference(function(result) {
+            $("#remoteVideos").append(_this.generateParticipant(result, false));
+        });
+        /**
+         * 收到有人离开房间
+         */
+        Manis.onLeaveConference(function(result) {
+            if (result.code == 200) {
+                $(
+                    ".participant_container_" + result.response.resource
+                ).remove();
+            }
+        });
+        /**
+         * 收到文件信息
+         */
+        Manis.onTextMessage(function(result) {
+            if (result.code == 200) {
+                var message =
+                    "<b>" +
+                    result.response.from +
+                    (result.response.isPrivateMsg
+                        ? "(悄悄对" +
+                          (result.response.to == "yourself"
+                              ? "你"
+                              : result.response.to == "all"
+                                  ? "大家"
+                                  : result.response.to) +
+                          "说)"
+                        : "(对大家说)") +
+                    ":</b> <p>" +
+                    result.response.content +
+                    "</p>";
+                $("#text-messages").append(message);
+            }
+        });
+        /**
+         * 收到音频状态变更
+         */
+        Manis.onAudioToggleMute(function(response) {
+            if (response.mute == true) {
+                var audioMuteDiv = document.createElement("div");
+                audioMuteDiv.id = "audio_mute_status_" + response.user.resource;
+                audioMuteDiv.innerHTML = "Audio mute status : ";
+                var audioMuteElement = document.createElement("span");
+                audioMuteElement.innerHTML = "Muted";
+                audioMuteDiv.appendChild(audioMuteElement);
+                $("#participant_base_info_" + response.user.resource).append(
+                    audioMuteDiv
+                );
+            } else {
+                $("#audio_mute_status_" + response.user.resource).remove();
+            }
+        });
+        /**
+         * 收到视频状态变更
+         */
+        Manis.onVideoToggleMute(function(response) {
+            if (response.mute == true) {
+                var videoMuteDiv = document.createElement("div");
+                videoMuteDiv.id = "video_mute_status_" + response.user.resource;
+                videoMuteDiv.innerHTML = "Video mute status : ";
+                var videoMuteElement = document.createElement("span");
+                videoMuteElement.innerHTML = "Muted";
+                videoMuteDiv.appendChild(videoMuteElement);
+                $("#participant_base_info_" + response.user.resource).append(
+                    videoMuteDiv
+                );
+            } else {
+                $("#video_mute_status_" + response.user.resource).remove();
+            }
+        });
+        /**
+         * 响铃
+         */
+        Manis.onRingUp(function(result) {
+            if (result.code == 200) {
+                var response = result.response;
+                var ringUpContainer = generateRingUpNotice(response);
+                document.querySelector("body").appendChild(ringUpContainer);
+            }
+        });
+        /**
+         * 收到拨号应答
+         */
+        Manis.onRingUpResponse(function(result) {
+            if (result.code == 200) {
+                var response = result.response;
+                if (response.answer == "accept") {
+                    console.log(
+                        response.nickname +
+                            "accept your invite into " +
+                            response.roomName
+                    );
+                    var receiver = $("#InvitePerson").val();
+                    var room = config.cNumber;
+                    var password = "";
+                    $("#createRoomBtn").click();
+                    setTimeout(function() {
+                        Manis.sendRoomComplete(
+                            receiver,
+                            room,
+                            password,
+                            function(res) {
+                                console.log("send room complete success ", res);
+                            }
+                        );
+                    }, 1000);
+                } else if (response.answer == "reject") {
+                    // someone reject you ring
+                    alert(
+                        response.nickname +
+                            "reject your invite into " +
+                            response.roomName
+                    );
+                } else if (response.answer == "busy") {
+                    // someone reject you ring
+                    alert(
+                        response.nickname + "now is busy " + response.roomName
+                    );
+                }
+            } else if (result.code == 406) {
+                alert(result.msg);
+            }
+        });
+        /**
+         * 注册被主持人静音
+         */
+        Manis.onAudioMuteBeSet(function(result) {
+            console.log(result);
+        });
+        /**
+         * 主持被主持人踢出房间
+         */
+        Manis.onEject(function(result) {
+            console.log(result);
+        });
+        /**
+         *
+         */
+        Manis.onHandsUp(function(result) {
+            console.log(result);
+        });
+        /**
+         *
+         */
+        Manis.onRoomComplete(function(result) {
+            console.log("on room complete", result);
+            if (result.code == 200) {
+                var response = result.response;
+                $("#conferenceName").val(response.roomNumber);
+                $("#conferencePassword").val(response.roomPassword);
+                $("#joinRoomBtn").click();
+            }
+        });
+        Manis.onStreamSourceRemoved(function(result) {
+            if (result.code == 200) {
+                $("#participant_stream_" + result.response.ssrc).remove();
+            }
+        });
     },
     beforeCreate() {
         const linkData = document.createElement("link");
         linkData.id = "linkdata";
-        linkData.href = "../../static/Manis-Meetings-Chrome-Extension_v0.0.9.crx";
+        linkData.href =
+            "../../static/Manis-Meetings-Chrome-Extension_v0.0.9.crx";
         document.body.appendChild(linkData);
     },
     beforeDestroy() {
         document.body.removeChild(document.getElementById(linkdata));
+    },
+    props: {
+        createVideoRoomData: Object
+    },
+    model: {
+        prop: ["createVideoRoomData"],
+        event: "reBack"
     }
 };
 </script>
@@ -331,6 +1133,40 @@ video {
     opacity: 1;
     text-align: center;
     color: #000;
+}
+
+.mani-media-box {
+    display: flex;
+    display: -webkit-flex;
+}
+.us-media video {
+    height: 100%;
+    width: 100%;
+    object-fit: fill;
+}
+.us-media .stream-box {
+    width: 100%;
+    height: 1000px;
+}
+.other-media {
+    width: 30%;
+}
+.us-media {
+    width: 70%;
+}
+
+#remoteVideos {
+    padding: 10px;
+    background: white;
+    box-shadow: 10px 10px 5px #888888;
+}
+#localVideos div,
+#remoteVideos div {
+    background: none;
+}
+.videoChatBtn {
+    padding: 10px 0;
+    text-align: center;
 }
 </style>
 

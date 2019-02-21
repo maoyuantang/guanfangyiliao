@@ -46,11 +46,11 @@
 			return {
                 way:true,//登录方式，true为密码登录，false为验证码登录，默认true
                 account:{
-                    text:'gftechadmin',//gftechadmin
+                    text:'',//gftechadmin
                     ok:true
                 },//账号
                 passwd:{
-                    text:'111111',
+                    text:'',
                     ok:true
                 },//密码
                 checkBoxStatus:[true,false],

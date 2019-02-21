@@ -285,7 +285,7 @@ export default {
           title: "科室",
           list: []
         },
-        departmentSelect: {}, //选中科室
+        departmentSelect: {}, //选中科室 
         searchKey: {}, //搜索关键字
         ourStaffUser: { 
           //账号列表
@@ -1063,7 +1063,8 @@ export default {
       const res = await userList({
         token: this.userInfo.token,         
         pageNum: this.ourStaff.ourStaffUser.page.pageNum,
-        pageSize: this.ourStaff.ourStaffUser.page.pageSize
+        pageSize: this.ourStaff.ourStaffUser.page.pageSize,
+        departmentId:this.ourStaff.departmentSelect
       });
       if (res.data && res.data.errCode === 0) {
         console.log(res);
