@@ -4,6 +4,11 @@
       <normalTab v-model="barInfo" @reBack="getBar"></normalTab>
     </div>
 
+    <!--    弹框子组件  引入 -->
+    <el-dialog title=" 医院及科室范围" :visible.sync="doctorVisible" width="602px" hight="356px" center>
+      <hosptialAndDepartmentArea :doctorDetailData="doctorDetailData"></hosptialAndDepartmentArea>
+    </el-dialog>
+
     <!-- 新增业务   弹框    1 -->
     <el-dialog title="疾病分级分类" :visible.sync="kuangData1.show" center>
       <el-form :model="kuangData1.form">
@@ -97,12 +102,12 @@
         </div>
       </div>
       <div class="medical_body0_table">
-        <el-table :data="medical_body0_Data" border style="width: 100%">
-          <el-table-column prop="1" label="科室"></el-table-column>
-          <el-table-column prop="2" label="类型"></el-table-column>
-          <el-table-column prop="3" label="编号"></el-table-column>
-          <el-table-column prop="4" label="名称"></el-table-column>
-          <el-table-column prop="5" label="分级"></el-table-column>
+        <el-table :data="medical_body0_Data" border style="width: 100%" @cell-click="cellClick1">
+          <el-table-column prop="aa" label="科室"></el-table-column>
+          <el-table-column prop="bb" label="类型"></el-table-column>
+          <el-table-column prop="cc" label="编号"></el-table-column>
+          <el-table-column prop="dd" label="名称"></el-table-column>
+          <el-table-column prop="ee" label="分级"></el-table-column>
           <el-table-column fixed="right" label="" width="250">
             <template slot-scope="scope">
               <el-button @click="editList1(scope.row)" type="success" plain size="mini"
@@ -127,11 +132,11 @@
         </div>
       </div>
       <div class="medical_body1_table">
-        <el-table :data="medical_body1_Data" border style="width: 100%">
-          <el-table-column prop="1" label="科室"></el-table-column>
-          <el-table-column prop="2" label="方向"></el-table-column>
-          <el-table-column prop="3" label="范围"></el-table-column>
-          <el-table-column prop="4" label="疾病等级"></el-table-column>
+        <el-table :data="medical_body1_Data" border style="width: 100%" @cell-click="cellClick2">
+          <el-table-column prop="aa" label="科室"></el-table-column>
+          <el-table-column prop="bb" label="方向"></el-table-column>
+          <el-table-column prop="cc" label="范围"></el-table-column>
+          <el-table-column prop="dd" label="疾病等级"></el-table-column>
           <el-table-column fixed="right" label="" width="250">
             <template slot-scope="scope">
               <el-button @click="editList2(scope.row)" type="success" plain size="mini"
@@ -177,6 +182,7 @@
   import diseaseGrade from './../../public/publicComponents/diseaseGrade.vue'
   import statisticsWay from './../../public/publicComponents/statisticsWay.vue'
   import normalColumnChart from './../../public/publicComponents/normalColumnChart.vue'
+  import hosptialAndDepartmentArea from './../xiezuo/hosptialAndDepartmentArea.vue'
   //引入token
   import { mapState } from "vuex";
   export default {
@@ -187,6 +193,7 @@
       diseaseGrade,
       statisticsWay,
       normalColumnChart,
+      hosptialAndDepartmentArea,
     },
     computed: {
       ...mapState({
@@ -257,6 +264,19 @@
         searchValue: "",//返回搜索框输入   search
         pageNum: 1,
         pageSize: 15,
+        // 管理1.2表  表体点击  范围  传入参数
+        doctorVisible: false,
+        doctorDetailData: [
+          {
+            hosptial: "西南医院第三附属医院",
+            department: "神经内科",
+          },
+          {
+            hosptial: "西南医院第三附属医院",
+            department: "神经内科",
+          },
+
+        ],
         //管理统计端  筛选工具栏  统计筛选返回值  接收参数
         time0: "",///统计筛选开始时间     DatePicker 日期选择器
         time1: "",//统计筛选结束时间      DatePicker 日期选择器
@@ -320,19 +340,19 @@
         },
         medical_body0_Data: [
           {
-            1: "1",
-            2: "2",
-            3: "3",
-            4: "4",
-            5: "5",
+            aa: "1",
+            bb: "2",
+            cc: "3",
+            dd: "4",
+            ee: "5",
           }
         ],
         medical_body1_Data: [
           {
-            1: "1",
-            2: "2",
-            3: "3",
-            4: "4",
+            aa: "1",
+            bb: "2",
+            cc: "3",
+            dd: "4",
           }
         ],
 
@@ -556,6 +576,36 @@
       },
 
 
+
+
+
+      // 管理    1.1表  表体  
+      cellClick1(row, column, cell, event) {
+
+      },
+      // 管理     1.2表  表体  
+      cellClick2(row, column, cell, event) {
+        // console.log(row, column)
+        if (column.label == "范围") {//当范围被点击
+          console.log(row.aa)//找到对应行的科室id
+          this.doctorVisible = true;
+        }
+      },
+      //范围弹框（子组件  reback函数）
+      doctorDetailFun() {
+        alert()
+      },
+      // 管理    1.1表   操作区
+      editList1(data) {
+        console.log(data)
+      },
+      delectList1(data) {
+        console.log(data)
+      },
+      // 管理   1.2表   操作区
+      editList2(data) {
+        console.log(data)
+      },
 
 
 
