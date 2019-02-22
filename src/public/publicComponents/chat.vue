@@ -1,9 +1,10 @@
 <template>
     <div class="chat">
-        <websocket1 ref="mychild" @reloaddata="addMessageK">
-        </websocket1>
+        <!-- <websocket1 ref="mychild" @reback="addMessageK1">
+        </websocket1> -->
         <div>
             {{chatUser}}
+            {{userSocketInfo.msgBox.a.msg}}1231
         </div>
         <div class="chatMessage">
             <ul class="chatRecord">
@@ -132,7 +133,7 @@
             </span>
         </div>
         <div>
-            <el-input class="chatInputK" type="textarea" :rows="2" placeholder="请输入内容" v-model="messageBody">
+            <el-input class="chatInputK" type="textarea" :rows="2" placeholder="请输入内容" v-model="messageBody" @keyup.enter="sendMessageChat(0,messageBody,'DEFAULT')">
             </el-input>
             <button class="sendMessage" @click="sendMessageChat(0,messageBody,'DEFAULT')">发送</button>
         </div>
@@ -230,12 +231,11 @@
         <!-- 药品处方 -->
         <div v-if="drugsVisible">
             <el-dialog title="药品处方" :visible.sync="drugsVisible" width="100%" center append-to-body>
-                {{sendToUserId}}
-                <drugs :sendToUserId="sendToUserId"></drugs>
+                <drugs :sendToUserId="sendToUserId" :userMessage="userMessage"></drugs>
             </el-dialog>
         </div>
         <!-- 视频聊天 -->
-        <div v-if="drugsVisible">
+        <div v-if="videoVisible">
             <el-dialog title="视频" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo()">
                 <ovideo :createVideoRoomData="createVideoRoomData"></ovideo>
             </el-dialog>
@@ -288,7 +288,7 @@ import {
     createVideoRoom,
     storageUsers
 } from "../../api/apiAll.js";
-import ovideo from "../../video/video.vue";
+import ovideo from "../../video/oVideo.vue";
 import { setTimeout } from "timers";
 
 export default {
@@ -362,10 +362,15 @@ export default {
     computed: {
         ...mapState({
             userState: state => state.user.userInfo,
-            userSelfInfo: state => state.user.userSelfInfo
+            userSelfInfo: state => state.user.userSelfInfo,
+            userSocketInfo: state => state.socket,
+            
+
         })
     },
     created() {
+        console.log(this.$store.state.socket.socketObj);
+        // this.addMessageK1();
         this.getDoctorVis();
         this.getHisRecord();
         this.getMemberMess();
@@ -376,10 +381,38 @@ export default {
         this.messageTicket = this.$store.state.socket.messageTicket;
     },
     methods: {
+        sendMessage(agentData) {
+            if (
+                this.$store.state.socket.socketObj.readyState ===
+                this.$store.state.socket.socketObj.OPEN
+            ) {
+                //若是ws开启状态
+                this.websocketsend(agentData);
+            } else if (
+                this.$store.state.socket.socketObj.readyState ===
+                this.$store.state.socket.socketObj.CONNECTING
+            ) {
+                // 若是 正在开启状态，则等待1s后重新调用
+                let _this = this;
+                setTimeout(function() {
+                    _this.sendMessage(agentData);
+                }, 1000);
+            } else {
+                // 若未开启 ，则等待1s后重新调用
+                let _this = this;
+                setTimeout(function() {
+                    _this.sendMessage(agentData);
+                }, 1000);
+            }
+        },
+        // 数据发送
+        websocketsend(data) {
+            let msg = this.$store.state.socket.IMessage.encode(data).finish();
+            this.$store.state.socket.socketObj.send(msg);
+        },
         // 随访
         getSendMessageChat(oMessage) {
             let messageBody = JSON.stringify(oMessage);
-            // this.childMessageType = 20;
             this.sendMessageChat(20, messageBody, "FOLLOWUP");
             this.followDetailVisible = false;
             this.followListVisible = fasle;
@@ -417,66 +450,60 @@ export default {
         //创建视频
         async setVideo(num) {
             let _this = this;
-            if (!this.createVideoVisable) {
-                let query = {
-                    token: this.userState.token
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                type: "NORMAL",
+                time: ""
+            };
+            const res = await createVideoRoom(query, options);
+            if (res.data && res.data.errCode === 0) {
+                this.createVideoRoomData = {
+                    conferenceId: res.data.body.conferenceId,
+                    conferenceNumber: res.data.body.conferenceNumber
                 };
-                let options = {
-                    type: "NORMAL",
-                    time: ""
-                };
-                const res = await createVideoRoom(query, options);
-                if (res.data && res.data.errCode === 0) {
-                    let childMessageType = 6;
-                    if (num == 1) {
-                        //群聊
-                        $.each(this.checkList, function(index, text) {
-                            let body =
-                                "sendroom&" +
-                                res.data.body.conferenceNumber +
-                                "&" +
-                                res.data.body.conferenceId +
-                                "&" +
-                                text;
-                            _this.sendVideoMessage(
-                                childMessageType,
-                                body,
-                                res.data.body.conferenceNumber,
-                                ""
-                            );
-                        });
-                    } else if (num == 0) {
-                        //单聊
+                let childMessageType = 6;
+                if (num == 1) {
+                    //群聊
+                    $.each(this.checkList, function(index, text) {
                         let body =
                             "sendroom&" +
                             res.data.body.conferenceNumber +
                             "&" +
                             res.data.body.conferenceId +
                             "&" +
-                            _this.userMemberNum[0].userId;
+                            text;
                         _this.sendVideoMessage(
                             childMessageType,
                             body,
                             res.data.body.conferenceNumber,
                             ""
                         );
-                    }
-
-                    this.videoVisible = true;
-                    this.createVideoRoomData = {
-                        conferenceId: res.data.body.conferenceId,
-                        conferenceNumber: res.data.body.conferenceNumber
-                    };
-                    this.createVideoVisable = true;
-                } else {
-                    //失败
-                    this.$notify.error({
-                        title: "警告",
-                        message: res.data.errMsg
                     });
+                } else if (num == 0) {
+                    //单聊
+                    let body =
+                        "sendroom&" +
+                        res.data.body.conferenceNumber +
+                        "&" +
+                        res.data.body.conferenceId +
+                        "&" +
+                        _this.userMemberNum[0].userId;
+                    _this.sendVideoMessage(
+                        childMessageType,
+                        body,
+                        res.data.body.conferenceNumber,
+                        ""
+                    );
                 }
+                this.videoVisible = true;
             } else {
-                alert("已有视频");
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
             }
         },
         // 发送视频消息
@@ -757,7 +784,6 @@ export default {
         },
         //发送
         sendMessageChat(childMessageType, messageBody, childMessageType1) {
-            alert(messageBody);
             let odate = new Date();
             let oHour = odate.getHours();
             let oMinite = odate.getMinutes();
@@ -782,7 +808,7 @@ export default {
                     to: this.sessionId, //发给谁，接收者的用户ID
                     body: messageBody, //消息内容
                     sequence: this.messageTicket.sequence, //消息发送序号。
-                    chatType: 0, //单聊  GROUP 群聊
+                    chatType: 2, //医生端标识
                     clientTime: timestamp,
                     serverTime: this.messageTicket.serverTime
                 }
@@ -790,9 +816,9 @@ export default {
             console.log(Iessage);
             // websocket.default.sendMessage(Iessage);
             if (messageBody) {
-                this.$refs.mychild.sendMessage(Iessage);
-                messageBody = JSON.parse(messageBody);
-
+                // this.$refs.mychild.sendMessage(Iessage);
+                // messageBody = JSON.parse(messageBody);
+                this.sendMessage(Iessage);
                 this.addMessageK(
                     messageBody,
                     oHour + ":" + oMinite,
@@ -814,6 +840,10 @@ export default {
                 serverTime: oMessageTime,
                 childMessageType: childMessageType
             });
+        },
+        addMessageK1(data) {
+            console.log(64546);
+            // alert(data)
         },
         searchBtn() {
             this.$emit("searchValue", this.input);
@@ -963,12 +993,21 @@ export default {
             }
         }
     },
+    watch: {
+        "userSocketInfo.msgBox.a.msg": {
+            handler(n,o) {
+                console.log(465465456465456456456456456)
+                console.log(n);
+            }
+        }
+    },
     props: {
         sessionId: String, //会话Id
-        doctorVis: Number
+        doctorVis: Number,
+        userMessage: Object
     },
     model: {
-        prop: ["sessionId", "doctorVis"],
+        prop: ["sessionId", "doctorVis", "userMessage"],
         event: "reBack"
     }
 };
@@ -1174,6 +1213,9 @@ export default {
     visibility: hidden;
     width: 100%;
     height: 100%;
+}
+.upload-demo-chat .el-upload__input {
+    display: none;
 }
 .imgUrlBig {
     width: 50px;

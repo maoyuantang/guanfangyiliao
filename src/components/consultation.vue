@@ -1,14 +1,7 @@
 <template>
     <!-- 远程会诊系统 -->
+    
     <div class="consultation">
-        远程会诊系统
-
-        <el-button type="text" @click="evaluateVisible = true">评价</el-button>
-        <el-button type="text" @click="departVisible = true">接收科室</el-button>
-        <el-button type="text" @click="doctorVisible = true">医生详情</el-button>
-        <el-button type="text" @click="groupVisible = true">会诊评价</el-button>
-        <el-button type="text" @click="recordVisible = true">查看记录</el-button>
-        会诊评价
         <!-- 发起会诊弹窗 -->
         <el-dialog class="startGroup" title="发起会诊" :visible.sync="centerDialogVisible" width="602px" hight="607px" center>
             <el-form ref="form" :model="startHz" label-width="80px">
@@ -48,11 +41,8 @@
                     <el-input v-model="startHz.medicalHistory"></el-input>
                 </el-form-item>
                 <el-form-item label="申请时间:">
-                    <!-- <el-date-picker v-model="startHz.applicationTime" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
-					</el-date-picker> -->
                     <el-date-picker v-model="startHz.applicationTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
                     </el-date-picker>
-                    <!-- <el-input v-model="startHz.applicationTime"></el-input> -->
                 </el-form-item>
                 <el-form-item label="会诊目的:">
                     <el-input v-model="startHz.consultationPurpose"></el-input>
@@ -62,103 +52,33 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
-        <!-- 打开评价 -->
-        <!-- <el-dialog class="evaluateBox" title=" " :visible.sync="evaluateVisible" width="602px" hight="356px" center>
-            <el-form ref="form" :model="form" label-width="80px">
-                <el-form-item class="evaluateMargin evaluateMargin1">
-                    <el-input class="evaluateInput" type="textarea" v-model="form.desc" placeholder="请选择活动区域"></el-input>
-                </el-form-item>
-
-                <el-form-item class="evaluateMargin">
-                    <el-button class="confirmBtn" type="primary">确认</el-button>
-                </el-form-item>
-            </el-form>
-        </el-dialog> -->
         <!-- 接收科室 -->
-        <el-dialog class="evaluateBox" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
-            <ul>
-                <li v-for="(text,index) in receptionDepartment" :key="index">
-                    <div>
-                        <img src="" />
-                    </div>
-                    <div class="evaluateCont">
-                        <h5>{{text.hospital}}</h5>
-                        <div>{{text.department}}</div>
-                    </div>
-                </li>
-            </ul>
-        </el-dialog>
+        <div v-if="departVisible">
+            <el-dialog class="evaluateBox" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
+                <receiveDepartent :receptionDepartment="receptionDepartment"></receiveDepartent>
+            </el-dialog>
+        </div>
         <!-- 医生详情 -->
-        <el-dialog class="evaluateBox evaluateBox2" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
-            <ul>
-                <li>
-                    <div>
-                        <img src="" />
-                    </div>
-                    <div class="evaluateCont">
-                        <h5>西南医院第三附属医院</h5>
-                        <div>神经内科</div>
-                    </div>
-                    <div>
-                        文字
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        <img src="" />
-                    </div>
-                    <div class="evaluateCont">
-                        <h5>西南医院第三附属医院</h5>
-                        <div>神经内科</div>
-                    </div>
-                    <div>
-                        文字
-                    </div>
-                </li>
-            </ul>
-        </el-dialog>
+        <div v-if="doctorVisible">
+            <el-dialog class="evaluateBox evaluateBox2" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
+                <doctorDetail :doctorDetailData="doctorDetailData"></doctorDetail>
+
+            </el-dialog>
+        </div>
         <!-- 邀请弹框 -->
-        <el-dialog class="evaluateBox evaluateBox2" title=" 邀请医生" :visible.sync="invitationVisible" width="602px" hight="356px" center>
-            <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
-            <el-button type="primary" @click="sureInvitation()">确认邀请</el-button>
-        </el-dialog>
+        <div v-if="invitationVisible">
+            <el-dialog class="evaluateBox evaluateBox2" title=" 邀请医生" :visible.sync="invitationVisible" width="602px" hight="356px" center>
+                <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
+                <el-button type="primary" @click="sureInvitation()">确认邀请</el-button>
+            </el-dialog>
+        </div>
         <!-- 查看记录 -->
-        <el-dialog class="  " title="  " :visible.sync="recordVisible" width="602px" hight="356px" center>
-            <ul>
-                <li class="ohisList">
-                    <h3>2018年4月4日</h3>
-                    <ul>
-                        <li class="ohisListMain">
-                            <div>
-                                <img src="../assets/img/a-6.png" />
-                            </div>
-                            <div class="ohisListRg">
-                                <div>张某人
-                                    <span> 17:54:34</span>
-                                </div>
-                                <div>那就等带节后再说吧。</div>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-                <li class="ohisList">
-                    <h3>2018年4月4日</h3>
-                    <ul>
-                        <li class="ohisListMain">
-                            <div>
-                                <img src="../assets/img/a-6.png" />
-                            </div>
-                            <div class="ohisListRg">
-                                <div>张某人
-                                    <span> 17:54:34</span>
-                                </div>
-                                <div>那就等带节后再说吧。</div>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </el-dialog>
+        <div v-if="recordVisible">
+            <el-dialog class="  " title="  " :visible.sync="recordVisible" width="602px" hight="356px" center>
+                <viewRecord :storyMessage="storyMessage"></viewRecord>
+            </el-dialog>
+        </div>
+
         <!-- 管理端 -->
         <div class="consultation" v-if="$store.state.user.viewRoot.now.name==='manager'">
             <div class="Admin-title">
@@ -190,6 +110,9 @@
                         <statisticsWay @reBack="getTjData"></statisticsWay>
                     </div>
                     <div style="display:flex">
+                        {{drawData}}
+                        </br>
+                        {{drawData1}}
                         <normalColumnChart :inData="drawData"> </normalColumnChart>
                         <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
                     </div>
@@ -266,7 +189,8 @@ import {
     queryByDeptList,
     queryConsultationInformList,
     sponsorConsultationInform,
-    fetchHistoryMessage
+    fetchHistoryMessage,
+    queryConsultationDoctorList
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -278,6 +202,9 @@ import normalColumnChart from "../public/publicComponents/normalColumnChart.vue"
 import search from "../public/publicComponents/search.vue";
 import statisticsWay from "../public/publicComponents/statisticsWay.vue";
 import publicTime from "../public/publicComponents/publicTime.vue";
+import receiveDepartent from "./xiezuo/receiveDepartent.vue";
+import viewRecord from "./xiezuo/viewRecord.vue";
+import doctorDetail from "./xiezuo/doctorDetail.vue";
 
 export default {
     components: {
@@ -288,10 +215,15 @@ export default {
         search,
         statisticsWay,
         chat,
-        publicTime
+        publicTime,
+        receiveDepartent,
+        viewRecord,
+        doctorDetail
     },
     data() {
         return {
+            storyMessage: [],
+            doctorDetailData: [],
             doctorVis: 0, //0是医生跟医生聊天
             cellColor: [
                 {
@@ -574,18 +506,30 @@ export default {
                 ]
             },
             //申请科室统计图
-            drawData: {
-                dataAxis: [], //每个柱子代表的类名
-                data: [], //具体数值
-                title: " ", //图表标题
-                totalNumber: "555"
-            },
+            // drawData: {
+            //     dataAxis: [], //每个柱子代表的类名
+            //     data: [], //具体数值
+            //     title: " ", //图表标题
+            //     totalNumber:""
+            // },
+            drawData1:{
+					dataAxis:['点', ],//每个柱子代表的类名
+					data:[220, ],//具体数值
+                    title:'测试测试',//图表标题
+                    total:'565'
+				},
+            drawData:{
+					dataAxis:['点', '击', '柱', '子','点', '击', '柱', '子','点', '击', '柱', '子'],//每个柱子代表的类名
+					data:[220, 182, 191, 234,220, 182, 191, 234,220, 182, 191, 234],//具体数值
+                    title:'测试测试',//图表标题
+                    totalNumber:'565'
+				},
             //发起科室统计图
             drawDataStart: {
                 dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
                 title: " ", //图表标题
-                totalNumber: "555"
+                totalNumber:""
             }
         };
     },
@@ -615,14 +559,14 @@ export default {
         },
         async cellClickData(data) {
             console.log(data);
-            if ((data[1].label = "接收科室")) {
+            if (data[1].label == "接收科室") {
                 this.departVisible = true;
                 let _this = this;
                 let query = {
                     token: this.userState.token,
                     consultationId: data[0].id
                 };
-                const res = await queryByDeptList(query);
+                let res = await queryByDeptList(query);
                 if (res.data && res.data.errCode === 0) {
                     _this.receptionDepartment = res.data.body;
                 } else {
@@ -632,8 +576,23 @@ export default {
                         message: res.data.errMsg
                     });
                 }
-            }
-            if ((data[1].label = "参与专家")) {
+            } else if (data[1].label == "参与专家") {
+                this.doctorVisible = true;
+                let _this = this;
+                let query = {
+                    token: this.userState.token,
+                    consultationId: data[0].id
+                };
+                let res = await queryConsultationDoctorList(query);
+                if (res.data && res.data.errCode === 0) {
+                    _this.doctorDetailData = res.data.body;
+                } else {
+                    //失败
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
             }
         },
         //查看记录
@@ -691,17 +650,18 @@ export default {
             let options = {
                 userId: this.userSelfInfo.userId,
                 sessionId: [row.sessionId],
-                msgId: 0,
+                msgId: this.$store.state.socket.messageTicket.msgId,
                 pageNums: 15
             };
             const res = await fetchHistoryMessage(query, options);
             if (res.data && res.data.errCode === 0) {
-                $.each(res.data.body, function(index, text) {
-                    _this.hospitalList.push({
-                        name: text.orgName,
-                        value: text.orgCode
-                    });
-                });
+                // $.each(res.data.body, function(index, text) {
+                //     _this.hospitalList.push({
+                //         name: text.orgName,
+                //         value: text.orgCode
+                //     });
+                // });
+                _this.storyMessage = res.data.body;
             } else {
                 //失败
                 this.$notify.error({
@@ -710,6 +670,25 @@ export default {
                 });
             }
         },
+        //获取医生详情
+        // async getDoctorDetail() {
+        //     this.doctorVisible = true;
+        //     let _this = this;
+        //     let query = {
+        //         token: this.userState.token,
+        //         consultationId: 会诊ID
+        //     };
+        //     const res = await queryConsultationDoctorList(query);
+        //     if (res.data && res.data.errCode === 0) {
+        //         _this.doctorDetailData = res.data.body;
+        //     } else {
+        //         //失败
+        //         this.$notify.error({
+        //             title: "警告",
+        //             message: res.data.errMsg
+        //         });
+        //     }
+        // },
         getOTab4(data) {
             console.log(data);
             this.oDocTime = data.index.value;
@@ -784,8 +763,11 @@ export default {
         getConsulTabData(res) {
             if (res.i == 0) {
                 this.oconsulVisable = true;
+                this.getAdminList();
             } else if (res.i == 1) {
                 this.oconsulVisable = false;
+                this.getApplyTjList();
+                this.getAdminTjList()
             }
         }, //获取医院列表
         async getHospitalment() {
@@ -923,8 +905,8 @@ export default {
             const res = await queryStatisticalByApplication(options);
             if (res.data && res.data.errCode === 0) {
                 $.each(res.data.body.data, function(index, text) {
-                    _this.drawData.dataAxis.push(text.unit);
-                    _this.drawData.data.push(text.number);
+                    _this.drawData.dataAxis.push(text.x);
+                    _this.drawData.data.push(text.y);
                 });
             } else {
                 //失败
@@ -949,8 +931,8 @@ export default {
             const res = await queryStatisticalBySponsor(options);
             if (res.data && res.data.errCode === 0) {
                 $.each(res.data.body.data, function(index, text) {
-                    _this.drawDataStart.dataAxis.push(text.unit);
-                    _this.drawDataStart.data.push(text.number);
+                    _this.drawDataStart.dataAxis.push(text.x);
+                    _this.drawDataStart.data.push(text.y);
                 });
             } else {
                 //失败

@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import ovideo from "../video/video.vue";
+import ovideo from "../video/oVideo.vue";
 import apiBaseURL from "../enums/apiBaseURL.js";
 import { mapState } from "vuex";
 import protobuf from "protobufjs";
@@ -143,6 +143,8 @@ export default {
             if (!window.webSocket) {
                 let owebsocket = new WebSocket(wsUrl);
                 this.$store.commit("socket/SETSOCKET", owebsocket);
+                 
+                
                 // this.webSocket = new WebSocket(wsUrl);
                 // window.webSocket = this.webSocket;
             }
@@ -895,7 +897,9 @@ export default {
 
                     // let toL = odata.info.to;
                     // let toNickNameL = odata.info.toNickName;
-
+                    this.$store.commit("socket/MSGBOX", odata.info);
+                    console.log('dd')
+                    console.log(this.$store.state.socket.msgBox.a.msg)
                     let msgId = odata.info.msgId;
                     console.log(odata);
                     var Iessage = {
@@ -1003,27 +1007,6 @@ export default {
         },
         // 数据发送
         websocketsend(data) {
-            //websock.send(JSON.stringify(agentData));
-            // let Message = {
-            //     RequestType: 4,
-            //     ticket: ticket,
-            //     info: {
-            //         messageType: 0, //消息
-            //         childMessageType: data.childMessageType, //文本
-            //         from: data.from, //userid
-            //         fromNickName: data.fromNickName, //昵称
-            //         toNickName: data.toNickName,
-            //         to: data.to, //发给谁，接收者的用户ID
-            //         body: data.body, //消息内容
-            //         sequence: sequence, //消息发送序号。
-            //         chatType: 2, //单聊  GROUP 群聊
-            //         clientTime: '',
-            //         serverTime: "",
-            //         conferenceId: data.conferenceId
-            //     }
-            // }
-
-            //    console.log(data)
             let msg = this.$store.state.socket.IMessage.encode(data).finish();
             this.$store.state.socket.socketObj.send(msg);
         },

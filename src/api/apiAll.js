@@ -2320,11 +2320,11 @@ export const queryByPage = query => { //1.患者分页列表
     })
 }
 
-export const getFamilyMemberInfoByDoctor = query => { //14.7.双向转诊-WEB医生端-查询记录
+export const getDoctorMessage1 = query => { //14.7.双向转诊-WEB医生端-查询记录
     const sign = postQueryHandle(query);
     return axios({
         method: 'get',
-        url: apiList.getFamilyMemberInfoByDoctor,
+        url: apiList.getDoctorMessage1,
         params: query,
         headers: {
             sign
@@ -2342,5 +2342,17 @@ export const queryListByUserId = query => { //2.医生端获取家庭成员列�
         }
     })
 }
+export const queryConsultationDoctorList = query => { //2.医生端获取家庭成员列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.queryConsultationDoctorList,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
 
 

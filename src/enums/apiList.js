@@ -5,7 +5,7 @@ export default {
     hospitalDoctorBusinessSubsystemList:'/m/v1/api/basics/hospital/fetchDoctorSubSystem',//医院医生业务子系统列表
     fileDownload:'/m/v1/api/fs/download/',//文件下载
     initializeTheCreationOfHospital:'/m/v1/api/basics/hospital/init',//初始化创建医院
-    userList:'/m/v1/api/user/user/list',//首页-账号及权限-用户列表
+    userList:'/m/v1/api/user/list',//首页-账号及权限-用户列表
     fetchHospitalDepts:'/m/v1/api/basics/hospital/fetchHospitalDepts',//2.2.获取医院科室列表
     fetchDoctorSubSystems:'/m/v1/api/basics/hospital/fetchDoctorSubSystems',//3.2.1.首页-医院医生业务子系统列表（新）
     createUser:'/m/v1/api/user/user/createUser',//3.3首页-账号及权限-创建用户
@@ -223,7 +223,14 @@ export default {
     applicantCANCEL:'/m/v1/api/referral/dualReferral/applicant/CANCEL',//14.9.双向转诊-WEB医生端-申请人操作
     dualReferralReception:'/m/v1/api/referral/dualReferral/reception/',//14.10.双向转诊-WEB医生端-接诊人操作
     receptionAudit:'/m/v1/api/referral/dualReferral/reception/audit',//14.11.双向转诊-WEB医生端-审核
+
+    getDoctorMessage1:'/m/v1/api/familyMember/getFamilyMemberInfoByDoctor',
+<<<<<<< HEAD
+    queryConsultationDoctorList:'/m/v1/api/consultation/queryConsultationDoctorList',
     queryByPage:'/m/v1/api/record/patientRecord/queryByPage',//1.患者分页列表
     queryListByUserId:'/m/v1/api/familyMember/queryListByUserId',//2.医生端获取家庭成员列表
+=======
+    // queryConsultationDoctorList:'/m/v1/api/consultation/queryConsultationDoctorList'
+>>>>>>> 4b26a1c6192089ee463455bb563f51bef1ac31ad
 }
 

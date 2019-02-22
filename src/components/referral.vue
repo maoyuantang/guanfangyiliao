@@ -18,7 +18,8 @@
         <!-- 转院详情 -->
         <div class="moved_footer">
           <ul>
-            <li v-for='(text,index) in dualReferralRecordFile.records'>{{text.optTime}}  {{text.orgName}}   {{text.deptName}}  {{text.stateName}}</li>
+            <li v-for='(text,index) in dualReferralRecordFile.records'>{{text.optTime}} {{text.orgName}}
+              {{text.deptName}} {{text.stateName}}</li>
           </ul>
         </div>
       </div>
@@ -35,38 +36,45 @@
         <div style="display:flex;margin:10px 0;">
           <el-form-item label="转诊类型:" :label-width="formLabelWidth">
             <el-select v-model="addForm.typeList.default.label" placeholder="上转/下转" clearable @change='upOrDown()'>
-              <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label"
+                :value="item.value"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="疾病名称:" :label-width="formLabelWidth">
-            <el-select v-model="addForm.diseaseName.default.label" placeholder="请选择" clearable @change='diseaseNameId()'>
-              <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-select v-model="addForm.diseaseName.default.label" placeholder="请选择" clearable
+              @change='diseaseNameId()'>
+              <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label"
+                :value="item.value"></el-option>
             </el-select>
           </el-form-item>
         </div>
 
         <el-form-item label="病     人:" :label-width="formLabelWidth">
           <el-select v-model="addForm.patient.default.label" placeholder="请选择" clearable>
-            <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label"
+              :value="item.value"></el-option>
           </el-select>
         </el-form-item>
 
         <div class="block" style="margin-bottom: 22px;">
-          <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
-          <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.selectedOptions" @change="handleChange"
-            clearable>
+          <span class="demonstration"
+            style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
+          <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.selectedOptions"
+            @change="handleChange" clearable>
           </el-cascader>
         </div>
 
         <el-form-item label="病历授权:" :label-width="formLabelWidth">
           <el-select v-model="addForm.giveRight.default.label" placeholder="单选" clearable>
-            <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label"
+              :value="item.value"></el-option>
           </el-select>
         </el-form-item>
 
         <div class="block" style="margin-bottom: 22px;">
-          <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
+          <span class="demonstration"
+            style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
           <el-date-picker v-model="addForm.moveTime.value3" type="datetime" placeholder="请选择" default-time="12:00:00">
           </el-date-picker>
         </div>
@@ -122,8 +130,10 @@
               <el-table-column prop="stateName" label="转诊状态"></el-table-column>
               <el-table-column fixed="right" label="操作" width="250">
                 <template slot-scope="scope">
-                  <el-button @click="dualReferralRecord1(scope.row)" type="success" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">查看记录</el-button>
-                  <el-button @click="viewFile2(scope.row)" type="warning" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">查看反馈</el-button>
+                  <el-button @click="dualReferralRecord1(scope.row)" type="success" plain size="mini"
+                    style="margin:0.05rem 0 0.05rem 0;">查看记录</el-button>
+                  <el-button @click="viewFile2(scope.row)" type="warning" plain size="mini"
+                    style="margin:0.05rem 0 0.05rem 0;">查看反馈</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -174,15 +184,23 @@
           <el-table-column fixed prop="stateName" label="转诊状态"></el-table-column>
           <el-table-column fixed="right" label="" width="400">
             <template slot-scope="scope">
-              <el-button @click="dualReferralRecord2(scope.row)" type="success" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">转诊记录</el-button>
-              <el-button @click="doctorListFun1(scope.row)" type="primary" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">查看档案</el-button>
-              <el-button @click="dualReferralUpdate(scope.row)" type="info" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">编辑</el-button>
+              <el-button @click="dualReferralRecord2(scope.row)" type="success" plain size="mini"
+                style="margin:0.05rem 0 0.05rem 0;">转诊记录</el-button>
+              <el-button @click="doctorListFun1(scope.row)" type="primary" plain size="mini"
+                style="margin:0.05rem 0 0.05rem 0;">查看档案</el-button>
+              <el-button @click="dualReferralUpdate(scope.row)" type="info" plain size="mini"
+                style="margin:0.05rem 0 0.05rem 0;">编辑</el-button>
               <!-- <el-button @click="doctorListFun4(scope.row)" type="warning" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">删除</el-button> -->
-              <el-button @click="applicantCANCEL(scope.row)" type="danger" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">取消</el-button>
-              <el-button @click="receptionAudit(scope.row)" type="primary" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">审核通过</el-button>
-              <el-button @click="dualReferralReception1(scope.row)" type="success" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">接诊</el-button>
-              <el-button @click="dualReferralReception2(scope.row)" type="warning" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">出院</el-button>
-              <el-button @click="dualReferralReception3(scope.row)" type="danger" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">转诊</el-button>
+              <el-button @click="applicantCANCEL(scope.row)" type="danger" plain size="mini"
+                style="margin:0.05rem 0 0.05rem 0;">取消</el-button>
+              <el-button @click="receptionAudit(scope.row)" type="primary" plain size="mini"
+                style="margin:0.05rem 0 0.05rem 0;">审核通过</el-button>
+              <el-button @click="dualReferralReception1(scope.row)" type="success" plain size="mini"
+                style="margin:0.05rem 0 0.05rem 0;">接诊</el-button>
+              <el-button @click="dualReferralReception2(scope.row)" type="warning" plain size="mini"
+                style="margin:0.05rem 0 0.05rem 0;">出院</el-button>
+              <el-button @click="dualReferralReception3(scope.row)" type="danger" plain size="mini"
+                style="margin:0.05rem 0 0.05rem 0;">转诊</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -273,7 +291,7 @@
         referralType: '',//方向，UP上转，DOWN下转
         medicalId: '',//疾病ID(readMedicals  接口返回)
         //管理操作区
-        dualReferralRecordFile:{},
+        dualReferralRecordFile: {},
         //医生操作区
         referralId: "",//转诊ID
 

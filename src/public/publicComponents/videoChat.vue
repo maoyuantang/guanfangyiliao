@@ -228,7 +228,7 @@ import {
     queryArticleList,
     getArticleDetails
 } from "../../api/apiAll.js";
-import ovideo from "../../video/video.vue";
+import ovideo from "../../video/oVideo.vue";
 import { setTimeout } from "timers";
 
 export default {
