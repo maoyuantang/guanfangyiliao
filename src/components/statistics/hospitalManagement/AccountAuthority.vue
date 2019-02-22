@@ -433,7 +433,7 @@ export default {
         }
       },
       outerCourtAlert:{//院外协作人员 弹窗数据 
-        show:true,//是否显示
+        show:false,//是否显示
         type:0,//0 表示邀请(新增)， 1表示 编辑   
         account:'',//账号 
         range:{//范围

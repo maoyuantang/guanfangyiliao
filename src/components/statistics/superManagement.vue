@@ -80,7 +80,19 @@
            <div class="add-hospital">
                <el-button type="danger" @click="alertAddMark">新增医院</el-button>
            </div>
+           
         </div>
+        <div>
+               <el-pagination
+                background
+                layout="prev, pager, next"
+                :page-size="10"
+                :current-page="1"
+                :total="11"
+                v-if="page.total!=0"
+                @current-change="ChangePage"
+            ></el-pagination>
+           </div>
         <!-- 科室弹出框 -->
         <Modal
             :styles="{width:'323px'}"
@@ -163,6 +175,12 @@ export default {
     },
     data() {
         return {
+            search: "",//搜索内容
+            page:{//分页
+                pageNum: 1,//当前页 
+                pageSize: 10,//每页条数
+                total:0//总条数
+            },
             spinShow:false,//是否显示loading
             showAlertTree:false,
             showAdd:false,//是否显示添加医院
@@ -290,6 +308,12 @@ export default {
         })
     },
     methods: {
+        /**
+         * 切换分页
+         */
+        ChangePage(data){
+            console.log(data)
+        },
         getSelect(item){
             console.log(item)
             const table = {
@@ -560,6 +584,7 @@ export default {
                 this.testData.tag = item;
                 this.testData = Object.assign({},this.testData)
                 this.showAlertTree = true;
+                console.log(this.testData)
             }else{
 
             }
@@ -621,6 +646,7 @@ export default {
                     value.label = value.subName;
                     value.label = value.name;
                     value.check = value.checked;
+                    // value.checkbox = value.checked;
                     return value;
                 });
                 this.testData.title = item.type==='superOrgNum'?'上级医院':'下级医院';
@@ -628,6 +654,7 @@ export default {
                 this.testData.show = true;
                 this.testData.tag = item;
                 this.showAlertTree = true;
+                console.log(this.testData)
             }else{
 
             }
@@ -649,7 +676,10 @@ export default {
                     });
                     return newArr
                 }
-                this.testData.data = iteration(res.data.body);
+                this.testData.data = iteration(res.data.body).map(item=>{
+                    item.check = item.checked;
+                    return item;
+                });
                 this.testData.title = '协作人员';
                 this.testData.canClick = true;
                 this.testData.show = true;
@@ -674,7 +704,7 @@ export default {
            console.log(res);
            if(res.data&&res.data.errCode===0){
                 this.testData.data = res.data.body;
-                this.testData.title = '子系统';
+                this.testData.title = '会诊范围';
                 this.testData.canClick = true;
                 this.testData.show = true;
                 this.testData.tag = item;
@@ -778,7 +808,8 @@ export default {
                         type: 'success'
                     });
                     this.department.addDepartmentName = '';
-                    this.deptNum( {type:'deptNum',value:this.nowItem})
+                    this.deptNum( {type:'deptNum',value:this.nowItem});
+                    this.getTableData();
                 }else{
                     this.$notify({
                         title: '失败',
@@ -920,6 +951,7 @@ export default {
 .data-item{
     display: flex;
     align-items: center;
+    margin-bottom: 0.2rem;
 }
 .data-item>span{
     flex: 1;
