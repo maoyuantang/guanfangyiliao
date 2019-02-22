@@ -18,16 +18,15 @@
     </div>
 </template>
 <script>
-export default {
-         props: {
-        doctorDetailData: Array,
-    },
-    model: {
-        prop: ["doctorDetailData"],
-        event: "reBack"
-    },
-};
+    export default {
+        props: {
+            doctorDetailData: Array,
+        },
+        model: {
+            prop: ["doctorDetailData"],
+            event: "reBack"
+        },
+    };
 </script>
 <style>
 </style>
-
