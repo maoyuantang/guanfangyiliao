@@ -107,7 +107,7 @@
           <div class="manager_moveManage_top mainTab">
             <div class="manager_moveManage_top_left">
               <selftag :inData="onLineList.topFlag[0]" @reback="getFilter0"></selftag>
-              <selftag v-model="onLineList.topFlag[1]" @reback="getFilter1"></selftag>
+              <!-- <selftag v-model="onLineList.topFlag[1]" @reback="getFilter1"></selftag> -->
               <selftag v-model="onLineList.topFlag[2]" @reback="getFilter2"></selftag>
             </div>
             <div class="manager_moveManage_top_right">
@@ -276,7 +276,7 @@
         //筛选返回值接收
         //管理1端  筛选工具栏  筛选返回值  接收参数
         departmentId: "",//筛选科室id   selftag
-        typeId: "",//筛选类型id   selftag
+        // typeId: "",//筛选类型id   selftag（已取消）
         direction: "",//方向：into转入，转出out    selftag   筛选工具栏
         searchValue: "",//返回搜索框输入   search
         pageNum: 1,
@@ -329,9 +329,9 @@
               list: []
             },
             {
-              more: false,
+              more: true,
               title: '方向',
-              list: [{ text: '全部', value: '' }, { text: '转入', value: '' }, { text: '转出', value: '' }]
+              list: []
             }
           ],
         },
@@ -509,11 +509,11 @@
         this.getList1();
         this.getList2();
       },
-      getFilter1(data) {//类型筛选
-        this.typeId = data.index.value;
-        console.log(this.typeId)
-        this.getList1();
-      },
+      // getFilter1(data) {//类型筛选
+      //   this.typeId = data.index.value;
+      //   console.log(this.typeId)
+      //   this.getList1();
+      // },
       getFilter2(data) {//方向筛选
         this.direction = data.index.value;
         console.log(this.direction)
@@ -585,31 +585,62 @@
           });
         }
       },
-      //1.21.26.类型筛选  工具栏 (管理)
-      async getSelect2(oindex) {
+      // //1.21.26.类型筛选  工具栏 (管理)          （接口不对，已取消此筛选项）
+      // async getSelect2(oindex) {
+      //   let _this = this;
+      //   let query = {
+      //     token: this.userState.token,
+      //     // type: 'MANAGE'
+      //   };
+      //   const res = await toolMedicalType(query);                     //1.21.26.类型筛选  工具栏 (管理)
+      //   if (res.data && res.data.errCode === 0) {
+      //     console.log('1.21.26.类型筛选  工具栏 +成功')
+      //     // console.log(res.data.body);
+      //     if (res.data.body.length > 6) {
+      //       this.onLineList.topFlag[1].more = true;
+      //     } else {
+      //       this.onLineList.topFlag[1].more = false;
+      //     }
+      //     $.each(res.data.body, function (index, text) {
+      //       //双向转诊   类型   筛选列表   管理1
+      //       _this.onLineList.topFlag[1].list.push({
+      //         text: text.name,
+      //         value: text.id
+      //       });
+      //     });
+      //   } else {
+      //     console.log('1.21.26.类型筛选  工具栏 +失败')
+      //     //失败
+      //     this.$notify.error({
+      //       title: "警告",
+      //       message: res.data.errMsg
+      //     });
+      //   }
+      // },
+      //1.21.28.方向筛选  工具栏 (管理)
+      async getSelect3(oindex) {
         let _this = this;
         let query = {
           token: this.userState.token,
-          // type: 'MANAGE'
         };
-        const res = await toolMedicalType(query);                     //1.21.26.类型筛选  工具栏 (管理)
+        const res = await toolReferralType(query);                     //1.21.28.方向筛选  工具栏 (管理)
         if (res.data && res.data.errCode === 0) {
-          console.log('1.21.26.类型筛选  工具栏 +成功')
+          console.log('1.21.28.方向筛选  工具栏 +成功')
           // console.log(res.data.body);
           if (res.data.body.length > 6) {
-            this.onLineList.topFlag[1].more = true;
+            this.onLineList.topFlag[2].more = true;
           } else {
-            this.onLineList.topFlag[1].more = false;
+            this.onLineList.topFlag[2].more = false;
           }
           $.each(res.data.body, function (index, text) {
             //双向转诊   类型   筛选列表   管理1
-            _this.onLineList.topFlag[1].list.push({
+            _this.onLineList.topFlag[2].list.push({
               text: text.name,
               value: text.id
             });
           });
         } else {
-          console.log('1.21.26.类型筛选  工具栏 +失败')
+          console.log('1.21.28.方向筛选  工具栏 +失败')
           //失败
           this.$notify.error({
             title: "警告",
@@ -1078,7 +1109,8 @@
 
     async created() {
       this.getSelect1()
-      this.getSelect2()
+      // this.getSelect2()
+      this.getSelect3()
       this.getList1()
       this.DoctorList()
     }
