@@ -2491,3 +2491,25 @@ export const medicalControlCharts = query => { //13.12.统计-统计图
         }
     })
 }
+export const fetchMedicalType = query => { //13.13.分级管理-类型下拉数据
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.fetchMedicalType,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const fetchMedicalDict = query => { //13.14.分级管理-名称与类型联动的名称下拉列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.fetchMedicalDict,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

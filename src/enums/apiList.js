@@ -241,5 +241,7 @@ export default {
     delMedicalControl:'/m/v1/api/referral/mcc/delMedicalControl',//13.10.权限控制-删除
     fetchMedicalControl:'/m/v1/api/referral/mcc/fetchMedicalControl',//13.11.权限控制-列表
     medicalControlCharts:'/m/v1/api/referral/mcc/medicalControlCharts',//13.12.统计-统计图
+    fetchMedicalType:'/m/v1/api/referral/mcc/fetchMedicalType',//13.13.分级管理-类型下拉数据
+    fetchMedicalDict:'/m/v1/api/referral/mcc/fetchMedicalDict',//13.14.分级管理-名称与类型联动的名称下拉列表
 }
 
