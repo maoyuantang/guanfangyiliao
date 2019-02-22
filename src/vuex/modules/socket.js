@@ -6,11 +6,6 @@ export default {
         msgBox:{//消息盒子
             a:{
                 msg:[
-                    {
-                        from:'',
-                        to:'',
-                        data:""
-                    }
                 ],
                 type:0
             }
@@ -41,6 +36,9 @@ export default {
             state.messageTicket.content = data.content;
             state.messageTicket.serverTime = data.serverTime;
             state.messageTicket.oMsgId = data.oMsgId;
+        },
+        MSGBOX(state,data){
+            state.msgBox.a.msg.push(data)
         },
 	},
 	actions:{
