@@ -229,5 +229,17 @@ export default {
     queryByPage:'/m/v1/api/record/patientRecord/queryByPage',//1.患者分页列表
     queryListByUserId:'/m/v1/api/familyMember/queryListByUserId',//2.医生端获取家庭成员列表
     // queryConsultationDoctorList:'/m/v1/api/consultation/queryConsultationDoctorList'
+    fetchMedicalClassify:'/m/v1/api/referral/mcc/fetchMedicalClassify',//13.1.分类管理-列表
+    addMedicalClassify:'/m/v1/api/referral/mcc/addMedicalClassify',//13.2.分类管理-新增
+    editMedicalClassify:'/m/v1/api/referral/mcc/editMedicalClassify',//13.3.分级管理-修改
+    delMedicalClassify:'/m/v1/api/referral/mcc/delMedicalClassify',//13.4.分级管理-删除
+    chooseDept:'/m/v1/api/referral/mcc/chooseDept',//13.5.权限控制-科室列表下拉框
+    chooseAcceptsLevel:'/m/v1/api/referral/mcc/chooseAcceptsLevel',//13.6.权限控制-接诊疾病等级下拉框
+    chooseApplyDept:'/m/v1/api/referral/mcc/chooseApplyDept',//13.7.权限控制-申请医院和科室下拉框
+    addMedicalControl:'/m/v1/api/referral/mcc/addMedicalControl',//13.8.权限控制-新增
+    editMedicalControl:'/m/v1/api/referral/mcc/editMedicalControl',//13.9.权限控制-编辑
+    delMedicalControl:'/m/v1/api/referral/mcc/delMedicalControl',//13.10.权限控制-删除
+    fetchMedicalControl:'/m/v1/api/referral/mcc/fetchMedicalControl',//13.11.权限控制-列表
+    medicalControlCharts:'/m/v1/api/referral/mcc/medicalControlCharts',//13.12.统计-统计图
 }
 

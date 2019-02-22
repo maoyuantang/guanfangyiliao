@@ -28,10 +28,16 @@ export default {
         classifiedTreatmentDiagnosisTypes:[],//分级诊疗 类型
         classificationDiagnosisTreatment:[],//分级诊疗 分级
         TwoReferralDirection:[],//双向转诊 方向
-        
+        allHospital:[],//所有医院
 
 	},
 	mutations:{
+         /**
+         * 设置 所有医院
+         */
+        SETALLHOSPITAL(state,data){
+            state.allHospital = data;
+        },
         /**
          * 设置 双向转诊 方向
          */

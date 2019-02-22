@@ -22,7 +22,8 @@
 		fetchHospitalDepts, toolMemberGroup, toolArchivesType, toolUserSource, toolArchivesInside, toolRxReviewStatus,
 		toolRxSendStatus, toolRxReviewDoctors, toolRxSendDoctors, toolConsultationType, toolConsultationStatus, toolSynergyStatus, 	
 		toolArchivesSource, toolBusinessModel, toolBusinessType, toolFollowupType, toolFollowupMode, toolFollowupContent, toolSurveyType,
-		toolSurveyMode, toolDeviceType, toolFollowupHasPlan, queryTypeList, toolMedicalType, toolMedicalGrading, toolReferralType
+		toolSurveyMode, toolDeviceType, toolFollowupHasPlan, queryTypeList, toolMedicalType, toolMedicalGrading, toolReferralType,
+		getAllHospital
 	} from '../api/apiAll.js'//api
 	
 export default {
@@ -32,6 +33,23 @@ export default {
     }
   },
   methods:{
+	  /**
+	   * 获取 所有医院
+	   */
+	  async getAllHospital(){
+		  const res = await getAllHospital({token:this.userState.token});
+			console.log(res);
+			if(res.data&&res.data.errCode===0){
+				this.$store.commit("global/SETALLHOSPITAL", res.data.body);
+				console.log(this.global.allHospital)
+			}else{
+				this.$notify({
+						title: '失败',
+						message: '医院列表获取失败', 
+						type: 'error'
+				});
+			}
+	  },
 		/**
 		 * 获取 双向转诊 方向 
 		 */
@@ -536,6 +554,7 @@ export default {
 			this.getToolMedicalType(),
 			this.getToolMedicalGrading(),
 			this.getToolReferralType(),
+			this.getAllHospital(),
 		]);
 		
   }

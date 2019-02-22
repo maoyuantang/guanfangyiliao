@@ -14,12 +14,7 @@
           </div>
           <div class="left-model-head-operating">
             <search @searchValue="ourStaffSearchChange"></search>
-            <!-- <el-input
-                            placeholder="Search by keywords…"
-                            suffix-icon="el-icon-search">
-            </el-input>-->
             <el-button type="primary" @click="openourStafAlert">新增</el-button>
-            <!-- <el-button type="primary" @click="alertStatus(1)">新增</el-button> -->
           </div>
         </div>
         <div class="left-model-body">
@@ -52,7 +47,6 @@
               </tr>
             </tbody>
           </table>
-          <!-- <publicList :tableData="newModules.tableData" :columns="newModules.columns" :tableBtn="newModules.tableBtn"></publicList> -->
         </div>
         <div class="pagination-div">
           <!-- :page-size="10"
@@ -75,29 +69,71 @@
         <div class="right-model-head">
           <div class="right-model-head-flag">
             <div>
-              <selftag @reBack="gitIndex" v-model="rightListHospital"></selftag>
-              <selftag @reBack="gitIndex" v-model="rightListDepartment"></selftag>
+              <!-- {{outerCourt.hospital}} -->
+              <selftag @reback="outerCourtUserHospitalSelect" v-model="outerCourt.hospital"></selftag>
+              <selftag @reback="outerCourtUserDepartmentSelect" v-model="outerCourt.department"></selftag>
             </div>
           </div>
           <div class="right-model-head-operating">
             <search></search>
-            <!-- <el-input
-                            placeholder="Search by keywords…"
-                            suffix-icon="el-icon-search">
-            </el-input>-->
-            <el-button type="primary" @click="alertStatus(2)">邀请协作</el-button>
+            <el-button type="primary" @click="inviteCollaboration">邀请协作</el-button>
           </div>
         </div>
         <div class="left-model-body">
-          <publicList
+          <table class="account-authority">
+            <thead class="account-authority-thead">
+              <tr>
+                <th>医院</th>
+                <th>科室</th>
+                <th>姓名</th>
+                <th>账号</th>
+                <th>手机号</th>
+                <th>业务范围</th>
+                <th>入住时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody class="account-authority-tbody">
+              <tr v-for="(item,index) in 9" :key="index">
+                <th>item.departmentName</th>
+                <th>item.name</th>
+                <th>item.account</th>
+                <th>item.phone</th>
+                <th>item.busRange.length</th>
+                <th>item.regTime</th>
+                <th>item.hasDeptManage?'有':'无'</th>
+                <th>
+                  <el-button type="success" size="mini" plain @click="revisionCollaboration(item)">编辑</el-button>
+                  <el-button type="danger" size="mini" plain>删除</el-button>
+                </th>
+              </tr>
+            </tbody>
+          </table>
+          <div class="pagination-div">
+          <!-- :page-size="10"
+                @current-change="listSelectPage"
+                :current-page="parseInt(listCondition.page.pageNum)"
+                v-if="listCondition.page.total!=0"
+          :total="listCondition.page.total"-->
+          <el-pagination
+            background
+            layout="prev, pager, next"
+            :page-size="outerCourt.page.pageSize"
+            :current-page="outerCourt.page.pageNum"
+            :total="outerCourt.page.total"
+            v-if="outerCourt.page.total!=0"
+            @current-change="outerCourtChangePage"
+          ></el-pagination>
+        </div>
+          <!-- <publicList
             :tableData="inviteModules.tableData"
             :columns="inviteModules.columns"
             :tableBtn="inviteModules.tableBtn"
-          ></publicList>
+          ></publicList>-->
         </div>
       </div>
     </el-tabs>
-
+    <!-- 本院人员 弹窗 -->
     <el-dialog
       :title="ourStafAlert.type===0?'新增':'修改'"
       :visible.sync="ourStafAlert.show"
@@ -222,9 +258,48 @@
       </span>-->
     </el-dialog>
 
-    <!-- {{ourStafAlert}}
-       {{userInfo.token}}
-    远程教育系统-->
+    <!-- 院外协作人员 弹窗 -->
+    <el-dialog
+      :title="ourStafAlert.type===0?'邀请协作':'修改协作'"
+      :visible.sync="outerCourtAlert.show"
+      width="602px"
+      hight="607px"
+      center
+      :before-close="outerCourtAlertClose"
+    >
+    <div class="our-staf-alert">
+      <div class="our-staf-alert-item">
+        <span class="our-staf-alert-item-key">账号/手机号:</span>
+        <div class="our-staf-alert-item-value-out">
+          <el-input
+            placeholder="请输入对方账号和手机号"
+            size="mini"
+            v-model="outerCourtAlert.account"
+            clearable>
+          </el-input>
+        </div>
+        <i class="iconfont ourStaf-alert-icon">&#xe7b0;</i>
+      </div>
+      <div class="our-staf-alert-item">
+        <span class="our-staf-alert-item-key">协作范围:</span>
+        <div class="our-staf-alert-item-value-out">
+          <el-select v-model="outerCourtAlert.range.select" size="mini" multiple placeholder="请选择">
+            <el-option
+              v-for="(item,index) in outerCourt.department.list"
+              :key="index"
+              size="mini"
+              :label="item.deptName"
+              :value="item.deptId">
+            </el-option>
+          </el-select>
+        </div>
+        <i class="iconfont ourStaf-alert-icon">&#xe7b0;</i>
+      </div>
+      <div class="our-staf-alert-sub">
+        <el-button type="primary" @click="outerCourtAlertSub">确定</el-button>
+      </div>
+    </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -245,11 +320,11 @@ import {
   synergyManageList,
   userList,
   userInfo,
-  updateUser
+  updateUser,
+  synergyManageInvite
 } from "../../../api/apiAll.js";
 
 export default {
-  watch: {},
   computed: {
     ...mapState({
       userInfo: state => state.user.userInfo,
@@ -285,11 +360,11 @@ export default {
           title: "科室",
           list: []
         },
-        departmentSelect: {}, //选中科室 
+        departmentSelect: {}, //选中科室
         searchKey: {}, //搜索关键字
-        ourStaffUser: { 
+        ourStaffUser: {
           //账号列表
-          page: { 
+          page: {
             //页码相关
             pageSize: 10, //每页多少数据
             pageNum: 1, //当前页
@@ -297,6 +372,33 @@ export default {
           },
           list: [] //本院人员列表
         }
+      },
+      outerCourt: {
+        //外院人员 数据
+        hospital: { 
+          //医院
+          index: 0,
+          more: false,
+          title: "医院",
+          list:[]
+        },
+        page: {  
+          //页码相关
+          pageSize: 10, //每页多少数据
+          pageNum: 1, //当前页
+          total: 0 //总条数
+        },
+        searchKey: "", //搜索关键字  
+        hospitalSelect: {}, //选中医院 
+        department: { 
+          //科室
+          index: 0,
+          more: false,
+          title: "科室",
+          list: []
+        },
+        departmentSelect: {}, //选中科室 
+        list: [] //外院人员列表 
       },
       ourStafAlert: {
         //弹窗
@@ -330,182 +432,18 @@ export default {
           }
         }
       },
-      /********************************** */
-      otrue: false,
+      outerCourtAlert:{//院外协作人员 弹窗数据 
+        show:true,//是否显示
+        type:0,//0 表示邀请(新增)， 1表示 编辑   
+        account:'',//账号 
+        range:{//范围
+          select:[],//选中   
+          list:[],//没用这个  直接用的 outerCourt.department
+        },
+      },
       tabPosition: "left",
-      leftListDepartment: {
-        //本院人员的科室标签列表
-        index: 0,
-        more: true,
-        title: "科室",
-        list: [
-          {
-            text: "全部"
-          },
-          {
-            text: "急诊科"
-          },
-          {
-            text: "骨科"
-          },
-          {
-            text: "普外科"
-          },
-          {
-            text: "肿瘤科"
-          },
-          {
-            text: "脑病科"
-          }
-        ]
-      },
-      rightListDepartment: {
-        //院外协作人员的科室标签列表
-        more: true,
-        title: "科室",
-        list: [
-          {
-            text: "全部"
-          },
-          {
-            text: "急诊科"
-          },
-          {
-            text: "骨科"
-          },
-          {
-            text: "普外科"
-          },
-          {
-            text: "肿瘤科"
-          },
-          {
-            text: "脑病科"
-          }
-        ]
-      },
-      rightListHospital: {
-        //院外协作人员的医院标签列表
-        more: true,
-        title: "科室",
-        list: [
-          {
-            text: "全部"
-          },
-          {
-            text: "急诊科"
-          },
-          {
-            text: "骨科"
-          },
-          {
-            text: "普外科"
-          },
-          {
-            text: "肿瘤科"
-          },
-          {
-            text: "脑病科"
-          }
-        ]
-      },
-      isAdd: 1, //1是新增弹窗，2是邀请弹窗，其余隐藏弹窗，建议选0
-      inviteNumber: "",
-      CollaborationScopeOk: null,
-      CollaborationScope: [
-        //协作范围科室选择列表
-        { name: "全部" },
-        { name: "糖尿病康复科" },
-        { name: "新生儿保健科" },
-        { name: "XXXXXXXX" }
-      ],
-      businessScope: [
-        //业务范围选择项
-        {
-          name: "远程门诊",
-          select: false
-        },
-        {
-          name: "远程会诊",
-          select: false
-        },
-        {
-          name: "远程协作",
-          select: true
-        },
-        {
-          name: "家医服务",
-          select: false
-        }
-      ],
-      newModules: {
-        columns: [
-          {
-            prop: "department",
-            label: "科室"
-          },
-          {
-            prop: "name",
-            label: "姓名"
-          },
-          {
-            prop: "accountNumber",
-            label: "账号"
-          },
-          {
-            prop: "phone",
-            label: "手机号"
-          },
-          {
-            prop: "businessScope",
-            label: "业务范围"
-          },
-          {
-            prop: "registeredTime",
-            label: "注册时间"
-          },
-          {
-            prop: "departmentManagement",
-            label: "科室管理"
-          }
-        ],
-        tableData: [
-          {
-            id: "91F0B9D25A474B6FA0CDBAC872035984",
-            department: "急诊科",
-            name: "Verge",
-            accountNumber: "201805261024526",
-            phone: "一连串字符",
-            businessScope: "10",
-            registeredTime: "2018-03-22",
-            departmentManagement: "有"
-          },
-          {
-            id: "91F0B9D25A474B6FA0CDBAC872035984",
-            department: "急诊科",
-            name: "Verge",
-            accountNumber: "201805261024526",
-            phone: "一连串字符",
-            businessScope: "10",
-            registeredTime: "2018-03-22",
-            departmentManagement: "有"
-          }
-        ],
-        tableBtn: [
-          {
-            name: "编辑",
-            method: (index, row) => {
-              console.log(row);
-            }
-          },
-          {
-            name: "删除",
-            method: (index, row) => {
-              console.log(row);
-            }
-          }
-        ]
-      },
+      /********************************** */
+
       inviteModules: {
         columns: [
           {
@@ -598,36 +536,178 @@ export default {
      */
     "global.departmentList": {
       handler(n) {
-        this.ourStafAlert.data.department.list = deepCopy(n);
-        this.ourStafAlert.data.manDepartment.list = deepCopy(n);
+        this.ourStafAlert.data.department.list = [
+          { text: "全部", deptId: "" },
+          ...deepCopy(n)
+        ];
+        this.ourStafAlert.data.manDepartment.list = [
+          { text: "全部", deptId: "" },
+          ...deepCopy(n)
+        ];
+      }
+    },
+    /**
+     * 检查医院变化，请求数据
+     */
+    "global.allHospital": {
+      handler(n) {
+        console.log(n);
+        this.setHospitalList(n);
       }
     }
   },
   methods: {
-      /**
-       * 初始化 本院人员 弹窗数据
-       */
-      initOurStafAlertData(){
-          this.ourStafAlert.show = false;
-          this.ourStafAlert.type = 0;
-          this.ourStafAlert.userId = '';
-            this.ourStafAlert.data.name = '';
-            this.ourStafAlert.data.phone = '';
-            this.ourStafAlert.data.account = '';
-            this.ourStafAlert.data.psd = '';
-            this.ourStafAlert.data.department.select = [];
-            this.ourStafAlert.data.manDepartment.select = '';
-            this.ourStafAlert.data.docBus.select = [];
-            this.ourStafAlert.data.manbus.select = [];
-      },
-      /**
-       * 本院人员 页码被选中
-       */
-      ourStaffChangePage(data){
-          console.log(data)
-          this.ourStaff.page.pageNum = data;
-          this.getUserList();
-      },
+    /**
+     * 修改协作 按钮 被点击
+     */
+    revisionCollaboration(item){
+      this.outerCourtAlert.show = true;
+      this.outerCourtAlert.type = 1;
+    },
+    /**
+     * 邀请协作 按钮 被点击
+     */
+    inviteCollaboration(){
+      this.outerCourtAlert.show = true;
+      this.outerCourtAlert.type = 0;
+    },
+    /**
+     * 院外协作人员 弹窗 被提交
+     */
+    outerCourtAlertSub(){
+      console.log('enter')
+      console.log()
+      this.outerCourtAlert.type===0?this.outerCourtNew():this.outerCourtModify();
+    },
+    /**
+     * 院外协作人员 弹窗 新增
+     */
+    async outerCourtNew(){
+      const postData = [
+        {token: this.userInfo.token},
+        {
+          userId:this.outerCourtAlert.account,
+          deptId:this.outerCourtAlert.range.select
+        }
+      ];
+      const res = await synergyManageInvite(...postData);
+      console.log(res);
+      if (res.data && res.data.errCode === 0) {
+        this.$notify({
+          title: "成功",
+          message: "邀请成功",
+          type: "success"
+        });
+        this.outerCourtAlertClose();
+      }else{
+        this.$notify.error({
+          title: "邀请失败",
+          message: res.data.errMsg
+        });
+      }
+    },
+     /**
+     * 院外协作人员 弹窗 修改
+     */
+    outerCourtModify(){
+
+    },
+    /**
+     * 外院 弹窗 关闭
+     */
+    outerCourtAlertClose(done){
+      this.outerCourtAlert.show = false;
+      this.outerCourtAlert.type = 0;
+      this.outerCourtAlert.account = '';
+      this.outerCourtAlert.range.select = [];
+      done()
+    },
+    /**
+     * 外院 分页 选择
+     */
+    outerCourtChangePage(data){
+      this.outerCourt.page.pageNum = data;
+      this.getSynergyManageList();
+    },
+    /**
+     * 外院 科室 被选中
+     */
+    outerCourtUserDepartmentSelect(data){
+      console.log(data);
+      this.outerCourt.departmentSelect = data.index;
+      this.getSynergyManageList();
+    },
+    /**
+     * 外院 医院 被选中
+     */
+    outerCourtUserHospitalSelect(data) {
+      console.log(data);
+      this.outerCourt.hospitalSelect = data.index;
+      this.getSynergyManageList();
+    },
+    /**
+     * 获取 15.1首页-账号及权限-院外协作列表
+     */
+    async getSynergyManageList() {
+      const res = await synergyManageList({
+        token: this.userInfo.token,
+        pageNum: this.outerCourt.page.pageNum,
+        pageSize: this.outerCourt.page.pageSize,
+        query: this.outerCourt.searchKey,
+        departmentId: this.outerCourt.departmentSelect.orgCode || ""
+      });
+      console.log(res);
+      if (res.data.errCode === 0) {
+        this.outerCourt.list = res.data.body.data2.list;
+        this.outerCourt.page.total = res.data.body.data2.total;
+      } else {
+        this.$notify.error({
+          title: "院外协作列表获取失败",
+          message: res.data.errMsg
+        });
+        // return {
+        //   success: false,
+        //   data: null
+        // };
+      }
+    },
+    /**
+     * 设置 医院列表
+     */
+    setHospitalList(data) {
+      const hospitalList = deepCopy(data); 
+      this.outerCourt.hospital.list = [
+        { text: "全部", id: "" },
+        ...hospitalList.map(item => {
+          item.text = item.orgName;
+          return item;
+        })
+      ];
+    },
+    /**
+     * 初始化 本院人员 弹窗数据
+     */
+    initOurStafAlertData() {
+      this.ourStafAlert.show = false;
+      this.ourStafAlert.type = 0;
+      this.ourStafAlert.userId = "";
+      this.ourStafAlert.data.name = "";
+      this.ourStafAlert.data.phone = "";
+      this.ourStafAlert.data.account = "";
+      this.ourStafAlert.data.psd = "";
+      this.ourStafAlert.data.department.select = [];
+      this.ourStafAlert.data.manDepartment.select = "";
+      this.ourStafAlert.data.docBus.select = [];
+      this.ourStafAlert.data.manbus.select = [];
+    },
+    /**
+     * 本院人员 页码被选中
+     */
+    ourStaffChangePage(data) {
+      console.log(data);
+      this.ourStaff.page.pageNum = data;
+      this.getUserList();
+    },
     /**
      * 修改用户信息
      */
@@ -874,7 +954,7 @@ export default {
      * 提交数据
      */
     async submission() {
-      this.ourStafAlert.type === 0 ? thisaddSub() : this.modifyUser();
+      this.ourStafAlert.type === 0 ? this.addSub() : this.modifyUser();
     },
     /**
      * 修改用户
@@ -910,16 +990,16 @@ export default {
       console.log(res);
       if (res.data.errCode === 0) {
         this.$notify({
-          title: "失败",
-          message: "修改失败",
+          title: "成功",
+          message: "修改成功",
           type: "success"
         });
         this.initOurStafAlertData();
         this.getUserList();
       } else {
         this.$notify({
-          title: "成功",
-          message: "修改成功",
+          title: "失败",
+          message: "修改失败",
           type: "error"
         });
       }
@@ -984,14 +1064,23 @@ export default {
       if (res.data.errCode === 0) {
         this.departmentlist = JSON.parse(JSON.stringify(res.data.body));
         this.ourStaff.department.list = JSON.parse(
-          JSON.stringify(
-            res.data.body.map(item => {
+          JSON.stringify([
+            { text: "全部", deptId: "" },
+            ...res.data.body.map(item => {
               item.text = item.deptName;
               return item;
             })
-          )
+          ])
         );
-
+        this.outerCourt.department.list = JSON.parse(
+          JSON.stringify([
+            { text: "全部", deptId: "" },
+            ...res.data.body.map(item => {
+              item.text = item.deptName;
+              return item;
+            })
+          ])
+        );
         console.log(this.departmentlist);
       } else {
         this.$notify.error({
@@ -1061,10 +1150,10 @@ export default {
      */
     async getUserList() {
       const res = await userList({
-        token: this.userInfo.token,         
+        token: this.userInfo.token,
         pageNum: this.ourStaff.ourStaffUser.page.pageNum,
         pageSize: this.ourStaff.ourStaffUser.page.pageSize,
-        departmentId:this.ourStaff.departmentSelect
+        departmentId: this.ourStaff.departmentSelect
       });
       if (res.data && res.data.errCode === 0) {
         console.log(res);
@@ -1093,19 +1182,14 @@ export default {
     },
     /******************** */
     gitIndex(index) {
-      // console.log(456)
+      console.log(456);
       // console.log(index)
     },
 
     inviteSub() {
       console.log("邀请");
     },
-    alertStatus(num) {
-      //操作弹框状态，传入1个数字，1表示新增弹窗，2表示邀请弹窗，其余隐藏弹窗，建议选0
-      if (Object.prototype.toString.call(num) !== "[object Number]") return;
-      num === 1 || num === 2 ? (this.otrue = true) : (this.otrue = false);
-      this.isAdd = num;
-    },
+    alertStatus(num) {},
     ourStaffDepartmentSelect(data) {
       this.ourStaff.departmentSelect = data.index;
       this.getUserList();
@@ -1124,6 +1208,8 @@ export default {
     this.fetchDoctorSubSystems();
     this.hospitalDepartmentManagementSubsystemList();
     this.getUserList();
+    this.setHospitalList(this.global.allHospital);
+    this.getSynergyManageList();
     // console.log(this.$store.state.user)
   }
 };
@@ -1285,7 +1371,23 @@ export default {
 .ourStaf-alert-sub {
   text-align: center;
 }
-
+.our-staf-alert-item{
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.2rem;
+}
+.our-staf-alert-item-key{
+  flex: 1;
+}
+.our-staf-alert-item-value-out{
+  flex: 4;
+}
+.our-staf-alert-item-value-out>div{
+  width: 100%;
+}
+.our-staf-alert-sub{
+  text-align: center;
+}
 /******************************************************/
 .mark-content {
   width: 6.02rem;

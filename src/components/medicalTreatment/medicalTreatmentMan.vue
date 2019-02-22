@@ -265,11 +265,11 @@
         pageNum: 1,
         pageSize: 15,
         // 管理1.2表  表体点击  范围  传入参数
-        doctorVisible:false,
+        doctorVisible: false,
         doctorDetailData: [
           {
-            hosptial:"西南医院第三附属医院",
-            department:"神经内科",
+            hosptial: "西南医院第三附属医院",
+            department: "神经内科",
           },
           {
             hosptial: "西南医院第三附属医院",

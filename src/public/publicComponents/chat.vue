@@ -1,9 +1,10 @@
 <template>
     <div class="chat">
-        <websocket1 ref="mychild" @reback="addMessageK1">
-        </websocket1>
+        <!-- <websocket1 ref="mychild" @reback="addMessageK1">
+        </websocket1> -->
         <div>
             {{chatUser}}
+            {{userSocketInfo.msgBox.a.msg}}1231
         </div>
         <div class="chatMessage">
             <ul class="chatRecord">
@@ -361,10 +362,15 @@ export default {
     computed: {
         ...mapState({
             userState: state => state.user.userInfo,
-            userSelfInfo: state => state.user.userSelfInfo
+            userSelfInfo: state => state.user.userSelfInfo,
+            userSocketInfo: state => state.socket,
+            
+
         })
     },
     created() {
+        console.log(this.$store.state.socket.socketObj);
+        // this.addMessageK1();
         this.getDoctorVis();
         this.getHisRecord();
         this.getMemberMess();
@@ -375,6 +381,35 @@ export default {
         this.messageTicket = this.$store.state.socket.messageTicket;
     },
     methods: {
+        sendMessage(agentData) {
+            if (
+                this.$store.state.socket.socketObj.readyState ===
+                this.$store.state.socket.socketObj.OPEN
+            ) {
+                //若是ws开启状态
+                this.websocketsend(agentData);
+            } else if (
+                this.$store.state.socket.socketObj.readyState ===
+                this.$store.state.socket.socketObj.CONNECTING
+            ) {
+                // 若是 正在开启状态，则等待1s后重新调用
+                let _this = this;
+                setTimeout(function() {
+                    _this.sendMessage(agentData);
+                }, 1000);
+            } else {
+                // 若未开启 ，则等待1s后重新调用
+                let _this = this;
+                setTimeout(function() {
+                    _this.sendMessage(agentData);
+                }, 1000);
+            }
+        },
+        // 数据发送
+        websocketsend(data) {
+            let msg = this.$store.state.socket.IMessage.encode(data).finish();
+            this.$store.state.socket.socketObj.send(msg);
+        },
         // 随访
         getSendMessageChat(oMessage) {
             let messageBody = JSON.stringify(oMessage);
@@ -781,9 +816,9 @@ export default {
             console.log(Iessage);
             // websocket.default.sendMessage(Iessage);
             if (messageBody) {
-                this.$refs.mychild.sendMessage(Iessage);
-                messageBody = JSON.parse(messageBody);
-
+                // this.$refs.mychild.sendMessage(Iessage);
+                // messageBody = JSON.parse(messageBody);
+                this.sendMessage(Iessage);
                 this.addMessageK(
                     messageBody,
                     oHour + ":" + oMinite,
@@ -806,8 +841,9 @@ export default {
                 childMessageType: childMessageType
             });
         },
-        addMessageK1(data){
-alert(data)
+        addMessageK1(data) {
+            console.log(64546);
+            // alert(data)
         },
         searchBtn() {
             this.$emit("searchValue", this.input);
@@ -954,6 +990,14 @@ alert(data)
                     title: "警告",
                     message: res.data.errMsg
                 });
+            }
+        }
+    },
+    watch: {
+        "userSocketInfo.msgBox.a.msg": {
+            handler(n,o) {
+                console.log(465465456465456456456456456)
+                console.log(n);
             }
         }
     },
