@@ -45,7 +45,8 @@ export default {
             oMsgId: "",
             content: "",
             heartCheck: {},
-            createVideoRoomData: {}
+            createVideoRoomData: {},
+            sessionId: ""
         };
     },
     computed: {
@@ -88,7 +89,10 @@ export default {
         receiveVideo() {
             this.closeVideoOr("ON");
         },
-        refuseVideo() {},
+        refuseVideo() {
+            this.receiveVideoVisable = false;
+            this.sendMessageChat(6, "refuse");
+        },
         handleClose() {},
         closeVideo() {
             this.closeVideoOr("OFF");
@@ -113,7 +117,7 @@ export default {
                         title: "成功",
                         message: "退出成功！"
                     });
-                    _this.VideoVisable=false
+                    _this.VideoVisable = false;
                 }
             } else {
                 //失败
@@ -143,8 +147,7 @@ export default {
             if (!window.webSocket) {
                 let owebsocket = new WebSocket(wsUrl);
                 this.$store.commit("socket/SETSOCKET", owebsocket);
-                 
-                
+
                 // this.webSocket = new WebSocket(wsUrl);
                 // window.webSocket = this.webSocket;
             }
@@ -177,6 +180,71 @@ export default {
             return this.$store.state.socket.socketObj;
         },
         // 实际调用的方法 ,按照协议生辰一个data数据agentData
+        // sendMessage(agentData) {
+        //     if (
+        //         this.$store.state.socket.socketObj.readyState ===
+        //         this.$store.state.socket.socketObj.OPEN
+        //     ) {
+        //         //若是ws开启状态
+        //         this.websocketsend(agentData);
+        //     } else if (
+        //         this.$store.state.socket.socketObj.readyState ===
+        //         this.$store.state.socket.socketObj.CONNECTING
+        //     ) {
+        //         // 若是 正在开启状态，则等待1s后重新调用
+        //         let _this = this;
+        //         setTimeout(function() {
+        //             _this.sendMessage(agentData);
+        //         }, 1000);
+        //     } else {
+        //         // 若未开启 ，则等待1s后重新调用
+        //         let _this = this;
+        //         setTimeout(function() {
+        //             _this.sendMessage(agentData);
+        //         }, 1000);
+        //     }
+        // },
+        //发送
+        sendMessageChat(childMessageType, messageBody) {
+            let odate = new Date();
+            let oHour = odate.getHours();
+            let oMinite = odate.getMinutes();
+            if (oHour <= 9) {
+                oHour = "0" + oHour;
+            }
+            if (oMinite <= 9) {
+                oMinite = "0" + oMinite;
+            }
+
+            let timestamp = Date.parse(new Date());
+            console.log(this.userSelfInfo);
+            let Iessage = {
+                RequestType: 4,
+                ticket: this.$store.state.socket.messageTicket.ticket,
+                info: {
+                    messageType: 0, //消息
+                    childMessageType: childMessageType, //文本
+                    from: this.userSelfInfo.userId, //userid
+                    fromNickName: this.userSelfInfo.name, //昵称
+                    toNickName: "",
+                    to: this.sessionId, //发给谁，接收者的用户ID
+                    body: messageBody, //消息内容
+                    sequence: this.$store.state.socket.messageTicket.sequence, //消息发送序号。
+                    chatType: 2, //医生端标识
+                    clientTime: timestamp,
+                    serverTime: this.$store.state.socket.messageTicket
+                        .serverTime
+                }
+            };
+            console.log(Iessage);
+            if (messageBody) {
+                this.sendMessage(Iessage);
+            } else {
+                alert("消息不能为空");
+            }
+
+            // let aaa=websocket.dadaTransfer
+        },
         sendMessage(agentData) {
             if (
                 this.$store.state.socket.socketObj.readyState ===
@@ -200,6 +268,11 @@ export default {
                     _this.sendMessage(agentData);
                 }, 1000);
             }
+        },
+        // 数据发送
+        websocketsend(data) {
+            let msg = this.$store.state.socket.IMessage.encode(data).finish();
+            this.$store.state.socket.socketObj.send(msg);
         },
         // 数据接收
         webSocketonmessage(odata) {
@@ -253,12 +326,13 @@ export default {
             } else if (RequestType == 0) {
                 //同步
             } else if (RequestType == 6) {
+                this.sessionId = odata.info.to;
                 console.log("run");
                 this.$emit("reloaddata");
                 console.log(odata.info.body);
                 let fromL = odata.info.from;
-                if (fromL == this.userSelfInfo.userId) {
-                    //判断是本人发的消息
+                if (fromL != this.userSelfInfo.userId) {
+                    //判断不是本人发的消息
                     let msgId = odata.info.msgId;
                     let childMessageType = odata.info.childMessageType;
                     let bodyVideo = odata.info.body;
@@ -275,9 +349,20 @@ export default {
                         }
                     };
                     this.sendMessage(Iessage);
+
+                    this.$store.commit("socket/MSGBOX", odata.info);
+                    let _this = this;
+                    this.createVideoRoomData = {
+                        conferenceId: odata.info.body.split("&")[2],
+                        conferenceNumber: odata.info.body.split("&")[1]
+                    };
+                    console.log(
+                        odata.info.body + "和" + odata.info.body.split("&")[1]
+                    );
+
                     let username = odata.info.fromNickName;
                     let id = odata.info.to.replace("#", "M").replace(":", "-");
-                    // let content = '';
+                    let content = "";
                     if (childMessageType == 6 || childMessageType == 8) {
                         if (bodyVideo == "refuse") {
                             //拒绝视频
@@ -333,180 +418,204 @@ export default {
                             bodyVideo.indexOf("sendroom") > -1 ||
                             bodyVideo.indexOf("MicroCinicSendRoom") > -1
                         ) {
-                            var videoing = layui.data("videoing").videoing;
-                            if (videoing == "true") {
-                                var room = "";
-                                var bodyT = "videoing";
-                                var childMessageTypeT = 6;
-                                var sessionId = toL;
-                                parent.seestateTPL(
-                                    childMessageTypeT,
-                                    bodyT,
-                                    sessionId,
-                                    room,
-                                    layui.data("realName").realName,
-                                    fromNickNameL
-                                );
-                                return false;
-                            }
-                            if (odata.info.body.indexOf("$") > -1) {
-                                if (odata.info.body.indexOf(userId) > -1) {
-                                    var strAudio =
-                                        "<audio id='audioPlay' src='./chat_vedio_callin.mp3' hidden='true' loop='true'>";
-                                    if ($("body").find("audio").length <= 0)
-                                        $("body").append(strAudio);
-                                    var audio = document.getElementById(
-                                        "audioPlay"
-                                    );
-                                    //浏览器支持 audion
-                                    audio.play();
-                                    content =
-                                        '<div class="lay-video">' +
-                                        '<div style="color:#fff;padding-bottom: 10px;">邀请你开视频</div>' +
-                                        '<div class="closediV"><button class="layui-btn layui-btn-danger" layim-event="extend" lay-filter="refusedto">拒绝</button>' +
-                                        '<button class="layui-btn" layim-event="extend" lay-filter="accept" data-typel="two" data-toNickNameL="' +
-                                        toNickNameL +
-                                        '" data-toL="' +
-                                        toL +
-                                        '" data-fromL="' +
-                                        fromL +
-                                        '" data-fromNickNameL="' +
-                                        fromNickNameL +
-                                        '" data-room="' +
-                                        bodyVideo +
-                                        '" data-type="true">接受</button>' +
-                                        "</div></div>";
-                                    layer.msg(username + "邀请你开视频");
-                                    Notification.requestPermission(function(
-                                        permission
-                                    ) {
-                                        if (
-                                            Notification.permission == "granted"
-                                        ) {
-                                            var notification = new Notification(
-                                                "" + username + "",
-                                                {
-                                                    body:
-                                                        "邀请你开视频。。。。",
-                                                    icon:
-                                                        "../../images/gf_logo_app.png"
-                                                }
-                                            );
-                                            notification.onclick = function() {
-                                                notification.close();
-                                            };
-                                        }
-                                    });
-                                } else {
-                                    var conferenceId = odata.info.body
-                                        .split("&")[2]
-                                        .split("$")[0];
-                                    var kName = odata.info.fromNickName;
-                                    content =
-                                        '<div class="lay-video">' +
-                                        '<div style="color:#F60" data-id="' +
-                                        conferenceId +
-                                        '" >发起了视频聊天</div>' +
-                                        '<div class="closediV vidoefix"  id="' +
-                                        conferenceId +
-                                        '">' +
-                                        '<div class="viedoe" style="color:#1474A9;padding: 5px;border-bottom: 2px solid #ccc;cursor: pointer;" layim-event="extend" data-conferenceId="' +
-                                        conferenceId +
-                                        '" lay-filter="jionRoom"><img src="../../images/v1.png" style="width: 20px;padding-right: 10px;    float: inherit;">正在进行视频会话</div>' +
-                                        '<div class="jinlis" style="display:none"><div class="userImlist">' +
-                                        '<img src="../../images/a1.png"><img src="../../images/a1.png"><img src="../../images/a1.png"><img src="../../images/a1.png">' +
-                                        "</div>" +
-                                        '<button class="layui-btn layui-btn-danger joninRom" layim-event="extend" lay-filter="cancelInto">取消</button>' +
-                                        '<button class="layui-btn joninRom" layim-event="extend" lay-filter="accept" data-typel="one" data-toNickNameL="' +
-                                        toNickNameL +
-                                        '" data-toL="' +
-                                        toL +
-                                        '" data-fromL="' +
-                                        fromL +
-                                        '" data-fromNickNameL="' +
-                                        fromNickNameL +
-                                        '" data-room="' +
-                                        bodyVideo +
-                                        '" data-type="true">加入</button>' +
-                                        "</div></div>";
-                                    var roomArray = [];
-                                    var roomNum = bodyVideo.split("&")[1];
-                                    var roomSession =
-                                        toL +
-                                        "$" +
-                                        roomNum +
-                                        "$" +
-                                        conferenceId;
-                                    try {
-                                        var roomAJosn = JSON.parse(
-                                            localStorage.getItem("roomSession")
-                                        );
-                                        for (
-                                            var i = 0;
-                                            i < roomAJosn.length;
-                                            i++
-                                        ) {
-                                            var roomnums = roomAJosn[i];
-                                            if (roomnums.indexOf(toL) > -1) {
-                                                console.log(roomnums);
-                                                roomAJosn.remove(roomnums);
-                                            } else {
-                                                roomArray.push(roomAJosn[i]);
-                                            }
-                                        }
-                                        //  roomArray.push(roomAJosn.toString());
-                                    } catch (e) {}
-                                    roomArray.push(roomSession);
-                                    localStorage.setItem(
-                                        "roomSession",
-                                        JSON.stringify(roomArray)
-                                    );
-                                }
-                            } else {
-                                var strAudio =
-                                    "<audio id='audioPlay' src='./chat_vedio_callin.mp3' hidden='true' loop='true'>";
-                                if ($("body").find("audio").length <= 0)
-                                    $("body").append(strAudio);
-                                var audio = document.getElementById(
-                                    "audioPlay"
-                                );
-                                //浏览器支持 audion
-                                audio.play();
-                                content =
-                                    '<div class="lay-video">' +
-                                    '<div style="color:#fff;padding-bottom: 10px;">邀请你开视频</div>' +
-                                    '<div class="closediV"><button class="layui-btn layui-btn-danger" layim-event="extend" lay-filter="refusedto">拒绝</button>' +
-                                    '<button class="layui-btn" layim-event="extend" lay-filter="accept" data-typel="two" data-toNickNameL="' +
-                                    toNickNameL +
-                                    '" data-toL="' +
-                                    toL +
-                                    '" data-fromL="' +
-                                    fromL +
-                                    '" data-fromNickNameL="' +
-                                    fromNickNameL +
-                                    '" data-room="' +
-                                    bodyVideo +
-                                    '" data-type="true">接受</button>' +
-                                    "</div></div>";
-                                layer.msg(username + "邀请你开视频");
-                                Notification.requestPermission(function(
-                                    permission
-                                ) {
-                                    if (Notification.permission == "granted") {
-                                        var notification = new Notification(
-                                            "" + username + "",
-                                            {
-                                                body: "邀请你开视频。。。。",
-                                                icon:
-                                                    "../../images/gf_logo_app.png"
-                                            }
-                                        );
-                                        notification.onclick = function() {
-                                            notification.close();
-                                        };
+                            if (
+                                odata.info.body.split("&")[3] ==
+                                this.userSelfInfo.userId
+                            ) {
+                                this.$notify({
+                                    title: "请注意",
+                                    message: "您有一条视频消息请点开查看！",
+                                    position: "bottom-right",
+                                    duration: 0,
+                                    onClick() {
+                                        _this.receiveVideoVisable = true;
                                     }
                                 });
                             }
+
+                            // var videoing = layui.data("videoing").videoing;
+                            // if (videoing == "true") {
+                            //     var room = "";
+                            //     var bodyT = "videoing";
+                            //     var childMessageTypeT = 6;
+                            //     var sessionId = toL;
+                            //     parent.seestateTPL(
+                            //         childMessageTypeT,
+                            //         bodyT,
+                            //         sessionId,
+                            //         room,
+                            //         layui.data("realName").realName,
+                            //         fromNickNameL
+                            //     );
+                            //     return false;
+                            // }
+                            // if (odata.info.body.indexOf("$") > -1) {
+                            //     this.$notify({
+                            //         title: "请注意",
+                            //         message: "您有一条视频消息请点开查看！",
+                            //         position: "bottom-right",
+                            //         duration: 0,
+                            //         onClick() {
+                            //             _this.receiveVideoVisable = true;
+                            //         }
+                            //     });
+                            //     if (odata.info.body.indexOf(userId) > -1) {
+                            //         var strAudio =
+                            //             "<audio id='audioPlay' src='./chat_vedio_callin.mp3' hidden='true' loop='true'>";
+                            //         if ($("body").find("audio").length <= 0)
+                            //             $("body").append(strAudio);
+                            //         var audio = document.getElementById(
+                            //             "audioPlay"
+                            //         );
+                            //         //浏览器支持 audion
+                            //         audio.play();
+                            //         content =
+                            //             '<div class="lay-video">' +
+                            //             '<div style="color:#fff;padding-bottom: 10px;">邀请你开视频</div>' +
+                            //             '<div class="closediV"><button class="layui-btn layui-btn-danger" layim-event="extend" lay-filter="refusedto">拒绝</button>' +
+                            //             '<button class="layui-btn" layim-event="extend" lay-filter="accept" data-typel="two" data-toNickNameL="' +
+                            //             toNickNameL +
+                            //             '" data-toL="' +
+                            //             toL +
+                            //             '" data-fromL="' +
+                            //             fromL +
+                            //             '" data-fromNickNameL="' +
+                            //             fromNickNameL +
+                            //             '" data-room="' +
+                            //             bodyVideo +
+                            //             '" data-type="true">接受</button>' +
+                            //             "</div></div>";
+                            //         layer.msg(username + "邀请你开视频");
+                            //         Notification.requestPermission(function(
+                            //             permission
+                            //         ) {
+                            //             if (
+                            //                 Notification.permission == "granted"
+                            //             ) {
+                            //                 var notification = new Notification(
+                            //                     "" + username + "",
+                            //                     {
+                            //                         body:
+                            //                             "邀请你开视频。。。。",
+                            //                         icon:
+                            //                             "../../images/gf_logo_app.png"
+                            //                     }
+                            //                 );
+                            //                 notification.onclick = function() {
+                            //                     notification.close();
+                            //                 };
+                            //             }
+                            //         });
+                            //     } else {
+                            //         var conferenceId = odata.info.body
+                            //             .split("&")[2]
+                            //             .split("$")[0];
+                            //         var kName = odata.info.fromNickName;
+                            //         content =
+                            //             '<div class="lay-video">' +
+                            //             '<div style="color:#F60" data-id="' +
+                            //             conferenceId +
+                            //             '" >发起了视频聊天</div>' +
+                            //             '<div class="closediV vidoefix"  id="' +
+                            //             conferenceId +
+                            //             '">' +
+                            //             '<div class="viedoe" style="color:#1474A9;padding: 5px;border-bottom: 2px solid #ccc;cursor: pointer;" layim-event="extend" data-conferenceId="' +
+                            //             conferenceId +
+                            //             '" lay-filter="jionRoom"><img src="../../images/v1.png" style="width: 20px;padding-right: 10px;    float: inherit;">正在进行视频会话</div>' +
+                            //             '<div class="jinlis" style="display:none"><div class="userImlist">' +
+                            //             '<img src="../../images/a1.png"><img src="../../images/a1.png"><img src="../../images/a1.png"><img src="../../images/a1.png">' +
+                            //             "</div>" +
+                            //             '<button class="layui-btn layui-btn-danger joninRom" layim-event="extend" lay-filter="cancelInto">取消</button>' +
+                            //             '<button class="layui-btn joninRom" layim-event="extend" lay-filter="accept" data-typel="one" data-toNickNameL="' +
+                            //             toNickNameL +
+                            //             '" data-toL="' +
+                            //             toL +
+                            //             '" data-fromL="' +
+                            //             fromL +
+                            //             '" data-fromNickNameL="' +
+                            //             fromNickNameL +
+                            //             '" data-room="' +
+                            //             bodyVideo +
+                            //             '" data-type="true">加入</button>' +
+                            //             "</div></div>";
+                            //         var roomArray = [];
+                            //         var roomNum = bodyVideo.split("&")[1];
+                            //         var roomSession =
+                            //             toL +
+                            //             "$" +
+                            //             roomNum +
+                            //             "$" +
+                            //             conferenceId;
+                            //         try {
+                            //             var roomAJosn = JSON.parse(
+                            //                 localStorage.getItem("roomSession")
+                            //             );
+                            //             for (
+                            //                 var i = 0;
+                            //                 i < roomAJosn.length;
+                            //                 i++
+                            //             ) {
+                            //                 var roomnums = roomAJosn[i];
+                            //                 if (roomnums.indexOf(toL) > -1) {
+                            //                     console.log(roomnums);
+                            //                     roomAJosn.remove(roomnums);
+                            //                 } else {
+                            //                     roomArray.push(roomAJosn[i]);
+                            //                 }
+                            //             }
+                            //             //  roomArray.push(roomAJosn.toString());
+                            //         } catch (e) {}
+                            //         roomArray.push(roomSession);
+                            //         localStorage.setItem(
+                            //             "roomSession",
+                            //             JSON.stringify(roomArray)
+                            //         );
+                            //     }
+                            // } else {
+                            //     var strAudio =
+                            //         "<audio id='audioPlay' src='./chat_vedio_callin.mp3' hidden='true' loop='true'>";
+                            //     if ($("body").find("audio").length <= 0)
+                            //         $("body").append(strAudio);
+                            //     var audio = document.getElementById(
+                            //         "audioPlay"
+                            //     );
+                            //     //浏览器支持 audion
+                            //     audio.play();
+                            //     content =
+                            //         '<div class="lay-video">' +
+                            //         '<div style="color:#fff;padding-bottom: 10px;">邀请你开视频</div>' +
+                            //         '<div class="closediV"><button class="layui-btn layui-btn-danger" layim-event="extend" lay-filter="refusedto">拒绝</button>' +
+                            //         '<button class="layui-btn" layim-event="extend" lay-filter="accept" data-typel="two" data-toNickNameL="' +
+                            //         toNickNameL +
+                            //         '" data-toL="' +
+                            //         toL +
+                            //         '" data-fromL="' +
+                            //         fromL +
+                            //         '" data-fromNickNameL="' +
+                            //         fromNickNameL +
+                            //         '" data-room="' +
+                            //         bodyVideo +
+                            //         '" data-type="true">接受</button>' +
+                            //         "</div></div>";
+                            //     layer.msg(username + "邀请你开视频");
+                            //     Notification.requestPermission(function(
+                            //         permission
+                            //     ) {
+                            //         if (Notification.permission == "granted") {
+                            //             var notification = new Notification(
+                            //                 "" + username + "",
+                            //                 {
+                            //                     body: "邀请你开视频。。。。",
+                            //                     icon:
+                            //                         "../../images/gf_logo_app.png"
+                            //                 }
+                            //             );
+                            //             notification.onclick = function() {
+                            //                 notification.close();
+                            //             };
+                            //         }
+                            //     });
+                            // }
                         }
                     } else if (childMessageType == 4) {
                         content =
@@ -888,20 +997,18 @@ export default {
                         }
                     }
                 } else {
-                    // 不是本人发的消息
+                    // 是本人发的消息
                     //判断当前接受的会话是否在当前列表中
                     //  let msgId = odata.info.msgId;
                     // let childMessageType = odata.info.childMessageType;
                     // let bodyVideo = odata.info.body;
                     // let fromNickNameL = odata.info.fromNickName;
-
-                    // let toL = odata.info.to;
-                    // let toNickNameL = odata.info.toNickName;
-                    this.$store.commit("socket/MSGBOX", odata.info);
-                    console.log('dd')
-                    console.log(this.$store.state.socket.msgBox.a.msg)
-                    let msgId = odata.info.msgId;
                     console.log(odata);
+                    let toL = odata.info.to;
+                    let toNickNameL = odata.info.toNickName;
+
+                    let msgId = odata.info.msgId;
+
                     var Iessage = {
                         RequestType: 106,
                         ticket: this.$store.state.socket.messageTicket.ticket,
@@ -911,22 +1018,6 @@ export default {
                         }
                     };
                     this.sendMessage(Iessage);
-                    let _this = this;
-                    this.createVideoRoomData = {
-                        conferenceId: odata.info.body.split("&")[2],
-                        conferenceNumber: odata.info.body.split("&")[1]
-                    };
-                    if (odata.info.childMessageType == 6) {
-                        this.$notify({
-                            title: "请注意",
-                            message: "您有一条视频消息请点开查看！",
-                            position: "bottom-right",
-                            duration: 0,
-                            onClick() {
-                                _this.receiveVideoVisable = true;
-                            }
-                        });
-                    }
 
                     try {
                         var bodyls = JSON.parse(odata.info.body);
@@ -1006,10 +1097,10 @@ export default {
             }
         },
         // 数据发送
-        websocketsend(data) {
-            let msg = this.$store.state.socket.IMessage.encode(data).finish();
-            this.$store.state.socket.socketObj.send(msg);
-        },
+        // websocketsend(data) {
+        //     let msg = this.$store.state.socket.IMessage.encode(data).finish();
+        //     this.$store.state.socket.socketObj.send(msg);
+        // },
         //关闭
         webSocketonclose(e) {
             // console.log("connection closed (" + e.code + ")");

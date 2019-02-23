@@ -225,12 +225,9 @@ export default {
     receptionAudit:'/m/v1/api/referral/dualReferral/reception/audit',//14.11.双向转诊-WEB医生端-审核
 
     getDoctorMessage1:'/m/v1/api/familyMember/getFamilyMemberInfoByDoctor',
-<<<<<<< HEAD
     queryConsultationDoctorList:'/m/v1/api/consultation/queryConsultationDoctorList',
     queryByPage:'/m/v1/api/record/patientRecord/queryByPage',//1.患者分页列表
     queryListByUserId:'/m/v1/api/familyMember/queryListByUserId',//2.医生端获取家庭成员列表
-=======
     // queryConsultationDoctorList:'/m/v1/api/consultation/queryConsultationDoctorList'
->>>>>>> 4b26a1c6192089ee463455bb563f51bef1ac31ad
 }
 

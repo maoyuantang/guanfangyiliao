@@ -1,6 +1,6 @@
 <template>
     <!-- 远程会诊系统 -->
-    
+
     <div class="consultation">
         <!-- 发起会诊弹窗 -->
         <el-dialog class="startGroup" title="发起会诊" :visible.sync="centerDialogVisible" width="602px" hight="607px" center>
@@ -41,8 +41,12 @@
                     <el-input v-model="startHz.medicalHistory"></el-input>
                 </el-form-item>
                 <el-form-item label="申请时间:">
-                    <el-date-picker v-model="startHz.applicationTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
-                    </el-date-picker>
+                    <el-date-picker
+      v-model="startHz.applicationTime"
+      type="datetime"
+      placeholder="选择日期时间"
+       format="yyyy-MM-dd HH:mm">
+    </el-date-picker>
                 </el-form-item>
                 <el-form-item label="会诊目的:">
                     <el-input v-model="startHz.consultationPurpose"></el-input>
@@ -512,24 +516,50 @@ export default {
             //     title: " ", //图表标题
             //     totalNumber:""
             // },
-            drawData1:{
-					dataAxis:['点', ],//每个柱子代表的类名
-					data:[220, ],//具体数值
-                    title:'测试测试',//图表标题
-                    total:'565'
-				},
-            drawData:{
-					dataAxis:['点', '击', '柱', '子','点', '击', '柱', '子','点', '击', '柱', '子'],//每个柱子代表的类名
-					data:[220, 182, 191, 234,220, 182, 191, 234,220, 182, 191, 234],//具体数值
-                    title:'测试测试',//图表标题
-                    totalNumber:'565'
-				},
+            drawData1: {
+                dataAxis: ["点"], //每个柱子代表的类名
+                data: [220], //具体数值
+                title: "测试测试", //图表标题
+                total: "565"
+            },
+            drawData: {
+                dataAxis: [
+                    "点",
+                    "击",
+                    "柱",
+                    "子",
+                    "点",
+                    "击",
+                    "柱",
+                    "子",
+                    "点",
+                    "击",
+                    "柱",
+                    "子"
+                ], //每个柱子代表的类名
+                data: [
+                    220,
+                    182,
+                    191,
+                    234,
+                    220,
+                    182,
+                    191,
+                    234,
+                    220,
+                    182,
+                    191,
+                    234
+                ], //具体数值
+                title: "测试测试", //图表标题
+                totalNumber: "565"
+            },
             //发起科室统计图
             drawDataStart: {
                 dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
                 title: " ", //图表标题
-                totalNumber:""
+                totalNumber: ""
             }
         };
     },
@@ -767,7 +797,7 @@ export default {
             } else if (res.i == 1) {
                 this.oconsulVisable = false;
                 this.getApplyTjList();
-                this.getAdminTjList()
+                this.getAdminTjList();
             }
         }, //获取医院列表
         async getHospitalment() {

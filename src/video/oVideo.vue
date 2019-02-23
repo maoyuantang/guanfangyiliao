@@ -6,12 +6,13 @@
                     <div class="col-xs-12 media-box other-media">
                         <div id="remoteVideos"></div>
                         <div class="videoChatBtn">
-                            问诊工具
-                            {{createVideoRoomData}}
+                            问诊工具 
                         </div>
                     </div>
                     <div class="col-xs-12 media-box us-media">
-                        <div id="localVideos"></div>
+                        <div id="localVideos">
+                             <video id="video" width="640" height="480" autoplay></video>
+                        </div>
                         <div>
                             <!-- <video-chat></video-chat> -->
                         </div>
@@ -20,6 +21,21 @@
 
                 </div>
             </div>
+        </div>
+        <div>
+           <div>
+               <h3></h3>
+               <ul>
+                   <li>
+                       <div>
+                           <img src="../assets/img/sendNew1.png" />
+                       </div>
+                       <div>
+                           于波
+                       </div>
+                   </li>
+               </ul>
+           </div>
         </div>
     </div>
 </template>
@@ -40,6 +56,49 @@ export default {
         };
     },
     methods: {
+        //调用本地摄像头
+        getLocal() {
+            var aVideo = document.getElementById("video");
+            this.$nextTick(() => {
+                var aCanvas = document.getElementById("canvas");
+                console.log(aCanvas);
+            });
+            // var ctx = aCanvas.getContext("2d");
+
+            navigator.getUserMedia =
+                navigator.getUserMedia ||
+                navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia ||
+                navigator.msGetUserMedia; //获取媒体对象（这里指摄像头）
+            navigator.getUserMedia(
+                {
+                    video: true
+                },
+                gotStream,
+                noStream
+            ); //参数1获取用户打开权限；参数二成功打开后调用，并传一个视频流对象，参数三打开失败后调用，传错误信息
+
+            function gotStream(stream) {
+                video.src = URL.createObjectURL(stream);
+                video.onerror = function() {
+                    stream.stop();
+                };
+                stream.onended = noStream;
+                video.onloadedmetadata = function() {
+                    // alert("摄像头成功打开！");
+                };
+            }
+
+            function noStream(err) {
+                alert(err);
+            }
+
+            // document
+            //     .getElementById("snap")
+            //     .addEventListener("click", function() {
+            //         ctx.drawImage(aVideo, 0, 0, 640, 480); //将获取视频绘制在画布上
+            //     });
+        },
         generateVideoDeviceSelectElement(resource) {
             var VideoInputSelectForm = document.createElement("div");
             VideoInputSelectForm.className = "form-group";
@@ -563,7 +622,6 @@ export default {
             var server = $("#server").val();
             // var server=this.oSeaver
             var server = "meet.xiaoqiangio.com";
-            alert(server);
             if (!server) {
                 alert("请输入服务器地址");
                 return false;
@@ -672,7 +730,7 @@ export default {
          * 匿名加入到房间
          */
         anonymousJoinRoomBtn() {
-            alert(this.createVideoRoomData.conferenceNumber)
+            alert(this.createVideoRoomData.conferenceNumber);
             let _this = this;
             // var conferenceName = $("#anonymousConferenceName").val();
             let conferenceName = this.createVideoRoomData.conferenceNumber;
@@ -681,7 +739,7 @@ export default {
                 return;
             }
             // var anonymousNickname = $("#anonymousNickname").val();
-            let anonymousNickname="于波"
+            let anonymousNickname = "于波";
             if (!anonymousNickname) {
                 alert("请输入昵称");
                 return;
@@ -901,7 +959,14 @@ export default {
     },
     created() {
         let _this = this;
-        this.firstSet();
+        
+        if (this.videoType == "门诊") {
+            this.getLocal();
+        } else {
+            alert('1234')
+            this.firstSet();
+        }
+
         /**
          * 收到有人进入房间
          */
@@ -1077,10 +1142,11 @@ export default {
         document.body.removeChild(document.getElementById(linkdata));
     },
     props: {
-        createVideoRoomData: Object
+        createVideoRoomData: Object,
+        videoType: String
     },
     model: {
-        prop: ["createVideoRoomData"],
+        prop: ["createVideoRoomData", "videoType"],
         event: "reBack"
     }
 };
