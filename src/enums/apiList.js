@@ -243,5 +243,15 @@ export default {
     medicalControlCharts:'/m/v1/api/referral/mcc/medicalControlCharts',//13.12.统计-统计图
     fetchMedicalType:'/m/v1/api/referral/mcc/fetchMedicalType',//13.13.分级管理-类型下拉数据
     fetchMedicalDict:'/m/v1/api/referral/mcc/fetchMedicalDict',//13.14.分级管理-名称与类型联动的名称下拉列表
+    pushStatisticalData:'/m/v1/api/record/recordCase/pushStatisticalData',//3.推送档案统计
+    doctorInto:'/m/v1/api/clinic/clinic/video/doctorInto',//20.1医生进入诊室
+    doctorGetList:'/m/v1/api/clinic/clinic/video/doctorGetList',//20.2医生获取视频列表状态
+    doctorHangupNext:'/m/v1/api/clinic/clinic/video/doctorHangupNext',//20.3医生就诊完毕，挂断视频
+    doctorClickList:'/m/v1/api/clinic/clinic/video/doctorClickList',//20.4医生获取未完成排队列表
+    doctorQuit:'/m/v1/api/clinic/clinic/video/doctorQuit',//20.5医生退出诊室
+    userInto:'/m/v1/api/clinic/clinic/video/userInto',//20.6患者进入诊室排队
+    userQueueHangUp:'/m/v1/api/clinic/clinic/video/userQueueHangUp',//20.7患者排队中，挂断
+    userHangUp:'/m/v1/api/clinic/clinic/video/userHangUp',//20.8患者视频中，主动挂断
+    userRefresh:'/m/v1/api/clinic/clinic/video/userRefresh',//20.9患者动态刷新
 }
 

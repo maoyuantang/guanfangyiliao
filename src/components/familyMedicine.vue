@@ -1,6 +1,5 @@
 <template>
 	<div class="family-medicine" >
-		{{global.businessModule}}
 		<div :is="$store.state.user.viewRoot.now.type==='1'?'familyMedicineManagement':'familyMedicineDoctor'"></div>
 	</div>
 	

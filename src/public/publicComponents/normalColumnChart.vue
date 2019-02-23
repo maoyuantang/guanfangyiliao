@@ -13,16 +13,18 @@
             inData:Object
         },
         model:{
-            prop:['inData']
+            prop:['inData']  
         },
         watch:{
             inData(n){
+                console.log('5555555555')
                 this.draw({
                     dataAxis:n.dataAxis,
                     data:n.data,
                     title:n.title,
                     total:n.total
                 });
+                console.log('change')
             }
         },
 		methods:{

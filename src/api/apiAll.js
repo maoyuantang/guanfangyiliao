@@ -2083,7 +2083,7 @@ export const queryPageByPushAndQuery = query => { //1.查询提取和推送档�
         }
     })
 }
-export const queryStatisticalData = query => { //2.查询提取和推送档案统计
+export const queryStatisticalData = query => { //2.查询提取统计
     const sign = postQueryHandle(query);
     return axios({
         method: 'get',
@@ -2508,6 +2508,125 @@ export const fetchMedicalDict = query => { //13.14.分级管理-名称与类型�
         method: 'get',
         url: apiList.fetchMedicalDict,
         params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const pushStatisticalData = query => { //3.推送档案统计
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.pushStatisticalData,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const doctorInto = (query, data) => {//20.1医生进入诊室
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.doctorInto,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const doctorGetList = (query, data) => {//20.2医生获取视频列表状态
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.doctorGetList,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const doctorHangupNext = (query, data) => {//20.3医生就诊完毕，挂断视频
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.doctorHangupNext,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const doctorClickList = (query, data) => {//20.4医生获取未完成排队列表
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.doctorClickList,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const doctorQuit = (query, data) => {//20.5医生退出诊室
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.doctorQuit,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const userInto = (query, data) => {//20.6患者进入诊室排队
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.userInto,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const userQueueHangUp = (query, data) => {//20.7患者排队中，挂断
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.userQueueHangUp,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const userHangUp = (query, data) => {//20.8患者视频中，主动挂断
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.userHangUp,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const userRefresh = (query, data) => {//20.9患者动态刷新
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.userRefresh,
+        params: query,
+        data: data,
         headers: {
             sign
         }

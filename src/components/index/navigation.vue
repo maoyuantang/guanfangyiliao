@@ -34,13 +34,11 @@ import { parse } from 'protobufjs';
 				}
 			},
 			'$store.state.user.viewRoot'(n,o){
-				// console.log(n);
 				let rePage = sessionStorage.getItem('page');
 				if(rePage){
 					try{
 						rePage = JSON.parse(rePage);
 					}catch(e){
-						// console.log(e);
 						this.$notify.error({
 							title: '错误',
 							message: '数据解析失败!!'
@@ -183,15 +181,11 @@ import { parse } from 'protobufjs';
 						});
 						return;
 					}
-					
-					// console.log(this.viewRoot[this.viewRoot.now.name])
 					const index = this.viewRoot[this.viewRoot.now.name].find(item=>{//该权限视图是否包含该页面
 						return item.code===rePage.code
 					});
-					// console.log(index);
 					if(index){
 						this.navList = this.navList.map((item,key)=>{
-							// console.log(item)
 							item.select = item.code===rePage.code;
 							return item;
 						});
