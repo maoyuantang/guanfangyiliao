@@ -2083,7 +2083,7 @@ export const queryPageByPushAndQuery = query => { //1.查询提取和推送档�
         }
     })
 }
-export const queryStatisticalData = query => { //2.查询提取和推送档案统计
+export const queryStatisticalData = query => { //2.查询提取统计
     const sign = postQueryHandle(query);
     return axios({
         method: 'get',
@@ -2353,6 +2353,282 @@ export const queryConsultationDoctorList = query => { //2.医生端获取家庭�
         }
     })
 }
-
-
-
+export const fetchMedicalClassify = query => { //13.1.分类管理-列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.fetchMedicalClassify,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const addMedicalClassify = (query, data) => {//13.2.分类管理-新增
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.addMedicalClassify,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const editMedicalClassify = (query, data) => {//13.3.分级管理-修改
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.editMedicalClassify,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const delMedicalClassify = (query, data) => {//13.4.分级管理-删除
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.delMedicalClassify,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const chooseDept = query => { //13.5.权限控制-科室列表下拉框
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.chooseDept,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const chooseAcceptsLevel = query => { //13.6.权限控制-接诊疾病等级下拉框
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.chooseAcceptsLevel,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const chooseApplyDept = query => { //13.7.权限控制-申请医院和科室下拉框
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.chooseApplyDept,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const addMedicalControl = (query, data) => {//13.8.权限控制-新增
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.addMedicalControl,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const editMedicalControl = (query, data) => {//13.9.权限控制-编辑
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.editMedicalControl,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const delMedicalControl = (query, data) => {//13.10.权限控制-删除
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.delMedicalControl,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const fetchMedicalControl = query => { //13.11.权限控制-列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.fetchMedicalControl,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const medicalControlCharts = query => { //13.12.统计-统计图
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.medicalControlCharts,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const fetchMedicalType = query => { //13.13.分级管理-类型下拉数据
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.fetchMedicalType,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const fetchMedicalDict = query => { //13.14.分级管理-名称与类型联动的名称下拉列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.fetchMedicalDict,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const pushStatisticalData = query => { //3.推送档案统计
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.pushStatisticalData,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const doctorInto = (query, data) => {//20.1医生进入诊室
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.doctorInto,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const doctorGetList = (query, data) => {//20.2医生获取视频列表状态
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.doctorGetList,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const doctorHangupNext = (query, data) => {//20.3医生就诊完毕，挂断视频
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.doctorHangupNext,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const doctorClickList = (query, data) => {//20.4医生获取未完成排队列表
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.doctorClickList,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const doctorQuit = (query, data) => {//20.5医生退出诊室
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.doctorQuit,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const userInto = (query, data) => {//20.6患者进入诊室排队
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.userInto,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const userQueueHangUp = (query, data) => {//20.7患者排队中，挂断
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.userQueueHangUp,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const userHangUp = (query, data) => {//20.8患者视频中，主动挂断
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.userHangUp,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const userRefresh = (query, data) => {//20.9患者动态刷新
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.userRefresh,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}

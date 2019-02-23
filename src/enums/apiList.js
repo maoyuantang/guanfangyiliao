@@ -229,5 +229,29 @@ export default {
     queryByPage:'/m/v1/api/record/patientRecord/queryByPage',//1.患者分页列表
     queryListByUserId:'/m/v1/api/familyMember/queryListByUserId',//2.医生端获取家庭成员列表
     // queryConsultationDoctorList:'/m/v1/api/consultation/queryConsultationDoctorList'
+    fetchMedicalClassify:'/m/v1/api/referral/mcc/fetchMedicalClassify',//13.1.分类管理-列表
+    addMedicalClassify:'/m/v1/api/referral/mcc/addMedicalClassify',//13.2.分类管理-新增
+    editMedicalClassify:'/m/v1/api/referral/mcc/editMedicalClassify',//13.3.分级管理-修改
+    delMedicalClassify:'/m/v1/api/referral/mcc/delMedicalClassify',//13.4.分级管理-删除
+    chooseDept:'/m/v1/api/referral/mcc/chooseDept',//13.5.权限控制-科室列表下拉框
+    chooseAcceptsLevel:'/m/v1/api/referral/mcc/chooseAcceptsLevel',//13.6.权限控制-接诊疾病等级下拉框
+    chooseApplyDept:'/m/v1/api/referral/mcc/chooseApplyDept',//13.7.权限控制-申请医院和科室下拉框
+    addMedicalControl:'/m/v1/api/referral/mcc/addMedicalControl',//13.8.权限控制-新增
+    editMedicalControl:'/m/v1/api/referral/mcc/editMedicalControl',//13.9.权限控制-编辑
+    delMedicalControl:'/m/v1/api/referral/mcc/delMedicalControl',//13.10.权限控制-删除
+    fetchMedicalControl:'/m/v1/api/referral/mcc/fetchMedicalControl',//13.11.权限控制-列表
+    medicalControlCharts:'/m/v1/api/referral/mcc/medicalControlCharts',//13.12.统计-统计图
+    fetchMedicalType:'/m/v1/api/referral/mcc/fetchMedicalType',//13.13.分级管理-类型下拉数据
+    fetchMedicalDict:'/m/v1/api/referral/mcc/fetchMedicalDict',//13.14.分级管理-名称与类型联动的名称下拉列表
+    pushStatisticalData:'/m/v1/api/record/recordCase/pushStatisticalData',//3.推送档案统计
+    doctorInto:'/m/v1/api/clinic/clinic/video/doctorInto',//20.1医生进入诊室
+    doctorGetList:'/m/v1/api/clinic/clinic/video/doctorGetList',//20.2医生获取视频列表状态
+    doctorHangupNext:'/m/v1/api/clinic/clinic/video/doctorHangupNext',//20.3医生就诊完毕，挂断视频
+    doctorClickList:'/m/v1/api/clinic/clinic/video/doctorClickList',//20.4医生获取未完成排队列表
+    doctorQuit:'/m/v1/api/clinic/clinic/video/doctorQuit',//20.5医生退出诊室
+    userInto:'/m/v1/api/clinic/clinic/video/userInto',//20.6患者进入诊室排队
+    userQueueHangUp:'/m/v1/api/clinic/clinic/video/userQueueHangUp',//20.7患者排队中，挂断
+    userHangUp:'/m/v1/api/clinic/clinic/video/userHangUp',//20.8患者视频中，主动挂断
+    userRefresh:'/m/v1/api/clinic/clinic/video/userRefresh',//20.9患者动态刷新
 }
 

@@ -12,12 +12,14 @@ import familyMedicineDoctor from './familyMedicine/familyMedicineDoctor.vue'
 	export default {
 		components:{
 			familyMedicineManagement,
-			familyMedicineDoctor
+			familyMedicineDoctor,
+			 
 		},
 		computed:{
 			...mapState({
 				userInfo:state => state.user.userInfo,
-				userSelfInfo:state => state.user.userSelfInfo
+				userSelfInfo:state => state.user.userSelfInfo,
+				global: state => state.global
 			})
 		},
 		data () {

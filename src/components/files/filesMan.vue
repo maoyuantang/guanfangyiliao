@@ -75,6 +75,7 @@
           </div>
         </div>
         <div class="files-man-chart-body">
+          4546465
             <normalColumnChart :inData="item" v-for="(item,index) in chartData" :key="index"></normalColumnChart>
         </div>
       </div>

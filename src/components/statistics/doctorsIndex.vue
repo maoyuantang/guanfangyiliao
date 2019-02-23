@@ -1,18 +1,10 @@
 <template>
 	<div class="doctors-index">
 		<div class="top-info">
-			<!-- <div class="info-box-out" v-for="(item,index) in topInfo" :key="index">
-				<infoBox :inData="item" @reback="getReData">
-					<infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter>
-					<infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter>
-					<infoList :inData="infoListData"></infoList>	
-				</infoBox>
-			</div> -->
-
 			<div class="info-box-out">
 				<infoBox inData="远程门诊" @reback="getReData">
-					<infoEnter v-for="(item,index) in onlineRoomsByDoctor" :key="index" :inData="item" @reback="getInfoClick"></infoEnter>
-					<!-- <infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter> -->
+					<!-- <infoEnter v-for="(item,index) in onlineRoomsByDoctor" :key="index" :inData="item" @reback="getInfoClick"></infoEnter> -->
+					<infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter>
 				</infoBox>
 			</div>
 			<div class="info-box-out">
@@ -22,7 +14,13 @@
 			</div>
 			<div class="info-box-out">
 				<infoBox inData="远程教育" @reback="getReData">
-					<infoList :inData="infoListData"></infoList>	
+					<!-- <infoList :inData="infoListData"></infoList>	 -->
+					<div class="distance-learning">
+						<div class="distance-learning-content">
+							<div class="distance-learning-content-info"></div>
+							<div class="distance-learning-content-status"></div>
+						</div>
+					</div>
 				</infoBox>
 			</div>
 		</div>
@@ -262,7 +260,7 @@
 				 */
 				planHistory:{
 					title:'查看历史计划',//弹窗标题
-					show:true,//是否显示
+					show:false,//是否显示
 					selectTime:[],//选择的时间
 					selectName:'',//选择的名称
 					allList:[],//所有列表
@@ -737,12 +735,6 @@
 						}
 					});
 				});
-
-				// if(this.auth['40000']){//随访下面的三个模块
-				// 	Promise.all([this.getTodayPlan(),this.getTodayAlert(),this.getTodayFollowup()])
-				// 	.then(res=>console.log(res))
-				// 	.catch(err=>console.log(err))
-				// }
 			},
 
 			/**
@@ -1194,6 +1186,13 @@
 	}
 	.history-alert-show-content{
 		margin-top: 0.2rem;
+	}
+	.distance-learning{
+
+	}
+	.distance-learning-content{
+		border: 1px solid #E1E8EE;
+		
 	}
 </style>
 <!--
