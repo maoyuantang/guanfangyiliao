@@ -5,7 +5,7 @@
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
                         <div id="remoteVideos"></div>
-                        <div class="videoChatBtn">
+                        <div class="videoChatBtn" v-show="questVisable" @click="videoChatBtn()">
                             问诊工具
                         </div>
                     </div>
@@ -17,9 +17,7 @@
                             <!-- <video-chat></video-chat> -->
                             <div class="videoTopBtnBox">
                                 <div>
-                                    <img src="./../../static/assets/img/danganVideo.png" />
-                                    
-                                    查档案
+                                    <img src="./../../static/assets/img/danganVideo.png" /> 查档案
                                 </div>
                                 <div>
                                     <div>屏幕分享</div>
@@ -37,6 +35,9 @@
                                     <div>关闭视频</div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="videoChatBox" v-show="videoChatVisable">
+                            <videoChat :sessionId="sessionId" :doctorVis="doctorVis"></videoChat>
                         </div>
 
                     </div>
@@ -88,7 +89,10 @@ import {
     doctorGetList,
     doctorClickList,
     createVideoRoom,
-    fetchChatSession
+    fetchChatSession,
+    doctorQuit,
+    doctorHangupNext,
+    storageUsers
 } from "../api/apiAll.js";
 export default {
     name: "video",
@@ -114,17 +118,20 @@ export default {
             createVideoRoomData1: {},
             localVideoVisable: true,
             sessionId: "",
-            oUserId:"",//当前就诊人id
-            guaVisable:false,
-            closePatientNumVisable:false,
+            oUserId: "", //当前就诊人id
+            guaVisable: false,
+            questVisable: false,
+            closePatientNumVisable: false,
+            videoChatVisable: false,
+            doctorVis: 1
         };
     },
     methods: {
-        openPatientNum(){
-            this.closePatientNumVisable=true
+        openPatientNum() {
+            this.closePatientNumVisable = true;
         },
-        closePatientNum(){
-            this.closePatientNumVisable=false
+        closePatientNum() {
+            this.closePatientNumVisable = false;
         },
         //发送
         sendMessageChat(childMessageType, messageBody, childMessageType1) {
@@ -332,7 +339,7 @@ export default {
         },
         //创建会话
         async createChat(ouserId) {
-            this.oUserId=ouserId
+            this.oUserId = ouserId;
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -370,7 +377,8 @@ export default {
                 };
                 _this.localVideoVisable = false;
                 this.firstSet();
-                _this.guaVisable=true;
+                _this.guaVisable = true;
+                _this.questVisable = true;
                 let childMessageType = 7;
                 let messageBody =
                     "MicroCinicSendRoom&" +
@@ -387,6 +395,16 @@ export default {
                 });
             }
         },
+        //问诊工具
+        videoChatBtn() {
+            if (this.videoChatVisable) {
+                this.videoChatVisable = false;
+                this.guaVisable = true;
+            } else {
+                this.videoChatVisable = true;
+                this.guaVisable = false;
+            }
+        },
         //挂断当前视频
         async closeTheVideo() {
             let _this = this;
@@ -395,12 +413,13 @@ export default {
             };
             let options = {
                 clinicId: this.oClinicId,
-                userId: oUserId
+                userId: this.oUserId
             };
             const res = await doctorHangupNext(query, options);
             if (res.data && res.data.errCode === 0) {
                 _this.getThePatient();
-                _this.noLineUpNum()
+                _this.noLineUpNum();
+                _this.closeVideoRoom()
             } else {
                 //失败
                 this.$notify.error({
@@ -410,7 +429,7 @@ export default {
             }
         },
         //关闭视频
-        async closeTheVideo() {
+        async closeVideo() {
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -422,8 +441,59 @@ export default {
             if (res.data && res.data.errCode === 0) {
                 this.$notify.success({
                     title: "成功",
-                    message: '退出诊室成功'
+                    message: "退出诊室成功"
                 });
+                this.closeVideoRoom()
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //退出视频房间
+        async closeVideoRoom() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                conferenceId: this.createVideoRoomData1.conferenceId,
+                state: "OFF"
+            };
+            const res = await storageUsers(query, options);
+            if (res.data && res.data.errCode === 0) {
+                 let childMessageType = 7;
+                let messageBody =
+                    "MicroCinic&" +"hangup"
+
+                _this.sendMessageChat(childMessageType, messageBody);
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+         //删除视频房间
+        async closeVideoRoom() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                conferenceId: this.createVideoRoomData1.conferenceId,
+                state: "OFF"
+            };
+            const res = await storageUsers(query, options);
+            if (res.data && res.data.errCode === 0) {
+                 let childMessageType = 7;
+                let messageBody =
+                    "MicroCinic&" +"hangup"
+
+                _this.sendMessageChat(childMessageType, messageBody);
             } else {
                 //失败
                 this.$notify.error({
@@ -1575,7 +1645,7 @@ video {
 }
 .videoChatBtn {
     position: absolute;
-    bottom:10px;
+    bottom: 10px;
     padding: 10px 0;
     text-align: center;
     cursor: pointer;
@@ -1652,35 +1722,34 @@ video {
     font-size: 14px;
     color: #ffffff;
 }
-.videoTopBtnBox{
+.videoTopBtnBox {
     position: absolute;
-    top:10px;
-    width:100%;
+    top: 10px;
+    width: 100%;
     display: flex;
     display: -webkit-flex;
-    justify-content:space-between
+    justify-content: space-between;
 }
-.videoTopBtnBox>div:first-child{
+.videoTopBtnBox > div:first-child {
     padding: 6px;
-width:120px;
-height: 40px;
-background: rgba(40,16,18,0.78);
-border-radius: 4px;
-color:white;
+    width: 120px;
+    height: 40px;
+    background: rgba(40, 16, 18, 0.78);
+    border-radius: 4px;
+    color: white;
 }
-.videoTopBtnBox>div:first-child>img
-{
-        margin-right: 16px;
+.videoTopBtnBox > div:first-child > img {
+    margin-right: 16px;
 }
-.videoTopBtnBox>div:nth-child(2){
+.videoTopBtnBox > div:nth-child(2) {
     display: flex;
-    display: -webkit-flex
+    display: -webkit-flex;
 }
-.videoTopBtnBox>div:nth-child(2)>div{
+.videoTopBtnBox > div:nth-child(2) > div {
     /* position: relative;
     left: 17px;
     float: right; */
-    margin:0 10px;
+    margin: 0 10px;
     background: #7e7377;
     border-radius: 50%;
     width: 70px;
@@ -1688,21 +1757,23 @@ color:white;
     line-height: 70px;
     text-align: center;
     font-size: 15px;
-    color:white;
+    color: white;
 }
-#participant_stream_{
+#participant_stream_ {
+}
 
+#remoteVideos > div > div:nth-child(2),
+#remoteVideos > div > div:nth-child(3),
+#localVideos > div > div:nth-child(2),
+#localVideos > div > div:nth-child(3) {
+    display: none !important;
 }
-
-#remoteVideos>div>div:nth-child(2),
-#remoteVideos>div>div:nth-child(3),
-#localVideos>div>div:nth-child(2),
-#localVideos>div>div:nth-child(3){
-display: none !important
-}
-#localVideos{
+#localVideos {
     height: 768px;
 }
-
+.videoChatBox {
+    position: absolute;
+    bottom: -253px;
+}
 </style>
 
