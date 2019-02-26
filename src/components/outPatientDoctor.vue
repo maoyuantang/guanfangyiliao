@@ -474,8 +474,8 @@
 
         <!-- 视频聊天 -->
         <div v-if="centerDialogVisible">
-            <el-dialog title="视频" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
-                <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType"></ovideo>
+            <el-dialog title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
+                <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"></ovideo>
             </el-dialog>
         </div>
 
@@ -505,7 +505,8 @@ import {
     clinicOrders, //7.18(WEB医生)获取所有该诊室的订单信息
 
     // 谭莹
-    fetchChatSession //创建单聊会话
+    fetchChatSession, //创建单聊会话
+    doctorInto,//进入门诊
 
     // 废弃接口
     // fetchHospitalDepts,//2.2.获取医院科室列表
@@ -538,6 +539,7 @@ export default {
                 conferenceId: "",
                 conferenceNumber: ""
             },
+            oClinicId:[],//当前进入门诊id
             //谭莹变量
             // testData: {
             //   select: {
@@ -687,35 +689,40 @@ export default {
     },
     methods: {
         // 谭莹事件
-        //进入诊室
-        async enterRoomBtn(oClinicId) {
+        //进入门诊
+        enterRoomBtn(oid){
             this.centerDialogVisible = true;
-            let _this = this;
-            let query = {
-                token: this.userState.token
-            };
-            const options = {
-                clinicId: oClinicId,
-            };
-            const res = await storageUsers(query, options);
-            console.log(res);
-            if (res.data && res.data.errCode === 0) {
-                this.$notify.success({
-                    title: "成功",
-                    message: "退出成功！"
-                });
-                _this.createVideoVisable = false;
-                _this.sendMessageChat(6, "cancle", "VIDEO");
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
+            this.oClinicId=oid
         },
         //退出视频
-        async closeVideo() {
+        // async closeVideo() {
+        //     let _this = this;
+        //     let query = {
+        //         token: this.userState.token
+        //     };
+        //     const options = {
+        //         conferenceId: this.createVideoRoomData.conferenceId,
+        //         state: "OFF"
+        //     };
+        //     const res = await storageUsers(query, options);
+        //     console.log(res);
+        //     if (res.data && res.data.errCode === 0) {
+        //         this.$notify.success({
+        //             title: "成功",
+        //             message: "退出成功！"
+        //         });
+        //         _this.createVideoVisable = false;
+        //         _this.sendMessageChat(6, "cancle", "VIDEO");
+        //     } else {
+        //         //失败
+        //         this.$notify.error({
+        //             title: "警告",
+        //             message: res.data.errMsg
+        //         });
+        //     }
+        // },
+        //退出诊室
+         async closeVideo() {
             let _this = this;
             let query = {
                 token: this.userState.token
