@@ -2632,3 +2632,83 @@ export const userRefresh = (query, data) => {//20.9患者动态刷新
         }
     })
 }
+export const groupList = query => { //19.3用户组列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.groupList,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const groupSelects = query => { //19.8用户组条件选项
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.groupSelects,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const addGroupMember = (query, data) => {//19.5分配用户到小组中
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.addGroupMember,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const addOrdinaryArchives = (query, data) => {//2.新增患者普通档案
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.addOrdinaryArchives,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const addWomanMessage = (query, data) => {//4.新增孕妇档案
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.addWomanMessage,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const typeList = query => { //6.授课方式筛选条件列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.typeList,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const arrangeList = query => { //5.获取排课计划列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.arrangeList,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

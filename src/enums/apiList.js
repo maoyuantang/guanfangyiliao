@@ -94,7 +94,7 @@ export default {
     createVideoRoom:'/m/v1/api/basics/videoMeeting/createVideoRoom',//1.3.创建视频
     storageUsers:'/m/v1/api/basics/videoMeeting/storageUsers',//1.4.进入/退出视频房间
     queryStorageUsers:'/m/v1/api/videoMeeting/queryStorageUsers/',//1.5.根据房间号获取用户列表
-    closeVideoRoom:'/m/v1/api/videoMeeting/closeVideoRoom/',//1.6.删除视频会议房间
+    closeVideoRoom:'/m/v1/api/basics/videoMeeting/closeVideoRoom/',//1.6.删除视频会议房间
     videoMeetingInvited:'/m/v1/api/videoMeeting/invited/',//1.7.邀请用户进行视频通话
     invitedOff:'/m/v1/api/videoMeeting/invited/off/',//1.8.通知邀请者已经进入会议视频
     upload:'/m/v1/api/hdfs/fs/upload',//1.9.1文件上传
@@ -253,5 +253,12 @@ export default {
     userQueueHangUp:'/m/v1/api/clinic/clinic/video/userQueueHangUp',//20.7患者排队中，挂断
     userHangUp:'/m/v1/api/clinic/clinic/video/userHangUp',//20.8患者视频中，主动挂断
     userRefresh:'/m/v1/api/clinic/clinic/video/userRefresh',//20.9患者动态刷新
+    groupList:'/m/v1/api/user/group/list',//19.3用户组列表
+    groupSelects:'/m/v1/api/user/group/groupSelects',//19.8用户组条件选项
+    addGroupMember:'/m/v1/api/user/group/addGroupMember',//19.5分配用户到小组中
+    addOrdinaryArchives:'/m/v1/api/record/patientRecord/addOrdinaryArchives',//2.新增患者普通档案
+    addWomanMessage:'/m/v1/api/record/patientRecord/addWomanMessage',//4.新增孕妇档案
+    typeList:'/m/v1/api/inquiry/eduCourse/typeList',//6.授课方式筛选条件列表
+    arrangeList:'/m/v1/api/inquiry/eduCourse/arrangeList',//5.获取排课计划列表
 }
 
