@@ -7,265 +7,265 @@
 
 -->
 <template>
-  <div class="outPatientDoctor">
-    {{chatVisible}}
-    <!-- {{userState.hasAuth}}
+    <div class="outPatientDoctor">
+        {{chatVisible}}
+        <!-- {{userState.hasAuth}}
     {{userState.hasAuth.filter(item=>item.authorityId==='10000' && item.type === '2')}} -->
-    <!-- 45465465465
+        <!-- 45465465465
 <img :src="imgChuFangDan" alt=""> -->
-    <doctorTab :inData="oAdminTab" @reBack="getConsulTabData"></doctorTab>
-    <!-- 我的诊室-循环 -->
-    
-    <ul v-for="(text,index) in myHomes" :key="index" v-if="oconsulVisable==0" class="outpatient_s">
-      <li class="outpatient_left">
-        <p class="title">{{text.orgName}}-{{text.clinicName}}</p>
-        <div class="outpatient_user">
-          <img src="../assets/img/ME.png" alt="">
-          <div class="outpatient_name">
-            <p class="p1">{{text.orgName}}</p>
-            <!-- <p class="p1">{{text.doctor.doctorName}}</p> -->
-            <p class="p2">{{text.doctor.doctorStates?'没接诊':'接诊中...'}}</p>
-          </div>
-        </div>
-        <i></i>
-        <div v-for="(text,index) in tableDataList1" :key="index" v-show='myHomesBiao[index]==index' style="width: 90%;margin: auto;">
-          <el-table :data="text">
-            <el-table-column prop="unProcess" label="未处理"></el-table-column>
-            <el-table-column prop="process" label="已处理"></el-table-column>
-            <el-table-column prop="otherDocter" label="其他医生"></el-table-column>
-          </el-table>
-        </div>
-        <el-button class="startConsul" type="text" @click="centerDialogVisible = true">进入门诊</el-button>
-      </li>
-      <li class="outpatient_right">
-        <!-- 病人个数循环 -->
-        <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail">
-          <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
-            <h1>{{text1.userName}}</h1>
-            <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-              <el-button type="success" plain>查看档案</el-button>
-              <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button>
-              <el-button type="info" plain>未开始</el-button>
-            </div>
-          </li>
-          <li class="medicalExpenses">
-            问诊费用
-            <span>
-              <span>￥</span>{{text1.askPrice}}</span>
-          </li>
-          <li class="drug">
-            <div class="fee">处方费用 ¥
-              <span>{{text1.prescriptionPrice}}</span>
-            </div>
-            <ul>
-              <li class="drugTitle">Rx:</li>
-              <li>
-                <ul class="drugDetail">
-                  <li>
-                    <ul v-for="(text,index) in text.drugDetail" :key="index">
-                      <li>（{{index+1}}）</li>
-                      <li>{{text.drugName}}</li>
-                      <li>{{text.norm}}</li>
-                      <li>{{text.drugQuantity}}</li>
-                      <li>{{text.drugDosage}}</li>
-                      <li>{{text.drugUse}}</li>
-                      <li>{{text.drugTimes}}</li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li class="orderTime">
-            <span>下单时间:</span>
-            <span class="span">{{text1.clinicOrderTime}}</span>
-          </li>
-          <li class="acceptTime">
-            <span>接诊时间:</span>
-            <span class="span">{{text1.askTime}}</span>
-          </li>
-        </ul>
+        <doctorTab :inData="oAdminTab" @reBack="getConsulTabData"></doctorTab>
+        <!-- 我的诊室-循环 -->
 
-      </li>
-    </ul>
-    <ul v-if="oconsulVisable == 1" class="prescriptionCheck">
-      <li class="checkList">
-        <div class="title">
-          <span class="title1">审核列表</span>
-          <span class="title2">...</span>
-        </div>
-        <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index,text)' :class="whichUser==index?'backgroundUser':''">
-          <li>
-            <img src="../assets/img/ME.png" alt="头像">
-            <div>
-              <p class="name">{{text.userName}}</p>
-              <p class="depart">问诊医生:
-                <span>{{text.createDoctor}}</span> |
-                <span>{{text.clinicName}}</span>
-              </p>
-            </div>
-          </li>
-        </ul>
-      </li>
-      <li v-for="(text,index) in bcd" :key="index+ '-label'" v-show='whichUser==index' class="waitPeople">
-
-        <ul>
-          <li>
-            <ul class="title">
-              <li class="wait">
-                <i class="iconfont">&#xe8c0;</i>
-                <span>等待审方人数</span>
-              </li>
-              <li class="num">{{text.number}}</li>
-            </ul>
-          </li>
-          <li class="wait1">
-            <ul>
-              <li class="name">{{text.userName}}</li>
-              <li class="gender">性别:
-                <span>{{text.userSex}}</span>
-              </li>
-              <li class="age">年龄:
-                <span>{{text.userAge}}</span>
-              </li>
-              <li class="birthday">出生日期:
-                <span>{{text.birthday}}</span>
-              </li>
-              <li class="phoneNumber">联系方式:
-                <span>{{text.birthday}}</span>
-              </li>
-              <li class="address">常用地址:
-                <span>{{text.address}}</span>
-              </li>
-
-            </ul>
-          </li>
-          <li class="wait2">
-            <ul>
-              <li class="patientNumber">门诊号:
-                <span>{{text.clinicId}}</span>
-              </li>
-              <li class="feeType">费别:
-                <span>{{text.priceDesc}}</span>
-              </li>
-              <li class="medicalInsurance">医保类型:
-                <span>{{text.medicalInsurance}}</span>
-              </li>
-            </ul>
-          </li>
-          <li class="wait3">
-            <ul>
-              <li class="healDoctor">开方医生:
-                <span>{{text.createDoctor}}</span>
-              </li>
-              <li class="checkDoctor">审方医生:
-                <span>{{text.reviewDoctor}}</span>
-              </li>
-              <li class="giveDoctor">发药医生:
-                <span>{{text.sendDoctor}}</span>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-      <li v-for="(text,index) in bcd" :key="index" v-show='whichUser==index' class="prescriptionDetail">
-        <ul>
-          <li class="detailHead">
-          </li>
-          <li class="detailCount">
-            <div class="sign">
-              <ul>
-                <li>主诉:
-                  <span>{{text.pb.complained}}</span>
-                </li>
-                <li>现病史:
-                  <span>{{text.pb.medicalHistory}}</span>
-                </li>
-                <li>过敏史:
-                  <span>{{text.pb.allergyHistory}}</span>
-                </li>
-                <li>门诊诊断:
-                  <span>{{text.pb.diagnosis}}</span>
-                </li>
-              </ul>
-            </div>
-            <div class="result">
-              <div class="front">
-                <ul>
-                  <li>
-                    <el-checkbox v-model="text.pb.report">疫情报告</el-checkbox>
-                  </li>
-                  <li>
-                    <el-checkbox v-model="text.pb.report">复诊</el-checkbox>
-                  </li>
-                  <li>
-
-                    <div class="block">
-                      <span class="demonstration">发病日期：</span>
-                      <el-date-picker @blur="demonstration1" v-model="text.pb.occurTime" align="right" type="date" placeholder="选择日期">
-                      </el-date-picker>
+        <ul v-for="(text,index) in myHomes" :key="index" v-if="oconsulVisable==0" class="outpatient_s">
+            <li class="outpatient_left">
+                <p class="title">{{text.orgName}}-{{text.clinicName}}</p>
+                <div class="outpatient_user">
+                    <img src="../assets/img/ME.png" alt="">
+                    <div class="outpatient_name">
+                        <p class="p1">{{text.orgName}}</p>
+                        <!-- <p class="p1">{{text.doctor.doctorName}}</p> -->
+                        <p class="p2">{{text.doctor.doctorStates?'没接诊':'接诊中...'}}</p>
                     </div>
-                  </li>
+                </div>
+                <i></i>
+                <div v-for="(text,index) in tableDataList1" :key="index" v-show='myHomesBiao[index]==index' style="width: 90%;margin: auto;">
+                    <el-table :data="text">
+                        <el-table-column prop="unProcess" label="未处理"></el-table-column>
+                        <el-table-column prop="process" label="已处理"></el-table-column>
+                        <el-table-column prop="otherDocter" label="其他医生"></el-table-column>
+                    </el-table>
+                </div>
+                <el-button class="startConsul" type="text" @click="enterRoomBtn(text.id)">进入门诊</el-button>
+            </li>
+            <li class="outpatient_right">
+                <!-- 病人个数循环 -->
+                <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail">
+                    <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
+                        <h1>{{text1.userName}}</h1>
+                        <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
+                            <el-button type="success" plain>查看档案</el-button>
+                            <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button>
+                            <el-button type="info" plain>未开始</el-button>
+                        </div>
+                    </li>
+                    <li class="medicalExpenses">
+                        问诊费用
+                        <span>
+                            <span>￥</span>{{text1.askPrice}}</span>
+                    </li>
+                    <li class="drug">
+                        <div class="fee">处方费用 ¥
+                            <span>{{text1.prescriptionPrice}}</span>
+                        </div>
+                        <ul>
+                            <li class="drugTitle">Rx:</li>
+                            <li>
+                                <ul class="drugDetail">
+                                    <li>
+                                        <ul v-for="(text,index) in text.drugDetail" :key="index">
+                                            <li>（{{index+1}}）</li>
+                                            <li>{{text.drugName}}</li>
+                                            <li>{{text.norm}}</li>
+                                            <li>{{text.drugQuantity}}</li>
+                                            <li>{{text.drugDosage}}</li>
+                                            <li>{{text.drugUse}}</li>
+                                            <li>{{text.drugTimes}}</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="orderTime">
+                        <span>下单时间:</span>
+                        <span class="span">{{text1.clinicOrderTime}}</span>
+                    </li>
+                    <li class="acceptTime">
+                        <span>接诊时间:</span>
+                        <span class="span">{{text1.askTime}}</span>
+                    </li>
                 </ul>
-              </div>
-              <div class="behind">
-                <div class="block">
-                  <span class="demonstration">下次复查日期:</span>
-                  <el-date-picker @blur="demonstration2" v-model="text.pb.reviewTime" align="right" type="date" placeholder="选择日期">
-                  </el-date-picker>
+
+            </li>
+        </ul>
+        <ul v-if="oconsulVisable == 1" class="prescriptionCheck">
+            <li class="checkList">
+                <div class="title">
+                    <span class="title1">审核列表</span>
+                    <span class="title2">...</span>
                 </div>
-              </div>
-            </div>
-            <div class="dates">
-              <ul>
-                <li class="orderTime">
-                  <span>下单时间:</span>
-                  <span class="span">{{text.pb.createTime}}</span>
-                </li>
-                <li class="acceptTime">
-                  <span>接诊时间:</span>
-                  <span class="span">{{text.pb.createTime}}</span>
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li class="detailList">
-            <search @searchValue="adminSearchChange"></search>
-            <div class="listBao">
-              <div class="lists" v-for="(text,index) in ARR" :key="index" v-show='whichUser==index'>
-                <el-table :data="text" style="width: 100%">
-                  <el-table-column prop="index" label="序号"></el-table-column>
-                  <el-table-column prop="drugName" label="药品名称">
-                  </el-table-column>
-                  <el-table-column prop="drugUse" label="用法">
-                  </el-table-column>
-                  <el-table-column prop="drugTimes" label="频率">
-                  </el-table-column>
-                  <el-table-column prop="drugDosage" label="用量">
-                  </el-table-column>
-                  <el-table-column prop="drugPrice" label="单价">
-                  </el-table-column>
-                  <el-table-column prop="drugQuantity" label="数量">
-                  </el-table-column>
-                  <el-table-column prop="subtotal" label="合计">
-                  </el-table-column>
-                  <el-table-column prop="doctorAsk" label="医生嘱托">
-                  </el-table-column>
-                </el-table>
-              </div>
-              <div class="totals">
-                <div class="totalMoney">总金额:
-                  <span>{{text.pb.drugPrice}}</span>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li class="detailFooter">
-            <el-button class="preview" type="primary" @click="dialogTableVisibleFun" plain>预览</el-button>
-            <el-button class="fail" type="info">不通过</el-button>
-            <el-button class="success" type="success" @click='checkPrescription'>生成电子处方</el-button>
-          </li>
-          <!-- <div>
+                <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index,text)' :class="whichUser==index?'backgroundUser':''">
+                    <li>
+                        <img src="../assets/img/ME.png" alt="头像">
+                        <div>
+                            <p class="name">{{text.userName}}</p>
+                            <p class="depart">问诊医生:
+                                <span>{{text.createDoctor}}</span> |
+                                <span>{{text.clinicName}}</span>
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li v-for="(text,index) in bcd" :key="index+ '-label'" v-show='whichUser==index' class="waitPeople">
+
+                <ul>
+                    <li>
+                        <ul class="title">
+                            <li class="wait">
+                                <i class="iconfont">&#xe8c0;</i>
+                                <span>等待审方人数</span>
+                            </li>
+                            <li class="num">{{text.number}}</li>
+                        </ul>
+                    </li>
+                    <li class="wait1">
+                        <ul>
+                            <li class="name">{{text.userName}}</li>
+                            <li class="gender">性别:
+                                <span>{{text.userSex}}</span>
+                            </li>
+                            <li class="age">年龄:
+                                <span>{{text.userAge}}</span>
+                            </li>
+                            <li class="birthday">出生日期:
+                                <span>{{text.birthday}}</span>
+                            </li>
+                            <li class="phoneNumber">联系方式:
+                                <span>{{text.birthday}}</span>
+                            </li>
+                            <li class="address">常用地址:
+                                <span>{{text.address}}</span>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li class="wait2">
+                        <ul>
+                            <li class="patientNumber">门诊号:
+                                <span>{{text.clinicId}}</span>
+                            </li>
+                            <li class="feeType">费别:
+                                <span>{{text.priceDesc}}</span>
+                            </li>
+                            <li class="medicalInsurance">医保类型:
+                                <span>{{text.medicalInsurance}}</span>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="wait3">
+                        <ul>
+                            <li class="healDoctor">开方医生:
+                                <span>{{text.createDoctor}}</span>
+                            </li>
+                            <li class="checkDoctor">审方医生:
+                                <span>{{text.reviewDoctor}}</span>
+                            </li>
+                            <li class="giveDoctor">发药医生:
+                                <span>{{text.sendDoctor}}</span>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li v-for="(text,index) in bcd" :key="index" v-show='whichUser==index' class="prescriptionDetail">
+                <ul>
+                    <li class="detailHead">
+                    </li>
+                    <li class="detailCount">
+                        <div class="sign">
+                            <ul>
+                                <li>主诉:
+                                    <span>{{text.pb.complained}}</span>
+                                </li>
+                                <li>现病史:
+                                    <span>{{text.pb.medicalHistory}}</span>
+                                </li>
+                                <li>过敏史:
+                                    <span>{{text.pb.allergyHistory}}</span>
+                                </li>
+                                <li>门诊诊断:
+                                    <span>{{text.pb.diagnosis}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="result">
+                            <div class="front">
+                                <ul>
+                                    <li>
+                                        <el-checkbox v-model="text.pb.report">疫情报告</el-checkbox>
+                                    </li>
+                                    <li>
+                                        <el-checkbox v-model="text.pb.report">复诊</el-checkbox>
+                                    </li>
+                                    <li>
+
+                                        <div class="block">
+                                            <span class="demonstration">发病日期：</span>
+                                            <el-date-picker @blur="demonstration1" v-model="text.pb.occurTime" align="right" type="date" placeholder="选择日期">
+                                            </el-date-picker>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="behind">
+                                <div class="block">
+                                    <span class="demonstration">下次复查日期:</span>
+                                    <el-date-picker @blur="demonstration2" v-model="text.pb.reviewTime" align="right" type="date" placeholder="选择日期">
+                                    </el-date-picker>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dates">
+                            <ul>
+                                <li class="orderTime">
+                                    <span>下单时间:</span>
+                                    <span class="span">{{text.pb.createTime}}</span>
+                                </li>
+                                <li class="acceptTime">
+                                    <span>接诊时间:</span>
+                                    <span class="span">{{text.pb.createTime}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="detailList">
+                        <search @searchValue="adminSearchChange"></search>
+                        <div class="listBao">
+                            <div class="lists" v-for="(text,index) in ARR" :key="index" v-show='whichUser==index'>
+                                <el-table :data="text" style="width: 100%">
+                                    <el-table-column prop="index" label="序号"></el-table-column>
+                                    <el-table-column prop="drugName" label="药品名称">
+                                    </el-table-column>
+                                    <el-table-column prop="drugUse" label="用法">
+                                    </el-table-column>
+                                    <el-table-column prop="drugTimes" label="频率">
+                                    </el-table-column>
+                                    <el-table-column prop="drugDosage" label="用量">
+                                    </el-table-column>
+                                    <el-table-column prop="drugPrice" label="单价">
+                                    </el-table-column>
+                                    <el-table-column prop="drugQuantity" label="数量">
+                                    </el-table-column>
+                                    <el-table-column prop="subtotal" label="合计">
+                                    </el-table-column>
+                                    <el-table-column prop="doctorAsk" label="医生嘱托">
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                            <div class="totals">
+                                <div class="totalMoney">总金额:
+                                    <span>{{text.pb.drugPrice}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="detailFooter">
+                        <el-button class="preview" type="primary" @click="dialogTableVisibleFun" plain>预览</el-button>
+                        <el-button class="fail" type="info">不通过</el-button>
+                        <el-button class="success" type="success" @click='checkPrescription'>生成电子处方</el-button>
+                    </li>
+                    <!-- <div>
             4555
             <div>
               <span v-for="(item,index) in testData.list" :key="index" @click="getData(item,index)">{{item.name}}</span>
@@ -275,208 +275,211 @@
             </div>
 
           </div> -->
-        </ul>
-      </li>
-    </ul>
-
-    <ul v-if="oconsulVisable == 2" class="transport">
-      <li class="checkList">
-        <div class="title">
-          <span class="title1">审核列表</span>
-          <span class="title2">...</span>
-        </div>
-        <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index)' :class="whichUser==index?'backgroundUser':''">
-          <li>
-            <img src="../assets/img/ME.png" alt="头像">
-            <div>
-              <p class="name">{{text.userName}}</p>
-              <p class="depart">问诊医生:
-                <span>{{text.createDoctor}}</span> |
-                <span>{{text.clinicName}}</span>
-              </p>
-            </div>
-          </li>
-        </ul>
-      </li>
-      <li v-for="(text,index) in bcd" :key="index+ '-label'" v-show='whichUser==index' class="waitPeople">
-        <ul>
-          <li>
-            <ul class="title">
-              <li class="wait">
-                <i class="iconfont">&#xe8c0;</i>
-                <span>等待发药人数</span>
-              </li>
-              <li class="num">{{text.number}}</li>
-            </ul>
-          </li>
-          <li class="wait1">
-            <ul>
-              <li class="name">{{text.userName}}</li>
-              <li class="gender">性别:
-                <span>{{text.userSex}}</span>
-              </li>
-              <li class="age">年龄:
-                <span>{{text.userAge}}</span>
-              </li>
-              <li class="birthday">出生日期:
-                <span>{{text.birthday}}</span>
-              </li>
-              <li class="phoneNumber">联系方式:
-                <span>{{text.birthday}}</span>
-              </li>
-              <li class="address">常用地址:
-                <span>{{text.address}}</span>
-              </li>
-
-            </ul>
-          </li>
-          <li class="wait2">
-            <ul>
-              <li class="patientNumber">门诊号:
-                <span>{{text.clinicId}}</span>
-              </li>
-              <li class="feeType">费别:
-                <span>{{text.priceDesc}}</span>
-              </li>
-              <li class="medicalInsurance">医保类型:
-                <span>{{text.medicalInsurance}}</span>
-              </li>
-            </ul>
-          </li>
-          <li class="wait3">
-            <ul>
-              <li class="healDoctor">开方医生:
-                <span>{{text.createDoctor}}</span>
-              </li>
-              <li class="checkDoctor">审方医生:
-                <span>{{text.reviewDoctor}}</span>
-              </li>
-              <li class="giveDoctor">发药医生:
-                <span>{{text.sendDoctor}}</span>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-      <li v-for="(text,index) in bcd" :key="index" v-show='whichUser==index' class="prescriptionDetail">
-        <ul>
-          <li class="detailHead">
-          </li>
-          <li class="detailCount">
-            <div class="sign">
-              <ul>
-                <li>主诉:
-                  <span>{{text.pb.complained}}</span>
-                </li>
-                <li>现病史:
-                  <span>{{text.pb.medicalHistory}}</span>
-                </li>
-                <li>过敏史:
-                  <span>{{text.pb.allergyHistory}}</span>
-                </li>
-                <li>门诊诊断:
-                  <span>{{text.pb.diagnosis}}</span>
-                </li>
-              </ul>
-            </div>
-            <div class="result">
-              <div class="front">
-                <ul>
-                  <li>
-                    <el-checkbox v-model="text.pb.report">疫情报告</el-checkbox>
-                  </li>
-                  <li>
-                    <el-checkbox v-model="text.pb.review">复诊</el-checkbox>
-                  </li>
-                  <li>
-
-                    <div class="block">
-                      <span class="demonstration">发病日期：</span>
-                      <el-date-picker @blur="demonstration1" v-model="text.pb.occurTime" align="right" type="date" placeholder="选择日期">
-                      </el-date-picker>
-                    </div>
-                  </li>
                 </ul>
-              </div>
-              <div class="behind">
-                <div class="block">
-                  <span class="demonstration">下次复查日期:</span>
-                  <el-date-picker @blur="demonstration2" v-model="text.pb.reviewTime" align="right" type="date" placeholder="选择日期">
-                  </el-date-picker>
-                </div>
-              </div>
-            </div>
-            <div class="dates">
-              <ul>
-                <li class="orderTime">
-                  <span>下单时间:</span>
-                  <span class="span">{{text.pb.createTime}}</span>
-                </li>
-                <li class="acceptTime">
-                  <span>接诊时间:</span>
-                  <span class="span">{{text.pb.createTime}}</span>
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li class="detailList">
-            <search @searchValue="adminSearchChange"></search>
-            <div class="listBao">
-              <div class="lists" v-for="(text,index) in ARR" :key="index" v-show='whichUser==index'>
-                <el-table :data="text" style="width: 100%">
-                  <el-table-column prop="index" label="序号"></el-table-column>
-                  <el-table-column prop="drugName" label="药品名称">
-                  </el-table-column>
-                  <el-table-column prop="drugUse" label="用法">
-                  </el-table-column>
-                  <el-table-column prop="drugTimes" label="频率">
-                  </el-table-column>
-                  <el-table-column prop="drugDosage" label="用量">
-                  </el-table-column>
-                  <el-table-column prop="drugPrice" label="单价">
-                  </el-table-column>
-                  <el-table-column prop="drugQuantity" label="数量">
-                  </el-table-column>
-                  <el-table-column prop="subtotal" label="合计">
-                  </el-table-column>
-                  <el-table-column prop="doctorAsk" label="医生嘱托">
-                  </el-table-column>
-                </el-table>
-              </div>
-              <div class="totals">
-                <div class="totalMoney">总金额:
-                  <span>{{text.pb.drugPrice}}</span>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li class="detailFooter">
-            <el-button class="preview" type="primary" @click="dialogTableVisibleFun" plain>预览</el-button>
-            <el-button class="ship" type="primary" plain>发货</el-button>
-          </li>
+            </li>
         </ul>
-      </li>
 
-    </ul>
+        <ul v-if="oconsulVisable == 2" class="transport">
+            <li class="checkList">
+                <div class="title">
+                    <span class="title1">审核列表</span>
+                    <span class="title2">...</span>
+                </div>
+                <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index)' :class="whichUser==index?'backgroundUser':''">
+                    <li>
+                        <img src="../assets/img/ME.png" alt="头像">
+                        <div>
+                            <p class="name">{{text.userName}}</p>
+                            <p class="depart">问诊医生:
+                                <span>{{text.createDoctor}}</span> |
+                                <span>{{text.clinicName}}</span>
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li v-for="(text,index) in bcd" :key="index+ '-label'" v-show='whichUser==index' class="waitPeople">
+                <ul>
+                    <li>
+                        <ul class="title">
+                            <li class="wait">
+                                <i class="iconfont">&#xe8c0;</i>
+                                <span>等待发药人数</span>
+                            </li>
+                            <li class="num">{{text.number}}</li>
+                        </ul>
+                    </li>
+                    <li class="wait1">
+                        <ul>
+                            <li class="name">{{text.userName}}</li>
+                            <li class="gender">性别:
+                                <span>{{text.userSex}}</span>
+                            </li>
+                            <li class="age">年龄:
+                                <span>{{text.userAge}}</span>
+                            </li>
+                            <li class="birthday">出生日期:
+                                <span>{{text.birthday}}</span>
+                            </li>
+                            <li class="phoneNumber">联系方式:
+                                <span>{{text.birthday}}</span>
+                            </li>
+                            <li class="address">常用地址:
+                                <span>{{text.address}}</span>
+                            </li>
 
-    <!-- 进入诊室弹窗 -->
-    <el-dialog class="startGroup" title="进入诊室" :visible.sync="centerDialogVisible" width="602px" hight="607px" center>
-      dgasgasddgas
-    </el-dialog>
-    <!-- 预览弹窗 -->
-    <el-dialog title="预览" :visible.sync="dialogTableVisible">
-      <img src='' alt="">
-    </el-dialog>
+                        </ul>
+                    </li>
+                    <li class="wait2">
+                        <ul>
+                            <li class="patientNumber">门诊号:
+                                <span>{{text.clinicId}}</span>
+                            </li>
+                            <li class="feeType">费别:
+                                <span>{{text.priceDesc}}</span>
+                            </li>
+                            <li class="medicalInsurance">医保类型:
+                                <span>{{text.medicalInsurance}}</span>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="wait3">
+                        <ul>
+                            <li class="healDoctor">开方医生:
+                                <span>{{text.createDoctor}}</span>
+                            </li>
+                            <li class="checkDoctor">审方医生:
+                                <span>{{text.reviewDoctor}}</span>
+                            </li>
+                            <li class="giveDoctor">发药医生:
+                                <span>{{text.sendDoctor}}</span>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li v-for="(text,index) in bcd" :key="index" v-show='whichUser==index' class="prescriptionDetail">
+                <ul>
+                    <li class="detailHead">
+                    </li>
+                    <li class="detailCount">
+                        <div class="sign">
+                            <ul>
+                                <li>主诉:
+                                    <span>{{text.pb.complained}}</span>
+                                </li>
+                                <li>现病史:
+                                    <span>{{text.pb.medicalHistory}}</span>
+                                </li>
+                                <li>过敏史:
+                                    <span>{{text.pb.allergyHistory}}</span>
+                                </li>
+                                <li>门诊诊断:
+                                    <span>{{text.pb.diagnosis}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="result">
+                            <div class="front">
+                                <ul>
+                                    <li>
+                                        <el-checkbox v-model="text.pb.report">疫情报告</el-checkbox>
+                                    </li>
+                                    <li>
+                                        <el-checkbox v-model="text.pb.review">复诊</el-checkbox>
+                                    </li>
+                                    <li>
 
-    <!-- 谭莹聊天弹窗 -->
+                                        <div class="block">
+                                            <span class="demonstration">发病日期：</span>
+                                            <el-date-picker @blur="demonstration1" v-model="text.pb.occurTime" align="right" type="date" placeholder="选择日期">
+                                            </el-date-picker>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="behind">
+                                <div class="block">
+                                    <span class="demonstration">下次复查日期:</span>
+                                    <el-date-picker @blur="demonstration2" v-model="text.pb.reviewTime" align="right" type="date" placeholder="选择日期">
+                                    </el-date-picker>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dates">
+                            <ul>
+                                <li class="orderTime">
+                                    <span>下单时间:</span>
+                                    <span class="span">{{text.pb.createTime}}</span>
+                                </li>
+                                <li class="acceptTime">
+                                    <span>接诊时间:</span>
+                                    <span class="span">{{text.pb.createTime}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="detailList">
+                        <search @searchValue="adminSearchChange"></search>
+                        <div class="listBao">
+                            <div class="lists" v-for="(text,index) in ARR" :key="index" v-show='whichUser==index'>
+                                <el-table :data="text" style="width: 100%">
+                                    <el-table-column prop="index" label="序号"></el-table-column>
+                                    <el-table-column prop="drugName" label="药品名称">
+                                    </el-table-column>
+                                    <el-table-column prop="drugUse" label="用法">
+                                    </el-table-column>
+                                    <el-table-column prop="drugTimes" label="频率">
+                                    </el-table-column>
+                                    <el-table-column prop="drugDosage" label="用量">
+                                    </el-table-column>
+                                    <el-table-column prop="drugPrice" label="单价">
+                                    </el-table-column>
+                                    <el-table-column prop="drugQuantity" label="数量">
+                                    </el-table-column>
+                                    <el-table-column prop="subtotal" label="合计">
+                                    </el-table-column>
+                                    <el-table-column prop="doctorAsk" label="医生嘱托">
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                            <div class="totals">
+                                <div class="totalMoney">总金额:
+                                    <span>{{text.pb.drugPrice}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="detailFooter">
+                        <el-button class="preview" type="primary" @click="dialogTableVisibleFun" plain>预览</el-button>
+                        <el-button class="ship" type="primary" plain>发货</el-button>
+                    </li>
+                </ul>
+            </li>
 
-    <div v-if="chatVisible">
-      <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-        <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage"></chat>
-      </el-dialog>
+        </ul>
+
+        <!-- 预览弹窗 -->
+        <el-dialog title="预览" :visible.sync="dialogTableVisible">
+            <img src='' alt="">
+        </el-dialog>
+
+        <!-- 谭莹聊天弹窗 -->
+
+        <div v-if="chatVisible">
+            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+                <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage"></chat>
+            </el-dialog>
+        </div>
+
+        <!-- 视频聊天 -->
+        <div v-if="centerDialogVisible">
+            <el-dialog title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
+                <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"></ovideo>
+            </el-dialog>
+        </div>
+
     </div>
-
-  </div>
 </template>
 
 <script>
@@ -502,7 +505,8 @@ import {
     clinicOrders, //7.18(WEB医生)获取所有该诊室的订单信息
 
     // 谭莹
-    fetchChatSession //创建单聊会话
+    fetchChatSession, //创建单聊会话
+    doctorInto,//进入门诊
 
     // 废弃接口
     // fetchHospitalDepts,//2.2.获取医院科室列表
@@ -514,20 +518,28 @@ import { mapState } from "vuex";
 import chat from "../public/publicComponents/chat.vue";
 import doctorTab from "../public/publicComponents/doctorTab.vue";
 import search from "../public/publicComponents/search.vue";
+import ovideo from "../video/oVideo.vue";
 export default {
     components: {
         doctorTab,
         search,
-        chat
+        chat,
+        ovideo
     },
     data() {
         return {
             //谭莹变量
+            videoType: "门诊",
             chatVisible1: true,
             doctorVis: 1, //医生跟患者单聊
             sessionId: "", //会话id
             chatVisible: false,
-            userMessage:{},
+            userMessage: {},
+            createVideoRoomData: {
+                conferenceId: "",
+                conferenceNumber: ""
+            },
+            oClinicId:[],//当前进入门诊id
             //谭莹变量
             // testData: {
             //   select: {
@@ -677,17 +689,76 @@ export default {
     },
     methods: {
         // 谭莹事件
+        //进入门诊
+        enterRoomBtn(oid){
+            this.centerDialogVisible = true;
+            this.oClinicId=oid
+        },
+        //退出视频
+        // async closeVideo() {
+        //     let _this = this;
+        //     let query = {
+        //         token: this.userState.token
+        //     };
+        //     const options = {
+        //         conferenceId: this.createVideoRoomData.conferenceId,
+        //         state: "OFF"
+        //     };
+        //     const res = await storageUsers(query, options);
+        //     console.log(res);
+        //     if (res.data && res.data.errCode === 0) {
+        //         this.$notify.success({
+        //             title: "成功",
+        //             message: "退出成功！"
+        //         });
+        //         _this.createVideoVisable = false;
+        //         _this.sendMessageChat(6, "cancle", "VIDEO");
+        //     } else {
+        //         //失败
+        //         this.$notify.error({
+        //             title: "警告",
+        //             message: res.data.errMsg
+        //         });
+        //     }
+        // },
+        //退出诊室
+         async closeVideo() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const options = {
+                conferenceId: this.createVideoRoomData.conferenceId,
+                state: "OFF"
+            };
+            const res = await storageUsers(query, options);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "退出成功！"
+                });
+                _this.createVideoVisable = false;
+                _this.sendMessageChat(6, "cancle", "VIDEO");
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         // 我的诊室发送消息
-        async sendMessage(text,text1) {
-          console.log(text)
-          console.log(text1)
-          this.userMessage={
-            clinicId:text.id,
-            departmentId:text.departmentId,
-            userId:text1.userId,
-            orgCode:text.orgCode
-          }
-          console.log(this.userMessage)
+        async sendMessage(text, text1) {
+            console.log(text);
+            console.log(text1);
+            this.userMessage = {
+                clinicId: text.id,
+                departmentId: text.departmentId,
+                userId: text1.userId,
+                orgCode: text.orgCode
+            };
+            console.log(this.userMessage);
             let _this = this;
             let query = {
                 token: this.userState.token
