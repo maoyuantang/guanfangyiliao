@@ -750,11 +750,12 @@
 				const query = {
 					token:this.userInfo.token,
 					type:this.statisticsInfo.countMethod.select.value,
+					deptId:this.statisticsInfo.department.id || ''
 				};
 				if(this.statisticsInfo.period){
 					query.startDate = this.statisticsInfo.period[0];
 					query.endDate = this.statisticsInfo.period[1];
-					query.deptId = this.statisticsInfo.department.id || ''
+					// query.deptId = this.statisticsInfo.department.id || ''
 				}
 				const res = await queryStatisticalData(query);
 				console.log(res);
