@@ -32,10 +32,14 @@
 
 						<el-table-column fixed="right" label="" width="300">
 							<template slot-scope="scope">
-								<el-button @click="isShowViewDetailFun(scope.row)" type="text" size="small">查看详情</el-button>
-								<el-button @click="isShowEditFun(scope.row)" type="text" size="small">编辑</el-button>
-								<el-button v-if="scope.row.state" @click="isShowForbidFun(scope.row)" type="text" size="small">禁用</el-button>
-								<el-button v-else @click="isShowForbidFun(scope.row)" type="text" size="small">解除禁用</el-button>
+								<el-button @click="isShowViewDetailFun(scope.row)" type="success" plain size="mini"
+									style="margin:0.05rem 0 0.05rem 0;">查看详情</el-button>
+								<el-button @click="isShowEditFun(scope.row)" type="success" plain size="mini"
+									style="margin:0.05rem 0 0.05rem 0;">编辑</el-button>
+								<el-button v-if="scope.row.state" @click="isShowForbidFun(scope.row)" type="danger" plain size="mini"
+									style="margin:0.05rem 0 0.05rem 0;">禁用</el-button>
+								<el-button v-else @click="isShowForbidFun(scope.row)" type="danger" plain size="mini"
+									style="margin:0.05rem 0 0.05rem 0;">解除禁用</el-button>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -60,8 +64,9 @@
 
 				</div>
 				<div class="online-clinic-middle">
-					<publicList :columns="prescriptionAuditDistribution.tableBody.columns" :tableData="prescriptionAuditDistribution.tableBody.tableData"
-					 :tableBtn="prescriptionAuditDistribution.tableBody.tableBtn">
+					<publicList :columns="prescriptionAuditDistribution.tableBody.columns"
+						:tableData="prescriptionAuditDistribution.tableBody.tableData"
+						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn">
 					</publicList>
 				</div>
 			</div>
@@ -85,10 +90,10 @@
 		</div>
 		<!-- 新增门诊弹框 -->
 		<addNewFrame :inData="addData" @reback="getData" @department="getDepartment" @getAgreementSelect="getSelectInfo"
-		 :sureVisiable="sureVisiable"></addNewFrame>
+			:sureVisiable="sureVisiable"></addNewFrame>
 		<!-- 表一查看关联医生弹框 -->
 		<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="503px" hight="470px"
-		 center>
+			center>
 			<ul>
 				<li v-for="(text,index) in relationalDoctor" :key="index">
 					<div class="evaluateCont1">
@@ -1608,7 +1613,7 @@
 		color: red !important;
 	}
 
-	.recordBtn {
+	.recordBtn{
 		width: 57px;
 		height: 20px;
 		background: rgba(66, 133, 244, 0.1);

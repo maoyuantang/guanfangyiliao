@@ -808,7 +808,7 @@
                 children: []
               }
             )
-            if (text.childre.length != 0) {
+            if (text.children.length != 0) {
               $.each(text.children, function (index, text) {
                 _this.addForm.intoHospital.list[index].children.push(
                   {
