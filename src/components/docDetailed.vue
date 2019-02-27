@@ -9,15 +9,15 @@
       <div class="doc-detailed-alert">
           <div class="doc-detailed-alert-content">
                 <div class="doc-detailed-tag">
-                <span 
-                v-for="(item,index) in topTag.list" 
-                :key="index" 
-                class="doc-detailed-tag-span" 
-                :class="topTag.index === index ? 'doc-detailed-tag-span-select' : null "
-                @click="selectTag(index)">
-                {{item.name}}
-                </span>
-            </div>
+                    <span 
+                    v-for="(item,index) in topTag.list" 
+                    :key="index" 
+                    class="doc-detailed-tag-span" 
+                    :class="topTag.index === index ? 'doc-detailed-tag-span-select' : null "
+                    @click="selectTag(index)">
+                    {{item.name}}
+                    </span>
+                </div>
             <div class="doc-detailed-nav">
                 <div class="doc-detailed-nav-content">
                 <span 
@@ -30,24 +30,7 @@
                 </span>
                 </div>
             </div>
-            <div class="doc-detailed-content">
-                <div class="doc-detailed-content-medical-record">
-                    <div class="doc-detailed-content-medical-record-item">
-                        <div class="doc-detailed-content-medical-record-item-left">
-                            <img src="../../static/assets/img/上传@2x.png" alt="" srcset="">
-                        </div>
-                        <div class="doc-detailed-content-medical-record-item-right">
-                            <p class="doc-detailed-content-medical-record-item-title">随访计划</p>
-                            <p class="doc-detailed-content-medical-record-item-time">2018-12-25 10:00</p>
-                            <p class="doc-detailed-content-medical-record-item-text">最后一次自测数据</p>
-                        </div>
-                    </div>
-                    <div class="doc-detailed-content-medical-record-item"></div>
-                    <div class="doc-detailed-content-medical-record-item"></div>
-                    <div class="doc-detailed-content-medical-record-item"></div>
-                    <div class="doc-detailed-content-medical-record-item"></div>
-                </div>
-            </div>
+            <div class="doc-detailed-content" :is="viewCurrent"></div>
           </div>
       </div>
     </el-dialog>
@@ -55,13 +38,21 @@
 </template>
 
 <script>
+import medicalRecord from './docDetailed/medicalRecord.vue'
+import visiting from './docDetailed/visiting.vue'
+import doc from './docDetailed/doc.vue'
+
+
 import { mapState } from "vuex";
 import { queryListByUserId} from '../api/apiAll.js'//api
 export default {
     name: "docDetailed",
     components: {
-        
+        medicalRecord,
+        visiting,
+        doc
     },
+    
     data() {
         return {
             show:true,//是否显示
@@ -72,9 +63,9 @@ export default {
             nav:{//顶部nav数据
                 index:0,//选中
                 list:[
-                    {laber:'院内病历'},
-                    {laber:'院内就诊'},
-                    {laber:'院外档案'},
+                    {laber:'院内病历',page:'medicalRecord'},
+                    {laber:'院内就诊',page:'visiting'},
+                    {laber:'院外档案',page:'doc'},
                 ]//列表
             },
         };
@@ -84,7 +75,10 @@ export default {
             userState: state => state.user.userInfo,
             userSelfInfo:state => state.user.userSelfInfo, 
             global: state => state.global
-        })
+        }),
+        viewCurrent(){
+            return this.nav.list[this.nav.index].page
+        },
     },
     
     methods: {
@@ -125,6 +119,7 @@ export default {
          */
         selectNav(index){
             this.nav.index = index;
+            console.log(index)
         },
     },
     created() {
@@ -136,6 +131,9 @@ export default {
 
 <style scoped>
 .doc-detailed{}
+.doc-detailed-tag{
+    padding-bottom: 0.45rem;
+}
 .doc-detailed-tag-span{
     font-family: PingFangSC-Regular;
     color: var(--color6);
@@ -145,6 +143,9 @@ export default {
 }
 .doc-detailed-tag-span-select{
     color:#FBA800;
+}
+.doc-detailed-nav{
+    margin-bottom: 0.65rem;
 }
 .doc-detailed-nav-content{
     display:flex;

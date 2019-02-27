@@ -12,7 +12,7 @@
 						<selftag v-model="bussTypeList" @reback="bussTypeSelect"></selftag>
 					</div>
 					<div class="family-medicine-management-middle-right">
-						<div class="family-medicine-search"><search></search></div>
+						<div class="family-medicine-search"><search @searchValue="searchChange"></search></div>
 						<div><el-button type="primary" @click="addBuss">新增业务</el-button></div>
 					</div>
 				</div>
@@ -39,23 +39,24 @@
 			<div class="family-medicine-management-body-part-two" v-show="barInfo.i===1">
 				<div class="part-two-head">
 					<div class="part-two-head-left">
-						<selftag v-model="statisticsInfo.departmentList" @reback="getDepartmentSelect"></selftag>
+						<selftag v-model="statisticsInfo.departmentList" @reback="getStatisticsDepartmentSelect"></selftag>
 					</div>
 					<div class="part-two-head-right">
 						<publicTime @timeValue="timeValueFun"></publicTime>
-						<el-select v-model="statisticsInfo.countMethod.select" clearable placeholder="请选择">
+						<el-select v-model="statisticsInfo.countMethod.select.value" clearable placeholder="请选择">
 							<el-option
 							v-for="(item,index) in statisticsInfo.countMethod.list"
 							:key="index"
 							:label="item.name"
-							:value="item.name">
+							:value="item.value">
 							</el-option>
 						</el-select>
 					</div>
 				</div>
 				<div class="part-two-body">
 					<div class="part-two-body-layout">
-						<normalColumnChart v-model="drawData"></normalColumnChart>
+						<normalColumnChart v-model="statisticsInfo.push"></normalColumnChart>
+						<normalColumnChart v-model="statisticsInfo.query"></normalColumnChart>
 					</div>
 				</div>
 			</div>
@@ -328,8 +329,6 @@
 				</div>
 			</div>
 		</Modal>
-		<p>{{global.departmentList}}</p>
-		<p>{{departmentList}}</p>
 		
 		<!-- <addNewFrame :inData="testData" @reback="getAddData" @getAgreementSelect="getAgreementSelect" @department="getSelectDepartment"></addNewFrame> -->
 	</div>
@@ -347,7 +346,8 @@
 	import addNewFrame from './../../public/publicComponents/addNewFrame.vue'
 	import { 
 		stencilName, toolBusinessType, toolDept, doctorsByOrgCodeAndDeptId, fetchHospitalDepts, businessType, protocols, protocolById,
-		addBusiness, stencilModel, getChildrenByDepartmentId, businessCondition, disableClinic, updateBusiness
+		addBusiness, stencilModel, getChildrenByDepartmentId, businessCondition, disableClinic, updateBusiness, queryStatisticalData,
+		pushStatisticalData
 	} from '../../api/apiAll.js'
 	export default {
 		watch:{
@@ -359,7 +359,14 @@
 					console.log(n);
 					this.getSelectDepartment(n)
 				}
-			}
+			},
+			'statisticsInfo.countMethod.select.value':{
+				handler(n){
+					this.getPushStatisticalData();
+					this.getQueryStatisticalData();
+					console.log('i is fish')
+				}
+			},
 		},
 		components:{
 			normalTab,
@@ -380,7 +387,6 @@
 		data () {
 			return {
 				loadingInstance:0,//loading
-				listenTimmer:null,//侦听定时器
 				searchCondition:{//搜索条件  
 					department:{
 						id:''
@@ -392,7 +398,8 @@
 						id:''   
 					},//业务类型
 					pageNum:1,
-					maxPage:1
+					maxPage:1,
+					selectValue:''
 				},
 				statisticsInfo:{//统计  
 					departmentList:{
@@ -400,19 +407,32 @@
 						title:'科室',
 						list:[]
 					},
+					department:{id:''},
 					period:[],//时间段
 					tableList:[],//图标
-					countMethod:{//统计模块 统计方式
-						select:{name:'按科室统计'}, 
+					countMethod:{//统计模块 统计方式 
+						select:{name:'按科室统计',value:'DEPT'}, 
 						list:[
-							{name:'按科室统计'},
-							{name:'按日统计'},
-							{name:'按月统计'},
-							{name:'按年统计'},
+							{name:'按科室统计',value:'DEPT'},
+							{name:'按日统计',value:'DAY'},
+							{name:'按月统计',value:'MONTH'},
+							{name:'按年统计',value:'YEAR'},
 						]
 					},
+					push:{//推送档案统计 
+						dataAxis:[],//x轴
+						data:[],//y轴
+						title:'推送档案统计',//标题
+						total:'',//副标题
+					},
+					query:{//查询提取统计
+						dataAxis:[],//x轴
+						data:[],//y轴
+						title:'推送档案统计',//标题
+						total:'',//副标题
+					},
 				},
-				showInfo:{//显示的业务列表
+				showInfo:{//显示的业务列表 
 					pageNum:1, //当前页
 					pageSize:9, //每页的数量
 					size:1,//当前页的数量
@@ -618,8 +638,6 @@
 						showContent:''
 					}
 				},
-
-/********************************************************* */
 				/**
 				 * bar 数据
 				 */
@@ -685,26 +703,83 @@
                     ]
 				},
 
-				/**
-				 * 统计模块 时间段
-				 */
-				countTime:[],
 
-				
-
-				/***
-				 * 统计模块  图表
-				 */
-				drawData:{}
 			}
 		},
 		methods:{
+			/**
+			 * 用户使用搜索框 搜索
+			 */
+			searchChange(data){
+				console.log(data)
+				this.searchCondition.selectValue = data;  
+			},
+			/**
+			 * 获取 推送档案统计
+			 */
+			async getPushStatisticalData(){
+				const query = {
+					token:this.userInfo.token,
+					type:this.statisticsInfo.countMethod.select.value,
+				};
+				if(this.statisticsInfo.period){
+					query.startDate = this.statisticsInfo.period[0];
+					query.endDate = this.statisticsInfo.period[1];
+					query.deptId = this.statisticsInfo.department.id || ''
+				}
+				const res = await pushStatisticalData(query);
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+					this.statisticsInfo.push.dataAxis = res.data.body.data.map(item=>item.x);
+					this.statisticsInfo.push.data = res.data.body.data.map(item=>item.y);
+					this.statisticsInfo.push.total = res.data.body.total;
+					this.statisticsInfo.push = Object.assign({},this.statisticsInfo.push)
+					console.log(this.statisticsInfo.push)
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '推送档案统计获取失败',
+						type: 'error'
+					});
+				}
+			},
+			/**
+			 * 获取 查询提取统计
+			 */
+			async getQueryStatisticalData(){
+				const query = {
+					token:this.userInfo.token,
+					type:this.statisticsInfo.countMethod.select.value,
+					deptId:this.statisticsInfo.department.id || ''
+				};
+				if(this.statisticsInfo.period){
+					query.startDate = this.statisticsInfo.period[0];
+					query.endDate = this.statisticsInfo.period[1];
+					// query.deptId = this.statisticsInfo.department.id || ''
+				}
+				const res = await queryStatisticalData(query);
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+					this.statisticsInfo.query.dataAxis = res.data.body.data.map(item=>item.x);
+					this.statisticsInfo.query.data = res.data.body.data.map(item=>item.y);
+					this.statisticsInfo.query.total = res.data.body.total;
+					this.statisticsInfo.query = Object.assign({},this.statisticsInfo.query)
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '查询提取统计获取失败',
+						type: 'error'
+					});
+				}
+			},
 			/**
 			 * 获取用户选择时间段
 			 */
 			timeValueFun(data){
 				console.log(data);
 				this.statisticsInfo.period = data;
+				this.getPushStatisticalData();
+				this.getQueryStatisticalData();
 			},
 			
 			/**
@@ -753,15 +828,30 @@
 			getBar(data){
 				console.log(data)
 			},
+			/**
+			 * 科室标签 被点击(统计)
+			 */
+			getStatisticsDepartmentSelect(item){
+				console.log(item);
+				this.statisticsInfo.department.id = item.index.deptId || '';
+				// this.statisticsInfo.countMethod.select.value = item.index.deptId || '';
+				// this.searchCondition.department.id = item.index.deptId || '';
+				// this.searchCondition.pageNum = 1;
+				// this.getBussByCondition();
+				this.getPushStatisticalData();
+				this.getQueryStatisticalData();
+			},
 
 			/**
-			 * 科室标签 被点击
+			 * 科室标签 被点击(家医服务管理)
 			 */
 			getDepartmentSelect(item){
 				console.log(item)
 				this.searchCondition.department.id = item.index.deptId || '';
 				this.searchCondition.pageNum = 1;
 				this.getBussByCondition();
+				// this.getPushStatisticalData();
+				// this.getQueryStatisticalData();
 			},
 
 			/**
@@ -1728,26 +1818,6 @@
 				this.searchCondition.pageNum++;
 				this.getBussByCondition();
 			},
-			// /**
-			//  * 每隔一定时间，检查是否触底
-			//  */
-			// listenBoundingClientRect(){
-			// 	this.$nextTick(e=>{
-			// 		this.listenTimmer = setTimeout(() => {
-			// 			console.log(`document.body.clientHeight:${document.body.clientHeight}`)
-			// 			console.log(`this.$refs.familymedicinemanagement.getBoundingClientRect().bottom:${this.$refs.familymedicinemanagement.getBoundingClientRect().bottom}`)
-			// 			// console.log(document.body.clientHeight - this.$refs.familymedicinemanagement.getBoundingClientRect().bottom)
-			// 			// if(document.body.clientHeight - this.$refs.familymedicinemanagement.getBoundingClientRect().bottom >=0){
-			// 			// 	console.log( 'get');
-			// 			// 	this.pullLoading();
-			// 			// }
-						
-			// 			// console.log(this.$refs.familymedicinemanagement.clientHeight)
-			// 			this.listenBoundingClientRect();
-			// 		}, 200);
-			// 	});
-			// },
-			test(){console.log('click')},
 		},
 		async created(){
 			
@@ -1755,25 +1825,8 @@
 			this.getBussModuleList();
 			this.getBussTypeList();
 			this.getBussByCondition();
-			setTimeout(() => {
-				this.drawData = {
-					dataAxis:['点', '击', '柱', '子','点', '击', '柱', '子','点', '击', '柱', '子'],//每个柱子代表的类名
-					data:[220, 182, 191, 234,220, 182, 191, 234,220, 182, 191, 234],//具体数值
-					title:'测试测试,修改修改'//图表标题
-				}
-			}, 5000);
-			// this.listenBoundingClientRect();
-			
-			// this.$nextTick(e=>{
-			// 	console.log(document.body.clientHeight)
-			// 	console.log(this.$refs.familymedicinemanagement.getBoundingClientRect().bottom)
-			// 	console.log(document.body.clientHeight - this.$refs.familymedicinemanagement.getBoundingClientRect().bottom)
-			// })
-			// setTimeout(() => {
-			// 		console.log('ok')
-			// 		// console.log(this.$refs.familymedicinemanagement.getBoundingClientRect().bottom)
-			// 	}, 2000);
-			
+			this.getPushStatisticalData();
+			this.getQueryStatisticalData();
 			
 		}
 	}
@@ -1968,5 +2021,8 @@
 		border: none;
 		outline:none; 
 		width: .4rem;
+	}
+	.part-two-body-layout{
+		display: flex;
 	}
 </style>

@@ -75,7 +75,8 @@
           </div>
         </div>
         <div class="files-man-chart-body">
-            <normalColumnChart :inData="item" v-for="(item,index) in chartData" :key="index"></normalColumnChart>
+            <normalColumnChart :inData="chartData.queryData"></normalColumnChart>
+            <normalColumnChart :inData="chartData.pushData"></normalColumnChart>
         </div>
       </div>
     </div>
@@ -89,7 +90,7 @@ import selftag from "../../public/publicComponents/selftag.vue";
 import search from "../../public/publicComponents/search.vue";
 import publicTime from "../../public/publicComponents/publicTime.vue";
 import normalColumnChart from "../../public/publicComponents/normalColumnChart.vue";
-import { queryPageByPushAndQuery, queryStatisticalData } from "../../api/apiAll.js";
+import { queryPageByPushAndQuery, queryStatisticalData, pushStatisticalData } from "../../api/apiAll.js";
 export default {
   components: {
     normalTab,
@@ -119,7 +120,9 @@ export default {
     },
     'chartCondition.statisticsMethods.select.value':{
         handler(n){
-            this.getChartData();
+          this.getQueryStatisticalData();
+          this.getPushStatisticalData();
+            // this.getChartData();
         }
     }
   },
@@ -231,17 +234,17 @@ export default {
       /**
        * 图表数据
        */
-      chartData: {
+      chartData: {  
         queryData:{
             dataAxis:[],
             data:[],
-            title:'',
+            title:'档案查询',
             total:''
         },
         pushData:{
             dataAxis:[],
             data:[],
-            title:'',
+            title:'档案推送',
             total:''
         }
       },
@@ -261,7 +264,9 @@ export default {
   async created() {
     this.getDataFromURL();
     this.getDepartmentList();
-    this.getChartData();
+    this.getQueryStatisticalData();
+    this.getPushStatisticalData();
+    // this.getChartData();
   },
   methods: {
     getBar(data) {
@@ -327,34 +332,94 @@ export default {
     },
 
     /**
-     * 1.查询提取和推送档案分页列表
+     * 1.查询提取
      */
-    async getChartData(){
-        const getChartDataQuery = {};
-        getChartDataQuery.token = this.userInfo.token;
-        getChartDataQuery.type = this.chartCondition.statisticsMethods.select.value;
-        if(this.chartCondition.period){
-            getChartDataQuery.startDate = this.chartCondition.period[0];
-            getChartDataQuery.endDate = this.chartCondition.period[1];
+    async getQueryStatisticalData(){
+				const query = {
+					token:this.userInfo.token,
+          type:this.chartCondition.statisticsMethods.select.value,
+          deptId:this.chartCondition.departmentList.select.deptId|| ''
+        };
+        // this.chartCondition.period
+				if(this.chartCondition.period){
+					query.startDate = this.chartCondition.period[0];
+					query.endDate = this.chartCondition.period[1];
+					// query.deptId = this.statisticsInfo.department.id || ''
         }
-        if(this.chartCondition.departmentList.select.deptId){
-            getChartDataQuery.deptId = this.chartCondition.departmentList.select.deptId;
-        }
-        console.log(6666666)
-        console.log(getChartDataQuery)
-        // return 
-        const res = await queryStatisticalData(getChartDataQuery);
-        console.log(res);
-        if (res.data && res.data.errCode === 0){
+        console.log(query)
+				const res = await queryStatisticalData(query);
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+          this.chartData.queryData.dataAxis = res.data.body.data.map(item=>item.x);
+          this.chartData.queryData.data = res.data.body.data.map(item=>item.y);
+          this.chartData.queryData.total = res.data.body.total;
+          this.chartData.queryData = Object.assign({},this.chartData.queryData);
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '查询提取统计获取失败',
+						type: 'error'
+					});
+				}
+			},
+    // async getChartData(){
+    //     const getChartDataQuery = {};
+    //     getChartDataQuery.token = this.userInfo.token;
+    //     getChartDataQuery.type = this.chartCondition.statisticsMethods.select.value;
+    //     if(this.chartCondition.period){
+    //         getChartDataQuery.startDate = this.chartCondition.period[0];
+    //         getChartDataQuery.endDate = this.chartCondition.period[1];
+    //     }
+    //     if(this.chartCondition.departmentList.select.deptId){
+    //         getChartDataQuery.deptId = this.chartCondition.departmentList.select.deptId;
+    //     }
+    //     console.log(6666666)
+    //     console.log(getChartDataQuery)
+    //     // return 
+    //     const res = await queryStatisticalData(getChartDataQuery);
+    //     console.log(res);
+    //     if (res.data && res.data.errCode === 0){
 
-        }else{
-            this.$notify({
-                title: "失败",
-                message: "图表数据获取失败",
-                type: "error"
-            });
+    //     }else{
+    //         this.$notify({
+    //             title: "失败",
+    //             message: "图表数据获取失败",
+    //             type: "error"
+    //         });
+    //     }
+    // },
+    /**
+     * 推送档案
+     */
+    async getPushStatisticalData(){
+				const query = {
+					token:this.userInfo.token,
+          type:this.chartCondition.statisticsMethods.select.value,
+          deptId:this.chartCondition.departmentList.select.deptId|| ''
+        };
+        // this.chartCondition.period
+				if(this.chartCondition.period){
+					query.startDate = this.chartCondition.period[0];
+					query.endDate = this.chartCondition.period[1];
+					// query.deptId = this.statisticsInfo.department.id || ''
         }
-    },
+        console.log(query)
+				const res = await pushStatisticalData(query);
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+          this.chartData.pushData.dataAxis = res.data.body.data.map(item=>item.x);
+          this.chartData.pushData.data = res.data.body.data.map(item=>item.y);
+          this.chartData.pushData.total = res.data.body.total;
+          this.chartData.pushData = Object.assign({},this.chartData.pushData);
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '推送档案统计获取失败',
+						type: 'error'
+					});
+				}
+			},
+    
     /**
      * 档案列表查询条件   科室被选择
      */
@@ -431,7 +496,9 @@ export default {
     timeValueFun(data){
         console.log(data);
         this.chartCondition.period = data;
-        this.getChartData();
+        this.getQueryStatisticalData();
+        this.getPushStatisticalData();
+        // this.getChartData();
     },
 
     /**
@@ -440,7 +507,9 @@ export default {
     chartDepartmentListSelect(data){
         console.log(data);
         this.chartCondition.departmentList.select = data.index;
-        this.getChartData();
+        this.getQueryStatisticalData();
+        this.getPushStatisticalData();
+        // this.getChartData();
     },
 
   }
@@ -478,5 +547,8 @@ export default {
 .files-man-body-top-right{
     display: flex;
     align-items: center;
+}
+.files-man-chart-body{
+  display: flex;
 }
 </style>

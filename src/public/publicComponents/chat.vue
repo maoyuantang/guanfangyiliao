@@ -4,7 +4,6 @@
         </websocket1> -->
         <div>
             {{chatUser}}
-            {{userSocketInfo.msgBox.a.msg}}1231
         </div>
         <div class="chatMessage">
             <ul class="chatRecord">
@@ -15,7 +14,7 @@
                     </div>
                     <div class="otherCon">
                         <h4>
-                            <span class="peopleName">{{text.name}}</span>
+                            <span class="peopleName">{{text.fromNickName}}</span>
                             <span class="otime">{{text.serverTime}}</span>
                         </h4>
                         <div>
@@ -101,9 +100,9 @@
                     <el-button class="setVideoBtn" @click="setVideo(1)" type="primary">确认</el-button>
                 </div>
             </span>
-            <span v-show="oDoctorVis" @click="addArticle()" title="发送文章">
+            <!-- <span v-show="oDoctorVis" @click="addArticle()" title="发送文章">
                 <img src="../../assets/img/sendNew3.png" />
-            </span>
+            </span> -->
             <span v-show="oDoctorVis" @click="addFollow()" title="发送随访">
                 <img src="../../assets/img/sendNew4.png" />
             </span>
@@ -363,9 +362,7 @@ export default {
         ...mapState({
             userState: state => state.user.userInfo,
             userSelfInfo: state => state.user.userSelfInfo,
-            userSocketInfo: state => state.socket,
-            
-
+            userSocketInfo: state => state.socket
         })
     },
     created() {
@@ -381,6 +378,82 @@ export default {
         this.messageTicket = this.$store.state.socket.messageTicket;
     },
     methods: {
+        //发送
+        sendMessageChat(childMessageType, messageBody, childMessageType1) {
+            let odate = new Date();
+            let oHour = odate.getHours();
+            let oMinite = odate.getMinutes();
+            if (oHour <= 9) {
+                oHour = "0" + oHour;
+            }
+            if (oMinite <= 9) {
+                oMinite = "0" + oMinite;
+            }
+
+            let timestamp = Date.parse(new Date());
+            console.log(this.userSelfInfo);
+            let Iessage = {
+                RequestType: 4,
+                ticket: this.messageTicket.ticket,
+                info: {
+                    messageType: 0, //消息
+                    childMessageType: childMessageType, //文本
+                    from: this.userSelfInfo.userId, //userid
+                    fromNickName: this.userSelfInfo.name, //昵称
+                    toNickName: "",
+                    to: this.sessionId, //发给谁，接收者的用户ID
+                    body: messageBody, //消息内容
+                    sequence: this.messageTicket.sequence, //消息发送序号。
+                    chatType: 2, //医生端标识
+                    clientTime: timestamp,
+                    serverTime: this.messageTicket.serverTime
+                }
+            };
+            console.log(Iessage);
+            // websocket.default.sendMessage(Iessage);
+            if (messageBody) {
+                // this.$refs.mychild.sendMessage(Iessage);
+                // messageBody = JSON.parse(messageBody);
+                this.sendMessage(Iessage);
+                this.addMessageK(
+                    this.userSelfInfo.userId,
+                    messageBody,
+                    oHour + ":" + oMinite,
+                    childMessageType1
+                );
+                this.messageBody = "";
+            } else {
+                alert("消息不能为空");
+            }
+
+            // let aaa=websocket.dadaTransfer
+        },
+
+        // 添加消息到发送框
+        addMessageK(ouserId, oMessage, oMessageTime, childMessageType) {
+            if (childMessageType == "VIDEO") {
+                if ((oMessage = "cancle")) {
+                    oMessage = "取消了视频通话";
+                } else if ((oMessage = "refuse")) {
+                    oMessage = "拒绝了视频通话";
+                } else if ((oMessage = "videoing")) {
+                    oMessage = "对方正在视频通话中";
+                } else if ((oMessage = "complete")) {
+                    oMessage = "视频通话已结束";
+                } else if ((oMessage = "accept")) {
+                    oMessage = "接受了视频聊天";
+                } else if ((oMessage = "complete")) {
+                    oMessage = "视频通话已结束";
+                }
+            }
+            console.log(childMessageType+oMessage)
+            this.messageList.push({
+                from: ouserId,
+                content: oMessage,
+                serverTime: oMessageTime,
+                childMessageType: childMessageType
+            });
+        },
         sendMessage(agentData) {
             if (
                 this.$store.state.socket.socketObj.readyState ===
@@ -441,7 +514,11 @@ export default {
         },
         showVideoBtn() {
             if (this.userMemberNum.length > 1) {
-                this.showVideoBtnVisable = true;
+                if (this.showVideoBtnVisable) {
+                    this.showVideoBtnVisable = false;
+                } else {
+                    this.showVideoBtnVisable = true;
+                }
             } else {
                 this.showVideoBtnVisable = false;
                 this.setVideo(0); //单聊
@@ -527,7 +604,8 @@ export default {
                 }
             };
             console.log(Iessage);
-            this.$refs.mychild.sendMessage(Iessage);
+            // this.$refs.mychild.sendMessage(Iessage);
+            this.sendMessage(Iessage);
         },
         //添加备注
         addRemarks() {
@@ -782,69 +860,7 @@ export default {
                 });
             }
         },
-        //发送
-        sendMessageChat(childMessageType, messageBody, childMessageType1) {
-            let odate = new Date();
-            let oHour = odate.getHours();
-            let oMinite = odate.getMinutes();
-            if (oHour <= 9) {
-                oHour = "0" + oHour;
-            }
-            if (oMinite <= 9) {
-                oMinite = "0" + oMinite;
-            }
 
-            let timestamp = Date.parse(new Date());
-            console.log(this.userSelfInfo);
-            let Iessage = {
-                RequestType: 4,
-                ticket: this.messageTicket.ticket,
-                info: {
-                    messageType: 0, //消息
-                    childMessageType: childMessageType, //文本
-                    from: this.userSelfInfo.userId, //userid
-                    fromNickName: this.userSelfInfo.name, //昵称
-                    toNickName: "",
-                    to: this.sessionId, //发给谁，接收者的用户ID
-                    body: messageBody, //消息内容
-                    sequence: this.messageTicket.sequence, //消息发送序号。
-                    chatType: 2, //医生端标识
-                    clientTime: timestamp,
-                    serverTime: this.messageTicket.serverTime
-                }
-            };
-            console.log(Iessage);
-            // websocket.default.sendMessage(Iessage);
-            if (messageBody) {
-                // this.$refs.mychild.sendMessage(Iessage);
-                // messageBody = JSON.parse(messageBody);
-                this.sendMessage(Iessage);
-                this.addMessageK(
-                    messageBody,
-                    oHour + ":" + oMinite,
-                    childMessageType1
-                );
-                this.messageBody = "";
-            } else {
-                alert("消息不能为空");
-            }
-
-            // let aaa=websocket.dadaTransfer
-        },
-
-        // 添加消息到发送框
-        addMessageK(oMessage, oMessageTime, childMessageType) {
-            this.messageList.push({
-                from: this.userSelfInfo.userId,
-                content: oMessage,
-                serverTime: oMessageTime,
-                childMessageType: childMessageType
-            });
-        },
-        addMessageK1(data) {
-            console.log(64546);
-            // alert(data)
-        },
         searchBtn() {
             this.$emit("searchValue", this.input);
         },
@@ -984,6 +1000,7 @@ export default {
                     message: "退出成功！"
                 });
                 _this.createVideoVisable = false;
+                _this.sendMessageChat(6, "cancle", "VIDEO");
             } else {
                 //失败
                 this.$notify.error({
@@ -995,9 +1012,43 @@ export default {
     },
     watch: {
         "userSocketInfo.msgBox.a.msg": {
-            handler(n,o) {
-                console.log(465465456465456456456456456)
-                console.log(n);
+            handler(n, o) {
+                let olength = n.length;
+                let oTime = n[olength - 1].serverTime;
+                let timestamp4 = new Date(oTime);
+                let y = timestamp4.getHours();
+                let d = timestamp4.getMinutes();
+                if (y <= 9) {
+                    y = "0" + y;
+                }
+                if (d <= 9) {
+                    d = "0" + d;
+                }
+                console.log(y + "-" + d);
+                let oMessageTime = y + ":" + d;
+
+                let messageBody = n[olength - 1].body;
+                let oUserId = n[olength - 1].from;
+                let childMessageType = "";
+                if (n[olength - 1].childMessageType) {
+                    childMessageType = "DEFAULT";
+                } else {
+                    if(n[olength - 1].childMessageType==6){
+                        childMessageType="VIDEO"
+                    }else if(n[olength - 1].childMessageType==4){
+                        childMessageType="AUDIO"
+                    }else if(n[olength - 1].childMessageType==5){
+                        childMessageType="IMAGE"
+                    }else if(n[olength - 1].childMessageType==7){
+                        childMessageType="CRVIDEO"
+                    }else if(n[olength - 1].childMessageType==18){
+                        childMessageType="INTERROGATION"
+                    }else if(n[olength - 1].childMessageType==20){
+                        childMessageType="FOLLOWUP"
+                    }
+                    
+                }
+                this.addMessageK(oUserId, messageBody, oMessageTime, childMessageType);
             }
         }
     },
@@ -1066,7 +1117,8 @@ export default {
     letter-spacing: 0;
     line-height: 27px;
 }
-.recordLf .otherCon h4 span {
+.recordLf .otherCon h4 span,
+.recordRg .otherCon h4 span {
     font-family: Lato-Regular;
     font-size: 12px;
     color: #939eab;
@@ -1262,6 +1314,7 @@ export default {
     position: absolute;
     width: 200px;
     height: 200px;
+    background: white;
     box-shadow: 4px 4px 4px #cccccc;
     overflow-y: scroll;
 }

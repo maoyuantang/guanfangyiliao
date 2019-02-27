@@ -3,7 +3,7 @@
 		超级管理员
         <alertTree :inData="testData" @reback="getSelect" v-if="showAlertTree"></alertTree>
         <div class="super-management-top">
-            <search></search>
+            <search @searchValue="searchChange"></search>
         </div>
         <div class="super-management-middle">
            <table class="super-management-middle-table">
@@ -80,19 +80,18 @@
            <div class="add-hospital">
                <el-button type="danger" @click="alertAddMark">新增医院</el-button>
            </div>
-           
-        </div>
-        <div>
+           <div>
                <el-pagination
                 background
                 layout="prev, pager, next"
-                :page-size="10"
-                :current-page="1"
-                :total="11"
+                :page-size="page.pageSize"               
+                :current-page="page.pageNum"
+                :total="page.total"
                 v-if="page.total!=0"
                 @current-change="ChangePage"
             ></el-pagination>
            </div>
+        </div>
         <!-- 科室弹出框 -->
         <Modal
             :styles="{width:'323px'}"
@@ -177,9 +176,9 @@ export default {
         return {
             search: "",//搜索内容
             page:{//分页
-                pageNum: 1,//当前页 
+                pageNum: 1,//当前页  
                 pageSize: 10,//每页条数
-                total:0//总条数
+                total:10//总条数
             },
             spinShow:false,//是否显示loading
             showAlertTree:false,
@@ -309,10 +308,20 @@ export default {
     },
     methods: {
         /**
+         * 搜索框数据
+         */
+        searchChange(data){
+            console.log(data);
+            this.search = data;
+            this.getTableData();
+        },
+        /**
          * 切换分页
          */
         ChangePage(data){
-            console.log(data)
+            console.log(data);
+            this.page.pageNum = data;
+            this.getTableData();
         },
         getSelect(item){
             console.log(item)
@@ -423,6 +432,7 @@ export default {
                     })
                 },
                 consNum: async data=>{
+                    console.log('enter')
                     const setMap = (arr,tag) => {//拷贝原数组，找出被选值
                         return arr.map(item=>{
                             tag.forEach(v=>item.ok = item.ok?item.ok:item.id === v.id);
@@ -447,7 +457,33 @@ export default {
                     const result = setMap(this.testData.data, item.select);
                     let fanal = deleteNoOption(result);
                     fanal = hintArr(fanal);
-                   
+                    // const postData = {
+                    //     orgCode:this.testData.tag.value.code,
+                    //     list:fanal
+                    // }; 
+                    const res = await updateConsultationTree(...[
+                        {token:this.userState.token},
+                        {
+                            orgCode:this.testData.tag.value.code,
+                            list:fanal
+                        }
+                    ]);
+                    console.log(res)
+                    if(res.data.errCode === 0){
+                        this.$notify({
+                            title: '成功',
+                            message: '修改成功',
+                            type: 'success'
+                        });
+                    }else{
+                        this.$notify({
+                            title: '失败',
+                            message: '修改失败',
+                            type: 'error'
+                        });
+                    }
+                //    console.log(fanal); this.testData.tag
+                    return;
                     const ask = fanal.map(item=>{//将格式调整成后端想要的结构
                         const options = [//请求参数
                             {token:this.userState.token},
@@ -458,20 +494,30 @@ export default {
                         ];
                         return options;
                     });
-                    console.log(ask);
+                    
                     Promise.all(ask.map(item => updateConsultationTree(...item)))
                     .then(res=>{
                         console.log(res);
-                        res.forEach(v=>{
-                            if(v.data.errCode!==0){
+                        for(const i of res){
+                            if(i.data.errCode!==0){
                                 this.$notify({
                                     title: '失败',
                                     message: '修改失败',
                                     type: 'error'
                                 });
+                                return;
                             }
-                            return;
-                        });
+                        }
+                        // res.forEach(v=>{
+                        //     if(v.data.errCode!==0){
+                        //         this.$notify({
+                        //             title: '失败',
+                        //             message: '修改失败',
+                        //             type: 'error'
+                        //         });
+                        //     }
+                        //     return;
+                        // });
                         this.$notify({
                             title: '成功',
                             message: '修改成功',
@@ -509,9 +555,9 @@ export default {
             console.log(1)
             const options = {
                 token: this.userState.token,
-                search: "",
-                pageNum: 1,
-                pageSize: 10
+                search: this.search,
+                pageNum: this.page.pageNum,
+                pageSize: this.page.pageSize
             };
             data = data || options;
             const res = await fetchHospitalList(data);
@@ -519,6 +565,7 @@ export default {
             if (res.data && res.data.errCode === 0) {
                 this.tableData.head = res.data.body.header;
                 this.tableData.data = res.data.body.data2.list;
+                this.page.total = res.data.body.data2.total;
             } else { //失败
                 this.$notify.error({
                     title: "数据获取失败",
@@ -703,7 +750,30 @@ export default {
            });
            console.log(res);
            if(res.data&&res.data.errCode===0){
-                this.testData.data = res.data.body;
+            //    const setStatus = data => {
+            //        data = data.map(item=>{
+            //            item.check = item.select;
+            //            if(item.children){
+            //                setStatus(item.children)
+            //            }
+            //            return item;
+            //        })
+            //    }
+            //     const testData = setStatus(res.data.body)
+            //     console.log(testData)
+                const handle = data => {
+                   data.forEach(item=>{
+                       item.check = item.select;
+                       if(item.children){
+                           handle(item.children)
+                       }
+                   })
+                };
+                this.testData.data = handle(res.data.body);
+
+                // this.testData.data = res.data.body.map(item=>{
+                //     item.check = item.select
+                // });
                 this.testData.title = '会诊范围';
                 this.testData.canClick = true;
                 this.testData.show = true;

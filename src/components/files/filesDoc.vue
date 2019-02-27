@@ -41,7 +41,14 @@
             <th>{{item.lobbyNumber}}</th>
             <th>
               <el-button type="primary" size="mini" plain @click="openAlert(item)">查看档案</el-button>
-              <el-button type="warning" size="mini" plain>录入档案</el-button>
+              <!-- <el-button type="danger" size="mini" plain>录入档案</el-button> -->
+              <el-dropdown>
+               <el-button type="danger" size="mini" plain>录入档案</el-button>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>孕妇信息</el-dropdown-item>
+                  <el-dropdown-item @click.native="openAlertNor">普通档案</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </th>
           </tr>
         </tbody>
@@ -50,21 +57,29 @@
     <div class="files-doc-footer">
       <div class="files-doc-footer-left">
         <div class="files-doc-footer-all">
-          <el-checkbox>全部</el-checkbox>
+          <el-checkbox v-model="bottomOperating.all">全部</el-checkbox>
         </div>
         <div class="files-doc-footer-moveto">
           <el-dropdown>
             <span class="el-dropdown-link">移动到</span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>黄金糕</el-dropdown-item>
-              <el-dropdown-item>狮子头</el-dropdown-item>
-              <el-dropdown-item>螺蛳粉</el-dropdown-item>
+              <el-dropdown-item v-for="(item,index) in bottomOperating.list" :key="index" @click.native="moveToItem(item)">{{item.groupName}}</el-dropdown-item>
+              <!-- <el-dropdown-item>狮子头</el-dropdown-item> -->
+              <!-- <el-dropdown-item>螺蛳粉</el-dropdown-item> -->
             </el-dropdown-menu>
           </el-dropdown>
         </div>
       </div>
       <div class="files-doc-footer-right">
-        <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :page-size="findCondition.page.pageSize"
+          @current-change="listSelectPage"
+          :current-page="parseInt(findCondition.page.pageNum)"
+          v-if="findCondition.page.total!=0"
+          :total="findCondition.page.total"
+        ></el-pagination>
       </div>
     </div>
     <el-dialog
@@ -107,6 +122,167 @@
 		</div>
       </div>
     </el-dialog>
+    <!-- 新增普通档案弹窗 -->
+    <el-dialog
+      title=" "
+      :visible.sync="norDoc.show"
+      :fullscreen="false"
+      :before-close="norDocClose"
+    >
+      <div class="norDoc">
+        <div class="doc-item">
+          <div class="doc-item-content">
+            <div>
+              <el-select v-model="norDoc.nameSelectId" clearable placeholder="姓名" size="mini">
+                <el-option
+                  v-for="(item,index) in norDoc.nameList"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+              <i class="iconfont doc-must-input">&#xe7b0;</i>
+            </div>
+            
+            <div>
+              <el-select v-model="norDoc.sexSelectId" clearable placeholder="性别" size="mini">
+                <el-option
+                  v-for="(item,index) in norDoc.sexList"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+            <!-- <div>
+              <el-input
+                placeholder="性别"
+                v-model="norDoc.sex"
+                size="mini"
+                clearable>
+              </el-input>
+            </div> -->
+
+            <div>
+              <el-input
+                placeholder="年龄"
+                v-model="norDoc.age"
+                size="mini"
+                clearable>
+              </el-input>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="doc-item">
+          <div class="doc-item-content">
+            <el-input
+              placeholder="家庭现住址"
+              v-model="norDoc.addr"
+              size="mini"
+              clearable>
+            </el-input>
+          </div>
+        </div>    
+      </div>
+
+      <div class="doc-item">
+        <div class="doc-item-content">
+          <el-input
+            type="textarea"
+            :rows="4"
+            placeholder="诊断"
+            v-model="norDoc.diagnosis">
+          </el-input>
+        </div>
+      </div>
+
+      <div class="doc-item">
+        <div class="doc-item-content">
+          <el-input
+            type="textarea"
+            :rows="4"
+            placeholder="处理意见"
+            v-model="norDoc.deal">
+          </el-input>
+        </div>
+      </div>
+
+      <div class="doc-item">
+        <div class="doc-item-content">
+          <el-button type="primary" @click="createNorDoc">保存</el-button>
+        </div>
+      </div>          
+    </el-dialog>
+    <!-- 新孕妇通档案弹窗 -->
+    <el-dialog
+      title=" "
+      :visible.sync="pregnantWomanDoc.show"
+      :fullscreen="false"
+      :before-close="pregnantWomanDocClose"
+    >
+    <div class="norDoc">
+      <div class="doc-item">
+          <div class="doc-item-content">
+            <div>
+              <el-select v-model="pregnantWomanDoc.nameSelectId" clearable placeholder="姓名" size="mini">
+                <el-option
+                  v-for="(item,index) in pregnantWomanDoc.nameList"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </div>
+            <div>
+              <el-input
+                placeholder="丈夫"
+                v-model="pregnantWomanDoc.husband"
+                size="mini"
+                clearable>
+              </el-input>
+            </div>
+            <div>
+              <el-input
+                placeholder="联系电话"
+                v-model="pregnantWomanDoc.phone"
+                size="mini"
+                clearable>
+              </el-input>
+            </div>
+          </div>
+      </div>    
+      <div class="doc-item">
+          <div class="doc-item-content">
+            <el-input
+              placeholder="家庭现住址"
+              v-model="pregnantWomanDoc.addr"
+              size="mini"
+              clearable>
+            </el-input>
+          </div>
+        </div>    
+      
+       <div class="doc-item">
+          <div class="doc-item-content">
+            <el-date-picker
+              v-model="pregnantWomanDoc.LastMenstrualPeriod"
+              value-format="yyyy-MM-dd"
+              size="mini"
+              type="date"
+              placeholder="末次月经">
+            </el-date-picker>
+          </div>
+      </div>
+
+      <div class="doc-item">
+        <div class="doc-item-content">
+          <el-button type="primary" @click="createPregnantWomanDoc">保存</el-button>
+        </div>
+      </div>   
+    </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -116,7 +292,7 @@ import selftag from "../../public/publicComponents/selftag.vue";
 import search from "../../public/publicComponents/search.vue";
 import doctorTab from "../../public/publicComponents/doctorTab.vue";
 import { deepCopy } from "../../public/publicJs/deepCopy.js";
-import { queryByPage } from "../../api/apiAll.js";
+import { queryByPage, groupSelects, addGroupMember, queryListByUserId, addOrdinaryArchives, addWomanMessage } from "../../api/apiAll.js";
 export default {
   components: {
     selftag,
@@ -184,7 +360,15 @@ export default {
           })
         });
       }
-    }
+    },
+    /**
+     *检测全选勾选情况
+     */
+    'bottomOperating.all':{
+      handler(n){
+        this.userList.forEach(item=>item.select = n);
+      }
+    },
   },
   computed: {
     ...mapState({
@@ -195,7 +379,47 @@ export default {
   },
   data() {
     return {
-      findCondition: {
+      norDoc:{//新增 普通档案  弹窗数据  
+        show:false,//是否显示
+        nameSelectId:'',//选择名字 
+        nameList:[],//名字列表  
+        sexList:[//性别 
+          {label:'女',value:0},
+          {label:'男',value:1},
+        ],
+        sexSelectId:0,
+        age:'',//年龄
+        addr:'',//地址
+        org:'',//机构
+        diagnosis:'',//诊断
+        deal:'',//处理意见
+      },
+      pregnantWomanDoc:{//新增 孕妇档案  弹窗数据   
+        show:true,
+        nameSelectId:'',//选择名字 
+        nameList:[],//名字列表  
+        husband:'',//丈夫
+        phone:'',//电话
+        addr:'',//地址
+        LastMenstrualPeriod:null,//末次月经
+      },
+      bottomOperating:{ //下方全选 和 移动到  
+        all:false,
+        moveTo:null,
+        list:[
+          // {
+          //   userId:'userId',
+          //   userName:'userName',
+          //   sessionId:'sessionId',
+          //   age:'age',
+          //   sexName:'sexName',
+          //   groupId:'groupId',
+          //   groupName:'groupName',
+          //   phone:'phone'
+          // }
+        ]
+      },
+      findCondition: { 
         //查询条件
         grouping: {
           //分组
@@ -234,7 +458,7 @@ export default {
           }
         },
         searchKey: "", //查询关键字
-        page: {
+        page: { 
           //分页相关
           pageNum: 1, //当前页
           pageSize: 10, //每页多少数据
@@ -264,6 +488,251 @@ export default {
     };
   },
   methods: {
+    /**
+     * 新增 孕妇 档案
+     */
+    async createPregnantWomanDoc(){
+      // console.log(this.pregnantWomanDoc);
+      const postData = {
+        memberId:this.pregnantWomanDoc.nameSelectId,
+        memberName:this.pregnantWomanDoc.nameList.find(value=>{return value.id === this.pregnantWomanDoc.nameSelectId}).name,
+        husband:this.pregnantWomanDoc.husband,
+        phone:this.pregnantWomanDoc.phone,
+        home:this.pregnantWomanDoc.addr,
+        ultimate:this.pregnantWomanDoc.LastMenstrualPeriod 
+      };
+      console.log(postData);
+      // return;
+      const res = await addWomanMessage(...[
+        {token: this.userInfo.token},
+        postData
+      ]);
+      console.log(res);
+      if (res.data && res.data.errCode === 0) {
+        this.$notify({
+            title: '成功',
+            message: '新增成功',
+            type: 'success'
+          });
+          this.pregnantWomanDocClose();
+      }else{
+        this.$notify({
+          title: "失败",
+          message: "新增失败",
+          type: "error"
+        });
+      }
+    },
+     /**
+     * 打开 新增 孕妇档案 弹窗
+     */
+    openPregnantWomanDoc(){
+      this.pregnantWomanDoc.show = true;
+    },
+    /**
+     * 关闭 新增 孕妇 档案
+     */
+    pregnantWomanDocClose(done){
+      this.pregnantWomanDoc.show = false;
+      this.pregnantWomanDoc.nameSelectId = '';
+      this.pregnantWomanDoc.husband = '';
+      this.pregnantWomanDoc.phone = '';
+      this.pregnantWomanDoc.addr = '';
+      this.pregnantWomanDoc.LastMenstrualPeriod = null;
+    },
+    /**
+     * 打开 新增 普通档案 弹窗
+     */
+    openAlertNor(){
+      this.norDoc.show = true;
+    },
+    /**
+     * 2.新增患者普通档案
+     */
+    async createNorDoc(){
+      const postData = {
+          memberId:this.norDoc.nameSelectId,
+          sex:this.norDoc.sexSelectId,
+          age:this.norDoc.age,
+          address:this.norDoc.addr,
+          diagnosis:this.norDoc.diagnosis,
+          opinion:this.norDoc.deal
+      };
+      console.log(postData)
+      // return;
+      const res = await addOrdinaryArchives(...[
+        {token: this.userInfo.token},
+        postData
+      ]);
+      console.log(res);
+      if (res.data && res.data.errCode === 0) {
+          this.$notify({
+            title: '成功',
+            message: '新增成功',
+            type: 'success'
+          });
+          this.norDocClose();
+      }else{
+        this.$notify({
+          title: "失败",
+          message: "新增失败",
+          type: "error"
+        });
+      }
+    },
+    /**
+     * 获取 家庭成员列表
+     */
+    async getQueryListByUserId(){
+      const res = await queryListByUserId({
+        token: this.userInfo.token,
+        userId: this.userSelfInfo.userId
+      });
+      console.log(res); 
+      if (res.data && res.data.errCode === 0) {
+        this.norDoc.nameList = deepCopy(res.data.body);
+        this.pregnantWomanDoc.nameList = deepCopy(res.data.body);
+      }else{
+        this.$notify({
+          title: "失败",
+          message: "家庭成员列表获取失败",
+          type: "error"
+        });
+      }
+    },
+    /**
+     * 移动到
+     */
+    async moveToItem(item){
+      const selectItem = this.userList.filter(element=>element.select);
+      Promise.all(
+        selectItem.map(element=>{
+          return addGroupMember(...[
+            {token: this.userInfo.token},
+            {
+              groupId:item.groupId,
+              userId:element.userId
+            }
+          ])
+        })
+      )
+      .then(resArr=>{
+        console.log(resArr);
+        for(const i of resArr){
+          if(i.data.errCode !== 0){
+            this.$notify({
+              title: "error",
+              message: '移动失败',
+              type: "error"
+            });
+            return;
+          }
+        }
+        this.$notify({
+          title: '成功',
+          message: '移动成功',
+          type: 'success'
+        });
+      })
+      .catch(err=>{
+        this.$notify({
+          title: "error",
+          message: err,
+          type: "error"
+        });
+      })
+      
+    },
+    /**
+     * 关闭 新增 普通档案 弹窗
+     */
+    norDocClose(done){
+      this.norDoc.show = false;
+      this.norDoc.nameSelectId = '';
+      this.norDoc.sexSelectId = 0;
+      this.norDoc.age = '';
+      this.norDoc.addr = '';
+      this.norDoc.org = '';
+      this.norDoc.diagnosis = '';
+      this.norDoc.deal = '';
+      // done();
+    },
+    /**
+     * 获取 用户组列表
+     */
+    async getGroupSelects(){
+      const res = await groupSelects({token: this.userInfo.token});
+      console.log(res);
+      if (res.data && res.data.errCode === 0) {
+        this.bottomOperating.list = res.data.body;
+      } else {
+        this.$notify({
+          title: "失败",
+          message: "用户组列表获取失败",
+          type: "error"
+        });
+      }
+    },
+    /**
+     * 选择分页
+     */
+    listSelectPage(data){
+      this.findCondition.page.pageNum = data;
+      this.getQueryByPage();
+    },
+    /**
+     * 获取 分组
+     */
+    getgrouping(){
+      this.findCondition.grouping.data = deepCopy({
+          more: false,
+          title: "分组",
+          list: this.$store.state.global.group.map(item => {
+            item.text = item.name;
+            return item;
+          })
+        });
+    },
+    /**
+     * 获取 档案分类
+    */
+   getDocumentsClassification(){ 
+     this.findCondition.fileClassification.data = deepCopy({
+          more: false,
+          title: "档案分类",
+          list: this.$store.state.global.documentsClassification.map(item => {
+            item.text = item.name;
+            return item;
+          })
+        });
+   },
+   /**
+    * 获取 来源
+    */
+   getSource(){
+     this.findCondition.source.data = deepCopy({
+          more: false,
+          title: "来源",
+          list: this.$store.state.global.userSource.map(item => {
+            item.text = item.name;
+            return item;
+          })
+        });
+   },
+   /**
+    * 获取 院内档案
+    * 
+    */
+   getHospitalArchives(){
+     this.findCondition.inHospitalFile.data = deepCopy({
+          more: false,
+          title: "院内档案",
+          list: this.$store.state.global.hospitalArchives.map(item => {
+            item.text = item.name;
+            return item;
+          })
+        });
+   }, 
 	  /**
 	   * nav 被点击
 	   */
@@ -305,6 +774,7 @@ export default {
     groupingSelect(data) {
       console.log(data);
       this.findCondition.grouping.select = data.index;
+      this.getQueryByPage();
     },
 
     /**
@@ -313,6 +783,7 @@ export default {
     fileClassificationSelect(data) {
       console.log(data);
       this.findCondition.fileClassification.select = data.index;
+      this.getQueryByPage();
     },
 
     /**
@@ -321,6 +792,7 @@ export default {
     sourceSelect(data) {
       console.log(data);
       this.findCondition.source.select = data.index;
+      this.getQueryByPage();
     },
 
     /**
@@ -329,6 +801,7 @@ export default {
     inHospitalFileSelect(data) {
       console.log(data);
       this.findCondition.inHospitalFile.select = data.index;
+      this.getQueryByPage();
     },
 
     /**
@@ -337,6 +810,7 @@ export default {
     searchChange(data) {
       console.log(data);
       this.findCondition.searchKey = data;
+      this.getQueryByPage();
     },
 
     /**
@@ -345,27 +819,26 @@ export default {
     async getQueryByPage() {
       const query = {
         token: this.userInfo.token,
-        groupId: this.findCondition.grouping.select.id,
-        relSource: this.findCondition.source.select.id,
-        isRecord: this.findCondition.source.select.id
-          ? this.findCondition.source.select.id === "true"
-          : false,
+        groupId: this.findCondition.grouping.select.id || '',
+        relSource: this.findCondition.source.select.id || '',
+        isRecord: this.findCondition.inHospitalFile.select.id === "true",
         searchKey: this.findCondition.searchKey,
         pageNum: this.findCondition.page.pageNum,
         pageSize: this.findCondition.page.pageSize
       };
-      for (const i in query) {
-        !query[i] ? delete query[i] : null;
-      }
+      // for (const i in query) {
+      //   !query[i] ? delete query[i] : null;
+      // }
       console.log(query);
       // return;
       const res = await queryByPage(query);
       console.log(res);
       if (res.data && res.data.errCode === 0) {
 		  this.userList = res.data.body.data2.list.map(item=>{
-			  item.select = true;
+			  item.select = false;
 			  return item;
-		  });
+      });
+      this.findCondition.page.total = res.data.body.data2.total;
       } else {
         this.$notify({
           title: "失败",
@@ -378,6 +851,12 @@ export default {
   async created() {
     // console.log(deepCopy);
     this.getQueryByPage();
+    this.getgrouping();
+    this.getDocumentsClassification();
+    this.getSource();
+    this.getHospitalArchives();
+    this.getGroupSelects();
+    this.getQueryListByUserId();
   }
 };
 </script>
@@ -463,5 +942,25 @@ export default {
 .files-doc-aler-item-title{
 color: var(--color18);
 line-height: 0.22rem;
+}
+.doc-item{
+  margin-bottom: 0.2rem;
+}
+.doc-item-content{
+  display: flex;
+  align-items: center;
+}
+.doc-item-content>div{
+  padding-left: 0.1rem;
+  padding-right: 0.1rem;
+  display: flex;
+  align-items: center;
+}
+.doc-item-content>.el-button{
+  margin: 0 auto;
+}
+.doc-must-input{
+  font-size: var(--fontSize1);
+  color: red;
 }
 </style>

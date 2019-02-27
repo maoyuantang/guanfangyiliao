@@ -94,7 +94,7 @@ export default {
     createVideoRoom:'/m/v1/api/basics/videoMeeting/createVideoRoom',//1.3.创建视频
     storageUsers:'/m/v1/api/basics/videoMeeting/storageUsers',//1.4.进入/退出视频房间
     queryStorageUsers:'/m/v1/api/videoMeeting/queryStorageUsers/',//1.5.根据房间号获取用户列表
-    closeVideoRoom:'/m/v1/api/videoMeeting/closeVideoRoom/',//1.6.删除视频会议房间
+    closeVideoRoom:'/m/v1/api/basics/videoMeeting/closeVideoRoom/',//1.6.删除视频会议房间
     videoMeetingInvited:'/m/v1/api/videoMeeting/invited/',//1.7.邀请用户进行视频通话
     invitedOff:'/m/v1/api/videoMeeting/invited/off/',//1.8.通知邀请者已经进入会议视频
     upload:'/m/v1/api/hdfs/fs/upload',//1.9.1文件上传
@@ -243,5 +243,22 @@ export default {
     medicalControlCharts:'/m/v1/api/referral/mcc/medicalControlCharts',//13.12.统计-统计图
     fetchMedicalType:'/m/v1/api/referral/mcc/fetchMedicalType',//13.13.分级管理-类型下拉数据
     fetchMedicalDict:'/m/v1/api/referral/mcc/fetchMedicalDict',//13.14.分级管理-名称与类型联动的名称下拉列表
+    pushStatisticalData:'/m/v1/api/record/recordCase/pushStatisticalData',//3.推送档案统计
+    doctorInto:'/m/v1/api/clinic/clinic/video/doctorInto',//20.1医生进入诊室
+    doctorGetList:'/m/v1/api/clinic/clinic/video/doctorGetList',//20.2医生获取视频列表状态
+    doctorHangupNext:'/m/v1/api/clinic/clinic/video/doctorHangupNext',//20.3医生就诊完毕，挂断视频
+    doctorClickList:'/m/v1/api/clinic/clinic/video/doctorClickList',//20.4医生获取未完成排队列表
+    doctorQuit:'/m/v1/api/clinic/clinic/video/doctorQuit',//20.5医生退出诊室
+    userInto:'/m/v1/api/clinic/clinic/video/userInto',//20.6患者进入诊室排队
+    userQueueHangUp:'/m/v1/api/clinic/clinic/video/userQueueHangUp',//20.7患者排队中，挂断
+    userHangUp:'/m/v1/api/clinic/clinic/video/userHangUp',//20.8患者视频中，主动挂断
+    userRefresh:'/m/v1/api/clinic/clinic/video/userRefresh',//20.9患者动态刷新
+    groupList:'/m/v1/api/user/group/list',//19.3用户组列表
+    groupSelects:'/m/v1/api/user/group/groupSelects',//19.8用户组条件选项
+    addGroupMember:'/m/v1/api/user/group/addGroupMember',//19.5分配用户到小组中
+    addOrdinaryArchives:'/m/v1/api/record/patientRecord/addOrdinaryArchives',//2.新增患者普通档案
+    addWomanMessage:'/m/v1/api/record/patientRecord/addWomanMessage',//4.新增孕妇档案
+    typeList:'/m/v1/api/inquiry/eduCourse/typeList',//6.授课方式筛选条件列表
+    arrangeList:'/m/v1/api/inquiry/eduCourse/arrangeList',//5.获取排课计划列表
 }
 
