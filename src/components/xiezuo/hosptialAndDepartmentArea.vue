@@ -7,8 +7,8 @@
                     <img src="" />
                 </div>
                 <div class="everyOne_right">
-                    <p1>{{text.hosptial}}</p1>
-                    <p2>{{text.department}}</p2>
+                    <p class="p1">{{text.hospitalName}}</p>
+                    <p class="p2">{{text.deptName}}</p>
                 </div>
             </li>
         </ul>
@@ -53,14 +53,14 @@
         align-items: flex-start;
     }
 
-    .everyOne_right p1 {
+    .everyOne_right .p1{
         font-family: PingFangSC-Regular;
         font-size: 14px;
         /* color: #909191; */
         line-height: 20px;
     }
 
-    .everyOne_right p2 {
+    .everyOne_right .p2 {
         opacity: 0.8;
         font-family: PingFangSC-Regular;
         font-size: 13px;

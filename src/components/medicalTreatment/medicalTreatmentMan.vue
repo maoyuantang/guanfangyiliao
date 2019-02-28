@@ -8,41 +8,46 @@
     <el-dialog title=" 医院及科室范围" :visible.sync="doctorVisible" width="602px" hight="356px" center>
       <hosptialAndDepartmentArea :doctorDetailData="doctorDetailData"></hosptialAndDepartmentArea>
     </el-dialog>
-
     <!-- 新增业务   弹框    1 -->
-    <el-dialog title="疾病分级分类" :visible.sync="kuangData1.show" center>
+    <el-dialog title="疾病分级分类" :visible.sync="kuangData1.show" :before-close="handleClose1" center>
       <el-form :model="kuangData1.form">
         <el-form-item label="科室" :label-width="kuangData1.formLabelWidth">
-          <el-select v-model="kuangData1.options1.default.label" placeholder="选择科室（单选）" style="width:80%">
+          <el-select v-model="kuangData1.options1.value" placeholder="选择科室（单选）" style="width:80%">
             <el-option v-for="item in kuangData1.options1.list||[]" :key="item.value" :label="item.label"
               :value="item.value"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="类型" :label-width="kuangData1.formLabelWidth">
-          <el-select v-model="kuangData1.options2.default.label" placeholder="单选" style="width:80%">
-            <el-option v-for="item in kuangData1.options2.list||[]" :key="item.value" :label="item.label"
-              :value="item.value"></el-option>
+          <el-select v-model="kuangData1.options2.value" filterable allow-create default-first-option
+            placeholder="填写或选择" style="width: 80%;" @change='isHaveDepartment11' ref="ceshi1">
+            <el-option v-for="(item,index) in kuangData1.options2.list||[]" :key="index" :label="item.label"
+              :value="item.value">
+            </el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="名称" :label-width="kuangData1.formLabelWidth">
-          <el-select v-model="kuangData1.options3.default.label" placeholder="单选" style="width:80%">
-            <el-option v-for="item in kuangData1.options3.list||[]" :key="item.value" :label="item.label"
-              :value="item.value"></el-option>
+          <el-select v-model="kuangData1.options3.value" filterable allow-create default-first-option
+            placeholder="填写或选择" style="width: 80%;" @change="inputReturn12" ref="ceshi2">
+            <el-option v-for="(item,index) in kuangData1.options3.list||[]" :key="index" :label="item.label"
+              :value="item.value">
+            </el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="分级" :label-width="kuangData1.formLabelWidth">
-          <el-select v-model="kuangData1.options4.default.label" placeholder="请选择1-4级" style="width:80%">
+          <el-select v-model="kuangData1.options4.value" placeholder="请选择1-4级" style="width:80%">
             <el-option v-for="item in kuangData1.options4.list||[]" :key="item.value" :label="item.label"
               :value="item.value"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
-
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="kuangData1Fun" style="width:80%">确 定</el-button>
+        <el-button v-if="YesList1 == 1" type="primary" @click="kuangData1Fun11" style="width:80%">新 增
+        </el-button>
+        <el-button v-if="YesList1 == 2" type="primary" @click="kuangData1Fun12" style="width:80%">编 辑
+        </el-button>
       </div>
     </el-dialog>
 
@@ -50,36 +55,38 @@
 
 
     <!-- 新增业务   弹框  2  -->
-    <el-dialog title="转入控制" :visible.sync="kuangData2.show" center>
+    <el-dialog title="转入控制" :visible.sync="kuangData2.show" :before-close="handleClose2" center>
       <el-form>
         <!-- :model="kuangData2.options" -->
         <el-form-item label="科         室:" :label-width="kuangData2.formLabelWidth">
-          <el-select v-model="kuangData2.options1.default.label" placeholder="单选" style="width:80%">
+          <el-select v-model="kuangData2.options1.value" placeholder="单选" style="width:80%"
+            @change='isHaveDepartment21'>
             <el-option v-for="item in kuangData2.options1.list||[]" :key="item.value" :label="item.label"
               :value="item.value"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="接诊疾病等级:" :label-width="kuangData2.formLabelWidth">
-          <el-select v-model="kuangData2.options2.default.label" multiple placeholder="请选择" style="width:80%">
+          <el-select v-model="kuangData2.options2.value" multiple placeholder="多选" style="width:80%"
+            @change="inputReturn21">
             <el-option v-for="item in kuangData2.options2.list||[]" :key="item.value" :label="item.label"
               :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="申请医院和科室:" :label-width="kuangData2.formLabelWidth">
-          <el-select v-model="kuangData2.options3.default.label" multiple placeholder="请选择" style="width:80%">
-            <el-option v-for="item in kuangData2.options3.list||[]" :key="item.value" :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
+        <div class="block" style="margin-bottom: 22px;">
+          <span class="demonstration"
+            style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室:</span>
+          <el-cascader :options="kuangData2.options3.list" v-model="kuangData2.options3.value" @change="inputReturn22"
+            placeholder="多选" clearable style="width:65%;">
+          </el-cascader>
+        </div>
 
       </el-form>
-
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="kuangData2Fun" style="width:80%">确 定</el-button>
+        <el-button v-if="YesList2 == 1" type="primary" @click="kuangData1Fun21" style="width:80%">新 增</el-button>
+        <el-button v-if="YesList2 == 2" type="primary" @click="kuangData1Fun22" style="width:80%">编 辑</el-button>
       </div>
     </el-dialog>
 
@@ -132,21 +139,27 @@
         </div>
       </div>
       <div class="medical_body1_table">
-        <el-table :data="medical_body1_Data" border style="width: 100%" @cell-click="cellClick2">
+        <el-table :data="medical_body1_Data" border style="width: 100%" @cell-click="cellClick2" :key="Math.random()">
           <el-table-column prop="deptName" label="科室"></el-table-column>
           <el-table-column prop="direction" label="方向"></el-table-column>
           <el-table-column prop="scope" label="范围"></el-table-column>
           <el-table-column prop="levelDesc" label="疾病等级"></el-table-column>
-          <el-table-column fixed="right" label="" width="250">
+          <el-table-column fixed="right" label="操作" width="250">
             <template slot-scope="scope">
               <el-button @click="editList2(scope.row)" type="success" plain size="mini"
                 style="margin:0.05rem 0 0.05rem 0;">编辑
+              </el-button>
+              <el-button @click="delectList2(scope.row)" type="danger" plain size="mini"
+                style="margin:0.05rem 0 0.05rem 0;">删除
               </el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
     </div>
+
+
+
     <!-- 管理   统计 -->
     <div v-if="barInfo.i == 2" class="medical_body2">
       <div class="manager_count_top mainTab">
@@ -189,6 +202,8 @@
     delMedicalControl,//13.10.权限控制-删除
     fetchMedicalControl,//13.11.权限控制-列表
     medicalControlCharts,//13.12.统计-统计图
+    fetchMedicalType,//13.13.分级管理-类型下拉数据
+    fetchMedicalDict,//13.14.分级管理-名称与类型联动的名称下拉列表
   } from "../../api/apiAll.js";
   //引入组件
   import normalTab from './../../public/publicComponents/normalTab.vue'
@@ -223,46 +238,47 @@
         kuangData1: {
           show: false,
           options1: {
-            default: { value: '', label: '' },
-            list: [
-              // {
-              //   value: '',
-              //   label: '黄金糕'
-              // },
-            ]
+            value: "",
+            list: []
           },
           options2: {
-            default: { value: '', label: '' },
+            default: {
+              label: "",
+              value: ""
+            },
+            value: "",
             list: []
           },
           options3: {
-            default: { value: '', label: '' },
-            list: []
-          },
-          options3: {
-            default: { value: '', label: '' },
-            list: []
+            default: {
+              label: "",
+              value: ""
+            },
+            value: "",
+            list: [],
           },
           options4: {
-            default: { value: '', label: '' },
+            value: "",
             list: [{ value: '1', label: '一级' }, { value: '2', label: '二级' }, { value: '3', label: '三级' }, { value: '4', label: '四级' },]
           },
           formLabelWidth: '120px',
         },
+        YesList1: null,
+        YesList2: null,
         // 弹框  2  参数
         kuangData2: {
           show: false,
           options1: {
-            default: { value: '', label: '' },
+            value: "",
             list: []
           },
           options2: {
-            default: { value: '', label: '' },
+            value: [],
             list: []
           },
           options3: {
-            default: { value: '', label: '' },
-            list: []
+            value: [],
+            list: [],
           },
           formLabelWidth: '120px',
         },
@@ -270,6 +286,8 @@
         // 常用参数
         //管理1表 查看记录  弹框
         editKuang: false,//显示  编辑
+        adds: "",//保存表一新增弹框，编辑时某一行的id
+        adds2: "",//保存表2新增弹框，编辑时某一行的id
 
         //筛选返回值接收
         //管理1端  筛选工具栏  筛选返回值  接收参数
@@ -377,6 +395,7 @@
       }
     },
     methods: {
+
       //自调用组件函数
       //  管理  切换数据
       getBar(data) {
@@ -413,6 +432,31 @@
         this.type = data.select.value
         this.getList3()
       },
+      handleClose1(done) {
+        this.kuangData1.options1.value = "";
+        this.kuangData1.options2.value = "";
+        this.kuangData1.options3.value = "";
+        this.kuangData1.options4.value = "";
+        done();
+      },
+      handleClose2(done) {
+        this.kuangData2.options1.value = "";
+        this.kuangData2.options2.value = [];
+        this.kuangData2.options3.value = [];
+        done();
+      },
+      inputReturn11(value) {
+        console.log(value);
+      },
+      inputReturn12(value) {
+        console.log(value);
+      },
+      inputReturn21(value) {
+        console.log(value);
+      },
+      inputReturn22(value) {
+        console.log(value);
+      },
 
 
 
@@ -434,6 +478,7 @@
           } else {
             this.onLineList.topFlag[0].more = false;
           }
+          this.onLineList.topFlag[0].list.length = 0;
           $.each(res.data.body, function (index, text) {
             _this.onLineList.topFlag[0].list.push(
               {
@@ -442,7 +487,7 @@
               }
             );
           });
-          this.kuangData1.options1.list = this.onLineList.topFlag[0].list
+          // this.kuangData1.options1.list = this.onLineList.topFlag[0].list
         } else {
           console.log('1.21.1.科室工具栏 +失败')
           //失败
@@ -461,12 +506,13 @@
         const res = await toolMedicalType(query);                                     //1.21.26.类型筛选  工具栏 (管理)
         if (res.data && res.data.errCode === 0) {
           console.log('1.21.26.类型筛选  工具栏 +成功')
-          // console.log(res.data.body);
+          console.log(res.data.body);
           if (res.data.body.length > 6) {
             this.onLineList.topFlag[1].more = true;
           } else {
             this.onLineList.topFlag[1].more = false;
           }
+          this.onLineList.topFlag[1].list.length = 0;
           $.each(res.data.body, function (index, text) {
             //   类型   筛选列表   管理1
             _this.onLineList.topFlag[1].list.push({
@@ -498,6 +544,7 @@
           } else {
             this.onLineList.topFlag[2].more = false;
           }
+          this.onLineList.topFlag[2].list.length = 0;
           $.each(res.data.body, function (index, text) {
             _this.onLineList.topFlag[2].list.push({
               text: text.name,
@@ -590,6 +637,25 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       // 管理    1.1表  表体  
       cellClick1(row, column, cell, event) {
 
@@ -598,8 +664,9 @@
       cellClick2(row, column, cell, event) {
         // console.log(row, column)
         if (column.label == "范围") {//当范围被点击
-          console.log(row.aa)//找到对应行的科室id
+          console.log(row)//找到对应行的科室id
           this.doctorVisible = true;
+          this.doctorDetailData = row.deptRels
         }
       },
       //范围弹框（子组件  reback函数）
@@ -607,16 +674,197 @@
         alert()
       },
       // 管理    1.1表   操作区
+      // 表一编辑
       editList1(data) {
+        this.YesList1 = 2;
+        this.kuangData1.show = true;
+        this.fetchHospitalDepts().then(val => {//执行完科室获取再执行获取名称list
+          this.isHaveDepartment11();
+        });
         console.log(data)
+        const _this = this
+        console.log(this.kuangData1.options1.list)
+        console.log(this.kuangData1.options2.list)
+        console.log(this.kuangData1.options3.list)
+        this.adds = data.id
+        this.kuangData1.options1.value = data.deptId
+        this.kuangData1.options2.value = data.diseaseTypeId
+        this.kuangData1.options3.value = data.diseaseId//疾病ID
+        // this.kuangData1.options3.value = data.medicalName//疾病名称
+
+        // console.log(this.kuangData1.options3.list)
+        // console.log(data.medicalName)
+        // console.log(this.kuangData1.options3.value)
+        $.each(this.kuangData1.options4.list, function (index, text) {
+          if (_this.kuangData1.options4.list[index].label == data.levelName) {
+            _this.kuangData1.options4.value = _this.kuangData1.options4.list[index].value
+          }
+        })
+
+        // console.log()
       },
-      delectList1(data) {
+      // 表一编辑   提交
+      async kuangData1Fun12() {
+        let abc = []
+        const _this = this
+        console.log(this.kuangData1.options2.list)
+        $.each(this.kuangData1.options2.list, function (index, text) {
+          if (_this.$refs.ceshi1.query == _this.kuangData1.options2.list[index].label) {
+            console.log("编辑匹配到了下拉，直接提交")
+            abc.push("1")
+            _this.editMedicalClassify();
+          } else { }
+        })
+        console.log(this.abc)
+        if (abc.length == 0) {
+          console.log("编辑无匹配，传空新增类型")
+          this.addMedicalClassify2();
+        } else { }
+        this.kuangData1.show = false;
+      },
+      //表一编辑提交函数
+      async editMedicalClassify() {
+        let query = {
+          token: this.userState.token,
+        };
+        let options = {//访问data里面自定义的参数（表格value）
+          id: this.adds,//此行id
+          deptId: this.kuangData1.options1.value,
+          diseaseTypeId: this.kuangData1.options2.value,//类型ID
+          diseaseTypeName: this.$refs.ceshi1.query,//类型名称
+          diseaseId: this.kuangData1.options3.value,//疾病ID
+          diseaseName: this.$refs.ceshi2.query,//疾病名称
+          level: this.kuangData1.options4.value
+        };
+        const res = await editMedicalClassify(query, options);//表1新增   提交                   //13.3.分级管理-修改
+        if (res.data && res.data.errCode === 0) {
+          console.log('表1-编辑  +成功')
+          console.log(res)
+          this.getList1()
+          this.getSelect2()
+          this.handleClose1();
+        } else {
+          //失败
+          console.log('表1-编辑  +失败')
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+
+      // 表一删除
+      async delectList1(data) {
         console.log(data)
+        const _this = this
+        let query = {
+          token: this.userState.token,
+        };
+        let options = {
+          id: data.id
+        }
+        const res = await delMedicalClassify(query, options);                                 //13.4.分级管理-删除
+        if (res.data && res.data.errCode === 0) {
+          console.log('表1-删除 +成功')
+          console.log(res)
+          this.getList1()
+          this.getSelect2()
+        } else {
+          //失败
+          console.log('表1-删除 +失败')
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
       },
       // 管理   1.2表   操作区
+      //1.2表   操作区   编辑
       editList2(data) {
+        const _this = this
         console.log(data)
+        this.YesList2 = 2;
+        this.kuangData2.show = true;
+        this.adds2 = data.id
+        this.chooseDept().then(val => {//执行完科室获取再执行获取名称list
+          this.isHaveDepartment21();
+        });
+        this.kuangData2.options1.value = data.deptId
+        this.kuangData2.options2.value.length = 0
+        this.kuangData2.options3.value.length = 0
+        $.each(data.levels, function (index, text) {
+          _this.kuangData2.options2.value.push(JSON.stringify(text.level))
+        })
+        this.kuangData2.options3.value.push(data.deptRels[0].hospitalId, data.deptRels[0].deptId)
       },
+      // 表2编辑   提交
+      async kuangData1Fun22() {
+        this.editMedicalControl();
+        this.kuangData2.show = false;
+      },
+      //表2编辑提交函数 
+      async editMedicalControl() {
+        let query = {
+          token: this.userState.token,
+        };
+        let options = {
+          id: this.adds2,
+          deptId: this.kuangData2.options1.value,
+          levels: this.kuangData2.options2.value,
+          applyDepts: [
+            {
+              hospitalId: this.kuangData2.options3.value[0],
+              deptIds: [this.kuangData2.options3.value[1]]
+            }
+          ]
+        }
+        const res = await editMedicalControl(query, options);//               //13.9.权限控制-编辑 
+        if (res.data && res.data.errCode === 0) {
+          console.log('表1.2-编辑  +成功')
+          console.log(res)
+          this.getList2()
+          // this.handleClose2();
+        } else {
+          //失败
+          console.log('表1.2-编辑  +失败')
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      // 表2  删除
+      async delectList2(data) {
+        console.log(data)
+        const _this = this
+        let query = {
+          token: this.userState.token,
+        };
+        let options = {
+          id: data.id
+        }
+        const res = await delMedicalControl(query, options);                                 //13.10.权限控制-删除 
+        if (res.data && res.data.errCode === 0) {
+          console.log('表1.2-删除 +成功')
+          console.log(res)
+          this.getList2()
+          this.getSelect2()
+        } else {
+          //失败
+          console.log('表1.2-删除 +失败')
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+
+
+
+
+
+
+
 
 
 
@@ -628,43 +876,168 @@
 
       //弹出  新增业务1  表单
       async addBusinessFun1() {
+        this.YesList1 = 1;
+        this.kuangData1.options2.list.length = 0
         this.kuangData1.show = true;
+        this.fetchHospitalDepts();
+      },
+      //2.2.获取医院科室列表    新增弹框
+      async fetchHospitalDepts() {
+        const _this = this
         // 获取下拉   科室
         let query1 = {
-          orgCode:"1545649424290" ,//医院代码
+          orgCode: "1545649424290",//医院代码
           deptId: ""//科室ID，无该参数则返回医院全部科室，有该参数则会过滤科室列表
         };
-        const res = await fetchHospitalDepts(query1);                                 //2.2.获取医院科室列表
-        if (res.data && res.data.errCode === 0) {
+        const res1 = await fetchHospitalDepts(query1);                                 //2.2.获取医院科室列表
+        if (res1.data && res1.data.errCode === 0) {
           console.log('表1-新增2.2.获取医院科室列表 +成功')
-          console.log(res)
+          console.log(res1)
+          console.log(this.kuangData1.options1.list)
+          _this.kuangData1.options1.list = res1.data.body.map(item => {
+            return {
+              label: item.deptName,
+              value: item.deptId
+            }
+          })
         } else {
           //失败
           console.log('表1-新增2.2.获取医院科室列表 +失败')
+          this.$notify.error({
+            title: "警告",
+            message: res1.data.errMsg
+          });
+        }
+        //获取类型下拉
+        let query2 = {
+          token: this.userState.token,
+        };
+        const res2 = await fetchMedicalType(query2);                                //13.13.分级管理-类型下拉数据
+        if (res2.data && res2.data.errCode === 0) {
+          console.log('表1-新增13.13.分级管理-类型下拉数据 +成功')
+          console.log(res2)
+          this.kuangData1.options2.list.length = 0;
+          $.each(res2.data.body, function (index, text) {
+            _this.kuangData1.options2.list.push({
+              label: text.name,
+              value: text.id
+            });
+          });
+          console.log(this.kuangData1.options2)
+        } else {
+          //失败
+          console.log('表1-新增13.13.分级管理-类型下拉数据 +失败')
+          this.$notify.error({
+            title: "警告",
+            message: res2.data.errMsg
+          });
+        }
+      },
+      //13.14.分级管理-名称与类型联动的名称下拉列表
+      async isHaveDepartment11() {
+        const _this = this
+        if (this.kuangData2.options2.value) {//等待  询问
+          this.kuangData1.options3.value = ""
+          this.kuangData1.options3.list.length = 0
+          let query3 = {
+            token: this.userState.token,
+            diseaseTypeId: this.kuangData1.options2.value//类型ID
+          };
+          const res = await fetchMedicalDict(query3);                                 //13.14.分级管理-名称与类型联动的名称下拉列表
+          if (res.data && res.data.errCode === 0) {
+            console.log('表1-新增13.14.分级管理-名称与类型联动的名称下拉列表 +成功')
+            console.log(res)
+            $.each(res.data.body, function (index, text) {
+              _this.kuangData1.options3.list.push({
+                label: text.name,
+                value: text.id
+              });
+            });
+          } else {
+            //失败
+            console.log('表1-新增13.14.分级管理-名称与类型联动的名称下拉列表 +失败')
+            this.$notify.error({
+              title: "警告",
+              message: res.data.errMsg
+            });
+          }
+        }
+      },
+      //弹出  新增业务1   提交 
+      async kuangData1Fun11() {
+        let abc = []
+        // console.log(abc)
+        const _this = this
+        console.log(this.kuangData1.options2.list)
+        // console.log(Object.prototype.toString.call(this.kuangData1.options3.list))
+        $.each(this.kuangData1.options2.list, function (index, text) {
+          // console.log(`_this.$refs.ceshi2.query => ${_this.$refs.ceshi2.query}`);
+          // console.log(`_this.kuangData1.options3.list[index].label => ${_this.kuangData1.options3.list[index].label}`);
+          if (_this.$refs.ceshi1.query == _this.kuangData1.options2.list[index].label) {
+            console.log("新增匹配到了下拉，直接加列表数据")
+            abc.push("1")
+            _this.addMedicalClassify1();
+          } else {
+            // alert(2)
+          }
+        })
+        console.log(this.abc)
+        if (abc.length == 0) {
+          console.log("新增无匹配，新增类型")
+          this.addMedicalClassify2();
+        } else {
+          // alert(5)
+        }
+        this.kuangData1.show = false
+      },
+      //表一新增提交函数
+      async addMedicalClassify1() {
+        let query = {
+          token: this.userState.token,
+        };
+        let options = {//访问data里面自定义的参数（表格value）
+          deptId: this.kuangData1.options1.value,
+          diseaseTypeId: this.kuangData1.options2.value,//类型ID
+          diseaseTypeName: this.$refs.ceshi1.query,//类型名称
+          diseaseId: this.kuangData1.options3.value,//疾病ID
+          diseaseName: this.$refs.ceshi2.query,//疾病名称
+          level: this.kuangData1.options4.value
+        };
+        const res = await addMedicalClassify(query, options);//表1新增   提交                   //13.2.分类管理-新增 
+        if (res.data && res.data.errCode === 0) {
+          console.log('表1-新增  +成功')
+          console.log(res)
+          this.getList1()
+          this.getSelect2()
+          this.handleClose1();
+        } else {
+          //失败
+          console.log('表1-新增  +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
           });
         }
       },
-      //弹出  新增业务1   提交 
-      async kuangData1Fun() {
-        this.kuangData1.show = false
+      async addMedicalClassify2() {
         let query = {
           token: this.userState.token,
         };
-        let options = {//访问data里面自定义的参数（表格default）
-          deptId: 12345654,
-          diseaseTypeId: "",
-          diseaseTypeName: "阿斯顿发生的",
-          diseaseId: "",
-          diseaseName: "阿斯顿发生的",
-          level: "一级"
+        let options = {//访问data里面自定义的参数（表格value）
+          deptId: this.kuangData1.options1.value,
+          diseaseTypeId: "",//类型ID
+          diseaseTypeName: this.$refs.ceshi1.query,//类型名称
+          diseaseId: "",//疾病ID
+          diseaseName: this.$refs.ceshi2.query,//疾病名称
+          level: this.kuangData1.options4.value
         };
-        const res = await addMedicalClassify(query,options);//表1新增   提交                   //13.2.分类管理-新增 
+        const res = await addMedicalClassify(query, options);//表1新增   提交                   //13.2.分类管理-新增 
         if (res.data && res.data.errCode === 0) {
           console.log('表1-新增  +成功')
           console.log(res)
+          this.getList1()
+          this.getSelect2()
+          this.handleClose1();
         } else {
           //失败
           console.log('表1-新增  +失败')
@@ -678,74 +1051,119 @@
 
       //弹出  新增业务2  表单
       async addBusinessFun2() {
+        this.YesList2 = 1;
         this.kuangData2.show = true;
+        this.chooseDept().then(val => {//执行完科室获取再执行获取名称list
+          this.isHaveDepartment21();
+        });
+      },
+      async chooseDept() {
+        const _this = this
         let query1 = {
           token: this.userState.token,
         };
-        const res = await chooseDept(query1);                                            //13.5.权限控制-科室列表下拉框 
-        if (res.data && res.data.errCode === 0) {
+        const res1 = await chooseDept(query1);                                            //13.5.权限控制-科室列表下拉框 
+        if (res1.data && res1.data.errCode === 0) {
           console.log('权限控制-科室列表下拉框 +成功')
-          console.log(res)
-          this.kuangData2.options1.list = res.data.body
-          console.log(res.data.body)
-          //13.6.权限控制-接诊疾病等级下拉框
-          if (res.data.body) {
-            let query = {
-              token: this.userState.token,
-              deptId: null//依靠   上面一层获取科室id
-            };
-            const res = await chooseAcceptsLevel(query);                                 //13.6.权限控制-接诊疾病等级下拉框
-            if (res.data && res.data.errCode === 0) {
-              console.log('权限控制-接诊疾病等级下拉框 +成功')
-              console.log(res)
-              this.kuangData2.options2.list = res.data.body
-              console.log(res.data.body)
-            } else {
-              //失败
-              console.log('权限控制-接诊疾病等级下拉框 +失败')
-              this.$notify.error({
-                title: "警告",
-                message: res.data.errMsg
-              });
-            }
-          }
-          let query2 = {
-            token: this.userState.token,
-          };
-          const res = await chooseApplyDept(query2);                                 //13.7.权限控制-申请医院和科室下拉框 
-          if (res.data && res.data.errCode === 0) {
-            console.log('权限控制-申请医院和科室下拉框 +成功')
-            console.log(res)
-            this.kuangData2.options3.list = res.data.body
-            console.log(res.data.body)
-          } else {
-            //失败
-            console.log('权限控制-申请医院和科室下拉框 +失败')
-            this.$notify.error({
-              title: "警告",
-              message: res.data.errMsg
-            });
-          }
+          console.log(res1)
+          const testJson = this.setJson(res1.data.body);
+          this.kuangData2.options1.list = testJson.data
+          console.log(this.kuangData2.options1.list)
         } else {
           //失败
           console.log('权限控制-科室列表下拉框 +失败')
           this.$notify.error({
             title: "警告",
-            message: res.data.errMsg
+            message: res1.data.errMsg
           });
         }
-
+        let query2 = {
+          token: this.userState.token,
+        };
+        const res2 = await chooseApplyDept(query2);                                 //13.7.权限控制-申请医院和科室下拉框 
+        if (res2.data && res2.data.errCode === 0) {
+          console.log('权限控制-申请医院和科室下拉框 +成功')
+          console.log(res2)
+          this.kuangData2.options3.list.length = 0;
+          $.each(res2.data.body, function (index, text) {
+            _this.kuangData2.options3.list.push(
+              {
+                label: text.label,
+                value: text.id,
+                type: text.type,
+                children: []
+              }
+            )
+            if (text.children.length != 0) {
+              $.each(text.children, function (index, text) {
+                _this.kuangData2.options3.list[index].children.push(
+                  {
+                    label: text.label,
+                    value: text.id,
+                    type: text.type,
+                  }
+                )
+              })
+            }
+          })
+          console.log(this.kuangData2.options3.list)
+        } else {
+          //失败
+          console.log('权限控制-申请医院和科室下拉框 +失败')
+          this.$notify.error({
+            title: "警告",
+            message: res2.data.errMsg
+          });
+        }
+      },
+      //13.6.权限控制-接诊疾病等级下拉框
+      async isHaveDepartment21() {
+        if (this.kuangData2.options1.value != "") {
+          let query = {
+            token: this.userState.token,
+            deptId: this.kuangData2.options1.value//依靠   上面一层获取科室id
+          };
+          const res = await chooseAcceptsLevel(query);                                 //13.6.权限控制-接诊疾病等级下拉框
+          if (res.data && res.data.errCode === 0) {
+            console.log('权限控制-接诊疾病等级下拉框 +成功')
+            console.log(res)
+            const testJson = this.setJson(res.data.body);
+            this.kuangData2.options2.list = testJson.data
+          } else {
+            //失败
+            console.log('权限控制-接诊疾病等级下拉框 +失败')
+            this.$notify.error({
+              title: "警告",
+              message: res.data.errMsg
+            });
+          }
+        }
       },
       //弹出  新增业务2   提交 
-      async kuangData2Fun() {
+      async kuangData1Fun21() {
+        console.log(this.kuangData2.options1.value)
+        console.log(this.kuangData2.options2.value)
+        console.log(this.kuangData2.options3.value)
         this.kuangData2.show = false
         let query = {
           token: this.userState.token,
         };
-        const res = await addMedicalControl(query);                                 //13.8.权限控制-新增  
+        let options = {
+          deptId: this.kuangData2.options1.value,
+          levels: this.kuangData2.options2.value,
+          applyDepts: [
+            {
+              hospitalId: this.kuangData2.options3.value[0],
+              deptIds: [this.kuangData2.options3.value[1]]
+            }
+          ]
+        }
+        const res = await addMedicalControl(query, options);                                 //13.8.权限控制-新增  
         if (res.data && res.data.errCode === 0) {
           console.log('权限控制-新增  +成功')
           console.log(res)
+          this.getList2();
+          this.handleClose2();
         } else {
           //失败
           console.log('权限控制-新增  +失败')
@@ -753,6 +1171,29 @@
             title: "警告",
             message: res.data.errMsg
           });
+        }
+      },
+
+
+
+
+      /**
+       * 数组提取json
+       */
+      setJson(data) {
+        if (Object.prototype.toString.call(data) !== "[object Array]") return { ok: false, data: null };
+        const reJson = [];
+        for (const i of data) {
+          for (const j in i) {
+            reJson.push({
+              label: i[j],
+              value: j
+            })
+          }
+        };
+        return {
+          ok: true,
+          data: reJson
         }
       },
     },
