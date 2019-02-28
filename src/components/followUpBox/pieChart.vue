@@ -1,5 +1,8 @@
 <template>
-    <div class="normal-column-chart" ref="testEcharts"></div>
+    <div class="normal-column-chart" ref="testEcharts">
+
+        33434
+    </div>
 </template>
 
 <script>

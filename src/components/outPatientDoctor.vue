@@ -506,7 +506,7 @@ import {
 
     // 谭莹
     fetchChatSession, //创建单聊会话
-    doctorInto,//进入门诊
+    doctorInto //进入门诊
 
     // 废弃接口
     // fetchHospitalDepts,//2.2.获取医院科室列表
@@ -539,7 +539,7 @@ export default {
                 conferenceId: "",
                 conferenceNumber: ""
             },
-            oClinicId:[],//当前进入门诊id
+            oClinicId: [], //当前进入门诊id
             //谭莹变量
             // testData: {
             //   select: {
@@ -684,15 +684,16 @@ export default {
         //引入token
         ...mapState({
             userState: state => state.user.userInfo,
-            userSelfInfo: state => state.user.userSelfInfo
+            userSelfInfo: state => state.user.userSelfInfo,
+            userSocketInfo: state => state.socket
         })
     },
     methods: {
         // 谭莹事件
         //进入门诊
-        enterRoomBtn(oid){
+        enterRoomBtn(oid) {
             this.centerDialogVisible = true;
-            this.oClinicId=oid
+            this.oClinicId = oid;
         },
         //退出视频
         // async closeVideo() {
@@ -722,7 +723,7 @@ export default {
         //     }
         // },
         //退出诊室
-         async closeVideo() {
+        async closeVideo() {
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -1017,10 +1018,23 @@ export default {
             }
         }
     },
+
     async created() {
         this.getList1(); //7.6医生列表1
         // this.addPrescription();//7.8开处方
         // this.checkPrescription();//7.9是否通过
+    },
+    watch: {
+        "userSocketInfo.synchroMessage": {
+            handler(n, o) {
+                let _this = this;
+                $.each(n.syncData, function(index, text) {
+                    if (text.command == "SYNC_DOCTOR_ROOM") {
+                        _this.getList1();
+                    }
+                });
+            }
+        }
     }
 };
 </script>

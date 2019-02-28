@@ -18,7 +18,7 @@ import ovideo from "../video/oVideo.vue";
 import apiBaseURL from "../enums/apiBaseURL.js";
 import { mapState } from "vuex";
 import protobuf from "protobufjs";
-import { storageUsers } from "../api/apiAll.js";
+import { storageUsers,fetchSyncInfo,userInfo } from "../api/apiAll.js";
 
 export default {
     components: {
@@ -52,7 +52,8 @@ export default {
     computed: {
         ...mapState({
             userState: state => state.user.userInfo,
-            userSelfInfo: state => state.user.userSelfInfo
+            userSelfInfo: state => state.user.userSelfInfo,
+            userSocketInfo: state => state.socket
         })
     },
     async created() {
@@ -96,6 +97,52 @@ export default {
         handleClose() {},
         closeVideo() {
             this.closeVideoOr("OFF");
+        },
+        // 拉取同步消息接口
+        async pullSynchro() {
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                versionId: this.userSelfInfo.currMaxVersion,
+                pageNums: 10
+            };
+            const res = await fetchSyncInfo(query);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                let oUserSelfInfo=this.userSelfInfo;
+                oUserSelfInfo.currMaxVersion=res.data.body.currMaxVersion
+                this.$store.commit("user/SETUSERSELFINFO", oUserSelfInfo);
+               this.$store.commit("socket/SYNCHROIMESSAGE", res.data.body);
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //获取用户信息
+        async getUserInfo() {
+            const options = {
+                token: this.userState.token,
+                oneself: true
+            };
+            let res = await userInfo(options);
+            if (res.data.errCode === 0) {
+                //登录成功
+                this.$store.commit("user/SETUSERSELFINFO", res.data.body);
+                sessionStorage.setItem(
+                    "userSelfInfo",
+                    JSON.stringify(res.data.body)
+                ); //将用户个人信息写入缓存
+            } else {
+                this.$message({
+                    showClose: true,
+                    message: res.errMsg,
+                    type: "error"
+                });
+            }
+            this.$router.push({ path: "/" });
         },
         // 进入或退出视频
         async closeVideoOr(oState) {
@@ -271,11 +318,15 @@ export default {
         },
         // 数据发送
         websocketsend(data) {
+            console.log("下方发消息");
+            console.log(data);
             let msg = this.$store.state.socket.IMessage.encode(data).finish();
+
             this.$store.state.socket.socketObj.send(msg);
         },
         // 数据接收
         webSocketonmessage(odata) {
+            console.log("下方收消息");
             console.log(odata);
             let RequestType = odata.RequestType;
             if (RequestType == 101 || RequestType == 104) {
@@ -325,6 +376,19 @@ export default {
                 return false;
             } else if (RequestType == 0) {
                 //同步
+                // let Iessage = {
+                //     RequestType: 100,
+                //     ticket: this.$store.state.socket.messageTicket.ticket,
+                //     status: {
+                //         state: true,
+                //         msgId: "", //客户端上接收到最后一条消息的ID号
+                //         sequence: this.$store.state.socket.messageTicket
+                //             .sequence //客户端上发送最后一条消息的序号
+                //     }
+                // };
+                // this.sendMessage(Iessage);
+                this.pullSynchro()
+                return false;
             } else if (RequestType == 6) {
                 this.sessionId = odata.info.to;
                 console.log("run");
@@ -1162,7 +1226,22 @@ export default {
         //     };
         //     this.$emit("getMessageTicket", messageTicket);
         // }
-    }
+    },
+        watch: {
+        "userSocketInfo.synchroMessage": {
+            handler(n, o) {
+                let _this = this;
+                $.each(n.syncData, function(index, text) {
+                    if (text.command == "SYNC_USER_INFO_UPDATE") {
+                        _this.getUserInfo();
+                    }
+                    if (text.command == "SYNC_LOGOUT") {
+                        //退出登录
+                    }
+                });
+            }
+        }
+    },
 };
 </script>
 
