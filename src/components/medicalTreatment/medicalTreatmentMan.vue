@@ -664,8 +664,9 @@
       cellClick2(row, column, cell, event) {
         // console.log(row, column)
         if (column.label == "范围") {//当范围被点击
-          console.log(row.aa)//找到对应行的科室id
+          console.log(row)//找到对应行的科室id
           this.doctorVisible = true;
+          this.doctorDetailData = row.deptRels
         }
       },
       //范围弹框（子组件  reback函数）
