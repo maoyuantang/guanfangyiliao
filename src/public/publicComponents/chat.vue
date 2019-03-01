@@ -46,8 +46,7 @@
 
                                     <!-- 显示随访表 -->
                                     <!-- 自己发的随访表 -->
-                                    <div v-show="text.childMessageType=='FOLLOWUP' || text.childMessageType=='INTERROGATION' || text.childMessageType=='ARTICLE'">
-                                        {{text.content}}
+                                    <div v-if="text.childMessageType=='FOLLOWUP' || text.childMessageType=='INTERROGATION' || text.childMessageType=='ARTICLE'">
                                         <div v-show="text.from==userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.id,text.childMessageType)">
 
                                             <div>
@@ -822,7 +821,7 @@ export default {
                             this.messageList[i].content = "随访";
                         } else if (odata[i].childMessageType == "AUDIO") {
                             //音频
-                            this.messageList[i].content = "音频";
+                            this.messageList[i].content = "该消息为音频消息,请在手机上查看";
                         } else if (odata[i].childMessageType == "VIDEO") {
                             //视频
                             if (odata[i].body.indexOf("refuse") > -1) {
@@ -1056,7 +1055,7 @@ export default {
             handler(data, o) {
                 let olength = data.length;
                 let oData=data[olength - 1]
-                console.log(data)
+                console.log(data  )
                 if (oData.RequestType == 6) {
                     if (this.sessionId == oData.info.to) {
                         
@@ -1084,6 +1083,7 @@ export default {
                             childMessageType = "VIDEO";
                         } else if (oData.info.childMessageType == 4) {
                             childMessageType = "AUDIO";
+                            messageBody='该消息为音频消息,请在手机上查看'
                         } else if (oData.info.childMessageType == 5) {
                             childMessageType = "IMAGE";
                         } else if (oData.info.childMessageType == 7) {

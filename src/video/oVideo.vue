@@ -21,7 +21,7 @@
                                 </div>
                                 <div>
                                     <div>屏幕分享</div>
-                                    <div @click="openPatientNum()">列表</div>
+                                    <div @click="openPatientNum()" v-show="listVisable">列表</div>
                                 </div>
                             </div>
                             <div class="videoBtn" v-show="guaVisable">
@@ -109,6 +109,7 @@ export default {
     },
     data() {
         return {
+            listVisable:true,
             oSeaver: "meet.xiaoqiangio.com",
             oUser: "gfki",
             oPassWord: "1qaz@WSX",
@@ -1377,12 +1378,14 @@ export default {
         let _this = this;
 
         if (this.videoType == "门诊") {
+            this.listVisable=true;
             this.getLocal();
             this.enterRoomBtn();
             this.noLineUpNum();
             this.getThePatient();
         } else {
-            alert("1234");
+            this.localVideoVisable=false;
+            this.listVisable=false;
             this.firstSet();
         }
 
@@ -1577,10 +1580,10 @@ export default {
     props: {
         createVideoRoomData: Object,
         videoType: String,
-        oClinicId: String
+        oClinicId: String,
     },
     model: {
-        prop: ["createVideoRoomData", "videoType", "oClinicId"],
+        prop: ["createVideoRoomData", "videoType", "oClinicId",],
         event: "reBack"
     }
 };
