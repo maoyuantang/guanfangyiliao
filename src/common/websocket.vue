@@ -414,7 +414,7 @@ export default {
                     };
                     this.sendMessage(Iessage);
 
-                    this.$store.commit("socket/MSGBOX", odata.info);
+                    this.$store.commit("socket/MSGBOX", odata);
                     let _this = this;
                     this.createVideoRoomData = {
                         conferenceId: odata.info.body.split("&")[2],
