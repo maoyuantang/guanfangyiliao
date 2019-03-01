@@ -3,6 +3,7 @@ export default {
 	state:{
         socketObj:null,//socket对象
         IMessage:"",
+        synchroMessage:"",
         msgBox:{//消息盒子
             a:{
                 msg:[
@@ -30,6 +31,10 @@ export default {
         IMESSAGE(state,data){
 			state.IMessage = data;
         },
+        //同步消息
+        SYNCHROIMESSAGE(state,data){
+			state.synchroMessage = data;
+        },
         MESSAGETICKET(state,data){
             state.messageTicket.ticket = data.ticket;
             state.messageTicket.sequence = data.sequence;
@@ -47,6 +52,9 @@ export default {
         },
         IMessage(context,data){
 			context.commit("IMESSAGE",data);
+        },
+        synchroIMessage(context,data){
+			context.commit("SYNCHROIMESSAGE",data);
         },
         messageTicket(context,data){
             context.commit("MESSAGETICKET",data);

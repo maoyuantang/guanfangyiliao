@@ -1328,6 +1328,18 @@ export const alertGet = query => {//10.9.1 获取设备告警信息【医生web�
         }
     })
 }
+export const myFollowDetailFun = query => {//10.9.1 获取设备告警信息【医生web】
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.myFollowDetailFun,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
 export const alertSwitch = (query, data) => {//10.9.2 设备告警开关改变【医生web】
     const sign = postQueryHandle(Object.assign({}, data, query));
     return axios({
@@ -1785,12 +1797,13 @@ export const myFollowup = query => { //我的随访用户列表
         }
     })
 }
-export const phoneFollowupSwitch = query => { //改变电话随访开关【医生web】
-    const sign = postQueryHandle(query);
+export const phoneFollowupSwitch = (query, data) => {//
+    const sign = postQueryHandle(Object.assign({}, data, query));
     return axios({
-        method: 'get',
+        method: 'post',
         url: apiList.phoneFollowupSwitch,
         params: query,
+        data: data,
         headers: {
             sign
         }

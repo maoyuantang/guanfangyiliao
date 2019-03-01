@@ -11,7 +11,7 @@
                     </div>
                     <div class="col-xs-12 media-box us-media">
                         <div id="localVideos">
-                            <video class="localVideo1" v-show="localVideoVisable" id="video" width="640" height="480" autoplay></video>
+                            <video class="localVideo1" v-if="localVideoVisable" id="video" width="640" height="480" autoplay></video>
                         </div>
                         <div>
                             <!-- <video-chat></video-chat> -->
@@ -66,7 +66,7 @@
             <div class="patientClass0">
                 <h3>未处理业务(未排队)</h3>
                 <ul v-show="noLineVisable">
-                    <li v-for="(text,index) in noLineNum" :key="index">
+                    <li v-for="(text,index) in noLineNum" :key="index" @click="createChat(text.userId)">
                         <div>
                             <img src="../assets/img/sendNew1.png" />
                         </div>
@@ -92,7 +92,8 @@ import {
     fetchChatSession,
     doctorQuit,
     doctorHangupNext,
-    storageUsers
+    storageUsers,
+    closeVideoRoom
 } from "../api/apiAll.js";
 export default {
     name: "video",
@@ -102,7 +103,8 @@ export default {
     computed: {
         ...mapState({
             userState: state => state.user.userInfo,
-            userSelfInfo: state => state.user.userSelfInfo
+            userSelfInfo: state => state.user.userSelfInfo,
+            userSocketInfo: state => state.socket
         })
     },
     data() {
@@ -123,7 +125,8 @@ export default {
             questVisable: false,
             closePatientNumVisable: false,
             videoChatVisable: false,
-            doctorVis: 1
+            doctorVis: 1,
+            videoIng: 0
         };
     },
     methods: {
@@ -361,37 +364,47 @@ export default {
         },
         //创建视频
         async createVideo(ouserId) {
-            let _this = this;
-            let query = {
-                token: this.userState.token
-            };
-            let options = {
-                type: "NORMAL",
-                time: ""
-            };
-            const res = await createVideoRoom(query, options);
-            if (res.data && res.data.errCode === 0) {
-                _this.createVideoRoomData1 = {
-                    conferenceId: res.data.body.conferenceId,
-                    conferenceNumber: res.data.body.conferenceNumber
+            if (this.videoIng == 0) {
+                let _this = this;
+                let query = {
+                    token: this.userState.token
                 };
-                _this.localVideoVisable = false;
-                this.firstSet();
-                _this.guaVisable = true;
-                _this.questVisable = true;
-                let childMessageType = 7;
-                let messageBody =
-                    "MicroCinicSendRoom&" +
-                    res.data.body.conferenceNumber +
-                    "&" +
-                    res.data.body.conferenceId;
+                let options = {
+                    type: "NORMAL",
+                    time: ""
+                };
+                const res = await createVideoRoom(query, options);
+                if (res.data && res.data.errCode === 0) {
+                    _this.createVideoRoomData1 = {
+                        conferenceId: res.data.body.conferenceId,
+                        conferenceNumber: res.data.body.conferenceNumber
+                    };
+                    console.log("创建视频成功");
+                    _this.videoIng = 1;
+                    _this.closePatientNumVisable = false;
+                    _this.localVideoVisable = false;
+                    this.firstSet();
+                    _this.guaVisable = true;
+                    _this.questVisable = true;
+                    let childMessageType = 7;
+                    let messageBody =
+                        "MicroCinicSendRoom&" +
+                        res.data.body.conferenceNumber +
+                        "&" +
+                        res.data.body.conferenceId;
 
-                _this.sendMessageChat(childMessageType, messageBody);
-            } else {
-                //失败
+                    _this.sendMessageChat(childMessageType, messageBody);
+                } else {
+                    //失败
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
+            } else if (this.videoIng == 1) {
                 this.$notify.error({
                     title: "警告",
-                    message: res.data.errMsg
+                    message: "正在视频中....."
                 });
             }
         },
@@ -419,7 +432,12 @@ export default {
             if (res.data && res.data.errCode === 0) {
                 _this.getThePatient();
                 _this.noLineUpNum();
-                _this.closeVideoRoom()
+                _this.closeVideoRoom(0);
+                _this.guaVisable = false;
+                _this.questVisable = false;
+                console.log("关闭视频成功");
+                _this.localVideoVisable = true;
+                _this.videoIng = 0;
             } else {
                 //失败
                 this.$notify.error({
@@ -443,7 +461,7 @@ export default {
                     title: "成功",
                     message: "退出诊室成功"
                 });
-                this.closeVideoRoom()
+                this.closeVideoRoom(1);
             } else {
                 //失败
                 this.$notify.error({
@@ -453,7 +471,7 @@ export default {
             }
         },
         //退出视频房间
-        async closeVideoRoom() {
+        async closeVideoRoom(num) {
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -464,11 +482,12 @@ export default {
             };
             const res = await storageUsers(query, options);
             if (res.data && res.data.errCode === 0) {
-                 let childMessageType = 7;
-                let messageBody =
-                    "MicroCinic&" +"hangup"
+                let childMessageType = 7;
+                let messageBody = "MicroCinic&" + "hangup";
 
                 _this.sendMessageChat(childMessageType, messageBody);
+                _this.deleteVideoRoom();
+                _this.leaveRoomBtn();
             } else {
                 //失败
                 this.$notify.error({
@@ -477,23 +496,16 @@ export default {
                 });
             }
         },
-         //删除视频房间
-        async closeVideoRoom() {
+        //删除视频房间
+        async deleteVideoRoom() {
             let _this = this;
             let query = {
-                token: this.userState.token
+                token: this.userState.token,
+                cID: this.createVideoRoomData1.conferenceId
             };
-            let options = {
-                conferenceId: this.createVideoRoomData1.conferenceId,
-                state: "OFF"
-            };
-            const res = await storageUsers(query, options);
+            const res = await closeVideoRoom(query);
             if (res.data && res.data.errCode === 0) {
-                 let childMessageType = 7;
-                let messageBody =
-                    "MicroCinic&" +"hangup"
-
-                _this.sendMessageChat(childMessageType, messageBody);
+                console.log("删除房间陈宫");
             } else {
                 //失败
                 this.$notify.error({
@@ -1176,7 +1188,7 @@ export default {
                 console.log("leave conference success : ", conference);
                 document.querySelector("#remoteVideos").innerHTML = "";
                 document.querySelector("#localVideos").innerHTML = "";
-                location.reload();
+                // location.reload();
             });
             $("button").removeClass("btn-primary disabled");
         },
@@ -1547,6 +1559,20 @@ export default {
     },
     beforeDestroy() {
         document.body.removeChild(document.getElementById(linkdata));
+    },
+    watch: {
+        "userSocketInfo.synchroMessage": {
+            handler(n, o) {
+                let _this = this;
+                $.each(n.syncData, function(index, text) {
+                    if (text.command == "SYNC_DOCTOR_GET_LIST") {
+                        _this.getThePatient();
+                    }
+                    if (text.command == "SYNC_DOCTOR_APP_OUT") {
+                    }
+                });
+            }
+        }
     },
     props: {
         createVideoRoomData: Object,
