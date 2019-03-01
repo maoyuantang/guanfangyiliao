@@ -22,6 +22,15 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
+
+
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
+
+Vue.use(Viewer);
+Viewer.setDefaults({
+  Options: { "inline": true, "button": true, "navbar": true, "title": true, "toolbar": true, "tooltip": true, "movable": true, "zoomable": true, "rotatable": true, "scalable": true, "transition": true, "fullscreen": true, "keyboard": true, "url": "data-source" }
+})
 Vue.use(VueQuillEditor)
 
 Vue.prototype.$echarts = echarts 
