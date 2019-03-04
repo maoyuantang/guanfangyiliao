@@ -10,7 +10,6 @@
  *      
  *  */
 export default str => {
-    "use strict";
     if(!str){
         return {
             ok:false,

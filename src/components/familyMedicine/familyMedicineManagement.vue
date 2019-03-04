@@ -329,8 +329,6 @@
 				</div>
 			</div>
 		</Modal>
-		
-		<!-- <addNewFrame :inData="testData" @reback="getAddData" @getAgreementSelect="getAgreementSelect" @department="getSelectDepartment"></addNewFrame> -->
 	</div>
 </template>
 
@@ -343,7 +341,7 @@
 	import publicInfoModule from './../../public/publicComponents/publicInfoModule.vue'
 	import publicTime from './../../public/publicComponents/publicTime.vue'
 	import normalColumnChart from './../../public/publicComponents/normalColumnChart.vue'
-	import addNewFrame from './../../public/publicComponents/addNewFrame.vue'
+	import check from './../../public/publicJs/check.js'
 	import { 
 		stencilName, toolBusinessType, toolDept, doctorsByOrgCodeAndDeptId, fetchHospitalDepts, businessType, protocols, protocolById,
 		addBusiness, stencilModel, getChildrenByDepartmentId, businessCondition, disableClinic, updateBusiness, queryStatisticalData,
@@ -375,7 +373,6 @@
 			publicInfoModule,
 			publicTime,
 			normalColumnChart,
-			addNewFrame
         },
         computed:{
 			...mapState({
@@ -425,10 +422,10 @@
 						title:'推送档案统计',//标题
 						total:'',//副标题
 					},
-					query:{//查询提取统计
+					query:{//查询提取统计 
 						dataAxis:[],//x轴
 						data:[],//y轴
-						title:'推送档案统计',//标题
+						title:'查询提取统计',//标题
 						total:'',//副标题
 					},
 				},
@@ -445,7 +442,7 @@
 				},
 				testData:{ 
 					state:true,
-					show:false,//是否显示新增弹窗 
+					show:false,//是否显示新增弹窗   
 					type:'1',//'1'为新增 '2'为编辑
 					businessId:'',//业务id(新增为空，编辑不为空)  
 					businessTypeList:{//新增在线诊室业务类型  
@@ -713,6 +710,7 @@
 			searchChange(data){
 				console.log(data)
 				this.searchCondition.selectValue = data;  
+				this.getBussByCondition();
 			},
 			/**
 			 * 获取 推送档案统计
@@ -732,7 +730,7 @@
 				if(res.data&&res.data.errCode===0){
 					this.statisticsInfo.push.dataAxis = res.data.body.data.map(item=>item.x);
 					this.statisticsInfo.push.data = res.data.body.data.map(item=>item.y);
-					this.statisticsInfo.push.total = res.data.body.total;
+					this.statisticsInfo.push.total = `总数: ${res.data.body.total}`;
 					this.statisticsInfo.push = Object.assign({},this.statisticsInfo.push)
 					console.log(this.statisticsInfo.push)
 				}else{
@@ -762,7 +760,7 @@
 				if(res.data&&res.data.errCode===0){
 					this.statisticsInfo.query.dataAxis = res.data.body.data.map(item=>item.x);
 					this.statisticsInfo.query.data = res.data.body.data.map(item=>item.y);
-					this.statisticsInfo.query.total = res.data.body.total;
+					this.statisticsInfo.query.total = `总数: ${res.data.body.total}`;
 					this.statisticsInfo.query = Object.assign({},this.statisticsInfo.query)
 				}else{
 					this.$notify({
@@ -1189,6 +1187,7 @@
 			 * 保存信息
 			 */
 			async saveInfo(){
+				console.log(5555)
 				console.log(this.testData);
 				const postData = [//请求参数
 					{token:this.userInfo.token},
@@ -1242,7 +1241,7 @@
 				//下面注意下，value=customize说明是自定义，需要取label，其他取value
 				postData[1].businessType = this.testData.businessTypeList.default.value==='customize' ?this.testData.businessTypeList.default.label:this.testData.businessTypeList.default.value;
 				console.log(this.testData.type)
-				return
+				// return
 				const res = this.testData.type==='1'? await addBusiness(...postData):await updateBusiness(...postData);
 
 				console.log(res);
@@ -1385,14 +1384,25 @@
 			 * 17.7按条件筛选业务
 			 */
 			async getBussByCondition(data){
+				const checkStr = (new check(this.searchCondition.selectValue)).wordsCheck();
+				if(!checkStr.ok){
+					this.$notify({
+						title: '输入错误',
+						message: checkStr.msg,
+						type: 'error'
+					});
+					return;
+				}
 				const res = await businessCondition({
 					token:this.userInfo.token,
 					stencilName:this.searchCondition.bussModule.id ,    
 					departmentId:this.searchCondition.department.id,
 					businessType:this.searchCondition.bussType.id,
 					pageNum:this.searchCondition.pageNum,
-					pageSize:9
+					pageSize:9,
+					string:this.searchCondition.selectValue
 				});
+				
 				console.log(res);
 				if(res.data&&res.data.errCode===0){
 					const modulesMap = [
@@ -1520,10 +1530,10 @@
 			 * 某个业务编辑被点击
 			 */
 			async editItem(item){
-				console.log('get')
 				console.log(item);
 				const option = {
 					show:false,//是否显示新增弹窗 
+					state:item.state,
 					type:'2',//'1'为新增 '2'为编辑
 					businessId:item.businessId,//业务id(新增为空，编辑不为空)   
 					businessTypeList:{//新增在线诊室业务类型  

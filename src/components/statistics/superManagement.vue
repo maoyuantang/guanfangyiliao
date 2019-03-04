@@ -80,7 +80,7 @@
            <div class="add-hospital">
                <el-button type="danger" @click="alertAddMark">新增医院</el-button>
            </div>
-           <div>
+           <div class="pagination">
                <el-pagination
                 background
                 layout="prev, pager, next"
@@ -165,6 +165,7 @@ import publicList from "../../public/publicComponents/publicList.vue";
 import alertTree from "../../public/publicComponents/alertTree.vue";
 import selfTab from "../../public/publicComponents/selfTab.vue";
 import sensitiveWordCheck from '../../public/publicJs/sensitiveWordCheck.js'
+import createUUID from '../../public/publicJs/createUUID.js'
 export default {
     components: {
         search,
@@ -254,50 +255,6 @@ export default {
                     // }
                 ]
             },
-            data2: [
-                // {
-                //         title:'all',
-                //         expand: true,
-                //         children:[]
-                // }
-                // {
-                //     title: 'parent 1',
-                //     expand: true,
-                //     id:'1st',
-                //     children: [
-                //         {
-                //             title: 'parent 1-1',
-                //             expand: true,
-                //             id:'2nd',
-                //             children: [
-                //                 {
-                //                     title: 'leaf 1-1-1',
-                //                     id:'3th',
-                //                 },
-                //                 {
-                //                     title: 'leaf 1-1-2',
-                //                     id:'4th',
-                //                 }
-                //             ]
-                //         },
-                //         {
-                //             title: 'parent 1-2',
-                //             id:'5th',
-                //             expand: true,
-                //             children: [
-                //                 {
-                //                     title: 'leaf 1-2-1',
-                //                     id:'6th',
-                //                 },
-                //                 {
-                //                     title: 'leaf 1-2-1',
-                //                     id:'7th',
-                //                 }
-                //             ]
-                //         }
-                //     ]
-                // }
-            ]
         };
     },
     computed: {
@@ -318,10 +275,12 @@ export default {
         /**
          * 切换分页
          */
-        ChangePage(data){
+        async ChangePage(data){
             console.log(data);
-            this.page.pageNum = data;
-            this.getTableData();
+            const isOk = await this.getTableData(data);
+            if(isOk){
+                this.page.pageNum = data;
+            } 
         },
         getSelect(item){
             console.log(item)
@@ -338,10 +297,7 @@ export default {
                             message: '修改成功',
                             type: 'success'
                         });
-                        this.getTableData()
-                        // Promise.all([this.subSystemNum({type:'subSystemNum',value:item.tag.value}),this.getTableData()])
-                        //     .then(responense=>console.log(responense))
-                        //     .catch(err=>console.log(err))
+                        this.getTableData();
                         
                     }else{
                         this.$notify({
@@ -372,7 +328,7 @@ export default {
                 teamNum:async data =>{
                     const setMap = (arr,tag) => {//拷贝原数组，找出被选值
                         return arr.map(item=>{
-                            tag.forEach(v=>item.select = item.select?item.select:item.id === v.id);
+                            tag.forEach(v=>item.select = item.select?item.select:item.identification === v.identification);
                             item.children?setMap(item.children,tag):null;
                             return item
                         })
@@ -393,43 +349,31 @@ export default {
                     }
                     const result = setMap(this.testData.data, item.select);
                     let fanal = deleteNoOption(result);
+                     
                     fanal = hintArr(fanal);
-                    const ask = fanal.map(item=>{//将格式调整成后端想要的结构
-                        const options = [//请求参数
-                            {token:this.userState.token},
-                            {
-                                orgCode:item.id,
-                                data:item.children
-                            }
-                        ];
-                        return options;
-                    });
-                    Promise.all(ask.map(item => settingsUpdate(...item)))
-                    .then(res=>{
-                        res.forEach(v=>{
-                            if(v.data.errCode!==0){
-                                this.$notify({
-                                    title: '失败',
-                                    message: '修改失败',
-                                    type: 'error'
-                                });
-                            }
-                            return;
-                        });
+                    const ask = [
+                        {token:this.userState.token},
+                        {
+                            orgCode:item.tag.value.code,
+                            data:fanal
+                        }
+                    ];
+                    const res = await settingsUpdate(...ask);
+                    console.log(res);
+                    if(res.data && res.data.errCode === 0){
                         this.$notify({
                             title: '成功',
                             message: '修改成功',
                             type: 'success'
                         });
-                    })
-                    .catch(err=>{
-                        // console.log(err)
+                        this.getTableData();
+                    }else{
                         this.$notify({
-                            title: 'err',
-                            message: err,
+                            title: '失败',
+                            message: '修改失败',
                             type: 'error'
                         });
-                    })
+                    }
                 },
                 consNum: async data=>{
                     console.log('enter')
@@ -475,6 +419,7 @@ export default {
                             message: '修改成功',
                             type: 'success'
                         });
+                        this.getTableData();
                     }else{
                         this.$notify({
                             title: '失败',
@@ -482,56 +427,6 @@ export default {
                             type: 'error'
                         });
                     }
-                //    console.log(fanal); this.testData.tag
-                    return;
-                    const ask = fanal.map(item=>{//将格式调整成后端想要的结构
-                        const options = [//请求参数
-                            {token:this.userState.token},
-                            {
-                                orgCode:item.id,
-                                list:item.children
-                            }
-                        ];
-                        return options;
-                    });
-                    
-                    Promise.all(ask.map(item => updateConsultationTree(...item)))
-                    .then(res=>{
-                        console.log(res);
-                        for(const i of res){
-                            if(i.data.errCode!==0){
-                                this.$notify({
-                                    title: '失败',
-                                    message: '修改失败',
-                                    type: 'error'
-                                });
-                                return;
-                            }
-                        }
-                        // res.forEach(v=>{
-                        //     if(v.data.errCode!==0){
-                        //         this.$notify({
-                        //             title: '失败',
-                        //             message: '修改失败',
-                        //             type: 'error'
-                        //         });
-                        //     }
-                        //     return;
-                        // });
-                        this.$notify({
-                            title: '成功',
-                            message: '修改成功',
-                            type: 'success'
-                        });
-                    })
-                    .catch(err=>{
-                        console.log(err);
-                        this.$notify({
-                            title: 'err',
-                            message: err,
-                            type: 'error'
-                        });
-                    })
                 },
                 
                 default:data=>{}
@@ -539,8 +434,6 @@ export default {
             if(table[item.tag.type]){
                 table[item.tag.type]();
             }
-            
-
         },
         setNowItem(item){
             console.log(item)
@@ -551,26 +444,28 @@ export default {
         /**
          * 获取表格数据
          */
-        async getTableData(data){
-            console.log(1)
+        async getTableData(pageNum){
+            console.log(pageNum)
             const options = {
                 token: this.userState.token,
                 search: this.search,
-                pageNum: this.page.pageNum,
+                pageNum: pageNum || this.page.pageNum,
                 pageSize: this.page.pageSize
             };
-            data = data || options;
-            const res = await fetchHospitalList(data);
+            // data = data || options;
+            const res = await fetchHospitalList(options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
                 this.tableData.head = res.data.body.header;
                 this.tableData.data = res.data.body.data2.list;
                 this.page.total = res.data.body.data2.total;
+                return true;
             } else { //失败
                 this.$notify.error({
                     title: "数据获取失败",
                     message: res.data.errMsg
                 });
+                return false;
             }
         },
 
@@ -622,6 +517,7 @@ export default {
                     value.id = value.subCode;
                     value.label = value.subName;
                     value.check = value.checkbox;
+                    value.identification = createUUID()+ new Date().getTime();
                     return value;
                 });
                 console.log(this.testData.data)
@@ -693,6 +589,7 @@ export default {
                     value.label = value.subName;
                     value.label = value.name;
                     value.check = value.checked;
+                    value.identification = createUUID()+ new Date().getTime();
                     // value.checkbox = value.checked;
                     return value;
                 });
@@ -718,21 +615,39 @@ export default {
                 function iteration(arr){
                     const newArr = arr.map(value=>{
                         value.label = value.name;
+                        value.check = value.checked;
+                        value.identification = createUUID()+ new Date().getTime();
                         if(value.children)iteration(value.children);
                         return value
                     });
                     return newArr
                 }
+                const deleteOutSelect = arr => {//若不是全选，删除外层选中
+                    for(const i of arr){
+                        if(i.children && i.children.length>=1){
+                            i.check = false;
+                            i.checked = false;
+                            deleteOutSelect(i.children)
+                        }
+                    }
+                };
+                let mid = iteration(res.data.body).map(item=>{
+                    item.check = item.checked;
+                    return item;
+                });
+                deleteOutSelect(mid);
+                // this.testData.data = mid;
+                console.log(mid)
                 this.testData.data = iteration(res.data.body).map(item=>{
                     item.check = item.checked;
                     return item;
                 });
+                console.log(this.testData.data)
                 this.testData.title = '协作人员';
                 this.testData.canClick = true;
                 this.testData.show = true;
                 this.testData.tag = item;
                 console.log(this.testData)
-
                 this.showAlertTree = true;
             }else{
 
@@ -750,30 +665,18 @@ export default {
            });
            console.log(res);
            if(res.data&&res.data.errCode===0){
-            //    const setStatus = data => {
-            //        data = data.map(item=>{
-            //            item.check = item.select;
-            //            if(item.children){
-            //                setStatus(item.children)
-            //            }
-            //            return item;
-            //        })
-            //    }
-            //     const testData = setStatus(res.data.body)
-            //     console.log(testData)
                 const handle = data => {
                    data.forEach(item=>{
                        item.check = item.select;
                        if(item.children){
                            handle(item.children)
                        }
+                       item.identification = createUUID()+ new Date().getTime();
+                       return item
                    })
                 };
-                this.testData.data = handle(res.data.body);
-
-                // this.testData.data = res.data.body.map(item=>{
-                //     item.check = item.select
-                // });
+                handle(res.data.body);
+                this.testData.data = res.data.body;
                 this.testData.title = '会诊范围';
                 this.testData.canClick = true;
                 this.testData.show = true;
@@ -1077,6 +980,9 @@ export default {
 .super-management-del-Department{
     font-size: var(--fontSize1);
     cursor: pointer;
+}
+.pagination{
+    text-align: center;
 }
 </style>
 <!--

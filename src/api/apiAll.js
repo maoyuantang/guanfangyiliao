@@ -2712,3 +2712,116 @@ export const arrangeList = query => { //5.获取排课计划列表
         }
     })
 }
+export const eduCourseArrange = (query, data) => {//1.新增排课计划
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.eduCourseArrange,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const getArrange = query => { //3.获取用于编辑的排课计划详情
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.getArrange,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eduCourseEdit = (query, data) => {//2.编辑排课计划
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.eduCourseEdit,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const countTeacher = query => { //1. 统计授课人次
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.countTeacher,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const countStudent = query => { //2. 统计听课人次
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.countStudent,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eduCourseCancel = (query, data) => {//4.取消排课计划
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.eduCourseCancel,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const webCourseList = query => { //12.7 web获取课程列表【医生web】
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.webCourseList,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const signUp = query => { //12.6 报名
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.signUp,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const intoClassroom = query => { //12.5 进入学习（临时）
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.intoClassroom,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const intoPlatform = query => { //12.4 进入教学（临时）
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.intoPlatform,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

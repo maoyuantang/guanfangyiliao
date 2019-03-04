@@ -11,7 +11,7 @@
             <selftag v-model="listCondition.types" @reback="getTypeSelect"></selftag>
           </div>
           <div class="files-man-body-top-right">
-            <search></search>
+            <search @searchValue="searchChange"></search>
           </div>
         </div>
         <div class="files-man-body-list">
@@ -178,7 +178,8 @@ export default {
               value: "PUSH"
             }
           ],
-          select: {} //选中   
+          select: {}, //选中  
+          searchKey:'',//搜索关键字 
         },
         page: {
           //页码
@@ -276,6 +277,14 @@ export default {
     getDepartmentSelect(data) {
       console.log(data);
     },
+    /**
+     * 获取 搜索关键字
+     */
+    searchChange(data){
+      console.log(data);
+      this.listCondition.searchKey = data;
+      this.getListData();
+    },
 
     /**
      * 获取科室列表
@@ -306,7 +315,8 @@ export default {
         deptId: this.listCondition.departmentList.select.deptId || "",
         type: this.listCondition.types.select.value || "",
         pageNum: this.listCondition.page.pageNum || 1,
-        pageSize: this.listCondition.page.pageSize || 10
+        pageSize: this.listCondition.page.pageSize || 10,
+        searchKey:this.listCondition.searchKey
       };
       for (const i in ajaxQuery) {
         console.log(`${i} ==> ${ajaxQuery[i]}`);

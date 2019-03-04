@@ -527,6 +527,7 @@ export default {
 		}),
   },
   created(){
+	//   debugger
 		Promise.all([
 			this.getHospitalDepts(),
 			this.getGroup(),

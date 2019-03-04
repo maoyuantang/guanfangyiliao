@@ -2,7 +2,7 @@
 	<div class="cloud-management">
 		云存储管理
 		<div class="cloud-management-head">
-			<search></search>
+			<search @searchValue="searchChange"></search>
 		</div>
 		<div class="cloud-management-body">
 			<div class="config-module">
@@ -66,11 +66,20 @@
 				</table>
 			</div>
 		</div>
-		<addNewFrame :inData="haveATry" @reback="getData"></addNewFrame>
+		<div class="pagination">
+			<el-pagination
+					background
+					layout="prev, pager, next"
+					:page-size="queryConditions.page.size"               
+					:current-page="queryConditions.page.current"
+					:total="queryConditions.page.total"
+					v-if="queryConditions.page.total!=0"
+					@current-change="ChangePage"
+			></el-pagination>
+		</div>
 		<Modal
 			v-model="editingBusiness.show"
 			title="编辑"
-			
 			footer-hide
 			@on-ok="editOk"
 			@on-cancel="getBusinessInfo">
@@ -125,7 +134,6 @@
 						</el-select>
 					</div>
 				</div>
-				<!-- {{cloudStorage.hospital}} -->
 				<div class="editing-business-alert-item">
 					<span class="editing-business-alert-item-name"></span>
 					<div class="editing-business-alert-item-right-set">
@@ -134,31 +142,19 @@
 				</div>
 				<div class="editing-business-alert-item">
 					<el-checkbox v-model="cloudStorage.agree">用户协议</el-checkbox>
-					<!-- <span>用户协议</span> -->
 				</div>
-				<!-- {{configurationsList}}
-				</br>
-				{{cloudStorage.hospital}}
-				</br>
-				{{configurationsList}} -->
 				<div class="editing-business-alert-item editing-business-sub">
 					<el-button type="primary" @click="subHospitalConfig">确定</el-button>
 				</div>
 			</div>
 		</Modal>
-		<!-- <render :propData="propTest"></render> -->
 	</div>
 </template>
 
 <script>
 	import { mapState } from "vuex"
-	import addNewFrame from '../public/publicComponents/addNewFrame.vue'
 	import search from '../public/publicComponents/search.vue'
 	import {fetchUserCloud, viewCloud, hospitalsByCloud, updateCloud} from '../api/apiAll.js'
-	
-
-
-	import render from '../public/publicComponents/render.vue'
 	export default {
 		watch:{
 			'cloudStorage.hospital':{
@@ -171,30 +167,12 @@
 							}
 						}
 					});
-					this.showsSelectList = newArr
-					// let newArr = n.map(v=>typeof v === 'object' ? v.hospitalOrgCode : v);//打平数组
-					// newArr = [...new Set(newArr)];//去重
-					// newArr = newArr.map(v=>{//还原
-					// 	for(const i of this.configurationsList){
-					// 		if(i.hospitalOrgCode === v){
-					// 			return i
-					// 		}
-					// 	}
-					// 	// this.configurationsList.forEach(item=>{//forEach返回未定义，有空了查找下原因
-					// 	// 	if(item.hospitalOrgCode === v) {
-					// 	// 		return item;
-					// 	// 	}
-					// 	// })
-					// });
-					// this.showsSelectList = newArr;
-					// console.log(newArr)
+					this.showsSelectList = newArr;
 				}
 			},
 		},
 		components:{
 			search,
-			addNewFrame,
-			render
 		},
 		computed: {
 			...mapState({
@@ -203,75 +181,14 @@
 		},
 		data () {
 			return {
-				propTest:[
-					['a'],
-					[
-						[
-							'b'
-						],
-						[
-							'c',
-							'd'
-						]
-					]
-				],
-				haveATry:{
-					show:true,
-					type:'1',//1表示新增在线诊室，2表示新增家医业务
-					businessTypeList:[//新增在线诊室业务类型
-						{
-							label:'//新增在线诊室业务类型1',
-							value:'//新增在线诊室业务类型value1'
-						},
-						{
-							label:'//新增在线诊室业务类型2',
-							value:'//新增在线诊室业务类型value2'
-						}
-					],
-					businessTemplate:[//新增家医业务模板
-						{
-							label:'//新增家医业务模板1',
-							value:'//新增家医业务模板value1'
-						},
-						{
-							label:'//新增家医业务模板2',
-							value:'//新增家医业务模板value2'
-						},
-					],
-					departmentList:[//科室列表
-						{
-							label:'//科室列表1',
-							value:'//科室列表value1'
-						},
-						{
-							label:'//科室列表2',
-							value:'//科室列表value2'
-						},
-					],
-					doctorList:[//医生列表
-						{
-							label:'//医生列表1',
-							value:'//医生列表value1'
-						},
-						{
-							label:'//医生列表2',
-							value:'//医生列表value2'
-						},
-					],
-					agreement:[
-						{
-							name:'1st',
-							content:'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-						},
-						{
-							name:'2nd',
-							content:'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
-						},
-					]
+				queryConditions:{//查询条件    
+					page:{//分页
+						current:1,
+						size:10,
+						total:0
+					},
+					keyWorlds:'' 
 				},
-				
-
-/*********************************************************************************************** */
 				showsSelectList:[],
 				editingBusiness:{//编辑业务  
 					show:false,//是否显示
@@ -401,6 +318,21 @@
 		},
 		methods:{
 			/**
+			 * 关键字 搜索
+			 */
+			searchChange(data){
+				this.queryConditions.keyWorlds = data;
+				this.getTableInfo();
+			},
+			/**
+			 * 分页切换
+			 */
+			ChangePage(data){
+				console.log(data);
+				this.queryConditions.page.current = data;
+				this.getTableInfo();
+			},
+			/**
 			 * 获取业务信息
 			 */
 			async getBusinessInfo(){
@@ -424,11 +356,17 @@
 			 * 获取表格信息
 			 */
 			async getTableInfo(){
-				const res = await fetchUserCloud({token: this.userState.token});
+				const res = await fetchUserCloud({
+					token: this.userState.token,
+					search:this.queryConditions.keyWorlds,
+					pageNum:this.queryConditions.page.current,
+					pageSize:this.queryConditions.page.size
+				});
 				console.log(res);
 				if(res.data && res.data.errCode === 0){
 					this.tableInfo.header = res.data.body.header;
 					this.tableInfo.data = res.data.body.data2;
+					this.queryConditions.page.total = res.data.body.data2.total
 				}else{
 					console.log('fail')
 					this.$notify({
@@ -463,19 +401,15 @@
 			 * 编辑业务 -> 添加'价格'
 			 */
 			addPriceItem(){
-				console.log(this.editingBusiness.priceList)
-				if(this.editingBusiness.priceList.length>=3){
+				if(this.cloudStorage.price.length>=3){
 					this.$notify({
 						title: '添加失败',
 						message: '最多只能添加三个!!',
 						type: 'error'
 					});
 				}else{
-					this.editingBusiness.priceList.push({worth: 0,unitEnum: "YEAR",valueUnit: 1 });
-					// this.editingBusiness.priceList.push({price:'',year:'1'});
+					this.cloudStorage.price.push({worth: 0,unitEnum: "YEAR",valueUnit: 1 });
 				}
-				console.log(this.editingBusiness.priceList)
-				
 			},
 
 			/**
@@ -487,7 +421,6 @@
 				const newObj = this.cloudStorage.price[index];
 				// console.log(newObj)
 				newObj.valueUnit = i;
-				// // newObj.year = i;
 				this.cloudStorage.price.splice(index,1,newObj);
 			},
 
@@ -549,10 +482,6 @@
 					});
 				}
 			},
-			/******************** */
-			getData(data){
-				console.log(data)
-			}
 		},
 		async created(){
 			this.getTableInfo();
@@ -737,5 +666,9 @@
 	}
 	.editing-business-show-config{
 		margin-right: 0.1rem;
+	}
+	.pagination{
+		text-align: center;
+		width:100%;
 	}
 </style>

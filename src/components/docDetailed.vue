@@ -7,6 +7,7 @@
       :before-close="handleClose"
     >
       <div class="doc-detailed-alert">
+          {{topTag.list[this.topTag.index]}}
           <div class="doc-detailed-alert-content">
                 <div class="doc-detailed-tag">
                     <span 
@@ -56,7 +57,7 @@ export default {
     data() {
         return {
             show:true,//是否显示
-            topTag:{//顶部tag数据
+            topTag:{//顶部tag数据 
                 index:0,//选中
                 list:[]//列表
             },
@@ -87,6 +88,7 @@ export default {
          */
         handleClose(done){
             done();
+            this.$router.go(-1);
         },
 
         /**

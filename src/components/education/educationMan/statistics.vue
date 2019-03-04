@@ -28,10 +28,10 @@
 
 <script>
     import { mapState } from "vuex"
-    import tag from '../../public/publicComponents/tag.vue'
-    import publicTime from '../../public/publicComponents/publicTime.vue'
-    import normalColumnChart from '../../public/publicComponents/normalColumnChart.vue'
-    import { countTeacher, countStudent } from '../../api/apiAll.js'
+    import tag from '../../../public/publicComponents/tag.vue'
+    import publicTime from '../../../public/publicComponents/publicTime.vue'
+    import normalColumnChart from '../../../public/publicComponents/normalColumnChart.vue'
+    import { countTeacher, countStudent } from '../../../api/apiAll.js'
 	export default {
 		watch:{
 			'global.departmentList':{

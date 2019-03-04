@@ -1,65 +1,31 @@
 <template>
 	<div class="education">
-		<normalTab v-model="barInfo" @reBack="getBar"></normalTab>
-		远程教育系统
-		{{viewCurrent}}
-		<div :is="viewCurrent"></div>
-
-
+		<div :is="viewCurrent.page"></div>
 	</div>
 </template>
 
 <script>
-	import normalTab from '../public/publicComponents/normalTab.vue'
-	import resources from './education/resources.vue'
-	import classScheduling from './education/classScheduling.vue'
-	import statistics from './education/statistics.vue'
+	import educationDoc from './education/educationDoc.vue'
+	import educationMan from './education/educationMan.vue'
 	export default {
 		computed:{
 			viewCurrent(){
-				return this.barInfo.list[this.barInfo.i].page
-			}	
+				const rootView = {
+					manager:'educationMan',
+					doctors:'educationDoc'
+				};
+				return {page:rootView[this.$store.state.user.viewRoot.now.name]}
+			}
 		},
 		components:{
-			normalTab,
-			resources,
-			classScheduling,
-			statistics
+			educationDoc,
+			educationMan
 		},
 		data () {
 			return {
-				/**
-				 * bar 数据
-				 */
-				barInfo:{
-					i:0,//当前页面
-					list:[
-						{
-							en:'Teaching resources',
-							zh:'教学资源',
-							page:'resources'
-						},
-						{
-							en:'Timetable plan',
-							zh:'排课计划',
-							page:'classScheduling'
-						},
-						{
-							en:'statistics',
-							zh:'统计',
-							page:'statistics'
-						},
-					]	
-				},
 			}
 		},
 		methods:{
-			/**
-			 * bar 切换数据
-			 */
-			getBar(data){
-				console.log(data)
-			},
 		},
 		async created(){
 

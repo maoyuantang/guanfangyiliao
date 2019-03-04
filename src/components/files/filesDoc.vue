@@ -41,11 +41,10 @@
             <th>{{item.lobbyNumber}}</th>
             <th>
               <el-button type="primary" size="mini" plain @click="openAlert(item)">查看档案</el-button>
-              <!-- <el-button type="danger" size="mini" plain>录入档案</el-button> -->
               <el-dropdown>
                <el-button type="danger" size="mini" plain>录入档案</el-button>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>孕妇信息</el-dropdown-item>
+                  <el-dropdown-item @click.native="openPregnantWomanDoc">孕妇信息</el-dropdown-item>
                   <el-dropdown-item @click.native="openAlertNor">普通档案</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -64,8 +63,6 @@
             <span class="el-dropdown-link">移动到</span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item v-for="(item,index) in bottomOperating.list" :key="index" @click.native="moveToItem(item)">{{item.groupName}}</el-dropdown-item>
-              <!-- <el-dropdown-item>狮子头</el-dropdown-item> -->
-              <!-- <el-dropdown-item>螺蛳粉</el-dropdown-item> -->
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -122,167 +119,8 @@
 		</div>
       </div>
     </el-dialog>
-    <!-- 新增普通档案弹窗 -->
-    <el-dialog
-      title=" "
-      :visible.sync="norDoc.show"
-      :fullscreen="false"
-      :before-close="norDocClose"
-    >
-      <div class="norDoc">
-        <div class="doc-item">
-          <div class="doc-item-content">
-            <div>
-              <el-select v-model="norDoc.nameSelectId" clearable placeholder="姓名" size="mini">
-                <el-option
-                  v-for="(item,index) in norDoc.nameList"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id">
-                </el-option>
-              </el-select>
-              <i class="iconfont doc-must-input">&#xe7b0;</i>
-            </div>
-            
-            <div>
-              <el-select v-model="norDoc.sexSelectId" clearable placeholder="性别" size="mini">
-                <el-option
-                  v-for="(item,index) in norDoc.sexList"
-                  :key="index"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </div>
-            <!-- <div>
-              <el-input
-                placeholder="性别"
-                v-model="norDoc.sex"
-                size="mini"
-                clearable>
-              </el-input>
-            </div> -->
-
-            <div>
-              <el-input
-                placeholder="年龄"
-                v-model="norDoc.age"
-                size="mini"
-                clearable>
-              </el-input>
-            </div>
-            
-          </div>
-        </div>
-
-        <div class="doc-item">
-          <div class="doc-item-content">
-            <el-input
-              placeholder="家庭现住址"
-              v-model="norDoc.addr"
-              size="mini"
-              clearable>
-            </el-input>
-          </div>
-        </div>    
-      </div>
-
-      <div class="doc-item">
-        <div class="doc-item-content">
-          <el-input
-            type="textarea"
-            :rows="4"
-            placeholder="诊断"
-            v-model="norDoc.diagnosis">
-          </el-input>
-        </div>
-      </div>
-
-      <div class="doc-item">
-        <div class="doc-item-content">
-          <el-input
-            type="textarea"
-            :rows="4"
-            placeholder="处理意见"
-            v-model="norDoc.deal">
-          </el-input>
-        </div>
-      </div>
-
-      <div class="doc-item">
-        <div class="doc-item-content">
-          <el-button type="primary" @click="createNorDoc">保存</el-button>
-        </div>
-      </div>          
-    </el-dialog>
-    <!-- 新孕妇通档案弹窗 -->
-    <el-dialog
-      title=" "
-      :visible.sync="pregnantWomanDoc.show"
-      :fullscreen="false"
-      :before-close="pregnantWomanDocClose"
-    >
-    <div class="norDoc">
-      <div class="doc-item">
-          <div class="doc-item-content">
-            <div>
-              <el-select v-model="pregnantWomanDoc.nameSelectId" clearable placeholder="姓名" size="mini">
-                <el-option
-                  v-for="(item,index) in pregnantWomanDoc.nameList"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id">
-                </el-option>
-              </el-select>
-            </div>
-            <div>
-              <el-input
-                placeholder="丈夫"
-                v-model="pregnantWomanDoc.husband"
-                size="mini"
-                clearable>
-              </el-input>
-            </div>
-            <div>
-              <el-input
-                placeholder="联系电话"
-                v-model="pregnantWomanDoc.phone"
-                size="mini"
-                clearable>
-              </el-input>
-            </div>
-          </div>
-      </div>    
-      <div class="doc-item">
-          <div class="doc-item-content">
-            <el-input
-              placeholder="家庭现住址"
-              v-model="pregnantWomanDoc.addr"
-              size="mini"
-              clearable>
-            </el-input>
-          </div>
-        </div>    
-      
-       <div class="doc-item">
-          <div class="doc-item-content">
-            <el-date-picker
-              v-model="pregnantWomanDoc.LastMenstrualPeriod"
-              value-format="yyyy-MM-dd"
-              size="mini"
-              type="date"
-              placeholder="末次月经">
-            </el-date-picker>
-          </div>
-      </div>
-
-      <div class="doc-item">
-        <div class="doc-item-content">
-          <el-button type="primary" @click="createPregnantWomanDoc">保存</el-button>
-        </div>
-      </div>   
-    </div>
-    </el-dialog>
+    <WomanDoc :inData="pregnantWomanDoc" @reback="createPregnantWomanDoc"></WomanDoc>
+    <norDocAlert :inData="norDoc" @reback="createNorDoc"></norDocAlert>
   </div>
 </template>
 
@@ -291,13 +129,19 @@ import { mapState } from "vuex";
 import selftag from "../../public/publicComponents/selftag.vue";
 import search from "../../public/publicComponents/search.vue";
 import doctorTab from "../../public/publicComponents/doctorTab.vue";
+
+import norDocAlert from "../../public/publicComponents/norDocAlert.vue";
+import WomanDoc from "../../public/publicComponents/WomanDoc.vue";
+
 import { deepCopy } from "../../public/publicJs/deepCopy.js";
 import { queryByPage, groupSelects, addGroupMember, queryListByUserId, addOrdinaryArchives, addWomanMessage } from "../../api/apiAll.js";
 export default {
   components: {
     selftag,
     search,
-    doctorTab
+    doctorTab,
+    norDocAlert,
+    WomanDoc
   },
   watch: {
     /**
@@ -380,6 +224,7 @@ export default {
   data() {
     return {
       norDoc:{//新增 普通档案  弹窗数据  
+        // id:'1231321',
         show:false,//是否显示
         nameSelectId:'',//选择名字 
         nameList:[],//名字列表  
@@ -395,7 +240,7 @@ export default {
         deal:'',//处理意见
       },
       pregnantWomanDoc:{//新增 孕妇档案  弹窗数据   
-        show:true,
+        show:false,
         nameSelectId:'',//选择名字 
         nameList:[],//名字列表  
         husband:'',//丈夫
@@ -489,20 +334,40 @@ export default {
   },
   methods: {
     /**
+     * 打开 孕妇 档案
+     */
+    openPregnantWomanDoc(){
+      this.pregnantWomanDoc.show = true; 
+    },
+    /**
      * 新增 孕妇 档案
      */
-    async createPregnantWomanDoc(){
-      // console.log(this.pregnantWomanDoc);
+    async createPregnantWomanDoc(data){
       const postData = {
-        memberId:this.pregnantWomanDoc.nameSelectId,
-        memberName:this.pregnantWomanDoc.nameList.find(value=>{return value.id === this.pregnantWomanDoc.nameSelectId}).name,
-        husband:this.pregnantWomanDoc.husband,
-        phone:this.pregnantWomanDoc.phone,
-        home:this.pregnantWomanDoc.addr,
-        ultimate:this.pregnantWomanDoc.LastMenstrualPeriod 
+        memberId:data.nameSelectId,
+        memberName:data.nameList.find(value=>{return value.id === data.nameSelectId}).name,
+        husband:data.husband,
+        phone:data.phone,
+        home:data.addr,
+        ultimate:data.LastMenstrualPeriod 
       };
       console.log(postData);
-      // return;
+      if(!postData.id){
+         this.$notify({
+            title: '错误',
+            message: '家庭成员为必选项',
+            type: 'error'
+          });
+          return;
+      }
+      if(!postData.ultimate){
+        this.$notify({
+            title: '错误',
+            message: '末次月经为必选项',
+            type: 'error'
+          });
+          return;
+      }
       const res = await addWomanMessage(...[
         {token: this.userInfo.token},
         postData
@@ -549,17 +414,32 @@ export default {
     /**
      * 2.新增患者普通档案
      */
-    async createNorDoc(){
+    async createNorDoc(data){
       const postData = {
-          memberId:this.norDoc.nameSelectId,
-          sex:this.norDoc.sexSelectId,
-          age:this.norDoc.age,
-          address:this.norDoc.addr,
-          diagnosis:this.norDoc.diagnosis,
-          opinion:this.norDoc.deal
+          memberId:data.nameSelectId,
+          sex:data.sexSelectId,
+          age:data.age,
+          address:data.addr,
+          diagnosis:data.diagnosis,
+          opinion:data.deal
       };
-      console.log(postData)
-      // return;
+      console.log(postData);
+      if(!postData.memberId){
+        this.$notify({
+          title: "错误",
+          message: "成员为必填选项",
+          type: "error"
+        });
+        return;
+      }
+      if(!postData.sex){
+        this.$notify({
+          title: "错误",
+          message: "性别为必填选项",
+          type: "error"
+        });
+        return;
+      }
       const res = await addOrdinaryArchives(...[
         {token: this.userInfo.token},
         postData
@@ -758,15 +638,13 @@ export default {
      * 打开弹窗
      */
     openAlert(data) {
-		console.log(data);
-		// return;
-	//   this.alertData.show = true;
-	  this.$router.push({
-		  path: "/docDetailed",
-		  query:{
-			  id:data.userId
-		  }
-	  })
+      console.log(data);
+      this.$router.push({
+        path: "/docDetailed",
+        query:{
+          id:data.userId
+        }
+      })
     },
     /**
      * 分组 被选中
