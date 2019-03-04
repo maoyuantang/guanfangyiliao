@@ -87,36 +87,37 @@
             </el-form>
         </div>
         <!-- 添加问诊或文章 -->
-        <!-- <el-dialog title="添加问诊或文章" :visible.sync="questVisible" center append-to-body>
-            <el-tabs v-model="activeName" @tab-click="addQueatOrArticle">
-                <el-tab-pane label="问诊" name="first">
-                    <el-checkbox-group v-model="questCheckList">
-                        <el-checkbox v-for="(text,index) in questList" :key="index" :label="text.id">{{text.title}}</el-checkbox><br />
-                    </el-checkbox-group>
+        <div v-if="questVisible">
+            <el-dialog title="添加问诊或文章" :visible.sync="questVisible" center append-to-body>
+                <addQuestOrAritle @reback="sureQuestArticle"></addQuestOrAritle>
 
-                </el-tab-pane>
-                <el-tab-pane label="文章" name="second">
-                    <el-checkbox-group v-model="articleCheckList">
-                        <el-checkbox v-for="(text,index) in articleList" :key="index" :label="text.id">{{text.title}}</el-checkbox>
-                    </el-checkbox-group>
-                </el-tab-pane>
-            </el-tabs>
-            <button @click="sureAddQuest()">确认</button>
-        </el-dialog> -->
+            </el-dialog>
+        </div>
     </div>
 </template>
 
 <script>
 import apiBaseURL from "../../enums/apiBaseURL.js";
 import { mapState } from "vuex";
-import { getFamilyMemberInfo, getModelTitleList,createFollowUpPlan } from "../../api/apiAll.js";
-import { setTimeout } from 'timers';
+import {
+    getFamilyMemberInfo,
+    getModelTitleList,
+    createFollowUpPlan
+} from "../../api/apiAll.js";
+import { setTimeout } from "timers";
+import addQuestOrAritle from "../followUpBox/addQuestOrAritle.vue";
 export default {
-    components: {},
+    components: {
+        addQuestOrAritle
+    },
     data() {
         return {
             addFollowBtnVis: true,
-            questVisible:false,
+            questVisible: false,
+            questCheckList: "",
+            articleCheckList: "",
+            questList: "",
+            articleList: ""
         };
     },
     computed: {
@@ -176,7 +177,7 @@ export default {
                 1
             );
         },
-         //添加一项
+        //添加一项
         addFollowTimeList() {
             this.addFollowData.itemModels.push({
                 calcVal: 1,
@@ -195,17 +196,16 @@ export default {
             let query = {
                 token: this.userState.token
             };
-            this.addFollowData.userId=this.sendToUserId
+            this.addFollowData.userId = this.sendToUserId;
             const options = this.addFollowData;
             const res = await createFollowUpPlan(query, options);
             if (res.data && res.data.errCode === 0) {
-                let oMessage={
-                    id:res.data.body.planId,
-                    title:this.addFollowData.title,
-                    firstTreatmentTime:this.addFollowData.firstTreatmentTime
-                }
-                this.$emit('osendmessagechat',oMessage)
-                
+                let oMessage = {
+                    id: res.data.body.planId,
+                    title: this.addFollowData.title,
+                    firstTreatmentTime: this.addFollowData.firstTreatmentTime
+                };
+                this.$emit("osendmessagechat", oMessage);
             } else {
                 //失败
                 this.$notify.error({
@@ -213,15 +213,54 @@ export default {
                     message: res.data.errMsg
                 });
             }
-            
         },
+
+        //确认选择的问诊和文章
+        sureQuestArticle(data) {
+            this.questCheckList = data.questCheckList;
+            this.articleCheckList = data.articleCheckList;
+            this.questList = data.questList;
+            this.articleList = data.articleList;
+            console.log(this.articleCheckList);
+            let _this = this;
+            _this.addFollowData.itemModels[
+                            _this.questOindex
+                        ].contentModels=[]
+            $.each(this.questList, function(index, text) {
+                $.each(_this.questCheckList, function(index1, text1) {
+                    if (text.id == text1) {
+                        _this.addFollowData.itemModels[
+                            _this.questOindex
+                        ].contentModels.push({
+                            followUpType: "INQUIRY",
+                            title: text.title,
+                            contentId: text.id
+                        });
+                    }
+                });
+            });
+            $.each(this.articleList, function(index2, text2) {
+                $.each(_this.articleCheckList, function(index3, text3) {
+                    if (text2.id == text3) {
+                        _this.addFollowData.itemModels[
+                            _this.questOindex
+                        ].contentModels.push({
+                            followUpType: "ESSAY",
+                            title: text2.title,
+                            contentId: text2.id
+                        });
+                    }
+                });
+            });
+            this.questVisible = false;
+        }
     },
-      props: {
+    props: {
         addFollowData: Object,
-        sendToUserId:String
+        sendToUserId: String
     },
-     model: {
-        prop: ["addFollowData","sendToUserId"],
+    model: {
+        prop: ["addFollowData", "sendToUserId"],
         event: "reBack"
     },
     created() {

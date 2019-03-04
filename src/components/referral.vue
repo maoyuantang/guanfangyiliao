@@ -25,25 +25,30 @@
       </div>
     </el-dialog>
     <!--弹框1.2  管理查看反馈-->
-    <el-dialog title="" :visible.sync="isShowmoveUser2" width="40%" center>
-      查看反馈
+    <el-dialog title="查看反馈" :visible.sync="isShowmoveUser2" width="40%" center>
+      <el-table :data="rebackInformation">
+        <el-table-column property="1" label="医院"></el-table-column>
+        <el-table-column property="2" label="科室"></el-table-column>
+        <el-table-column property="3" label="姓名"></el-table-column>
+        <el-table-column property="4" label="反馈信息"></el-table-column>
+      </el-table>
     </el-dialog>
 
     <!-- <button @click='addMove'>新增转诊</button> -->
     <!-- 弹框2 新增转诊 -->
-    <el-dialog title="新增转诊" :visible.sync="isShowaddMove">
+    <el-dialog title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
       <el-form :model="addForm">
         <div style="display:flex;margin:10px 0;">
           <el-form-item label="转诊类型:" :label-width="formLabelWidth">
-            <el-select v-model="addForm.typeList.default.label" placeholder="上转/下转" clearable @change='upOrDown()'>
+            <el-select v-model="addForm.typeList.value" placeholder="上转/下转" clearable @change='upOrDown()'>
               <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label"
                 :value="item.value"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="疾病名称:" :label-width="formLabelWidth">
-            <el-select v-model="addForm.diseaseName.default.label" placeholder="请选择" clearable
-              @change='diseaseNameId()'>
+            <el-select v-model="addForm.diseaseName.value" placeholder="请选择" clearable @change='diseaseNameId()'
+              ref="ceshi1">
               <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label"
                 :value="item.value"></el-option>
             </el-select>
@@ -51,7 +56,7 @@
         </div>
 
         <el-form-item label="病     人:" :label-width="formLabelWidth">
-          <el-select v-model="addForm.patient.default.label" placeholder="请选择" clearable>
+          <el-select v-model="addForm.patient.value" placeholder="请选择" clearable ref="ceshi2">
             <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label"
               :value="item.value"></el-option>
           </el-select>
@@ -60,13 +65,13 @@
         <div class="block" style="margin-bottom: 22px;">
           <span class="demonstration"
             style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
-          <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.selectedOptions"
-            @change="handleChange" clearable>
+          <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.value" @change="handleChange"
+            clearable ref="ceshi3">
           </el-cascader>
         </div>
 
         <el-form-item label="病历授权:" :label-width="formLabelWidth">
-          <el-select v-model="addForm.giveRight.default.label" placeholder="单选" clearable>
+          <el-select v-model="addForm.giveRight.value" placeholder="单选" clearable>
             <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label"
               :value="item.value"></el-option>
           </el-select>
@@ -75,7 +80,7 @@
         <div class="block" style="margin-bottom: 22px;">
           <span class="demonstration"
             style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
-          <el-date-picker v-model="addForm.moveTime.value3" type="datetime" placeholder="请选择" default-time="12:00:00">
+          <el-date-picker v-model="addForm.moveTime.value" type="datetime" placeholder="请选择" default-time="12:00:00">
           </el-date-picker>
         </div>
 
@@ -89,7 +94,9 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer" style="text-align:center;">
-        <el-button type="primary" @click="dualReferralAdd" style="width:70%;">确 定</el-button>
+        <el-button type="primary" v-if="kuang2Save == true" @click="dualReferralAdd1" style="width:70%;">新 增</el-button>
+        <el-button type="primary" v-if="kuang2Save == false" @click="dualReferralAdd2" style="width:70%;">编 辑
+        </el-button>
       </div>
 
     </el-dialog>
@@ -107,7 +114,6 @@
           <div class="manager_moveManage_top mainTab">
             <div class="manager_moveManage_top_left">
               <selftag :inData="onLineList.topFlag[0]" @reback="getFilter0"></selftag>
-              <!-- <selftag v-model="onLineList.topFlag[1]" @reback="getFilter1"></selftag> -->
               <selftag v-model="onLineList.topFlag[2]" @reback="getFilter2"></selftag>
             </div>
             <div class="manager_moveManage_top_right">
@@ -164,10 +170,6 @@
         <div class="manager_count_top_right">
           <statisticsWay1 v-model="time" @reBack="getFilterTime"></statisticsWay1>
         </div>
-        <!-- <div>
-          <span>时间段：</span>
-          <el-date-picker v-model="time" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
-        </div> -->
         <el-button class="startConsul" type="text" @click="addMove">新增转诊</el-button>
       </div>
       <div>
@@ -185,22 +187,11 @@
           <el-table-column fixed="right" label="" width="400">
             <template slot-scope="scope">
               <el-button @click="dualReferralRecord2(scope.row)" type="success" plain size="mini"
-                style="margin:0.05rem 0 0.05rem 0;">转诊记录</el-button>
-              <el-button @click="doctorListFun1(scope.row)" type="primary" plain size="mini"
-                style="margin:0.05rem 0 0.05rem 0;">查看档案</el-button>
-              <el-button @click="dualReferralUpdate(scope.row)" type="info" plain size="mini"
-                style="margin:0.05rem 0 0.05rem 0;">编辑</el-button>
-              <!-- <el-button @click="doctorListFun4(scope.row)" type="warning" plain size="mini" style="margin:0.05rem 0 0.05rem 0;">删除</el-button> -->
-              <el-button @click="applicantCANCEL(scope.row)" type="danger" plain size="mini"
-                style="margin:0.05rem 0 0.05rem 0;">取消</el-button>
-              <el-button @click="receptionAudit(scope.row)" type="primary" plain size="mini"
-                style="margin:0.05rem 0 0.05rem 0;">审核通过</el-button>
-              <el-button @click="dualReferralReception1(scope.row)" type="success" plain size="mini"
-                style="margin:0.05rem 0 0.05rem 0;">接诊</el-button>
-              <el-button @click="dualReferralReception2(scope.row)" type="warning" plain size="mini"
-                style="margin:0.05rem 0 0.05rem 0;">出院</el-button>
-              <el-button @click="dualReferralReception3(scope.row)" type="danger" plain size="mini"
-                style="margin:0.05rem 0 0.05rem 0;">转诊</el-button>
+                style="margin:0.05rem 0 0.05rem 0;">查看记录（转诊记录）</el-button>
+              <el-button v-for="(text,index) in scope.row.buttons" :key="index"
+                @click="list2Done(text.btnCommand,scope.row)" type="success" plain size="mini"
+                style="margin:0 0.05rem;">
+                {{text.btnName}}</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -272,6 +263,7 @@
         isShowmoveUser1: false,//显示  转诊记录
         //管理1表 查看反馈  弹框
         isShowmoveUser2: false,//显示  反馈详情
+        kuang2Save: true,//医生端新增框哪个保存按钮显示
 
         //筛选返回值接收
         //管理1端  筛选工具栏  筛选返回值  接收参数
@@ -356,97 +348,48 @@
         isShowaddMove: false,
         addForm: {
           typeList: {//转诊类型
-            default: {
-              label: "",
-              value: ""
-            },
+            value: "",
             list: [
               {
                 label: "上转",
-                value: "1"
+                value: "UP"
               },
               {
                 label: "下转",
-                value: "2"
+                value: "DOWN"
               }
             ],
           },
           diseaseName: {//疾病名称
-            default: {
-              label: "",
-              value: ""
-            },
+            value: "",
             list: [],
           },
           patient: {//病人
-            default: {
-              label: "",
-              value: ""
-            },
+            value: "",
             list: [
               {
-                label: "测试",
-                value: ""
+                label: "病人1",
+                value: "paientId1"
               }
             ],
           },
           intoHospital: {//转入医院
-            default: {
-              label: '指南',
-              value: 'zhinan',
-              type: 0,
-              children: [
-                {
-                  value: 'shejiyuanze',
-                  label: '设计原则',
-                  type: 1,
-                }
-              ]
-            },
+            value: [],
             list: [
               {
-                value: 'zhinan',
-                label: '指南',
-                type: null,
+                label: 123,
+                value: 456,
                 children: [
                   {
-                    value: 'shejiyuanze',
-                    label: '设计原则',
-                  },
-                  {
-                    value: 'daohang',
-                    label: '导航',
-                    children: [
-                      {
-                        value: 'shejiyuanze',
-                        label: '设计原则',
-                      },
-                    ]
+                    label: 321,
+                    value: 654
                   }
                 ]
-              },
-              {
-                value: 'zujian',
-                label: '组件',
-                children: [
-                  {
-                    value: 'basic',
-                    label: 'Basic',
-                  },
-                ]
-              },
-              {
-                value: 'ziyuan',
-                label: '资源',
               }
             ],
-            selectedOptions: [],
           },
           giveRight: {//病历授权
-            default: {
-              label: "",
-              value: ""
-            },
+            value: "",
             list: [
               {
                 value: '12',
@@ -455,17 +398,23 @@
             ],
           },
           moveTime: {//转诊时间
-            value3: '',
-            default: {
-              label: "",
-              value: ""
-            },
+            value: "",
             list: [],
           },
-          movePurpose: '',
-          beginIdea: '',
+          movePurpose: "",
+          beginIdea: "",
         },
         formLabelWidth: '120px',
+        //查看反馈信息弹框参数
+        rebackInformation: [
+          {
+            1: "无",
+            2: "无",
+            3: "无",
+            4: "无",
+            5: "无",
+          }
+        ],
         //统计
         //申请科室统计图
         monthToYear: [],
@@ -498,7 +447,9 @@
       //自调用组件函数
       //转诊管理、统计、切换插件返回值（管理端）
       getNav(data) {
-        if (data.i == 1) {
+        if (data.i == 0) {
+          this.getList1()
+        } else if (data.i == 1) {
           this.getList2()
         }
       },
@@ -509,11 +460,6 @@
         this.getList1();
         this.getList2();
       },
-      // getFilter1(data) {//类型筛选
-      //   this.typeId = data.index.value;
-      //   console.log(this.typeId)
-      //   this.getList1();
-      // },
       getFilter2(data) {//方向筛选
         this.direction = data.index.value;
         console.log(this.direction)
@@ -540,6 +486,18 @@
       },
       handleChange(value) {
         console.log(value);
+      },
+      handleClose1(done) {
+        this.addForm.typeList.value = "";
+        this.addForm.diseaseName.value = "";
+        this.addForm.patient.value = "";
+        this.addForm.intoHospital.value.length = 0;
+        this.addForm.giveRight.value = "";
+        this.addForm.moveTime.value = "";
+        this.addForm.movePurpose = "";
+        this.addForm.beginIdea = "";
+        // done();
+        this.isShowaddMove = false
       },
 
 
@@ -585,38 +543,6 @@
           });
         }
       },
-      // //1.21.26.类型筛选  工具栏 (管理)          （接口不对，已取消此筛选项）
-      // async getSelect2(oindex) {
-      //   let _this = this;
-      //   let query = {
-      //     token: this.userState.token,
-      //     // type: 'MANAGE'
-      //   };
-      //   const res = await toolMedicalType(query);                     //1.21.26.类型筛选  工具栏 (管理)
-      //   if (res.data && res.data.errCode === 0) {
-      //     console.log('1.21.26.类型筛选  工具栏 +成功')
-      //     // console.log(res.data.body);
-      //     if (res.data.body.length > 6) {
-      //       this.onLineList.topFlag[1].more = true;
-      //     } else {
-      //       this.onLineList.topFlag[1].more = false;
-      //     }
-      //     $.each(res.data.body, function (index, text) {
-      //       //双向转诊   类型   筛选列表   管理1
-      //       _this.onLineList.topFlag[1].list.push({
-      //         text: text.name,
-      //         value: text.id
-      //       });
-      //     });
-      //   } else {
-      //     console.log('1.21.26.类型筛选  工具栏 +失败')
-      //     //失败
-      //     this.$notify.error({
-      //       title: "警告",
-      //       message: res.data.errMsg
-      //     });
-      //   }
-      // },
       //1.21.28.方向筛选  工具栏 (管理)
       async getSelect3(oindex) {
         let _this = this;
@@ -651,7 +577,6 @@
 
       // 管理1表
       async getList1() {
-        console.log('管理1表接口还没出来')
         let _this = this;
         let query = {
           token: this.userState.token,
@@ -734,30 +659,40 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
       //新增转诊
       async addMove() {
-        this.isShowaddMove = !this.isShowaddMove
+        this.isShowaddMove = true
+        this.kuang2Save = true
       },
       //新增弹框首选项   转诊类型选的什么
       upOrDown() {
-        if (this.addForm.typeList.default.label == 1) {
-          console.log(this.addForm.typeList.default.label)
-          this.referralType = 'UP'
-        } else {
-          this.referralType = 'DOWN'
-        }
-        this.readMedicals();
+        return new Promise(t => {
+          this.referralType = this.addForm.typeList.value
+          this.readMedicals();
+          t();
+        });
       },
       //返回所选病症id
       diseaseNameId() {
-        this.medicalId = this.addForm.diseaseName.default.label
+        // console.log(this.addForm.diseaseName)
+        this.medicalId = this.addForm.diseaseName.value
         console.log(this.medicalId)
-        console.log(this.addForm.diseaseName.default.value)
         if (this.medicalId) {
           this.readMedicalsOfHospitalAndDept();
         }
       },
-      // 病人下拉列表
+      // 疾病名称下拉框 列表
       async readMedicals() {
         console.log(this.referralType)
         let _this = this;
@@ -765,10 +700,11 @@
           token: this.userState.token,
           referralType: this.referralType,//方向，UP上转，DOWN下转
         };
-        const res = await readMedicals(options);                  //14.1.双向转诊-WEB医生端-列表
+        const res = await readMedicals(options);                  //14.1.双向转诊-WEB医生端-疾病名称下拉框 
         if (res.data && res.data.errCode === 0) {
-          console.log('病人下拉列表+成功')
+          console.log('疾病名称下拉框 +成功')
           console.log(res)
+          this.addForm.diseaseName.list.length = 0
           $.each(res.data.body, function (index, text) {
             _this.addForm.diseaseName.list.push(
               {
@@ -779,7 +715,7 @@
           })
         } else {
           //失败
-          console.log('病人下拉列表+失败')
+          console.log('疾病名称下拉框 +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -788,6 +724,7 @@
       },
       // 14.2.双向转诊-WEB医生端-医院与科室下拉框联动 
       async readMedicalsOfHospitalAndDept() {
+        this.referralType = this.addForm.typeList.value
         console.log(this.referralType)
         let _this = this;
         const options = {
@@ -808,7 +745,7 @@
                 children: []
               }
             )
-            if (text.childre.length != 0) {
+            if (text.children.length != 0) {
               $.each(text.children, function (index, text) {
                 _this.addForm.intoHospital.list[index].children.push(
                   {
@@ -820,6 +757,7 @@
               })
             }
           })
+          console.log(this.addForm.intoHospital.list)
         } else {
           //失败
           console.log('医生端-医院与科室下拉框联动 +失败')
@@ -830,46 +768,35 @@
         }
       },
       //点击确定    新增门诊
-      async dualReferralAdd() {
-        console.log(this.addForm, this.referralType)
-        this.isShowaddMove = !this.isShowaddMove
+      async dualReferralAdd1() {
+        console.log(this.addForm)
         let query = {
           token: this.userState.token
         };
         let options = {
-          // referralType: this.referralType,//转诊类型：UP上转，DOWN下转
-          // illnessId: this.medicalId,//疾病ID
-          // illnessName: this.addForm.diseaseName.default.label,//疾病名称
-          // patientId: this.addForm.patient.default.value,//病人ID（编号） 
-          // patientName: this.addForm.patient.default.label,//病人名称 
-          // receiveOrgCode: this.addForm.intoHospital.default.value,//接收医院代码 
-          // receiveOrgName: "测试医院",//接收医生名称 
-          // receiveDeptId: this.addForm.intoHospital.default.children.value,//接收科室ID
-          // receiveDeptName: this.addForm.intoHospital.default.children.label,//接收科室名称
-          // intention: "",//转诊目的
-          // diagnose: "",//初步诊断
-          // archivesAuthority: "",//病历授权
-
-          referralType: "DOWN",
-          illnessId: "11111",
-          illnessName: "测试疾病",
-          patientId: "病人ID",
-          patientName: "病人名称",
-          receiveOrgCode: "1545618639429",
-          receiveOrgName: "测试医院",
-          receiveDeptId: "1398F2FBB8AA48518385F2486840FE17",
-          receiveDeptName: "急诊科",
-          intention: "",
-          diagnose: "",
-          archivesAuthority: ""
+          referralType: this.addForm.typeList.value,
+          illnessId: this.addForm.diseaseName.value,
+          illnessName: this.$refs.ceshi1.selectedLabel,
+          patientId: this.addForm.patient.value,
+          patientName: this.$refs.ceshi2.selectedLabel,
+          receiveOrgCode: this.addForm.intoHospital.value[0],
+          receiveOrgName: this.$refs.ceshi3.currentLabels[0],
+          receiveDeptId: this.addForm.intoHospital.value[1],
+          receiveDeptName: this.$refs.ceshi3.currentLabels[1],
+          intention: this.addForm.movePurpose,
+          diagnose: this.addForm.beginIdea,
+          archivesAuthority: this.addForm.giveRight.value
         };
+        console.log(options)
         const res = await dualReferralAdd(query, options);                                   //  14.6.双向转诊-WEB医生端-申请转诊 
         if (res.data && res.data.errCode === 0) {
+          this.isShowaddMove =false
           console.log('新增门诊 +成功')
           console.log(res)
-          this.referralId = res.data.body
-          console.log(this.referralId)
+          // this.referralId = res.data.body
+          // console.log(this.referralId)
           this.DoctorList();
+          this.handleClose1()
         } else {
           //失败
           console.log('新增门诊 +失败')
@@ -879,6 +806,23 @@
           });
         }
       },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -923,11 +867,41 @@
       //查看档案     (按钮)
       async doctorListFun1(data) {
         console.log(data)
-        this.isShowaddMove = !this.isShowaddMove
+        // this.isShowaddMove = !this.isShowaddMove
+        // this.isShowmoveUser1 = !this.isShowmoveUser1
       },
-      //转诊记录     (按钮)
+      //表2点击  操作区    (按钮)
+      //按钮 UPDATE("修改"), CANCEL("取消"), AUDIT("审核"), RECEPTION("接诊"), LEAVE_HOSPITAL("出院"), REFERRAL("转诊"),
+      async list2Done(data1, data2) {
+        console.log(data1, data2)
+        this.referralId = data2.referralId
+        if (data1 == "UPDATE") {//编辑
+          this.dualReferralUpdate(data2);
+          this.kuang2Save = false
+          this.DoctorList()
+        } else if (data1 == "CANCEL") {//取消
+          this.applicantCANCEL(data2)
+          this.DoctorList()
+        }
+        else if (data1 == "AUDIT") {//审核
+          this.receptionAudit(data2)
+          this.DoctorList()
+        }
+        else if (data1 == "RECEPTION") {//接诊
+          this.dualReferralReception1(data2)
+          this.DoctorList()
+        }
+        else if (data1 == "LEAVE_HOSPITAL") {//出院
+          this.dualReferralReception2(data2)
+          this.DoctorList()
+        }
+        else if (data1 == "REFERRAL") {//转诊
+          this.dualReferralReception3(data2)
+          this.DoctorList()
+        }
+      },
+      //转诊记录     (按钮)   (管理医生端都有的查看 详情按钮)
       async dualReferralRecord2(data) {
-        console.log(data.referralId)
         console.log(data)
         this.isShowmoveUser1 = !this.isShowmoveUser1
         let _this = this;
@@ -949,32 +923,73 @@
           });
         }
       },
+
+
+
       //编辑     (按钮)
-      async dualReferralUpdate(data) {
-        console.log(data)
-        this.isShowaddMove = !this.isShowaddMove
+      //开始渲染
+      async dualReferralUpdate(data2) {
+        this.isShowaddMove = true
+        this.referralId = data2.referralId
+        console.log(data2)
+        let _this = this;
+        const options = {
+          token: this.userState.token,
+          referralId: data2.referralId,//转诊ID
+        };
+        const res = await dualReferralRecord(options);                  //14.7.双向转诊-WEB医生端-查询记录 
+        if (res.data && res.data.errCode === 0) {
+          console.log('医生端-查询记录 (按钮)+成功')
+          console.log(res)
+          this.addForm.typeList.value = res.data.body.typeCode
+          this.addForm.diseaseName.value = res.data.body.illnessId
+          this.addForm.patient.value = res.data.body.patientId
+          this.addForm.intoHospital.value = [res.data.body.receiveOrgCode, res.data.body.receiveDeptId]
+          this.addForm.giveRight.value = res.data.body.archivesAuthority
+          this.addForm.moveTime.value = res.data.body.applyTime
+          this.addForm.movePurpose = res.data.body.intention
+          this.addForm.beginIdea = res.data.body.diagnose
+          console.log(this.addForm)
+          this.upOrDown().then(val => {
+            this.diseaseNameId();
+          });
+        } else {
+          //失败
+          console.log('医生端-查询记录 (按钮)+失败')
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      async dualReferralAdd2(data2) {
+        console.log(this.addForm)
         let query = {
           token: this.userState.token
         };
         let options = {
-          id: "15644654564656646",//ID
-          referralType: "UP",//转诊类型：UP上转，DOWN下转
-          illnessId: "11111",//疾病ID
-          illnessName: "测试疾病",//疾病名称
-          patientId: "病人ID",//病人ID（编号） 
-          patientName: "病人名称",//病人名称 
-          receiveOrgCode: "1545618639429",//接收医院代码 
-          receiveOrgName: "测试医院",//接收医生名称 
-          receiveDeptId: "1398F2FBB8AA48518385F2486840FE17",//接收科室ID
-          receiveDeptName: "急诊科",//接收科室名称
-          intention: "",//转诊目的
-          diagnose: "",//初步诊断
-          archivesAuthority: ""//病历授权
+          id: this.referralId,//ID
+          referralType: this.addForm.typeList.value,//转诊类型：UP上转，DOWN下转
+          illnessId: this.addForm.diseaseName.value,//疾病ID
+          illnessName: this.$refs.ceshi1.selectedLabel,//疾病名称
+          patientId: this.addForm.patient.value,//病人ID（编号） 
+          patientName: this.$refs.ceshi2.selectedLabel,//病人名称 
+          receiveOrgCode: this.addForm.intoHospital.value[0],//接收医院代码 
+          receiveOrgName: this.$refs.ceshi3.currentLabels[0],//接收医生名称 
+          receiveDeptId: this.addForm.intoHospital.value[1],//接收科室ID
+          receiveDeptName: this.$refs.ceshi3.currentLabels[1],//接收科室名称
+          intention: this.addForm.movePurpose,//转诊目的
+          diagnose: this.addForm.beginIdea,//初步诊断
+          archivesAuthority: this.addForm.giveRight.value,//病历授权
         };
+        console.log(options)
         const res = await dualReferralUpdate(query, options);                                   //  14.8.双向转诊-WEB医生端-修改
         if (res.data && res.data.errCode === 0) {
+          this.isShowaddMove = false
           console.log('WEB医生端编辑 +成功')
           console.log(res)
+          this.DoctorList();
+          this.handleClose1()
         } else {
           //失败
           console.log('WEB医生端编辑 +失败')
@@ -989,14 +1004,15 @@
       //   console.log(data)
       // },
       //取消     (按钮)
-      async applicantCANCEL(data) {
-        console.log(data)
+      async applicantCANCEL(data2) {
         let _this = this;
-        const options = {
+        const query = {
           token: this.userState.token,
-          referralId: this.referralId,//转诊ID
         };
-        const res = await applicantCANCEL(options);                  //14.9.双向转诊-WEB医生端-申请人操作
+        const options = {
+          referralId: data2.referralId,//转诊ID
+        };
+        const res = await applicantCANCEL(query,options);                  //14.9.双向转诊-WEB医生端-申请人操作
         if (res.data && res.data.errCode === 0) {
           console.log('医生端-取消 (按钮)+成功')
           console.log(res)
@@ -1010,13 +1026,12 @@
         }
       },
       //审核通过      (按钮)
-      async receptionAudit(data) {
-        console.log(data)
+      async receptionAudit(data2) {
         let query = {
           token: this.userState.token,
         };
         let options = {
-          referralId: this.referralId,//转诊ID
+          referralId: data2.referralId,//转诊ID
         };
         const res = await receptionAudit(query, options);                                   //14.11.双向转诊-WEB医生端-审核
         if (res.data && res.data.errCode === 0) {
@@ -1032,15 +1047,13 @@
         }
       },
       //接诊     (按钮)
-      async dualReferralReception1(data) {
-        console.log(data)
-        console.log(this.referralId)
+      async dualReferralReception1(data2) {
         let query = {
           token: this.userState.token,
           operate: 'RECEPTION'
         };
         let options = {
-          referralId: this.referralId,//转诊ID
+          referralId: data2.referralId,//转诊ID
         };
         const res = await dualReferralReception(query, options);                                   //14.10.双向转诊-WEB医生端-接诊人操作
         if (res.data && res.data.errCode === 0) {
@@ -1056,14 +1069,13 @@
         }
       },
       //出院     (按钮)
-      async dualReferralReception2(data) {
-        console.log(data)
+      async dualReferralReception2(data2) {
         let query = {
           token: this.userState.token,
           operate: 'LEAVE_HOSPITAL'
         };
         let options = {
-          referralId: this.referralId,//转诊ID
+          referralId: data2.referralId,//转诊ID
         };
         const res = await dualReferralReception(query, options);                                   //14.10.双向转诊-WEB医生端-接诊人操作
         if (res.data && res.data.errCode === 0) {
@@ -1079,14 +1091,13 @@
         }
       },
       //转诊     (按钮)
-      async dualReferralReception3(data) {
-        console.log(data)
+      async dualReferralReception3(data2) {
         let query = {
           token: this.userState.token,
           operate: 'REFERRAL'
         };
         let options = {
-          referralId: this.referralId,//转诊ID
+          referralId: data2.referralId,//转诊ID
         };
         const res = await dualReferralReception(query, options);                                   //14.10.双向转诊-WEB医生端-接诊人操作
         if (res.data && res.data.errCode === 0) {

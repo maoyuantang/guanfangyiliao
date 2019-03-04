@@ -1,24 +1,15 @@
 <template>
+<!-- 随访计划详情 -->
     <div>
         <div class="addFollowBox">
             <el-form ref="form" :model="addFollowData" label-width="80px">
 
                 <el-form-item>
-                    <el-input class="addFollowTitle" disabled v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
-                </el-form-item>
-                <el-form-item label="">
-                    <el-radio-group v-model="addFollowData.type">
-                        <el-radio label="INHOSPITAL" disabled>住院随访</el-radio>
-                        <el-radio label="OUTPATIENT" disabled>门诊随访</el-radio>
-                    </el-radio-group>
+                    <el-input class="addFollowTitle"  v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
                 </el-form-item>
                 <div class="addFollowMain">
-                    <el-form-item class="addFollowM-bot" label="首次治疗">
-                        <el-date-picker class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
-                        </el-date-picker>
-                    </el-form-item>
                     <ul>
-                        <li v-for="(text,index) in addFollowData.itemModels" :key="index">
+                        <li v-for="(text,index) in addFollowData.planItemResults" :key="index">
                             <div class="addFollowM-bot" style="display:flex">
                                 <el-form-item class="addFollowM-bot" label="距离首次治疗">
                                     <div class="DistanceFirst">
@@ -40,7 +31,7 @@
 
                             </div>
                             <ul class="questBox">
-                                <li v-for="(otext,oindex) in text.contentModels" :key="oindex">
+                                <li v-for="(otext,oindex) in text.itemContentResults" :key="oindex">
                                     <div>
                                         <span v-show="otext.followUpType=='REMIND'">提醒：</span>
                                         <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
@@ -50,21 +41,12 @@
                                         <span class="questTableName">{{otext.title}}</span>
                                     </div>
 
-                                    <span @click="deleteQuest(index,oindex)" class="questDelete">
-                                        <img src="../../assets/img/addFollowDelete2.png" />
-                                    </span>
+                                    
                                 </li>
                             </ul>
 
                         </li>
                     </ul>
-                    <div class="addFollowM-bot">
-                        提醒时间
-                        <el-select class="addFollowHou" v-model="addFollowData.remindDays" placeholder="请选择">
-                            <el-option v-for="(text,index) in 100" :key="index" :label="text" :value="text">
-                            </el-option>
-                        </el-select>
-                    </div>
                 </div>
 
             </el-form>
@@ -190,9 +172,6 @@ export default {
         event: "reBack"
     },
     created() {
-        //  this.addFollowData=this.followDetailData
-        //  console.log(this.followDetailData)
-        this.getDrugsMessage();
     },
     beforeDestroy() {}
 };

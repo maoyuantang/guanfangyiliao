@@ -2,10 +2,11 @@
     <div class="chat">
         <!-- <websocket1 ref="mychild" @reback="addMessageK1">
         </websocket1> -->
-        <div>
+        <div :title="chatUser" class="otherNumClass">
             {{chatUser}}
         </div>
         <div class="chatMessage">
+            <div class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</div>
             <ul class="chatRecord">
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
@@ -17,11 +18,13 @@
                             <span class="peopleName">{{text.fromNickName}}</span>
                             <span class="otime">{{text.serverTime}}</span>
                         </h4>
-                        <div>
-                            <div class="messageCon">
-
+                        <div class="messageCon">
+                            <div v-show="text.from==userSelfInfo.userId" class="noReadro">
                                 <span class="allReadColor" v-if="text.oRead">已读 </span>
                                 <span class="noReadColor" v-else>未读</span>
+                            </div>
+
+                            <div>
                                 <!-- 显示文本 -->
                                 <div v-show="text.childMessageType=='DEFAULT'">
                                     {{text.content}}
@@ -30,7 +33,11 @@
                                 <div v-show="text.childMessageType=='IMAGE'" class="imgUrlBig">
                                     <span>
                                     </span>
-                                    <img :src="text.imgUrl" />
+                                    <!-- <img :src="text.content" /> -->
+
+                                    <viewer :images="text.signImages" toolbar="false">
+                                        <img :src="text.signImages" width="50">
+                                    </viewer>
                                 </div>
                                 <!-- 显示视频 -->
                                 <div v-show="text.childMessageType=='VIDEO'">
@@ -39,7 +46,7 @@
 
                                 <!-- 显示随访表 -->
                                 <!-- 自己发的随访表 -->
-                                <div v-show="text.childMessageType=='FOLLOWUP' || text.childMessageType=='INTERROGATION' || text.childMessageType=='ARTICLE'">
+                                <div v-if="text.childMessageType=='FOLLOWUP' || text.childMessageType=='INTERROGATION' || text.childMessageType=='ARTICLE'">
                                     <div v-show="text.from==userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.id,text.childMessageType)">
 
                                         <div>
@@ -71,7 +78,10 @@
                                         </div>
                                     </div>
                                 </div>
-
+                            </div>
+                            <div v-show="text.from!=userSelfInfo.userId" class="noReadro">
+                                <span class="allReadColor" v-if="text.oRead">已读 </span>
+                                <span class="noReadColor" v-else>未读</span>
                             </div>
 
                         </div>
@@ -339,7 +349,8 @@ export default {
             followListVisible: false, //随访列表详情是否显示
             ourl: "",
             imgId: "", //上传图片后得到的id
-            imgUrl: "/m/v1/api/hdfs/fs/download/",
+            imgUrl:
+                "https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/",
             videoVisible: false, //视频是否显示
             areadyReadNum: "", //已读
             chatUser: "", //参与聊天的成员
@@ -355,7 +366,11 @@ export default {
             followDetailData: {},
             otitle: "",
             oFollowId: "",
-            followDetailVisible: false
+            followDetailVisible: false,
+            signImages: [
+                "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=85690711,3884201894&fm=27&gp=0.jpg"
+            ],
+            oMsgId: ""
         };
     },
     computed: {
@@ -373,9 +388,15 @@ export default {
         this.getMemberMess();
         this.alreadyRead();
 
-        this.ourl = "/m/v1/api/hdfs/fs/upload?token=" + this.userState.token;
+        this.ourl =
+            "/m/v1/api/hdfs/fs/upload?token=" +
+            this.userState.token +
+            "&ooo=" +
+            Math.random(10);
         console.log(this.sessionId);
         this.messageTicket = this.$store.state.socket.messageTicket;
+        console.log(this.$store.state.socket.messageTicket);
+        this.oMsgId = this.$store.state.socket.messageTicket.oMsgId;
     },
     methods: {
         //发送
@@ -425,8 +446,6 @@ export default {
             } else {
                 alert("消息不能为空");
             }
-
-            // let aaa=websocket.dadaTransfer
         },
 
         // 添加消息到发送框
@@ -446,7 +465,18 @@ export default {
                     oMessage = "视频通话已结束";
                 }
             }
-            console.log(childMessageType+oMessage)
+
+            console.log(childMessageType + oMessage);
+            if (childMessageType == "IMAGE") {
+                this.messageList.push({
+                    from: ouserId,
+                    content: this.imgUrl + oMessage,
+                    serverTime: oMessageTime,
+                    childMessageType: childMessageType,
+                    signImages: [this.imgUrl + oMessage]
+                });
+            }
+            console.log(childMessageType);
             this.messageList.push({
                 from: ouserId,
                 content: oMessage,
@@ -487,8 +517,9 @@ export default {
         getSendMessageChat(oMessage) {
             let messageBody = JSON.stringify(oMessage);
             this.sendMessageChat(20, messageBody, "FOLLOWUP");
+
+            this.followListVisible = false;
             this.followDetailVisible = false;
-            this.followListVisible = fasle;
         },
         // 问诊
         getSendMessageChat1(oMessage) {
@@ -508,6 +539,11 @@ export default {
                 // this.childMessageType = 5;
                 // this.sendMessageChat();
                 this.sendMessageChat(5, res.body, "IMAGE");
+                this.ourl =
+                    "/m/v1/api/hdfs/fs/upload?token=" +
+                    this.userState.token +
+                    "&ooo=" +
+                    Math.random(10);
             } else {
                 alert("失败");
             }
@@ -730,25 +766,27 @@ export default {
             }
         },
         //获取历史记录
-        async getHisRecord() {
+        async getHisRecord(oMsgId) {
             console.log("历史消息");
             console.log(this.sessionId);
+            let _this = this;
             let query = {
                 token: this.userState.token
             };
             const options = {
                 userId: this.userSelfInfo.userId,
                 sessionId: [this.sessionId],
-                msgId: this.messageTicket.msgId,
-                pageNums: 157
+                msgId: this.oMsgId,
+                pageNums: 15
             };
             console.log(Object.prototype.toString.call([this.sessionId]));
             const res = await fetchHistoryMessage(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
                 let odata = res.data.body.reverse();
-                this.messageList = odata;
-                $.each(this.messageList, function(index, text) {
+                let oLengthMsgId = res.data.body.length;
+                this.oMsgId = res.data.body[oLengthMsgId - 1].msgId;
+                $.each(odata, function(index, text) {
                     let timestamp4 = new Date(text.serverTime);
                     let y = timestamp4.getHours();
                     let d = timestamp4.getMinutes();
@@ -760,7 +798,7 @@ export default {
                     }
                     console.log(y + "-" + d);
                     text.serverTime = y + ":" + d;
-                    //  text.serverTime=
+                    _this.messageList.push(text);
                 });
 
                 for (let i = 0; i < odata.length; i++) {
@@ -786,7 +824,8 @@ export default {
                             this.messageList[i].content = "随访";
                         } else if (odata[i].childMessageType == "AUDIO") {
                             //音频
-                            this.messageList[i].content = "音频";
+                            this.messageList[i].content =
+                                "该消息为音频消息,请在手机上查看";
                         } else if (odata[i].childMessageType == "VIDEO") {
                             //视频
                             if (odata[i].body.indexOf("refuse") > -1) {
@@ -827,11 +866,16 @@ export default {
                             );
                         } else if (odata[i].childMessageType == "IMAGE") {
                             //图片
-                            this.messageList[i].imgUrl =
-                                apiBaseURL.developmentEnvironment +
-                                "/m/v1/api/hdfs/fs/download/" +
-                                odata[i].body;
+                            // this.messageList[i].imgUrl =
+                            //     apiBaseURL.developmentEnvironment +
+                            //     "/m/v1/api/hdfs/fs/download/" +
+                            //     odata[i].body;
                             // this.messageList[i].imgUrl="http://pic1.nipic.com/2008-12-30/200812308231244_2.jpg"
+                            this.messageList[i].content =
+                                this.imgUrl + odata[i].body;
+                            this.messageList[i].signImages = [
+                                this.imgUrl + odata[i].body
+                            ];
                         } else if (odata[i].childMessageType == "AUDIO") {
                             //音频
                             this.messageList[i].content = "音频";
@@ -1012,43 +1056,55 @@ export default {
     },
     watch: {
         "userSocketInfo.msgBox.a.msg": {
-            handler(n, o) {
-                let olength = n.length;
-                let oTime = n[olength - 1].serverTime;
-                let timestamp4 = new Date(oTime);
-                let y = timestamp4.getHours();
-                let d = timestamp4.getMinutes();
-                if (y <= 9) {
-                    y = "0" + y;
-                }
-                if (d <= 9) {
-                    d = "0" + d;
-                }
-                console.log(y + "-" + d);
-                let oMessageTime = y + ":" + d;
+            handler(data, o) {
+                let olength = data.length;
+                let oData = data[olength - 1];
+                console.log(data);
+                if (oData.RequestType == 6) {
+                    if (this.sessionId == oData.info.to) {
+                        let oTime = oData.info.serverTime;
+                        let timestamp4 = new Date(oTime);
+                        let y = timestamp4.getHours();
+                        let d = timestamp4.getMinutes();
+                        if (y <= 9) {
+                            y = "0" + y;
+                        }
+                        if (d <= 9) {
+                            d = "0" + d;
+                        }
+                        console.log(y + "-" + d);
+                        let oMessageTime = y + ":" + d;
 
-                let messageBody = n[olength - 1].body;
-                let oUserId = n[olength - 1].from;
-                let childMessageType = "";
-                if (n[olength - 1].childMessageType) {
-                    childMessageType = "DEFAULT";
-                } else {
-                    if(n[olength - 1].childMessageType==6){
-                        childMessageType="VIDEO"
-                    }else if(n[olength - 1].childMessageType==4){
-                        childMessageType="AUDIO"
-                    }else if(n[olength - 1].childMessageType==5){
-                        childMessageType="IMAGE"
-                    }else if(n[olength - 1].childMessageType==7){
-                        childMessageType="CRVIDEO"
-                    }else if(n[olength - 1].childMessageType==18){
-                        childMessageType="INTERROGATION"
-                    }else if(n[olength - 1].childMessageType==20){
-                        childMessageType="FOLLOWUP"
+                        let messageBody = oData.info.body;
+                        let oUserId = oData.info.from;
+                        let childMessageType = "";
+                        if (!oData.info.childMessageType) {
+                            childMessageType = "DEFAULT";
+                        }
+
+                        if (oData.info.childMessageType == 6) {
+                            childMessageType = "VIDEO";
+                        } else if (oData.info.childMessageType == 4) {
+                            childMessageType = "AUDIO";
+                            messageBody = "该消息为音频消息,请在手机上查看";
+                        } else if (oData.info.childMessageType == 5) {
+                            childMessageType = "IMAGE";
+                        } else if (oData.info.childMessageType == 7) {
+                            childMessageType = "CRVIDEO";
+                        } else if (oData.info.childMessageType == 18) {
+                            childMessageType = "INTERROGATION";
+                        } else if (oData.info.childMessageType == 20) {
+                            childMessageType = "FOLLOWUP";
+                        }
+                        console.log(messageBody);
+                        this.addMessageK(
+                            oUserId,
+                            messageBody,
+                            oMessageTime,
+                            childMessageType
+                        );
                     }
-                    
                 }
-                this.addMessageK(oUserId, messageBody, oMessageTime, childMessageType);
             }
         }
     },
@@ -1067,13 +1123,14 @@ export default {
 <style>
 .chat {
     width: 636px;
-    height: 534px;
+    height: 568px;
 }
 .chatMessage {
     width: 100%;
-    height: 280px;
+    height: 310px;
     margin-bottom: 12px;
     border-bottom: 1px solid #e5edf3;
+    overflow: hidden;
 }
 .sendIcon {
     display: flex;
@@ -1269,6 +1326,10 @@ export default {
 .upload-demo-chat .el-upload__input {
     display: none;
 }
+
+.upload-demo-chat .el-upload-list {
+    display: none;
+}
 .imgUrlBig {
     width: 50px;
     height: 100px;
@@ -1331,6 +1392,21 @@ export default {
 .setVideoBtn {
     width: 80px;
     height: 30px;
+}
+.otherNumClass {
+    width: 100%;
+    padding: 0 10px;
+    overflow: hidden;
+    height: 23px;
+}
+.noReadro > span {
+    display: block;
+    width: 30px;
+    margin: 0 10px;
+}
+.loadMoreChat {
+    cursor: pointer;
+    text-align: center;
 }
 /* 备注
 

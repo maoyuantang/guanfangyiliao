@@ -4,14 +4,17 @@
             <div class="drugs_box_lf">
                 <div>
                     <div class="drugs_box_lf_headImg">
-                        <img src="../../assets/img/sendNew2.png" />
+                        <img :src="imgUrl+familyMessage.userId" />
                     </div>
-                    <div>
-                        <h4>姓名：{{familyMessage.name}}</h4>
-                        性别: {{familyMessage.sex}}<br /> 年龄: {{familyMessage.age}}<br /> 出生日期: {{familyMessage.birthday}} <br />联系方式: {{familyMessage.phone}} <br />常用地址: {{familyMessage.address}}<br />
+                    <div class="drugsMessage">
+                        <h4>{{familyMessage.name}}</h4>
+                        <div>
+                            性别: {{familyMessage.sex}}<br /> 年龄: {{familyMessage.age}}<br /> 出生日期: {{familyMessage.birthday}} <br />联系方式: {{familyMessage.phone}} <br />常用地址: {{familyMessage.address}}<br />
+
+                        </div>
                     </div>
                 </div>
-                <div>
+                <div class="drugsMzNum">
                     门诊号: 23568459 <br />费别: 自费<br /> 医保类型: 职工医保
                 </div>
             </div>
@@ -30,20 +33,23 @@
                         <el-form-item label="门诊诊断: ">
                             <el-input v-model="chufangData.diagnosis"></el-input>
                         </el-form-item>
-                        <el-form-item>
-                            <el-checkbox-group v-model="chufangData.report">
-                                <el-checkbox label="疫情报告" name="type"></el-checkbox>
-                            </el-checkbox-group>
-                            <el-checkbox-group v-model="chufangData.review">
-                                <el-checkbox label="复诊" name="type"></el-checkbox>
-                            </el-checkbox-group>
-                        </el-form-item>
-                        <el-form-item label="发病日期: ">
-                            <el-date-picker type="date" placeholder="选择日期" v-model="chufangData.occurTime" style="width: 100%;"></el-date-picker>
-                        </el-form-item>
-                        <el-form-item label="下次复查日期: ">
-                            <el-date-picker type="date" placeholder="选择日期" v-model="chufangData.reviewTime" style="width: 100%;"></el-date-picker>
-                        </el-form-item>
+                        <div class="drugsCheckBox">
+                            <el-form-item>
+                                <el-checkbox-group v-model="chufangData.report">
+                                    <el-checkbox label="疫情报告" name="type"></el-checkbox>
+                                </el-checkbox-group>
+                                <el-checkbox-group v-model="chufangData.review">
+                                    <el-checkbox label="复诊" name="type"></el-checkbox>
+                                </el-checkbox-group>
+                            </el-form-item>
+                            <el-form-item label="发病日期: ">
+                                <el-date-picker type="date" placeholder="选择日期" v-model="chufangData.occurTime" style="width: 100%;"></el-date-picker>
+                            </el-form-item>
+                            <el-form-item label="下次复查日期: ">
+                                <el-date-picker type="date" placeholder="选择日期" v-model="chufangData.reviewTime" style="width: 100%;"></el-date-picker>
+                            </el-form-item>
+                        </div>
+
                     </el-form>
 
                 </div>
@@ -65,14 +71,18 @@
                             </el-table-column>
                             <el-table-column prop="drugQuantity" label="数量" width="120">
                                 <template slot-scope="scope">
-                                    <el-popover trigger="hover" placement="top">
-                                        <p>姓名: {{ scope.row.drugQuantity }}</p>
-                                    </el-popover>
+                                    <input class="drugsListInput" v-model="scope.row.drugQuantity" type="number" @change="countAll()"/>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="drugPriceAll" label="合计" width="120">
+                                <template slot-scope="scope">
+                                    <input class="drugsListInput" disabled v-model="scope.row.drugQuantity * scope.row.drugPrice" type="text" />
+                                </template>
                             </el-table-column>
                             <el-table-column prop="ask" label="医生嘱托" width="120">
+                                <template slot-scope="scope">
+                                    <input class="drugsListInput" v-model="scope.row.ask" type="text" />
+                                </template>
                             </el-table-column>
                             <el-table-column fixed="right" label="操作" width="100">
                                 <template slot-scope="scope">
@@ -83,7 +93,7 @@
                     </div>
                     <div>
                         <div>
-                            总金额：199
+                            总金额：{{countAllPrice}}
                         </div>
                         <div>
                             <el-button type="primary">预览</el-button>
@@ -111,6 +121,8 @@ export default {
     },
     data() {
         return {
+            imgUrl:
+                "https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/",
             form: {
                 name: ""
             },
@@ -133,8 +145,7 @@ export default {
                 reviewEnum: null, //空
                 orgCode: "",
                 complained: "",
-                medicalHistory:
-                    "",
+                medicalHistory: "",
                 allergyHistory: "",
                 diagnosis: "",
                 report: true,
@@ -150,7 +161,8 @@ export default {
                         subtotal: 60.0, //药品🐤小计
                         doctorAsk: "一定要按时按量吃药" //医生嘱托
                     }
-                ]
+                ],
+                countAllPrice:""
             }
         };
     },
@@ -177,7 +189,8 @@ export default {
                     sex: res.data.body.sex,
                     birthday: res.data.body.birthday,
                     phone: res.data.body.phone,
-                    address: res.data.body.address
+                    address: res.data.body.address,
+                    userId: res.data.body.userId
                 };
             } else {
                 //失败
@@ -207,6 +220,9 @@ export default {
         },
         //提交审核
         async submitAudit() {
+            $.each(this.chufangData.drugDetails,function(index,text){
+                text.drugPriceAll=text.drugPrice * text.drugQuantity
+            })
             let query = {
                 token: this.userState.token
             };
@@ -225,26 +241,33 @@ export default {
                 });
             }
         },
-        setMessage(){
-            this.chufangData.firstDoctorId=this.userSelfInfo.userId;
-            this.chufangData.clinicId=this.userMessage.clinicId
-            this.chufangData.departmentId=this.userMessage.departmentId
-            this.chufangData.userId=this.userMessage.userId
-            this.chufangData.orgCode=this.userMessage.orgCode
+        //计算总价格
+        countAll() {
+             $.each(this.chufangData.drugDetails,function(index,text){
+                this.countAllPrice+=text.drugPrice * text.drugQuantity
+            })
+        },
+        setMessage() {
+            this.chufangData.firstDoctorId = this.userSelfInfo.userId;
+            this.chufangData.clinicId = this.userMessage.clinicId;
+            this.chufangData.departmentId = this.userMessage.departmentId;
+            this.chufangData.userId = this.userMessage.userId;
+            this.chufangData.orgCode = this.userMessage.orgCode;
         }
     },
     props: {
         sendToUserId: String,
-        userMessage:Object
+        userMessage: Object
     },
     model: {
-        prop: ["sendToUserId","userMessage"],
+        prop: ["sendToUserId", "userMessage"],
         event: "reBack"
     },
     created() {
         this.getDrugsMessage();
         this.getDrugsByCondition();
-        this.setMessage()
+        this.setMessage();
+        this.countAll()
     },
     beforeDestroy() {}
 };
@@ -306,6 +329,7 @@ export default {
     margin-bottom: 15px;
 }
 .drugs_box_lf_headImg {
+    margin-right: 10px;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -313,5 +337,43 @@ export default {
 .drugs_box_lf_headImg > img {
     width: 100%;
     height: 100%;
+}
+.drugsMessage > h4 {
+    margin-bottom: 10px;
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #212223;
+    line-height: 20px;
+}
+.drugsMessage > div {
+    line-height: 27px;
+}
+.drugsMzNum {
+    padding-left: 45px;
+    line-height: 27px;
+}
+.drugsCheckBox{
+    display: flex;
+    display: -webkit-flex;
+    font-family: PingFangSC-Light;
+font-size: 14px;
+color: #212223;
+line-height: 20px;
+}
+.drugsCheckBox>div:first-child>div{
+    display: flex;
+    display: -webkit-flex;
+}
+.drugsCheckBox>div:first-child>div>div{
+    margin:0 5px;
+}
+.drugsCheckBox .el-checkbox__label,
+.drugsCheckBox .el-form-item__label{
+  color: #212223 !important;  
+}
+.drugsListInput{
+        width: 77px;
+    height: 20px;
+    font-size: 12px;
 }
 </style>
