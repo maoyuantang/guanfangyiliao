@@ -630,7 +630,17 @@
 		methods: {
 			//自调用组件函数
 			//在线、处方审核、统计、切换插件返回值
-			getNav(data) { console.log(data) },
+			getNav(data) { 
+				console.log(data)
+				this.getFilter0();//获取科室列表
+				this.getFilter1();//审核状态
+				this.getFilter2();//配送状态
+				this.getFilter3();//审核医生
+				this.getFilter4();//发药医生
+				this.getList1();//管理列表1
+				this.getList2();//管理列表2
+				this.getList3();//管理图表3（统计图表数据获取）
+			 },
 			//筛选返回值
 			getFilter(data) {//科室筛选
 				this.departmentId = data.index.value;
@@ -700,6 +710,9 @@
 						this.onLineList.topFlag[0].more = false;
 						this.statistics.topFlag[0].more = false;
 					}
+					this.onLineList.topFlag[0].list.length = 0
+					this.prescriptionAuditDistribution.topFlag[0].list.length = 0
+					this.statistics.topFlag[0].list.length = 0
 					$.each(res.data.body, function (index, text) {
 						//在线诊室筛选列表渲染
 						_this.onLineList.topFlag[0].list.push({
@@ -735,11 +748,13 @@
 				const res = await toolRxReviewStatus(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('1.21.2.处方审核状态 +成功')
+					console.log(res)
 					if (res.data.body.length > 6) {
 						this.prescriptionAuditDistribution.topFlag[1].more = true;
 					} else {
 						this.prescriptionAuditDistribution.topFlag[1].more = false;
 					}
+					this.prescriptionAuditDistribution.topFlag[1].list.length = 0
 					$.each(res.data.body, function (index, text) {
 						//处方审核状态列表渲染
 						_this.prescriptionAuditDistribution.topFlag[1].list.push({
@@ -770,6 +785,7 @@
 					} else {
 						this.prescriptionAuditDistribution.topFlag[2].more = false;
 					}
+					this.prescriptionAuditDistribution.topFlag[2].list.length = 0
 					$.each(res.data.body, function (index, text) {
 						//处方配送状态渲染
 						_this.prescriptionAuditDistribution.topFlag[2].list.push({
@@ -800,6 +816,7 @@
 					} else {
 						this.prescriptionAuditDistribution.topFlag[3].more = false;
 					}
+					this.prescriptionAuditDistribution.topFlag[3].list.length = 0
 					$.each(res.data.body, function (index, text) {
 						//处方审核医生渲染
 						_this.prescriptionAuditDistribution.topFlag[3].list.push({
@@ -830,6 +847,7 @@
 					} else {
 						this.prescriptionAuditDistribution.topFlag[4].more = false;
 					}
+					this.prescriptionAuditDistribution.topFlag[4].list.length = 0
 					$.each(res.data.body, function (index, text) {
 						//处方发药医生渲染
 						_this.prescriptionAuditDistribution.topFlag[4].list.push({
@@ -1158,7 +1176,7 @@
 				const res = await doctorsByOrgCodeAndDeptId(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('新增弹框渲染+关联医生+成功')
-					// console.log(res)
+					console.log(res)
 					// res.data.body.map(item => console.log(item))
 					$.each(res.data.body, function (index, text) {
 						_this.addData.doctorList.list.push({
