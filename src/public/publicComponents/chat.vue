@@ -6,6 +6,7 @@
             {{chatUser}}
         </div>
         <div class="chatMessage">
+            <div class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</div>
             <ul class="chatRecord">
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
@@ -17,73 +18,70 @@
                             <span class="peopleName">{{text.fromNickName}}</span>
                             <span class="otime">{{text.serverTime}}</span>
                         </h4>
-                        <div>
-                            <div class="messageCon">
-                                <div v-show="text.from==userSelfInfo.userId" class="noReadro">
-                                    <span class="allReadColor" v-if="text.oRead">已读 </span>
-                                    <span class="noReadColor" v-else>未读</span>
+                        <div class="messageCon">
+                            <div v-show="text.from==userSelfInfo.userId" class="noReadro">
+                                <span class="allReadColor" v-if="text.oRead">已读 </span>
+                                <span class="noReadColor" v-else>未读</span>
+                            </div>
+
+                            <div>
+                                <!-- 显示文本 -->
+                                <div v-show="text.childMessageType=='DEFAULT'">
+                                    {{text.content}}
+                                </div>
+                                <!-- 显示图片 -->
+                                <div v-show="text.childMessageType=='IMAGE'" class="imgUrlBig">
+                                    <span>
+                                    </span>
+                                    <!-- <img :src="text.content" /> -->
+
+                                    <viewer :images="text.signImages" toolbar="false">
+                                        <img :src="text.signImages" width="50">
+                                    </viewer>
+                                </div>
+                                <!-- 显示视频 -->
+                                <div v-show="text.childMessageType=='VIDEO'">
+                                    {{text.content}}
                                 </div>
 
-                                <div>
-                                    <!-- 显示文本 -->
-                                    <div v-show="text.childMessageType=='DEFAULT'">
-                                        {{text.content}}
-                                    </div>
-                                    <!-- 显示图片 -->
-                                    <div v-show="text.childMessageType=='IMAGE'" class="imgUrlBig">
-                                        <span>
-                                        </span>
-                                        <!-- <img :src="text.content" /> -->
+                                <!-- 显示随访表 -->
+                                <!-- 自己发的随访表 -->
+                                <div v-if="text.childMessageType=='FOLLOWUP' || text.childMessageType=='INTERROGATION' || text.childMessageType=='ARTICLE'">
+                                    <div v-show="text.from==userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.id,text.childMessageType)">
 
-                                        <viewer :images="text.signImages" toolbar="false">
-                                            <img :src="text.signImages" width="50">
-                                        </viewer>
-                                    </div>
-                                    <!-- 显示视频 -->
-                                    <div v-show="text.childMessageType=='VIDEO'">
-                                        {{text.content}}
-                                    </div>
-
-                                    <!-- 显示随访表 -->
-                                    <!-- 自己发的随访表 -->
-                                    <div v-if="text.childMessageType=='FOLLOWUP' || text.childMessageType=='INTERROGATION' || text.childMessageType=='ARTICLE'">
-                                        <div v-show="text.from==userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.id,text.childMessageType)">
-
-                                            <div>
-                                                <img src="../../assets/img/followQuest1.png" />
-                                            </div>
-                                            <div>
-                                                <h3>
-                                                    <span v-show="text.childMessageType=='FOLLOWUP'">随访</span>
-                                                    <span v-show="text.childMessageType=='INTERROGATION'">问诊</span>
-                                                    <span v-show="text.childMessageType=='ARTICLE'">文章</span>
-                                                    / {{text.content.title}}
-                                                </h3>
-                                                <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
-                                            </div>
-
+                                        <div>
+                                            <img src="../../assets/img/followQuest1.png" />
                                         </div>
-                                        <!-- 对方发的随访表 -->
-                                        <div v-show="text.from!=userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.id,text.childMessageType)">
-                                            <div>
-                                                <img src="../../assets/img/followQuest2.png" />
-                                            </div>
-                                            <div>
-                                                <h3>
-                                                    <span v-show="text.childMessageType=='FOLLOWUP'">随访</span>
-                                                    <span v-show="text.childMessageType=='INTERROGATION'">问诊</span>
-                                                    <span v-show="text.childMessageType=='ARTICLE'">文章</span>
-                                                    /{{text.content.title}}</h3>
-                                                <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
-                                            </div>
+                                        <div>
+                                            <h3>
+                                                <span v-show="text.childMessageType=='FOLLOWUP'">随访</span>
+                                                <span v-show="text.childMessageType=='INTERROGATION'">问诊</span>
+                                                <span v-show="text.childMessageType=='ARTICLE'">文章</span>
+                                                / {{text.content.title}}
+                                            </h3>
+                                            <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                        </div>
+
+                                    </div>
+                                    <!-- 对方发的随访表 -->
+                                    <div v-show="text.from!=userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.id,text.childMessageType)">
+                                        <div>
+                                            <img src="../../assets/img/followQuest2.png" />
+                                        </div>
+                                        <div>
+                                            <h3>
+                                                <span v-show="text.childMessageType=='FOLLOWUP'">随访</span>
+                                                <span v-show="text.childMessageType=='INTERROGATION'">问诊</span>
+                                                <span v-show="text.childMessageType=='ARTICLE'">文章</span>
+                                                /{{text.content.title}}</h3>
+                                            <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div v-show="text.from!=userSelfInfo.userId" class="noReadro">
-                                    <span class="allReadColor" v-if="text.oRead">已读 </span>
-                                    <span class="noReadColor" v-else>未读</span>
-                                </div>
-
+                            </div>
+                            <div v-show="text.from!=userSelfInfo.userId" class="noReadro">
+                                <span class="allReadColor" v-if="text.oRead">已读 </span>
+                                <span class="noReadColor" v-else>未读</span>
                             </div>
 
                         </div>
@@ -371,7 +369,8 @@ export default {
             followDetailVisible: false,
             signImages: [
                 "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=85690711,3884201894&fm=27&gp=0.jpg"
-            ]
+            ],
+            oMsgId: ""
         };
     },
     computed: {
@@ -396,6 +395,8 @@ export default {
             Math.random(10);
         console.log(this.sessionId);
         this.messageTicket = this.$store.state.socket.messageTicket;
+        console.log(this.$store.state.socket.messageTicket);
+        this.oMsgId = this.$store.state.socket.messageTicket.oMsgId;
     },
     methods: {
         //发送
@@ -765,25 +766,27 @@ export default {
             }
         },
         //获取历史记录
-        async getHisRecord() {
+        async getHisRecord(oMsgId) {
             console.log("历史消息");
             console.log(this.sessionId);
+            let _this = this;
             let query = {
                 token: this.userState.token
             };
             const options = {
                 userId: this.userSelfInfo.userId,
                 sessionId: [this.sessionId],
-                msgId: this.messageTicket.msgId,
-                pageNums: 157
+                msgId: this.oMsgId,
+                pageNums: 15
             };
             console.log(Object.prototype.toString.call([this.sessionId]));
             const res = await fetchHistoryMessage(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
                 let odata = res.data.body.reverse();
-                this.messageList = odata;
-                $.each(this.messageList, function(index, text) {
+                let oLengthMsgId = res.data.body.length;
+                this.oMsgId = res.data.body[oLengthMsgId - 1].msgId;
+                $.each(odata, function(index, text) {
                     let timestamp4 = new Date(text.serverTime);
                     let y = timestamp4.getHours();
                     let d = timestamp4.getMinutes();
@@ -795,7 +798,7 @@ export default {
                     }
                     console.log(y + "-" + d);
                     text.serverTime = y + ":" + d;
-                    //  text.serverTime=
+                    _this.messageList.push(text);
                 });
 
                 for (let i = 0; i < odata.length; i++) {
@@ -821,7 +824,8 @@ export default {
                             this.messageList[i].content = "随访";
                         } else if (odata[i].childMessageType == "AUDIO") {
                             //音频
-                            this.messageList[i].content = "该消息为音频消息,请在手机上查看";
+                            this.messageList[i].content =
+                                "该消息为音频消息,请在手机上查看";
                         } else if (odata[i].childMessageType == "VIDEO") {
                             //视频
                             if (odata[i].body.indexOf("refuse") > -1) {
@@ -1054,11 +1058,10 @@ export default {
         "userSocketInfo.msgBox.a.msg": {
             handler(data, o) {
                 let olength = data.length;
-                let oData=data[olength - 1]
-                console.log(data  )
+                let oData = data[olength - 1];
+                console.log(data);
                 if (oData.RequestType == 6) {
                     if (this.sessionId == oData.info.to) {
-                        
                         let oTime = oData.info.serverTime;
                         let timestamp4 = new Date(oTime);
                         let y = timestamp4.getHours();
@@ -1083,7 +1086,7 @@ export default {
                             childMessageType = "VIDEO";
                         } else if (oData.info.childMessageType == 4) {
                             childMessageType = "AUDIO";
-                            messageBody='该消息为音频消息,请在手机上查看'
+                            messageBody = "该消息为音频消息,请在手机上查看";
                         } else if (oData.info.childMessageType == 5) {
                             childMessageType = "IMAGE";
                         } else if (oData.info.childMessageType == 7) {
@@ -1120,13 +1123,14 @@ export default {
 <style>
 .chat {
     width: 636px;
-    height: 534px;
+    height: 568px;
 }
 .chatMessage {
     width: 100%;
-    height: 280px;
+    height: 310px;
     margin-bottom: 12px;
     border-bottom: 1px solid #e5edf3;
+    overflow: hidden;
 }
 .sendIcon {
     display: flex;
@@ -1398,6 +1402,11 @@ export default {
 .noReadro > span {
     display: block;
     width: 30px;
+    margin: 0 10px;
+}
+.loadMoreChat {
+    cursor: pointer;
+    text-align: center;
 }
 /* 备注
 

@@ -383,7 +383,7 @@
                             <selftag :inData="oTab4" @reback="getOTab4"></selftag>
                         </div>
 
-                        <search @searchValue="searchChange"></search>
+                        <search @searchValue="adminSearchChange"></search>
                     </div>
                     <div>
                         <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
@@ -497,6 +497,8 @@
                     <div>
                         <div v-if="myFollowVisable">
                             <el-table :data="myFollowList" border style="width: 100%">
+                                <el-table-column type="selection" width="55">
+                                </el-table-column>
                                 <el-table-column fixed prop="userName" label="姓名" width="150">
                                 </el-table-column>
                                 <el-table-column prop="origin" label="来源" width="120">
@@ -517,13 +519,13 @@
                                 <el-table-column prop="deviceAlert" label="设备告警" width="120">
                                     <template slot-scope="scope">
                                         <div class="warnNumBox">
-<el-switch v-model="scope.row.deviceAlert" active-color="#13ce66" inactive-color="#ff4949" @change="warnFollow(scope.row)">
-                                        </el-switch>
-                                        <div class="warnNum" @click="setWarn(scope.row)">
-                                            设置：180
+                                            <el-switch v-model="scope.row.deviceAlert" active-color="#13ce66" inactive-color="#ff4949" @change="warnFollow(scope.row)">
+                                            </el-switch>
+                                            <div class="warnNum" @click="setWarn(scope.row)">
+                                                设置：180
+                                            </div>
                                         </div>
-                                        </div>
-                                        
+
                                     </template>
                                 </el-table-column>
                                 <el-table-column fixed="right" label="操作" width="100">
@@ -543,7 +545,7 @@
         <div>
             <div v-if="followDetailVisible">
                 <el-dialog class="evaluateBox addFollowBox" title=" " :visible.sync="followDetailVisible" width="602px" hight="356px" center>
-                    <followDetail  :addFollowData="followDetailData"></followDetail>
+                    <followDetail :addFollowData="followDetailData"></followDetail>
                 </el-dialog>
             </div>
         </div>
@@ -631,8 +633,8 @@ export default {
     data() {
         return {
             //随访计划
-            warnVisible:false,
-            warnList:[],
+            warnVisible: false,
+            warnList: [],
             followPlanVisible: false,
             followPlanData: [],
             infoForm: {
@@ -937,6 +939,7 @@ export default {
                 }
             ],
             //满意度数据
+            mydChoice: "",
             addMydTemplateVis: true,
             mydTemlateName: {
                 title: "",
@@ -1247,8 +1250,8 @@ export default {
             articleImg: "",
             myFollowList: [],
             myFollowVisable: true,
-            followDetailData:{},
-            followDetailVisible:false,
+            followDetailData: {},
+            followDetailVisible: false
         };
     },
     computed: {
@@ -1471,6 +1474,7 @@ export default {
         //满意度接口
         // 满意度调查切换
         followUp2Fun(index) {
+            this.mydChoice = index;
             this.indexTab2 = index;
             if (index == 0) {
                 this.oGetResultList();
@@ -2036,12 +2040,11 @@ export default {
         //处理标题数据好方便传入子组件
         circularData(data) {},
         //搜索框
-        searchChange(data) {
-            this.searchData = data;
+        adminSearchChange(data) {
             this.getFoList();
-            // this.getfamiliList();
             this.oGetModelList();
             this.oGetResultList();
+            this.searchData = data;
         },
         //医生端接口
         //医生端tab切换
@@ -2054,6 +2057,7 @@ export default {
                 this.doctorSxVisiable = false;
             }
             if (oindex == 0) {
+                //我的随访
                 this.myFollowVisable = true;
                 this.docAddTemplate = false;
                 (this.doctorColumns = [
@@ -2113,6 +2117,7 @@ export default {
                     }
                 ];
             } else if (oindex == 1) {
+                //随访模板
                 this.myFollowVisable = false;
                 this.docAddTemplate = true;
                 (this.doctorColumns = [
@@ -2153,11 +2158,12 @@ export default {
                         name: "删除",
                         oclass: "viewFollow",
                         method: (index, row) => {
-                            this.docFollowDelete(deleteTemplate, index, row);
+                            this.docFollowDelete(deleteTemplate, index, row, 1);
                         }
                     }
                 ];
             } else if (oindex == 2) {
+                //门诊模板
                 this.myFollowVisable = false;
                 this.docAddTemplate = true;
                 (this.doctorColumns = [
@@ -2198,11 +2204,12 @@ export default {
                         name: "删除",
                         oclass: "viewFollow",
                         method: (index, row) => {
-                            this.docFollowDelete(deleteInquiry, index, row);
+                            this.docFollowDelete(deleteInquiry, index, row, 2);
                         }
                     }
                 ];
             } else if (oindex == 3) {
+                //宣教文章
                 this.myFollowVisable = false;
                 this.docAddTemplate = true;
                 (this.doctorColumns = [
@@ -2243,11 +2250,12 @@ export default {
                         name: "删除",
                         oclass: "viewFollow",
                         method: (index, row) => {
-                            this.docFollowDelete(deleteArticle, index, row);
+                            this.docFollowDelete(deleteArticle, index, row, 3);
                         }
                     }
                 ];
             } else if (oindex == 4) {
+                //疾病风险
                 this.myFollowVisable = false;
                 this.docAddTemplate = false;
                 (this.doctorColumns = [
@@ -2306,14 +2314,12 @@ export default {
             this.oQueryArticleList();
         },
         //删除
-        async docFollowDelete(deleteFunName, index, row) {
+        async docFollowDelete(deleteFunName, index, row, num) {
             let _this = this;
             const query = {
                 token: this.userState.token
             };
-            const options = {
-                id: row.id
-            };
+            let options = num == 3 ? { articleId: row.id } : { id: row.id };
 
             const res = await deleteFunName(query, options);
             if (res.data && res.data.errCode === 0) {
@@ -2322,9 +2328,13 @@ export default {
                     message: "删除成功"
                 });
                 setTimeout(function() {
-                    _this.oGetTemplate();
-                    _this.oQueryList();
-                    _this.oQueryArticleList();
+                    if (num == 1) {
+                        _this.oGetTemplate();
+                    } else if (num == 2) {
+                        _this.oQueryList();
+                    } else if (num == 3) {
+                        _this.oQueryArticleList();
+                    }
                 }, 1000);
             } else {
                 //失败
@@ -2749,7 +2759,7 @@ export default {
 
         //我的随访查看详情
         async myFollowDetail(row) {
-            this.followDetailVisible=true;
+            this.followDetailVisible = true;
             let _this = this;
             let query = {
                 token: this.userState.token,
@@ -2757,7 +2767,7 @@ export default {
             };
             const res = await myFollowDetailFun(query);
             if (res.data && res.data.errCode === 0) {
-               this.followDetailData=res.data.body
+                this.followDetailData = res.data.body;
             } else {
                 //失败
                 this.$notify.error({
@@ -2830,8 +2840,8 @@ export default {
             };
             const res = await alertGet(query);
             if (res.data && res.data.errCode === 0) {
-                this.warnVisible=true;
-                this.warnList=res.data.body
+                this.warnVisible = true;
+                this.warnList = res.data.body;
             } else {
                 //失败
                 this.$notify.error({
@@ -2840,23 +2850,23 @@ export default {
                 });
             }
         },
-         //设置设备告警值
-        async sureSetWarn(data){
- let _this = this;
+        //设置设备告警值
+        async sureSetWarn(data) {
+            let _this = this;
             let query = {
-                token: this.userState.token,
+                token: this.userState.token
             };
-            let options=data
-            const res = await alertSet(query,options);
+            let options = data;
+            const res = await alertSet(query, options);
             if (res.data && res.data.errCode === 0) {
-               this.$notify.success({
+                this.$notify.success({
                     title: "成功",
-                    message: '修改成功'
+                    message: "修改成功"
                 });
-                setTimeout(function(){
+                setTimeout(function() {
                     _this.getUsFollow();
-                     _this.warnVisible=false
-                },1000)
+                    _this.warnVisible = false;
+                }, 1000);
             } else {
                 //失败
                 this.$notify.error({
@@ -3199,21 +3209,21 @@ export default {
     color: #ffffff;
     letter-spacing: -0.25px;
 }
-.warnNumBox{
+.warnNumBox {
     display: flex;
     display: -webkit-flex;
     cursor: pointer;
 }
-.warnNum{
-    width:60px;
+.warnNum {
+    width: 60px;
     height: 17px;
-    background: #FFFFFF;
-border: 1px solid #E4E8EB;
-border-radius: 3px;
-font-family: PingFangSC-Regular;
-font-size: 12px;
-color: #909191;
-text-align: center;
-line-height: 17px
+    background: #ffffff;
+    border: 1px solid #e4e8eb;
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #909191;
+    text-align: center;
+    line-height: 17px;
 }
 </style>
