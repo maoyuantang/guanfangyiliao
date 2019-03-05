@@ -5,7 +5,7 @@
 export default class Check{
     constructor(str,...args){
         this.str = str;
-        this.words = ['&','<','>','"',"'",'/','javascript','http','https',' '];
+        this.words = ['&','<','>','"',"'",'/','javascript','http','https',' ','null'];
     }
     /**
      * 检查是否有关键字
@@ -16,7 +16,8 @@ export default class Check{
      * }
      */
      wordsCheck(){
-        if(!this.str)return{ok:false,msg:'输入为空',key:''};
+        if(Object.prototype.toString.call(this.str)!== "[object String]" )return{ok:false,msg:'请输入字符串',key:''};
+        // if(!this.str)return{ok:false,msg:'输入为空',key:''};
         for(const i of this.words){
             if(this.str.indexOf(i) != -1 ){
                 return {

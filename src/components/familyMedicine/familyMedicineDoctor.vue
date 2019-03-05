@@ -3,11 +3,20 @@
 		家医系统 医生端
         <div class="family-medicine-doctor-head">
             <div class="family-medicine-doctor-head-left">
-                <selftag v-model="dateList" @reback="getDateSelect"></selftag>   
-                <selftag v-model="busModules" @reback="getDateSelect"></selftag>    
+                <tag :inData="queryConditions.date" @reback="getDateSelect"></tag>
+                <tag :inData="queryConditions.busModules" @reback="getModuleSelect"></tag>
             </div>
             <div class="family-medicine-doctor-head-right">
-                <publicTime @timeValue="getSelectTime"></publicTime>
+                <!-- <publicTime @timeValue="getSelectTime"></publicTime> -->
+                <span class="time-paragraph">时间段：</span>
+                <el-date-picker
+                v-model="queryConditions.time"
+                type="datetimerange"
+                size="mini" value-format="yyyy-MM-dd HH:mm:ss"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+                </el-date-picker>
             </div>
         </div>
         <div class="family-medicine-doctor-body">
@@ -38,10 +47,22 @@
                         <th class="family-medicine-doctor-body-spe">
                             <el-button type="warning" size="mini" plain @click="checkDoc(item,index)">查看档案</el-button>
                             <el-button type="success" size="mini" plain>发送</el-button>
+                            <el-button type="primary" size="mini" plain>查看记录</el-button>
                         </th>
                     </tr>
                 </tbody>
             </table>
+        </div>
+         <div class="family-medicine-doctor-footer">
+            <el-pagination
+                background
+                layout="prev, pager, next"
+                :page-size="queryConditions.page.size"               
+                :current-page="queryConditions.page.current"
+                :total="queryConditions.page.total"
+                v-if="queryConditions.page.total!=0"
+                @current-change="ChangePage"
+            ></el-pagination>
         </div>
         <el-dialog
         :visible.sync="alertInfo.show">
@@ -86,70 +107,68 @@
 <script>
     import { mapState } from 'vuex'
     import selftag from './../../public/publicComponents/selftag.vue'
+    import tag from './../../public/publicComponents/tag.vue'
     import publicTime from './../../public/publicComponents/publicTime.vue'
     import { stencilName, fetchOrderInfo, updateOrderServices } from '../../api/apiAll.js'
 	export default {
         components:{
             selftag,
-            publicTime
+            publicTime,
+            tag
         },
         computed:{
 			...mapState({
 				userInfo:state => state.user.userInfo,
-                userSelfInfo:state => state.user.userSelfInfo,
+                userSelfInfo:state => state.user.userSelfInfo,   
                 global: state => state.global 
 			})
-		},
+        },
+        watch:{
+            'global.businessModule':{
+                handler(n){
+                    this.getBusModules()
+                }
+            },
+            'queryConditions.time':{
+                handler(n){
+                    console.log(n);
+                    this.getTableList();
+                }
+            }
+        },
 		data () {
 			return {
-                /**
-                 * 顶部日期信息
-                 */
-				dateList:{
-                    more:false,
-                    title:'日期',
-                    list:[
-                        {
-                            text:'全部'
-                        },
-                        {
-                            text:'今日'
-                        }
-                    ]
-                },
-
-                /**
-                 * 顶部 业务模块 信息
-                 */
-                busModules:{
-                    more:false,
-                    title:'业务模块',
-                    list:[
-                        {
-                            text:'全部'
-                        },
-                        {
-                            text:'家庭医生'
-                        },
-                        {
-                            text:'远程监护'
-                        },
-                        {
-                            text:'陪护服务'
-                        },
-                        {
-                            text:'智能陪检'
-                        },
-                        {
-                            text:'在线咨询'
-                        },
-                        {
-                            text:'上门服务'
-                        },
-                        {
-                            text:'家用设备'
-                        }
-                    ]
+                queryConditions:{//查询条件  
+                    date:{//日期
+                        title:'日期',//标题
+                        select:0,//当前选中项
+                        list:
+                        [
+                            {
+                                label:'全部',
+                                value:''
+                            },
+                            {
+                                label:'今日',
+                                value:'today'
+                            },
+                        ],
+                        more:false
+                    },
+                    busModules:{//业务模块 
+                        title:'业务模块',//标题  
+                        select:0,//当前选中项
+                        list:
+                        [
+                        ],
+                        more:false
+                    },
+                    time:[],
+                    page:{
+                        current:1,
+                        size:10,
+                        total:0
+                    },
                 },
 
                 /**
@@ -164,7 +183,7 @@
                  * 弹窗信息
                  */
                 alertInfo:{    
-                    show:true,
+                    show:false,
                     data:{ 
                         time:'',
                         place:''
@@ -175,88 +194,77 @@
 		},
 		methods:{
             /**
-             * 初始化接口
+             * 分页
              */
-            initApi(){
-                Promise.all([this.getBusModules(),this.getTableList()])
+            ChangePage(num){
+                this.queryConditions.page.current = num;
+                this.getTableList();
             },
+            /**
+             * 获取用户选择模块
+             */
+            getModuleSelect(data){
+                this.queryConditions.busModules.select = data.index;
+                console.log(data);
+                this.getTableList();
+            },
+            // /**
+            //  * 初始化接口
+            //  */
+            // initApi(){
+            //     // Promise.all([this.getBusModules(),this.getTableList()])
+            // },
 
 			/**
              * 获取日期选项
              */
             getDateSelect(item){
-                console.log(item)
+                console.log(item);
+                this.queryConditions.date.select = item.index;
+                this.getTableList();
             },
 
+            // /**
+            // *  获取用户选择时间
+            // *
+            // */
+            // getSelectTime(time){
+            //     console.log(time)
+            // },
             /**
-            *  获取用户选择时间
-            *
-            */
-            getSelectTime(time){
-                console.log(time)
-            },
-
-            /**
-             * 17.1获取所有业务模版名
+             * 获取业务模版
              */
-            async getBusModules(){
-                const res = await stencilName({token:this.userInfo.token});
-                console.log(res);
-                if(res.data&&res.data.errCode===0){
-                    const modulesMap = [
-                        {
-                            text:'家庭医生',
-                            en:'JTYS'
-                        },
-                        {
-                            text:'上门服务',
-                            en:'SMFW'
-                        },
-                        {
-                            text:'智能陪检',
-                            en:'ZNPJ'
-                        },
-                        {
-                            text:'远程监护',
-                            en:'YCJH'
-                        },
-                        {
-                            text:'在线咨询',
-                            en:'ZXZX'
-                        },
-                        {
-                            text:'家用设备',
-                            en:'JYSB'
-                        },
-                        {
-                            text:'陪护服务',
-                            en:'PHFW'
-                        }
-                    ];
-                    this.busModules.list = res.data.body.map(item=>{
-                        for(const i of modulesMap){
-                            if(item === i.en) return i
-                        }
-                    });
-                    console.log(this.busModules.list)
-                }else{
-                    this.$notify({
-						title: '失败',
-						message: '业务模版获取失败',
-						type: 'error'
-					});
-                }
+            getBusModules(){
+                this.queryConditions.busModules.list = this.global.businessModule.map(item=>{
+                    item.label = item.name;
+                    item.value = item.id;
+                    return item;
+                });
             },
+           
 
             /**
              * 6.7.家医系统中订单列表（WEB端使用）
              */
             async getTableList(){
-                const res = await fetchOrderInfo({token:this.userInfo.token});
+                const query = {
+                    token:this.userInfo.token,
+                    pageNum:this.queryConditions.page.current,
+                    pageSize:this.queryConditions.page.size,
+                    model:this.queryConditions.busModules.list[this.queryConditions.busModules.select].value || '',
+                };
+                if(this.queryConditions.time.length>=2){
+                    query.starTime = this.queryConditions.time[0];
+                    query.endTime = this.queryConditions.time[1];
+                }
+                console.log(query)
+                // return;
+                const res = await fetchOrderInfo(query);
                 console.log(res);
                 if(res.data&&res.data.errCode===0){
                     this.tableInfo.thead = res.data.body.header;
                     this.tableInfo.tbody = res.data.body.data2.list;
+                    this.queryConditions.page.total = res.data.body.data2.total
                     console.log(this.tableInfo)
                 }else{
                     this.$notify({
@@ -314,6 +322,7 @@
                         },
                         item:null
                     }
+                    this.getTableList();
                 }else{
                     this.$notify({
 						title: '失败',
@@ -327,11 +336,19 @@
              * 查看档案
              */
             checkDoc(item,index){
-                console.log(item)
+                console.log(item);
+                this.$router.push({
+                    path: "/docDetailed",
+                    query:{
+                        id:item.userId
+                    }
+	            })
             },
 		},
 		async created(){
-            this.initApi();
+            // this.initApi();
+            this.getBusModules();
+            this.getTableList();
 		}
 	}
 </script>
@@ -396,5 +413,8 @@
     }
     .alert-centent{
         padding-left: 0.2rem;
+    }
+    .family-medicine-doctor-footer{
+        text-align: center;
     }
 </style>

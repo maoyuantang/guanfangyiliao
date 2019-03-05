@@ -190,9 +190,10 @@
 
 <script>
     import { mapState } from "vuex"
-    import { typeList, arrangeList, eduCourseArrange, doctorsByOrgCodeAndDeptId, getArrange, eduCourseEdit, eduCourseCancel } from '../../api/apiAll.js'
-    import tag from '../../public/publicComponents/tag.vue'
-    import search from '../../public/publicComponents/search.vue'
+    import { typeList, arrangeList, eduCourseArrange, doctorsByOrgCodeAndDeptId, getArrange, eduCourseEdit, eduCourseCancel } from '../../../api/apiAll.js'
+    import Check from '../../../public/publicJs/check.js'
+    import tag from '../../../public/publicComponents/tag.vue'
+    import search from '../../../public/publicComponents/search.vue'
 	export default {
 		watch:{
 			'global.departmentList':{
@@ -395,14 +396,56 @@
              * 弹窗提交
              */
             subimt(){
+                if(!this.alertData.data.name){//名称不能为空
+                    this.$notify({
+                        title: '请输入名称',
+                        message: '名称不能为空',
+                        type: 'error'
+                    });
+                    return;
+                }
+                const isPass = (new Check(this.alertData.data.name || '')).wordsCheck();
+                if(!isPass.ok){//名称不能是关键字
+                    this.$notify({
+                        title: '错误',
+                        message: isPass.msg,
+                        type: 'error'
+                    });
+                    return;
+                }
+                if(!this.alertData.data.lecturerSelect){//授 课 人 不能为空
+                    this.$notify({
+                        title: '请输入名称',
+                        message: '授课人不能为空',
+                        type: 'error'
+                    });
+                    return;
+                }
+                if(!this.alertData.data.time){//时间 不能为空
+                    this.$notify({
+                        title: '请输入名称',
+                        message: '时间不能为空',
+                        type: 'error'
+                    });
+                    return;
+                }
+                 if(this.alertData.data.departmentSelect.length<=0){//科室 不能为空
+                    this.$notify({
+                        title: '请输入名称',
+                        message: '科室不能为空',
+                        type: 'error'
+                    });
+                    return;
+                }
                 this.alertData.type === 0? this.add() : this.modify();
             },
             /**
              *  新增
              */
             async add(){
-                console.log(this.alertData.data.time);
-                if(!this.alertData.data.time)return;
+                
+                // console.log(this.alertData.data.time);
+                // if(!this.alertData.data.time)return;
                 const postData = {
                     name:this.alertData.data.name,
                     type:this.alertData.data.waySelect,
@@ -498,6 +541,15 @@
              * 获取排课计划列表
              */
             async getArrangeList(){
+                const isPass = (new Check(this.queryConditions.searchKey || '')).wordsCheck();
+                if(!isPass.ok){
+                    this.$notify({
+                        title: '错误',
+                        message: isPass.msg,
+                        type: 'error'
+                    });
+                    return;
+                }
                 const res = await arrangeList({
                     token:this.userState.token,
                     department:this.queryConditions.department.list[this.queryConditions.department.select].value || '',
@@ -619,7 +671,7 @@
 
 <style scoped>
 	.class-scheduling{
-		padding-top: 0.2rem;
+		
 	}
 	.class-scheduling-top{
         display: flex;

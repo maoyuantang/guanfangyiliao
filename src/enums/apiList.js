@@ -5,7 +5,7 @@ export default {
     hospitalDoctorBusinessSubsystemList:'/m/v1/api/basics/hospital/fetchDoctorSubSystem',//医院医生业务子系统列表
     fileDownload:'/m/v1/api/fs/download/',//文件下载
     initializeTheCreationOfHospital:'/m/v1/api/basics/hospital/init',//初始化创建医院
-    userList:'/m/v1/api/user/list',//首页-账号及权限-用户列表
+    userList:'/m/v1/api/user/user/list',//首页-账号及权限-用户列表
     fetchHospitalDepts:'/m/v1/api/basics/hospital/fetchHospitalDepts',//2.2.获取医院科室列表
     fetchDoctorSubSystems:'/m/v1/api/basics/hospital/fetchDoctorSubSystems',//3.2.1.首页-医院医生业务子系统列表（新）
     createUser:'/m/v1/api/user/user/createUser',//3.3首页-账号及权限-创建用户
@@ -260,5 +260,15 @@ export default {
     addWomanMessage:'/m/v1/api/record/patientRecord/addWomanMessage',//4.新增孕妇档案
     typeList:'/m/v1/api/inquiry/eduCourse/typeList',//6.授课方式筛选条件列表
     arrangeList:'/m/v1/api/inquiry/eduCourse/arrangeList',//5.获取排课计划列表
+    eduCourseArrange:'/m/v1/api/inquiry/eduCourse/arrange',//1.新增排课计划
+    getArrange:'/m/v1/api/inquiry/eduCourse/getArrange',//3.获取用于编辑的排课计划详情
+    eduCourseEdit:'/m/v1/api/inquiry/eduCourse/edit',//2.编辑排课计划
+    countTeacher:'/m/v1/api/inquiry/eduCourse/countTeacher',//1. 统计授课人次
+    countStudent:'/m/v1/api/inquiry/eduCourse/countStudent',//2. 统计听课人次
+    eduCourseCancel:'/m/v1/api/inquiry/eduCourse/cancel',//4.取消排课计划
+    webCourseList:'/m/v1/api/inquiry/eduLearn/webCourseList',//12.7 web获取课程列表【医生web】
+    signUp:'/m/v1/api/inquiry/eduLearn/signUp',//12.6 报名
+    intoClassroom:'/m/v1/api/inquiry/eduLearn/intoClassroom',//12.5 进入学习（临时）
+    intoPlatform:'/m/v1/api/inquiry/eduLearn/intoPlatform',//12.4 进入教学（临时）
 }
 

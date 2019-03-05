@@ -15,7 +15,14 @@ import './icons/baseIcon.css'
 import 'iview/dist/styles/iview.css'
 import echarts from 'echarts'
 
+// import { 
+//   Button, Select ,Dialog, Pagination, Dropdown, DropdownMenu, DropdownItem, Menu,
+//   Input, Radio, RadioGroup, Checkbox, CheckboxButton, CheckboxGroup, Switch, Option,
+//   OptionGroup, ButtonGroup, Table, TableColumn, DatePicker, TimeSelect, TimePicker,
+//   Popover, Tooltip, Form, FormItem, Tabs, Tag, Tree, Icon, Row, Col, Upload, Steps,
+//   Step, Cascader, Loading, Message, Notification, MessageBox, MenuItem,
 
+// } from 'element-ui'
 import  VueQuillEditor from 'vue-quill-editor'
 // require styles 引入样式
 import 'quill/dist/quill.core.css'
@@ -33,20 +40,69 @@ Viewer.setDefaults({
 })
 Vue.use(VueQuillEditor)
 
+// Vue.use(Button)
+// Vue.use(Select)
+// Vue.use(Dialog)
+// Vue.use(Pagination)
+// Vue.use(Dropdown)
+// Vue.use(DropdownMenu)
+// Vue.use(DropdownItem)
+// Vue.use(Menu)
+// Vue.use(Input)
+// Vue.use(Radio)
+
+// Vue.use(RadioGroup)
+// Vue.use(Checkbox)
+// Vue.use(CheckboxButton)
+// Vue.use(CheckboxGroup)
+// Vue.use(Switch)
+// Vue.use(Option)
+// Vue.use(OptionGroup)
+// Vue.use(ButtonGroup)
+// Vue.use(Table)
+// Vue.use(TableColumn)
+
+// Vue.use(DatePicker)
+// Vue.use(TimeSelect)
+// Vue.use(TimePicker)
+// Vue.use(Popover)
+// Vue.use(Tooltip)
+// Vue.use(Form)
+// Vue.use(FormItem)
+// Vue.use(Tabs)
+// Vue.use(Tag)
+// Vue.use(Tree)
+
+// Vue.use(Icon)
+// Vue.use(Row)
+// Vue.use(Col)
+// Vue.use(Upload)
+// Vue.use(Steps)
+// Vue.use(Step)
+// Vue.use(Cascader)
+// Vue.use(Loading)
+// Vue.use(Message)
+// Vue.use(Notification)
+
+// Vue.use(MessageBox)
+// Vue.use(MenuItem)
+
 Vue.prototype.$echarts = echarts 
+
+// Vue.prototype.$loading = Loading.service
+// Vue.prototype.$msgbox = MessageBox
+// Vue.prototype.$alert = MessageBox.alert
+// Vue.prototype.$confirm = MessageBox.confirm
+// Vue.prototype.$prompt = MessageBox.prompt
+// Vue.prototype.$notify = Notification
+// Vue.prototype.$message = Message
 
 Vue.use(elementUi);
 Vue.use(iView);
 
 Vue.config.productionTip = false
+// debugger
 
-//router.beforeEach((to, from, next) => {
-///* 路由发生变化修改页面title */
-//if (to.meta.title) {
-//  document.title = to.meta.title
-//}
-//next()
-//})
 
 /* eslint-disable no-new */
 new Vue({

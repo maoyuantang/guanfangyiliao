@@ -49,11 +49,6 @@
           </table>
         </div>
         <div class="pagination-div">
-          <!-- :page-size="10"
-                @current-change="listSelectPage"
-                :current-page="parseInt(listCondition.page.pageNum)"
-                v-if="listCondition.page.total!=0"
-          :total="listCondition.page.total"-->
           <el-pagination
             background
             layout="prev, pager, next"
@@ -69,7 +64,6 @@
         <div class="right-model-head">
           <div class="right-model-head-flag">
             <div>
-              <!-- {{outerCourt.hospital}} -->
               <selftag @reback="outerCourtUserHospitalSelect" v-model="outerCourt.hospital"></selftag>
               <selftag @reback="outerCourtUserDepartmentSelect" v-model="outerCourt.department"></selftag>
             </div>
@@ -110,11 +104,17 @@
             </tbody>
           </table>
           <div class="pagination-div">
-          <!-- :page-size="10"
-                @current-change="listSelectPage"
-                :current-page="parseInt(listCondition.page.pageNum)"
-                v-if="listCondition.page.total!=0"
-          :total="listCondition.page.total"-->
+            <el-pagination
+              background
+              layout="prev, pager, next"
+              :page-size="ourStaff.ourStaffUser.page.pageSize"
+              :current-page="ourStaff.ourStaffUser.page.pageNum"
+              :total="ourStaff.ourStaffUser.page.total"
+              v-if="ourStaff.ourStaffUser.page.total!=0"
+              @current-change="ourStaffChangePage"
+            ></el-pagination>
+          </div>
+          <div class="pagination-div">
           <el-pagination
             background
             layout="prev, pager, next"
@@ -125,11 +125,6 @@
             @current-change="outerCourtChangePage"
           ></el-pagination>
         </div>
-          <!-- <publicList
-            :tableData="inviteModules.tableData"
-            :columns="inviteModules.columns"
-            :tableBtn="inviteModules.tableBtn"
-          ></publicList>-->
         </div>
       </div>
     </el-tabs>
@@ -252,10 +247,6 @@
           <el-button type="primary" @click="submission">确定</el-button>
         </div>
       </div>
-      <!-- <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span>-->
     </el-dialog>
 
     <!-- 院外协作人员 弹窗 -->
@@ -306,8 +297,6 @@
 <script>
 import { mapState } from "vuex";
 import selftag from "../../../public/publicComponents/selftag.vue";
-import markLayer from "../../../public/publicComponents/markLayer.vue";
-import publicList from "../../../public/publicComponents/publicList.vue";
 import selectTree from "../../../public/publicComponents/selectTree.vue";
 import sensitiveWordCheck from "../../../public/publicJs/sensitiveWordCheck.js";
 import search from "../../../public/publicComponents/search.vue";
@@ -383,7 +372,7 @@ export default {
           list:[]
         },
         page: {  
-          //页码相关
+          //页码相关   
           pageSize: 10, //每页多少数据
           pageNum: 1, //当前页
           total: 0 //总条数
@@ -442,92 +431,6 @@ export default {
         },
       },
       tabPosition: "left",
-      /********************************** */
-
-      inviteModules: {
-        columns: [
-          {
-            prop: "hospital",
-            label: "医院"
-          },
-          {
-            prop: "department",
-            label: "科室"
-          },
-          {
-            prop: "name",
-            label: "姓名"
-          },
-          // {
-          //     prop:"age",
-          //     label:"年龄"
-          // },
-          {
-            prop: "accountNumber",
-            label: "账号"
-          },
-          {
-            prop: "phone",
-            label: "手机号"
-          },
-          {
-            prop: "businessScope",
-            label: "业务范围"
-          },
-          {
-            prop: "enterTime",
-            label: "入住时间"
-          }
-        ],
-        tableData: [
-          {
-            id: "91F0B9D25A474B6FA0CDBAC872035984",
-            hospital: "重庆冠方智慧医院",
-            department: "急诊科",
-            name: "Verge",
-            accountNumber: "201805261024526",
-            phone: "一连串字符",
-            businessScope: "10",
-            enterTime: "2018-03-22"
-          },
-          {
-            id: "91F0B9D25A474B6FA0CDBAC872035984",
-            hospital: "重庆冠方智慧医院",
-            department: "急诊科",
-            name: "Verge",
-            accountNumber: "201805261024526",
-            phone: "一连串字符",
-            businessScope: "10",
-            enterTime: "2018-03-22"
-          },
-          {
-            id: "91F0B9D25A474B6FA0CDBAC872035984",
-            hospital: "重庆冠方智慧医院",
-            department: "急诊科",
-            name: "Verge",
-            accountNumber: "201805261024526",
-            phone: "一连串字符",
-            businessScope: "10",
-            enterTime: "2018-03-22"
-          }
-        ],
-        tableBtn: [
-          {
-            name: "新增",
-            method: (index, row) => {
-              console.log(index);
-              console.log(row);
-              // this.handleDel(index, row);
-            }
-          },
-          {
-            name: "编辑",
-            method: (index, row) => {
-              this.handleDel(index, row);
-            }
-          }
-        ]
-      }
     };
   },
   watch: {
@@ -575,8 +478,6 @@ export default {
      * 院外协作人员 弹窗 被提交
      */
     outerCourtAlertSub(){
-      console.log('enter')
-      console.log()
       this.outerCourtAlert.type===0?this.outerCourtNew():this.outerCourtModify();
     },
     /**
@@ -586,12 +487,11 @@ export default {
       const postData = [
         {token: this.userInfo.token},
         {
-          userId:this.outerCourtAlert.account,
+          account:this.outerCourtAlert.account,
           deptId:this.outerCourtAlert.range.select
         }
       ];
       const res = await synergyManageInvite(...postData);
-      console.log(res);
       if (res.data && res.data.errCode === 0) {
         this.$notify({
           title: "成功",
@@ -620,7 +520,6 @@ export default {
       this.outerCourtAlert.type = 0;
       this.outerCourtAlert.account = '';
       this.outerCourtAlert.range.select = [];
-      done()
     },
     /**
      * 外院 分页 选择
@@ -633,7 +532,6 @@ export default {
      * 外院 科室 被选中
      */
     outerCourtUserDepartmentSelect(data){
-      console.log(data);
       this.outerCourt.departmentSelect = data.index;
       this.getSynergyManageList();
     },
@@ -641,7 +539,6 @@ export default {
      * 外院 医院 被选中
      */
     outerCourtUserHospitalSelect(data) {
-      console.log(data);
       this.outerCourt.hospitalSelect = data.index;
       this.getSynergyManageList();
     },
@@ -656,7 +553,6 @@ export default {
         query: this.outerCourt.searchKey,
         departmentId: this.outerCourt.departmentSelect.orgCode || ""
       });
-      console.log(res);
       if (res.data.errCode === 0) {
         this.outerCourt.list = res.data.body.data2.list;
         this.outerCourt.page.total = res.data.body.data2.total;
@@ -665,10 +561,6 @@ export default {
           title: "院外协作列表获取失败",
           message: res.data.errMsg
         });
-        // return {
-        //   success: false,
-        //   data: null
-        // };
       }
     },
     /**
@@ -704,7 +596,6 @@ export default {
      * 本院人员 页码被选中
      */
     ourStaffChangePage(data) {
-      console.log(data);
       this.ourStaff.page.pageNum = data;
       this.getUserList();
     },
@@ -712,13 +603,11 @@ export default {
      * 修改用户信息
      */
     async modifyUserInfo(item) {
-      console.log(item);
       const res = await this.getUserInfo({
         token: this.userInfo.token,
         userId: item.id,
         oneself: item.id === this.userSelfInfo.userId
       });
-      console.log(res);
       if (res.success) {
         this.ourStafAlert.type = 1;
         (this.ourStafAlert.data.userId = res.data.userId),
@@ -728,9 +617,6 @@ export default {
         this.ourStafAlert.data.department.select = res.data.depts.map(
           item => item.deptId
         );
-        // this.ourStafAlert.data.manDepartment.select =
-        //   res.data.managerDepts[0].deptId;
-
         this.ourStafAlert.data.docBus.select = res.data.systemBusList.map(
           item => {
             item.id = item.subCode;
@@ -744,7 +630,6 @@ export default {
           return item;
         });
         this.ourStafAlert.show = true;
-        console.log(this.ourStafAlert);
       }
     },
     /**
@@ -752,7 +637,6 @@ export default {
      */
     async getUserInfo(data) {
       const res = await userInfo(data);
-      console.log(res);
       if (res.data.errCode === 0) {
         return {
           success: true,
@@ -773,7 +657,6 @@ export default {
      * 获取 医生业务范围 选中
      */
     getOurStafManbus(data) {
-      console.log(data);
       this.ourStafAlert.data.manbus.select = data;
     },
     /**
@@ -781,8 +664,6 @@ export default {
      */
     getOurStafDocBus(data) {
       this.ourStafAlert.data.docBus.select = data;
-      console.log(data);
-      // .map(element => element.id);
       return;
       console.log(data);
       let mid = deepCopy(this.ourStafAlert.data.docBus.list);
@@ -1008,10 +889,6 @@ export default {
      * 新增用户
      */
     async addSub() {
-      // this.ourStafAlert.type = 1;
-      // console.log(this.ourStafAlert)
-      // return
-      // const postData = this.getAddSubData();
       const postData = {
         account: this.ourStafAlert.data.account,
         name: this.ourStafAlert.data.name,
@@ -1101,8 +978,6 @@ export default {
       });
       if (res.data.errCode === 0) {
         this.ourStafAlert.data.docBus.list = res.data.body;
-        // this.DoctorBusinessScope = res.data.body;
-        // console.log(this.DoctorBusinessScope)
       } else {
         this.$notify.error({
           title: "数据获取失败",
@@ -1126,17 +1001,6 @@ export default {
           item.label = item.subName;
           return item;
         });
-
-        // this.DepartmentManagementAuthority = res.data.body.map(item=>{
-        //     return Object.assign({},{
-        //        children:[],
-        //        id:item.subCode,
-        //        label:item.subName,
-        //        select:item.checkbox
-        //     },item)
-        // });
-        // this.DepartmentManagementAuthority = res.data.body;
-        // console.log( this.DepartmentManagementAuthority)
       } else {
         this.$notify.error({
           title: "数据获取失败",
@@ -1153,7 +1017,7 @@ export default {
         token: this.userInfo.token,
         pageNum: this.ourStaff.ourStaffUser.page.pageNum,
         pageSize: this.ourStaff.ourStaffUser.page.pageSize,
-        departmentId: this.ourStaff.departmentSelect
+        departmentId: this.ourStaff.departmentSelect.deptId || ''
       });
       if (res.data && res.data.errCode === 0) {
         console.log(res);
@@ -1161,18 +1025,6 @@ export default {
         this.ourStaff.ourStaffUser.page.total = res.data.body.data2.size;
       } else {
       }
-
-      // const res = await synergyManageList({
-      //     token:this.userInfo.token,
-      //     pageNum:this.ourStaff.page.currentPage,
-      //     pageSize:this.ourStaff.page.pageSize,
-      // });
-      // console.log(res);
-      // if(res.data && res.data.errCode === 0){
-
-      // }else{
-
-      // }
     },
     /**
      * 本院人员 搜索框搜索
@@ -1180,26 +1032,13 @@ export default {
     async ourStaffSearchChange(data) {
       console.log(data);
     },
-    /******************** */
-    gitIndex(index) {
-      console.log(456);
-      // console.log(index)
-    },
-
-    inviteSub() {
-      console.log("邀请");
-    },
-    alertStatus(num) {},
     ourStaffDepartmentSelect(data) {
       this.ourStaff.departmentSelect = data.index;
       this.getUserList();
-      console.log(data);
     }
   },
   components: {
     selftag,
-    markLayer,
-    publicList,
     selectTree,
     search
   },
@@ -1210,7 +1049,6 @@ export default {
     this.getUserList();
     this.setHospitalList(this.global.allHospital);
     this.getSynergyManageList();
-    // console.log(this.$store.state.user)
   }
 };
 </script>

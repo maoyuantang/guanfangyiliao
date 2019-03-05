@@ -12,8 +12,6 @@
                     </DropdownMenu>
                 </Dropdown>
             </div>
-            
-            
             <div class="public-info-module-layout-top">
                 <div class="public-info-module-logo"><span class="public-info-module-logo-content" :style="{color:inData.color,borderColor:inData.color,background:inData.bgColor}">{{inData.logoName}}</span></div>
                 <div class="public-info-module-Introduction">
