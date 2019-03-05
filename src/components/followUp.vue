@@ -315,10 +315,15 @@
                                         </el-form-item>
 
                                         <el-form-item label="所属分类" class="classification">
-                                            <el-input v-model="mydTemlateName.title">dfdfdfd</el-input>
-                                            <div class="mydAddSuosuClass">
+                                            <div class="ificationBox">
+                                                <el-input v-model="mydTemlateName.title">dfdfdfd</el-input>
+                                                <div @click="ificationBoxClick()">
+                                                    <img src="../../static/assets/img/downXia.png" />
+                                                </div>
+                                            </div>
+                                            <div class="mydAddSuosuClass" v-show="mydAddSuosuClassVis">
                                                 <ul>
-                                                    <li v-for="(text1,index1) in oTab66.list" :key="index1" :value="text1.value" @click="sendTemplateList('',text1.value)">
+                                                    <li v-for="(text1,index1) in oTab66.list" :key="index1" :value="text1.value" @click="sendTemplateList1(text1.value)">
                                                         {{text1.text}}>
                                                     </li>
 
@@ -333,7 +338,6 @@
                                                     {{mydTemlateName.context}}
                                                 </div>
                                             </div>
-                                            <!-- <el-cascader :options="mydAddoptions" v-model="associationId" @active-item-change="handleChange" :props="props" ></el-cascader> -->
                                         </el-form-item>
                                     </div>
                                     <span>
@@ -465,7 +469,6 @@
                         <statisticsWay @reBack="tjTimeValueFun"></statisticsWay>
                     </div>
                     <div style="display:flex">
-                        {{drawData}} {{drawData1}}
                         <normalColumnChart :inData="drawData"> </normalColumnChart>
                         <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
 
@@ -1251,7 +1254,8 @@ export default {
             myFollowList: [],
             myFollowVisable: true,
             followDetailData: {},
-            followDetailVisible: false
+            followDetailVisible: false,
+            mydAddSuosuClassVis:false,
         };
     },
     computed: {
@@ -1359,12 +1363,12 @@ export default {
             }
         },
         //满意度新增模板借口
-        async handleChange(value) {
-            console.log(value);
+        // async handleChange(value) {
+        //     console.log(value);
 
-            this.sendTemplateList(value, "");
-            console.log(this.mydTemplateTitle);
-        },
+        //     this.sendTemplateList1(value, "");
+        //     console.log(this.mydTemplateTitle);
+        // },
         onEditorReady(editor) {},
 
         //筛选
@@ -1687,29 +1691,39 @@ export default {
             }
         },
         //满意度调查发送模板3
-        async sendTemplateList(value, mydTemplateType) {
+        async sendTemplateList(){
             this.templateVisible = true;
-            if (value) {
-                this.mydType = value[0];
-                this.templateVisible = false;
-            }
-            if (mydTemplateType) {
-                this.templateVisible = false;
-            }
 
             let _this = this;
             let query = {
                 token: this.userState.token,
-                type: mydTemplateType
+                type: ""
             };
             const res = await getTitleList(query);
             if (res.data && res.data.errCode === 0) {
                 this.mydTemplateTitle = res.data.body;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        async sendTemplateList1(value) {
+            console.log(value)
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                type: value
+            };
+            const res = await getTitleList(query);
+            if (res.data && res.data.errCode === 0) {
                 this.mydTemlateName.nameList = res.data.body;
-                if (value) {
-                    if (value[0] == "OUTPATIENT") {
+                 console.log(value)
+                    if (value == "OUTPATIENT") {
                         _this.mydAddoptions[0].cities = [];
-
+                        console.log(value)
                         $.each(res.data.body, function(index, text) {
                             _this.mydAddoptions[0].cities.push({
                                 value: text.associationId,
@@ -1723,7 +1737,7 @@ export default {
                                 ]
                             });
                         });
-                    } else if (value[0] == "MEDICALTECHNOLOGY") {
+                    } else if (value == "MEDICALTECHNOLOGY") {
                         _this.mydAddoptions[1].cities = [];
                         $.each(res.data.body, function(index, text) {
                             _this.mydAddoptions[1].cities.push({
@@ -1737,7 +1751,7 @@ export default {
                                 ]
                             });
                         });
-                    } else if (value[0] == "INHOSPITAL") {
+                    } else if (value == "INHOSPITAL") {
                         _this.mydAddoptions[2].cities = [];
                         $.each(res.data.body, function(index, text) {
                             _this.mydAddoptions[1].cities.push({
@@ -1751,7 +1765,7 @@ export default {
                                 ]
                             });
                         });
-                    } else if (value[0] == "ADMINISTRATION") {
+                    } else if (value == "ADMINISTRATION") {
                         _this.mydAddoptions[3].cities = [];
                         $.each(res.data.body, function(index, text) {
                             _this.mydAddoptions[1].cities.push({
@@ -1765,7 +1779,7 @@ export default {
                                 ]
                             });
                         });
-                    } else if (value[0] == "URL") {
+                    } else if (value == "URL") {
                         _this.mydAddoptions[4].cities = [];
                         $.each(res.data.body, function(index, text) {
                             _this.mydAddoptions[1].cities.push({
@@ -1779,7 +1793,7 @@ export default {
                                 ]
                             });
                         });
-                    } else if (value[0] == "MEDICALTECHNOLOGY") {
+                    } else if (value == "MEDICALTECHNOLOGY") {
                         _this.mydAddoptions[1].cities = [];
                         $.each(res.data.body, function(index, text) {
                             _this.mydAddoptions[1].cities.push({
@@ -1793,7 +1807,7 @@ export default {
                                 ]
                             });
                         });
-                    } else if (value[0] == "MEDICALTECHNOLOGY") {
+                    } else if (value == "MEDICALTECHNOLOGY") {
                         _this.mydAddoptions[1].cities = [];
                         $.each(res.data.body, function(index, text) {
                             _this.mydAddoptions[1].cities.push({
@@ -1808,7 +1822,6 @@ export default {
                             });
                         });
                     }
-                }
             } else {
                 //失败
                 this.$notify.error({
@@ -1845,17 +1858,21 @@ export default {
             this.mydTemplateTitle.splice(index, 1);
             this.sendTemplateId.push(text.associationId);
             this.sendTemplate1.push(text);
+            console.log(this.sendTemplateId)
         },
         //删除满意度模板
         deleteMydTemplate(index, text) {
             this.sendTemplate1.splice(index, 1);
-            let oindex = sendTemplateId.indexOf(text.associationId);
+            let oindex = this.sendTemplateId.indexOf(text.associationId);
             this.sendTemplateId.splice(oindex, 1);
             this.mydTemplateTitle.push(text);
+            console.log(this.sendTemplateId)
         },
         getUserId(row) {
-            $.each(row, (text, index) => {
-                this.userList.push(text.userId);
+            console.log(row)
+            let _this=this;
+            $.each(row, (index, text) => {
+                _this.userList.push(text.userId);
             });
         },
         //发送模板
@@ -2313,6 +2330,9 @@ export default {
             this.oQueryList();
             this.oQueryArticleList();
         },
+        searchChange(){
+
+        },
         //删除
         async docFollowDelete(deleteFunName, index, row, num) {
             let _this = this;
@@ -2658,6 +2678,14 @@ export default {
             this.imageUrl = URL.createObjectURL(file.raw);
             this.addArticleData.pictureId = res.body;
             console.log(this.addArticleData.pictureId);
+        },
+        //满意度新增模板跳出
+        ificationBoxClick() {
+            if (this.mydAddSuosuClassVis) {
+                this.mydAddSuosuClassVis = false;
+            } else {
+                this.mydAddSuosuClassVis = true;
+            }
         },
         //满意度饼图
         async oGetResultGraph() {
@@ -3225,5 +3253,19 @@ export default {
     color: #909191;
     text-align: center;
     line-height: 17px;
+}
+.ificationBox {
+    position: relative;
+}
+.ificationBox > div:last-child {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 8px;
+    top: 0px;
+}
+.ificationBox > div:last-child > img {
+    width: 100%;
+    height: 100%;
 }
 </style>

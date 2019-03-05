@@ -1,9 +1,18 @@
 <template>
     <div>
-        <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose">
+        <!-- <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose">
             <div>
                 <button @click="receiveVideo()">接收</button>
                 <button @click="refuseVideo()">拒绝</button>
+            </div>
+        </el-dialog> -->
+        <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose">
+            <div>
+                <h4>某某某要求你视频</h4>
+                <div>
+                    <button @click="receiveVideo()">接收</button>
+                    <button @click="refuseVideo()">拒绝</button>
+                </div>
             </div>
         </el-dialog>
         <!-- 视频聊天 -->
@@ -18,7 +27,7 @@ import ovideo from "../video/oVideo.vue";
 import apiBaseURL from "../enums/apiBaseURL.js";
 import { mapState } from "vuex";
 import protobuf from "protobufjs";
-import { storageUsers,fetchSyncInfo,userInfo } from "../api/apiAll.js";
+import { storageUsers, fetchSyncInfo, userInfo } from "../api/apiAll.js";
 
 export default {
     components: {
@@ -89,6 +98,8 @@ export default {
     methods: {
         receiveVideo() {
             this.closeVideoOr("ON");
+            this.sendMessageChat('6', 'accept')
+             this.$store.commit("socket/IFVIDEOIMG", 1);
         },
         refuseVideo() {
             this.receiveVideoVisable = false;
@@ -109,10 +120,10 @@ export default {
             const res = await fetchSyncInfo(query);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
-                let oUserSelfInfo=this.userSelfInfo;
-                oUserSelfInfo.currMaxVersion=res.data.body.currMaxVersion
+                let oUserSelfInfo = this.userSelfInfo;
+                oUserSelfInfo.currMaxVersion = res.data.body.currMaxVersion;
                 this.$store.commit("user/SETUSERSELFINFO", oUserSelfInfo);
-               this.$store.commit("socket/SYNCHROIMESSAGE", res.data.body);
+                this.$store.commit("socket/SYNCHROIMESSAGE", res.data.body);
             } else {
                 //失败
                 this.$notify.error({
@@ -376,23 +387,10 @@ export default {
                 return false;
             } else if (RequestType == 0) {
                 //同步
-                // let Iessage = {
-                //     RequestType: 100,
-                //     ticket: this.$store.state.socket.messageTicket.ticket,
-                //     status: {
-                //         state: true,
-                //         msgId: "", //客户端上接收到最后一条消息的ID号
-                //         sequence: this.$store.state.socket.messageTicket
-                //             .sequence //客户端上发送最后一条消息的序号
-                //     }
-                // };
-                // this.sendMessage(Iessage);
-                this.pullSynchro()
+                this.pullSynchro();
                 return false;
             } else if (RequestType == 6) {
                 this.sessionId = odata.info.to;
-                console.log("run");
-                this.$emit("reloaddata");
                 console.log(odata.info.body);
                 let fromL = odata.info.from;
                 if (fromL != this.userSelfInfo.userId) {
@@ -416,10 +414,7 @@ export default {
 
                     this.$store.commit("socket/MSGBOX", odata);
                     let _this = this;
-                    this.createVideoRoomData = {
-                        conferenceId: odata.info.body.split("&")[2],
-                        conferenceNumber: odata.info.body.split("&")[1]
-                    };
+
                     console.log(
                         odata.info.body + "和" + odata.info.body.split("&")[1]
                     );
@@ -430,54 +425,55 @@ export default {
                     if (childMessageType == 6 || childMessageType == 8) {
                         if (bodyVideo == "refuse") {
                             //拒绝视频
-                            content =
-                                '<div style="color:#F60">拒绝了视频通话</div>';
-                            layer.msg("拒绝了视频通话");
+                            // content =
+                            //     '<div style="color:#F60">拒绝了视频通话</div>';
+                            // layer.msg("拒绝了视频通话");
                         } else if (bodyVideo == "cancle") {
-                            var videosessionid = layui.data("videosessionid")
-                                .id;
-                            if (videosessionid == fromL) {
-                                var music = document.getElementById(
-                                    "audioPlay"
-                                );
-                                music.pause();
-                                content =
-                                    '<div style="color:#fff">取消了视频通话</div>';
-                                if (count == 0) {
-                                    layer.msg("取消了视频通话");
-                                    $(".closediV").hide();
-                                    $(".vidoefix").remove();
-                                    $(".viedoe").remove();
-                                    setTimeout(function() {
-                                        layer.closeAll(); //疯狂模式，关闭所有层
-                                    }, 500);
-                                }
-                            }
+                            _this.receiveVideoVisable = false;
+                            // var videosessionid = layui.data("videosessionid")
+                            //     .id;
+                            // if (videosessionid == fromL) {
+                            //     var music = document.getElementById(
+                            //         "audioPlay"
+                            //     );
+                            //     music.pause();
+                            //     content =
+                            //         '<div style="color:#fff">取消了视频通话</div>';
+                            //     if (count == 0) {
+                            //         layer.msg("取消了视频通话");
+                            //         $(".closediV").hide();
+                            //         $(".vidoefix").remove();
+                            //         $(".viedoe").remove();
+                            //         setTimeout(function() {
+                            //             layer.closeAll(); //疯狂模式，关闭所有层
+                            //         }, 500);
+                            //     }
+                            // }
                             return false;
                         } else if (bodyVideo.indexOf("videoing") > -1) {
-                            layer.msg("对方正在视频通话中");
+                            // layer.msg("对方正在视频通话中");
                             return;
                         } else if (bodyVideo.indexOf("complete") > -1) {
-                            layui.data("selectRoomStateNw", {
-                                key: "sessionId",
-                                remove: true
-                            });
-                            layui.data("videoing", {
-                                key: "videoing",
-                                value: "false"
-                            });
-                            content =
-                                '<div style="color:#373C38">视频通话已结束</div>';
-                            sessionStorage.setItem("joinroom", "false"); //判断进入房间
-                            layer.msg("对方挂断视频");
+                            // layui.data("selectRoomStateNw", {
+                            //     key: "sessionId",
+                            //     remove: true
+                            // });
+                            // layui.data("videoing", {
+                            //     key: "videoing",
+                            //     value: "false"
+                            // });
+                            // content =
+                            //     '<div style="color:#373C38">视频通话已结束</div>';
+                            // sessionStorage.setItem("joinroom", "false"); //判断进入房间
+                            // layer.msg("对方挂断视频");
                         } else if (
                             bodyVideo.indexOf("MicroCinic&hangup") > -1
                         ) {
                         } else if (bodyVideo.indexOf("accept") > -1) {
-                            count++;
-                            acceptrom = "complete&time=";
-                            content =
-                                '<div style="color:#373C38">接受了视频聊天</div>';
+                            // count++;
+                            // acceptrom = "complete&time=";
+                            // content =
+                            //     '<div style="color:#373C38">接受了视频聊天</div>';
                         } else if (
                             bodyVideo.indexOf("sendroom") > -1 ||
                             bodyVideo.indexOf("MicroCinicSendRoom") > -1
@@ -486,15 +482,24 @@ export default {
                                 odata.info.body.split("&")[3] ==
                                 this.userSelfInfo.userId
                             ) {
-                                this.$notify({
-                                    title: "请注意",
-                                    message: "您有一条视频消息请点开查看！",
-                                    position: "bottom-right",
-                                    duration: 0,
-                                    onClick() {
-                                        _this.receiveVideoVisable = true;
-                                    }
-                                });
+                                this.createVideoRoomData = {
+                                    conferenceId: odata.info.body.split("&")[2],
+                                    conferenceNumber: odata.info.body.split(
+                                        "&"
+                                    )[1]
+                                };
+                                _this.receiveVideoVisable = true;
+                                // this.$notify({
+                                //     title: "请注意",
+                                //     message: "您有一条视频消息请点开查看！",
+                                //     position: "bottom-right",
+                                //     duration: 0,
+                                //     showClose: oshowClose,
+                                //     onClick() {
+                                //         _this.receiveVideoVisable = true;
+                                //     },
+                                //     onClose() {}
+                                // });
                             }
 
                             // var videoing = layui.data("videoing").videoing;
@@ -952,9 +957,9 @@ export default {
                     var fromUserid = odata.info.from;
                     var timestamp = odata.info.clientTime;
                     var mine = false;
-                    if (fromUserid == userId) {
-                        mine = true;
-                    }
+                    // if (fromUserid == userId) {
+                    //     mine = true;
+                    // }
                     if (userSeesion.indexOf(fromid) > -1) {
                         var type = "group";
                     } else {
@@ -1227,7 +1232,7 @@ export default {
         //     this.$emit("getMessageTicket", messageTicket);
         // }
     },
-        watch: {
+    watch: {
         "userSocketInfo.synchroMessage": {
             handler(n, o) {
                 let _this = this;
@@ -1241,7 +1246,7 @@ export default {
                 });
             }
         }
-    },
+    }
 };
 </script>
 
