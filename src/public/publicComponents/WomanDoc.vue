@@ -4,6 +4,7 @@
     :visible.sync="inData.show"
     :fullscreen="false"
     :before-close="pregnantWomanDocClose"
+    append-to-body
 >
 <div class="norDoc">
     <div class="doc-item">

@@ -5,9 +5,9 @@
                 <img src="../../../static/assets/img/随访计划@2x.png" alt="" srcset="">
             </div>
             <div class="doc-nor-item-right">
-                <p class="doc-nor-item-title">住院处方</p>
-                <p class="doc-nor-item-time">最近一次处方时间 </p>
-                <p class="doc-nor-item-text">此处显示最近一次处方门诊医生的处理意见或者医嘱或者其他 反正是留一段字符 备用</p>
+                <p class="doc-nor-item-title">随访计划</p>
+                <p class="doc-nor-item-time">{{followUp.nearDate || 'empty'}} </p>
+                <p class="doc-nor-item-text" v-for="(item,index) in followUp.content" :key="index">{{item}}</p>
             </div>
         </div>
 
@@ -16,7 +16,7 @@
                 <img src="../../../static/assets/img/风险自评@2x.png" alt="" srcset="">
             </div>
             <div class="doc-nor-item-right">
-                <p class="doc-nor-item-title">住院处方</p>
+                <p class="doc-nor-item-title">风险评估</p>
                 <p class="doc-nor-item-time">最近一次处方时间 </p>
                 <p class="doc-nor-item-text">此处显示最近一次处方门诊医生的处理意见或者医嘱或者其他 反正是留一段字符 备用</p>
             </div>
@@ -27,9 +27,9 @@
                 <img src="../../../static/assets/img/设备自测@2x.png" alt="" srcset="">
             </div>
             <div class="doc-nor-item-right">
-                <p class="doc-nor-item-title">住院处方</p>
-                <p class="doc-nor-item-time">最近一次处方时间 </p>
-                <p class="doc-nor-item-text">此处显示最近一次处方门诊医生的处理意见或者医嘱或者其他 反正是留一段字符 备用</p>
+                <p class="doc-nor-item-title">设备自测</p>
+                <p class="doc-nor-item-time">{{selfTest.nearlyDate}} </p>
+                <p class="doc-nor-item-text">{{selfTest.data}}</p>
             </div>
         </div>
 
@@ -38,7 +38,7 @@
                 <img src="../../../static/assets/img/上传@2x.png" alt="" srcset="">
             </div>
             <div class="doc-nor-item-right">
-                <p class="doc-nor-item-title">住院处方</p>
+                <p class="doc-nor-item-title">上传档案</p>
                 <p class="doc-nor-item-time">最近一次处方时间 </p>
                 <p class="doc-nor-item-text">此处显示最近一次处方门诊医生的处理意见或者医嘱或者其他 反正是留一段字符 备用</p>
             </div>
@@ -47,24 +47,83 @@
 </template>
 
 <script>
+    import { mapState } from "vuex"
+    import { nearlyFollowup, nearlyDevice } from '../../api/apiAll.js'
 	export default {
+        props:[
+            "inData"
+        ],
 		watch:{
 			
 		},
 		data () {
 			return {
-				
+				followUp:{//随访
+                    nearDate:'',//最近时间
+                    content:[],//内容
+                },
+                selfTest:{//设备自测
+                    nearlyDate:'',
+                    data:''
+                }
 			}
 		},
 		computed:{
-			
+			...mapState({
+                userState: state => state.user.userInfo,
+                userSelfInfo:state => state.user.userSelfInfo, 
+                global: state => state.global
+            }),
 		},
 		methods:{
+            /**
+             * 获取 成员最近随访
+             */
+            async getNearlyFollowup(){
+                const res = await nearlyFollowup({
+                    token: this.userState.token,
+                    userId:this.inData.userId,
+                    memberId:this.inData.id
+                });
+                console.log(res);
+                if (res.data && res.data.errCode === 0){
+                    this.followUp = res.data.body;
+                }else{
+                    this.$notify({
+						title: '失败',
+						message: '随访计划获取失败',
+						type: 'error'
+					});
+                }
+            },
+            /**
+             * 获取 成员最近自测 
+             */
+            async nearlyDevice(){
+                const res = await nearlyDevice({
+                    token: this.userState.token,
+                    userId:this.inData.userId,
+                    memberId:this.inData.id
+                });
+                console.log(res);
+                if (res.data && res.data.errCode === 0){
+                    this.selfTest = res.data.body;
+                }else{
+                    this.$notify({
+						title: '失败',
+						message: '设备自测获取失败',
+						type: 'error'
+					});
+                }
+            },
 		},
 		components:{
             
 		},
 		async created(){
+            console.log(this.inData);
+            this.getNearlyFollowup();
+            this.nearlyDevice();
 		}
 	}
 </script>
@@ -97,6 +156,7 @@
         margin-top: 0.28rem;
         color: var(--color18);
         line-height: 0.22rem;
+        font-weight: bold;
     }
     .doc-nor-item-time{
         font-family: var(--fontFamily3);

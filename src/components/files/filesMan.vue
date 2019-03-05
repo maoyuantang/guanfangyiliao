@@ -35,15 +35,31 @@
                 <th>{{item.userName || '暂缺'}}</th>
                 <th>{{item.phone || '暂缺'}}</th>
                 <th>{{item.recordId || '暂缺'}}</th>
-                <th>{{item.recordType || '暂缺'}}</th>
-                <th>{{item.recordUserName || '暂缺'}}</th>
+                <th class="limit-size">
+                  <el-tooltip class="item" effect="light" :content="item.recordType" placement="top">
+                    <div>{{item.recordType.length>7?`${item.recordType.substring(0,7)}...`:item.recordType}}</div>
+                  </el-tooltip>
+                </th>
+                <th>
+                  <el-tooltip class="item" effect="light" :content="item.recordUserName" placement="top">
+                    <div>{{item.recordUserName.length>7?`${item.recordUserName.substring(0,7)}...`:item.recordUserName}}</div>
+                  </el-tooltip>
+                  </th>
                 <th>{{item.type || '暂缺'}}</th>
-                <th>{{item.extractType || '暂缺'}}</th>
-                <th>{{item.createTime || '暂缺'}}</th>
+                <th>
+                  <el-tooltip class="item" effect="light" :content="item.extractType" placement="top">
+                    <div>{{item.extractType.length>7?`${item.extractType.substring(0,7)}...`:item.extractType}}</div>
+                  </el-tooltip>
+                </th>
+                <th>
+                  <el-tooltip class="item" effect="light" :content="item.createTime" placement="top">
+                    <div>{{item.createTime.length>7?`${item.createTime.substring(0,7)}...`:item.createTime}}</div>
+                  </el-tooltip>
+                </th>
               </tr>
             </tbody>
           </table>
-          <div>
+          <div class="files-man-page">
             <el-pagination
               background
               layout="prev, pager, next"
@@ -539,17 +555,22 @@ export default {
 .files-man-body-list-table {
   width: 100%;
 }
+.files-man-body-list-table tr{
+  display: flex;
+}
 .files-man-body-list-table th {
   border-bottom: 1px solid var(--color5);
   padding-top: 0.12rem;
   padding-bottom: 0.1rem;
+  flex:1;
 }
 .files-man-body-list-thead th {
   color: var(--color3);
   letter-spacing: 0;
+  font-size: 13px;
 }
-.files-man-body-list-body th {
-  font-family: var(--fontFamily3);
+.files-man-body-list-tbody th {
+  /* font-family: var(--fontFamily3); */
   font-size: var(--fontSize1);
   color: var(--color3);
   letter-spacing: 0;
@@ -560,5 +581,14 @@ export default {
 }
 .files-man-chart-body{
   display: flex;
+}
+.files-man-page{
+  text-align: center;
+}
+.limit-size>button{
+  border: none;
+  font-size: var(--fontSize1);
+  color: var(--color3);
+  letter-spacing: 0;
 }
 </style>
