@@ -1262,6 +1262,30 @@
       border-left: 1px solid #e7edf3;
       padding: 0 0 0 0.3rem;
       width: 70%;
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      .dian {
+          position: absolute;
+          font-size: 30px;
+        top: 2%;
+        right: 2%;
+          transform: rotate(90deg);
+          cursor: pointer
+        }
 
       .patientDetail {
         display: flex;
@@ -1269,14 +1293,7 @@
         justify-content: space-around;
         margin: 0.18rem 0 0 0;
 
-        .dian {
-          position: absolute;
-          font-size: 30px;
-          top: 0%;
-          right: 0%;
-          transform: rotate(90deg);
-          cursor: pointer
-        }
+        
 
         .name {
           margin: 5% 0 0 0;

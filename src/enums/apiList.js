@@ -270,5 +270,7 @@ export default {
     signUp:'/m/v1/api/inquiry/eduLearn/signUp',//12.6 报名
     intoClassroom:'/m/v1/api/inquiry/eduLearn/intoClassroom',//12.5 进入学习（临时）
     intoPlatform:'/m/v1/api/inquiry/eduLearn/intoPlatform',//12.4 进入教学（临时）
+    nearlyFollowup:'/m/v1/api/followup/followupPlan/nearlyFollowup',//1.医生查看成员最近随访
+    nearlyDevice:'/m/v1/api/device/house/nearlyDevice',//1.医生查看成员最近自测
 }
 

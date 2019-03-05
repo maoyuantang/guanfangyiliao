@@ -39,6 +39,9 @@
 
 <script>
 	export default {
+        props:[
+            "inData"
+        ],
 		watch:{
 			
 		},
@@ -56,6 +59,7 @@
             
 		},
 		async created(){
+            console.log(this.inData)
 		}
 	}
 </script>
