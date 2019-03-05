@@ -1,3 +1,8 @@
+<!-- 
+  医生端   新增弹框内的病例授权、病人列表都没得接口，而且多选的输入框在编辑状态下都无法正常显示
+ -->
+
+
 <!--双向转诊系统-->
 <template>
   <div class="referral">
@@ -138,8 +143,8 @@
                 <template slot-scope="scope">
                   <el-button @click="dualReferralRecord1(scope.row)" type="success" plain size="mini"
                     style="margin:0.05rem 0 0.05rem 0;">查看记录</el-button>
-                  <el-button @click="viewFile2(scope.row)" type="warning" plain size="mini"
-                    style="margin:0.05rem 0 0.05rem 0;">查看反馈</el-button>
+                  <!-- <el-button @click="viewFile2(scope.row)" type="warning" plain size="mini"
+                    style="margin:0.05rem 0 0.05rem 0;">查看反馈</el-button> -->
                 </template>
               </el-table-column>
             </el-table>
@@ -480,7 +485,26 @@
       },
       //点击筛选日期    医生端
       getOTab4(data) {
-        this.doctorDate = data.index.value;
+        console.log(data)
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        if (month < 10) {
+          month = "0" + month;
+        }
+        if (day < 10) {
+          day = "0" + day;
+        }
+        var nowDate = year + "-" + month + "-" + day;
+        if(data.index.value == "TODAY"){
+          this.time0 = nowDate;
+          this.time1 = nowDate;
+        }else if(data.index.value == "ALL"){
+          this.time0 = "";
+          this.time1 = "";
+        }
+        // this.doctorDate = data.index.value;//这个参数不用了
         this.getList2();
         this.DoctorList();//医生端列表
       },

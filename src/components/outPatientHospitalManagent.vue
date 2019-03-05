@@ -1,3 +1,6 @@
+<!-- 
+  医生端   我的诊室  查看档案
+ -->
 <!--门诊系统医院管理页面-->
 <template>
 	<div class="hospital-management-outpatient">
