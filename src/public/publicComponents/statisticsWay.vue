@@ -45,10 +45,12 @@
         },
 		methods:{
             sendData(){//发送消息
-                 this.$emit('reBack',{
+                 this.$emit('reBack',
+                 {
                     time:this.time,
                     select:this.defaultSelect
-                })
+                }
+                )
             },
             getIndex(index){//点击调用该函数
                 console.log(this.testData[index])

@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="container-fluid bs-docs-container">
+            {{userSocketInfo.ifVideoImg}}
             <div class="row">
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
@@ -35,9 +36,16 @@
                                     <div>关闭视频</div>
                                 </div>
                             </div>
+                            <div class="videoBtn" v-show="publicVideoVisable">
+                                <div @click="closeVideoRoom(3)">
+                                    <div><img src="./../../static/assets/img/gua1.png" /></div>
+                                    <div>挂断</div>
+
+                                </div>
+                            </div>
                         </div>
                         <div class="videoChatBox" v-show="videoChatVisable">
-                            <videoChat :sessionId="sessionId" :doctorVis="doctorVis"></videoChat>
+                            <!-- <videoChat :sessionId="sessionId" :doctorVis="doctorVis"></videoChat> -->
                         </div>
 
                     </div>
@@ -109,7 +117,8 @@ export default {
     },
     data() {
         return {
-            listVisable:true,
+            publicVideoVisable:false,
+            listVisable: true,
             oSeaver: "meet.xiaoqiangio.com",
             oUser: "gfki",
             oPassWord: "1qaz@WSX",
@@ -419,6 +428,34 @@ export default {
                 this.guaVisable = false;
             }
         },
+        //挂断普通视频
+        async closePublicVideo() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                clinicId: this.oClinicId,
+                userId: this.oUserId
+            };
+            const res = await doctorHangupNext(query, options);
+            if (res.data && res.data.errCode === 0) {
+                _this.getThePatient();
+                _this.noLineUpNum();
+                _this.closeVideoRoom(0);
+                _this.guaVisable = false;
+                _this.questVisable = false;
+                console.log("关闭视频成功");
+                _this.localVideoVisable = true;
+                _this.videoIng = 0;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         //挂断当前视频
         async closeTheVideo() {
             let _this = this;
@@ -483,11 +520,30 @@ export default {
             };
             const res = await storageUsers(query, options);
             if (res.data && res.data.errCode === 0) {
-                let childMessageType = 7;
+                let childMessageType = "";
                 let messageBody = "MicroCinic&" + "hangup";
 
-                _this.sendMessageChat(childMessageType, messageBody);
+                if (num == 3) {
+                    console.log("离开房间1");
+                    
+                    childMessageType = 6;
+                    
+                    if(_this.userSocketInfo.ifVideoImg == 0){
+                        _this.$emit("reback", "closeCancle");
+                        messageBody="cancle"
+                    }else if(_this.userSocketInfo.ifVideoImg == 1){
+                        alert('1111')
+                        _this.$emit("reback", "closeComplete");
+                        messageBody="complete"
+                    }
+                    _this.$store.commit("socket/IFVIDEOIMG", 0);
+                } else {
+                    childMessageType = 7;
+                    _this.sendMessageChat(childMessageType, messageBody);
+                }
+                
                 _this.deleteVideoRoom();
+                console.log("离开房间");
                 _this.leaveRoomBtn();
             } else {
                 //失败
@@ -1378,14 +1434,17 @@ export default {
         let _this = this;
 
         if (this.videoType == "门诊") {
-            this.listVisable=true;
+            this.listVisable = true;
+            this.publicVideoVisable=false;
             this.getLocal();
             this.enterRoomBtn();
             this.noLineUpNum();
             this.getThePatient();
+            
         } else {
-            this.localVideoVisable=false;
-            this.listVisable=false;
+            this.publicVideoVisable=true;
+            this.localVideoVisable = false;
+            this.listVisable = false;
             this.firstSet();
         }
 
@@ -1580,10 +1639,10 @@ export default {
     props: {
         createVideoRoomData: Object,
         videoType: String,
-        oClinicId: String,
+        oClinicId: String
     },
     model: {
-        prop: ["createVideoRoomData", "videoType", "oClinicId",],
+        prop: ["createVideoRoomData", "videoType", "oClinicId"],
         event: "reBack"
     }
 };

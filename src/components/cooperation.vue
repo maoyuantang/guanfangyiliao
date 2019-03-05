@@ -1,85 +1,88 @@
 <template>
-	<!-- 远程协作系统 -->
-	<div class="cooperation">
-		<el-dialog class="RecordDialog" title="" :visible.sync="isShowRecord" width="680px">
-			<!-- <chat :sessionId="sessionId"></chat> -->
-		</el-dialog>
-		<!-- 管理端 -->
-		<div class="cooperation" v-if="$store.state.user.viewRoot.now.name==='manager'">
-			<div class="Admin-title">
-				<normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
-			</div>
-			<div class="admin-oMain">
-				<!-- 协作管理列表 -->
-				<div v-if="manageOrCount">
-					<div class="mainTab">
-						<div>
-							<selftag :inData="oTab1" @reback="getOTab1"></selftag>
-							<!-- <selftag :inData="oTab1" @reback="getOTab11"></selftag> -->
-							<selftag :inData="oTab2" @reback="getOTab2"></selftag>
-							<selftag :inData="oTab3" @reback="getOTab3"></selftag>
-						</div>
-						<search @searchValue="adminSearchChange"></search>
-					</div>
-					<div>
-						<publicList :tableData="adminLists" :columns="adminColumns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData"></publicList>
-					</div>
-				</div>
-				<!-- 统计 -->
-				<div v-else>
-					<div class="mainTab">
-						<div>
-							<selftag :inData="oTab1" @reback="getOTab1"></selftag>
-						</div>
-						<statisticsWay @reBack="getTjData"></statisticsWay>
-					</div>
-					<div style="display:flex">
-						<normalColumnChart :inData="drawData"> </normalColumnChart>
-					</div>
-				</div>
-			</div>
-		</div>
+    <!-- 远程协作系统 -->
+    <div class="cooperation">
+        <el-dialog class="RecordDialog" title="" :visible.sync="isShowRecord" width="680px">
+            <!-- <chat :sessionId="sessionId"></chat> -->
+        </el-dialog>
+        <!-- 管理端 -->
+        <div class="cooperation" v-if="$store.state.user.viewRoot.now.name==='manager'">
+            <div class="Admin-title">
+                <normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
+            </div>
+            <div class="admin-oMain">
+                <!-- 协作管理列表 -->
+                <div v-if="manageOrCount">
+                    <div class="mainTab">
+                        <div>
+                            <!-- 申请科室 -->
+                            <selftag :inData="oTab1" @reback="getOTab1"></selftag>
+                            <!-- 协作科室 -->
+                            <selftag :inData="oTab2" @reback="getOTab2"></selftag>
+                            <!-- 协作状态 -->
+                            <selftag :inData="oTab3" @reback="getOTab3"></selftag>
+                        </div>
+                        <search @searchValue="adminSearchChange"></search>
+                    </div>
+                    <div>
+                        <publicList :tableData="adminLists" :columns="adminColumns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData"></publicList>
+                    </div>
+                </div>
+                <!-- 统计 -->
+                <div v-else>
+                    <div class="mainTab">
+                        <div>
+                            <selftag :inData="oTab1" @reback="getOTab1"></selftag>
+                        </div>
+                        <statisticsWay @reBack="getFilterTime"></statisticsWay>
+                        <!-- <publicTime ></publicTime> -->
+                    </div>
+                    <div style="display:flex">
+                        <normalColumnChart :inData="drawData"> </normalColumnChart>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-		<!-- 医生端 -->
-		<div class="cooperation" v-else>
-			<div class="doc-title">
-				<selftag :inData="oTab4" @reback="getOTab4"></selftag>
-				<statisticsWay1 @reBack="getTjData"></statisticsWay1>
-				<el-button class="startConsul" type="text" @click="initiateCollaboration() ">发起协作</el-button>
-			</div>
-			<div>
-				<el-table :data="docTableData" border style="width: 100%">
-					<el-table-column fixed prop="synergyUserHead" label="协作编号"></el-table-column>
-					<el-table-column fixed prop="applyDeptName" label="发起科室"></el-table-column>
-					<el-table-column fixed prop="applyUserName" label="发起医生"></el-table-column>
-					<el-table-column fixed prop="" label="发起时间"></el-table-column>
-					<el-table-column fixed prop="synergyIntention" label="目的"></el-table-column>
-					<el-table-column fixed prop="synergyDeptName" label="协作科室"></el-table-column>
-					<el-table-column fixed prop="synergyUserName" label="协作医生"></el-table-column>
-					<el-table-column fixed prop="synergyStatus" label="状态"></el-table-column>
-					<el-table-column fixed="right" label="操作" width="100">
-						<template slot-scope="scope">
-							<!-- <el-button @click="DoctorListFun1(scope.row)" type="text" size="small">病历</el-button>
+        <!-- 医生端 -->
+        <div class="cooperation" v-else>
+            <div class="doc-title">
+                <selftag :inData="oTab4" @reback="getOTab4"></selftag>
+                <statisticsWay1 @reBack="getTjData"></statisticsWay1>
+                <el-button class="startConsul" type="text" @click="initiateCollaboration() ">发起协作</el-button>
+            </div>
+            <div>
+                <el-table :data="docTableData" border style="width: 100%">
+                    <el-table-column fixed prop="synergyUserHead" label="协作编号"></el-table-column>
+                    <el-table-column fixed prop="applyDeptName" label="发起科室"></el-table-column>
+                    <el-table-column fixed prop="applyUserName" label="发起医生"></el-table-column>
+                    <el-table-column fixed prop="" label="发起时间"></el-table-column>
+                    <el-table-column fixed prop="synergyIntention" label="目的"></el-table-column>
+                    <el-table-column fixed prop="synergyDeptName" label="协作科室"></el-table-column>
+                    <el-table-column fixed prop="synergyUserName" label="协作医生"></el-table-column>
+                    <el-table-column fixed prop="synergyStatus" label="状态"></el-table-column>
+                    <el-table-column fixed="right" label="操作" width="100">
+                        <template slot-scope="scope">
+                            <!-- <el-button @click="DoctorListFun1(scope.row)" type="text" size="small">病历</el-button>
 							<el-button @click="DoctorListFun2(scope.row)" type="text" size="small">邀请</el-button>
 							<el-button v-show="scope.row.status=='OVER'" @click="DoctorListFun3(scope.row)" type="text" size="small">查看记录</el-button>
 							<el-button v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="DoctorListFun4(scope.row)" type="text" size="small">进入协作</el-button>
 							<el-button v-show="scope.row.departmentId==userState.userId" @click="DoctorListFun5(scope.row)" type="text" size="small">结束</el-button> -->
-							<el-button @click="handleClick(scope.row)" type="text" size="small">病历</el-button>
-							<el-button @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
-							<el-button v-show="scope.row.status=='OVER'" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
-							<el-button v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="toConsultation(scope.row)" type="text" size="small">进入会诊</el-button>
-							<el-button v-show="scope.row.departmentId==userState.userId" @click="handleClick(scope.row)" type="text" size="small">结束</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
-			</div>
-		</div>
-		<el-dialog class="chatDialog" title="" :visible.sync="isShowChat" width="680px">
-			<chat :sessionId="sessionId"></chat>
-		</el-dialog>
+                            <el-button @click="handleClick(scope.row)" type="text" size="small">病历</el-button>
+                            <el-button @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
+                            <el-button v-show="scope.row.status=='OVER'" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
+                            <el-button v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="toConsultation(scope.row)" type="text" size="small">进入会诊</el-button>
+                            <el-button v-show="scope.row.departmentId==userState.userId" @click="handleClick(scope.row)" type="text" size="small">结束</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
+        <el-dialog class="chatDialog" title="" :visible.sync="isShowChat" width="680px">
+            <chat :sessionId="sessionId"></chat>
+        </el-dialog>
 
-		<!-- 发起协作弹框 -->
-		<el-dialog class="evaluateBox evaluateBox2" title=" 发起协作" :visible.sync="centerDialogVisible" width="602px" hight="356px" center>
+        <!-- 发起协作弹框 -->
+        <el-dialog class="evaluateBox evaluateBox2" title=" 发起协作" :visible.sync="centerDialogVisible" width="602px" hight="356px" center>
 			<el-tree :data="invitationData1" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
 			<el-form ref="form" :model="startXiezuo" label-width="80px">
 				<el-form-item label="病历">
@@ -99,34 +102,34 @@
 			</el-form>
 			<el-button type="primary" @click="sureInvitation()">确认邀请</el-button>
 		</el-dialog>
-		<!-- 查看记录 -->
-		<div v-if="viewRecordVisible">
-			<el-dialog class="evaluateBox evaluateBox2" title=" 查看记录" :visible.sync="viewRecordVisible" width="602px" hight="356px" center>
-				<viewRecord></viewRecord>
-			</el-dialog>
-		</div>
-		<!-- 接收科室 -->
-		<div v-if="departVisible">
-			<el-dialog class="evaluateBox" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
-				<receiveDepartent :receptionDepartment="receptionDepartment"></receiveDepartent>
-			</el-dialog>
-		</div>
-		<!-- 医生详情 -->
-		<div v-if="doctorVisible">
-			<el-dialog class="evaluateBox evaluateBox2" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
-				<doctorDetail :doctorDetailData="doctorDetailData"></doctorDetail>
+        <!-- 查看记录 -->
+        <div v-if="viewRecordVisible">
+            <el-dialog class="evaluateBox evaluateBox2" title=" 查看记录" :visible.sync="viewRecordVisible" width="602px" hight="356px" center>
+                <viewRecord></viewRecord>
+            </el-dialog>
+        </div>
+        <!-- 接收科室 -->
+        <div v-if="departVisible">
+            <el-dialog class="evaluateBox" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
+                <receiveDepartent :receptionDepartment="receptionDepartment"></receiveDepartent>
+            </el-dialog>
+        </div>
+        <!-- 医生详情 -->
+        <div v-if="doctorVisible">
+            <el-dialog class="evaluateBox evaluateBox2" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
+                <doctorDetail :doctorDetailData="doctorDetailData"></doctorDetail>
 
-			</el-dialog>
-		</div>
+            </el-dialog>
+        </div>
 
-		<!-- 邀请弹框 -->
-        <div v-if="invitationVisible">
+        <!-- 邀请弹框 -->
+        <!-- <div v-if="invitationVisible">
             <el-dialog class="evaluateBox evaluateBox2" title=" 邀请医生" :visible.sync="invitationVisible" width="602px" hight="356px" center>
                 <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
                 <el-button type="primary" @click="sureInvitation()">确认邀请</el-button>
             </el-dialog>
-        </div>
-	</div>
+        </div> -->
+    </div>
 </template>
 <script>
 import {
@@ -158,6 +161,7 @@ import statisticsWay1 from "../public/publicComponents/statisticsWay1.vue";
 import receiveDepartent from "./xiezuo/receiveDepartent.vue";
 import viewRecord from "./xiezuo/viewRecord.vue";
 import doctorDetail from "./xiezuo/doctorDetail.vue";
+import publicTime from "../public/publicComponents/publicTime.vue";
 export default {
     components: {
         selftag,
@@ -170,11 +174,12 @@ export default {
         chat,
         viewRecord,
         doctorDetail,
-        receiveDepartent
+        receiveDepartent,
+        publicTime
     },
     data() {
         return {
-			invitationVisible:false,
+            invitationVisible: false,
             cellColor: [
                 {
                     cell: 4,
@@ -187,9 +192,9 @@ export default {
                     oclass: "ooRed"
                 }
             ],
-            viewRecordVisible: true,
-			invitationData1: [],
-			invitationData:[],
+            viewRecordVisible: false,
+            invitationData1: [],
+            invitationData: [],
             startXiezuo: {
                 id: "",
                 intention: "",
@@ -234,10 +239,10 @@ export default {
             //医生端  筛选工具栏  日期筛选返回值  接收参数
             // applyDepartmentId: "",//申请科室ID
             // departmentList: [], //科室列表
-            // acceptDepartmentId: "", //接收科室ID
+            acceptDepartmentId: "", //接收科室ID
             // departmentsId: "",//弹框内参数
             // time: '',
-
+            statisticsType: "DAY",
             // element
             // 必备参数
             //时间筛选组件		必备参数
@@ -453,12 +458,12 @@ export default {
             //点击  进入协作  弹出chat（复用组件） chat 聊天框的参数
             sessionId: "",
             //医生端列表（自定义组件 ）
-            docTableData: []
+            docTableData: [],
 
             // oVisable: true,
             // evaluateVisible: false, //是否打开评价
-            // departVisible: false, //是否接收科室
-            // doctorVisible: false, //医生详情
+            departVisible: false, //是否接收科室
+            doctorVisible: false //医生详情
             // groupVisible: false, //会诊评价
         };
     },
@@ -482,7 +487,8 @@ export default {
             // this.invitationVisible = true;
             let _this = this;
             let query = {
-                token: this.userState.token
+                token: this.userState.token,
+                id:""
             };
             const res = await enableSynergyDoctor(query);
             if (res.data && res.data.errCode === 0) {
@@ -505,9 +511,9 @@ export default {
                     message: res.data.errMsg
                 });
             }
-		},
-		
-		 //获取邀请列表
+        },
+
+        //获取邀请列表
         async Invitation(row) {
             this.consultationId = row.id;
             this.invitationData = [];
@@ -537,8 +543,8 @@ export default {
                     message: res.data.errMsg
                 });
             }
-		},
-		 //确认邀请
+        },
+        //确认邀请
         async sureInvitation() {
             let _this = this;
             let query = {
@@ -674,13 +680,10 @@ export default {
             this.getList1();
             this.getList2();
         },
-        // getOTab11(data) {//接收科室筛选
-        // 	this.acceptDepartmentId = data.index.value;
-        // 	this.getList1();
-        // },
+        //协作科室选择
         getOTab2(data) {
             //协作科室筛选
-            this.adminType = data.index.value;
+            this.acceptDepartmentId = data.index.value;
             this.getList1();
         },
         getOTab3(data) {
@@ -699,12 +702,27 @@ export default {
             this.searchValue = data;
             this.getList1();
         },
-        getTjData(data) {
+        getFilterTime(data) {
+            console.log(data);
             //统计页面  时间选择器返回值
-            this.time0 = data.time[0]; //统计筛选开始时间
-            this.time1 = data.time[1]; //统计筛选结束时间
-            this.type = data.select.value;
-            this.count();
+            if (data.time) {
+                this.time0 = data.time[0]; //统计筛选开始时间
+                this.time1 = data.time[1]; //统计筛选结束时间
+            } else {
+                this.time0 = ""; //统计筛选开始时间
+                this.time1 = ""; //统计筛选结束时间
+            }
+            if (data.select.value == "DEPT") {
+                this.statisticsType = 1;
+            } else if (data.select.value == "DAY") {
+                this.statisticsType = 2;
+            } else if (data.select.value == "MONTH") {
+                this.statisticsType = 3;
+            } else if (data.select.value == "YEAR") {
+                this.statisticsType = 4;
+            }
+            // this.count();
+            this.getList2();
         },
 
         //筛选列表  管理端
@@ -783,7 +801,7 @@ export default {
             let _this = this;
             const options = {
                 token: this.userState.token,
-                query: "",
+                query: this.searchValue,
                 pageNum: 1,
                 pageSize: 10,
                 status: this.adminStatus,
@@ -818,8 +836,8 @@ export default {
             let _this = this;
             const options = {
                 token: this.userState.token,
-                type: 1,
                 applyDeptId: this.initiateDepartmentId,
+                statisticsType: this.statisticsType,
                 startTime: this.time0,
                 endTime: this.time1
             };
@@ -911,30 +929,30 @@ export default {
 
         //发起协作弹框  数据获取
         //可协作医生（医生端）-弹框
-        // async otherDoctor() {
-        //     let _this = this;
-        //     let query = {
-        //     	token: this.userState.token
-        //     	// id:""
-        //     };
-        //     const res = await enableSynergyDoctor(query);
-        //     if (res.data && res.data.errCode === 0) {
-        //     	$.each(res.data.body, function (index, text) {
-        //     		_this.hospitalList.push({
-        //     			name: text.orgName,
-        //     			value: text.orgCode
-        //     		});
-        //     	});
-        //     	console.log(res)
-        //     } else {
-        //     	console.log(res)
-        //     	//失败
-        //     	this.$notify.error({
-        //     		title: "警告",
-        //     		message: res.data.errMsg
-        //     	});
-        //     }
-        // },
+        async otherDoctor() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+                // id:""
+            };
+            const res = await enableSynergyDoctor(query);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body, function(index, text) {
+                    _this.hospitalList.push({
+                        name: text.orgName,
+                        value: text.orgCode
+                    });
+                });
+                console.log(res);
+            } else {
+                console.log(res);
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         //协作弹框内  病例   列表
         dialogCase(oid, oindex) {
             // this.getDepartment(oindex);

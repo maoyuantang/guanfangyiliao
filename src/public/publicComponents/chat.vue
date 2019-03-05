@@ -2,12 +2,14 @@
     <div class="chat">
         <!-- <websocket1 ref="mychild" @reback="addMessageK1">
         </websocket1> -->
+        {{userSocketInfo.ifVideoImg}}
         <div :title="chatUser" class="otherNumClass">
             {{chatUser}}
         </div>
         <div class="chatMessage">
-            <div class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</div>
+            <!-- <div class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</div> -->
             <ul class="chatRecord">
+                <li class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
                         <img src="../../assets/img/日照宝宝.jpg" />
@@ -245,8 +247,8 @@
         </div>
         <!-- 视频聊天 -->
         <div v-if="videoVisible">
-            <el-dialog title="视频" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo()">
-                <ovideo :createVideoRoomData="createVideoRoomData"></ovideo>
+            <el-dialog title="视频" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo('cancle','us')" :showClose="VideoshowClose">
+                <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick"></ovideo>
             </el-dialog>
         </div>
         <!-- 录入档案 -->
@@ -295,7 +297,8 @@ import {
     queryArticleList,
     getArticleDetails,
     createVideoRoom,
-    storageUsers
+    storageUsers,
+    closeVideoRoom
 } from "../../api/apiAll.js";
 import ovideo from "../../video/oVideo.vue";
 import { setTimeout } from "timers";
@@ -313,6 +316,7 @@ export default {
     },
     data() {
         return {
+            VideoshowClose: false,
             addQuestId: "",
             sendToUserId: "",
             articleClickId: "",
@@ -440,7 +444,8 @@ export default {
                     this.userSelfInfo.userId,
                     messageBody,
                     oHour + ":" + oMinite,
-                    childMessageType1
+                    childMessageType1,
+                    this.userSelfInfo.name
                 );
                 this.messageBody = "";
             } else {
@@ -449,26 +454,36 @@ export default {
         },
 
         // 添加消息到发送框
-        addMessageK(ouserId, oMessage, oMessageTime, childMessageType) {
+        addMessageK(
+            ouserId,
+            oMessage,
+            oMessageTime,
+            childMessageType,
+            fromNickName
+        ) {
             if (childMessageType == "VIDEO") {
-                if ((oMessage = "cancle")) {
+                if (oMessage == "cancle") {
                     oMessage = "取消了视频通话";
-                } else if ((oMessage = "refuse")) {
+                } else if (oMessage == "refuse") {
                     oMessage = "拒绝了视频通话";
-                } else if ((oMessage = "videoing")) {
+                } else if (oMessage == "videoing") {
                     oMessage = "对方正在视频通话中";
-                } else if ((oMessage = "complete")) {
+                } else if (oMessage == "complete") {
                     oMessage = "视频通话已结束";
-                } else if ((oMessage = "accept")) {
+                } else if (oMessage == "accept") {
                     oMessage = "接受了视频聊天";
-                } else if ((oMessage = "complete")) {
+                } else if (oMessage == "complete") {
                     oMessage = "视频通话已结束";
+                } else if (oMessage.indexOf("sendroom") > -1) {
+                    console.log("发起了视频聊天！！！！");
+                    oMessage = "发起了视频聊天";
                 }
             }
 
             console.log(childMessageType + oMessage);
             if (childMessageType == "IMAGE") {
                 this.messageList.push({
+                    fromNickName: fromNickName,
                     from: ouserId,
                     content: this.imgUrl + oMessage,
                     serverTime: oMessageTime,
@@ -591,7 +606,8 @@ export default {
                             childMessageType,
                             body,
                             res.data.body.conferenceNumber,
-                            ""
+                            "",
+                            "VIDEO"
                         );
                     });
                 } else if (num == 0) {
@@ -607,7 +623,8 @@ export default {
                         childMessageType,
                         body,
                         res.data.body.conferenceNumber,
-                        ""
+                        "",
+                        "VIDEO"
                     );
                 }
                 this.videoVisible = true;
@@ -620,7 +637,24 @@ export default {
             }
         },
         // 发送视频消息
-        sendVideoMessage(childMessageType, body, conferenceNumber, toNickName) {
+        sendVideoMessage(
+            childMessageType,
+            body,
+            conferenceNumber,
+            toNickName,
+            childMessageType1
+        ) {
+            let odate = new Date();
+            let oHour = odate.getHours();
+            let oMinite = odate.getMinutes();
+            if (oHour <= 9) {
+                oHour = "0" + oHour;
+            }
+            if (oMinite <= 9) {
+                oMinite = "0" + oMinite;
+            }
+
+            let timestamp = Date.parse(new Date());
             var Iessage = {
                 RequestType: 4,
                 ticket: this.messageTicket.ticket,
@@ -642,6 +676,14 @@ export default {
             console.log(Iessage);
             // this.$refs.mychild.sendMessage(Iessage);
             this.sendMessage(Iessage);
+
+            this.addMessageK(
+                this.userSelfInfo.userId,
+                body,
+                oHour + ":" + oMinite,
+                childMessageType1,
+                this.userSelfInfo.name
+            );
         },
         //添加备注
         addRemarks() {
@@ -1027,7 +1069,8 @@ export default {
             }
         },
         //退出视频
-        async closeVideo() {
+        async closeVideo(oMessageType, closeUser) {
+            this.videoVisible = false;
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -1044,7 +1087,46 @@ export default {
                     message: "退出成功！"
                 });
                 _this.createVideoVisable = false;
-                _this.sendMessageChat(6, "cancle", "VIDEO");
+                if (this.userSocketInfo.ifVideoImg == 1) {
+                    oMessageType = "complete";
+                } else {
+                    oMessageType = "cancle";
+                }
+                if (closeUser == "us") {
+                    _this.sendMessageChat(6, oMessageType, "VIDEO");
+                    this.$store.commit("socket/IFVIDEOIMG", 0);
+                }
+                _this.deleteVideoRoom();
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //视频组件传过来的事件
+        videoclick(data) {
+            alert('qwqw')
+            if (data == "closeCancle") {
+                this.videoVisible = false;
+                this.sendMessageChat('6', 'cancle', 'VIDEO')
+            } else if (data == "closeComplete") {
+                this.videoVisible = false;
+            this.sendMessageChat('6', 'complete', 'VIDEO');
+            }
+        },
+        //删除视频房间
+        async deleteVideoRoom() {
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                cID: this.createVideoRoomData.conferenceId
+            };
+            const res = await closeVideoRoom(query, options);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                alert("删除成功");
             } else {
                 //失败
                 this.$notify.error({
@@ -1054,6 +1136,7 @@ export default {
             }
         }
     },
+
     watch: {
         "userSocketInfo.msgBox.a.msg": {
             handler(data, o) {
@@ -1083,7 +1166,35 @@ export default {
                         }
 
                         if (oData.info.childMessageType == 6) {
+                            console.log("取消了视频");
                             childMessageType = "VIDEO";
+                            if (messageBody == "refuse") {
+                                //对方拒绝了视频
+                                // this.closeVideo(messageBody, "other");
+                            } else if (messageBody == "complete") {
+                                //对方挂断了视频
+                                // this.closeVideo(messageBody, "other");
+                            } else if (messageBody == "accept") {
+                                this.$store.commit("socket/IFVIDEOIMG", 1);
+                            } else if (
+                                messageBody.indexOf("sendroom") > -1 ||
+                                messageBody.indexOf("MicroCinicSendRoom") > -1
+                            ) {
+                                //对方邀请你开视频
+                                // if (
+                                //     oData.info.body.split("&")[3] ==
+                                //     this.userSelfInfo.userId
+                                // ) {
+                                //     this.createVideoRoomData = {
+                                //         conferenceId: oData.info.body.split(
+                                //             "&"
+                                //         )[2],
+                                //         conferenceNumber: oData.info.body.split(
+                                //             "&"
+                                //         )[1]
+                                //     };
+                                // }
+                            }
                         } else if (oData.info.childMessageType == 4) {
                             childMessageType = "AUDIO";
                             messageBody = "该消息为音频消息,请在手机上查看";
@@ -1101,7 +1212,8 @@ export default {
                             oUserId,
                             messageBody,
                             oMessageTime,
-                            childMessageType
+                            childMessageType,
+                            oData.info.fromNickName
                         );
                     }
                 }
@@ -1276,6 +1388,7 @@ export default {
     float: right;
 }
 .chatMessage > ul {
+    padding: 20px 0;
     overflow-y: scroll;
     height: 300px;
 }
