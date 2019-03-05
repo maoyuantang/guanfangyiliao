@@ -2838,3 +2838,25 @@ export const intoPlatform = query => { //12.4 进入教学（临时）
         }
     })
 }
+export const nearlyFollowup = query => { //1.医生查看成员最近随访
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.nearlyFollowup,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const nearlyDevice = query => { //1.医生查看成员最近随访
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.nearlyDevice,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

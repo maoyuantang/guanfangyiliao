@@ -487,8 +487,7 @@ export default {
             // this.invitationVisible = true;
             let _this = this;
             let query = {
-                token: this.userState.token,
-                id:""
+                token: this.userState.token
             };
             const res = await enableSynergyDoctor(query);
             if (res.data && res.data.errCode === 0) {

@@ -4,6 +4,7 @@
     :visible.sync="inData.show"
     :fullscreen="false"
     :before-close="norDocClose"
+    append-to-body
 >
     <div class="inData">
     <div class="doc-item">

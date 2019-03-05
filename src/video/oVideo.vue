@@ -12,7 +12,10 @@
                     </div>
                     <div class="col-xs-12 media-box us-media">
                         <div id="localVideos">
-                            <video class="localVideo1" v-if="localVideoVisable" id="video" width="640" height="480" autoplay></video>
+
+                        </div>
+                        <div class="localVideos1" v-if="localVideoVisable">
+                            <video class="localVideo1" id="video" width="640" height="480" autoplay></video>
                         </div>
                         <div>
                             <!-- <video-chat></video-chat> -->
@@ -44,7 +47,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="videoChatBox" v-show="videoChatVisable">
+                        <div class="videoChatBox" v-if="videoChatVisable">
                             <!-- <videoChat :sessionId="sessionId" :doctorVis="doctorVis"></videoChat> -->
                         </div>
 
@@ -60,7 +63,7 @@
             <div class="patientClass0" v-show="patientVisable">
                 <h3>正在排队</h3>
                 <ul>
-                    <li @click="createChat(thePatientMessage.userId)">
+                    <li @click="createChat(thePatientMessage.userId,1)">
                         <div>
                             <img src="../assets/img/sendNew1.png" />
                         </div>
@@ -74,7 +77,7 @@
             <div class="patientClass0">
                 <h3>未处理业务(未排队)</h3>
                 <ul v-show="noLineVisable">
-                    <li v-for="(text,index) in noLineNum" :key="index" @click="createChat(text.userId)">
+                    <li v-for="(text,index) in noLineNum" :key="index" @click="createChat(text.userId,0)">
                         <div>
                             <img src="../assets/img/sendNew1.png" />
                         </div>
@@ -89,7 +92,7 @@
 </template>
 <script>
 import "../../static/assets/css/jquery-impromptu.css";
-import videoChat from "../public/publicComponents/videoChat.vue";
+// import videoChat from "../public/publicComponents/chat.vue";
 import apiBaseURL from "../enums/apiBaseURL.js";
 import { mapState } from "vuex";
 import {
@@ -106,7 +109,7 @@ import {
 export default {
     name: "video",
     components: {
-        videoChat
+        // videoChat
     },
     computed: {
         ...mapState({
@@ -117,7 +120,7 @@ export default {
     },
     data() {
         return {
-            publicVideoVisable:false,
+            publicVideoVisable: false,
             listVisable: true,
             oSeaver: "meet.xiaoqiangio.com",
             oUser: "gfki",
@@ -137,6 +140,8 @@ export default {
             videoChatVisable: false,
             doctorVis: 1,
             videoIng: 0
+            // loadingUs:true,
+            // loadingOther:true,
         };
     },
     methods: {
@@ -351,7 +356,7 @@ export default {
             }
         },
         //创建会话
-        async createChat(ouserId) {
+        async createChat(ouserId, num) {
             this.oUserId = ouserId;
             let _this = this;
             let query = {
@@ -363,7 +368,12 @@ export default {
             const res = await fetchChatSession(query, options);
             if (res.data && res.data.errCode === 0) {
                 _this.sessionId = res.data.body;
-                _this.createVideo(ouserId);
+                //正在排队
+                if (num == 1) {
+                    _this.createVideo(ouserId);
+                } else {
+                    //未完成排队
+                }
             } else {
                 //失败
                 this.$notify.error({
@@ -525,23 +535,23 @@ export default {
 
                 if (num == 3) {
                     console.log("离开房间1");
-                    
+
                     childMessageType = 6;
-                    
-                    if(_this.userSocketInfo.ifVideoImg == 0){
+
+                    if (_this.userSocketInfo.ifVideoImg == 0) {
                         _this.$emit("reback", "closeCancle");
-                        messageBody="cancle"
-                    }else if(_this.userSocketInfo.ifVideoImg == 1){
-                        alert('1111')
+                        messageBody = "cancle";
+                    } else if (_this.userSocketInfo.ifVideoImg == 1) {
+                        alert("1111");
                         _this.$emit("reback", "closeComplete");
-                        messageBody="complete"
+                        messageBody = "complete";
                     }
                     _this.$store.commit("socket/IFVIDEOIMG", 0);
                 } else {
                     childMessageType = 7;
                     _this.sendMessageChat(childMessageType, messageBody);
                 }
-                
+
                 _this.deleteVideoRoom();
                 console.log("离开房间");
                 _this.leaveRoomBtn();
@@ -1090,6 +1100,7 @@ export default {
         },
         //初始化配置
         firstSet() {
+            alert("初始化配置");
             let _this = this;
             var server = $("#server").val();
             // var server=this.oSeaver
@@ -1117,6 +1128,7 @@ export default {
         },
         //登录
         videoLogin() {
+            alert("登陆");
             let _this = this;
             // var username = $("#username").val();
             // var username=this.oUser
@@ -1202,6 +1214,7 @@ export default {
          * 匿名加入到房间
          */
         anonymousJoinRoomBtn() {
+            alert("匿名加入到房间");
             alert(this.createVideoRoomData1.conferenceNumber);
             let _this = this;
             // var conferenceName = $("#anonymousConferenceName").val();
@@ -1435,14 +1448,13 @@ export default {
 
         if (this.videoType == "门诊") {
             this.listVisable = true;
-            this.publicVideoVisable=false;
+            this.publicVideoVisable = false;
             this.getLocal();
             this.enterRoomBtn();
             this.noLineUpNum();
             this.getThePatient();
-            
         } else {
-            this.publicVideoVisable=true;
+            this.publicVideoVisable = true;
             this.localVideoVisable = false;
             this.listVisable = false;
             this.firstSet();
@@ -1634,6 +1646,90 @@ export default {
                     }
                 });
             }
+        },
+        "userSocketInfo.msgBox.a.msg": {
+            handler(data, o) {
+                let olength = data.length;
+                let oData = data[olength - 1];
+                console.log(data);
+                if (oData.RequestType == 6) {
+                    if (this.sessionId == oData.info.to) {
+                        let oTime = oData.info.serverTime;
+                        let timestamp4 = new Date(oTime);
+                        let y = timestamp4.getHours();
+                        let d = timestamp4.getMinutes();
+                        if (y <= 9) {
+                            y = "0" + y;
+                        }
+                        if (d <= 9) {
+                            d = "0" + d;
+                        }
+                        console.log(y + "-" + d);
+                        let oMessageTime = y + ":" + d;
+
+                        let messageBody = oData.info.body;
+                        let oUserId = oData.info.from;
+                        let childMessageType = "";
+                        if (!oData.info.childMessageType) {
+                            childMessageType = "DEFAULT";
+                        }
+
+                        if (oData.info.childMessageType == 6) {
+                            console.log("取消了视频");
+                            childMessageType = "VIDEO";
+                            if (messageBody == "refuse") {
+                                //对方拒绝了视频
+                                // this.closeVideo(messageBody, "other");
+                            } else if (messageBody == "complete") {
+                                //对方挂断了视频
+                                // this.closeVideo(messageBody, "other");
+                            } else if (messageBody == "accept") {
+                                this.$store.commit("socket/IFVIDEOIMG", 1);
+                            } else if (
+                                messageBody.indexOf("sendroom") > -1 ||
+                                messageBody.indexOf("MicroCinicSendRoom") > -1
+                            ) {
+                                //对方邀请你开视频
+                                // if (
+                                //     oData.info.body.split("&")[3] ==
+                                //     this.userSelfInfo.userId
+                                // ) {
+                                //     this.createVideoRoomData = {
+                                //         conferenceId: oData.info.body.split(
+                                //             "&"
+                                //         )[2],
+                                //         conferenceNumber: oData.info.body.split(
+                                //             "&"
+                                //         )[1]
+                                //     };
+                                // }
+                            }
+                        } else if (oData.info.childMessageType == 4) {
+                            childMessageType = "AUDIO";
+                            messageBody = "该消息为音频消息,请在手机上查看";
+                        } else if (oData.info.childMessageType == 5) {
+                            childMessageType = "IMAGE";
+                        } else if (oData.info.childMessageType == 7) {
+                            childMessageType = "CRVIDEO";
+                            if(oData.info.body=="MicroCinic&hangup"){
+                                this.closeTheVideo()
+                            }
+                        } else if (oData.info.childMessageType == 18) {
+                            childMessageType = "INTERROGATION";
+                        } else if (oData.info.childMessageType == 20) {
+                            childMessageType = "FOLLOWUP";
+                        }
+                        console.log(messageBody);
+                        this.addMessageK(
+                            oUserId,
+                            messageBody,
+                            oMessageTime,
+                            childMessageType,
+                            oData.info.fromNickName
+                        );
+                    }
+                }
+            }
         }
     },
     props: {
@@ -1703,6 +1799,8 @@ video {
 }
 .us-media {
     position: relative;
+    padding: 0;
+    height: 1000px;
 }
 .us-media video {
     height: 100%;
@@ -1715,17 +1813,21 @@ video {
 }
 .other-media {
     position: relative;
+    padding: 0;
     width: 30%;
-    height: 768px;
+}
+.other-media video {
+    height: 300px;
 }
 .us-media {
     width: 70%;
 }
 
 #remoteVideos {
+    height: 930px;
     padding: 10px;
     background: white;
-    box-shadow: 10px 10px 5px #888888;
+    border-right: 11px solid #888888;
 }
 #localVideos div,
 #remoteVideos div {
@@ -1737,6 +1839,8 @@ video {
     padding: 10px 0;
     text-align: center;
     cursor: pointer;
+    width: 100%;
+    border-top: 1px solid #6666;
 }
 .patientClass {
     position: fixed;
@@ -1857,11 +1961,21 @@ video {
     display: none !important;
 }
 #localVideos {
-    height: 768px;
+    height: 100%;
+}
+.localVideos1 {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
 }
 .videoChatBox {
     position: absolute;
-    bottom: -253px;
+    bottom: -220px;
+    width:100%
+}
+.videoChatBox .chat{
+    width:100%
 }
 </style>
 
