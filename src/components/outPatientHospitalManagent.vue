@@ -742,10 +742,17 @@
 			//筛选列表  管理端
 			//1.21.1.科室工具栏 (管理)
 			async getFilter0(data) {
+				// console.log(this.userInfo.rooter)
+				// console.log(this.userInfo.manager)
+				if(this.userInfo.manager){
+					this.type = 'MANAGE'
+				}else{
+					this.type = 'DOCTOR'
+				}
 				const _this = this
 				let query = {
 					token: this.userState.token,
-					type: 'MANAGE'
+					type: this.type
 				};
 				const res = await toolDept(query);
 				if (res.data && res.data.errCode === 0) {

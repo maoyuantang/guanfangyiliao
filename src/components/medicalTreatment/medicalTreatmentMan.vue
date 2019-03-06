@@ -469,10 +469,17 @@
       //筛选工具栏  请求  管理端
       //1.21.1.科室筛选  工具栏 (管理) (管理)
       async getSelect1(oindex) {
+        // console.log(this.userState.rooter)
+        // console.log(this.userState.manager)
+        if (this.userState.manager) {
+          this.type = 'MANAGE'
+        } else {
+          this.type = 'DOCTOR'
+        }
         let _this = this;
         let query = {
           token: this.userState.token,
-          type: 'MANAGE'
+          type: this.type
         };
         const res = await toolDept(query);                                       //1.21.1.科室筛选  工具栏 (管理) (管理)
         if (res.data && res.data.errCode === 0) {

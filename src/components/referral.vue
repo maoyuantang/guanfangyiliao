@@ -535,10 +535,17 @@
       //筛选列表  管理端
       //1.21.1.科室筛选  工具栏 (管理) (管理)
       async getSelect1(oindex) {
+        // console.log(this.userInfo.rooter)
+        // console.log(this.userInfo.manager)
+        if (this.userInfo.manager) {
+          this.type = 'MANAGE'
+        } else {
+          this.type = 'DOCTOR'
+        }
         let _this = this;
         let query = {
           token: this.userState.token,
-          type: 'MANAGE'
+          type: this.type
         };
         const res = await toolDept(query);                     //1.21.1.科室筛选  工具栏 (管理) (管理)
         if (res.data && res.data.errCode === 0) {
