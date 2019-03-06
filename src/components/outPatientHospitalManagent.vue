@@ -84,7 +84,7 @@
 					</div>
 				</div>
 				<div class="hospital-management-outpatient-statistics-midle">
-					<div style="display:flex">
+					<div>
 						<!-- <normalColumnChart v-for="(item,index) in testdata" :key="index" :inData="item"> </normalColumnChart> -->
 						<normalColumnChart :inData="testdata1"> </normalColumnChart>
 						<normalColumnChart :inData="testdata2"> </normalColumnChart>
@@ -640,7 +640,7 @@
 				},
 
 
-				//科室统计图
+				//统计图
 				testdata1: {
 					dataAxis: [],//每个柱子代表的类名
 					data: [],//具体数值
@@ -685,7 +685,9 @@
 				} else if (data.i == 1) {
 					this.getList2();//管理列表2
 				} else if (data.i == 2) {
-					this.getList3();//管理图表3（统计图表数据获取）
+					this.getList1().then(val => {
+						this.getList3();
+					});
 				}
 			},
 			//筛选返回值
@@ -1106,8 +1108,8 @@
 			//统计图表数据的获取
 			async getList3() {
 				this.getList31();
-				// this.getList32();
-				// this.getList33();
+				this.getList32();
+				this.getList33();
 			},
 			// 6.9.远程门诊订单统计柱状图 
 			async getList31() {
@@ -1127,9 +1129,9 @@
 					console.log(lists)
 					console.log(this.type)
 					this.yTotal1 = 0
+					this.testdata1.dataAxis.length = 0
+					this.testdata1.data.length = 0
 					$.each(lists, function (index, text) {
-
-						//等待 
 						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
 						// _this.monthToYearDoor.months.push(text.x)
 						// _this.monthToYearDoor.years.push(text.y)
@@ -1167,9 +1169,9 @@
 					console.log(lists)
 					console.log(this.type)
 					this.yTotal2 = 0
+					this.testdata2.dataAxis.length = 0
+					this.testdata2.data.length = 0
 					$.each(lists, function (index, text) {
-
-						//等待 
 						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
 						// _this.monthToYearDoor.months.push(text.x)
 						// _this.monthToYearDoor.years.push(text.y)
@@ -1180,6 +1182,7 @@
 					this.testdata2.title = "处方订单"
 					this.testdata2.total = "总数：" + this.yTotal2
 					console.log(this.yTotal2)
+					console.log(this.testdata2)
 				} else {
 					//失败
 					console.log('统计图+处方订单+失败')
@@ -1207,9 +1210,9 @@
 					console.log(lists)
 					console.log(this.type)
 					this.yTotal3 = 0
+					this.testdata3.dataAxis.length = 0
+					this.testdata3.data.length = 0
 					$.each(lists, function (index, text) {
-
-						//等待 
 						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
 						// _this.monthToYearDoor.months.push(text.x)
 						// _this.monthToYearDoor.years.push(text.y)
@@ -1683,6 +1686,18 @@
 
 	.hospital-management-outpatient-statistics-top>div {
 		flex: 1;
+	}
+
+	.hospital-management-outpatient-statistics-midle {
+		margin: 40px 0 0 0;
+
+		div {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			justify-content: start;
+			align-items: center;
+			/* flex-wrap: wrap; */
+		}
 	}
 
 	.evaluateBox1 {

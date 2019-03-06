@@ -161,8 +161,9 @@
             </div>
           </div>
           <div class="manager_count_midle">
-            <div style="display:flex">
-              <normalColumnChart :inData="drawData"> </normalColumnChart>
+            <div>
+              <normalColumnChart :inData="testdata1"> </normalColumnChart>
+              <normalColumnChart :inData="testdata2"> </normalColumnChart>
             </div>
           </div>
         </div>
@@ -282,6 +283,8 @@
         time0: "",///统计筛选开始时间     DatePicker 日期选择器
         time1: "",//统计筛选结束时间      DatePicker 日期选择器
         type: 'MONTH', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天       Select 选择器
+        yTotal1: 0,//统计y轴相加
+        yTotal2: 0,//统计y轴相加
         //医生端  筛选工具栏  日期筛选返回值  接收参数
         doctorDate: '',//日期筛选
         // 新增转诊
@@ -423,18 +426,18 @@
         //统计
         //申请科室统计图
         monthToYear: [],
-        drawData: {
-          dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-          data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-          title: "申请科室统计图", //图表标题
-          totalNumber: "555"
+        //统计图
+        testdata1: {
+          dataAxis: [],//每个柱子代表的类名
+          data: [],//具体数值
+          title: '',//图表标题
+          total: ''
         },
-        //发起科室统计图
-        drawDataStart: {
-          dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-          data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-          title: "发起科室统计图", //图表标题
-          totalNumber: "555"
+        testdata2: {
+          dataAxis: [],//每个柱子代表的类名
+          data: [],//具体数值
+          title: '',//图表标题
+          total: ''
         },
         //医生端列表（自定义组件 ）
         docTableData: [],//医生端列表数据接收
@@ -455,7 +458,9 @@
         if (data.i == 0) {
           this.getList1()
         } else if (data.i == 1) {
-          this.getList2()
+          this.getList1().then(val => {
+            this.getList2();
+          });
         }
       },
       //筛选返回值  管理端
@@ -497,10 +502,10 @@
           day = "0" + day;
         }
         var nowDate = year + "-" + month + "-" + day;
-        if(data.index.value == "TODAY"){
+        if (data.index.value == "TODAY") {
           this.time0 = nowDate;
           this.time1 = nowDate;
-        }else if(data.index.value == "ALL"){
+        } else if (data.index.value == "ALL") {
           this.time0 = "";
           this.time1 = "";
         }
@@ -626,23 +631,76 @@
       },
       //管理2表（统计）
       async getList2() {
+        this.getList21()
+        this.getList22()
+      },
+      //14.4.双向转诊-WEB管理端-统计 
+      async getList21() {
         const _this = this
         let query = {
           token: this.userState.token,
           deptId: this.departmentId, //String false 科室ID 
           statisticalType: this.type, //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
-          direction: this.direction,//方向：into转入，转出out
+          direction: "into",//方向：into转入，转出out
           startTime: this.time0,
           endTime: this.time1
         };
         const res = await statistics(query);            //14.4.双向转诊-WEB管理端-统计 
         if (res.data && res.data.errCode === 0) {
-          console.log('统计+成功')
+          console.log('统计+转入人次+成功')
           console.log(res)
           const lists = res.data.body.data
+          this.yTotal1 = 0
+          this.testdata1.dataAxis.length = 0
+          this.testdata1.data.length = 0
+          $.each(lists, function (index, text) {
+            _this.yTotal1 += text.y;
+            _this.testdata1.dataAxis.push(text.x)
+            _this.testdata1.data.push(text.y)
+          });
+          this.testdata1.title = "转入人次"
+          this.testdata1.total = "总数：" + this.yTotal1
+          console.log(this.yTotal1)
+          console.log(this.testdata1)
         } else {
           //失败
-          console.log('统计+失败')
+          console.log('统计+转入人次+失败')
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      async getList22() {
+        const _this = this
+        let query = {
+          token: this.userState.token,
+          deptId: this.departmentId, //String false 科室ID 
+          statisticalType: this.type, //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
+          direction: "out",//方向：into转入，转出out
+          startTime: this.time0,
+          endTime: this.time1
+        };
+        const res = await statistics(query);            //14.4.双向转诊-WEB管理端-统计 
+        if (res.data && res.data.errCode === 0) {
+          console.log('统计+转出人次+成功')
+          console.log(res)
+          const lists = res.data.body.data
+          this.yTotal2 = 0
+          this.testdata2.dataAxis.length = 0
+          this.testdata2.data.length = 0
+          $.each(lists, function (index, text) {
+            _this.yTotal2 += text.y;
+            _this.testdata2.dataAxis.push(text.x)
+            _this.testdata2.data.push(text.y)
+          });
+          this.testdata2.title = "转出人次"
+          this.testdata2.total = "总数：" + this.yTotal2
+          console.log(this.yTotal2)
+          console.log(this.testdata2)
+        } else {
+          //失败
+          console.log('统计+转出人次+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -814,7 +872,7 @@
         console.log(options)
         const res = await dualReferralAdd(query, options);                                   //  14.6.双向转诊-WEB医生端-申请转诊 
         if (res.data && res.data.errCode === 0) {
-          this.isShowaddMove =false
+          this.isShowaddMove = false
           console.log('新增门诊 +成功')
           console.log(res)
           // this.referralId = res.data.body
@@ -1036,7 +1094,7 @@
         const options = {
           referralId: data2.referralId,//转诊ID
         };
-        const res = await applicantCANCEL(query,options);                  //14.9.双向转诊-WEB医生端-申请人操作
+        const res = await applicantCANCEL(query, options);                  //14.9.双向转诊-WEB医生端-申请人操作
         if (res.data && res.data.errCode === 0) {
           console.log('医生端-取消 (按钮)+成功')
           console.log(res)
@@ -1277,5 +1335,16 @@
     display: flex;
     display: -webkit-flex;
     justify-content: space-between;
+  }
+  .manager_count_midle{
+    margin: 40px 0 0 0;
+
+    div {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      justify-content: start;
+      align-items: center;
+      /* flex-wrap: wrap; */
+    }
   }
 </style>
