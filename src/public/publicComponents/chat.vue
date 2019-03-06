@@ -1,8 +1,5 @@
 <template>
     <div class="chat">
-        <!-- <websocket1 ref="mychild" @reback="addMessageK1">
-        </websocket1> -->
-        {{userSocketInfo.ifVideoImg}}
         <div :title="chatUser" class="otherNumClass">
             {{chatUser}}
         </div>
@@ -136,7 +133,7 @@
                 <img src="../../assets/img/sendNew10.png" />
                 <ul>
                     <li @click="openPublicFile()">普通档案</li>
-                    <li>孕妇答案</li>
+                    <li @click="openManFile()">孕妇答案</li>
                 </ul>
             </span>
             <span v-show="oDoctorVis" title="健康处方">
@@ -258,11 +255,9 @@
             </el-dialog>
         </div>
         <!-- 录入档案 -->
-        <!-- <div v-if="enterFileVisible"> -->
-            <!-- <el-dialog title="录入新档案" :visible.sync="enterFileVisible" center append-to-body> -->
-                <WomanDoc v-if="enterFileVisible" :inData="puBlicFileData"></WomanDoc>
-            <!-- </el-dialog> -->
-        <!-- </div> -->
+        <WomanDoc :inData="puBlicManData" @reback="addPublicMan"></WomanDoc>
+        <!-- 孕妇档案 -->
+        <norDocAlert :inData="puBlicFileData" @reback="addPublicFile"></norDocAlert>
     </div>
 </template>
 
@@ -278,6 +273,8 @@ import quest from "../../components/chat/quest.vue";
 import followDetail from "../../components/chat/followDetail.vue";
 import articleDetail from "../../components/chat/articleDetail.vue";
 import WomanDoc from "./WomanDoc.vue";
+import norDocAlert from "./norDocAlert.vue";
+
 import nohave from "./noData.vue";
 import {
     fetchHistoryMessage,
@@ -293,7 +290,10 @@ import {
     getArticleDetails,
     createVideoRoom,
     storageUsers,
-    closeVideoRoom
+    closeVideoRoom,
+    queryListByUserId,
+    addWomanMessage,
+    addOrdinaryArchives
 } from "../../api/apiAll.js";
 import ovideo from "../../video/oVideo.vue";
 import { setTimeout } from "timers";
@@ -308,14 +308,15 @@ export default {
         quest,
         articleDetail,
         nohave,
-        WomanDoc
+        WomanDoc,
+        norDocAlert
     },
     data() {
         return {
             puBlicFileData: {
                 //新增 普通档案  弹窗数据
                 // id:'1231321',
-                show: true, //是否显示
+                show: false, //是否显示
                 nameSelectId: "", //选择名字
                 nameList: [], //名字列表
                 sexList: [
@@ -722,11 +723,107 @@ export default {
         },
         //普通档案
         openPublicFile() {
-            this.enterFileVisible = true;
+            this.puBlicFileData.show = true;
+            // this.puBlicFileData = Object({}, this.puBlicFileData);
+            console.log(this.puBlicFileData);
+            this.getFamily();
         },
         //孕妇档案
         openManFile() {
-            this.enterManVisible = true;
+            this.puBlicManData.show = true;
+            this.getFamily();
+        },
+        async addPublicFile(data) {
+            console.log(data);
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                memberId: data.nameSelectId,
+                sex: data.sexSelectId,
+                age: data.age,
+                address: data.addr,
+                diagnosis: data.diagnosis,
+                opinion: data.deal
+            };
+            const res = await addOrdinaryArchives(query, options);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "录入成功"
+                });
+                 setTimeout(function(){
+                        _this.puBlicFileData.show=false
+                    },1000)
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        async addPublicMan(data) {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                memberId: data.nameSelectId,
+                memberName:  data.nameList.find(value=>{return value.id === data.nameSelectId}).name,
+                husband:  data.husband,
+                phone:  data.phone,
+                home:  data.addr,
+                ultimate:  data.LastMenstrualPeriod
+            };
+            const res = await addWomanMessage(query, options);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                    this.$notify.success({
+                        title: "成功",
+                        message: "录入成功"
+                    });
+                    setTimeout(function(){
+                        _this.puBlicManData.show=false
+                    },1000)
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //获取家庭成员
+        async getFamily() {
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                userId: this.userSelfInfo.userId
+            };
+            const res = await queryListByUserId(query);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body, function(index, text) {
+                    console.log(_this.puBlicFileData);
+                    _this.puBlicFileData.nameList.push({
+                        name: text.name,
+                        id: text.id
+                    });
+                    _this.puBlicManData.nameList.push({
+                        name: text.name,
+                        id: text.id
+                    });
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
         },
         //添加随访
         async addFollow() {
@@ -907,7 +1004,7 @@ export default {
                             //视频
                             if (odata[i].body.indexOf("refuse") > -1) {
                                 this.messageList[i].content = "挂断了视频";
-                            } else if (odata[i].body.indexOf("sendroom") > -1) {
+                            } else if (odata[i].body.indexOf("sendroom") > -1 || odata[i].body.indexOf("MicroCinicSendRoom") > -1) {
                                 this.messageList[i].content = "发起了视频聊天";
                             } else if (odata[i].body.indexOf("complete") > -1) {
                                 this.messageList[i].content = "视频通话已结束";
@@ -962,7 +1059,7 @@ export default {
                             //视频
                             if (odata[i].body.indexOf("refuse") > -1) {
                                 this.messageList[i].content = "拒绝了视频";
-                            } else if (odata[i].body.indexOf("sendroom") > -1) {
+                            }  else if (odata[i].body.indexOf("sendroom") > -1 || odata[i].body.indexOf("MicroCinicSendRoom") > -1) {
                                 this.messageList[i].content = "发起了视频聊天";
                             } else if (odata[i].body.indexOf("complete") > -1) {
                                 this.messageList[i].content = "视频通话已结束";
@@ -1296,6 +1393,12 @@ export default {
     line-height: 20px;
     font-size: 8px;
     cursor: pointer;
+}
+.enterFile:hover ul{
+    display: block
+}
+.enterFile ul{
+    display: none
 }
 .chatRecord > li {
     width: 100%;

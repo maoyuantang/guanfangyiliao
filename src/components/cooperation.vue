@@ -83,25 +83,25 @@
 
         <!-- 发起协作弹框 -->
         <el-dialog class="evaluateBox evaluateBox2" title=" 发起协作" :visible.sync="centerDialogVisible" width="602px" hight="356px" center>
-			<el-tree :data="invitationData1" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
-			<el-form ref="form" :model="startXiezuo" label-width="80px">
-				<el-form-item label="病历">
-					<el-select v-model="startXiezuo.recordId" placeholder="请选择活动区域">
-						<el-option label="区域一" value="shanghai"></el-option>
-						<el-option label="区域二" value="beijing"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="目的">
-					<el-input v-model="startXiezuo.intention"></el-input>
-				</el-form-item>
+            <el-tree :data="invitationData1" @check="handleCheckChange" show-checkbox></el-tree>
+            <el-form ref="form" :model="startXiezuo" label-width="80px">
+                <el-form-item label="病历">
+                    <el-select v-model="startXiezuo.recordId" placeholder="请选择活动区域">
+                        <el-option label="区域一" value="shanghai"></el-option>
+                        <el-option label="区域二" value="beijing"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="目的">
+                    <el-input v-model="startXiezuo.intention"></el-input>
+                </el-form-item>
 
-				<el-form-item>
-					<el-button type="primary" @click="onSubmit">立即创建</el-button>
-					<el-button>取消</el-button>
-				</el-form-item>
-			</el-form>
-			<el-button type="primary" @click="sureInvitation()">确认邀请</el-button>
-		</el-dialog>
+                <el-form-item>
+                    <el-button type="primary" @click="startXiez()">立即创建</el-button>
+                    <el-button>取消</el-button>
+                </el-form-item>
+            </el-form>
+            <el-button type="primary" @click="sureInvitation()">确认邀请</el-button>
+        </el-dialog>
         <!-- 查看记录 -->
         <div v-if="viewRecordVisible">
             <el-dialog class="evaluateBox evaluateBox2" title=" 查看记录" :visible.sync="viewRecordVisible" width="602px" hight="356px" center>
@@ -483,7 +483,7 @@ export default {
         //获取邀请列表
         async Invitation1() {
             // this.consultationId = row.id;
-            // this.invitationData = [];
+            this.invitationData1 = [];
             // this.invitationVisible = true;
             let _this = this;
             let query = {
@@ -491,18 +491,32 @@ export default {
             };
             const res = await enableSynergyDoctor(query);
             if (res.data && res.data.errCode === 0) {
-                $.each(res.data.body, function(index, text) {
-                    _this.invitationData1.push({
-                        label: text.name,
-                        children: []
-                    });
-                    $.each(text.children, function(oindex, otext) {
-                        _this.invitationData1[oindex].children.push({
-                            label: text.name,
-                            id: otext.id
-                        });
-                    });
-                });
+                console.log(res.data.body);
+                this.invitationData1=res.data.body
+                // $.each(res.data.body, function(index, text) {
+                //     _this.invitationData1.push({
+                //         label: text.name,
+                //         children: [],
+                //         id: text.id
+                //     });
+                //     if (text.children.length > 0) {
+                //         $.each(text.children, function(oindex, otext) {
+                //             _this.invitationData1[index].children.push({
+                //                 label: otext.name,
+                //                 id: otext.id
+                //             });
+
+                //             if (otext.children.length > 0) {
+                //                 $.each(otext.children, function(oindex1, otext2) {
+                //                     _this.invitationData1[index].children[oindex].children.push({
+                //                         label: otext2.name,
+                //                         id: otext2.id
+                //                     });
+                //                 });
+                //             }
+                //         });
+                //     }
+                // });
             } else {
                 //失败
                 this.$notify.error({
@@ -511,7 +525,7 @@ export default {
                 });
             }
         },
-
+        getTjData() {},
         //获取邀请列表
         async Invitation(row) {
             this.consultationId = row.id;
