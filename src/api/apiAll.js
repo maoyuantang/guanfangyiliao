@@ -2860,3 +2860,14 @@ export const nearlyDevice = query => { //1.医生查看成员最近随访
         }
     })
 }
+export const statisticsPeople = query => { //7.3.1远程门诊就诊人次柱状统计图
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.statisticsPeople,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
