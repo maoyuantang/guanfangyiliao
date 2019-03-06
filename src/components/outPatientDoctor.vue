@@ -37,70 +37,6 @@
       </li>
 
 
-
-
-
-
-
-
-      <!-- <el-dialog title="就诊列表" :visible.sync="isShowPatient" width="60%" center>
-        <ul v-for="(text5,index) in text.clinicOrders" :key="index" class=""
-          style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px;">
-          <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
-            <div>
-              <h1>{{text5.userName}}</h1>
-              <div class="orderTime">
-                <span>下单时间:</span>
-                <span class="span">{{text5.clinicOrderTime}}</span>
-              </div>
-            </div>
-            <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-              <el-button type="success" plain>查看档案</el-button>
-              <el-button type="danger" @click="sendMessage(text,text5)">发送</el-button>
-              <el-button type="info" plain>未开始</el-button>
-            </div>
-          </li>
-
-          <li class="drug">
-            <div>
-              <div class="drugTitle">Rx:</div>
-              <div>
-                <div class="drugDetail">
-                  <div>
-                    <ul v-for="(text,index) in text5.drugDetail" :key="index">
-                      <li>（{{index+1}}）</li>
-                      <li>{{text.drugName}}</li>
-                      <li>{{text.norm}}</li>
-                      <li>{{text.drugQuantity}}</li>
-                      <li>{{text.drugDosage}}</li>
-                      <li>{{text.drugUse}}</li>
-                      <li>{{text.drugTimes}}</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-
-          <li>
-            <el-table :data="text5.clinicOrders">
-              <el-table-column prop="askTime" label="接诊时间"></el-table-column>
-              <el-table-column prop="userName" label="首诊医生"></el-table-column>
-              <el-table-column prop="askPrice" label="问诊费用"></el-table-column>
-              <el-table-column prop="prescriptionPrice" label="处方费"></el-table-column>
-            </el-table>
-          </li>
-
-        </ul>
-      </el-dialog> -->
-
-
-
-
-
-
-
-
       <li class="outpatient_right">
         <!-- 病人个数循环 -->
         <span class="dian" @click="lookList(text.clinicOrders)">...</span>
@@ -117,7 +53,9 @@
           <li class="medicalExpenses">
             问诊费用
             <span>
-              <span>￥</span>{{text1.askPrice}}</span>
+              <span>￥</span>
+              {{text1.askPrice}}
+            </span>
           </li>
           <li class="drug">
             <div class="fee">处方费用 ¥
@@ -154,6 +92,20 @@
 
       </li>
     </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <ul v-if="oconsulVisable == 1" class="prescriptionCheck">
       <li class="checkList">
         <div class="title">
@@ -351,6 +303,20 @@
       </li>
     </ul>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <ul v-if="oconsulVisable == 2" class="transport">
       <li class="checkList">
         <div class="title">
@@ -537,7 +503,7 @@
 
     </ul>
 
-
+    <!-- //某诊室的所有病人列表 -->
     <el-dialog title="就诊列表" :visible.sync="isShowPatient" width="60%" center>
       <ul v-for="(text5,index) in huanzheList" :key="index" class=""
         style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px;">
