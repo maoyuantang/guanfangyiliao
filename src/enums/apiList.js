@@ -272,5 +272,6 @@ export default {
     intoPlatform:'/m/v1/api/inquiry/eduLearn/intoPlatform',//12.4 进入教学（临时）
     nearlyFollowup:'/m/v1/api/followup/followupPlan/nearlyFollowup',//1.医生查看成员最近随访
     nearlyDevice:'/m/v1/api/device/house/nearlyDevice',//1.医生查看成员最近自测
+    statisticsPeople:'/m/v1/api/clinic/clinic/statisticsPeople',//7.3.1远程门诊就诊人次柱状统计图
 }
 
