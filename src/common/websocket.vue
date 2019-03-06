@@ -16,9 +16,12 @@
             </div>
         </el-dialog>
         <!-- 视频聊天 -->
-        <el-dialog title="视频" :visible.sync="VideoVisable" center append-to-body fullscreen @close="closeVideo()">
-            <ovideo :createVideoRoomData="createVideoRoomData"></ovideo>
-        </el-dialog>
+        <div v-if="VideoVisable">
+            <el-dialog title="视频" :visible.sync="VideoVisable" center append-to-body fullscreen @close="closeVideo()">
+                <ovideo :createVideoRoomData="createVideoRoomData"></ovideo>
+            </el-dialog>
+        </div>
+
     </div>
 </template>
 
@@ -98,8 +101,8 @@ export default {
     methods: {
         receiveVideo() {
             this.closeVideoOr("ON");
-            this.sendMessageChat('6', 'accept')
-             this.$store.commit("socket/IFVIDEOIMG", 1);
+            this.sendMessageChat("6", "accept");
+            this.$store.commit("socket/IFVIDEOIMG", 1);
         },
         refuseVideo() {
             this.receiveVideoVisable = false;
@@ -960,111 +963,111 @@ export default {
                     // if (fromUserid == userId) {
                     //     mine = true;
                     // }
-                    if (userSeesion.indexOf(fromid) > -1) {
-                        var type = "group";
-                    } else {
-                        var type = "firend";
-                    }
-                    var resdata = {
-                        username: username, //消息来源用户名
-                        avatar:
-                            interfaces +
-                            "/user/api/v2/public/download?downType=Head&secId=" +
-                            encodeBase64 +
-                            "&userId=" +
-                            odata.info.from +
-                            "&layer=00&deType=HD",
-                        id: id, //消息的来源ID（如果是私聊，则是用户id，如果是群聊，则是群组id）
-                        type: type, //聊天窗口来源类型，从发送消息传递的to里面获取
-                        content: content, //消息内容
-                        chatType: chatTypeT,
-                        groupId: id, //定义唯一的id方便你处理信息
-                        cid: cid, //消息id，可不传。除非你要对消息进行一些操作（如撤回）
-                        mine: mine, //是否我发送的消息，如果为true，则会显示在右方
-                        fromid: fromid, //消息的发送者id（比如群组中的某个消息发送者），可用于自动解决浏览器多窗口时的一些问题
-                        timestamp: timestamp //服务端时间戳。注意：JS中的时间戳是精确到毫秒，如果你返回的是标准的 unix 时间戳，记得要 *1000
-                    };
-                    var seFromid = odata.info.from;
-                    var seBody = odata.info.body;
-                    var sEsessionId = layui.data("selectRoomState").sessionId;
-                    var sEsessionIdt = layui.data("selectRoomStateT").sessionId;
-                    var childNum = odata.info.childMessageType;
+                    // if (userSeesion.indexOf(fromid) > -1) {
+                    //     var type = "group";
+                    // } else {
+                    //     var type = "firend";
+                    // }
+                    // var resdata = {
+                    //     username: username, //消息来源用户名
+                    //     avatar:
+                    //         interfaces +
+                    //         "/user/api/v2/public/download?downType=Head&secId=" +
+                    //         encodeBase64 +
+                    //         "&userId=" +
+                    //         odata.info.from +
+                    //         "&layer=00&deType=HD",
+                    //     id: id, //消息的来源ID（如果是私聊，则是用户id，如果是群聊，则是群组id）
+                    //     type: type, //聊天窗口来源类型，从发送消息传递的to里面获取
+                    //     content: content, //消息内容
+                    //     chatType: chatTypeT,
+                    //     groupId: id, //定义唯一的id方便你处理信息
+                    //     cid: cid, //消息id，可不传。除非你要对消息进行一些操作（如撤回）
+                    //     mine: mine, //是否我发送的消息，如果为true，则会显示在右方
+                    //     fromid: fromid, //消息的发送者id（比如群组中的某个消息发送者），可用于自动解决浏览器多窗口时的一些问题
+                    //     timestamp: timestamp //服务端时间戳。注意：JS中的时间戳是精确到毫秒，如果你返回的是标准的 unix 时间戳，记得要 *1000
+                    // };
+                    // var seFromid = odata.info.from;
+                    // var seBody = odata.info.body;
+                    // var sEsessionId = layui.data("selectRoomState").sessionId;
+                    // var sEsessionIdt = layui.data("selectRoomStateT").sessionId;
+                    // var childNum = odata.info.childMessageType;
 
-                    if (odata.info.chatType == 3) {
-                        //判断是否是用户发送过来的消息
-                        if (fromid == sEsessionId) {
-                            try {
-                                parent.onliConert(
-                                    fromNickNameL,
-                                    seBody,
-                                    childNum
-                                );
-                            } catch (e) {}
-                        } else {
-                            try {
-                                var chatboxsession = layui
-                                    .data("chatboxsession")
-                                    .id.replace("M", "#")
-                                    .replace("-", ":");
-                                var selectRoomStateNw = layui
-                                    .data("selectRoomStateNw")
-                                    .sessionId.replace("M", "#")
-                                    .replace("-", ":");
-                            } catch (e) {}
-                            if (selectRoomStateNw == odata.info.to) {
-                                try {
-                                    parent.onliConertp(
-                                        fromNickNameL,
-                                        seBody,
-                                        childNum
-                                    );
-                                } catch (e) {}
-                            }
-                            if (chatboxsession == odata.info.to) {
-                                console.log(odata.info.to);
-                                parent.chatKu(
-                                    odata.info.body,
-                                    odata.info.serverTime
-                                );
-                            }
-                            var notification = new Notification(
-                                "" + odata.info.fromNickName + "",
-                                {
-                                    body: "我已填好问诊表，请医生查看",
-                                    icon: "../../images/gf_logo_app.png"
-                                }
-                            );
-                            notification.onclick = function() {
-                                notification.close();
-                            };
-                            parent.rendcoles(
-                                odata.info.to
-                                    .replace("#", "M")
-                                    .replace(":", "-")
-                            );
-                        }
-                    } else {
-                        try {
-                            var selectRoomStateNw = layui
-                                .data("selectRoomStateNw")
-                                .sessionId.replace("M", "#")
-                                .replace("-", ":");
-                        } catch (e) {}
-                        if (selectRoomStateNw == odata.info.to) {
-                            try {
-                                parent.onliConertp(
-                                    fromNickNameL,
-                                    seBody,
-                                    childNum
-                                );
-                            } catch (e) {}
-                        } else {
-                            if (userSeesion.indexOf(fromid) > -1) {
-                                layim.getMessage(resdata); //res.data即你发送消息传递的数据（阅读：监听发送的消息）
-                                return false;
-                            }
-                        }
-                    }
+                    // if (odata.info.chatType == 3) {
+                    //     //判断是否是用户发送过来的消息
+                    //     if (fromid == sEsessionId) {
+                    //         try {
+                    //             parent.onliConert(
+                    //                 fromNickNameL,
+                    //                 seBody,
+                    //                 childNum
+                    //             );
+                    //         } catch (e) {}
+                    //     } else {
+                    //         try {
+                    //             var chatboxsession = layui
+                    //                 .data("chatboxsession")
+                    //                 .id.replace("M", "#")
+                    //                 .replace("-", ":");
+                    //             var selectRoomStateNw = layui
+                    //                 .data("selectRoomStateNw")
+                    //                 .sessionId.replace("M", "#")
+                    //                 .replace("-", ":");
+                    //         } catch (e) {}
+                    //         if (selectRoomStateNw == odata.info.to) {
+                    //             try {
+                    //                 parent.onliConertp(
+                    //                     fromNickNameL,
+                    //                     seBody,
+                    //                     childNum
+                    //                 );
+                    //             } catch (e) {}
+                    //         }
+                    //         if (chatboxsession == odata.info.to) {
+                    //             console.log(odata.info.to);
+                    //             parent.chatKu(
+                    //                 odata.info.body,
+                    //                 odata.info.serverTime
+                    //             );
+                    //         }
+                    //         var notification = new Notification(
+                    //             "" + odata.info.fromNickName + "",
+                    //             {
+                    //                 body: "我已填好问诊表，请医生查看",
+                    //                 icon: "../../images/gf_logo_app.png"
+                    //             }
+                    //         );
+                    //         notification.onclick = function() {
+                    //             notification.close();
+                    //         };
+                    //         parent.rendcoles(
+                    //             odata.info.to
+                    //                 .replace("#", "M")
+                    //                 .replace(":", "-")
+                    //         );
+                    //     }
+                    // } else {
+                    //     try {
+                    //         var selectRoomStateNw = layui
+                    //             .data("selectRoomStateNw")
+                    //             .sessionId.replace("M", "#")
+                    //             .replace("-", ":");
+                    //     } catch (e) {}
+                    //     if (selectRoomStateNw == odata.info.to) {
+                    //         try {
+                    //             parent.onliConertp(
+                    //                 fromNickNameL,
+                    //                 seBody,
+                    //                 childNum
+                    //             );
+                    //         } catch (e) {}
+                    //     } else {
+                    //         if (userSeesion.indexOf(fromid) > -1) {
+                    //             layim.getMessage(resdata); //res.data即你发送消息传递的数据（阅读：监听发送的消息）
+                    //             return false;
+                    //         }
+                    //     }
+                    // }
                 } else {
                     // 是本人发的消息
                     //判断当前接受的会话是否在当前列表中

@@ -5,6 +5,7 @@
         <transition>
             <router-view class="router-view-class" />
         </transition>
+        
         <websocket1 ref="mychild"></websocket1>
     </div>
 </template>

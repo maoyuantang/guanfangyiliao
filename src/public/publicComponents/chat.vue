@@ -1,8 +1,5 @@
 <template>
     <div class="chat">
-        <!-- <websocket1 ref="mychild" @reback="addMessageK1">
-        </websocket1> -->
-        {{userSocketInfo.ifVideoImg}}
         <div :title="chatUser" class="otherNumClass">
             {{chatUser}}
         </div>
@@ -21,9 +18,12 @@
                             <span class="otime">{{text.serverTime}}</span>
                         </h4>
                         <div class="messageCon">
-                            <div v-show="text.from==userSelfInfo.userId" class="noReadro">
-                                <span class="allReadColor" v-if="text.oRead">已读 </span>
-                                <span class="noReadColor" v-else>未读</span>
+
+                            <div v-if="oDoctorVis" class="noReadro">
+                                <div v-if="text.from==userSelfInfo.userId">
+                                    <span class="allReadColor" v-if="text.oRead">已读 </span>
+                                    <span class="noReadColor" v-else>未读</span>
+                                </div>
                             </div>
 
                             <div>
@@ -81,9 +81,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div v-show="text.from!=userSelfInfo.userId" class="noReadro">
-                                <span class="allReadColor" v-if="text.oRead">已读 </span>
-                                <span class="noReadColor" v-else>未读</span>
+                            <div v-show="oDoctorVis" class="noReadro">
+                                <div v-if="text.from!=userSelfInfo.userId">
+                                    <span class="allReadColor" v-if="text.oRead">已读 </span>
+                                    <span class="noReadColor" v-else>未读</span>
+                                </div>
                             </div>
 
                         </div>
@@ -112,9 +114,6 @@
                     <el-button class="setVideoBtn" @click="setVideo(1)" type="primary">确认</el-button>
                 </div>
             </span>
-            <!-- <span v-show="oDoctorVis" @click="addArticle()" title="发送文章">
-                <img src="../../assets/img/sendNew3.png" />
-            </span> -->
             <span v-show="oDoctorVis" @click="addFollow()" title="发送随访">
                 <img src="../../assets/img/sendNew4.png" />
             </span>
@@ -130,8 +129,12 @@
             <span v-show="oDoctorVis" @click="addPlan()" title="计划">
                 <img src="../../assets/img/sendNew9.png" />
             </span>
-            <span v-show="oDoctorVis" title="录入档案">
+            <span v-show="oDoctorVis" title="录入档案" class="enterFile">
                 <img src="../../assets/img/sendNew10.png" />
+                <ul>
+                    <li @click="openPublicFile()">普通档案</li>
+                    <li @click="openManFile()">孕妇答案</li>
+                </ul>
             </span>
             <span v-show="oDoctorVis" title="健康处方">
                 <img src="../../assets/img/sendNew11.png" />
@@ -252,22 +255,9 @@
             </el-dialog>
         </div>
         <!-- 录入档案 -->
-        <!-- <el-dialog title="录入新档案" :visible.sync="planVisible"   center append-to-body>
-            <el-form ref="form" :model="planData" label-width="80px">
-                <el-form-item label="计划时间">
-                    <el-date-picker v-model="planData.planTime" type="datetime" placeholder="选择日期时间">
-                    </el-date-picker>
-                </el-form-item>
-
-                <el-form-item label="计划内容">
-                    <el-input type="textarea" v-model="planData.planCon"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="onSubmit">确认</el-button>
-                    <el-button>取消</el-button>
-                </el-form-item>
-            </el-form>
-        </el-dialog> -->
+        <WomanDoc :inData="puBlicManData" @reback="addPublicMan"></WomanDoc>
+        <!-- 孕妇档案 -->
+        <norDocAlert :inData="puBlicFileData" @reback="addPublicFile"></norDocAlert>
     </div>
 </template>
 
@@ -282,6 +272,8 @@ import follow from "../../components/chat/follow.vue";
 import quest from "../../components/chat/quest.vue";
 import followDetail from "../../components/chat/followDetail.vue";
 import articleDetail from "../../components/chat/articleDetail.vue";
+import WomanDoc from "./WomanDoc.vue";
+import norDocAlert from "./norDocAlert.vue";
 
 import nohave from "./noData.vue";
 import {
@@ -298,7 +290,10 @@ import {
     getArticleDetails,
     createVideoRoom,
     storageUsers,
-    closeVideoRoom
+    closeVideoRoom,
+    queryListByUserId,
+    addWomanMessage,
+    addOrdinaryArchives
 } from "../../api/apiAll.js";
 import ovideo from "../../video/oVideo.vue";
 import { setTimeout } from "timers";
@@ -312,10 +307,41 @@ export default {
         followDetail,
         quest,
         articleDetail,
-        nohave
+        nohave,
+        WomanDoc,
+        norDocAlert
     },
     data() {
         return {
+            puBlicFileData: {
+                //新增 普通档案  弹窗数据
+                // id:'1231321',
+                show: false, //是否显示
+                nameSelectId: "", //选择名字
+                nameList: [], //名字列表
+                sexList: [
+                    //性别
+                    { label: "女", value: 0 },
+                    { label: "男", value: 1 }
+                ],
+                sexSelectId: 0,
+                age: "", //年龄
+                addr: "", //地址
+                org: "", //机构
+                diagnosis: "", //诊断
+                deal: "" //处理意见
+            },
+            puBlicManData: {
+                //新增 孕妇档案  弹窗数据
+                show: false,
+                nameSelectId: "", //选择名字
+                nameList: [], //名字列表
+                husband: "", //丈夫
+                phone: "", //电话
+                addr: "", //地址
+                LastMenstrualPeriod: null //末次月经
+            },
+            enterFileVisible: false,
             VideoshowClose: false,
             addQuestId: "",
             sendToUserId: "",
@@ -374,7 +400,8 @@ export default {
             signImages: [
                 "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=85690711,3884201894&fm=27&gp=0.jpg"
             ],
-            oMsgId: ""
+            oMsgId: "",
+            ReadMessage: "" //已读未读
         };
     },
     computed: {
@@ -385,6 +412,7 @@ export default {
         })
     },
     created() {
+        console.log(ovideo);
         console.log(this.$store.state.socket.socketObj);
         // this.addMessageK1();
         this.getDoctorVis();
@@ -462,17 +490,17 @@ export default {
             fromNickName
         ) {
             if (childMessageType == "VIDEO") {
-                if (oMessage == "cancle") {
+                if (oMessage.indexOf("cancle") > -1) {
                     oMessage = "取消了视频通话";
-                } else if (oMessage == "refuse") {
+                } else if (oMessage.indexOf("refuse") > -1) {
                     oMessage = "拒绝了视频通话";
-                } else if (oMessage == "videoing") {
+                } else if (oMessage.indexOf("videoing") > -1) {
                     oMessage = "对方正在视频通话中";
-                } else if (oMessage == "complete") {
+                } else if (oMessage.indexOf("complete") > -1) {
                     oMessage = "视频通话已结束";
-                } else if (oMessage == "accept") {
+                } else if (oMessage.indexOf("accept") > -1) {
                     oMessage = "接受了视频聊天";
-                } else if (oMessage == "complete") {
+                } else if (oMessage.indexOf("complete") > -1) {
                     oMessage = "视频通话已结束";
                 } else if (oMessage.indexOf("sendroom") > -1) {
                     console.log("发起了视频聊天！！！！");
@@ -693,6 +721,110 @@ export default {
         addPlan() {
             this.planVisible = true;
         },
+        //普通档案
+        openPublicFile() {
+            this.puBlicFileData.show = true;
+            // this.puBlicFileData = Object({}, this.puBlicFileData);
+            console.log(this.puBlicFileData);
+            this.getFamily();
+        },
+        //孕妇档案
+        openManFile() {
+            this.puBlicManData.show = true;
+            this.getFamily();
+        },
+        async addPublicFile(data) {
+            console.log(data);
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                memberId: data.nameSelectId,
+                sex: data.sexSelectId,
+                age: data.age,
+                address: data.addr,
+                diagnosis: data.diagnosis,
+                opinion: data.deal
+            };
+            const res = await addOrdinaryArchives(query, options);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "录入成功"
+                });
+                 setTimeout(function(){
+                        _this.puBlicFileData.show=false
+                    },1000)
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        async addPublicMan(data) {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                memberId: data.nameSelectId,
+                memberName:  data.nameList.find(value=>{return value.id === data.nameSelectId}).name,
+                husband:  data.husband,
+                phone:  data.phone,
+                home:  data.addr,
+                ultimate:  data.LastMenstrualPeriod
+            };
+            const res = await addWomanMessage(query, options);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                    this.$notify.success({
+                        title: "成功",
+                        message: "录入成功"
+                    });
+                    setTimeout(function(){
+                        _this.puBlicManData.show=false
+                    },1000)
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //获取家庭成员
+        async getFamily() {
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                userId: this.userSelfInfo.userId
+            };
+            const res = await queryListByUserId(query);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body, function(index, text) {
+                    console.log(_this.puBlicFileData);
+                    _this.puBlicFileData.nameList.push({
+                        name: text.name,
+                        id: text.id
+                    });
+                    _this.puBlicManData.nameList.push({
+                        name: text.name,
+                        id: text.id
+                    });
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         //添加随访
         async addFollow() {
             this.followVisible = true;
@@ -844,7 +976,7 @@ export default {
                 });
 
                 for (let i = 0; i < odata.length; i++) {
-                    if (this.areadyReadNum > odata[i].msgId) {
+                    if (this.areadyReadNum < odata[i].msgId) {
                         this.messageList[i].oRead = true;
                     } else {
                         this.messageList[i].oRead = false;
@@ -872,12 +1004,14 @@ export default {
                             //视频
                             if (odata[i].body.indexOf("refuse") > -1) {
                                 this.messageList[i].content = "挂断了视频";
-                            } else if (odata[i].body.indexOf("sendroom") > -1) {
+                            } else if (odata[i].body.indexOf("sendroom") > -1 || odata[i].body.indexOf("MicroCinicSendRoom") > -1) {
                                 this.messageList[i].content = "发起了视频聊天";
                             } else if (odata[i].body.indexOf("complete") > -1) {
                                 this.messageList[i].content = "视频通话已结束";
                             } else if (odata[i].body.indexOf("cancle") > -1) {
                                 this.messageList[i].content = "取消了视频";
+                            } else if (odata[i].body.indexOf("accept") > -1) {
+                                this.messageList[i].content = "接受了视频";
                             }
                         } else if (odata[i].childMessageType == "IMAGE") {
                         } else {
@@ -924,8 +1058,8 @@ export default {
                         } else if (odata[i].childMessageType == "VIDEO") {
                             //视频
                             if (odata[i].body.indexOf("refuse") > -1) {
-                                this.messageList[i].content = "挂断了视频";
-                            } else if (odata[i].body.indexOf("sendroom") > -1) {
+                                this.messageList[i].content = "拒绝了视频";
+                            }  else if (odata[i].body.indexOf("sendroom") > -1 || odata[i].body.indexOf("MicroCinicSendRoom") > -1) {
                                 this.messageList[i].content = "发起了视频聊天";
                             } else if (odata[i].body.indexOf("complete") > -1) {
                                 this.messageList[i].content = "视频通话已结束";
@@ -1107,13 +1241,13 @@ export default {
         },
         //视频组件传过来的事件
         videoclick(data) {
-            alert('qwqw')
+            alert("qwqw");
             if (data == "closeCancle") {
                 this.videoVisible = false;
-                this.sendMessageChat('6', 'cancle', 'VIDEO')
+                this.sendMessageChat("6", "cancle", "VIDEO");
             } else if (data == "closeComplete") {
                 this.videoVisible = false;
-            this.sendMessageChat('6', 'complete', 'VIDEO');
+                this.sendMessageChat("6", "complete", "VIDEO");
             }
         },
         //删除视频房间
@@ -1259,6 +1393,12 @@ export default {
     line-height: 20px;
     font-size: 8px;
     cursor: pointer;
+}
+.enterFile:hover ul{
+    display: block
+}
+.enterFile ul{
+    display: none
 }
 .chatRecord > li {
     width: 100%;
@@ -1520,6 +1660,18 @@ export default {
 .loadMoreChat {
     cursor: pointer;
     text-align: center;
+}
+.enterFile {
+    position: relative;
+}
+.enterFile ul {
+    position: absolute;
+    color: black;
+}
+.enterFile ul li {
+    text-align: center;
+    line-height: 23px;
+    font-size: 11px;
 }
 /* 备注
 

@@ -1,10 +1,7 @@
 <!--
-门诊系统医院管理页面
+医生端未处理：  处方单  预览   查看档案
 
-我的门诊-其他医生-不知如何显示
 点击生成处方，7.9审核处方，后台返回审方医生id未null，无法请求
-处方单 未获取成功  预览
-
 -->
 <template>
   <div class="outPatientDoctor">
@@ -108,13 +105,13 @@
         <!-- 病人个数循环 -->
         <span class="dian" @click="lookList(text.clinicOrders)">...</span>
         <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail">
-          
+
           <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
             <h1>{{text1.userName}}</h1>
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
               <el-button type="success" plain>查看档案</el-button>
               <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button>
-              <el-button type="info" plain>未开始</el-button>
+              <el-button type="info" plain>{{text.doctor.doctorStates?'未开始':'进行中'}}</el-button>
             </div>
           </li>
           <li class="medicalExpenses">
@@ -163,19 +160,21 @@
           <span class="title1">审核列表</span>
           <span class="title2">...</span>
         </div>
-        <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index,text)'
-          :class="whichUser==index?'backgroundUser':''">
-          <li>
-            <img src="../assets/img/ME.png" alt="头像">
-            <div>
-              <p class="name">{{text.userName}}</p>
-              <p class="depart">问诊医生:
-                <span>{{text.createDoctor}}</span> |
-                <span>{{text.clinicName}}</span>
-              </p>
-            </div>
-          </li>
-        </ul>
+        <div class="div">
+          <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index,text)'
+            :class="whichUser==index?'backgroundUser':''">
+            <li>
+              <img src="../assets/img/ME.png" alt="头像">
+              <div>
+                <p class="name">{{text.userName}}</p>
+                <p class="depart">问诊医生:
+                  <span>{{text.createDoctor}}</span> |
+                  <span>{{text.clinicName}}</span>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </li>
       <li v-for="(text,index) in bcd" :key="index+ '-label'" v-show='whichUser==index' class="waitPeople">
 
@@ -266,7 +265,7 @@
                     <el-checkbox v-model="text.pb.report">疫情报告</el-checkbox>
                   </li>
                   <li>
-                    <el-checkbox v-model="text.pb.report">复诊</el-checkbox>
+                    <el-checkbox v-model="text.pb.review">复诊</el-checkbox>
                   </li>
                   <li>
 
@@ -332,9 +331,10 @@
               </div>
             </div>
           </li>
+          <textarea class="doctorTalk" name="" id="" placeholder="备注："></textarea>
           <li class="detailFooter">
             <el-button class="preview" type="primary" @click="dialogTableVisibleFun" plain>预览</el-button>
-            <el-button class="fail" type="info">不通过</el-button>
+            <el-button class="fail" type="info" @click='checkPrescription0'>不通过</el-button>
             <el-button class="success" type="success" @click='checkPrescription'>生成电子处方</el-button>
           </li>
           <!-- <div>
@@ -357,19 +357,21 @@
           <span class="title1">审核列表</span>
           <span class="title2">...</span>
         </div>
-        <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index)'
-          :class="whichUser==index?'backgroundUser':''">
-          <li>
-            <img src="../assets/img/ME.png" alt="头像">
-            <div>
-              <p class="name">{{text.userName}}</p>
-              <p class="depart">问诊医生:
-                <span>{{text.createDoctor}}</span> |
-                <span>{{text.clinicName}}</span>
-              </p>
-            </div>
-          </li>
-        </ul>
+        <div class="div">
+          <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index)'
+            :class="whichUser==index?'backgroundUser':''">
+            <li>
+              <img src="../assets/img/ME.png" alt="头像">
+              <div>
+                <p class="name">{{text.userName}}</p>
+                <p class="depart">问诊医生:
+                  <span>{{text.createDoctor}}</span> |
+                  <span>{{text.clinicName}}</span>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </li>
       <li v-for="(text,index) in bcd" :key="index+ '-label'" v-show='whichUser==index' class="waitPeople">
         <ul>
@@ -525,6 +527,7 @@
               </div>
             </div>
           </li>
+          <textarea class="doctorTalk" name="" id="" placeholder="备注："></textarea>
           <li class="detailFooter">
             <el-button class="preview" type="primary" @click="dialogTableVisibleFun" plain>预览</el-button>
             <el-button class="ship" type="primary" plain>发货</el-button>
@@ -552,7 +555,7 @@
             <el-button type="info" plain>未开始</el-button>
           </div>
         </li>
-    
+
         <li class="drug">
           <div>
             <div class="drugTitle">Rx:</div>
@@ -573,7 +576,7 @@
             </div>
           </div>
         </li>
-    
+
         <li>
           <el-table :data="text5.clinicOrders">
             <el-table-column prop="askTime" label="接诊时间"></el-table-column>
@@ -582,7 +585,7 @@
             <el-table-column prop="prescriptionPrice" label="处方费"></el-table-column>
           </el-table>
         </li>
-    
+
       </ul>
     </el-dialog>
     <!-- 预览弹窗 -->
@@ -713,7 +716,7 @@
         isShowPatient: false,//就诊列表是否出现
         isShowPatientList: [],//就诊列表数据
         text5Array: [],//就诊列表弹框底部table数据
-        huanzheList:[],
+        huanzheList: [],
 
         // 7.8开处方 医生端列表2
         // firstDoctorId: '',//开方医生id
@@ -917,7 +920,9 @@
         if (res.i == 0) {
           this.getList1();
         } else if (res.i == 1) {
-          this.getList2();
+          this.getList2().then(val => {
+            this.whichUserFun(0, this.bcd[0]);//刷新默认读取第一条数据
+          });
         } else if (res.i == 2) {
           this.getList3();
         }
@@ -936,6 +941,7 @@
         // console.log(data)
       },
       whichUserFun(index, data) {
+        console.log(index, data)
         this.whichUser = index;
         this.prescriptionId = data.pb.id;
         this.secondDoctorId = data.reviewDoctor;
@@ -988,7 +994,7 @@
       async lookList(data) {
         const _this = this
         this.isShowPatient = true
-        this.huanzheList=data
+        this.huanzheList = data
       },
       // 7.10.1按审方医生获取处方审核列表 (医生列表2)
       async getList2() {
@@ -1139,14 +1145,38 @@
         let options = {
           prescriptionId: this.prescriptionId,
           secondDoctorId: this.secondDoctorId,
-          reviewEnum: this.reviewEnum0 //等待
+          reviewEnum: "REVIEWED" //等待
         };
         const res = await updatePrescription(query, options);
         if (res.data && res.data.errCode === 0) {
-          console.log("审核处方医生端+成功");
+          console.log("点击生成处方+成功");
           console.log(res);
         } else {
-          console.log("审核处方医生端+失败");
+          console.log("点击生成处方+失败");
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      // 7.9审核处方   不通过
+      async checkPrescription0() {
+
+        let _this = this;
+        let query = {
+          token: this.userState.token
+        };
+        let options = {
+          prescriptionId: this.prescriptionId,
+          secondDoctorId: this.secondDoctorId,
+          reviewEnum: "FAILREVIEWED"
+        };
+        const res = await updatePrescription(query, options);
+        if (res.data && res.data.errCode === 0) {
+          console.log("不通过+成功");
+          console.log(res);
+        } else {
+          console.log("不通过+失败");
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1158,7 +1188,6 @@
     async created() {
       this.getList1(); //7.6医生列表1
       // this.addPrescription();//7.8开处方
-      // this.checkPrescription();//7.9是否通过
     },
     watch: {
       "userSocketInfo.synchroMessage": {
@@ -1262,30 +1291,30 @@
       border-left: 1px solid #e7edf3;
       padding: 0 0 0 0.3rem;
       width: 70%;
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       .dian {
-          position: absolute;
-          font-size: 30px;
+        position: absolute;
+        font-size: 30px;
         top: 2%;
         right: 2%;
-          transform: rotate(90deg);
-          cursor: pointer
-        }
+        transform: rotate(90deg);
+        cursor: pointer
+      }
 
       .patientDetail {
         display: flex;
@@ -1293,7 +1322,7 @@
         justify-content: space-around;
         margin: 0.18rem 0 0 0;
 
-        
+
 
         .name {
           margin: 5% 0 0 0;
@@ -1444,48 +1473,53 @@
       }
     }
 
-    ul {
-      display: flex;
-      flex-direction: column;
-      margin: 0.1rem 0;
-      padding: 0.17rem 0.2rem;
+    .div {
+      overflow-y: scroll;
 
-      li {
+      ul {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        margin: 0.1rem 0;
+        padding: 0.17rem 0.2rem;
 
-        img {
-          width: 0.5rem;
-          height: 0.5rem;
-          border-radius: 50%;
-          margin: 0 0.1rem 0 0;
-        }
-
-        div {
+        li {
           display: flex;
-          flex-direction: column;
+          align-items: center;
 
-          .name {
-            font-family: PingFangSC-Regular;
-            font-size: 14px;
-            color: #000;
+          img {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            margin: 0 0.1rem 0 0;
           }
 
-          .depart {
-            font-family: PingFangSC-Regular;
-            font-size: 14px;
-            color: #000;
-            letter-spacing: 0.2px;
-            line-height: 21px;
+          div {
+            display: flex;
+            flex-direction: column;
+
+            .name {
+              font-family: PingFangSC-Regular;
+              font-size: 14px;
+              color: #000;
+            }
+
+            .depart {
+              font-family: PingFangSC-Regular;
+              font-size: 14px;
+              color: #000;
+              letter-spacing: 0.2px;
+              line-height: 21px;
+            }
           }
         }
       }
+
     }
   }
 
   .waitPeople {
     width: 15%;
-    height: 95%;
+    /* height: 95%; */
     background: #ffffff;
     border: 1px solid #e4e8eb;
     border-radius: 0 0 3px 3px;
@@ -1716,7 +1750,7 @@
 
       .detailList {
         width: 100%;
-        height: 41%;
+        /* height: 41%; */
         /* background: #FFFFFF; */
         border-radius: 3px;
         margin: 3% 0 0 0;
@@ -1724,7 +1758,6 @@
         .listBao {
           margin: 3% 0 0 0;
           height: 85%;
-          overflow-y: scroll;
 
           .lists {
             margin: 0.3rem 0 0 0;
@@ -1747,6 +1780,12 @@
             }
           }
         }
+      }
+
+      .doctorTalk {
+        padding: 2px;
+        width: 100%;
+        height: 10%;
       }
 
       .detailFooter {
@@ -1821,39 +1860,44 @@
         }
       }
 
-      ul {
-        display: flex;
-        flex-direction: column;
-        margin: 0.1rem 0;
-        padding: 0.17rem 0.2rem;
+      .div {
+        overflow-y: scroll;
 
-        li {
+
+        ul {
           display: flex;
-          align-items: center;
+          flex-direction: column;
+          margin: 0.1rem 0;
+          padding: 0.17rem 0.2rem;
 
-          img {
-            width: 0.5rem;
-            height: 0.5rem;
-            border-radius: 50%;
-            margin: 0 0.1rem 0 0;
-          }
-
-          div {
+          li {
             display: flex;
-            flex-direction: column;
+            align-items: center;
 
-            .name {
-              font-family: PingFangSC-Regular;
-              font-size: 14px;
-              color: #000;
+            img {
+              width: 0.5rem;
+              height: 0.5rem;
+              border-radius: 50%;
+              margin: 0 0.1rem 0 0;
             }
 
-            .depart {
-              font-family: PingFangSC-Regular;
-              font-size: 14px;
-              color: #000;
-              letter-spacing: 0.2px;
-              line-height: 21px;
+            div {
+              display: flex;
+              flex-direction: column;
+
+              .name {
+                font-family: PingFangSC-Regular;
+                font-size: 14px;
+                color: #000;
+              }
+
+              .depart {
+                font-family: PingFangSC-Regular;
+                font-size: 14px;
+                color: #000;
+                letter-spacing: 0.2px;
+                line-height: 21px;
+              }
             }
           }
         }
@@ -1862,7 +1906,7 @@
 
     .waitPeople {
       width: 15%;
-      height: 95%;
+      /* height: 95%; */
       background: #ffffff;
       border: 1px solid #e4e8eb;
       border-radius: 0 0 3px 3px;
@@ -2088,7 +2132,7 @@
 
         .detailList {
           width: 100%;
-          height: 41%;
+          /* height: 41%; */
           /* background: #FFFFFF; */
           border-radius: 3px;
           margin: 3% 0 0 0;
@@ -2119,6 +2163,12 @@
               }
             }
           }
+        }
+
+        .doctorTalk {
+          padding: 2px;
+          width: 100%;
+          height: 10%;
         }
 
         .detailFooter {
