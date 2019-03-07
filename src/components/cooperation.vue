@@ -24,6 +24,7 @@
                         <search @searchValue="adminSearchChange"></search>
                     </div>
                     <div>
+                        {{adminLists}}
                         <publicList :tableData="adminLists" :columns="adminColumns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData"></publicList>
                     </div>
                 </div>
@@ -31,7 +32,7 @@
                 <div v-else>
                     <div class="mainTab">
                         <div>
-                            <selftag :inData="oTab1" @reback="getOTab1"></selftag>
+                            <selftag :inData="oTab1" @reback="getOTab5"></selftag>
                         </div>
                         <statisticsWay @reBack="getFilterTime"></statisticsWay>
                         <!-- <publicTime ></publicTime> -->
@@ -62,15 +63,10 @@
                     <el-table-column fixed prop="synergyStatus" label="状态"></el-table-column>
                     <el-table-column fixed="right" label="操作" width="100">
                         <template slot-scope="scope">
-                            <!-- <el-button @click="DoctorListFun1(scope.row)" type="text" size="small">病历</el-button>
-							<el-button @click="DoctorListFun2(scope.row)" type="text" size="small">邀请</el-button>
-							<el-button v-show="scope.row.status=='OVER'" @click="DoctorListFun3(scope.row)" type="text" size="small">查看记录</el-button>
-							<el-button v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="DoctorListFun4(scope.row)" type="text" size="small">进入协作</el-button>
-							<el-button v-show="scope.row.departmentId==userState.userId" @click="DoctorListFun5(scope.row)" type="text" size="small">结束</el-button> -->
                             <el-button @click="handleClick(scope.row)" type="text" size="small">病历</el-button>
                             <el-button @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
-                            <el-button v-show="scope.row.status=='OVER'" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
-                            <el-button v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="toConsultation(scope.row)" type="text" size="small">进入会诊</el-button>
+                            <el-button v-show="scope.row.synergyStatus==2" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
+                            <el-button v-show="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="toConsultation(scope.row)" type="text" size="small">进入协作</el-button>
                             <el-button v-show="scope.row.departmentId==userState.userId" @click="handleClick(scope.row)" type="text" size="small">结束</el-button>
                         </template>
                     </el-table-column>
@@ -83,7 +79,7 @@
 
         <!-- 发起协作弹框 -->
         <el-dialog class="evaluateBox evaluateBox2" title=" 发起协作" :visible.sync="centerDialogVisible" width="602px" hight="356px" center>
-            <el-tree :data="invitationData1" @check="handleCheckChange" show-checkbox></el-tree>
+            <el-tree :data="invitationData1" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
             <el-form ref="form" :model="startXiezuo" label-width="80px">
                 <el-form-item label="病历">
                     <el-select v-model="startXiezuo.recordId" placeholder="请选择活动区域">
@@ -96,11 +92,10 @@
                 </el-form-item>
 
                 <el-form-item>
-                    <el-button type="primary" @click="startXiez()">立即创建</el-button>
+                    <el-button type="primary" @click="launchXiezuo()">确认邀请</el-button>
                     <el-button>取消</el-button>
                 </el-form-item>
             </el-form>
-            <el-button type="primary" @click="sureInvitation()">确认邀请</el-button>
         </el-dialog>
         <!-- 查看记录 -->
         <div v-if="viewRecordVisible">
@@ -123,12 +118,12 @@
         </div>
 
         <!-- 邀请弹框 -->
-        <!-- <div v-if="invitationVisible">
+        <div v-if="invitationVisible">
             <el-dialog class="evaluateBox evaluateBox2" title=" 邀请医生" :visible.sync="invitationVisible" width="602px" hight="356px" center>
-                <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
+                <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChangeInvita" show-checkbox></el-tree>
                 <el-button type="primary" @click="sureInvitation()">确认邀请</el-button>
             </el-dialog>
-        </div> -->
+        </div>
     </div>
 </template>
 <script>
@@ -142,11 +137,13 @@ import {
     manageStatistics, //9.3协作管理统计
     synergyPage, //9.4医生协作列表
     enableSynergyDoctor, //9.5获取可协作医生（本院、院外协作）
-    sendSynergy //9.6 提交  发起协作  表单数据
+    sendSynergy, //9.6 提交  发起协作  表单数据
     // receiveDept,//9.9本院参与科室
     // synergyChangeStatus, //9.7开始/结束协作
     // synergyInto,//9.8进入协作
     // receiveDoctor,//9.10本院参与医生
+    sponsorConsultationInform,
+    queryConsultationInformList
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -199,7 +196,7 @@ export default {
                 id: "",
                 intention: "",
                 recordId: "",
-                receiverId: ["", ""]
+                receiverId: []
             },
             adminLists: [],
             //管理端  切换管理和统计
@@ -248,45 +245,12 @@ export default {
             //时间筛选组件		必备参数
             time: null, // 时间筛选组件    statisticsWay
             //
-            props: {
+            defaultProps: {
                 label: "name",
-                children: "zones"
+                children: "children"
             },
             count: 1,
             //发起协作弹框  必备参数
-            handleCheckChange(data, checked, indeterminate) {
-                console.log(data, checked, indeterminate);
-            },
-            loadNode(node, resolve) {
-                if (node.level === 0) {
-                    return resolve([{ name: "region1" }, { name: "region2" }]);
-                }
-                if (node.level > 3) return resolve([]);
-                var hasChild;
-                if (node.data.name === "region1") {
-                    hasChild = true;
-                } else if (node.data.name === "region2") {
-                    hasChild = false;
-                } else {
-                    hasChild = Math.random() > 0.5;
-                }
-                setTimeout(() => {
-                    var data;
-                    if (hasChild) {
-                        data = [
-                            {
-                                name: "zone" + this.count++
-                            },
-                            {
-                                name: "zone" + this.count++
-                            }
-                        ];
-                    } else {
-                        data = [];
-                    }
-                    resolve(data);
-                }, 500);
-            },
 
             //管理切换（复用组件 ）
             oAdminTab: {
@@ -364,7 +328,7 @@ export default {
                     label: "协作编号"
                 },
                 {
-                    prop: "1",
+                    prop: "applyDeptName",
                     label: "申请科室"
                 },
                 {
@@ -376,11 +340,11 @@ export default {
                     label: "发起时间"
                 },
                 {
-                    prop: "synergyDeptName",
+                    prop: "synergyDeptNameLength",
                     label: "协作科室"
                 },
                 {
-                    prop: "synergyUserName",
+                    prop: "synergyUserNameLength",
                     label: "协作医生"
                 },
                 {
@@ -463,8 +427,9 @@ export default {
             // oVisable: true,
             // evaluateVisible: false, //是否打开评价
             departVisible: false, //是否接收科室
-            doctorVisible: false //医生详情
+            doctorVisible: false, //医生详情
             // groupVisible: false, //会诊评价
+            xiezuoId:""
         };
     },
 
@@ -476,6 +441,57 @@ export default {
     },
 
     methods: {
+        handleCheckChange(data, checked, indeterminate) {
+            console.log(checked);
+            let _this = this;
+            $.each(checked.checkedNodes, function(index, text) {
+                console.log(text);
+                if (text.type == 3) {
+                    console.log(_this.startXiezuo);
+                    _this.startXiezuo.receiverId.push(text.id);
+                }
+            });
+        },
+        handleCheckChangeInvita(data, checked, indeterminate) {
+            console.log(checked);
+            let _this = this;
+            $.each(checked.checkedNodes, function(index, text) {
+                if (text.type == 3) {
+                    console.log(_this.startXiezuo);
+                    _this.startXiezuo.receiverId.push(text.id);
+                }
+            });
+        },
+        loadNode(node, resolve) {
+            if (node.level === 0) {
+                return resolve([{ name: "region1" }, { name: "region2" }]);
+            }
+            if (node.level > 3) return resolve([]);
+            var hasChild;
+            if (node.data.name === "region1") {
+                hasChild = true;
+            } else if (node.data.name === "region2") {
+                hasChild = false;
+            } else {
+                hasChild = Math.random() > 0.5;
+            }
+            setTimeout(() => {
+                var data;
+                if (hasChild) {
+                    data = [
+                        {
+                            name: "zone" + this.count++
+                        },
+                        {
+                            name: "zone" + this.count++
+                        }
+                    ];
+                } else {
+                    data = [];
+                }
+                resolve(data);
+            }, 500);
+        },
         initiateCollaboration() {
             this.centerDialogVisible = true;
             this.Invitation1();
@@ -492,31 +508,7 @@ export default {
             const res = await enableSynergyDoctor(query);
             if (res.data && res.data.errCode === 0) {
                 console.log(res.data.body);
-                this.invitationData1=res.data.body
-                // $.each(res.data.body, function(index, text) {
-                //     _this.invitationData1.push({
-                //         label: text.name,
-                //         children: [],
-                //         id: text.id
-                //     });
-                //     if (text.children.length > 0) {
-                //         $.each(text.children, function(oindex, otext) {
-                //             _this.invitationData1[index].children.push({
-                //                 label: otext.name,
-                //                 id: otext.id
-                //             });
-
-                //             if (otext.children.length > 0) {
-                //                 $.each(otext.children, function(oindex1, otext2) {
-                //                     _this.invitationData1[index].children[oindex].children.push({
-                //                         label: otext2.name,
-                //                         id: otext2.id
-                //                     });
-                //                 });
-                //             }
-                //         });
-                //     }
-                // });
+                this.invitationData1 = res.data.body;
             } else {
                 //失败
                 this.$notify.error({
@@ -528,27 +520,16 @@ export default {
         getTjData() {},
         //获取邀请列表
         async Invitation(row) {
-            this.consultationId = row.id;
+            this.xiezuoId = row.id;
             this.invitationData = [];
             this.invitationVisible = true;
             let _this = this;
             let query = {
                 token: this.userState.token
             };
-            const res = await queryConsultationInformList(query);
+            const res = await enableSynergyDoctor(query);
             if (res.data && res.data.errCode === 0) {
-                $.each(res.data.body, function(index, text) {
-                    _this.invitationData.push({
-                        label: text.name,
-                        children: []
-                    });
-                    $.each(text.children, function(oindex, otext) {
-                        _this.invitationData[oindex].children.push({
-                            label: text.name,
-                            id: otext.id
-                        });
-                    });
-                });
+                _this.invitationData = res.data.body;
             } else {
                 //失败
                 this.$notify.error({
@@ -564,10 +545,12 @@ export default {
                 token: this.userState.token
             };
             let options = {
-                consultationId: this.consultationId,
-                depts: this.invitationSelectList
+                id: this.xiezuoId,
+                intention: "",
+                recordId: "",
+                receiverId: this.invitationSelectList
             };
-            const res = await sponsorConsultationInform(query, options);
+            const res = await sendSynergy(query, options);
             if (res.data && res.data.errCode === 0) {
                 this.$notify.success({
                     title: "成功",
@@ -647,37 +630,6 @@ export default {
                 }
             }
         },
-        //获取邀请列表
-        // async Invitation(row) {
-        //     this.consultationId = row.id;
-        //     this.invitationData = [];
-        //     this.invitationVisible = true;
-        //     let _this = this;
-        //     let query = {
-        //         token: this.userState.token
-        //     };
-        //     const res = await enableSynergyDoctor(query);
-        //     if (res.data && res.data.errCode === 0) {
-        //         $.each(res.data.body, function(index, text) {
-        //             _this.invitationData.push({
-        //                 label: text.name,
-        //                 children: []
-        //             });
-        //             $.each(text.children, function(oindex, otext) {
-        //                 _this.invitationData[oindex].children.push({
-        //                     label: text.name,
-        //                     id: otext.id
-        //                 });
-        //             });
-        //         });
-        //     } else {
-        //         //失败
-        //         this.$notify.error({
-        //             title: "警告",
-        //             message: res.data.errMsg
-        //         });
-        //     }
-        // },
         //自调用组件函数
         getConsulTabData(res) {
             //选择管理？统计？
@@ -691,7 +643,6 @@ export default {
             //发起科室筛选
             this.initiateDepartmentId = data.index.value;
             this.getList1();
-            this.getList2();
         },
         //协作科室选择
         getOTab2(data) {
@@ -709,6 +660,10 @@ export default {
             //点击筛选日期    医生端
             this.doctorDate = data.index.value;
             this.DoctorList(); //医生端列表
+        },
+        getOTab5(data) {
+            this.acceptDepartmentId = data.index.value;
+            this.getList2();
         },
         adminSearchChange(data) {
             //右上角搜索框
@@ -741,35 +696,33 @@ export default {
         //筛选列表  管理端
         //1.21.1.科室筛选  工具栏 (管理) (管理)
         //申请科室   协作科室
-        async getSelect1(oindex) {
+        //获取工具栏科室列表
+        async getToolDept(oindex) {
             let _this = this;
             let query = {
-                token: this.userState.token,
-                type: "MANAGE"
+                type: "DOCTOR",
+                token: this.userState.token
             };
             const res = await toolDept(query);
             if (res.data && res.data.errCode === 0) {
-                console.log("1.21.1.科室工具栏 +成功");
-                console.log(res.data.body);
                 if (res.data.body.length > 6) {
                     this.oTab1.more = true;
+                    this.oTab2.more = true;
                 } else {
                     this.oTab1.more = false;
+                    this.oTab2.more = false;
                 }
                 $.each(res.data.body, function(index, text) {
-                    //协作管理   申请科室   筛选列表
                     _this.oTab1.list.push({
                         text: text.name,
                         value: text.id
                     });
-                    //协作管理   协作科室   筛选列表
                     _this.oTab2.list.push({
                         text: text.name,
                         value: text.id
                     });
                 });
             } else {
-                console.log("1.21.1.科室工具栏 +失败");
                 //失败
                 this.$notify.error({
                     title: "警告",
@@ -778,19 +731,17 @@ export default {
             }
         },
         //协作状态  筛选
-        async getSelect2(oindex) {
+        async getSelect2() {
             let _this = this;
             let query = {
                 token: this.userState.token
             };
             const res = await toolSynergyStatus(query);
             if (res.data && res.data.errCode === 0) {
-                console.log("1.21.8.协作状态协作状态 +成功");
-                console.log(res.data.body);
                 if (res.data.body.length > 6) {
-                    this.oTab3.more = true;
+                    _this.oTab3.more = true;
                 } else {
-                    this.oTab3.more = false;
+                    _this.oTab3.more = false;
                 }
                 $.each(res.data.body, function(index, text) {
                     //协作管理   协作状态   筛选列表
@@ -800,7 +751,6 @@ export default {
                     });
                 });
             } else {
-                console.log("1.21.8.协作状态协作状态 +失败");
                 //失败
                 this.$notify.error({
                     title: "警告",
@@ -827,6 +777,14 @@ export default {
             console.log(options);
             if (res.data && res.data.errCode === 0) {
                 _this.adminLists = res.data.body.data2.list;
+                $.each(_this.adminLists, function(index, text) {
+                    if (text.synergyDeptNam.length > 0) {
+                        alert(text.synergyDeptNam.length);
+                        text.synergyDeptNameLength = text.synergyDeptNam.length;
+                        text.synergyUserNameLength =
+                            text.synergyUserName.length;
+                    }
+                });
             } else {
                 //失败
                 this.$notify.error({
@@ -1015,7 +973,7 @@ export default {
     },
 
     async created() {
-        this.getSelect1();
+        this.getToolDept();
         this.getSelect2();
 
         this.getList1(); //管理列表
@@ -1119,14 +1077,14 @@ export default {
     line-height: 3px;
 }
 
-.startGroup {
+/* .startGroupXiezuo {
     width: 30%;
     margin: auto;
 }
 
-.startGroup input {
+.startGroupXiezuo input {
     height: 30px;
-}
+} */
 
 .confirmBtn {
     width: 100%;

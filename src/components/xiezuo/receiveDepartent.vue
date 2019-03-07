@@ -1,10 +1,10 @@
 <template>
     <div>
-        <ul>
+        <ul class="departmentDetail">
             <li v-for="(text,index) in receptionDepartment" :key="index">
-                <div>
-                    <img src="" />
-                </div>
+                <!-- <div>
+                    <img :src="imgUrl+text.hospitalId" />
+                </div> -->
                 <div class="evaluateCont">
                     <h5>{{text.hospital}}</h5>
                     <div>{{text.department}}</div>
@@ -15,14 +15,24 @@
 </template>
 <script>
 export default {
-     props: {
-        receptionDepartment: Array,
+    data() {
+        return {
+            imgUrl: "https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"
+        };
+    },
+    created() {
+    },
+    props: {
+        receptionDepartment: Array
     },
     model: {
         prop: ["receptionDepartment"],
         event: "reBack"
-    },
+    }
 };
 </script>
 <style>
+.departmentDetail>li{
+    display: flex
+}
 </style>
