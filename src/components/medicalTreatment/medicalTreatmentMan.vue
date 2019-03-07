@@ -171,8 +171,8 @@
         </div>
       </div>
       <div class="manager_count_midle">
-        <div style="display:flex">
-          <normalColumnChart :inData="drawData"> </normalColumnChart>
+        <div>
+          <normalColumnChart :inData="testdata1"> </normalColumnChart>
         </div>
       </div>
     </div>
@@ -379,18 +379,13 @@
         //统计
         //申请科室统计图
         monthToYear: [],
-        drawData: {
-          dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-          data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-          title: "申请科室统计图", //图表标题
-          totalNumber: "555"
-        },
-        //发起科室统计图
-        drawDataStart: {
-          dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-          data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-          title: "发起科室统计图", //图表标题
-          totalNumber: "555"
+        //统计图
+        yTotal1: 0,//统计y轴相加
+        testdata1: {
+          dataAxis: [],//每个柱子代表的类名
+          data: [],//具体数值
+          title: '',//图表标题
+          total: ''
         },
       }
     },
@@ -400,6 +395,15 @@
       //  管理  切换数据
       getBar(data) {
         console.log(data)
+        if (data.i == 0) {
+          this.getList1()
+        } else if (data.i == 1) {
+          this.getList2()
+        } else if (data.i == 2) {
+          this.getList1().then(val => {
+            this.getList3();
+          });
+        }
       },
       //筛选返回值  管理端
       getFilter0(data) {//科室筛选
@@ -427,6 +431,7 @@
         this.getList2()
       },
       getFilterTime(data) {//统计		//时间选择器返回函数
+        console.log(data)
         this.time0 = data.time[0];//统计筛选开始时间
         this.time1 = data.time[1];//统计筛选结束时间
         this.type = data.select.value
@@ -464,10 +469,17 @@
       //筛选工具栏  请求  管理端
       //1.21.1.科室筛选  工具栏 (管理) (管理)
       async getSelect1(oindex) {
+        // console.log(this.userState.rooter)
+        // console.log(this.userState.manager)
+        if (this.userState.manager) {
+          this.type = 'MANAGE'
+        } else {
+          this.type = 'DOCTOR'
+        }
         let _this = this;
         let query = {
           token: this.userState.token,
-          type: 'MANAGE'
+          type: this.type
         };
         const res = await toolDept(query);                                       //1.21.1.科室筛选  工具栏 (管理) (管理)
         if (res.data && res.data.errCode === 0) {
@@ -620,12 +632,24 @@
         };
         const res = await medicalControlCharts(query);                                            //13.12.统计-统计图 
         if (res.data && res.data.errCode === 0) {
-          console.log('统计+成功')
+          console.log('统计+疾病库+成功')
           console.log(res)
           const lists = res.data.body.data
+          this.yTotal1 = 0
+          this.testdata1.dataAxis.length = 0
+          this.testdata1.data.length = 0
+          $.each(lists, function (index, text) {
+            _this.yTotal1 += text.y;
+            _this.testdata1.dataAxis.push(text.x)
+            _this.testdata1.data.push(text.y)
+          });
+          this.testdata1.title = "疾病库"
+          this.testdata1.total = "总数：" + this.yTotal1
+          console.log(this.yTotal1)
+          console.log(this.testdata1)
         } else {
           //失败
-          console.log('统计+失败')
+          console.log('统计+疾病库+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1205,9 +1229,6 @@
       this.getSelect2()
       this.getSelect3()
       this.getList1()
-      this.getList2()
-      this.getList3()
-
     }
   }
 </script>
@@ -1293,5 +1314,17 @@
 
   .manager_count_top>div {
     flex: 1;
+  }
+
+  .manager_count_midle {
+    margin: 40px 0 0 0;
+
+    div {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      justify-content: start;
+      align-items: center;
+      /* flex-wrap: wrap; */
+    }
   }
 </style>

@@ -84,8 +84,11 @@
 					</div>
 				</div>
 				<div class="hospital-management-outpatient-statistics-midle">
-					<div style="display:flex">
-						<normalColumnChart v-for="(item,index) in testdata" :key="index" :inData="item"> </normalColumnChart>
+					<div>
+						<!-- <normalColumnChart v-for="(item,index) in testdata" :key="index" :inData="item"> </normalColumnChart> -->
+						<normalColumnChart :inData="testdata1"> </normalColumnChart>
+						<normalColumnChart :inData="testdata2"> </normalColumnChart>
+						<normalColumnChart :inData="testdata3"> </normalColumnChart>
 					</div>
 				</div>
 			</div>
@@ -134,7 +137,7 @@
 		</el-dialog>
 
 		<!-- 查看详情弹框中的聊天弹框 -->
-		<el-dialog class="  " title="聊天模块" :visible.sync="isShowRecordChat" center>
+		<el-dialog class="" title="聊天模块" :visible.sync="isShowRecordChat" center>
 			聊天模块
 		</el-dialog>
 
@@ -146,7 +149,42 @@
 
 		<!-- 物流状态 -->
 		<el-dialog title="物流状态" :visible.sync="roadStatusList2" center>
-			待引入组件
+			<div class="visiting">
+				<Timeline>
+					<TimelineItem>
+						<p class="visiting-hospital">重庆市医科大学第三附属医院</p>
+						<p class="visiting-department">
+							<span class="visiting-department-on">on</span>
+							<span class="visiting-department-name">科室名称 | 门诊</span>
+						</p>
+						<p class="visiting-content">主诉: 小孩夜晚不咳嗽，白天咳嗽；咳嗽无痰。</p>
+					</TimelineItem>
+					<TimelineItem>
+						<p class="visiting-hospital">重庆市医科大学第三附属医院</p>
+						<p class="visiting-department">
+							<span class="visiting-department-on">on</span>
+							<span class="visiting-department-name">科室名称 | 门诊</span>
+						</p>
+						<p class="visiting-content">主诉: 小孩夜晚不咳嗽，白天咳嗽；咳嗽无痰。</p>
+					</TimelineItem>
+					<TimelineItem>
+						<p class="visiting-hospital">重庆市医科大学第三附属医院</p>
+						<p class="visiting-department">
+							<span class="visiting-department-on">on</span>
+							<span class="visiting-department-name">科室名称 | 门诊</span>
+						</p>
+						<p class="visiting-content">主诉: 小孩夜晚不咳嗽，白天咳嗽；咳嗽无痰。</p>
+					</TimelineItem>
+					<TimelineItem>
+						<p class="visiting-hospital">重庆市医科大学第三附属医院</p>
+						<p class="visiting-department">
+							<span class="visiting-department-on">on</span>
+							<span class="visiting-department-name">科室名称 | 门诊</span>
+						</p>
+						<p class="visiting-content">主诉: 小孩夜晚不咳嗽，白天咳嗽；咳嗽无痰。</p>
+					</TimelineItem>
+				</Timeline>
+			</div>
 		</el-dialog>
 		<!-- 查看记录 -->
 		<el-dialog class="  " title="  " :visible.sync="viewRecordList2" width="602px" hight="356px" center>
@@ -203,6 +241,8 @@
 		protocolById,//17.13 根据协议id获取协议 
 		fetchMzOrderInfo,//6.8.远程门诊订单列表弹框数据（WEB端使用）
 		orderYcmzCharts,//6.9.远程门诊订单统计柱状图
+		orderRxCharts, //6.10.处方订单统计柱状图
+		statisticsPeople, //7.3.1远程门诊就诊人次柱状统计图 
 		//筛选接口
 		toolDept,//1.21.1.科室工具栏  get
 		toolRxReviewStatus,//1.21.2.处方审核状态  get
@@ -312,6 +352,9 @@
 					months: [],
 					years: []
 				},//门诊   月年转换
+				yTotal1: 0,//统计y轴相加
+				yTotal2: 0,//统计y轴相加
+				yTotal3: 0,//统计y轴相加
 				monthToYearway: [],//处方   月年转换
 				monthToYearPeople: [],//就诊人次    月年转换
 				//7.1新增门诊参数
@@ -597,28 +640,25 @@
 				},
 
 
-				//科室统计图
-				testdata: [
-					{
-						dataAxis: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],//每个柱子代表的类名
-						data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234],//具体数值
-						title: '测试测试,修改修改',//图表标题
-						total: 'i is fish'
-					},
-					{
-						dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'],//每个柱子代表的类名
-						data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234],//具体数值
-						title: '测试测试,修改修改',//图表标题
-						total: 'i is fish'
-					},
-					{
-						dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'],//每个柱子代表的类名
-						data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234],//具体数值
-						title: '测试测试,修改修改',//图表标题
-						total: 'i is fish'
-					},
-
-				],
+				//统计图
+				testdata1: {
+					dataAxis: [],//每个柱子代表的类名
+					data: [],//具体数值
+					title: '',//图表标题
+					total: ''
+				},
+				testdata2: {
+					dataAxis: [],//每个柱子代表的类名
+					data: [],//具体数值
+					title: '',//图表标题
+					total: ''
+				},
+				testdata3: {
+					dataAxis: [],//每个柱子代表的类名
+					data: [],//具体数值
+					title: '',//图表标题
+					total: ''
+				},
 
 			}
 		},
@@ -633,17 +673,23 @@
 		methods: {
 			//自调用组件函数
 			//在线、处方审核、统计、切换插件返回值
-			getNav(data) { 
+			getNav(data) {
 				console.log(data)
 				this.getFilter0();//获取科室列表
 				this.getFilter1();//审核状态
 				this.getFilter2();//配送状态
 				this.getFilter3();//审核医生
 				this.getFilter4();//发药医生
-				this.getList1();//管理列表1
-				this.getList2();//管理列表2
-				this.getList3();//管理图表3（统计图表数据获取）
-			 },
+				if (data.i == 0) {
+					this.getList1();//管理列表1
+				} else if (data.i == 1) {
+					this.getList2();//管理列表2
+				} else if (data.i == 2) {
+					this.getList1().then(val => {
+						this.getList3();
+					});
+				}
+			},
 			//筛选返回值
 			getFilter(data) {//科室筛选
 				this.departmentId = data.index.value;
@@ -696,10 +742,17 @@
 			//筛选列表  管理端
 			//1.21.1.科室工具栏 (管理)
 			async getFilter0(data) {
+				// console.log(this.userInfo.rooter)
+				// console.log(this.userInfo.manager)
+				if(this.userInfo.manager){
+					this.type = 'MANAGE'
+				}else{
+					this.type = 'DOCTOR'
+				}
 				const _this = this
 				let query = {
 					token: this.userState.token,
-					type: 'MANAGE'
+					type: this.type
 				};
 				const res = await toolDept(query);
 				if (res.data && res.data.errCode === 0) {
@@ -1061,7 +1114,12 @@
 			//管理3表（统计表）
 			//统计图表数据的获取
 			async getList3() {
-
+				this.getList31();
+				this.getList32();
+				this.getList33();
+			},
+			// 6.9.远程门诊订单统计柱状图 
+			async getList31() {
 				const _this = this
 				let query = {
 					token: this.userState.token,
@@ -1073,34 +1131,115 @@
 				// console.log(query)
 				const res = await orderYcmzCharts(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('统计图标数据+成功')
+					console.log('统计图+门诊订单+成功')
 					const lists = res.data.body.data
 					console.log(lists)
 					console.log(this.type)
+					this.yTotal1 = 0
+					this.testdata1.dataAxis.length = 0
+					this.testdata1.data.length = 0
 					$.each(lists, function (index, text) {
-						//把所有月份分成一年一年的，保存的参数意见建好了monthToYear
-
-						//等待 
 						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
-
 						// _this.monthToYearDoor.months.push(text.x)
 						// _this.monthToYearDoor.years.push(text.y)
+						_this.yTotal1 += text.y;
+						_this.testdata1.dataAxis.push(text.x)
+						_this.testdata1.data.push(text.y)
 					});
-					// this.testdata.push({
-					// 	dataAxis: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],//每个柱子代表的类名
-					// 	data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234],//具体数值
-					// 	title: '测试测试,修改修改',//图表标题
-					// 	total: 'i is fish'
-					// })
+					this.testdata1.title = "门诊订单"
+					this.testdata1.total = "总数：" + this.yTotal1
+					console.log(this.yTotal1)
 				} else {
 					//失败
-					console.log('统计图标数据+失败')
+					console.log('统计图+门诊订单+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
 					});
 				}
 			},
+			// 6.10.处方订单统计柱状图 
+			async getList32() {
+				const _this = this
+				let query = {
+					token: this.userState.token,
+					deptId: this.departmentId, //String false 科室ID 
+					starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
+					endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
+					type: this.type //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
+				};
+				// console.log(query)
+				const res = await orderRxCharts(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('统计图+处方订单+成功')
+					const lists = res.data.body.data
+					console.log(lists)
+					console.log(this.type)
+					this.yTotal2 = 0
+					this.testdata2.dataAxis.length = 0
+					this.testdata2.data.length = 0
+					$.each(lists, function (index, text) {
+						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
+						// _this.monthToYearDoor.months.push(text.x)
+						// _this.monthToYearDoor.years.push(text.y)
+						_this.yTotal2 += text.y;
+						_this.testdata2.dataAxis.push(text.x)
+						_this.testdata2.data.push(text.y)
+					});
+					this.testdata2.title = "处方订单"
+					this.testdata2.total = "总数：" + this.yTotal2
+					console.log(this.yTotal2)
+					console.log(this.testdata2)
+				} else {
+					//失败
+					console.log('统计图+处方订单+失败')
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
+			// 7.3.1远程门诊就诊人次柱状统计图 
+			async getList33() {
+				const _this = this
+				let query = {
+					token: this.userState.token,
+					deptId: this.departmentId, //String false 科室ID 
+					starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
+					endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
+					type: this.type //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
+				};
+				// console.log(query)
+				const res = await statisticsPeople(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('统计图+就诊人次+成功')
+					const lists = res.data.body.data
+					console.log(lists)
+					console.log(this.type)
+					this.yTotal3 = 0
+					this.testdata3.dataAxis.length = 0
+					this.testdata3.data.length = 0
+					$.each(lists, function (index, text) {
+						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
+						// _this.monthToYearDoor.months.push(text.x)
+						// _this.monthToYearDoor.years.push(text.y)
+						_this.yTotal3 += text.y;
+						_this.testdata3.dataAxis.push(text.x)
+						_this.testdata3.data.push(text.y)
+					});
+					this.testdata3.title = "就诊人次"
+					this.testdata3.total = "总数：" + this.yTotal3
+					console.log(this.yTotal3)
+				} else {
+					//失败
+					console.log('统计图+就诊人次+失败')
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
+			},
+
 
 
 
@@ -1556,6 +1695,18 @@
 		flex: 1;
 	}
 
+	.hospital-management-outpatient-statistics-midle {
+		margin: 40px 0 0 0;
+
+		div {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			justify-content: start;
+			align-items: center;
+			/* flex-wrap: wrap; */
+		}
+	}
+
 	.evaluateBox1 {
 		ul {
 			li {
@@ -1634,7 +1785,7 @@
 		color: red !important;
 	}
 
-	.recordBtn{
+	.recordBtn {
 		width: 57px;
 		height: 20px;
 		background: rgba(66, 133, 244, 0.1);
@@ -1650,5 +1801,28 @@
 		display: flex;
 		display: -webkit-flex;
 		justify-content: space-between;
+	}
+
+	.visiting-hospital {
+		color: var(--color18);
+		line-height: 0.22rem;
+	}
+
+	.visiting-department-on {
+		font-family: var(--fontFamily4);
+		font-size: var(--fontSize1);
+		color: var(--color19);
+		line-height: 0.22rem;
+	}
+
+	.visiting-department-name {
+		font-size: var(--fontSize1);
+		color: var(--borderColor5);
+	}
+
+	.visiting-content {
+		height: 0.76rem;
+		background: #F3F6FA;
+		border-radius: 4px;
 	}
 </style>
