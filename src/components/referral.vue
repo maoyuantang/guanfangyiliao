@@ -283,6 +283,7 @@
         time0: "",///统计筛选开始时间     DatePicker 日期选择器
         time1: "",//统计筛选结束时间      DatePicker 日期选择器
         type: 'MONTH', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天       Select 选择器
+        types: '', //String MANAGE账号是什么权限
         yTotal1: 0,//统计y轴相加
         yTotal2: 0,//统计y轴相加
         //医生端  筛选工具栏  日期筛选返回值  接收参数
@@ -455,6 +456,7 @@
       //自调用组件函数
       //转诊管理、统计、切换插件返回值（管理端）
       getNav(data) {
+        this.getList1();
         if (data.i == 0) {
           this.getList1()
         } else if (data.i == 1) {
@@ -538,14 +540,14 @@
         // console.log(this.userInfo.rooter)
         // console.log(this.userInfo.manager)
         if (this.userInfo.manager) {
-          this.type = 'MANAGE'
+          this.types = 'MANAGE'
         } else {
-          this.type = 'DOCTOR'
+          this.types = 'DOCTOR'
         }
         let _this = this;
         let query = {
           token: this.userState.token,
-          type: this.type
+          type: this.types
         };
         const res = await toolDept(query);                     //1.21.1.科室筛选  工具栏 (管理) (管理)
         if (res.data && res.data.errCode === 0) {
@@ -613,6 +615,20 @@
 
       // 管理1表
       async getList1() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        if (month < 10) {
+          month = "0" + month;
+        }
+        if (day < 10) {
+          day = "0" + day;
+        }
+        var nowDate = year + "-" + month + "-" + day;
+        this.time0 = nowDate;
+        this.time1 = nowDate;
+
         let _this = this;
         let query = {
           token: this.userState.token,
@@ -625,6 +641,8 @@
         const res = await dualReferralManagePage(query);            //14.3.双向转诊-WEB管理端-管理列表
         if (res.data && res.data.errCode === 0) {
           console.log('管理1表+成功')
+          console.log(this.time0)
+          console.log(this.time1)
           console.log(res)
           const lists = res.data.body.data2.list
           this.manageBodyData = lists
@@ -1343,7 +1361,8 @@
     display: -webkit-flex;
     justify-content: space-between;
   }
-  .manager_count_midle{
+
+  .manager_count_midle {
     margin: 40px 0 0 0;
 
     div {
