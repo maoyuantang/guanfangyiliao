@@ -103,20 +103,20 @@
                         <search @searchValue="adminSearchChange"></search>
                     </div>
                     <div>
-                        <tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData"> </tableList>
+                        <tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData" :total="adminTotal" @reback="changeCurrent"> </tableList>
                     </div>
                 </div>
                 <!-- 统计 -->
                 <div v-else>
                     <div class="mainTab">
                         <div>
-                            <selftag :inData="oTab1" @reback="getOTab1"></selftag>
+                            <selftag :inData="oTab1" @reback="getOTab5"></selftag>
                         </div>
                         <statisticsWay @reBack="getTjData"></statisticsWay>
                     </div>
                     <div style="display:flex">
-                        {{drawData}} {{drawData1}}
-                        <normalColumnChart :inData="drawData"> </normalColumnChart>
+                        {{drawData1}}{{drawDataStart}}
+                        <normalColumnChart :inData="drawData1"> </normalColumnChart>
                         <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
                     </div>
                 </div>
@@ -236,6 +236,7 @@ export default {
     },
     data() {
         return {
+            adminTotal:0,
             storyMessage: [],
             doctorDetailData: [],
             doctorVis: 0, //0是医生跟医生聊天
@@ -330,6 +331,7 @@ export default {
                     // }
                 ]
             },
+            adminPageNum:1,
             //医生端
             consultationId: "",
             invitationSelectList: [],
@@ -512,49 +514,11 @@ export default {
                 ]
             },
             //申请科室统计图
-            // drawData: {
-            //     dataAxis: [], //每个柱子代表的类名
-            //     data: [], //具体数值
-            //     title: " ", //图表标题
-            //     totalNumber:""
-            // },
             drawData1: {
                 dataAxis: ["点"], //每个柱子代表的类名
                 data: [220], //具体数值
                 title: "测试测试", //图表标题
                 total: "565"
-            },
-            drawData: {
-                dataAxis: [
-                    "点",
-                    "击",
-                    "柱",
-                    "子",
-                    "点",
-                    "击",
-                    "柱",
-                    "子",
-                    "点",
-                    "击",
-                    "柱",
-                    "子"
-                ], //每个柱子代表的类名
-                data: [
-                    220,
-                    182,
-                    191,
-                    234,
-                    220,
-                    182,
-                    191,
-                    234,
-                    220,
-                    182,
-                    191,
-                    234
-                ], //具体数值
-                title: "测试测试", //图表标题
-                totalNumber: "565"
             },
             //发起科室统计图
             drawDataStart: {
@@ -620,6 +584,12 @@ export default {
                     message: res.data.errMsg
                 });
             }
+        },
+        // 管理端分页
+        changeCurrent(data){
+            this.adminPageNum=data
+            this.getAdminList()
+
         },
         async cellClickData(data) {
             console.log(data);
@@ -733,12 +703,6 @@ export default {
             };
             const res = await fetchHistoryMessage(query, options);
             if (res.data && res.data.errCode === 0) {
-                // $.each(res.data.body, function(index, text) {
-                //     _this.hospitalList.push({
-                //         name: text.orgName,
-                //         value: text.orgCode
-                //     });
-                // });
                 _this.storyMessage = res.data.body;
             } else {
                 //失败
@@ -773,6 +737,14 @@ export default {
             this.startDate = "";
             this.endDate = "";
             this.getDocList();
+        },
+        getOTab5(data) {
+            console.log(data);
+            this.applicationDeptId2 = data.index.value;
+            this.statisticsStart = "";
+            this.statisticsEnd = "";
+            this.getAdminTjList();
+            this.getApplyTjList();
         },
         addHospital() {
             this.startHz.consultationHospitalDept.push({
@@ -840,7 +812,7 @@ export default {
             this.chatVisible = true;
             this.sessionId = oObject.sessionId;
             if (oObject.state == "NEW") {
-                oObject.state="UNDERWAY"
+                oObject.state = "UNDERWAY";
                 this.overclick(oObject, "on");
             }
         },
@@ -1054,7 +1026,7 @@ export default {
                 searchKey: this.searchValue,
                 applicationDeptId: this.applicationDeptId,
                 receiveDeptId: this.receiveDeptId,
-                pageNum: 1,
+                pageNum: this.adminPageNum,
                 pageSize: 10,
                 type: this.adminType,
                 status: this.adminStatus
@@ -1062,6 +1034,7 @@ export default {
             const res = await queryByManagerPage(options);
             if (res.data && res.data.errCode === 0) {
                 this.adminTableData = res.data.body.data2.list;
+                this.adminTotal=res.data.body.data2.total
 
                 console.log(res);
             } else {
@@ -1074,8 +1047,8 @@ export default {
         },
         //获取管理端申请科室统计列表
         async getApplyTjList() {
-            this.drawData.dataAxis = [];
-            this.drawData.data = [];
+            this.drawData1.dataAxis = [];
+            this.drawData1.data = [];
             let _this = this;
             const options = {
                 token: this.userState.token,
@@ -1087,8 +1060,8 @@ export default {
             const res = await queryStatisticalByApplication(options);
             if (res.data && res.data.errCode === 0) {
                 $.each(res.data.body.data, function(index, text) {
-                    _this.drawData.dataAxis.push(text.x);
-                    _this.drawData.data.push(text.y);
+                    _this.drawData1.dataAxis.push(text.x);
+                    _this.drawData1.data.push(text.y);
                 });
             } else {
                 //失败
@@ -1128,8 +1101,14 @@ export default {
         getTjData(data) {
             console.log(data);
             this.statisticsType = data.select.value;
-            this.statisticsStart = data.time[0];
-            this.statisticsEnd = data.time[1];
+            if (data.time) {
+                this.statisticsStart = data.time[0];
+                this.statisticsEnd = data.time[1];
+            } else {
+                var myDate = new Date();
+                this.statisticsStart=''
+            }
+
             this.getAdminTjList();
             this.getApplyTjList();
         },
@@ -1340,19 +1319,19 @@ export default {
 .ooRed {
     color: red !important;
 }
-.addHospitalBox{
+.addHospitalBox {
     position: relative;
 }
-.addHospital{
+.addHospital {
     position: absolute;
     display: inline-block;
-    width:20px;
+    width: 20px;
     height: 20px;
-        right: 20px;
+    right: 20px;
     top: 8px;
 }
-.addHospital>img{
-    width:100%;
+.addHospital > img {
+    width: 100%;
     height: 100%;
 }
 </style>
