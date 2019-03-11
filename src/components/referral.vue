@@ -7,104 +7,118 @@
 <template>
   <div class="referral">
     <!--弹框1.1  管理查看记录 -->
-    <el-dialog title="" :visible.sync="isShowmoveUser1" width="40%" center>
-      <div class="moved">
-        <!-- 头像姓名 -->
-        <div class="moved_top">
-          <img src="../assets/img/a-6.png" />
-          <p>{{dualReferralRecordFile.patientName}}</p>
+    <div v-if="isShowmoveUser1">
+      <el-dialog title="" :visible.sync="isShowmoveUser1" width="40%" center>
+        <div class="moved">
+          <!-- 头像姓名 -->
+          <div class="moved_top">
+            <img src="../assets/img/a-6.png" />
+            <p>{{dualReferralRecordFile.patientName}}</p>
+          </div>
+          <!-- 转院路程 -->
+          <div class="moved_middle">
+            <span class="Hospital1">{{dualReferralRecordFile.applyOrgName}}</span>
+            <img src="../assets/img/a-6.png" />
+            <span class="Hospital1">{{dualReferralRecordFile.receiveOrgName}}</span>
+          </div>
+          <!-- 转院详情 -->
+          <div class="moved_footer">
+            <ul>
+              <li v-for='(text,index) in dualReferralRecordFile.records'>{{text.optTime}} {{text.orgName}}
+                {{text.deptName}} {{text.stateName}}</li>
+            </ul>
+          </div>
         </div>
-        <!-- 转院路程 -->
-        <div class="moved_middle">
-          <span class="Hospital1">{{dualReferralRecordFile.applyOrgName}}</span>
-          <img src="../assets/img/a-6.png" />
-          <span class="Hospital1">{{dualReferralRecordFile.receiveOrgName}}</span>
-        </div>
-        <!-- 转院详情 -->
-        <div class="moved_footer">
-          <ul>
-            <li v-for='(text,index) in dualReferralRecordFile.records'>{{text.optTime}} {{text.orgName}}
-              {{text.deptName}} {{text.stateName}}</li>
-          </ul>
-        </div>
-      </div>
-    </el-dialog>
+      </el-dialog>
+    </div>
+
+
     <!--弹框1.2  管理查看反馈-->
-    <el-dialog title="查看反馈" :visible.sync="isShowmoveUser2" width="40%" center>
-      <el-table :data="rebackInformation">
-        <el-table-column property="1" label="医院"></el-table-column>
-        <el-table-column property="2" label="科室"></el-table-column>
-        <el-table-column property="3" label="姓名"></el-table-column>
-        <el-table-column property="4" label="反馈信息"></el-table-column>
-      </el-table>
-    </el-dialog>
+
+    <div v-if="isShowmoveUser2">
+      <el-dialog title="查看反馈" :visible.sync="isShowmoveUser2" width="40%" center>
+        <el-table :data="rebackInformation">
+          <el-table-column property="1" label="医院"></el-table-column>
+          <el-table-column property="2" label="科室"></el-table-column>
+          <el-table-column property="3" label="姓名"></el-table-column>
+          <el-table-column property="4" label="反馈信息"></el-table-column>
+        </el-table>
+      </el-dialog>
+    </div>
 
     <!-- <button @click='addMove'>新增转诊</button> -->
     <!-- 弹框2 新增转诊 -->
-    <el-dialog title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
-      <el-form :model="addForm">
-        <div style="display:flex;margin:10px 0;">
-          <el-form-item label="转诊类型:" :label-width="formLabelWidth">
-            <el-select v-model="addForm.typeList.value" placeholder="上转/下转" clearable @change='upOrDown()'>
-              <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label"
-                :value="item.value"></el-option>
+
+    <div v-if="isShowaddMove">
+      <el-dialog title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
+        <el-form :model="addForm">
+          <div style="display:flex;margin:10px 0;">
+            <el-form-item label="转诊类型:" :label-width="formLabelWidth">
+              <el-select v-model="addForm.typeList.value" placeholder="上转/下转" clearable @change='upOrDown()'>
+                <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label"
+                  :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="疾病名称:" :label-width="formLabelWidth">
+              <el-select v-model="addForm.diseaseName.value" placeholder="请选择" clearable @change='diseaseNameId()'
+                ref="ceshi1">
+                <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label"
+                  :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+
+          <el-form-item label="病     人:" :label-width="formLabelWidth">
+            <el-select v-model="addForm.patient.value" placeholder="请选择" clearable ref="ceshi2">
+              <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label"
+                :value="item.value">
+              </el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="疾病名称:" :label-width="formLabelWidth">
-            <el-select v-model="addForm.diseaseName.value" placeholder="请选择" clearable @change='diseaseNameId()'
-              ref="ceshi1">
-              <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label"
-                :value="item.value"></el-option>
+          <div class="block" style="margin-bottom: 22px;">
+            <span class="demonstration"
+              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
+            <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.value"
+              @change="handleChange" clearable ref="ceshi3">
+            </el-cascader>
+          </div>
+
+          <el-form-item label="病历授权:" :label-width="formLabelWidth">
+            <el-select v-model="addForm.giveRight.value" placeholder="单选" clearable>
+              <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label"
+                :value="item.value">
+              </el-option>
             </el-select>
           </el-form-item>
+
+          <div class="block" style="margin-bottom: 22px;">
+            <span class="demonstration"
+              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
+            <el-date-picker v-model="addForm.moveTime.value" type="datetime" placeholder="请选择" default-time="12:00:00">
+            </el-date-picker>
+          </div>
+
+          <el-form-item label="转诊目的:" :label-width="formLabelWidth">
+            <el-input v-model="addForm.movePurpose" autocomplete="off" placeholder="请填写"></el-input>
+          </el-form-item>
+
+          <el-form-item label="初步诊断:" :label-width="formLabelWidth">
+            <el-input v-model="addForm.beginIdea" autocomplete="off" placeholder="请填写"></el-input>
+          </el-form-item>
+        </el-form>
+
+        <div slot="footer" class="dialog-footer" style="text-align:center;">
+          <el-button type="primary" v-if="kuang2Save == true" @click="dualReferralAdd1" style="width:70%;">新 增
+          </el-button>
+          <el-button type="primary" v-if="kuang2Save == false" @click="dualReferralAdd2" style="width:70%;">编 辑
+          </el-button>
         </div>
 
-        <el-form-item label="病     人:" :label-width="formLabelWidth">
-          <el-select v-model="addForm.patient.value" placeholder="请选择" clearable ref="ceshi2">
-            <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label"
-              :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
+      </el-dialog>
+    </div>
 
-        <div class="block" style="margin-bottom: 22px;">
-          <span class="demonstration"
-            style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
-          <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.value" @change="handleChange"
-            clearable ref="ceshi3">
-          </el-cascader>
-        </div>
-
-        <el-form-item label="病历授权:" :label-width="formLabelWidth">
-          <el-select v-model="addForm.giveRight.value" placeholder="单选" clearable>
-            <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label"
-              :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
-
-        <div class="block" style="margin-bottom: 22px;">
-          <span class="demonstration"
-            style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
-          <el-date-picker v-model="addForm.moveTime.value" type="datetime" placeholder="请选择" default-time="12:00:00">
-          </el-date-picker>
-        </div>
-
-        <el-form-item label="转诊目的:" :label-width="formLabelWidth">
-          <el-input v-model="addForm.movePurpose" autocomplete="off" placeholder="请填写"></el-input>
-        </el-form-item>
-
-        <el-form-item label="初步诊断:" :label-width="formLabelWidth">
-          <el-input v-model="addForm.beginIdea" autocomplete="off" placeholder="请填写"></el-input>
-        </el-form-item>
-      </el-form>
-
-      <div slot="footer" class="dialog-footer" style="text-align:center;">
-        <el-button type="primary" v-if="kuang2Save == true" @click="dualReferralAdd1" style="width:70%;">新 增</el-button>
-        <el-button type="primary" v-if="kuang2Save == false" @click="dualReferralAdd2" style="width:70%;">编 辑
-        </el-button>
-      </div>
-
-    </el-dialog>
 
 
 
