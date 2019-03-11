@@ -12,7 +12,7 @@
 			<div class="online-clinic" v-if="navInfo.i===0">
 				<div class="online-clinic-top mainTab">
 					<div class="online-clinic-top-left">
-						<selftag :inData="onLineList.topFlag[0]" @reback="getFilter"></selftag>
+						<selftag :inData="onLineList.topFlag[0]" @reback="getSelect0"></selftag>
 					</div>
 					<div class="online-clinic-top-right">
 						<search @searchValue="adminSearchOne"></search>
@@ -22,7 +22,7 @@
 
 
 				<div class="online-clinic-middle">
-					<el-table :data="tableData" border style="width: 100%;" @cell-click="relateDoctors1">
+					<el-table :data="tableData" border style="width: 100%;" :max-height="600" @cell-click="relateDoctors1">
 						<el-table-column fixed prop="id" label="业务编号"></el-table-column>
 						<el-table-column prop="departmentName" label="科室"></el-table-column>
 						<el-table-column prop="fullName" label="业务名"></el-table-column>
@@ -47,6 +47,8 @@
 						</el-table-column>
 					</el-table>
 				</div>
+				<el-pagination background layout="prev, pager, next" :total="1000" @current-change="currentChange">
+				</el-pagination>
 			</div>
 
 
@@ -54,11 +56,11 @@
 			<div v-else-if="navInfo.i===1">
 				<div class="online-clinic-top">
 					<div class="online-clinic-top-left">
-						<selftag v-model="prescriptionAuditDistribution.topFlag[0]" @reback="getFilter"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[1]" @reback="getFilter"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[2]" @reback="getFilter"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[3]" @reback="getFilter"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[4]" @reback="getFilter"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[0]" @reback="getSelect0"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[1]" @reback="getSelect1"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[2]" @reback="getSelect2"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[3]" @reback="getSelect3"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[4]" @reback="getSelect4"></selftag>
 					</div>
 					<div class="online-clinic-top-right">
 						<search></search>
@@ -77,7 +79,7 @@
 			<div v-else-if="navInfo.i===2" class="statistics">
 				<div class="hospital-management-outpatient-statistics-top">
 					<div class="hospital-management-outpatient-statistics-top-left">
-						<selftag v-model="statistics.topFlag[0]" @reback="getFilter"></selftag>
+						<selftag v-model="statistics.topFlag[0]" @reback="getSelect0"></selftag>
 					</div>
 					<div class="hospital-management-outpatient-statistics-top-right">
 						<statisticsWay v-model="time" @reBack="getFilterTime"></statisticsWay>
@@ -144,7 +146,8 @@
 
 		<!-- 处方详情 -->
 		<el-dialog title="处方详情" :visible.sync="chuFangDetailList2" center>
-			后台返回一张图
+			<img style="width:100%" 
+				:src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userState.token+"&prescriptionId="+srcs'>
 		</el-dialog>
 
 		<!-- 物流状态 -->
@@ -304,6 +307,7 @@
 				// 常用参数
 				pageNum: 1,//页数
 				pageSize: 10,//条数
+				srcs: "",//处方id   用于拼接图片src
 
 
 
@@ -348,6 +352,7 @@
 				time0: "2017-06-01",//统计筛选起始时间
 				time1: "2019-01-25",//统计筛选结束时间
 				type: 'DAY', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天 
+				types: '', //String MANAGE账号是什么权限
 				monthToYearDoor: {
 					months: [],
 					years: []
@@ -551,7 +556,7 @@
 								label: "科室"
 							},
 							{
-								prop: "id",
+								prop: "clinicId",
 								label: "门诊订单号"
 							},
 							{
@@ -691,30 +696,33 @@
 				}
 			},
 			//筛选返回值
-			getFilter(data) {//科室筛选
+			getSelect0(data) {//科室筛选
+				console.log(data)
 				this.departmentId = data.index.value;
 				console.log(this.departmentId)
 				this.getList1();
 				this.getList2();
 				this.getList3();
 			},
-			getFilter(data) {//审核状态
+			getSelect1(data) {//审核状态
+				console.log(data)
 				this.reviewEnum = data.index.value;
 				console.log(this.reviewEnum)
 				this.getList1();
 				this.getList2();
 			},
-			getFilter(data) {//配送状态
+			getSelect2(data) {//配送状态
+				console.log(data)
 				this.sendEnum = data.index.value;
 				this.getList1();
 				this.getList2();
 			},
-			getFilter(data) {//审核医生
+			getSelect3(data) {//审核医生
 				this.reviewDoctorId = data.index.value;
 				this.getList1();
 				this.getList2();
 			},
-			getFilter(data) {//发药医生
+			getSelect4(data) {//发药医生
 				this.sendDoctorId = data.index.value;
 				this.getList1();
 				this.getList2();
@@ -744,15 +752,15 @@
 			async getFilter0(data) {
 				// console.log(this.userInfo.rooter)
 				// console.log(this.userInfo.manager)
-				if(this.userInfo.manager){
-					this.type = 'MANAGE'
-				}else{
-					this.type = 'DOCTOR'
+				if (this.userInfo.manager) {
+					this.types = 'MANAGE'
+				} else {
+					this.types = 'DOCTOR'
 				}
 				const _this = this
 				let query = {
 					token: this.userState.token,
-					type: this.type
+					type: this.types
 				};
 				const res = await toolDept(query);
 				if (res.data && res.data.errCode === 0) {
@@ -929,6 +937,20 @@
 
 			// 管理1表			7.5根据条件搜索在线诊室业务 获取列表
 			async getList1() {
+				var date = new Date();
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var day = date.getDate();
+				if (month < 10) {
+					month = "0" + month;
+				}
+				if (day < 10) {
+					day = "0" + day;
+				}
+				var nowDate = year + "-" + month + "-" + day;
+				this.time0 = nowDate;
+				this.time1 = nowDate;
+
 				let query = {
 					token: this.userState.token,
 					string: this.searchValue,
@@ -940,6 +962,8 @@
 				const res = await searchClinic(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表1+成功')
+					console.log(this.time0)
+					console.log(this.time1)
 					console.log(res)
 					const lists = res.data.body.data2.list
 					for (let j = 0; j < lists.length; j++) {
@@ -1520,8 +1544,24 @@
 			},
 			// 管理2表   操作区  
 			//处方详情   管理2表
-			chuFangDetailList2Fun() {
+			async chuFangDetailList2Fun(index, row) {
 				this.chuFangDetailList2 = true;
+				this.srcs = row.id
+				// let query = {
+				// 	token: this.userState.token,
+				// 	prescriptionId:row.id
+				// };
+				// const res = await prescriptionDetailById(query);
+				// if (res.data && res.data.errCode === 0) {
+				// 	console.log('处方详情图片+成功')
+				// 	console.log(res)
+				// } else {
+				// 	console.log('处方详情图片+失败')
+				// 	this.$notify.error({
+				// 		title: "警告",
+				// 		message: res.data.errMsg
+				// 	});
+				// }
 			},
 			//物流状态   管理2表
 			roadStatusList2Fun() {
@@ -1617,7 +1657,13 @@
 					this.addData.show = false
 				}
 			},
+			currentChange(data) {
+				console.log(data)
+				this.pageNum = data
+				this.getList1()
+			},
 		},
+
 
 
 		async created() {

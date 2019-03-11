@@ -285,7 +285,7 @@
           </li>
           <textarea class="doctorTalk" name="" id="" placeholder="备注："></textarea>
           <li class="detailFooter">
-            <el-button class="preview" type="primary" @click="dialogTableVisibleFun" plain>预览</el-button>
+            <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
             <el-button class="fail" type="info" @click='checkPrescription0'>不通过</el-button>
             <el-button class="success" type="success" @click='checkPrescription'>生成电子处方</el-button>
           </li>
@@ -495,7 +495,7 @@
           </li>
           <textarea class="doctorTalk" name="" id="" placeholder="备注："></textarea>
           <li class="detailFooter">
-            <el-button class="preview" type="primary" @click="dialogTableVisibleFun" plain>预览</el-button>
+            <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
             <el-button class="ship" type="primary" plain>发货</el-button>
           </li>
         </ul>
@@ -555,8 +555,9 @@
       </ul>
     </el-dialog>
     <!-- 预览弹窗 -->
-    <el-dialog title="预览" :visible.sync="dialogTableVisible">
-      <img src='' alt="">
+    <el-dialog title="预览" :visible.sync="dialogTableVisible" center >
+      <img style="width:100%"
+        :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userState.token+"&prescriptionId="+srcs'>
     </el-dialog>
 
     <!-- 谭莹聊天弹窗 -->
@@ -683,6 +684,8 @@
         isShowPatientList: [],//就诊列表数据
         text5Array: [],//就诊列表弹框底部table数据
         huanzheList: [],
+				srcs: "",//处方id   用于拼接图片src
+
 
         // 7.8开处方 医生端列表2
         // firstDoctorId: '',//开方医生id
@@ -915,8 +918,10 @@
         console.log(this.prescriptionId);
         console.log(this.secondDoctorId);
       },
-      dialogTableVisibleFun() {
+      dialogTableVisibleFun(row) {
+        console.log(row)
         this.dialogTableVisible = true;
+        this.srcs = row
         this.preLook();
       },
       // getData(item, index) {
@@ -926,6 +931,20 @@
       //列表
       // 7.6(WEB医生)获取所有该医生的在线诊室(医生端列表1)
       async getList1() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        if (month < 10) {
+          month = "0" + month;
+        }
+        if (day < 10) {
+          day = "0" + day;
+        }
+        var nowDate = year + "-" + month + "-" + day;
+        this.time0 = nowDate;
+        this.time1 = nowDate;
+
         const _this = this;
         let query = {
           token: this.userState.token,
@@ -935,6 +954,8 @@
         const res = await onlineRoomsByDoctor(query);
         if (res.data && res.data.errCode === 0) {
           console.log("医生端列表1+成功");
+          console.log(this.time0)
+          console.log(this.time1)
           this.myHomes = res.data.body.data2.list;
           console.log(this.myHomes);
           $.each(res.data.body.data2.list, function (index, text) {
@@ -1016,24 +1037,25 @@
       },
       // 7.12根据处方id获取处方电子版  (预览)
       async preLook() {
-        console.log(this.prescriptionId);
-        let query = {
-          token: this.userState.token,
-          prescriptionId: this.prescriptionId
-        };
-        const res = await prescriptionDetailById(query);
-        console.log(res.data);
-        if (res.data && res.data.errCode === 0) {
-          console.log("预览+成功");
-          console.log(res);
-        } else {
-          //失败
-          console.log("预览+失败");
-          this.$notify.error({
-            title: "警告",
-            message: res.data.errMsg
-          });
-        }
+        // console.log(this.prescriptionId);
+        
+        // let query = {
+        //   token: this.userState.token,
+        //   prescriptionId: this.prescriptionId
+        // };
+        // const res = await prescriptionDetailById(query);
+        // console.log(res.data);
+        // if (res.data && res.data.errCode === 0) {
+        //   console.log("预览+成功");
+        //   console.log(res);
+        // } else {
+        //   //失败
+        //   console.log("预览+失败");
+        //   this.$notify.error({
+        //     title: "警告",
+        //     message: res.data.errMsg
+        //   });
+        // }
       },
       // 1.9.文件下载
       async getList4() {

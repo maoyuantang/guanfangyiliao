@@ -314,6 +314,7 @@
         time0: "",///统计筛选开始时间     DatePicker 日期选择器
         time1: "",//统计筛选结束时间      DatePicker 日期选择器
         type: 'MONTH', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天       Select 选择器
+				types: '', //String MANAGE账号是什么权限
         //医生端  筛选工具栏  日期筛选返回值  接收参数
         // 新增
         dialogFormVisible: false,
@@ -472,14 +473,14 @@
         // console.log(this.userState.rooter)
         // console.log(this.userState.manager)
         if (this.userState.manager) {
-          this.type = 'MANAGE'
+          this.types = 'MANAGE'
         } else {
-          this.type = 'DOCTOR'
+          this.types = 'DOCTOR'
         }
         let _this = this;
         let query = {
           token: this.userState.token,
-          type: this.type
+          type: this.types
         };
         const res = await toolDept(query);                                       //1.21.1.科室筛选  工具栏 (管理) (管理)
         if (res.data && res.data.errCode === 0) {
@@ -577,6 +578,20 @@
 
       // 管理1.1表
       async getList1() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        if (month < 10) {
+          month = "0" + month;
+        }
+        if (day < 10) {
+          day = "0" + day;
+        }
+        var nowDate = year + "-" + month + "-" + day;
+        this.time0 = nowDate;
+        this.time1 = nowDate;
+
         let _this = this;
         let query = {
           token: this.userState.token,
@@ -590,6 +605,8 @@
         const res = await fetchMedicalClassify(query);                               // 13.1.分类管理-列表 
         if (res.data && res.data.errCode === 0) {
           console.log('管理1.1表+成功')
+          console.log(this.time0)
+          console.log(this.time1)
           console.log(res)
           this.medical_body0_Data = res.data.body.data2.list
         } else {
