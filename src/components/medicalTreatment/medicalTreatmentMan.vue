@@ -5,90 +5,98 @@
     </div>
 
     <!--    弹框子组件  引入 -->
-    <el-dialog title=" 医院及科室范围" :visible.sync="doctorVisible" width="602px" hight="356px" center>
-      <hosptialAndDepartmentArea :doctorDetailData="doctorDetailData"></hosptialAndDepartmentArea>
-    </el-dialog>
+
+    <div v-if="doctorVisible">
+      <el-dialog title=" 医院及科室范围" :visible.sync="doctorVisible" width="602px" hight="356px" center>
+        <hosptialAndDepartmentArea :doctorDetailData="doctorDetailData"></hosptialAndDepartmentArea>
+      </el-dialog>
+    </div>
     <!-- 新增业务   弹框    1 -->
-    <el-dialog title="疾病分级分类" :visible.sync="kuangData1.show" :before-close="handleClose1" center>
-      <el-form :model="kuangData1.form">
-        <el-form-item label="科室" :label-width="kuangData1.formLabelWidth">
-          <el-select v-model="kuangData1.options1.value" placeholder="选择科室（单选）" style="width:80%">
-            <el-option v-for="item in kuangData1.options1.list||[]" :key="item.value" :label="item.label"
-              :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
 
-        <el-form-item label="类型" :label-width="kuangData1.formLabelWidth">
-          <el-select v-model="kuangData1.options2.value" filterable allow-create default-first-option
-            placeholder="填写或选择" style="width: 80%;" @change='isHaveDepartment11' ref="ceshi1">
-            <el-option v-for="(item,index) in kuangData1.options2.list||[]" :key="index" :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
+    <div v-if="kuangData1.show">
+      <el-dialog title="疾病分级分类" :visible.sync="kuangData1.show" :before-close="handleClose1" center>
+        <el-form :model="kuangData1.form">
+          <el-form-item label="科室" :label-width="kuangData1.formLabelWidth">
+            <el-select v-model="kuangData1.options1.value" placeholder="选择科室（单选）" style="width:80%">
+              <el-option v-for="item in kuangData1.options1.list||[]" :key="item.value" :label="item.label"
+                :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item label="名称" :label-width="kuangData1.formLabelWidth">
-          <el-select v-model="kuangData1.options3.value" filterable allow-create default-first-option
-            placeholder="填写或选择" style="width: 80%;" @change="inputReturn12" ref="ceshi2">
-            <el-option v-for="(item,index) in kuangData1.options3.list||[]" :key="index" :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
+          <el-form-item label="类型" :label-width="kuangData1.formLabelWidth">
+            <el-select v-model="kuangData1.options2.value" filterable allow-create default-first-option
+              placeholder="填写或选择" style="width: 80%;" @change='isHaveDepartment11' ref="ceshi1">
+              <el-option v-for="(item,index) in kuangData1.options2.list||[]" :key="index" :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item label="分级" :label-width="kuangData1.formLabelWidth">
-          <el-select v-model="kuangData1.options4.value" placeholder="请选择1-4级" style="width:80%">
-            <el-option v-for="item in kuangData1.options4.list||[]" :key="item.value" :label="item.label"
-              :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button v-if="YesList1 == 1" type="primary" @click="kuangData1Fun11" style="width:80%">新 增
-        </el-button>
-        <el-button v-if="YesList1 == 2" type="primary" @click="kuangData1Fun12" style="width:80%">编 辑
-        </el-button>
-      </div>
-    </el-dialog>
+          <el-form-item label="名称" :label-width="kuangData1.formLabelWidth">
+            <el-select v-model="kuangData1.options3.value" filterable allow-create default-first-option
+              placeholder="填写或选择" style="width: 80%;" @change="inputReturn12" ref="ceshi2">
+              <el-option v-for="(item,index) in kuangData1.options3.list||[]" :key="index" :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="分级" :label-width="kuangData1.formLabelWidth">
+            <el-select v-model="kuangData1.options4.value" placeholder="请选择1-4级" style="width:80%">
+              <el-option v-for="item in kuangData1.options4.list||[]" :key="item.value" :label="item.label"
+                :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button v-if="YesList1 == 1" type="primary" @click="kuangData1Fun11" style="width:80%">新 增
+          </el-button>
+          <el-button v-if="YesList1 == 2" type="primary" @click="kuangData1Fun12" style="width:80%">编 辑
+          </el-button>
+        </div>
+      </el-dialog>
+    </div>
 
 
 
 
     <!-- 新增业务   弹框  2  -->
-    <el-dialog title="转入控制" :visible.sync="kuangData2.show" :before-close="handleClose2" center>
-      <el-form>
-        <!-- :model="kuangData2.options" -->
-        <el-form-item label="科         室:" :label-width="kuangData2.formLabelWidth">
-          <el-select v-model="kuangData2.options1.value" placeholder="单选" style="width:80%"
-            @change='isHaveDepartment21'>
-            <el-option v-for="item in kuangData2.options1.list||[]" :key="item.value" :label="item.label"
-              :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
+    <div v-if="kuangData2.show">
+      <el-dialog title="转入控制" :visible.sync="kuangData2.show" :before-close="handleClose2" center>
+        <el-form>
+          <!-- :model="kuangData2.options" -->
+          <el-form-item label="科         室:" :label-width="kuangData2.formLabelWidth">
+            <el-select v-model="kuangData2.options1.value" placeholder="单选" style="width:80%"
+              @change='isHaveDepartment21'>
+              <el-option v-for="item in kuangData2.options1.list||[]" :key="item.value" :label="item.label"
+                :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item label="接诊疾病等级:" :label-width="kuangData2.formLabelWidth">
-          <el-select v-model="kuangData2.options2.value" multiple placeholder="多选" style="width:80%"
-            @change="inputReturn21">
-            <el-option v-for="item in kuangData2.options2.list||[]" :key="item.value" :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
+          <el-form-item label="接诊疾病等级:" :label-width="kuangData2.formLabelWidth">
+            <el-select v-model="kuangData2.options2.value" multiple placeholder="多选" style="width:80%"
+              @change="inputReturn21">
+              <el-option v-for="item in kuangData2.options2.list||[]" :key="item.value" :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
 
-        <div class="block" style="margin-bottom: 22px;">
-          <span class="demonstration"
-            style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室:</span>
-          <el-cascader :options="kuangData2.options3.list" v-model="kuangData2.options3.value" @change="inputReturn22"
-            placeholder="多选" clearable style="width:65%;">
-          </el-cascader>
+          <div class="block" style="margin-bottom: 22px;">
+            <span class="demonstration"
+              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室:</span>
+            <el-cascader :options="kuangData2.options3.list" v-model="kuangData2.options3.value" @change="inputReturn22"
+              placeholder="多选" clearable style="width:65%;">
+            </el-cascader>
+          </div>
+
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button v-if="YesList2 == 1" type="primary" @click="kuangData1Fun21" style="width:80%">新 增</el-button>
+          <el-button v-if="YesList2 == 2" type="primary" @click="kuangData1Fun22" style="width:80%">编 辑</el-button>
         </div>
-
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button v-if="YesList2 == 1" type="primary" @click="kuangData1Fun21" style="width:80%">新 增</el-button>
-        <el-button v-if="YesList2 == 2" type="primary" @click="kuangData1Fun22" style="width:80%">编 辑</el-button>
-      </div>
-    </el-dialog>
+      </el-dialog>
+    </div>
 
 
 
@@ -171,8 +179,8 @@
         </div>
       </div>
       <div class="manager_count_midle">
-        <div style="display:flex">
-          <normalColumnChart :inData="drawData"> </normalColumnChart>
+        <div>
+          <normalColumnChart :inData="testdata1"> </normalColumnChart>
         </div>
       </div>
     </div>
@@ -314,6 +322,7 @@
         time0: "",///统计筛选开始时间     DatePicker 日期选择器
         time1: "",//统计筛选结束时间      DatePicker 日期选择器
         type: 'MONTH', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天       Select 选择器
+        types: '', //String MANAGE账号是什么权限
         //医生端  筛选工具栏  日期筛选返回值  接收参数
         // 新增
         dialogFormVisible: false,
@@ -379,18 +388,13 @@
         //统计
         //申请科室统计图
         monthToYear: [],
-        drawData: {
-          dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-          data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-          title: "申请科室统计图", //图表标题
-          totalNumber: "555"
-        },
-        //发起科室统计图
-        drawDataStart: {
-          dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-          data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-          title: "发起科室统计图", //图表标题
-          totalNumber: "555"
+        //统计图
+        yTotal1: 0,//统计y轴相加
+        testdata1: {
+          dataAxis: [],//每个柱子代表的类名
+          data: [],//具体数值
+          title: '',//图表标题
+          total: ''
         },
       }
     },
@@ -400,6 +404,15 @@
       //  管理  切换数据
       getBar(data) {
         console.log(data)
+        if (data.i == 0) {
+          this.getList1()
+        } else if (data.i == 1) {
+          this.getList2()
+        } else if (data.i == 2) {
+          this.getList1().then(val => {
+            this.getList3();
+          });
+        }
       },
       //筛选返回值  管理端
       getFilter0(data) {//科室筛选
@@ -427,6 +440,7 @@
         this.getList2()
       },
       getFilterTime(data) {//统计		//时间选择器返回函数
+        console.log(data)
         this.time0 = data.time[0];//统计筛选开始时间
         this.time1 = data.time[1];//统计筛选结束时间
         this.type = data.select.value
@@ -464,10 +478,17 @@
       //筛选工具栏  请求  管理端
       //1.21.1.科室筛选  工具栏 (管理) (管理)
       async getSelect1(oindex) {
+        // console.log(this.userState.rooter)
+        // console.log(this.userState.manager)
+        if (this.userState.manager) {
+          this.types = 'MANAGE'
+        } else {
+          this.types = 'DOCTOR'
+        }
         let _this = this;
         let query = {
           token: this.userState.token,
-          type: 'MANAGE'
+          type: this.types
         };
         const res = await toolDept(query);                                       //1.21.1.科室筛选  工具栏 (管理) (管理)
         if (res.data && res.data.errCode === 0) {
@@ -565,6 +586,20 @@
 
       // 管理1.1表
       async getList1() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        if (month < 10) {
+          month = "0" + month;
+        }
+        if (day < 10) {
+          day = "0" + day;
+        }
+        var nowDate = year + "-" + month + "-" + day;
+        this.time0 = nowDate;
+        this.time1 = nowDate;
+
         let _this = this;
         let query = {
           token: this.userState.token,
@@ -578,6 +613,8 @@
         const res = await fetchMedicalClassify(query);                               // 13.1.分类管理-列表 
         if (res.data && res.data.errCode === 0) {
           console.log('管理1.1表+成功')
+          console.log(this.time0)
+          console.log(this.time1)
           console.log(res)
           this.medical_body0_Data = res.data.body.data2.list
         } else {
@@ -620,12 +657,24 @@
         };
         const res = await medicalControlCharts(query);                                            //13.12.统计-统计图 
         if (res.data && res.data.errCode === 0) {
-          console.log('统计+成功')
+          console.log('统计+疾病库+成功')
           console.log(res)
           const lists = res.data.body.data
+          this.yTotal1 = 0
+          this.testdata1.dataAxis.length = 0
+          this.testdata1.data.length = 0
+          $.each(lists, function (index, text) {
+            _this.yTotal1 += text.y;
+            _this.testdata1.dataAxis.push(text.x)
+            _this.testdata1.data.push(text.y)
+          });
+          this.testdata1.title = "疾病库"
+          this.testdata1.total = "总数：" + this.yTotal1
+          console.log(this.yTotal1)
+          console.log(this.testdata1)
         } else {
           //失败
-          console.log('统计+失败')
+          console.log('统计+疾病库+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1205,9 +1254,6 @@
       this.getSelect2()
       this.getSelect3()
       this.getList1()
-      this.getList2()
-      this.getList3()
-
     }
   }
 </script>
@@ -1293,5 +1339,17 @@
 
   .manager_count_top>div {
     flex: 1;
+  }
+
+  .manager_count_midle {
+    margin: 40px 0 0 0;
+
+    div {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      justify-content: start;
+      align-items: center;
+      /* flex-wrap: wrap; */
+    }
   }
 </style>

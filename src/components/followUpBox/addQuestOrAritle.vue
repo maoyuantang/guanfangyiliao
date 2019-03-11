@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-tabs v-model="activeName" @tab-click="addQueatOrArticle">
+        <el-tabs v-model="activeName" @tab-click="addQueatOrArticle" class="addQueatOrArticle">
                     <el-tab-pane label="问诊" name="first">
                         <el-checkbox-group v-model="questCheckList">
                             <el-checkbox v-for="(text,index) in questList" :key="index" :label="text.id">{{text.title}}</el-checkbox><br />
@@ -116,4 +116,8 @@ export default {
 </script>
 
 <style>
+.addQueatOrArticle .el-checkbox{
+    display: block;
+    margin-left: 30px;
+}
 </style>

@@ -37,70 +37,6 @@
       </li>
 
 
-
-
-
-
-
-
-      <!-- <el-dialog title="就诊列表" :visible.sync="isShowPatient" width="60%" center>
-        <ul v-for="(text5,index) in text.clinicOrders" :key="index" class=""
-          style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px;">
-          <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
-            <div>
-              <h1>{{text5.userName}}</h1>
-              <div class="orderTime">
-                <span>下单时间:</span>
-                <span class="span">{{text5.clinicOrderTime}}</span>
-              </div>
-            </div>
-            <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-              <el-button type="success" plain>查看档案</el-button>
-              <el-button type="danger" @click="sendMessage(text,text5)">发送</el-button>
-              <el-button type="info" plain>未开始</el-button>
-            </div>
-          </li>
-
-          <li class="drug">
-            <div>
-              <div class="drugTitle">Rx:</div>
-              <div>
-                <div class="drugDetail">
-                  <div>
-                    <ul v-for="(text,index) in text5.drugDetail" :key="index">
-                      <li>（{{index+1}}）</li>
-                      <li>{{text.drugName}}</li>
-                      <li>{{text.norm}}</li>
-                      <li>{{text.drugQuantity}}</li>
-                      <li>{{text.drugDosage}}</li>
-                      <li>{{text.drugUse}}</li>
-                      <li>{{text.drugTimes}}</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-
-          <li>
-            <el-table :data="text5.clinicOrders">
-              <el-table-column prop="askTime" label="接诊时间"></el-table-column>
-              <el-table-column prop="userName" label="首诊医生"></el-table-column>
-              <el-table-column prop="askPrice" label="问诊费用"></el-table-column>
-              <el-table-column prop="prescriptionPrice" label="处方费"></el-table-column>
-            </el-table>
-          </li>
-
-        </ul>
-      </el-dialog> -->
-
-
-
-
-
-
-
-
       <li class="outpatient_right">
         <!-- 病人个数循环 -->
         <span class="dian" @click="lookList(text.clinicOrders)">...</span>
@@ -117,7 +53,9 @@
           <li class="medicalExpenses">
             问诊费用
             <span>
-              <span>￥</span>{{text1.askPrice}}</span>
+              <span>￥</span>
+              {{text1.askPrice}}
+            </span>
           </li>
           <li class="drug">
             <div class="fee">处方费用 ¥
@@ -154,6 +92,20 @@
 
       </li>
     </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <ul v-if="oconsulVisable == 1" class="prescriptionCheck">
       <li class="checkList">
         <div class="title">
@@ -333,7 +285,7 @@
           </li>
           <textarea class="doctorTalk" name="" id="" placeholder="备注："></textarea>
           <li class="detailFooter">
-            <el-button class="preview" type="primary" @click="dialogTableVisibleFun" plain>预览</el-button>
+            <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
             <el-button class="fail" type="info" @click='checkPrescription0'>不通过</el-button>
             <el-button class="success" type="success" @click='checkPrescription'>生成电子处方</el-button>
           </li>
@@ -350,6 +302,20 @@
         </ul>
       </li>
     </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <ul v-if="oconsulVisable == 2" class="transport">
       <li class="checkList">
@@ -529,7 +495,7 @@
           </li>
           <textarea class="doctorTalk" name="" id="" placeholder="备注："></textarea>
           <li class="detailFooter">
-            <el-button class="preview" type="primary" @click="dialogTableVisibleFun" plain>预览</el-button>
+            <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
             <el-button class="ship" type="primary" plain>发货</el-button>
           </li>
         </ul>
@@ -537,61 +503,67 @@
 
     </ul>
 
-
-    <el-dialog title="就诊列表" :visible.sync="isShowPatient" width="60%" center>
-      <ul v-for="(text5,index) in huanzheList" :key="index" class=""
-        style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px;">
-        <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
-          <div>
-            <h1>{{text5.userName}}</h1>
-            <div class="orderTime">
-              <span>下单时间:</span>
-              <span class="span">{{text5.clinicOrderTime}}</span>
-            </div>
-          </div>
-          <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-            <el-button type="success" plain>查看档案</el-button>
-            <el-button type="danger" @click="sendMessage(text,text5)">发送</el-button>
-            <el-button type="info" plain>未开始</el-button>
-          </div>
-        </li>
-
-        <li class="drug">
-          <div>
-            <div class="drugTitle">Rx:</div>
+    <!-- //某诊室的所有病人列表 -->
+    <div v-if="isShowPatient">
+      <el-dialog title="就诊列表" :visible.sync="isShowPatient" width="60%" center>
+        <ul v-for="(text5,index) in huanzheList" :key="index" class=""
+          style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px;">
+          <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
             <div>
-              <div class="drugDetail">
-                <div>
-                  <ul v-for="(text,index) in text5.drugDetail" :key="index">
-                    <li>（{{index+1}}）</li>
-                    <li>{{text.drugName}}</li>
-                    <li>{{text.norm}}</li>
-                    <li>{{text.drugQuantity}}</li>
-                    <li>{{text.drugDosage}}</li>
-                    <li>{{text.drugUse}}</li>
-                    <li>{{text.drugTimes}}</li>
-                  </ul>
+              <h1>{{text5.userName}}</h1>
+              <div class="orderTime">
+                <span>下单时间:</span>
+                <span class="span">{{text5.clinicOrderTime}}</span>
+              </div>
+            </div>
+            <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
+              <el-button type="success" plain>查看档案</el-button>
+              <el-button type="danger" @click="sendMessage(text,text5)">发送</el-button>
+              <el-button type="info" plain>未开始</el-button>
+            </div>
+          </li>
+
+          <li class="drug">
+            <div>
+              <div class="drugTitle">Rx:</div>
+              <div>
+                <div class="drugDetail">
+                  <div>
+                    <ul v-for="(text,index) in text5.drugDetail" :key="index">
+                      <li>（{{index+1}}）</li>
+                      <li>{{text.drugName}}</li>
+                      <li>{{text.norm}}</li>
+                      <li>{{text.drugQuantity}}</li>
+                      <li>{{text.drugDosage}}</li>
+                      <li>{{text.drugUse}}</li>
+                      <li>{{text.drugTimes}}</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </li>
+          </li>
 
-        <li>
-          <el-table :data="text5.clinicOrders">
-            <el-table-column prop="askTime" label="接诊时间"></el-table-column>
-            <el-table-column prop="userName" label="首诊医生"></el-table-column>
-            <el-table-column prop="askPrice" label="问诊费用"></el-table-column>
-            <el-table-column prop="prescriptionPrice" label="处方费"></el-table-column>
-          </el-table>
-        </li>
+          <li>
+            <el-table :data="text5.clinicOrders">
+              <el-table-column prop="askTime" label="接诊时间"></el-table-column>
+              <el-table-column prop="userName" label="首诊医生"></el-table-column>
+              <el-table-column prop="askPrice" label="问诊费用"></el-table-column>
+              <el-table-column prop="prescriptionPrice" label="处方费"></el-table-column>
+            </el-table>
+          </li>
 
-      </ul>
-    </el-dialog>
+        </ul>
+      </el-dialog>
+    </div>
+
     <!-- 预览弹窗 -->
-    <el-dialog title="预览" :visible.sync="dialogTableVisible">
-      <img src='' alt="">
-    </el-dialog>
+    <div v-if="dialogTableVisible">
+      <el-dialog title="预览" :visible.sync="dialogTableVisible" center>
+        <img style="width:100%"
+          :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userState.token+"&prescriptionId="+srcs'>
+      </el-dialog>
+    </div>
 
     <!-- 谭莹聊天弹窗 -->
 
@@ -717,6 +689,8 @@
         isShowPatientList: [],//就诊列表数据
         text5Array: [],//就诊列表弹框底部table数据
         huanzheList: [],
+        srcs: "",//处方id   用于拼接图片src
+
 
         // 7.8开处方 医生端列表2
         // firstDoctorId: '',//开方医生id
@@ -943,14 +917,18 @@
       whichUserFun(index, data) {
         console.log(index, data)
         this.whichUser = index;
-        this.prescriptionId = data.pb.id;
-        this.secondDoctorId = data.reviewDoctor;
-        console.log(this.whichUser);
-        console.log(this.prescriptionId);
-        console.log(this.secondDoctorId);
+        if (data) {
+          this.prescriptionId = data.pb.id;
+          this.secondDoctorId = data.reviewDoctor;
+          console.log(this.whichUser);
+          console.log(this.prescriptionId);
+          console.log(this.secondDoctorId);
+        }
       },
-      dialogTableVisibleFun() {
+      dialogTableVisibleFun(row) {
+        console.log(row)
         this.dialogTableVisible = true;
+        this.srcs = row
         this.preLook();
       },
       // getData(item, index) {
@@ -960,6 +938,20 @@
       //列表
       // 7.6(WEB医生)获取所有该医生的在线诊室(医生端列表1)
       async getList1() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        if (month < 10) {
+          month = "0" + month;
+        }
+        if (day < 10) {
+          day = "0" + day;
+        }
+        var nowDate = year + "-" + month + "-" + day;
+        this.time0 = nowDate;
+        this.time1 = nowDate;
+
         const _this = this;
         let query = {
           token: this.userState.token,
@@ -969,6 +961,8 @@
         const res = await onlineRoomsByDoctor(query);
         if (res.data && res.data.errCode === 0) {
           console.log("医生端列表1+成功");
+          console.log(this.time0)
+          console.log(this.time1)
           this.myHomes = res.data.body.data2.list;
           console.log(this.myHomes);
           $.each(res.data.body.data2.list, function (index, text) {
@@ -1008,10 +1002,12 @@
           console.log("医生端列表2(审核)+成功");
           this.bcd = res.data.body;
           console.log(this.bcd);
-          this.prescriptionId = this.bcd[0].pb.id;
-          $.each(this.bcd, function (index, text) {
-            _this.ARR.push(text.pb.prescriptionDrugs);
-          });
+          if (this.bcd[0]) {
+            this.prescriptionId = this.bcd[0].pb.id;
+            $.each(this.bcd, function (index, text) {
+              _this.ARR.push(text.pb.prescriptionDrugs);
+            });
+          }
         } else {
           //失败
           console.log("医生端列表2(审核)+失败");
@@ -1050,24 +1046,25 @@
       },
       // 7.12根据处方id获取处方电子版  (预览)
       async preLook() {
-        console.log(this.prescriptionId);
-        let query = {
-          token: this.userState.token,
-          prescriptionId: this.prescriptionId
-        };
-        const res = await prescriptionDetailById(query);
-        console.log(res.data);
-        if (res.data && res.data.errCode === 0) {
-          console.log("预览+成功");
-          console.log(res);
-        } else {
-          //失败
-          console.log("预览+失败");
-          this.$notify.error({
-            title: "警告",
-            message: res.data.errMsg
-          });
-        }
+        // console.log(this.prescriptionId);
+
+        // let query = {
+        //   token: this.userState.token,
+        //   prescriptionId: this.prescriptionId
+        // };
+        // const res = await prescriptionDetailById(query);
+        // console.log(res.data);
+        // if (res.data && res.data.errCode === 0) {
+        //   console.log("预览+成功");
+        //   console.log(res);
+        // } else {
+        //   //失败
+        //   console.log("预览+失败");
+        //   this.$notify.error({
+        //     title: "警告",
+        //     message: res.data.errMsg
+        //   });
+        // }
       },
       // 1.9.文件下载
       async getList4() {
@@ -1151,6 +1148,7 @@
         if (res.data && res.data.errCode === 0) {
           console.log("点击生成处方+成功");
           console.log(res);
+          this.getList2()
         } else {
           console.log("点击生成处方+失败");
           this.$notify.error({
@@ -1175,6 +1173,7 @@
         if (res.data && res.data.errCode === 0) {
           console.log("不通过+成功");
           console.log(res);
+          this.getList2()
         } else {
           console.log("不通过+失败");
           this.$notify.error({

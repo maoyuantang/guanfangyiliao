@@ -2,7 +2,7 @@
     <div class="followUp">
         <!-- 随访表模板 -->
         <div v-if="followTableVisible">
-            <el-dialog class="evaluateBox addFollowBox" title=" " :visible.sync="followTableVisible" width="602px" hight="356px" center>
+            <el-dialog class="evaluateBox addFollowBox addFollowBoxFollow" title=" " :visible.sync="followTableVisible" width="602px" hight="356px" center>
                 <el-form ref="form" :model="addFollowData" label-width="80px">
 
                     <el-form-item>
@@ -14,15 +14,15 @@
                             <el-radio label="OUTPATIENT">门诊随访</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <div class="addFollowMain">
-                        <el-form-item class="addFollowM-bot" label="首次治疗">
+                    <div class="addFollowMain addFollowMain1">
+                        <el-form-item class="addFollowM-bot firstZhiliao" label="首次治疗">
                             <el-date-picker class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
                             </el-date-picker>
                         </el-form-item>
                         <ul>
                             <li v-for="(text,index) in addFollowData.itemModels" :key="index">
                                 <div class="addFollowM-bot" style="display:flex">
-                                    <el-form-item class="addFollowM-bot" label="距离首次治疗">
+                                    <el-form-item class="addFollowM-bot firstDoctorTime" label="距离首次治疗">
                                         <div class="DistanceFirst">
                                             <el-form-item label=" ">
                                                 <el-select v-model="text.calcVal" placeholder=" ">
@@ -72,7 +72,7 @@
 
                             </li>
                         </ul>
-                        <div class="addFollowM-bot">
+                        <div class="addFollowM-bot remindTime">
                             提醒时间
                             <el-select class="addFollowHou" v-model="addFollowData.remindDays" placeholder="请选择">
                                 <el-option v-for="(text,index) in 100" :key="index" :label="text" :value="text">
@@ -91,7 +91,7 @@
         </div>
         <!-- 添加问诊或文章 -->
         <div v-if="questVisible">
-            <el-dialog title="添加问诊或文章" :visible.sync="questVisible" center append-to-body>
+            <el-dialog title="添加问诊或文章" :visible.sync="questVisible" center append-to-body width="400px">
                 <addQuestOrAritle @reback="sureQuestArticle"></addQuestOrAritle>
 
             </el-dialog>
@@ -105,7 +105,7 @@
         </div>
         <!--新增问诊模板 -->
         <div v-if="QuestTableVisible">
-            <el-dialog class="evaluateBox addQuestBox" title=" " :visible.sync="QuestTableVisible" width="602px" hight="356px" center>
+            <el-dialog class="evaluateBox addQuestBox " title=" " :visible.sync="QuestTableVisible" width="602px" hight="356px" center>
                 <el-form ref="form" :model="addQuestData" label-width="80px">
 
                     <el-form-item>
@@ -441,8 +441,8 @@
                         <tableList :tableData="satisfiedList" :columns="satisfiedColumns" :tableBtn="SatisfiedBtn" :checkVisable="mydTableChecked" @reBack="getUserId"></tableList>
 
                     </div>
-                    123
-                    <pieChart></pieChart>
+                    <!-- 123
+                    <pieChart></pieChart> -->
                 </div>
                 <!-- 家用设备检测 -->
                 <div v-show="2==oMainShow">
@@ -635,6 +635,7 @@ export default {
     },
     data() {
         return {
+            switchNum: 0,
             //随访计划
             warnVisible: false,
             warnList: [],
@@ -1255,7 +1256,7 @@ export default {
             myFollowVisable: true,
             followDetailData: {},
             followDetailVisible: false,
-            mydAddSuosuClassVis:false,
+            mydAddSuosuClassVis: false
         };
     },
     computed: {
@@ -1284,6 +1285,12 @@ export default {
         // 医生
         this.screenPublic(this.oTab11, toolFollowupMode, "随访类型"); //随访类型
         this.screenPublic(this.oTab14, queryTypeList, "文章类型"); //随访类型
+        if (this.userState.rooter || this.userState.manager) {
+            this.partDoctorType = "MANAGE";
+        } else {
+            this.partDoctorType = "DOCTOR";
+        }
+        this.getDepartment(); //科室列表
     },
     mounted() {},
     methods: {
@@ -1354,14 +1361,6 @@ export default {
             }
         },
 
-        //计算分别管理员和医生
-        partDoctor() {
-            if (this.userState.rooter || this.userState.manager) {
-                this.partDoctorType = "MANAGE";
-            } else {
-                this.partDoctorType = "DOCTOR";
-            }
-        },
         //满意度新增模板借口
         // async handleChange(value) {
         //     console.log(value);
@@ -1374,14 +1373,18 @@ export default {
         //筛选
         getOTab1(data) {
             this.odepartment = data.index.value;
-            this.getFoList();
-            // this.getfamiliList();
+            if (this.switchNum == 0) {
+                this.getFoList();
+            } else if (this.switchNum == 2) {
+                this.oManagerGetDeviceList();
+            } else if (this.switchNum == 3) {
+                this.oGetFollowupGraph();
+                this.oGetFollowupRemarks();
+            }
 
-            this.oGetModelList();
-            this.oGetResultList();
-            this.oGetMissileList();
-            this.oGetFollowupGraph();
-            this.oGetFollowupRemarks();
+            // this.oGetModelList();
+            // this.oGetResultList();
+            // this.oGetMissileList();
         },
         getOTab2(data) {
             this.otype = data.index.value;
@@ -1691,7 +1694,7 @@ export default {
             }
         },
         //满意度调查发送模板3
-        async sendTemplateList(){
+        async sendTemplateList() {
             this.templateVisible = true;
 
             let _this = this;
@@ -1711,7 +1714,7 @@ export default {
             }
         },
         async sendTemplateList1(value) {
-            console.log(value)
+            console.log(value);
             let _this = this;
             let query = {
                 token: this.userState.token,
@@ -1720,108 +1723,108 @@ export default {
             const res = await getTitleList(query);
             if (res.data && res.data.errCode === 0) {
                 this.mydTemlateName.nameList = res.data.body;
-                 console.log(value)
-                    if (value == "OUTPATIENT") {
-                        _this.mydAddoptions[0].cities = [];
-                        console.log(value)
-                        $.each(res.data.body, function(index, text) {
-                            _this.mydAddoptions[0].cities.push({
-                                value: text.associationId,
-                                label: text.title,
-                                cities: [
-                                    {
-                                        value: "",
-                                        label: text.context,
-                                        disabled: true
-                                    }
-                                ]
-                            });
+                console.log(value);
+                if (value == "OUTPATIENT") {
+                    _this.mydAddoptions[0].cities = [];
+                    console.log(value);
+                    $.each(res.data.body, function(index, text) {
+                        _this.mydAddoptions[0].cities.push({
+                            value: text.associationId,
+                            label: text.title,
+                            cities: [
+                                {
+                                    value: "",
+                                    label: text.context,
+                                    disabled: true
+                                }
+                            ]
                         });
-                    } else if (value == "MEDICALTECHNOLOGY") {
-                        _this.mydAddoptions[1].cities = [];
-                        $.each(res.data.body, function(index, text) {
-                            _this.mydAddoptions[1].cities.push({
-                                value: text.associationId,
-                                label: text.title,
-                                cities: [
-                                    {
-                                        value: "",
-                                        label: text.context
-                                    }
-                                ]
-                            });
+                    });
+                } else if (value == "MEDICALTECHNOLOGY") {
+                    _this.mydAddoptions[1].cities = [];
+                    $.each(res.data.body, function(index, text) {
+                        _this.mydAddoptions[1].cities.push({
+                            value: text.associationId,
+                            label: text.title,
+                            cities: [
+                                {
+                                    value: "",
+                                    label: text.context
+                                }
+                            ]
                         });
-                    } else if (value == "INHOSPITAL") {
-                        _this.mydAddoptions[2].cities = [];
-                        $.each(res.data.body, function(index, text) {
-                            _this.mydAddoptions[1].cities.push({
-                                value: text.associationId,
-                                label: text.title,
-                                cities: [
-                                    {
-                                        value: "",
-                                        label: text.context
-                                    }
-                                ]
-                            });
+                    });
+                } else if (value == "INHOSPITAL") {
+                    _this.mydAddoptions[2].cities = [];
+                    $.each(res.data.body, function(index, text) {
+                        _this.mydAddoptions[1].cities.push({
+                            value: text.associationId,
+                            label: text.title,
+                            cities: [
+                                {
+                                    value: "",
+                                    label: text.context
+                                }
+                            ]
                         });
-                    } else if (value == "ADMINISTRATION") {
-                        _this.mydAddoptions[3].cities = [];
-                        $.each(res.data.body, function(index, text) {
-                            _this.mydAddoptions[1].cities.push({
-                                value: text.associationId,
-                                label: text.title,
-                                cities: [
-                                    {
-                                        value: "",
-                                        label: text.context
-                                    }
-                                ]
-                            });
+                    });
+                } else if (value == "ADMINISTRATION") {
+                    _this.mydAddoptions[3].cities = [];
+                    $.each(res.data.body, function(index, text) {
+                        _this.mydAddoptions[1].cities.push({
+                            value: text.associationId,
+                            label: text.title,
+                            cities: [
+                                {
+                                    value: "",
+                                    label: text.context
+                                }
+                            ]
                         });
-                    } else if (value == "URL") {
-                        _this.mydAddoptions[4].cities = [];
-                        $.each(res.data.body, function(index, text) {
-                            _this.mydAddoptions[1].cities.push({
-                                value: text.associationId,
-                                label: text.title,
-                                cities: [
-                                    {
-                                        value: "",
-                                        label: text.context
-                                    }
-                                ]
-                            });
+                    });
+                } else if (value == "URL") {
+                    _this.mydAddoptions[4].cities = [];
+                    $.each(res.data.body, function(index, text) {
+                        _this.mydAddoptions[1].cities.push({
+                            value: text.associationId,
+                            label: text.title,
+                            cities: [
+                                {
+                                    value: "",
+                                    label: text.context
+                                }
+                            ]
                         });
-                    } else if (value == "MEDICALTECHNOLOGY") {
-                        _this.mydAddoptions[1].cities = [];
-                        $.each(res.data.body, function(index, text) {
-                            _this.mydAddoptions[1].cities.push({
-                                value: text.associationId,
-                                label: text.title,
-                                cities: [
-                                    {
-                                        value: "",
-                                        label: text.context
-                                    }
-                                ]
-                            });
+                    });
+                } else if (value == "MEDICALTECHNOLOGY") {
+                    _this.mydAddoptions[1].cities = [];
+                    $.each(res.data.body, function(index, text) {
+                        _this.mydAddoptions[1].cities.push({
+                            value: text.associationId,
+                            label: text.title,
+                            cities: [
+                                {
+                                    value: "",
+                                    label: text.context
+                                }
+                            ]
                         });
-                    } else if (value == "MEDICALTECHNOLOGY") {
-                        _this.mydAddoptions[1].cities = [];
-                        $.each(res.data.body, function(index, text) {
-                            _this.mydAddoptions[1].cities.push({
-                                value: text.associationId,
-                                label: text.title,
-                                cities: [
-                                    {
-                                        value: "",
-                                        label: text.context
-                                    }
-                                ]
-                            });
+                    });
+                } else if (value == "MEDICALTECHNOLOGY") {
+                    _this.mydAddoptions[1].cities = [];
+                    $.each(res.data.body, function(index, text) {
+                        _this.mydAddoptions[1].cities.push({
+                            value: text.associationId,
+                            label: text.title,
+                            cities: [
+                                {
+                                    value: "",
+                                    label: text.context
+                                }
+                            ]
                         });
-                    }
+                    });
+                }
             } else {
                 //失败
                 this.$notify.error({
@@ -1858,7 +1861,7 @@ export default {
             this.mydTemplateTitle.splice(index, 1);
             this.sendTemplateId.push(text.associationId);
             this.sendTemplate1.push(text);
-            console.log(this.sendTemplateId)
+            console.log(this.sendTemplateId);
         },
         //删除满意度模板
         deleteMydTemplate(index, text) {
@@ -1866,11 +1869,11 @@ export default {
             let oindex = this.sendTemplateId.indexOf(text.associationId);
             this.sendTemplateId.splice(oindex, 1);
             this.mydTemplateTitle.push(text);
-            console.log(this.sendTemplateId)
+            console.log(this.sendTemplateId);
         },
         getUserId(row) {
-            console.log(row)
-            let _this=this;
+            console.log(row);
+            let _this = this;
             $.each(row, (index, text) => {
                 _this.userList.push(text.userId);
             });
@@ -2040,6 +2043,7 @@ export default {
         getConsulTabData(res) {
             this.oMainShow = res.i;
             this.odepartment = "";
+            this.switchNum = res.i;
             if (res.i == 0) {
                 this.getFoList();
             } else if (res.i == 1) {
@@ -2330,9 +2334,7 @@ export default {
             this.oQueryList();
             this.oQueryArticleList();
         },
-        searchChange(){
-
-        },
+        searchChange() {},
         //删除
         async docFollowDelete(deleteFunName, index, row, num) {
             let _this = this;
@@ -2993,16 +2995,70 @@ export default {
 }
 .addFollowMain li {
     margin-bottom: 10px;
+    position: relative;
+}
+.addFollowMain1 > ul > li::before {
+    content: "";
+    display: block;
+
+    position: absolute;
+    left: -30px;
+    top: 11px;
+    width: 20px;
+    height: 16px;
+    background: url(../assets/img/Shape-Copy.png);
+}
+.addFollowMain1 .el-form-item__label {
+    text-align: left;
+}
+.remindTime {
+    position: relative;
+}
+.remindTime::before {
+    content: "";
+    display: block;
+
+    position: absolute;
+    left: -32px;
+    top: 30px;
+    width: 20px;
+    height: 16px;
+    background: url(../assets/img/Shape-Copy.png);
 }
 .addFollowMain .oTime input {
     width: 158px;
     height: 27px;
+}
+.addFollowMain .firstZhiliao {
+    position: relative;
+}
+.addFollowMain .firstZhiliao::before {
+    content: "";
+    display: block;
+
+    position: absolute;
+    left: -30px;
+    top: 11px;
+    width: 20px;
+    height: 16px;
+    background: url(../assets/img/Shape-Copy.png);
 }
 .questBox > li {
     display: flex;
     display: -webkit-flex;
     justify-content: space-between;
     padding-left: 40px;
+}
+.questBox > li::before {
+    content: "";
+    display: block;
+
+    position: absolute;
+    top: 2px;
+    left: 11px;
+    width: 20px;
+    height: 16px;
+    background: url(../assets/img/Shape.png);
 }
 .addFollowBtn {
     display: flex;
@@ -3125,15 +3181,20 @@ export default {
 .DistanceFirst {
     display: flex;
     display: -webkit-flex;
+    margin-top: -6px;
 }
 .DistanceFirst > div {
     width: 70px;
 }
 .addFollowBox .el-dialog__body {
-    padding: 25px 26px;
+    padding: 25px 50px;
 }
 
 /* 新增问诊模板 */
+.addQuestBox .el-dialog__header,
+.addQuestBox .el-dialog__body {
+    background: #eff5fb;
+}
 .addQuestBox .el-form-item__label {
     width: 20px !important;
 }
@@ -3267,5 +3328,12 @@ export default {
 .ificationBox > div:last-child > img {
     width: 100%;
     height: 100%;
+}
+.addFollowBoxFollow .el-dialog__header,
+.addFollowBoxFollow .el-dialog__body {
+    background: #eff5fb;
+}
+.firstDoctorTime .el-form-item__label {
+    width: 110px;
 }
 </style>

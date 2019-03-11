@@ -12,7 +12,7 @@
                     </span>
                 </template>
             </el-table-column>
-            <el-table-column fixed="right" label="操作" v-if="handleVisiable"  width="250">
+            <el-table-column fixed="right" label="操作" v-if="handleVisiable" width="250">
                 <template slot-scope="scope">
                     <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method(index,scope.row)" :class="text.oclass" type="text" size="small" :key="index">
                         {{text.name}}
@@ -20,6 +20,9 @@
                 </template>
             </el-table-column>
         </el-table>
+
+        <el-pagination background layout="prev, pager, next" :total="total" @current-change="changeCurrent">
+        </el-pagination>             
     </div>
 </template>
 
@@ -29,7 +32,7 @@ export default {
         return {
             otrue: true,
             multipleTable: [],
-            handleVisiable:false,
+            handleVisiable: false
         };
     },
     methods: {
@@ -56,13 +59,15 @@ export default {
             }
         },
         //如果不传按钮则操作隐藏
-        hideHandle(){
-            if(this.tableBtn || this.tableBtn.length<1){
-                this.handleVisiable=true
-            }else{
-                this.handleVisiable=false
+        hideHandle() {
+            if (this.tableBtn || this.tableBtn.length < 1) {
+                this.handleVisiable = true;
+            } else {
+                this.handleVisiable = false;
             }
-
+        },
+        changeCurrent(data){
+             this.$emit("reback",data);
         }
     },
     props: {
@@ -70,15 +75,16 @@ export default {
         columns: Array, //父组件传来的 列表标题 数据
         tableBtn: Array, //父组件传来的 列表按钮 数据
         checkVisable: Boolean, //父组件传来的是否有多选框
-        cellColor: Array // 添加类名和事件
+        cellColor: Array, // 添加类名和事件
+        total:Number
     },
     model: {
-        prop: ["tableData", "columns", "tableBtn", "checkVisable", "cellColor"],
+        prop: ["tableData", "columns", "tableBtn", "checkVisable", "cellColor","adminTotal"],
         event: "reBack"
     },
     async created() {
         this.reBackFn();
-        this.hideHandle()
+        this.hideHandle();
     }
 };
 </script>

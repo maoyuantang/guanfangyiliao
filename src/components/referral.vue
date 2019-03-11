@@ -7,104 +7,118 @@
 <template>
   <div class="referral">
     <!--弹框1.1  管理查看记录 -->
-    <el-dialog title="" :visible.sync="isShowmoveUser1" width="40%" center>
-      <div class="moved">
-        <!-- 头像姓名 -->
-        <div class="moved_top">
-          <img src="../assets/img/a-6.png" />
-          <p>{{dualReferralRecordFile.patientName}}</p>
+    <div v-if="isShowmoveUser1">
+      <el-dialog title="" :visible.sync="isShowmoveUser1" width="40%" center>
+        <div class="moved">
+          <!-- 头像姓名 -->
+          <div class="moved_top">
+            <img src="../assets/img/a-6.png" />
+            <p>{{dualReferralRecordFile.patientName}}</p>
+          </div>
+          <!-- 转院路程 -->
+          <div class="moved_middle">
+            <span class="Hospital1">{{dualReferralRecordFile.applyOrgName}}</span>
+            <img src="../assets/img/a-6.png" />
+            <span class="Hospital1">{{dualReferralRecordFile.receiveOrgName}}</span>
+          </div>
+          <!-- 转院详情 -->
+          <div class="moved_footer">
+            <ul>
+              <li v-for='(text,index) in dualReferralRecordFile.records'>{{text.optTime}} {{text.orgName}}
+                {{text.deptName}} {{text.stateName}}</li>
+            </ul>
+          </div>
         </div>
-        <!-- 转院路程 -->
-        <div class="moved_middle">
-          <span class="Hospital1">{{dualReferralRecordFile.applyOrgName}}</span>
-          <img src="../assets/img/a-6.png" />
-          <span class="Hospital1">{{dualReferralRecordFile.receiveOrgName}}</span>
-        </div>
-        <!-- 转院详情 -->
-        <div class="moved_footer">
-          <ul>
-            <li v-for='(text,index) in dualReferralRecordFile.records'>{{text.optTime}} {{text.orgName}}
-              {{text.deptName}} {{text.stateName}}</li>
-          </ul>
-        </div>
-      </div>
-    </el-dialog>
+      </el-dialog>
+    </div>
+
+
     <!--弹框1.2  管理查看反馈-->
-    <el-dialog title="查看反馈" :visible.sync="isShowmoveUser2" width="40%" center>
-      <el-table :data="rebackInformation">
-        <el-table-column property="1" label="医院"></el-table-column>
-        <el-table-column property="2" label="科室"></el-table-column>
-        <el-table-column property="3" label="姓名"></el-table-column>
-        <el-table-column property="4" label="反馈信息"></el-table-column>
-      </el-table>
-    </el-dialog>
+
+    <div v-if="isShowmoveUser2">
+      <el-dialog title="查看反馈" :visible.sync="isShowmoveUser2" width="40%" center>
+        <el-table :data="rebackInformation">
+          <el-table-column property="1" label="医院"></el-table-column>
+          <el-table-column property="2" label="科室"></el-table-column>
+          <el-table-column property="3" label="姓名"></el-table-column>
+          <el-table-column property="4" label="反馈信息"></el-table-column>
+        </el-table>
+      </el-dialog>
+    </div>
 
     <!-- <button @click='addMove'>新增转诊</button> -->
     <!-- 弹框2 新增转诊 -->
-    <el-dialog title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
-      <el-form :model="addForm">
-        <div style="display:flex;margin:10px 0;">
-          <el-form-item label="转诊类型:" :label-width="formLabelWidth">
-            <el-select v-model="addForm.typeList.value" placeholder="上转/下转" clearable @change='upOrDown()'>
-              <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label"
-                :value="item.value"></el-option>
+
+    <div v-if="isShowaddMove">
+      <el-dialog title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
+        <el-form :model="addForm">
+          <div style="display:flex;margin:10px 0;">
+            <el-form-item label="转诊类型:" :label-width="formLabelWidth">
+              <el-select v-model="addForm.typeList.value" placeholder="上转/下转" clearable @change='upOrDown()'>
+                <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label"
+                  :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="疾病名称:" :label-width="formLabelWidth">
+              <el-select v-model="addForm.diseaseName.value" placeholder="请选择" clearable @change='diseaseNameId()'
+                ref="ceshi1">
+                <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label"
+                  :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+
+          <el-form-item label="病     人:" :label-width="formLabelWidth">
+            <el-select v-model="addForm.patient.value" placeholder="请选择" clearable ref="ceshi2">
+              <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label"
+                :value="item.value">
+              </el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="疾病名称:" :label-width="formLabelWidth">
-            <el-select v-model="addForm.diseaseName.value" placeholder="请选择" clearable @change='diseaseNameId()'
-              ref="ceshi1">
-              <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label"
-                :value="item.value"></el-option>
+          <div class="block" style="margin-bottom: 22px;">
+            <span class="demonstration"
+              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
+            <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.value"
+              @change="handleChange" clearable ref="ceshi3">
+            </el-cascader>
+          </div>
+
+          <el-form-item label="病历授权:" :label-width="formLabelWidth">
+            <el-select v-model="addForm.giveRight.value" placeholder="单选" clearable>
+              <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label"
+                :value="item.value">
+              </el-option>
             </el-select>
           </el-form-item>
+
+          <div class="block" style="margin-bottom: 22px;">
+            <span class="demonstration"
+              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
+            <el-date-picker v-model="addForm.moveTime.value" type="datetime" placeholder="请选择" default-time="12:00:00">
+            </el-date-picker>
+          </div>
+
+          <el-form-item label="转诊目的:" :label-width="formLabelWidth">
+            <el-input v-model="addForm.movePurpose" autocomplete="off" placeholder="请填写"></el-input>
+          </el-form-item>
+
+          <el-form-item label="初步诊断:" :label-width="formLabelWidth">
+            <el-input v-model="addForm.beginIdea" autocomplete="off" placeholder="请填写"></el-input>
+          </el-form-item>
+        </el-form>
+
+        <div slot="footer" class="dialog-footer" style="text-align:center;">
+          <el-button type="primary" v-if="kuang2Save == true" @click="dualReferralAdd1" style="width:70%;">新 增
+          </el-button>
+          <el-button type="primary" v-if="kuang2Save == false" @click="dualReferralAdd2" style="width:70%;">编 辑
+          </el-button>
         </div>
 
-        <el-form-item label="病     人:" :label-width="formLabelWidth">
-          <el-select v-model="addForm.patient.value" placeholder="请选择" clearable ref="ceshi2">
-            <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label"
-              :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
+      </el-dialog>
+    </div>
 
-        <div class="block" style="margin-bottom: 22px;">
-          <span class="demonstration"
-            style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
-          <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.value" @change="handleChange"
-            clearable ref="ceshi3">
-          </el-cascader>
-        </div>
-
-        <el-form-item label="病历授权:" :label-width="formLabelWidth">
-          <el-select v-model="addForm.giveRight.value" placeholder="单选" clearable>
-            <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label"
-              :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
-
-        <div class="block" style="margin-bottom: 22px;">
-          <span class="demonstration"
-            style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
-          <el-date-picker v-model="addForm.moveTime.value" type="datetime" placeholder="请选择" default-time="12:00:00">
-          </el-date-picker>
-        </div>
-
-        <el-form-item label="转诊目的:" :label-width="formLabelWidth">
-          <el-input v-model="addForm.movePurpose" autocomplete="off" placeholder="请填写"></el-input>
-        </el-form-item>
-
-        <el-form-item label="初步诊断:" :label-width="formLabelWidth">
-          <el-input v-model="addForm.beginIdea" autocomplete="off" placeholder="请填写"></el-input>
-        </el-form-item>
-      </el-form>
-
-      <div slot="footer" class="dialog-footer" style="text-align:center;">
-        <el-button type="primary" v-if="kuang2Save == true" @click="dualReferralAdd1" style="width:70%;">新 增</el-button>
-        <el-button type="primary" v-if="kuang2Save == false" @click="dualReferralAdd2" style="width:70%;">编 辑
-        </el-button>
-      </div>
-
-    </el-dialog>
 
 
 
@@ -161,8 +175,9 @@
             </div>
           </div>
           <div class="manager_count_midle">
-            <div style="display:flex">
-              <normalColumnChart :inData="drawData"> </normalColumnChart>
+            <div>
+              <normalColumnChart :inData="testdata1"> </normalColumnChart>
+              <normalColumnChart :inData="testdata2"> </normalColumnChart>
             </div>
           </div>
         </div>
@@ -282,6 +297,9 @@
         time0: "",///统计筛选开始时间     DatePicker 日期选择器
         time1: "",//统计筛选结束时间      DatePicker 日期选择器
         type: 'MONTH', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天       Select 选择器
+        types: '', //String MANAGE账号是什么权限
+        yTotal1: 0,//统计y轴相加
+        yTotal2: 0,//统计y轴相加
         //医生端  筛选工具栏  日期筛选返回值  接收参数
         doctorDate: '',//日期筛选
         // 新增转诊
@@ -423,18 +441,18 @@
         //统计
         //申请科室统计图
         monthToYear: [],
-        drawData: {
-          dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-          data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-          title: "申请科室统计图", //图表标题
-          totalNumber: "555"
+        //统计图
+        testdata1: {
+          dataAxis: [],//每个柱子代表的类名
+          data: [],//具体数值
+          title: '',//图表标题
+          total: ''
         },
-        //发起科室统计图
-        drawDataStart: {
-          dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-          data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-          title: "发起科室统计图", //图表标题
-          totalNumber: "555"
+        testdata2: {
+          dataAxis: [],//每个柱子代表的类名
+          data: [],//具体数值
+          title: '',//图表标题
+          total: ''
         },
         //医生端列表（自定义组件 ）
         docTableData: [],//医生端列表数据接收
@@ -452,10 +470,13 @@
       //自调用组件函数
       //转诊管理、统计、切换插件返回值（管理端）
       getNav(data) {
+        this.getList1();
         if (data.i == 0) {
           this.getList1()
         } else if (data.i == 1) {
-          this.getList2()
+          this.getList1().then(val => {
+            this.getList2();
+          });
         }
       },
       //筛选返回值  管理端
@@ -497,10 +518,10 @@
           day = "0" + day;
         }
         var nowDate = year + "-" + month + "-" + day;
-        if(data.index.value == "TODAY"){
+        if (data.index.value == "TODAY") {
           this.time0 = nowDate;
           this.time1 = nowDate;
-        }else if(data.index.value == "ALL"){
+        } else if (data.index.value == "ALL") {
           this.time0 = "";
           this.time1 = "";
         }
@@ -530,10 +551,17 @@
       //筛选列表  管理端
       //1.21.1.科室筛选  工具栏 (管理) (管理)
       async getSelect1(oindex) {
+        // console.log(this.userInfo.rooter)
+        // console.log(this.userInfo.manager)
+        if (this.userInfo.manager) {
+          this.types = 'MANAGE'
+        } else {
+          this.types = 'DOCTOR'
+        }
         let _this = this;
         let query = {
           token: this.userState.token,
-          type: 'MANAGE'
+          type: this.types
         };
         const res = await toolDept(query);                     //1.21.1.科室筛选  工具栏 (管理) (管理)
         if (res.data && res.data.errCode === 0) {
@@ -601,6 +629,20 @@
 
       // 管理1表
       async getList1() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        if (month < 10) {
+          month = "0" + month;
+        }
+        if (day < 10) {
+          day = "0" + day;
+        }
+        var nowDate = year + "-" + month + "-" + day;
+        this.time0 = nowDate;
+        this.time1 = nowDate;
+
         let _this = this;
         let query = {
           token: this.userState.token,
@@ -613,6 +655,8 @@
         const res = await dualReferralManagePage(query);            //14.3.双向转诊-WEB管理端-管理列表
         if (res.data && res.data.errCode === 0) {
           console.log('管理1表+成功')
+          console.log(this.time0)
+          console.log(this.time1)
           console.log(res)
           const lists = res.data.body.data2.list
           this.manageBodyData = lists
@@ -626,23 +670,76 @@
       },
       //管理2表（统计）
       async getList2() {
+        this.getList21()
+        this.getList22()
+      },
+      //14.4.双向转诊-WEB管理端-统计 
+      async getList21() {
         const _this = this
         let query = {
           token: this.userState.token,
           deptId: this.departmentId, //String false 科室ID 
           statisticalType: this.type, //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
-          direction: this.direction,//方向：into转入，转出out
+          direction: "into",//方向：into转入，转出out
           startTime: this.time0,
           endTime: this.time1
         };
         const res = await statistics(query);            //14.4.双向转诊-WEB管理端-统计 
         if (res.data && res.data.errCode === 0) {
-          console.log('统计+成功')
+          console.log('统计+转入人次+成功')
           console.log(res)
           const lists = res.data.body.data
+          this.yTotal1 = 0
+          this.testdata1.dataAxis.length = 0
+          this.testdata1.data.length = 0
+          $.each(lists, function (index, text) {
+            _this.yTotal1 += text.y;
+            _this.testdata1.dataAxis.push(text.x)
+            _this.testdata1.data.push(text.y)
+          });
+          this.testdata1.title = "转入人次"
+          this.testdata1.total = "总数：" + this.yTotal1
+          console.log(this.yTotal1)
+          console.log(this.testdata1)
         } else {
           //失败
-          console.log('统计+失败')
+          console.log('统计+转入人次+失败')
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      async getList22() {
+        const _this = this
+        let query = {
+          token: this.userState.token,
+          deptId: this.departmentId, //String false 科室ID 
+          statisticalType: this.type, //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
+          direction: "out",//方向：into转入，转出out
+          startTime: this.time0,
+          endTime: this.time1
+        };
+        const res = await statistics(query);            //14.4.双向转诊-WEB管理端-统计 
+        if (res.data && res.data.errCode === 0) {
+          console.log('统计+转出人次+成功')
+          console.log(res)
+          const lists = res.data.body.data
+          this.yTotal2 = 0
+          this.testdata2.dataAxis.length = 0
+          this.testdata2.data.length = 0
+          $.each(lists, function (index, text) {
+            _this.yTotal2 += text.y;
+            _this.testdata2.dataAxis.push(text.x)
+            _this.testdata2.data.push(text.y)
+          });
+          this.testdata2.title = "转出人次"
+          this.testdata2.total = "总数：" + this.yTotal2
+          console.log(this.yTotal2)
+          console.log(this.testdata2)
+        } else {
+          //失败
+          console.log('统计+转出人次+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -814,7 +911,7 @@
         console.log(options)
         const res = await dualReferralAdd(query, options);                                   //  14.6.双向转诊-WEB医生端-申请转诊 
         if (res.data && res.data.errCode === 0) {
-          this.isShowaddMove =false
+          this.isShowaddMove = false
           console.log('新增门诊 +成功')
           console.log(res)
           // this.referralId = res.data.body
@@ -1036,7 +1133,7 @@
         const options = {
           referralId: data2.referralId,//转诊ID
         };
-        const res = await applicantCANCEL(query,options);                  //14.9.双向转诊-WEB医生端-申请人操作
+        const res = await applicantCANCEL(query, options);                  //14.9.双向转诊-WEB医生端-申请人操作
         if (res.data && res.data.errCode === 0) {
           console.log('医生端-取消 (按钮)+成功')
           console.log(res)
@@ -1277,5 +1374,17 @@
     display: flex;
     display: -webkit-flex;
     justify-content: space-between;
+  }
+
+  .manager_count_midle {
+    margin: 40px 0 0 0;
+
+    div {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      justify-content: start;
+      align-items: center;
+      /* flex-wrap: wrap; */
+    }
   }
 </style>
