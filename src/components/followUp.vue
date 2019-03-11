@@ -441,8 +441,8 @@
                         <tableList :tableData="satisfiedList" :columns="satisfiedColumns" :tableBtn="SatisfiedBtn" :checkVisable="mydTableChecked" @reBack="getUserId"></tableList>
 
                     </div>
-                    123
-                    <pieChart></pieChart>
+                    <!-- 123
+                    <pieChart></pieChart> -->
                 </div>
                 <!-- 家用设备检测 -->
                 <div v-show="2==oMainShow">
@@ -635,6 +635,7 @@ export default {
     },
     data() {
         return {
+            switchNum: 0,
             //随访计划
             warnVisible: false,
             warnList: [],
@@ -1284,6 +1285,12 @@ export default {
         // 医生
         this.screenPublic(this.oTab11, toolFollowupMode, "随访类型"); //随访类型
         this.screenPublic(this.oTab14, queryTypeList, "文章类型"); //随访类型
+        if (this.userState.rooter || this.userState.manager) {
+            this.partDoctorType = "MANAGE";
+        } else {
+            this.partDoctorType = "DOCTOR";
+        }
+        this.getDepartment(); //科室列表
     },
     mounted() {},
     methods: {
@@ -1354,14 +1361,6 @@ export default {
             }
         },
 
-        //计算分别管理员和医生
-        partDoctor() {
-            if (this.userState.rooter || this.userState.manager) {
-                this.partDoctorType = "MANAGE";
-            } else {
-                this.partDoctorType = "DOCTOR";
-            }
-        },
         //满意度新增模板借口
         // async handleChange(value) {
         //     console.log(value);
@@ -1374,14 +1373,18 @@ export default {
         //筛选
         getOTab1(data) {
             this.odepartment = data.index.value;
-            this.getFoList();
-            // this.getfamiliList();
+            if (this.switchNum == 0) {
+                this.getFoList();
+            } else if (this.switchNum == 2) {
+                this.oManagerGetDeviceList();
+            } else if (this.switchNum == 3) {
+                this.oGetFollowupGraph();
+                this.oGetFollowupRemarks();
+            }
 
-            this.oGetModelList();
-            this.oGetResultList();
-            this.oGetMissileList();
-            this.oGetFollowupGraph();
-            this.oGetFollowupRemarks();
+            // this.oGetModelList();
+            // this.oGetResultList();
+            // this.oGetMissileList();
         },
         getOTab2(data) {
             this.otype = data.index.value;
@@ -2040,6 +2043,7 @@ export default {
         getConsulTabData(res) {
             this.oMainShow = res.i;
             this.odepartment = "";
+            this.switchNum = res.i;
             if (res.i == 0) {
                 this.getFoList();
             } else if (res.i == 1) {
@@ -3004,19 +3008,18 @@ export default {
     height: 16px;
     background: url(../assets/img/Shape-Copy.png);
 }
-.addFollowMain1 .el-form-item__label{
-text-align:left
+.addFollowMain1 .el-form-item__label {
+    text-align: left;
 }
-.remindTime{
+.remindTime {
     position: relative;
-
 }
 .remindTime::before {
     content: "";
     display: block;
 
     position: absolute;
-   left: -32px;
+    left: -32px;
     top: 30px;
     width: 20px;
     height: 16px;
@@ -3026,7 +3029,7 @@ text-align:left
     width: 158px;
     height: 27px;
 }
-.addFollowMain .firstZhiliao{
+.addFollowMain .firstZhiliao {
     position: relative;
 }
 .addFollowMain .firstZhiliao::before {
@@ -3178,7 +3181,7 @@ text-align:left
 .DistanceFirst {
     display: flex;
     display: -webkit-flex;
-        margin-top: -6px;
+    margin-top: -6px;
 }
 .DistanceFirst > div {
     width: 70px;
@@ -3189,8 +3192,8 @@ text-align:left
 
 /* 新增问诊模板 */
 .addQuestBox .el-dialog__header,
-.addQuestBox .el-dialog__body{
-    background: #EFF5FB
+.addQuestBox .el-dialog__body {
+    background: #eff5fb;
 }
 .addQuestBox .el-form-item__label {
     width: 20px !important;
@@ -3330,8 +3333,7 @@ text-align:left
 .addFollowBoxFollow .el-dialog__body {
     background: #eff5fb;
 }
-.firstDoctorTime .el-form-item__label{
-width: 110px;
+.firstDoctorTime .el-form-item__label {
+    width: 110px;
 }
-
 </style>

@@ -17,31 +17,21 @@
                     </li>
                 </ul>
             </li>
-            <!-- <li class="ohisList">
-                <h3>2018年4月4日</h3>
-                <ul>
-                    <li class="ohisListMain">
-                        <div>
-                            <img src="../../assets/img/a-6.png" />
-                        </div>
-                        <div class="ohisListRg">
-                            <div>张某人
-                                <span> 17:54:34</span>
-                            </div>
-                            <div>那就等带节后再说吧。</div>
-                        </div>
-                    </li>
-                </ul>
-            </li> -->
         </ul>
+           <noData v-show="nodataVisable"></noData>
     </div>
 </template>
 <script>
+import noData from "../../public/publicComponents/noData.vue";
 export default {
+    components:{
+        noData
+    },
     data() {
         return {
             messageList: [],
-            timeList: []
+            timeList: [],
+            nodataVisable:false,
         };
     },
     methods: {
@@ -141,6 +131,12 @@ export default {
     },
     created() {
         this.resolveMessage();
+        console.log(this.storyMessage)
+        // if(this.storyMessage.length>0){
+        //     this.nodataVisable=false
+        // }else{
+        //     this.nodataVisable=true
+        // }
     },
     props: {
         storyMessage: Array

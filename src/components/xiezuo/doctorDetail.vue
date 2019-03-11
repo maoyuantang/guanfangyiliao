@@ -11,7 +11,7 @@
                 </div>
                 <div class="evaluateCont">
                     <h5>{{text.userName}}</h5>
-                    <div>{{text.orgName}} {{text.deptName}} </div>
+                    <div>{{text.hospital}} {{text.department}} </div>
                 </div>
                 <!-- <div>
                     文字

@@ -31,7 +31,6 @@
                             <selftag :inData="oTab1" @reback="getOTab5"></selftag>
                         </div>
                         <statisticsWay @reBack="getFilterTime"></statisticsWay>
-                        <!-- <publicTime ></publicTime> -->
                     </div>
                     <div style="display:flex">
                         <normalColumnChart :inData="drawData"> </normalColumnChart>
@@ -67,6 +66,8 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <el-pagination background layout="prev, pager, next" :total="docTotal" @current-change="changeCurrentDoc">
+                </el-pagination>
             </div>
         </div>
 
@@ -91,9 +92,9 @@
             </el-form>
         </el-dialog>
         <!-- 查看记录 -->
-        <div v-if="viewRecordVisible">
-            <el-dialog class="evaluateBox evaluateBox2" title=" 查看记录" :visible.sync="viewRecordVisible" width="602px" hight="356px" center>
-                <viewRecord></viewRecord>
+        <div v-if="recordVisible">
+            <el-dialog class="evaluateBox evaluateBox2" title=" 查看记录" :visible.sync="recordVisible" width="602px" hight="356px" center>
+                <viewRecord :storyMessage="storyMessage"></viewRecord>
             </el-dialog>
         </div>
         <!-- 接收科室 -->
@@ -118,7 +119,7 @@
             </el-dialog>
         </div>
 
-<!-- 聊天 -->
+        <!-- 聊天 -->
         <div v-if="chatVisible">
             <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
                 <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
@@ -138,12 +139,13 @@ import {
     synergyPage, //9.4医生协作列表
     enableSynergyDoctor, //9.5获取可协作医生（本院、院外协作）
     sendSynergy, //9.6 提交  发起协作  表单数据
-     receiveDept,//9.9本院参与科室
+    receiveDept, //9.9本院参与科室
     // synergyChangeStatus, //9.7开始/结束协作
     // synergyInto,//9.8进入协作
-     receiveDoctor,//9.10本院参与医生
+    receiveDoctor, //9.10本院参与医生
     sponsorConsultationInform,
-    queryConsultationInformList
+    queryConsultationInformList,
+    fetchHistoryMessage
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -176,9 +178,11 @@ export default {
     },
     data() {
         return {
-            doctorVis:0,
-            receptionDepartment:[],
-            doctorDetailData:[],
+            docTotal:0,
+            storyMessage: [],
+            doctorVis: 0,
+            receptionDepartment: [],
+            doctorDetailData: [],
             invitationVisible: false,
             cellColor: [
                 {
@@ -202,14 +206,16 @@ export default {
                 receiverId: []
             },
             adminLists: [],
-            adminPageNum:1,
-            adminTotal:0,
+            adminPageNum: 1,
+            adminTotal: 0,
+            docToatal:0,
+            docPageNum:1,
             //管理端  切换管理和统计
             manageOrCount: true, //切换管理和统计
             //医生端  发起协作  弹框
             centerDialogVisible: false, //显示 发起协作 弹框
             isShowChat: false, //聊天框（操作下）
-            isShowRecord: false, //查看记录
+            recordVisible: false, //查看记录
 
             //筛选返回值接收
             //管理1端  筛选工具栏  筛选返回值  接收参数
@@ -244,7 +250,7 @@ export default {
             acceptDepartmentId: "", //接收科室ID
             // departmentsId: "",//弹框内参数
             // time: '',
-            statisticsType: 'DAY',
+            statisticsType: "DAY",
             // element
             // 必备参数
             //时间筛选组件		必备参数
@@ -286,8 +292,7 @@ export default {
             oTab3: {
                 more: false,
                 title: "协作状态",
-                list: [
-                ]
+                list: []
             },
             oTab4: {
                 more: false,
@@ -358,11 +363,11 @@ export default {
                     name: "查看记录",
                     oclass: "recordBtn",
                     method: (index, row) => {
-                        this.recordFun(index, row);
+                        this.historicalRecord(row);
                     }
                 }
             ],
-            chatVisible:false,
+            chatVisible: false,
             //统计
             //申请科室统计图
             monthToYear: [],
@@ -398,14 +403,6 @@ export default {
                 title: "申请科室统计图", //图表标题
                 totalNumber: "555"
             },
-            //发起科室统计图
-            // drawDataStart: {
-            // 	dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-            // 	data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-            // 	title: "发起科室统计图", //图表标题
-            // 	totalNumber: "555"
-            // },
-
             // 医生端
             //可协作医生列表
             hospitalList: [],
@@ -419,8 +416,10 @@ export default {
             departVisible: false, //是否接收科室
             doctorVisible: false, //医生详情
             // groupVisible: false, //会诊评价
-            xiezuoId:"",
-            invitationSelectList:[]
+            xiezuoId: "",
+            invitationSelectList: [],
+            docTime0: "",
+            docTime1: ""
         };
     },
 
@@ -432,9 +431,9 @@ export default {
     },
 
     methods: {
-           //进入协作
+        //进入协作
         async toConsultation(oObject) {
-            console.log(oObject)
+            console.log(oObject);
             this.chatVisible = true;
             this.sessionId = oObject.sessionId;
             // if (oObject.state == "NEW") {
@@ -518,7 +517,12 @@ export default {
                 });
             }
         },
-        getTjData() {},
+        getTjData(data) {
+            console.log(data);
+            this.docTime0 = data.time[0];
+            this.docTime1 = data.time[1];
+            this.DoctorList();
+        },
         //获取邀请列表
         async Invitation(row) {
             this.xiezuoId = row.id;
@@ -592,19 +596,24 @@ export default {
                 });
             }
         },
-         // 管理端分页
-        changeCurrent(data){
-            this.adminPageNum=data
-            this.getList1()
-
+        // 管理端分页
+        changeCurrent(data) {
+            this.adminPageNum = data;
+            this.getList1();
         },
+// 医生端分页
+        changeCurrentDoc(data) {
+            this.docPageNum = data;
+            this.DoctorList();
+        },
+
         //协作科室和协作医生
         async cellClickData(data) {
             console.log(data);
             if (data[1].label == "协作科室") {
                 this.departVisible = true;
                 // this.receptionDepartment=data[0].synergyDeptName
-                console.log(this.receptionDepartment)
+                console.log(this.receptionDepartment);
                 let _this = this;
                 let query = {
                     token: this.userState.token,
@@ -645,8 +654,10 @@ export default {
             //选择管理？统计？
             if (res.i == 0) {
                 this.manageOrCount = true;
+                this.getList1()
             } else if (res.i == 1) {
                 this.manageOrCount = false;
+                this.getList2()
             }
         },
         getOTab1(data) {
@@ -668,11 +679,30 @@ export default {
         },
         getOTab4(data) {
             //点击筛选日期    医生端
-            this.doctorDate = data.index.value;
+            console.log(data);
+
+            if (data.index.value == "TODAY") {
+                var date = new Date();
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                var day = date.getDate();
+                if (month < 10) {
+                    month = "0" + month;
+                }
+                if (day < 10) {
+                    day = "0" + day;
+                }
+                this.docTime0 = year + "-" + month + "-" + day;
+                this.docTime1=year + "-" + month + "-" + day;
+            }else{
+                 this.docTime0 = "";
+                this.docTime1="";
+            }
+            
             this.DoctorList(); //医生端列表
         },
         getOTab5(data) {
-            this.acceptDepartmentId = data.index.value;
+            this.initiateDepartmentId = data.index.value;
             this.getList2();
         },
         adminSearchChange(data) {
@@ -690,7 +720,7 @@ export default {
                 this.time0 = ""; //统计筛选开始时间
                 this.time1 = ""; //统计筛选结束时间
             }
-            this.statisticsType=data.select.value
+            this.statisticsType = data.select.value;
             // if (data.select.value == "DEPT") {
             //     this.statisticsType = 1;
             // } else if (data.select.value == "DAY") {
@@ -788,13 +818,13 @@ export default {
             console.log(options);
             if (res.data && res.data.errCode === 0) {
                 _this.adminLists = res.data.body.data2.list;
-                _this.adminTotal=res.data.body.data2.total
+                _this.adminTotal = res.data.body.data2.total;
                 $.each(_this.adminLists, function(index, text) {
                     if (text.synergyDeptName.length > 0) {
-                        text.synergyDeptNameLength = text.synergyDeptName.length;
-                        
+                        text.synergyDeptNameLength =
+                            text.synergyDeptName.length;
                     }
-                     if (text.synergyUserName.length > 0) {
+                    if (text.synergyUserName.length > 0) {
                         text.synergyUserNameLength =
                             text.synergyUserName.length;
                     }
@@ -808,10 +838,29 @@ export default {
             }
         },
         // 管理1表   操作区
-        //点击  查看记录
-        recordFun(index, row) {
-            console.log(index, row);
-            this.isShowRecord = true;
+        //查看记录
+        async historicalRecord(row) {
+            this.recordVisible = true;
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                userId: this.userSelfInfo.userId,
+                sessionId: [row.sessionId],
+                msgId: this.$store.state.socket.messageTicket.oMsgId,
+                pageNums: 15
+            };
+            const res = await fetchHistoryMessage(query, options);
+            if (res.data && res.data.errCode === 0) {
+                _this.storyMessage = res.data.body;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
         },
 
         //管理2表（统计表）
@@ -842,35 +891,6 @@ export default {
                 });
             }
         },
-        //获取统计筛选科室列表-2
-        // async getApplyTjList() {
-        // 	this.drawData.dataAxis = [];
-        // 	this.drawData.data = [];
-        // 	let _this = this;
-        // 	const options = {
-        // 		token: this.userState.token,
-        // 		applyDeptId: this.initiateDepartmentId,
-        // 		type: 1,
-        // 		startTime: this.time0,
-        // 		endTime: this.time1,
-        // 	};
-        // 	// console.log(options)
-        // 	const res = await manageStatistics(options);
-        // 	if (res.data && res.data.errCode === 0) {
-        // 		$.each(res.data.body.data, function (index, text) {
-        // 			_this.drawData.dataAxis.push(text.unit);
-        // 			_this.drawData.data.push(text.number);
-        // 		});
-        // 		console.log('getApplyTjList成功')
-        // 	} else {
-        // 		console.log('getApplyTjList失败')
-        // 		//失败
-        // 		this.$notify.error({
-        // 			title: "警告",
-        // 			message: res.data.errMsg
-        // 		});
-        // 	}
-        // },
 
         // 医生表
         async DoctorList() {
@@ -878,21 +898,22 @@ export default {
             const options = {
                 token: this.userState.token,
                 query: "",
-                pageNum: 1,
-                pageSize: 15,
+                pageNum: this.docPageNum,
+                pageSize: 10,
                 status: this.adminStatus,
                 applyDeptId: this.applyDepartmentId,
                 synergyDeptId: this.acceptDepartmentId,
-                startTime: this.time0,
-                endTime: this.time1
+                startTime: this.docTime0,
+                endTime: this.docTime1
             };
             const res = await synergyPage(options);
             if (res.data && res.data.errCode === 0) {
                 _this.docTableData = res.data.body.data2.list;
-                $.each(_this.docTableData,function(index,text){
-text.synergyDeptName=text.synergyDeptName.length
-text.synergyUserName=text.synergyUserName.length
-                })
+                _this.docTotal=res.data.body.data2.total
+                $.each(_this.docTableData, function(index, text) {
+                    text.synergyDeptName = text.synergyDeptName.length;
+                    text.synergyUserName = text.synergyUserName.length;
+                });
             } else {
                 //失败
                 this.$notify.error({
@@ -990,12 +1011,12 @@ text.synergyUserName=text.synergyUserName.length
         this.getSelect2();
 
         this.getList1(); //管理列表
-        this.getList2(); //统计
 
         this.otherDoctor(); //可协作医生  列表
         this.dialogCase(); //可协作医生  列表
         this.dialogPurpose(); //可协作医生  列表
         this.DoctorList(); //医生协作列表
+        console.log(this.$store.state.socket.messageTicket.msgId);
     }
 };
 </script>

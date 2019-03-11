@@ -33,6 +33,8 @@ export default {
 </script>
 <style>
 .departmentDetail>li{
-    display: flex
+    display: flex;
+    display: -webkit-flex;
+    margin-bottom:10px;
 }
 </style>

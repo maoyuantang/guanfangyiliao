@@ -173,6 +173,8 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <el-pagination background layout="prev, pager, next" :total="docTotal" @current-change="changeCurrentDoc">
+                </el-pagination>
             </div>
 
         </div>
@@ -236,7 +238,8 @@ export default {
     },
     data() {
         return {
-            adminTotal:0,
+            docTotal: 0,
+            adminTotal: 0,
             storyMessage: [],
             doctorDetailData: [],
             doctorVis: 0, //0是医生跟医生聊天
@@ -276,7 +279,7 @@ export default {
             adminType: "",
             adminStatus: "",
             statisticsStart: "",
-            statisticsType: "DEPT",
+            statisticsType: "DAY",
             statisticsEnd: "",
             departmentsId: "",
             departmentList: [], //科室列表
@@ -331,7 +334,8 @@ export default {
                     // }
                 ]
             },
-            adminPageNum:1,
+            adminPageNum: 1,
+            docPageNum:1,
             //医生端
             consultationId: "",
             invitationSelectList: [],
@@ -586,10 +590,14 @@ export default {
             }
         },
         // 管理端分页
-        changeCurrent(data){
-            this.adminPageNum=data
-            this.getAdminList()
-
+        changeCurrent(data) {
+            this.adminPageNum = data;
+            this.getAdminList();
+        },
+        // 医生端分页
+        changeCurrentDoc(data) {
+            this.docPageNum = data;
+            this.getDocList();
         },
         async cellClickData(data) {
             console.log(data);
@@ -698,7 +706,7 @@ export default {
             let options = {
                 userId: this.userSelfInfo.userId,
                 sessionId: [row.sessionId],
-                msgId: this.$store.state.socket.messageTicket.msgId,
+                msgId: this.$store.state.socket.messageTicket.oMsgId,
                 pageNums: 15
             };
             const res = await fetchHistoryMessage(query, options);
@@ -1034,7 +1042,7 @@ export default {
             const res = await queryByManagerPage(options);
             if (res.data && res.data.errCode === 0) {
                 this.adminTableData = res.data.body.data2.list;
-                this.adminTotal=res.data.body.data2.total
+                this.adminTotal = res.data.body.data2.total;
 
                 console.log(res);
             } else {
@@ -1106,7 +1114,7 @@ export default {
                 this.statisticsEnd = data.time[1];
             } else {
                 var myDate = new Date();
-                this.statisticsStart=''
+                this.statisticsStart = "";
             }
 
             this.getAdminTjList();
@@ -1120,12 +1128,13 @@ export default {
                 dateType: this.oDocTime,
                 startDate: this.startDate,
                 endDate: this.endDate,
-                pageNum: 1,
+                pageNum: this.docPageNum,
                 pageSize: 10
             };
             const res = await queryByDoctorPage(options);
             if (res.data && res.data.errCode === 0) {
                 this.docTableData = res.data.body.data2.list;
+                this.docTotal = res.data.body.data2.total;
             } else {
                 //失败
                 this.$notify.error({
