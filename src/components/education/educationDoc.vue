@@ -101,15 +101,16 @@
             /**
              * 元素 按钮 被点击
              */
-            getItemClick(item){
-                console.log(item);
+            async getItemClick(item){
                 const ajaxMap = {
                     TOSIGNUP:this.signUp,//报名
                     TOLEARN:this.study,//进入学习
                     TOTEACH:this.teaching,//进入教学
                     NULL:this.someWrong,//参数错误
                 };
-                ajaxMap[item.action || 'NULL'](item);
+                this.list.find(i=>i.id===item.id).loading = true;
+                await ajaxMap[item.action || 'NULL'](item);
+                this.list.find(i=>i.id===item.id).loading = false;
             },
             /**
              * 报名
@@ -221,7 +222,8 @@
                 console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.list = res.data.body.list.map(item=>{
-                        item.imgUrl = `${urls.developmentEnvironment}/m/v1/api/hdfs/fs/download/${item.headId}`;
+                        item.imgUrl = item.headId?`${urls.developmentEnvironment}/m/v1/api/hdfs/fs/download/${item.headId}`:item.headId;
+                        item.loading = false;
                         return item;
                     });
                     this.queryConditions.page.total = res.data.body.total;
@@ -284,5 +286,8 @@
         align-items:center;
         grid-row-gap:0.2rem;
         padding-top: 0.2rem;
+    }
+    .education-doc-page{
+        text-align: center;
     }
 </style>

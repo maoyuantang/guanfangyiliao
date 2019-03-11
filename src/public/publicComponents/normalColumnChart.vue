@@ -3,7 +3,10 @@
 </template>
 
 <script>
-    import echarts from '../../plugs/echarts.js'
+    // import echarts from '../../plugs/echarts.js'
+    import echarts from 'echarts/lib/echarts'
+    require('echarts/lib/chart/bar')
+    require('echarts/lib/component/title')
 	export default {
 		data () {
 			return {	
@@ -17,7 +20,6 @@
         },
         watch:{
             inData(n){
-                console.log('5555555555')
                 this.draw({
                     dataAxis:n.dataAxis,
                     data:n.data,

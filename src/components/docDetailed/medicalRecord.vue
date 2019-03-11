@@ -65,7 +65,7 @@
         >
             <div class="prescription">
                 <Timeline>
-                    <TimelineItem>
+                    <TimelineItem v-for="(item,index) in 5" :key="index">
                         <p class="visiting-hospital">重庆市医科大学第三附属医院</p>
                         <p class="visiting-department">
                             <span class="visiting-department-on">on</span>
@@ -94,40 +94,7 @@
                                 </div>
                             </div>
                             <div class="visiting-content-btn">
-                                <el-button type="danger" size="mini" plain>看处方</el-button>
-                            </div>
-                        </div>
-                    </TimelineItem>
-                    <TimelineItem>
-                        <p class="visiting-hospital">重庆市医科大学第三附属医院</p>
-                        <p class="visiting-department">
-                            <span class="visiting-department-on">on</span>
-                            <span class="visiting-department-name">科室名称  |  门诊</span>
-                        </p>
-                        <div class="visiting-content">
-                            <div class="visiting-content-info">
-                                <div class="visiting-content-info-left"><span>R:</span></div>
-                                <div class="visiting-content-info-right">
-                                    <p class="visiting-content-info-right-p">
-                                        <span class="visiting-content-info-right-span">祛痰止咳胶囊</span>
-                                        <span class="visiting-content-info-right-span">12g*6袋</span>
-                                        <span class="visiting-content-info-right-span">1盒</span>
-                                        <span class="visiting-content-info-right-span">1用法: 1袋</span>
-                                        <span class="visiting-content-info-right-span">口服</span>
-                                        <span class="visiting-content-info-right-span">每天三次</span>
-                                    </p>
-                                    <p class="visiting-content-info-right-p">
-                                        <span class="visiting-content-info-right-span">祛痰止咳胶囊</span>
-                                        <span class="visiting-content-info-right-span">12g*6袋</span>
-                                        <span class="visiting-content-info-right-span">1盒</span>
-                                        <span class="visiting-content-info-right-span">1用法: 1袋</span>
-                                        <span class="visiting-content-info-right-span">口服</span>
-                                        <span class="visiting-content-info-right-span">每天三次</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="visiting-content-btn">
-                                <el-button type="danger" size="mini" plain>看处方</el-button>
+                                <el-button type="danger" size="mini" @click="prescriptionDetailsClick" plain>看处方</el-button>
                             </div>
                         </div>
                     </TimelineItem>
@@ -154,49 +121,7 @@
                 <p class="medicalOrder-top-item">执行情况</p>      
             </div>
             <div class="medicalOrder-body">
-                <div class="medicalOrder-body-list">
-                    <div class="medicalOrder-body-list-item">
-                        <p class="medicalOrder-body-list-item-item">头孢硫脒[乙]</p>
-                        <p class="medicalOrder-body-list-item-item">静脉滴入</p>
-                        <p class="medicalOrder-body-list-item-item">2018-05-22  08:22:21</p>
-                        <p class="medicalOrder-body-list-item-item">2018-05-22  08:22:21</p>
-                        <p class="medicalOrder-body-list-item-item">每天一次</p>
-                        <p class="medicalOrder-body-list-item-item">0.2g</p>
-                        <p class="medicalOrder-body-list-item-item medicalOrder-body-list-item-item-status">执行中</p>
-                    </div>
-                    <div class="medicalOrder-body-list-item">
-                        <p class="medicalOrder-body-list-item-item">头孢硫脒[乙]</p>
-                        <p class="medicalOrder-body-list-item-item">静脉滴入</p>
-                        <p class="medicalOrder-body-list-item-item">2018-05-22  08:22:21</p>
-                        <p class="medicalOrder-body-list-item-item">2018-05-22  08:22:21</p>
-                        <p class="medicalOrder-body-list-item-item">每天一次</p>
-                        <p class="medicalOrder-body-list-item-item">0.2g</p>
-                        <p class="medicalOrder-body-list-item-item medicalOrder-body-list-item-item-status">执行中</p>
-                    </div>
-                </div>
-
-                <div class="medicalOrder-body-list">
-                    <div class="medicalOrder-body-list-item">
-                        <p class="medicalOrder-body-list-item-item">头孢硫脒[乙]</p>
-                        <p class="medicalOrder-body-list-item-item">静脉滴入</p>
-                        <p class="medicalOrder-body-list-item-item">2018-05-22  08:22:21</p>
-                        <p class="medicalOrder-body-list-item-item">2018-05-22  08:22:21</p>
-                        <p class="medicalOrder-body-list-item-item">每天一次</p>
-                        <p class="medicalOrder-body-list-item-item">0.2g</p>
-                        <p class="medicalOrder-body-list-item-item medicalOrder-body-list-item-item-status">执行中</p>
-                    </div>
-                    <div class="medicalOrder-body-list-item">
-                        <p class="medicalOrder-body-list-item-item">头孢硫脒[乙]</p>
-                        <p class="medicalOrder-body-list-item-item">静脉滴入</p>
-                        <p class="medicalOrder-body-list-item-item">2018-05-22  08:22:21</p>
-                        <p class="medicalOrder-body-list-item-item">2018-05-22  08:22:21</p>
-                        <p class="medicalOrder-body-list-item-item">每天一次</p>
-                        <p class="medicalOrder-body-list-item-item">0.2g</p>
-                        <p class="medicalOrder-body-list-item-item medicalOrder-body-list-item-item-status">执行中</p>
-                    </div>
-                </div>
-
-                <div class="medicalOrder-body-list">
+                <div class="medicalOrder-body-list" v-for="(item,index) in 5" :key="index">
                     <div class="medicalOrder-body-list-item">
                         <p class="medicalOrder-body-list-item-item">头孢硫脒[乙]</p>
                         <p class="medicalOrder-body-list-item-item">静脉滴入</p>
@@ -261,7 +186,7 @@
                             </div>
                         </div>
                         <div class="visiting-content-btn">
-                            <el-button type="danger" size="mini" plain>看报告</el-button>
+                            <el-button type="danger" size="mini" @click="examinationDetailsClick" plain>看报告</el-button>
                         </div>
                     </div>
                 </TimelineItem>
@@ -279,7 +204,7 @@
         >
         <div class="report">
             <Timeline>
-                <TimelineItem>
+                <TimelineItem v-for="(item,index) in 5" :key="index">
                     <p class="visiting-hospital">重庆市医科大学第三附属医院</p>
                     <p class="visiting-department">
                         <span class="visiting-department-on">on</span>
@@ -446,12 +371,98 @@
 
             <div class="image-item">
                 <div class="image-item-head">
-                    <span class="image-item-name">张丽丽</span>
+                    <span class="image-item-head-name">影像所见</span>
                 </div>
                 <div class="image-item-body">
-
+                    <p class="image-item-body-item">胸部CT平扫示，胸廓对称，胸壁软组织结构清晰。气管纵隔局中，纵隔内未见明显肿大淋巴结。气管支气管开口通常。两肺内见斑片状、多发粟粒结节影，密度不均，部分病变内见点状钙化影。双侧胸腔内未见液性密度影。心影大小形态未见异常。</p>
                 </div>
             </div>
+
+            <div class="image-item">
+                <div class="image-item-head">
+                    <span class="image-item-head-name">诊断结论</span>
+                </div>
+                <div class="image-item-body">
+                    <p class="image-item-body-item">两肺病变，考虑结核伴钙化</p>
+                </div>
+            </div>
+
+            <div class="image-btn-div">
+                <el-button type="primary" @click="seeImageClick">查看影像</el-button>
+            </div>
+        </div>
+        </el-dialog>
+
+        <!-- 综合影像 弹窗 -->
+        <el-dialog
+        title=" "
+        append-to-body
+        :visible.sync="seeImage.show"
+        :fullscreen="true"
+        :before-close="seeImageClose"
+        >
+        <div class="see-image">
+            <img src="./../../../static/assets/img/a-6.png" alt="">
+        </div>
+        </el-dialog>
+
+        <!-- 检验检查列表（详细） 弹窗 -->
+        <el-dialog
+        title=" "
+        append-to-body
+        :visible.sync="examinationDetails.show"
+        :fullscreen="true"
+        :before-close="examinationDetailsClose"
+        >
+        <div class="examination-details">
+            <div class="examination-details-content">
+                <div class="examination-details-content-head">
+                    <p>凝血[检验报告]</p>
+                </div>
+                <div class="examination-details-content-body">
+                    <div class="examination-details-content-body-tip">
+                        <p>检查单号[2030045]</p>
+                    </div>
+                    <div class="examination-details-content-body-content">
+                        <table class="examination-details-table">
+                            <thead class="examination-details--thead">
+                                <tr>
+                                    <th>检查项目</th>
+                                    <th>检查项目</th>
+                                    <th>检查项目</th>
+                                    <th>检查项目</th>
+                                    <th>检查项目</th>
+                                </tr>
+                            </thead>
+                            <tbody class="examination-details-tbody">
+                                <tr v-for="(item,index) in 9" :key="index"> 
+                                    <th>凝血酶时间</th>
+                                    <th>凝血酶时间</th>
+                                    <th>凝血酶时间</th>
+                                    <th>凝血酶时间</th>
+                                    <th>凝血酶时间</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="examination-details-content-foot">
+                    <p>i is fish</p>
+                </div>
+            </div>
+        </div>
+        </el-dialog>
+
+        <!-- 处方详情 弹窗 -->
+        <el-dialog
+        title=" "
+        append-to-body
+        :visible.sync="prescriptionDetails.show"
+        :fullscreen="true"
+        :before-close="prescriptionDetailsClose"
+        >
+        <div class="see-image">
+            <img src="./../../../static/assets/img/a-6.png" alt="">
         </div>
         </el-dialog>
 	</div>
@@ -470,10 +481,16 @@
 				prescription:{//住院处方  
                     show:false, 
                 },
+                prescriptionDetails:{//处方详情
+                    show:false, 
+                },
                 medicalOrder:{//住院医嘱
                     show:false,
                 },
                 examination:{//检验检查
+                    show:false,
+                },
+                examinationDetails:{//检验检查列表（详细）
                     show:false,
                 },
                 report:{//体检报告
@@ -483,6 +500,9 @@
                     show:false,
                 },
                 image:{//综合影像
+                    show:false,
+                },
+                seeImage:{//查看影像
                     show:false,
                 }
 			}
@@ -508,6 +528,7 @@
                     this[i].show = showMap[i]
                 }
             },
+            
             /**
              * 住院处方 被点击
              */
@@ -544,10 +565,28 @@
                 this.changeAlert('image');
             },
             /**
+             * 处方详情 详情 弹窗
+             */
+            prescriptionDetailsClick(){
+                this.prescriptionDetails.show = true;
+            },
+            /**
+             * 检验检查列表（详细） 被点击
+             */
+            examinationDetailsClick(){
+                this.examinationDetails.show = true;
+            },
+            /**
              * 体检报告 详情 弹窗
              */
             reportDetailsClick(){
                 this.reportDetails.show = true;
+            },
+            /**
+             * 查看影像 弹窗
+             */
+            seeImageClick(){
+                this.seeImage.show = true;
             },
             //////////////
             /**
@@ -585,6 +624,24 @@
              */
             imageClose(){
                 this.image.show = false;
+            },
+            /**
+             * 综合影像 关闭
+             */
+            seeImageClose(){
+                this.seeImage.show = false;
+            },
+            /**
+             *检验检查列表（详细） 关闭 
+             */
+            examinationDetailsClose(){
+                this.examinationDetails.show = false;
+            },
+            /**
+             *处方详情 关闭 
+             */
+            prescriptionDetailsClose(){
+                this.prescriptionDetails.show = false;
             },
 		},
 		components:{
@@ -788,7 +845,7 @@
         color: rgba(0,0,0,0.87);
     }
     .image{
-        border: 1px solid red;
+        /* border: 1px solid red; */
         padding-left: 1rem;
         padding-right: 1rem;
     }
@@ -805,5 +862,82 @@
         font-family: var(--fontFamily3);
         font-size: var(--fontSize6);
         color: var(--color20)
+    }
+    .image-item-body-item-spe{
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--fontFamily3);
+        font-size: var(--fontSize6);
+        color: #281012;
+        padding-top: .4rem;
+    }
+    .image-item-body-item-spe-time{
+        font-family: var(--fontFamily3);
+        font-size: var(--fontSize6);
+        color: #646464;
+    }
+    .image-item{
+        padding-bottom: .45rem;
+    }
+    .image-item-body-item{
+        font-family: var(--fontFamily3);
+        font-size: var(--fontSize9);
+        color: #5D5D5D;
+    }
+    .image-item-body{
+        /* padding-top: .4rem; */
+    }
+    .image-btn-div{
+        text-align: right;
+    }
+    .see-image{
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+    .examination-details-table{
+        width: 100%;
+    }
+    .examination-details-table tr{
+        display: flex;
+    }
+    .examination-details-table th{
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 0.48rem;;
+    }
+    .examination-details--thead tr{
+        background-color: #ecedf2;
+    }
+    .examination-details-tbody tr:nth-of-type(even){
+        background: #f8f7fc;
+    }
+    .examination-details-content{
+        box-sizing: border-box;
+        border-top: 0.14rem solid #eaedf2;
+        border-left: 0.06rem solid #eaedf2;
+        border-right: 0.06rem solid #eaedf2;
+        padding-left: 0.1rem;
+        padding-right: 0.1rem;
+    }
+    .examination-details-content-head{
+        height: 0.72rem;
+        display: flex;
+        border-bottom: 0.1rem solid #eaedf2;
+    }
+    .examination-details-content-head p{
+        display: flex;
+        font-size: var(--fontSize5);
+        font-weight: bold;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+    .examination-details-content-body-tip{
+        font-size: var(--fontSize3);
+        color: #f7a060;
     }
 </style>

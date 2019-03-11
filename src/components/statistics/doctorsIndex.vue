@@ -1,30 +1,54 @@
 <template>
 	<div class="doctors-index">
+		{{courseList}}
 		<div class="top-info">
 			<div class="info-box-out">
-				<infoBox inData="远程门诊" @reback="getReData">
+				<infoBox inData="远程门诊" @reback="getReData" v-if="auth['10000']">
 					<!-- <infoEnter v-for="(item,index) in onlineRoomsByDoctor" :key="index" :inData="item" @reback="getInfoClick"></infoEnter> -->
 					<infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter>
 				</infoBox>
 			</div>
 			<div class="info-box-out">
-				<infoBox inData="移动查房" @reback="getReData">
+				<infoBox inData="移动查房" @reback="getReData" v-if="auth['90000']">
 					<infoList :inData="infoListData"></infoList>	
 				</infoBox>
 			</div>
 			<div class="info-box-out">
-				<infoBox inData="远程教育" @reback="getReData">
-					<!-- <infoList :inData="infoListData"></infoList>	 -->
+				<infoBox inData="远程教育" @reback="getReData" v-if="auth['60000']">
+					<!-- <infoList :inData="infoListData"></infoList>	 -->         
 					<div class="distance-learning">
 						<div class="distance-learning-content">
-							<div class="distance-learning-content-info"></div>
-							<div class="distance-learning-content-status"></div>
+							<div class="distance-learning-content-info">
+								<div class="distance-learning-content-info-left">
+									<img :src="courseList.length>0&&courseList[0].headImgURL?courseList.headImgURL:'../../../static/assets/img/a-6.png'" alt="">
+								</div>
+								<div class="distance-learning-content-info-right">
+									<p class="doc-name">{{courseList.length>0?courseList[0].teacherName:''}}</p>
+									<p class="class-num">{{courseList.length>0?courseList[0].courseNumber:''}}</p>
+								</div>
+							</div>
+							<div class="distance-learning-content-status">
+								<div class="distance-learning-content-status-item">
+									<p class="distance-learning-content-status-item-name">授课时间</p>
+									<p class="distance-learning-content-status-item-value">{{courseList.length>0?courseList[0].teachStartTime:''}}</p>
+								</div>
+								<div class="distance-learning-content-status-item">
+									<p class="distance-learning-content-status-item-name">报名人数</p>
+									<p class="distance-learning-content-status-item-value">{{courseList.length>0?courseList[0].num:''}}</p>
+								</div>
+								<div class="distance-learning-content-status-item">
+									<p class="distance-learning-content-status-item-name">状态</p>
+									<p class="distance-learning-content-status-item-value">{{courseList.length>0?courseList[0].classState:''}}</p>
+								</div>
+								<div class="distance-learning-content-status-item">
+									<el-button size="mini" type="danger">{{courseList.length>0?courseList[0].actionCount:''}}</el-button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</infoBox>
 			</div>
 		</div>
-		{{auth}}
 		<!-- 今日计划 -->
 		<div class="doctor-table" v-if="auth['40000']">
 			<div class="table-border">
@@ -193,11 +217,14 @@
 	import historyAlert from '../../public/publicComponents/historyAlert.vue'
 	import { 
 		todayPlan, todayAlert, planHistory , todayFollowup , alertHistory , historyFollowup ,queryByDoctorPage, onlineRoomsByDoctor,
-		queryByManagerPage, synergyPage	
+		queryByManagerPage, synergyPage, indexCourseList
 	} from '../../api/apiAll.js'
-	
+	import apiBaseURL from '../../enums/apiBaseURL.js'
 	
 	export default {
+		watch:{
+			auth(n){console.log(n)}
+		},
 		computed:{
 			...mapState({
                 userInfo:state => state.user.userInfo,
@@ -215,7 +242,28 @@
 				/**
 				 * 权限列表（数组形式）
 				 */
-				authList:[],
+				authList:[
+					// {
+					// 	"id": "65402e24bf6743d3b20c97f84b6c59d3",
+					// 	"courseNumber": "GF1550033179971",
+					// 	"type": "远程视频直播授课",
+					// 	"name": "直播房间ios",
+					// 	"source": null,
+					// 	"teacherName": "我",
+					// 	"headId": null,
+					// 	"teachStartTime": "2019-02-13 09:00",
+					// 	"num": 1,
+					// 	"classState": "未开始",
+					// 	"signUpState": false,
+					// 	"courseType": "LIVE",
+					// 	"teacher": true,
+					// 	"action": "TOTEACH"
+					// }
+				],
+				/**
+				 * 远程教育首页排课列表【医生web】
+				 */
+				courseList:[],
 				/**
 				 * 今日计划
 				 */
@@ -438,41 +486,12 @@
 				 */
 				mobileRounds:{},
 				/************* */
-				testTitle:{
-					name:"今日计划"
-				},
 				testBody:{
 					img:'',
 					name:'Amanda Reyes',
 					phone:'(499)-430-5810',
 					id:''
 				},
-				topInfo:[
-					{
-						title:'dag',
-						selectList:[
-							{name:'select1'},
-							{name:'select1'},
-							{name:'select1'}
-						]
-					},
-					{
-						title:'dag',
-						selectList:[
-							{name:'select1'},
-							{name:'select1'},
-							{name:'select1'}
-						]
-					},
-					{
-						title:'dag',
-						selectList:[
-							{name:'select1'},
-							{name:'select1'},
-							{name:'select1'}
-						]
-					}
-				],
 				testInfo:{
 					name:'急救中心',
 					unprocessed:12,
@@ -529,6 +548,32 @@
 			}
 		},
 		methods:{
+			/**
+			 * 获取 远程教育首页排课列表【医生web】
+			 */
+			async getIndexCourseList(){
+				const res = await indexCourseList({token:this.userInfo.token});
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+					const actionMap = {
+						TOSIGNUP:'报名',
+						TOLEARN:'进入学习',
+						TOTEACH:'进入教学',
+						NULL:'无操作'
+					};
+					this.courseList = res.data.body.map(item=>{
+						item.actionCount = actionMap[item.action] || actionMap.NULL;
+						item.headImgURL = item.headId?`${apiBaseURL.developmentEnvironment}/m/v1/api/hdfs/fs/download/${item.headId}`:item.headId;
+						return item;
+					})
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '远程教育首页排课获取失败',
+						type: 'error'
+					});
+				}
+			},
 			/**
 			 * 获取今日计划
 			 */
@@ -712,7 +757,7 @@
 					},
 					{
 						code:'60000',//远程教育
-						funs:[function(){console.log('暂时还没写')}]
+						funs:[this.getIndexCourseList]
 					},
 					{
 						code:'80000',//双向转诊
@@ -1188,11 +1233,68 @@
 		margin-top: 0.2rem;
 	}
 	.distance-learning{
-
+		padding-top: .4rem;
 	}
 	.distance-learning-content{
 		border: 1px solid #E1E8EE;
+		padding-top: .2rem;
+		padding-left: .2rem;
+		padding-right: .2rem;
 		
+	}
+	.distance-learning-content-info{
+		border-bottom: 1px solid #E4E8EE;
+		display: flex;
+		padding-bottom: .2rem;
+	}
+	.distance-learning-content-info-left{
+		width: 0.53rem;
+		height: 0.53rem;
+	}
+	.distance-learning-content-info-left>img{
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+	.distance-learning-content-info-right{
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding-left: 0.2rem;
+	}
+	.doc-name{
+		font-size: 15px;
+		color: var(--color18);
+	}
+	.class-num{
+		font-family: var(--fontFamily3);
+		font-size: 13px;
+		color: var(--color19);
+		line-height: var(--fontSize6);
+	}
+	.distance-learning-content-status{
+		display: flex;
+		padding-top: .18rem;
+		padding-bottom: .18rem;
+	}
+	.distance-learning-content-status-item{
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		/* align-items: center; */
+	}
+	.distance-learning-content-status-item-name{
+		font-size: 13px;
+		color: var(--color19);
+		line-height: var(--fontSize6);
+	}
+	.distance-learning-content-status-item-value{
+		font-family: OpenSans-Semibold;
+		font-size: 13px;
+		color: var(--color18);
+		line-height: var(--fontSize6);
 	}
 </style>
 <!--

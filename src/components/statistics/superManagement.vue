@@ -1,6 +1,5 @@
 <template>
 	<div class="super-management">
-		超级管理员
         <alertTree :inData="testData" @reback="getSelect" v-if="showAlertTree"></alertTree>
         <div class="super-management-top">
             <search @searchValue="searchChange"></search>
@@ -445,7 +444,7 @@ export default {
          * 获取表格数据
          */
         async getTableData(pageNum){
-            console.log(pageNum)
+            // console.log(pageNum)
             const options = {
                 token: this.userState.token,
                 search: this.search,

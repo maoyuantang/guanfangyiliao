@@ -22,7 +22,7 @@
             <normalColumnChart :inData="chartData.chart2"></normalColumnChart>
         </div>
         <div class="statistics-footer">
-            <el-pagination
+            <!-- <el-pagination
             background
             layout="prev, pager, next"
             :page-size="queryConditions.page.size"
@@ -30,7 +30,7 @@
             :total="queryConditions.page.total"
             v-if="queryConditions.page.total!=0"
             @current-change="outerCourtChangePage"
-            ></el-pagination>
+            ></el-pagination> -->
         </div>
 	</div>
 </template>
@@ -40,6 +40,7 @@
     import tag from '../../../public/publicComponents/tag.vue'
     import publicTime from '../../../public/publicComponents/publicTime.vue'
     import normalColumnChart from '../../../public/publicComponents/normalColumnChart.vue'
+    import {roundsStatistics} from '../../../api/apiAll.js' 
 	export default {
 		components: {
 			tag,
@@ -55,7 +56,7 @@
         },
 		data() {
 			return {
-                queryConditions:{//查询条件    
+                queryConditions:{//查询条件     
                     department:{//科室
                         title:'科室',//标题
                         select:0,//当前选中项
@@ -68,14 +69,14 @@
                         ],
                         more:false
                     },
-                    time:null, //时间段
-                    way:{//统计方式
+                    time:null, //时间段 
+                    way:{//统计方式 
                         select:'',  
                         list:[
-                            {label:'按科室统计',value:''},
-                            {label:'按科室统计',value:''},
-                            {label:'按科室统计',value:''},
-                            {label:'按科室统计',value:''},
+                            {label:'按科室统计',value:'DEPT'},
+                            {label:'按年统计',value:'YEAR'},
+                            {label:'按月统计',value:'MONTH'},
+                            {label:'按日统计',value:'DAY'},
                         ]
                     },
                     page:{  //分页
@@ -109,6 +110,36 @@
 		},
 		methods: {
             /**
+             * 获取图表数据
+             */
+            async getRoundsStatistics(){
+                const query = {
+                    token:this.userState.token,
+                    departmentId:this.queryConditions.department.list[this.queryConditions.department.select]?this.queryConditions.department.list[this.queryConditions.department.select].value:'',
+                    type:this.queryConditions.way.select
+                };
+                if(this.queryConditions.time){
+                    query.startTime = this.queryConditions.time[0],
+                    query.endTime = this.queryConditions.time[1]
+                }else{
+                    const nowData = new Date();
+                    query.startTime = `${nowData.getFullYear()-1}-${nowData.getMonth()+1}-${nowData.getDate()}`;
+                    query.endTime = `${nowData.getFullYear()}-${nowData.getMonth()+1}-${nowData.getDate()}`;
+                }
+                const res = await roundsStatistics(query);
+                console.log(res);
+                if(res.data&&res.data.errCode===0){
+                    
+                }else{
+                    this.$notify({
+						title: '失败',
+						message: '统计图表数据获取失败',
+						type: 'error'
+					});
+                }
+
+            },
+            /**
              * 分页切换
              */
             outerCourtChangePage(data){
@@ -141,6 +172,7 @@
 		},
 		async created(){
             this.setDepartmentData();
+            this.getRoundsStatistics();
 		}
 	}
 </script>

@@ -2871,3 +2871,91 @@ export const statisticsPeople = query => { //7.3.1远程门诊就诊人次柱状
         }
     })
 }
+export const lastAssessPlan = query => { //11.获取成员最后一次评估相关
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.lastAssessPlan,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const queryPageByRecordUser = query => { //1.查询我的档案列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.queryPageByRecordUser,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const lastUserRecord = query => { //7.获取患者最后一次上传档案信息
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.lastUserRecord,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const getUserUpDocList = query => { //5.医生WEB查询用户上传档案列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.getUserUpDocList,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const indexCourseList = query => { //1. 远程教育首页排课列表【医生web】
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.indexCourseList,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const roundsManager = query => { //15.1（管理）移动查房管理
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.roundsManager,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const roundsStatistics = query => { //15.2（管理）查房人次统计
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.roundsStatistics,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const myRounds = query => { //15.5（医生）我的查房
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.myRounds,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

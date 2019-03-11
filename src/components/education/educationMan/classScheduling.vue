@@ -782,4 +782,7 @@
     .class-scheduling-alert-item-value-spe>.el-input{
         width: .64rem;
     }
+    .class-scheduling-body-paging{
+        text-align: center;
+    }
 </style>
