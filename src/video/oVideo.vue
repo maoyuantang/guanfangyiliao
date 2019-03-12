@@ -2007,6 +2007,15 @@ video {
 2.   videoType:"门诊"
 第一个第二个参数就传我上面放的，是固定的
 3.   oClinicId："当前门诊id"
+
+
+ <!-- 视频聊天 -->
+    <div v-if="centerDialogVisible">
+      <el-dialog title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
+        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId">
+        </ovideo>
+      </el-dialog>
+    </div>
 */
 </style>
 

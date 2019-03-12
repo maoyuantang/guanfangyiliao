@@ -799,9 +799,27 @@
     methods: {
       // 谭莹事件
       //进入门诊
-      enterRoomBtn(oid) {
-        this.centerDialogVisible = true;
+      async enterRoomBtn(oid) {
+        
         this.oClinicId = oid;
+        let _this = this;
+        let query = {
+          token: this.userState.token
+        };
+        const options = {
+          clinicId:oid
+        };
+        const res = await doctorInto(query, options);
+        console.log(res);
+        if (res.data && res.data.errCode === 0) {
+         _this.centerDialogVisible = true;
+        } else {
+          //失败
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
       },
       //退出视频
       // async closeVideo() {
