@@ -17,23 +17,27 @@
 					</div>
 				</div>
 				<div class="family-medicine-management-content">
-					<div class="family-medicine-management-content-layout">
-						<publicInfoModule 
-						v-for="(item,index) in showInfo.list" 
-						:key="index" 
-						@edit="editItem"
-						@changeStatus="setStatus"
-						:inData="item"></publicInfoModule>
+					<div>
+						<div class="family-medicine-management-content-layout">
+							<publicInfoModule 
+							v-for="(item,index) in showInfo.list" 
+							:key="index" 
+							@edit="editItem"
+							@changeStatus="setStatus"
+							:inData="item"></publicInfoModule>
+						</div>
 					</div>
-					<el-pagination
-					background
-					layout="prev, pager, next"
-					:page-size="9"
-					@current-change="selectPage"
-					@prev-click="prePage"
-					@next-click="nextPage"
-					:total="searchCondition.maxPage*9">
-					</el-pagination>
+					<div class="family-medicine-management-page">
+						<el-pagination
+						background
+						layout="prev, pager, next"
+						:page-size="9"
+						@current-change="selectPage"
+						@prev-click="prePage"
+						@next-click="nextPage"
+						:total="searchCondition.maxPage*9">
+						</el-pagination>
+					</div>
 				</div>
 			</div>
 			<div class="family-medicine-management-body-part-two" v-show="barInfo.i===1">
@@ -189,7 +193,7 @@
 						<div v-for="(item,index) in testData.doctorList.default" :key="index">
 							<div class="family-new-alert-normal-userhead-">
 								<div class="family-new-alert-normal-userhead">
-									<img src="../../assets/img/a-6.png" alt="">
+									<img :src="testData.doctorList.list.find(i=>i.value===item).imgSrc || '../../static/assets/img/a-6.png'" alt="">
 									<i class="iconfont" >&#xe611;</i>
 								</div>
 							</div>
@@ -347,6 +351,7 @@
 		addBusiness, stencilModel, getChildrenByDepartmentId, businessCondition, disableClinic, updateBusiness, queryStatisticalData,
 		pushStatisticalData
 	} from '../../api/apiAll.js'
+	import apiBaseURL from '../../enums/apiBaseURL.js'
 	export default {
 		watch:{
 			/**
@@ -383,7 +388,6 @@
 		},
 		data () {
 			return {
-				loadingInstance:0,//loading
 				searchCondition:{//搜索条件  
 					department:{
 						id:''
@@ -991,6 +995,7 @@
 					this.testData.doctorList.list = res.data.body.map(item => {
 						item.label = item.doctorName;
 						item.value = item.doctorId;
+						item.imgSrc = item.headId ? `${apiBaseURL.developmentEnvironment}/m/v1/api/hdfs/fs/download/${item.headId}` : item.headId;
 						return item;
 					});
 					// this.testData.doctorList.default = [this.testData.doctorList.list[0].value,this.testData.doctorList.list[2].value]
@@ -1456,6 +1461,7 @@
 								item.logoName = i.text;
 								item.color = i.color;
 								item.bgColor = i.bgColor;
+								item.loading = false;
 								return item;
 							}
 						}
@@ -1475,39 +1481,19 @@
 					});
 				}
 			},
-
-			// /**
-			//  * 下拉加载业务
-			//  */
-			// pullLoading(){
-				
-			// 	if(this.searchCondition.pageNum>=this.searchCondition.maxPage){
-			// 		this.$message({
-			// 			message: '没有更多数据',
-			// 			type: 'warning'
-			// 		});
-			// 		return;
-			// 	}
-			// 	this.searchCondition.pageNum++;
-			// 	this.getBussByCondition();
-
-			// },
-			
 			
 			/**
 			 * 禁用，解除禁用
 			 */
 			async setStatus(info){
-				let loadingInstance = Loading.service({ fullscreen: true });
-				setTimeout(() => {
-					this.$nextTick(e=>loadingInstance.close())
-				}, 5000);
-				this.loadingInstance++;
+				this.showInfo.list.find(i=>i.businessId===info.item.businessId).loading = true;
 				const res = await disableClinic({token:this.userInfo.token},{
 					clinicId:info.item.businessId,
 					status:info.tagStatus
 				});
 				console.log(res);
+				this.showInfo.list.find(i=>i.businessId===info.item.businessId).loading = false;
+				// this.showInfo.list = Object({},this.showInfo.list);
 				if(res.data&&res.data.errCode===0){
 					for(const i of this.showInfo.list){
 						if(i.businessId === info.item.businessId){
@@ -1522,8 +1508,6 @@
 						type: 'error'
 					});
 				}
-				this.loadingInstance>0?this.loadingInstance--:null;
-				if(this.loadingInstance<=0){this.$nextTick(e=>loadingInstance.close())}
 			},
 
 			/**
@@ -1605,20 +1589,10 @@
 					}
 				};
 				this.testData = option;
-				// console.log(this.testData.type)
 				Promise.all([this.addBuss(), this.byStencilModel(item.stencilEnum), this.getFetchHospitalDepts()])
 				.then(res=>{
 					this.testData.show = true
 				})
-				// await this.addBuss();
-				// console.log(this.testData.type)
-				
-				// await this.byStencilModel(item.stencilEnum);
-				// // console.log(this.testData.type)
-				// // return 
-				// await this.getFetchHospitalDepts()
-				
-				// console.log('enter')
 			},
 
 			/**
@@ -1635,6 +1609,7 @@
 			cancelSet(){
 				console.log('cancelSet');
 				this.testData = {
+					state:true,
 					show:false,//是否显示新增弹窗 
 					type:'1',//'1'为新增 '2'为编辑
 					businessId:'',//业务id(新增为空，编辑不为空)  
@@ -1689,14 +1664,6 @@
 									// 	stencilEnum:'',//子业务模版（"JTYS", //家庭医生；"SMFW", //上门服务；"ZNPJ", //智能陪检；"YCJH", //远程监护；"ZXZX", //在线咨询；"JYSB", //家用设备； "PHFW" //陪护服务；）
 									// 	times:0//子业务次数
 									// },
-									// {
-									// 	childId:'',//子业务id
-									// 	childName:'新华医院健康诊室',//子业务名称
-									// 	childDepName:'',//子业务科室名
-									// 	childDoctors:'',//子业务人员
-									// 	stencilEnum:'',//子业务模版（"JTYS", //家庭医生；"SMFW", //上门服务；"ZNPJ", //智能陪检；"YCJH", //远程监护；"ZXZX", //在线咨询；"JYSB", //家用设备； "PHFW" //陪护服务；）
-									// 	times:0//子业务次数
-									// }
 								]
 							},
 							{
@@ -1830,7 +1797,6 @@
 			},
 		},
 		async created(){
-			
 			this.getFetchHospitalDepts();
 			this.getBussModuleList();
 			this.getBussTypeList();
@@ -2034,5 +2000,8 @@
 	}
 	.part-two-body-layout{
 		display: flex;
+	}
+	.family-medicine-management-page{
+		text-align: center;
 	}
 </style>

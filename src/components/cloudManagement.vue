@@ -1,6 +1,5 @@
 <template>
 	<div class="cloud-management">
-		云存储管理
 		<div class="cloud-management-head">
 			<search @searchValue="searchChange"></search>
 		</div>
@@ -21,17 +20,7 @@
 					<div class="config-module-content-config">
 						<p class="config-module-content-config-title">医院配置</p>
 						<div class="config-module-content-config-body">
-							<div class="business-item" v-for="(item,index) in showsSelectList" :key="index" v-text="item.hospitalName || ''">
-								<!-- {{item.hospitalName}} -->
-								<!-- <p>
-									<span>重庆市西南医院</span>
-									<span>档案数(18)</span>
-								</p>
-								<p>
-									<span>重庆市西南医院</span>
-									<span>档案数(18)</span>
-								</p> -->
-							</div> 
+							<div class="business-item" v-for="(item,index) in showsSelectList" :key="index" v-text="item.hospitalName || ''"></div> 
 							<p v-if="cloudStorage.hospital.length<=0">暂无数据</p>
 						</div>
 					</div>
@@ -160,14 +149,11 @@
 			'cloudStorage.hospital':{
 				handler(n){
 					let newArr = [...new Set(n)];
-					newArr = newArr.map(v=>{
-						for(const i of this.configurationsList){
-							if(i.hospitalOrgCode === v){
-								return i
-							}
+					this.showsSelectList = this.configurationsList.filter(v=>{
+						for(const i of newArr){
+							if(i === v.hospitalOrgCode) return v;
 						}
 					});
-					this.showsSelectList = newArr;
 				}
 			},
 		},
@@ -434,6 +420,12 @@
 					this.configurationsList = res.data.body.map(item=>{
 						item.hospitalOrgCode = item.code;
 						return item;
+					});
+					const newArr = [...new Set(this.cloudStorage.hospital)];
+					this.showsSelectList = this.configurationsList.filter(v=>{
+						for(const i of newArr){
+							if(i === v.hospitalOrgCode) return v;
+						}
 					})
 				}else{
 					this.$notify({

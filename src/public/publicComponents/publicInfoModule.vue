@@ -1,5 +1,5 @@
 <template>
-	<div class="public-info-module" >
+	<div class="public-info-module" v-loading="inData.loading">
 		<div class="public-info-module-layout">
             <!-- <i class="iconfont public-info-module-icon">&#xe612;</i> -->
             <div class="public-info-module-icon">
@@ -58,6 +58,9 @@
 
 <script>
 	export default {
+        watch:{
+            inData(n){console.log('change')}
+        },
         props:[
             'inData'
         ],

@@ -44,7 +44,7 @@
                         <th>2018-03-22</th>
                         <th>2018-03-22</th>
                         <th>2018-03-22</th>
-                        <th><i class="iconfont vedio-icon">&#xe614;</i></th>
+                        <th><i class="iconfont vedio-icon" @click="showVedio">&#xe614;</i></th>
                         <th>2018-03-22</th>
                     </tr>
                 </tbody>
@@ -61,6 +61,7 @@
             @current-change="outerCourtChangePage"
             ></el-pagination>
         </div>
+        <playVedio :inData="vedio"></playVedio>
 	</div>
 </template>
 
@@ -68,14 +69,22 @@
     import { mapState } from "vuex"
     import tag from '../../public/publicComponents/tag.vue'
     import publicTime from '../../public/publicComponents/publicTime.vue'
+    import playVedio from '../../public/publicComponents/playVedio.vue'
+    import {myRounds} from '../../api/apiAll.js' 
+    
 	export default {
 		components: {
             tag,
-            publicTime
+            publicTime,
+            playVedio
 		},
 		data() {
 			return {
-                queryConditions:{//查询条件   
+                vedio:{ //视频 链接 和显示
+                    show:false,
+                    url:'../../../static/assets/video/420-420.webm'
+                },
+                queryConditions:{//查询条件 
                     date:{//日期
                         title:'日期',//标题
                         select:0,//当前选中项
@@ -99,9 +108,7 @@
                         total:1000//总条数
                     },
                 },
-                tableData:{//表格数据
-
-                },
+                tableData:[],//表格数据
 			}
 		},
 		computed: {
@@ -113,18 +120,54 @@
 		},
 		methods: {
             /**
+             * 获取 列表 数据
+             */
+            async getMyRounds(){
+                const query = {
+                    token:this.userState.token,
+                };
+                if(this.queryConditions.time.length>0){
+                    query.startTime = this.queryConditions.time[0],
+                    query.endTime = this.queryConditions.time[1]
+                }else{
+                    const nowData = new Date();
+                    query.startTime = `${nowData.getFullYear()-1}-${nowData.getMonth()+1}-${nowData.getDate()}`;
+                    query.endTime = `${nowData.getFullYear()}-${nowData.getMonth()+1}-${nowData.getDate()}`;
+                }
+                const res = await myRounds(query);
+                console.log(res);
+                if(res.data&&res.data.errCode===0){
+                    this.tableData = res.data.body.data2.list;
+                    this.queryConditions.page.total = res.data.body.data2.total;
+                }else{
+                    this.$notify({
+						title: '失败',
+						message: '统计图表数据获取失败',
+						type: 'error'
+					});
+                }
+            },
+            /**
+             * 显示 视频
+             */
+            showVedio(){
+                this.vedio.show = true;
+            },
+            /**
              * 分页切换
              */
             outerCourtChangePage(num){
                 this.queryConditions.page.current = num;
-                console.log(this.queryConditions.page.current)
+                console.log(this.queryConditions.page.current);
+                this.getMyRounds(); 
             },
             /**
              * 获取 日期 选择
              */
-            getDateSelect(date){
-                this.queryConditions.date.select = data.index;
-                console.log(date)
+            getDateSelect(data){
+                console.log(data);
+                this.queryConditions.date.select = data.index;  
+                this.getMyRounds(); 
             },
             /**
              * 获取 时间段
@@ -132,9 +175,11 @@
             timeValueFun(time){
                 console.log(time);
                 this.queryConditions.time = time;
+                this.getMyRounds(); 
             },
 		},
 		async created(){
+            this.getMyRounds();
 		}
 	}
 </script>

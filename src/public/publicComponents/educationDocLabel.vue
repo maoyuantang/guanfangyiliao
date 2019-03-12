@@ -1,5 +1,5 @@
 <template>
-	<div class="education-doc-label">
+	<div class="education-doc-label" v-loading="inData.loading">
         <div class="education-doc-label-top">
             <div class="education-doc-label-imgdiv">
                 <!-- <img src="https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/5ad1576a993985e2d93b3e04735110f7" alt=""> -->

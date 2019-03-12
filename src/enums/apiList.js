@@ -273,5 +273,13 @@ export default {
     nearlyFollowup:'/m/v1/api/followup/followupPlan/nearlyFollowup',//1.医生查看成员最近随访
     nearlyDevice:'/m/v1/api/device/house/nearlyDevice',//1.医生查看成员最近自测
     statisticsPeople:'/m/v1/api/clinic/clinic/statisticsPeople',//7.3.1远程门诊就诊人次柱状统计图
+    lastAssessPlan:'/m/v1/api/medical/lastAssessPlan',//11.获取成员最后一次评估相关
+    queryPageByRecordUser:'/m/v1/api/record/recordUser/queryPageByRecordUser',//1.查询我的档案列表
+    lastUserRecord:'/m/v1/api/record/recordUser/lastUserRecord',//7.获取患者最后一次上传档案信息
+    getUserUpDocList:'/m/v1/api/record/recordUser/queryPageByDoctorWeb',//5.医生WEB查询用户上传档案列表
+    indexCourseList:'/m/v1/api/inquiry/eduLearn/indexCourseList',//1. 远程教育首页排课列表【医生web】
+    roundsManager:'/m/v1/api/roundsTerminal/rounds/roundsManager',//15.1（管理）移动查房管理
+    roundsStatistics:'/m/v1/api/roundsTerminal/rounds/roundsStatistics',//15.2（管理）查房人次统计
+    myRounds:'/m/v1/api/roundsTerminal/rounds/myRounds',//15.5（医生）我的查房
 }
 

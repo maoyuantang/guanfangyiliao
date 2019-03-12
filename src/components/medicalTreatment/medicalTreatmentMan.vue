@@ -5,90 +5,98 @@
     </div>
 
     <!--    弹框子组件  引入 -->
-    <el-dialog title=" 医院及科室范围" :visible.sync="doctorVisible" width="602px" hight="356px" center>
-      <hosptialAndDepartmentArea :doctorDetailData="doctorDetailData"></hosptialAndDepartmentArea>
-    </el-dialog>
+
+    <div v-if="doctorVisible">
+      <el-dialog title=" 医院及科室范围" :visible.sync="doctorVisible" width="602px" hight="356px" center>
+        <hosptialAndDepartmentArea :doctorDetailData="doctorDetailData"></hosptialAndDepartmentArea>
+      </el-dialog>
+    </div>
     <!-- 新增业务   弹框    1 -->
-    <el-dialog title="疾病分级分类" :visible.sync="kuangData1.show" :before-close="handleClose1" center>
-      <el-form :model="kuangData1.form">
-        <el-form-item label="科室" :label-width="kuangData1.formLabelWidth">
-          <el-select v-model="kuangData1.options1.value" placeholder="选择科室（单选）" style="width:80%">
-            <el-option v-for="item in kuangData1.options1.list||[]" :key="item.value" :label="item.label"
-              :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
 
-        <el-form-item label="类型" :label-width="kuangData1.formLabelWidth">
-          <el-select v-model="kuangData1.options2.value" filterable allow-create default-first-option
-            placeholder="填写或选择" style="width: 80%;" @change='isHaveDepartment11' ref="ceshi1">
-            <el-option v-for="(item,index) in kuangData1.options2.list||[]" :key="index" :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
+    <div v-if="kuangData1.show">
+      <el-dialog title="疾病分级分类" :visible.sync="kuangData1.show" :before-close="handleClose1" center>
+        <el-form :model="kuangData1.form">
+          <el-form-item label="科室" :label-width="kuangData1.formLabelWidth">
+            <el-select v-model="kuangData1.options1.value" placeholder="选择科室（单选）" style="width:80%">
+              <el-option v-for="item in kuangData1.options1.list||[]" :key="item.value" :label="item.label"
+                :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item label="名称" :label-width="kuangData1.formLabelWidth">
-          <el-select v-model="kuangData1.options3.value" filterable allow-create default-first-option
-            placeholder="填写或选择" style="width: 80%;" @change="inputReturn12" ref="ceshi2">
-            <el-option v-for="(item,index) in kuangData1.options3.list||[]" :key="index" :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
+          <el-form-item label="类型" :label-width="kuangData1.formLabelWidth">
+            <el-select v-model="kuangData1.options2.value" filterable allow-create default-first-option
+              placeholder="填写或选择" style="width: 80%;" @change='isHaveDepartment11' ref="ceshi1">
+              <el-option v-for="(item,index) in kuangData1.options2.list||[]" :key="index" :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item label="分级" :label-width="kuangData1.formLabelWidth">
-          <el-select v-model="kuangData1.options4.value" placeholder="请选择1-4级" style="width:80%">
-            <el-option v-for="item in kuangData1.options4.list||[]" :key="item.value" :label="item.label"
-              :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button v-if="YesList1 == 1" type="primary" @click="kuangData1Fun11" style="width:80%">新 增
-        </el-button>
-        <el-button v-if="YesList1 == 2" type="primary" @click="kuangData1Fun12" style="width:80%">编 辑
-        </el-button>
-      </div>
-    </el-dialog>
+          <el-form-item label="名称" :label-width="kuangData1.formLabelWidth">
+            <el-select v-model="kuangData1.options3.value" filterable allow-create default-first-option
+              placeholder="填写或选择" style="width: 80%;" @change="inputReturn12" ref="ceshi2">
+              <el-option v-for="(item,index) in kuangData1.options3.list||[]" :key="index" :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="分级" :label-width="kuangData1.formLabelWidth">
+            <el-select v-model="kuangData1.options4.value" placeholder="请选择1-4级" style="width:80%">
+              <el-option v-for="item in kuangData1.options4.list||[]" :key="item.value" :label="item.label"
+                :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button v-if="YesList1 == 1" type="primary" @click="kuangData1Fun11" style="width:80%">新 增
+          </el-button>
+          <el-button v-if="YesList1 == 2" type="primary" @click="kuangData1Fun12" style="width:80%">编 辑
+          </el-button>
+        </div>
+      </el-dialog>
+    </div>
 
 
 
 
     <!-- 新增业务   弹框  2  -->
-    <el-dialog title="转入控制" :visible.sync="kuangData2.show" :before-close="handleClose2" center>
-      <el-form>
-        <!-- :model="kuangData2.options" -->
-        <el-form-item label="科         室:" :label-width="kuangData2.formLabelWidth">
-          <el-select v-model="kuangData2.options1.value" placeholder="单选" style="width:80%"
-            @change='isHaveDepartment21'>
-            <el-option v-for="item in kuangData2.options1.list||[]" :key="item.value" :label="item.label"
-              :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
+    <div v-if="kuangData2.show">
+      <el-dialog title="转入控制" :visible.sync="kuangData2.show" :before-close="handleClose2" center>
+        <el-form>
+          <!-- :model="kuangData2.options" -->
+          <el-form-item label="科         室:" :label-width="kuangData2.formLabelWidth">
+            <el-select v-model="kuangData2.options1.value" placeholder="单选" style="width:80%"
+              @change='isHaveDepartment21'>
+              <el-option v-for="item in kuangData2.options1.list||[]" :key="item.value" :label="item.label"
+                :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item label="接诊疾病等级:" :label-width="kuangData2.formLabelWidth">
-          <el-select v-model="kuangData2.options2.value" multiple placeholder="多选" style="width:80%"
-            @change="inputReturn21">
-            <el-option v-for="item in kuangData2.options2.list||[]" :key="item.value" :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
+          <el-form-item label="接诊疾病等级:" :label-width="kuangData2.formLabelWidth">
+            <el-select v-model="kuangData2.options2.value" multiple placeholder="多选" style="width:80%"
+              @change="inputReturn21">
+              <el-option v-for="item in kuangData2.options2.list||[]" :key="item.value" :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
 
-        <div class="block" style="margin-bottom: 22px;">
-          <span class="demonstration"
-            style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室:</span>
-          <el-cascader :options="kuangData2.options3.list" v-model="kuangData2.options3.value" @change="inputReturn22"
-            placeholder="多选" clearable style="width:65%;">
-          </el-cascader>
+          <div class="block" style="margin-bottom: 22px;">
+            <span class="demonstration"
+              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室:</span>
+            <el-cascader :options="kuangData2.options3.list" v-model="kuangData2.options3.value" @change="inputReturn22"
+              placeholder="多选" clearable style="width:65%;">
+            </el-cascader>
+          </div>
+
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button v-if="YesList2 == 1" type="primary" @click="kuangData1Fun21" style="width:80%">新 增</el-button>
+          <el-button v-if="YesList2 == 2" type="primary" @click="kuangData1Fun22" style="width:80%">编 辑</el-button>
         </div>
-
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button v-if="YesList2 == 1" type="primary" @click="kuangData1Fun21" style="width:80%">新 增</el-button>
-        <el-button v-if="YesList2 == 2" type="primary" @click="kuangData1Fun22" style="width:80%">编 辑</el-button>
-      </div>
-    </el-dialog>
+      </el-dialog>
+    </div>
 
 
 
@@ -314,7 +322,7 @@
         time0: "",///统计筛选开始时间     DatePicker 日期选择器
         time1: "",//统计筛选结束时间      DatePicker 日期选择器
         type: 'MONTH', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天       Select 选择器
-				types: '', //String MANAGE账号是什么权限
+        types: '', //String MANAGE账号是什么权限
         //医生端  筛选工具栏  日期筛选返回值  接收参数
         // 新增
         dialogFormVisible: false,

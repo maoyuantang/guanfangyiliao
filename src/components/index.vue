@@ -514,6 +514,41 @@ export default {
 					});
 				}
 		},
+		/**
+		 * 调用 全局 通用 接口
+		 */
+		fetchAll(){
+			if(this.userState.rooter)return;
+			return Promise.all([
+				this.getHospitalDepts(),
+				this.getGroup(),
+				this.getDocumentsClassification(),
+				this.getUserSource(),
+				this.getHospitalArchives(),
+				this.getToolRxReviewStatus(),
+				this.getToolRxSendStatus(),
+				this.getToolRxReviewDoctors(),
+				this.getToolRxSendDoctors(),
+				this.getToolConsultationType(),
+				this.getToolConsultationStatus(),
+				this.getToolSynergyStatus(),
+				this.getToolArchivesSource(),
+				this.getToolBusinessModel(),
+				this.getToolBusinessType(),
+				this.getToolFollowupType(),
+				this.getToolFollowupMode(),
+				this.getToolFollowupContent(),
+				this.getToolSurveyType(),
+				this.getToolSurveyMode(),
+				this.getToolDeviceType(),
+				this.getToolFollowupHasPlan(),
+				this.getQueryTypeList(),
+				this.getToolMedicalType(),
+				this.getToolMedicalGrading(),
+				this.getToolReferralType(),
+				this.getAllHospital(),
+			]);
+		}
   },
   components:{
   	top,
@@ -527,36 +562,37 @@ export default {
 		}),
   },
   created(){
+	  this.fetchAll();
 	//   debugger
-		Promise.all([
-			this.getHospitalDepts(),
-			this.getGroup(),
-			this.getDocumentsClassification(),
-			this.getUserSource(),
-			this.getHospitalArchives(),
-			this.getToolRxReviewStatus(),
-			this.getToolRxSendStatus(),
-			this.getToolRxReviewDoctors(),
-			this.getToolRxSendDoctors(),
-			this.getToolConsultationType(),
-			this.getToolConsultationStatus(),
-			this.getToolSynergyStatus(),
-			this.getToolArchivesSource(),
-			this.getToolBusinessModel(),
-			this.getToolBusinessType(),
-			this.getToolFollowupType(),
-			this.getToolFollowupMode(),
-			this.getToolFollowupContent(),
-			this.getToolSurveyType(),
-			this.getToolSurveyMode(),
-			this.getToolDeviceType(),
-			this.getToolFollowupHasPlan(),
-			this.getQueryTypeList(),
-			this.getToolMedicalType(),
-			this.getToolMedicalGrading(),
-			this.getToolReferralType(),
-			this.getAllHospital(),
-		]);
+		// Promise.all([
+		// 	this.getHospitalDepts(),
+		// 	this.getGroup(),
+		// 	this.getDocumentsClassification(),
+		// 	this.getUserSource(),
+		// 	this.getHospitalArchives(),
+		// 	this.getToolRxReviewStatus(),
+		// 	this.getToolRxSendStatus(),
+		// 	this.getToolRxReviewDoctors(),
+		// 	this.getToolRxSendDoctors(),
+		// 	this.getToolConsultationType(),
+		// 	this.getToolConsultationStatus(),
+		// 	this.getToolSynergyStatus(),
+		// 	this.getToolArchivesSource(),
+		// 	this.getToolBusinessModel(),
+		// 	this.getToolBusinessType(),
+		// 	this.getToolFollowupType(),
+		// 	this.getToolFollowupMode(),
+		// 	this.getToolFollowupContent(),
+		// 	this.getToolSurveyType(),
+		// 	this.getToolSurveyMode(),
+		// 	this.getToolDeviceType(),
+		// 	this.getToolFollowupHasPlan(),
+		// 	this.getQueryTypeList(),
+		// 	this.getToolMedicalType(),
+		// 	this.getToolMedicalGrading(),
+		// 	this.getToolReferralType(),
+		// 	this.getAllHospital(),
+		// ]);
 		
   }
 }
@@ -591,7 +627,7 @@ export default {
 		padding-left: 0.37rem;
 		flex: 1;
 		/* overflow-y: auto; */
-		height: 100%;
+		/* height: 100%; */
 	}
 </style>
 <!--

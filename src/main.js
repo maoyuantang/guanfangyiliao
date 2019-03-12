@@ -12,8 +12,8 @@ import elementUi from './plugs/elementUi.js'
 import iView from './plugs/iview'
 import 'element-ui/lib/theme-chalk/index.css'
 import './icons/baseIcon.css'
-import 'iview/dist/styles/iview.css'
-import echarts from 'echarts'
+// import 'iview/dist/styles/iview.css'
+// import echarts from 'echarts'
 
 // import { 
 //   Button, Select ,Dialog, Pagination, Dropdown, DropdownMenu, DropdownItem, Menu,
@@ -33,6 +33,10 @@ import 'quill/dist/quill.bubble.css'
 
 import Viewer from 'v-viewer'
 import 'viewerjs/dist/viewer.css'
+import VideoPlayer from 'vue-video-player'
+require('video.js/dist/video-js.css')
+require('vue-video-player/src/custom-theme.css')
+Vue.use(VideoPlayer)
 
 Vue.use(Viewer);
 Viewer.setDefaults({
@@ -87,7 +91,7 @@ Vue.use(VueQuillEditor)
 // Vue.use(MessageBox)
 // Vue.use(MenuItem)
 
-Vue.prototype.$echarts = echarts 
+// Vue.prototype.$echarts = echarts 
 
 // Vue.prototype.$loading = Loading.service
 // Vue.prototype.$msgbox = MessageBox
@@ -98,7 +102,7 @@ Vue.prototype.$echarts = echarts
 // Vue.prototype.$message = Message
 
 Vue.use(elementUi);
-Vue.use(iView);
+// Vue.use(iView);
 
 Vue.config.productionTip = false
 // debugger
