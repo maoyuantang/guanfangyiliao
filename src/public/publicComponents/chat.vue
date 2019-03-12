@@ -570,6 +570,7 @@ export default {
         // 问诊
         getSendMessageChat1(oMessage) {
             let messageBody = JSON.stringify(oMessage);
+            console.log(messageBody)
             // this.childMessageType = 20;
             this.sendMessageChat(18, messageBody, "INTERROGATION");
             this.questDetailVisible = false;
@@ -727,7 +728,6 @@ export default {
         //普通档案
         openPublicFile() {
             this.puBlicFileData.show = true;
-            // this.puBlicFileData = Object({}, this.puBlicFileData);
             console.log(this.puBlicFileData);
             this.getFamily();
         },
@@ -872,7 +872,7 @@ export default {
         sendMessage2() {
             let ohtml = this.messageTicket.content;
         },
-         //随访模板详情
+        //随访模板详情
         async getFollowDetailMoban(oid) {
             console.log(this.userSelfInfo.userId);
             let query = {
@@ -1005,15 +1005,15 @@ export default {
                         this.messageList[i].oRead = false;
                     }
                     var ImgObj = new Image(); //判断图片是否存在
-                    ImgObj.src = this.imgUrl+odata[i].from;
+                    ImgObj.src = this.imgUrl + odata[i].from;
                     //没有图片，则返回-1
                     if (
                         ImgObj.fileSize > 0 ||
                         (ImgObj.width > 0 && ImgObj.height > 0)
                     ) {
-                        odata[i]
+                        odata[i];
                     } else {
-                       odata[i]
+                        odata[i];
                     }
                     // 不是本人发
                     if (odata[i].from != this.userSelfInfo.userId) {
@@ -1281,14 +1281,7 @@ export default {
         },
         //视频组件传过来的事件
         videoclick(data) {
-            alert("qwqw");
-            if (data == "closeCancle") {
                 this.videoVisible = false;
-                this.sendMessageChat("6", "cancle", "VIDEO");
-            } else if (data == "closeComplete") {
-                this.videoVisible = false;
-                this.sendMessageChat("6", "complete", "VIDEO");
-            }
         },
         //删除视频房间
         async deleteVideoRoom() {

@@ -24,17 +24,17 @@
                                     <img src="./../../static/assets/img/danganVideo.png" /> 查档案
                                 </div>
                                 <div>
-                                    <div>屏幕分享</div>
+                                    <div @click="screenClick()">屏幕分享</div>
                                     <div @click="openPatientNum()" v-show="listVisable">列表</div>
                                 </div>
                             </div>
-                            <div class="videoBtn" v-show="guaVisable">
-                                <div @click="closeTheVideo()">
+                            <div class="videoBtn">
+                                <div @click="closeTheVideo()" v-show="guaVisable">
                                     <div><img src="./../../static/assets/img/gua1.png" /></div>
                                     <div>挂断</div>
 
                                 </div>
-                                <div @click="closeVideo()">
+                                <div @click="closeVideo()" v-show="closeVideoBtnVieable">
                                     <div><img src="./../../static/assets/img/videoD1.png" /></div>
                                     <div>关闭视频</div>
                                 </div>
@@ -57,7 +57,7 @@
             </div>
         </div>
         <div class="patientClass" v-show="closePatientNumVisable">
-            <div @click="closePatientNum()">
+            <div class="closeUserMember" @click="closePatientNum()">
                 关闭
             </div>
             <div class="patientClass0" v-show="patientVisable">
@@ -87,6 +87,26 @@
                     </li>
                 </ul>
             </div>
+        </div>
+        <!--屏幕分享-->
+        <div v-if="screenVisible">
+            <el-dialog title="屏幕分享" :visible.sync="screenVisible" width="380px" center append-to-body>
+                <div class="screenBtn">
+                    <el-button type="primary" @click="sureScreen()">确认</el-button>
+                    <el-button type="primary" @click="installScreen()">共享屏幕插件安装指南</el-button>
+                    <el-button type="primary" @click="closeScreen()">取消</el-button>
+                </div>
+            </el-dialog>
+        </div>
+
+        <!--屏幕安装指南-->
+        <div v-if="installScreenVisible">
+            <el-dialog title="共享屏幕安装插件指南" :visible.sync="installScreenVisible" width="520px" center append-to-body>
+                <div class="screenClass">
+                    <img src="../assets/img/screenImg.png" />
+                </div>
+
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -120,6 +140,9 @@ export default {
     },
     data() {
         return {
+            screenVisible: false,
+            installScreenVisible: false,
+            closeVideoBtnVieable: false,
             publicVideoVisable: false,
             listVisable: true,
             oSeaver: "meet.xiaoqiangio.com",
@@ -145,6 +168,21 @@ export default {
         };
     },
     methods: {
+        //屏幕分享
+        screenClick() {
+            this.screenVisible = true;
+        },
+        closeScreen(){
+ this.screenVisible = false;
+        },
+        //确认分享
+        sureScreen() {
+            this.screenShareBtn();
+        },
+        //安装指南
+        installScreen() {
+            this.installScreenVisible = true;
+        },
         openPatientNum() {
             this.closePatientNumVisable = true;
         },
@@ -400,6 +438,7 @@ export default {
                         conferenceNumber: res.data.body.conferenceNumber
                     };
                     console.log("创建视频成功");
+                    _this.$store.commit("socket/IFENTERVIDEO", 1); //当前登录用户在视频中
                     _this.videoIng = 1;
                     _this.closePatientNumVisable = false;
                     _this.localVideoVisable = false;
@@ -494,6 +533,7 @@ export default {
                 console.log("关闭视频成功");
                 _this.localVideoVisable = true;
                 _this.videoIng = 0;
+                _this.$store.commit("socket/IFENTERVIDEO", 0); //当前登录用户没有在视频
             } else {
                 //失败
                 this.$notify.error({
@@ -517,7 +557,11 @@ export default {
                     title: "成功",
                     message: "退出诊室成功"
                 });
-                this.closeVideoRoom(1);
+                if (_this.$store.state.socket.ifEnterVideo == 0) {
+                    _this.$emit("reback", "closeVideoOnly");
+                } else if (_this.$store.state.socket.ifEnterVideo == 1) {
+                    this.closeVideoRoom(1);
+                }
             } else {
                 //失败
                 this.$notify.error({
@@ -549,10 +593,12 @@ export default {
                     if (_this.userSocketInfo.ifVideoImg == 0) {
                         _this.$emit("reback", "closeCancle");
                         messageBody = "cancle";
+                        _this.sendMessageChat("6", "cancle", "VIDEO");
                     } else if (_this.userSocketInfo.ifVideoImg == 1) {
                         alert("1111");
                         _this.$emit("reback", "closeComplete");
                         messageBody = "complete";
+                        _this.sendMessageChat("6", "complete", "VIDEO");
                     }
                     _this.$store.commit("socket/IFVIDEOIMG", 0);
                 } else {
@@ -1408,6 +1454,7 @@ export default {
         },
 
         screenShareBtn() {
+            let _this=this;
             Manis.addScreenSourceToConnection(function(result) {
                 if (result.code == 200) {
                     console.info(
@@ -1416,6 +1463,11 @@ export default {
                     );
                 } else {
                     console.error(result);
+                    _this.$notify.error({
+                    title: "警告",
+                    message: result.msg+',请确认是否安装屏幕共享插件，或查看安装'
+                });
+                    // parent.layer.msg(''+result.msg+',请确认是否安装屏幕共享插件，或查看安装');
                 }
             });
         },
@@ -1457,6 +1509,7 @@ export default {
         if (this.videoType == "门诊") {
             this.listVisable = true;
             this.publicVideoVisable = false;
+            this.closeVideoBtnVieable = true;
             this.getLocal();
             this.enterRoomBtn();
             this.noLineUpNum();
@@ -1466,7 +1519,7 @@ export default {
             this.localVideoVisable = false;
             this.listVisable = false;
             this.questVisable = true;
-            this.sessionId=this.sessionId1;
+            this.sessionId = this.sessionId1;
             this.firstSet();
 
             console.log(this.sessionId);
@@ -1858,10 +1911,10 @@ video {
 .patientClass {
     position: fixed;
     right: 0;
-    top: 56px;
+    top: 0px;
     padding-top: 68px;
     width: 304px;
-    height: 1000px;
+    height: 100%;
     background: rgba(0, 0, 0, 0.3);
     color: white;
 }
@@ -1990,8 +2043,28 @@ video {
 .videoChatBox .chat {
     width: 100%;
 }
-
-
+.closeUserMember {
+    position: absolute;
+    top: 18px;
+    left: 10px;
+    cursor: pointer;
+}
+.screenClass{
+    width:100%;
+        height: 600px;
+    overflow: auto;
+}
+.screenClass>img{
+    width:100%;
+}
+.screenBtn>button{
+        height: 28px;
+        padding: 0 15px;
+            border: 1px solid #dedede;
+                border-radius: 2px;
+                    color: #333;
+                        background-color: #fff;
+}
 /* 
 门诊打开注意 
 
