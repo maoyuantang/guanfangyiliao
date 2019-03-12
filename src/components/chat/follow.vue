@@ -257,7 +257,11 @@ export default {
     margin-left: 0 !important;
 }
 .addFollowBox .el-dialog__body {
-    padding: 25px 26px;
+    padding: 25px 50px;
+}
+.addQuestBox .el-dialog__header,
+.addQuestBox .el-dialog__body {
+    background: #eff5fb;
 }
 .addFollowMain input {
     height: 27px;

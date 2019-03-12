@@ -2656,6 +2656,19 @@ export const groupList = query => { //19.3用户组列表
         }
     })
 }
+export const addfenzu = (query, data) => {//19.4创建用户组
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.addfenzu,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+
 export const groupSelects = query => { //19.8用户组条件选项
     const sign = postQueryHandle(query);
     return axios({

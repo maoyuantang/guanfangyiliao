@@ -254,6 +254,7 @@ export default {
     userHangUp:'/m/v1/api/clinic/clinic/video/userHangUp',//20.8患者视频中，主动挂断
     userRefresh:'/m/v1/api/clinic/clinic/video/userRefresh',//20.9患者动态刷新
     groupList:'/m/v1/api/user/group/list',//19.3用户组列表
+    addfenzu:'/m/v1/api/user/group/create',//19.4创建用户组
     groupSelects:'/m/v1/api/user/group/groupSelects',//19.8用户组条件选项
     addGroupMember:'/m/v1/api/user/group/addGroupMember',//19.5分配用户到小组中
     addOrdinaryArchives:'/m/v1/api/record/patientRecord/addOrdinaryArchives',//2.新增患者普通档案
