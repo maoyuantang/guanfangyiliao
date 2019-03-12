@@ -31,24 +31,27 @@
                     </tr>
                 </thead>
                 <tbody class="rounds-doctor-tbody">
-                    <tr>
-                        <th>2018-03-22</th>
-                        <th>2018-03-22</th>
-                        <th>2018-03-22</th>
-                        <th>2018-03-22</th>
-                        <th>2018-03-22</th>
-                        <th>2018-03-22</th>
-                        <th>2018-03-22</th>
-                        <th>2018-03-22</th>
-                        <th>2018-03-22</th>
-                        <th>2018-03-22</th>
-                        <th>2018-03-22</th>
-                        <th>2018-03-22</th>
-                        <th><i class="iconfont vedio-icon" @click="showVedio">&#xe614;</i></th>
-                        <th>2018-03-22</th>
+                    <tr v-for="(item,index) in tableData" :key="index">
+                        <th>{{item.time}}</th>
+                        <th>{{item.ward}}</th>
+                        <th>{{item.bedNo}}</th>
+                        <th>{{item.patient}}</th>
+                        <th>{{item.patientId}}</th>
+                        <th>{{item.disInformation}}</th>
+                        <th>{{item.disAsk}}</th>
+                        <th>{{item.disReport}}</th>
+                        <th>{{item.check}}</th>
+                        <th>{{item.disImage}}</th>
+                        <th>{{item.disAskAction}}</th>
+                        <th>{{item.todayStatus}}</th>
+                        <th><i class="iconfont vedio-icon" @click="showVedio(item)">&#xe614;</i></th>
+                        <th>
+                            <el-button type="primary" size="mini" @click="recording(item)" plain>查看记录</el-button>
+                        </th>
                     </tr>
                 </tbody>
             </table>
+            <h1 v-if="tableData.length<=0">暂无数据</h1>
         </div>
         <div class="rounds-doctor-footer">
             <el-pagination
@@ -105,10 +108,27 @@
                     page:{//分页   
                         current:1,//当前页码
                         size:10,//每页 条数
-                        total:1000//总条数
+                        total:0//总条数
                     },
                 },
-                tableData:[],//表格数据
+                tableData:[//表格数据
+                    // {
+                    //     "bedNo": "床号",
+                    //     "check": "检验检查",
+                    //     "disAsk": "医嘱",
+                    //     "disAskAction": "医嘱执行",
+                    //     "disImage": "影像",
+                    //     "disInformation": "基本信息",
+                    //     "disRecording": "录音录像",
+                    //     "disReport": "体征报表",
+                    //     "id": "id",
+                    //     "patient": "病人",
+                    //     "patientId": "病人ID",
+                    //     "time": "时间",
+                    //     "todayStatus": "状态",
+                    //     "ward": "病区"
+                    // }
+                ],
 			}
 		},
 		computed: {
@@ -120,11 +140,19 @@
 		},
 		methods: {
             /**
+             * 查看记录
+             */
+            recording(item){
+
+            },
+            /**
              * 获取 列表 数据
              */
             async getMyRounds(){
                 const query = {
                     token:this.userState.token,
+                    pageNum:this.queryConditions.page.current,
+                    pageSize:this.queryConditions.page.size
                 };
                 if(this.queryConditions.time.length>0){
                     query.startTime = this.queryConditions.time[0],
@@ -142,7 +170,7 @@
                 }else{
                     this.$notify({
 						title: '失败',
-						message: '统计图表数据获取失败',
+						message: '列表数据获取失败',
 						type: 'error'
 					});
                 }
@@ -150,7 +178,7 @@
             /**
              * 显示 视频
              */
-            showVedio(){
+            showVedio(item){
                 this.vedio.show = true;
             },
             /**

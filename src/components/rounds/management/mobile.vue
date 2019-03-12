@@ -56,7 +56,7 @@
                     </tr>
                 </tbody>
             </table>
-            <p>暂无数据</p>
+            <h1 v-if="roundsList.length<=0">暂无数据</h1>
         </div>
         <div class="mobile-footer">
             <el-pagination
@@ -170,7 +170,7 @@
                     query.endTime = this.queryConditions.time[1];
                 }else{//如果没有选择时间，默认时间去年的今天到现在的
                     const nowData = new Date();
-                    query.startTime = `${nowData.getFullYear()-1}-${nowData.getMonth()+1}-${nowData.getDate()}`;
+                    query.startTime = `${nowData.getFullYear()-1}-${nowData.getMonth()}-${nowData.getDate()}`;
                     query.endTime = `${nowData.getFullYear()}-${nowData.getMonth()+1}-${nowData.getDate()}`;
                 }
                 console.log(query)

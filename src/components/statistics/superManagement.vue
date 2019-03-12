@@ -114,8 +114,15 @@
                     </ul>
                 </div>
                 <div class="add-department" v-if="department.showAdd">
-                    <input type="text" v-model="department.addDepartmentName">
-                    <i class="iconfont msg-icon" @click="closeDepartmentAdd">&#xe618;</i>
+                    <el-input
+                    placeholder="请输入内容"
+                    v-model="department.addDepartmentName"
+                    size="mini"
+                    @clear="closeDepartmentAdd"
+                    clearable>
+                    </el-input>
+                    <!-- <input type="text" v-model="department.addDepartmentName">
+                    <i class="iconfont msg-icon" @click="closeDepartmentAdd">&#xe618;</i> -->
                 </div>
                 
                 <div class="department-add">
@@ -949,7 +956,7 @@ export default {
     width: 100%;
 }
 .add-department{
-    border: 1px solid var(--borderColor1);
+    /* border: 1px solid var(--borderColor1); */
     display: flex;
     align-items: center;
     justify-content: space-between;
