@@ -189,6 +189,18 @@
 			</el-dialog>
     	</div>
 			
+		<div class="doctor-table">
+			<div class="table-border">
+				<infoListHead :inData="referral" @reBack="getHistoryFollowup"></infoListHead>
+				<newModuleTable v-for="(item,index) in referral.data" :key="index" :inData="item">
+					<el-button size="mini" type="warning" plain>查看档案</el-button>
+					<el-button size="mini" type="primary" plain>转诊详情</el-button>
+					<el-button size="mini" type="success" plain>编辑</el-button>
+					<el-button size="mini" type="danger" plain>删除</el-button>
+				</newModuleTable>
+			</div>
+		</div>
+
 
 		<!-- 为后面的表格做准备 没心思封装组件 -->
 		<div class="doctor-table">
@@ -202,6 +214,10 @@
 				</newModuleTable>
 			</div>
 		</div>
+		<el-dialog title="" :visible.sync="oVideoData.show" center append-to-body fullscreen>
+			<oVideo :createVideoRoomData="oVideoData.createVideoRoomData" :videoType="oVideoData.videoType" :oClinicId="oVideoData.oClinicId"></oVideo>
+		</el-dialog>
+
 		
 	</div>
 </template>
@@ -216,9 +232,10 @@
 	import userInfoRow from '../../public/publicComponents/userInfoRow.vue'
 	import newModuleTable from '../../public/publicComponents/newModuleTable.vue'
 	import historyAlert from '../../public/publicComponents/historyAlert.vue'
+	import oVideo from '../../video/oVideo.vue'  
 	import { 
 		todayPlan, todayAlert, planHistory , todayFollowup , alertHistory , historyFollowup ,queryByDoctorPage, onlineRoomsByDoctor,
-		queryByManagerPage, synergyPage, indexCourseList, doctorInto
+		queryByManagerPage, synergyPage, indexCourseList, doctorInto, dualReferralPage
 	} from '../../api/apiAll.js'
 	import apiBaseURL from '../../enums/apiBaseURL.js'
 	
@@ -234,6 +251,15 @@
 		},
 		data () {
 			return {
+				oVideoData:{
+					createVideoRoomData: {  
+						conferenceId: "",  
+						conferenceNumber: ""
+					},
+					videoType:"门诊",
+					oClinicId:"",
+					show:false
+				},
 
 				/**
 				 * 权限列表
@@ -265,6 +291,13 @@
 				 * 远程教育首页排课列表【医生web】
 				 */
 				courseList:[],
+				/**
+				 * 双向转诊
+				 */
+				referral:{
+					name:'远程会诊888', 
+					data:[]
+				},
 				/**
 				 * 今日计划
 				 */
@@ -314,45 +347,6 @@
 					selectName:'',//选择的名称
 					allList:[],//所有列表
 					showList:[]//根据选择计算过后需要显示的列表
-
-
-					// name:'历史计划',
-					// data:{
-					// 	// "pageNum": 1,
-					// 	// "pageSize": 10,
-					// 	// "size": 7,
-					// 	// "startRow": 1,
-					// 	// "endRow": 7,
-					// 	// "total": 7,
-					// 	// "pages": 1,
-					// 	// "prePage": 0,
-					// 	// "nextPage": 0,
-					// 	// "isFirstPage": true,
-					// 	// "isLastPage": true,
-					// 	// "hasPreviousPage": false,
-					// 	// "hasNextPage": false,
-					// 	// "navigatePages": 8,
-					// 	// "navigatepageNums": [
-					// 	// 	1
-					// 	// ],
-					// 	// "navigateFirstPage": 1,
-					// 	// "navigateLastPage": 1,
-					// 	// "firstPage": 1,
-					// 	// "lastPage": 1,
-					// 	// list:[
-					// 	// 	{
-					// 	// 		"infoId": "a7f6ef67eb6945e8b9ed0db208b18276",
-					// 	// 		"userId": "10000", 
-					// 	// 		"headId": null,
-					// 	// 		"userName": "超级管理员",
-					// 	// 		"phone": null,
-					// 	// 		"planStatus": "已超时",
-					// 	// 		"content": "一段亲切的问候哦",
-					// 	// 		"planStartTime": "2018-12-29 18:00:00",
-					// 	// 		"planCreateTime": "2018-12-29"
-					// 	// 	},
-					// 	// ]
-					// }
 				},
 
 				/**
@@ -550,13 +544,41 @@
 		},
 		methods:{
 			/**
+			 * 获取 双向转诊信息
+			 */
+			async getDualReferralPage(){
+				const res = await dualReferralPage({
+					token:this.userInfo.token,
+					pageNum:1,
+					pageSize:3,
+				});
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+					this.referral.data = res.data.body.data2.list.map(item=>{
+						item.userName = item.applyDoctorName;
+						item.hospital = item.applyOrgName;
+						item.num = item.referralNo;
+						item.time = item.receiveTime;
+						item.status = item.stateName;
+						return item;
+					});
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '双向转诊信息获取失败',
+						type: 'error'
+					});
+				}
+			},
+			/**
 			 * 进入 门诊
 			 */
 			async enterOutpatient(item){
 				console.log(item)
-				const res = await doctorInto({token:this.userInfo.token},{clinicId:item.clinicId});
+				const res = await doctorInto({token:this.userInfo.token},{clinicId:item.id});
 				if(res.data&&res.data.errCode===0){
-					
+					this.oVideoData.oClinicId = item.id;
+					this.oVideoData.show = true;
 				}else{
 					this.$notify({
 						title: '失败',
@@ -778,7 +800,7 @@
 					},
 					{
 						code:'80000',//双向转诊
-						funs:[function(){console.log('暂时还没写')}]
+						funs:[this.getDualReferralPage]
 					},
 					{
 						code:'90000',//移动查房
@@ -969,7 +991,8 @@
 			infoListHead,
 			userInfoRow,
 			newModuleTable,
-			historyAlert
+			historyAlert,
+			oVideo
 		},
 		async created(){
 			this.getAuth();
