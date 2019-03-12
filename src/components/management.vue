@@ -27,7 +27,7 @@
 					</div>
 					<!-- 表体 -->
 					<div class="dataBody">
-						<el-table :data="manageBodyData" border style="width: 100%">
+						<el-table :data="manageBodyData" style="width: 100%">
 							<el-table-column prop="deptName" label="科室"></el-table-column>
 							<el-table-column fixed prop="type" label="类型"></el-table-column>
 							<el-table-column prop="useName" label="使用者"></el-table-column>
