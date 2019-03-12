@@ -668,7 +668,7 @@
 			//自调用组件函数
 			//在线、处方审核、统计、切换插件返回值
 			getNav(data) {
-				console.log(data)
+				console.log(data.i)
 				this.getFilter0();//获取科室列表
 				this.getFilter1();//审核状态
 				this.getFilter2();//配送状态
@@ -1088,7 +1088,7 @@
 				const res = await prescriptionDetailByCondition(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表2+成功')
-					// console.log(res)
+					console.log(res)
 					const lists = res.data.body.data2.list
 					$.each(lists, function (index, text) {
 						if (text.reviewEnum == "UNREVIEWED") {

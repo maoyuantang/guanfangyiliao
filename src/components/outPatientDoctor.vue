@@ -1000,6 +1000,7 @@
         const res = await reviewList(query);
         if (res.data && res.data.errCode === 0) {
           console.log("医生端列表2(审核)+成功");
+          console.log(res)
           this.bcd = res.data.body;
           console.log(this.bcd);
           if (this.bcd[0]) {
