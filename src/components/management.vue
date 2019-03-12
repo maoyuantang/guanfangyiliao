@@ -75,10 +75,11 @@
 		// 已使用接口
 		//筛选接口
 		toolDept,//1.21.1.管理  科室列表
-		toolMedicalType,//1.21.26.分级诊疗-类型
+		toolTerminalType,//1.21.29.终端管理-类型 
+		toolTerminalArea,//1.21.30.终端管理-区域 
+		//列表接口
 		queryByWebPage,//1.终端管理web分页列表
 		terminalManagementStatistics,//2.终端管理统计
-
 
 	} from "../api/apiAll.js";
 	//引入组件
@@ -155,11 +156,11 @@
 							title: '类型',
 							list: [
 								{
-									text: '死的', 
+									text: '死的',
 									value: '0'
 								},
 								{
-									text: '移动查房终端', 
+									text: '移动查房终端',
 									value: 'ROUNDS'
 								}
 							]
@@ -253,7 +254,7 @@
 
 			//筛选列表  管理端
 			//1.21.1.科室筛选  工具栏 (管理) (管理)
-			async getSelect1(oindex) {
+			async getSelect1() {
 				if (this.userInfo.manager) {
 					this.types = 'MANAGE'
 				} else {
@@ -297,68 +298,68 @@
 				}
 			},
 			//1.21.26.类型筛选  工具栏 (管理)
-			async getSelect2(oindex) {
-				// let _this = this;
-				// let query = {
-				// 	token: this.userState.token,
-				// 	// type: 'MANAGE'
-				// };
-				// const res = await toolMedicalType(query);
-				// if (res.data && res.data.errCode === 0) {
-				// 	console.log('1.21.26.类型筛选  工具栏 +成功')
-				// 	// console.log(res.data.body);
-				// 	if (res.data.body.length > 6) {
-				// 		this.onLineList.topFlag[1].more = true;
-				// 	} else {
-				// 		this.onLineList.topFlag[1].more = false;
-				// 	}
-				// 	$.each(res.data.body, function (index, text) {
-				// 		//终端系统   类型   筛选列表   管理1
-				// 		_this.onLineList.topFlag[1].list.push({
-				// 			text: text.name,
-				// 			value: text.id
-				// 		});
-				// 	});
-				// } else {
-				// 	console.log('1.21.26.类型筛选  工具栏 +失败')
-				// 	//失败
-				// 	this.$notify.error({
-				// 		title: "警告",
-				// 		message: res.data.errMsg
-				// 	});
-				// }
+			async getSelect2() {
+				let _this = this;
+				let query = {
+					token: this.userState.token,
+				};
+				const res = await toolTerminalType(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('1.21.26.类型筛选  工具栏 +成功')
+					// console.log(res.data.body);
+					if (res.data.body.length > 6) {
+						this.onLineList.topFlag[1].more = true;
+					} else {
+						this.onLineList.topFlag[1].more = false;
+					}
+					this.onLineList.topFlag[1].list.length = 0
+					$.each(res.data.body, function (index, text) {
+						//终端系统   类型   筛选列表   管理1
+						_this.onLineList.topFlag[1].list.push({
+							text: text.name,
+							value: text.id
+						});
+					});
+				} else {
+					console.log('1.21.26.类型筛选  工具栏 +失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
 			},
 			//1.21.27.区域筛选  工具栏 (终端系统)
-			async getSelect3(oindex) {
-				// let _this = this;
-				// let query = {
-				// 	token: this.userState.token,
-				// 	// type: 'MANAGE'
-				// };
-				// const res = await toolMedicalGrading(query);
-				// if (res.data && res.data.errCode === 0) {
-				// 	console.log('1.21.27.分级筛选  工具栏 移动查房管理+成功')
-				// 	// console.log(res.data.body);
-				// 	if (res.data.body.length > 6) {
-				// 		this.onLineList.topFlag[2].more = true;
-				// 	} else {
-				// 		this.onLineList.topFlag[2].more = false;
-				// 	}
-				// 	$.each(res.data.body, function (index, text) {
-				// 		//终端系统   区域   筛选列表   管理1
-				// 		_this.onLineList.topFlag[2].list.push({
-				// 			text: text.name,
-				// 			value: text.id
-				// 		});
-				// 	});
-				// } else {
-				// 	console.log('1.21.27.分级筛选  工具栏 移动查房管理+失败')
-				// 	//失败
-				// 	this.$notify.error({
-				// 		title: "警告",
-				// 		message: res.data.errMsg
-				// 	});
-				// }
+			async getSelect3() {
+				let _this = this;
+				let query = {
+					token: this.userState.token,
+				};
+				const res = await toolTerminalArea(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('1.21.27.分级筛选  工具栏 移动查房管理+成功')
+					// console.log(res.data.body);
+					if (res.data.body.length > 6) {
+						this.onLineList.topFlag[2].more = true;
+					} else {
+						this.onLineList.topFlag[2].more = false;
+					}
+					this.onLineList.topFlag[2].list.length = 0
+					$.each(res.data.body, function (index, text) {
+						//终端系统   区域   筛选列表   管理1
+						_this.onLineList.topFlag[2].list.push({
+							text: text.name,
+							value: text.id
+						});
+					});
+				} else {
+					console.log('1.21.27.分级筛选  工具栏 移动查房管理+失败')
+					//失败
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
 			},
 
 

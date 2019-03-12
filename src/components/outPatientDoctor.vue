@@ -30,7 +30,7 @@
           <el-table :data="text">
             <el-table-column prop="unProcess" label="未处理"></el-table-column>
             <el-table-column prop="process" label="已处理"></el-table-column>
-            <el-table-column prop="otherDocter" label="其他医生"></el-table-column>
+            <el-table-column prop="doctorCount" label="其他医生"></el-table-column>
           </el-table>
         </div>
         <el-button class="startConsul" type="text" @click="enterRoomBtn(text.id)">进入门诊</el-button>
@@ -39,13 +39,14 @@
 
       <li class="outpatient_right">
         <!-- 病人个数循环 -->
-        <span class="dian" @click="lookList(text.clinicOrders)">...</span>
+        <!-- <span class="dian" @click="lookList(text.clinicOrders,text.doctor)">...</span> -->
+        <span class="dian" @click="lookList(text)">...</span>
         <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail">
 
           <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
             <h1>{{text1.userName}}</h1>
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-              <el-button type="success" plain>查看档案</el-button>
+              <el-button type="success" plain @click = "seeHistory(text1.userId)">查看档案</el-button>
               <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button>
               <el-button type="info" plain>{{text.doctor.doctorStates?'未开始':'进行中'}}</el-button>
             </div>
@@ -517,9 +518,9 @@
               </div>
             </div>
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-              <el-button type="success" plain>查看档案</el-button>
-              <el-button type="danger" @click="sendMessage(text,text5)">发送</el-button>
-              <el-button type="info" plain>未开始</el-button>
+              <el-button type="success" plain  @click = "seeHistory(text5.userId)">查看档案</el-button>
+              <el-button type="danger" @click="sendMessage(huanzheList3,text5)">发送</el-button>
+              <el-button type="info" plain>{{huanzheList[index].doctorStates?'未开始':'进行中'}}</el-button>
             </div>
           </li>
 
@@ -545,9 +546,9 @@
           </li>
 
           <li>
-            <el-table :data="text5.clinicOrders">
+            <el-table :data="huanzheList">
               <el-table-column prop="askTime" label="接诊时间"></el-table-column>
-              <el-table-column prop="userName" label="首诊医生"></el-table-column>
+              <el-table-column prop="" label="首诊医生"></el-table-column>
               <el-table-column prop="askPrice" label="问诊费用"></el-table-column>
               <el-table-column prop="prescriptionPrice" label="处方费"></el-table-column>
             </el-table>
@@ -689,6 +690,8 @@
         isShowPatientList: [],//就诊列表数据
         text5Array: [],//就诊列表弹框底部table数据
         huanzheList: [],
+        huanzheList2: [],
+        huanzheList3: {},
         srcs: "",//处方id   用于拼接图片src
 
 
@@ -1007,7 +1010,18 @@
       async lookList(data) {
         const _this = this
         this.isShowPatient = true
-        this.huanzheList = data
+        this.huanzheList = data.clinicOrders
+        this.huanzheList2 = data.doctor
+        this.huanzheList3 = data
+      },
+      async seeHistory(data){
+        console.log(data)
+        this.$router.push({
+          path:"/docDetailed",
+          query:{
+            id:data
+          }
+        })
       },
       // 7.10.1按审方医生获取处方审核列表 (医生列表2)
       async getList2() {
