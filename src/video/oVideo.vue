@@ -48,7 +48,7 @@
                             </div>
                         </div>
                         <div class="videoChatBox" v-if="videoChatVisable">
-                            <!-- <videoChat :sessionId="sessionId" :doctorVis="doctorVis"></videoChat> -->
+                            <videoChat :sessionId="sessionId" :doctorVis="doctorVis"></videoChat>
                         </div>
 
                     </div>
@@ -92,7 +92,7 @@
 </template>
 <script>
 import "../../static/assets/css/jquery-impromptu.css";
-// import videoChat from "../public/publicComponents/chat.vue";
+import videoChat from "../public/publicComponents/videoChat.vue";
 import apiBaseURL from "../enums/apiBaseURL.js";
 import { mapState } from "vuex";
 import {
@@ -109,7 +109,7 @@ import {
 export default {
     name: "video",
     components: {
-        // videoChat
+        videoChat
     },
     computed: {
         ...mapState({
@@ -432,10 +432,18 @@ export default {
         videoChatBtn() {
             if (this.videoChatVisable) {
                 this.videoChatVisable = false;
-                this.guaVisable = true;
+                if (this.videoType == "门诊") {
+                    this.guaVisable = true;
+                } else {
+                    this.publicVideoVisable = true;
+                }
             } else {
                 this.videoChatVisable = true;
-                this.guaVisable = false;
+                if (this.videoType == "门诊") {
+                    this.guaVisable = false;
+                } else {
+                    this.publicVideoVisable = false;
+                }
             }
         },
         //挂断普通视频
@@ -1457,7 +1465,11 @@ export default {
             this.publicVideoVisable = true;
             this.localVideoVisable = false;
             this.listVisable = false;
+            this.questVisable = true;
+            this.sessionId=this.sessionId1;
             this.firstSet();
+
+            console.log(this.sessionId);
         }
 
         /**
@@ -1711,8 +1723,8 @@ export default {
                             childMessageType = "IMAGE";
                         } else if (oData.info.childMessageType == 7) {
                             childMessageType = "CRVIDEO";
-                            if(oData.info.body=="MicroCinic&hangup"){
-                                this.closeTheVideo()
+                            if (oData.info.body == "MicroCinic&hangup") {
+                                this.closeTheVideo();
                             }
                         } else if (oData.info.childMessageType == 18) {
                             childMessageType = "INTERROGATION";
@@ -1735,10 +1747,11 @@ export default {
     props: {
         createVideoRoomData: Object,
         videoType: String,
-        oClinicId: String
+        oClinicId: String,
+        sessionId1: String
     },
     model: {
-        prop: ["createVideoRoomData", "videoType", "oClinicId"],
+        prop: ["createVideoRoomData", "videoType", "oClinicId", "sessionId1"],
         event: "reBack"
     }
 };
@@ -1971,11 +1984,11 @@ video {
 }
 .videoChatBox {
     position: absolute;
-    bottom: -220px;
-    width:100%
+    bottom: -241px;
+    width: 100%;
 }
-.videoChatBox .chat{
-    width:100%
+.videoChatBox .chat {
+    width: 100%;
 }
 </style>
 

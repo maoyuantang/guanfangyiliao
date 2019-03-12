@@ -534,11 +534,17 @@
                                 <el-table-column fixed="right" label="操作" width="100">
                                     <template slot-scope="scope">
                                         <el-button @click="handleClick(scope.row)" type="text" size="small">查看档案</el-button>
-                                        <el-button @click="handleClick(scope.row)" type="text" size="small">发送</el-button>
+                                        <el-button @click="sendMessage(scope.row)" type="text" size="small">发送</el-button>
                                         <el-button @click="myFollowDetail(scope.row)" type="text" size="small">查看详情</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
+                            <el-select v-model="value" placeholder="请选择">
+                                <el-option key="0" label="新增组" value="0" @click="addGroup()">
+                                </el-option>
+                                <el-option v-for="item in groupList" :key="item.groupId" :label="item.groupName" :value="item.groupId" @click="fenGroup(item.groupId)">
+                                </el-option>
+                            </el-select>
                         </div>
                         <tableList v-else :tableData="doctorList" :columns="doctorColumns" :checkVisable="docTableChecked" :tableBtn="doctorBtn"></tableList>
                     </div>
@@ -552,7 +558,16 @@
                 </el-dialog>
             </div>
         </div>
-
+        <div v-if="chatVisible">
+            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+                <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
+            </el-dialog>
+        </div>
+        <div v-if="groupVisible">
+            <el-dialog class="chatDialog" title="创建分组" :visible.sync="groupVisible" width="680px">
+                <el-input v-model="input" placeholder="请输入内容"></el-input>
+            </el-dialog>
+        </div>
     </div>
 </template>
 
@@ -601,7 +616,9 @@ import {
     phoneFollowupSwitch,
     myFollowDetailFun,
     alertGet,
-    alertSet
+    alertSet,
+    fetchChatSession,
+    groupList
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -617,6 +634,7 @@ import addQuestOrAritle from "./followUpBox/addQuestOrAritle.vue";
 import followDetail from "./followUpBox/followDetail.vue";
 import warnSet from "./followUpBox/warnSet.vue";
 import { quillEditor } from "vue-quill-editor";
+import chat from "../public/publicComponents/chat.vue";
 
 export default {
     components: {
@@ -631,10 +649,15 @@ export default {
         pieChart,
         addQuestOrAritle,
         followDetail,
-        warnSet
+        warnSet,
+        chat
     },
     data() {
         return {
+            groupVisible: false,
+            doctorVis: 0,
+            chatVisible: false,
+            sessionId: "",
             switchNum: 0,
             //随访计划
             warnVisible: false,
@@ -1256,7 +1279,8 @@ export default {
             myFollowVisable: true,
             followDetailData: {},
             followDetailVisible: false,
-            mydAddSuosuClassVis: false
+            mydAddSuosuClassVis: false,
+            groupList: []
         };
     },
     computed: {
@@ -2313,6 +2337,74 @@ export default {
                 this.doctorTemplateVisiable = false;
                 this.docTableChecked = false;
                 this.doctorBtn = [];
+            }
+        },
+        //我的随访发送
+        async sendMessage(row) {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const options = {
+                to: row.userId
+            };
+            const res = await fetchChatSession(query, options);
+            if (res.data && res.data.errCode === 0) {
+                _this.sessionId = res.data.body;
+                _this.chatVisible = true;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //用户组列表
+        async getGroupList() {
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                userId: this.userSelfInfo.userId,
+                homepage: true
+            };
+            const res = await groupList(query);
+            if (res.data && res.data.errCode === 0) {
+                _this.groupList = res.data.body;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //新增组
+        addGroup() {
+            this.groupVisible = true;
+        },
+        //移动分组
+        async fenGroup(oid) {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                groupId: "",
+                userId: ""
+            };
+            const res = await addGroupMember(query);
+            if (res.data && res.data.errCode === 0) {
+               this.$notify.success({
+                    title: "成功",
+                    message: '移动成功！'
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
             }
         },
         // 新增模板

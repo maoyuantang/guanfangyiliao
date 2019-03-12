@@ -18,7 +18,7 @@
                         </el-date-picker>
                     </el-form-item>
                     <ul>
-                        <li v-for="(text,index) in addFollowData.itemModels" :key="index">
+                        <li v-for="(text,index) in addFollowData.planItemResults" :key="index">
                             <div class="addFollowM-bot" style="display:flex">
                                 <el-form-item class="addFollowM-bot" label="距离首次治疗">
                                     <div class="DistanceFirst">
@@ -40,7 +40,7 @@
 
                             </div>
                             <ul class="questBox">
-                                <li v-for="(otext,oindex) in text.contentModels" :key="oindex">
+                                <li v-for="(otext,oindex) in text.itemContentResults" :key="oindex">
                                     <div>
                                         <span v-show="otext.followUpType=='REMIND'">提醒：</span>
                                         <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
@@ -50,23 +50,8 @@
                                         <span class="questTableName">{{otext.title}}</span>
                                     </div>
 
-                                    <span @click="deleteQuest(index,oindex)" class="questDelete">
-                                        <img src="../../assets/img/addFollowDelete2.png" />
-                                    </span>
                                 </li>
                             </ul>
-                            <div class="addFollowBtn" v-show="addFollowBtnVis">
-                                <div @click="addQuest(index)">
-                                    <span class="questDelete"><img src="../../assets/img/addFollowJa2.png" /></span> 问诊表/健康知识
-                                </div>
-                                <div>
-                                    <span @click="addFollowTimeList()">
-                                        <span class="questDelete"><img src="../../assets/img/addFollowJa1.png" /> </span> 添加一项</span>
-                                    <span @click="deleteFollowTimeList(index)">
-                                        <span class="questDelete"> <img src="../../assets/img/addFollowDelete.png" /> </span>
-                                        此项</span>
-                                </div>
-                            </div>
 
                         </li>
                     </ul>
@@ -77,47 +62,40 @@
                             </el-option>
                         </el-select>
                     </div>
-                    <div>
-                        <el-checkbox v-model="addFollowData.remindMe">提醒我</el-checkbox>
-                        <el-checkbox v-model="addFollowData.remindHe">提醒他</el-checkbox>
-                    </div>
-                    <el-button @click="addFollowTable()" type="primary">发送</el-button>
                 </div>
 
             </el-form>
         </div>
         <!-- 添加问诊或文章 -->
-        <div v-if="questVisible">
-            <el-dialog title="添加问诊或文章" :visible.sync="questVisible" center append-to-body>
-                <addQuestOrAritle @reback="sureQuestArticle"></addQuestOrAritle>
+        <!-- <el-dialog title="添加问诊或文章" :visible.sync="questVisible" center append-to-body>
+            <el-tabs v-model="activeName" @tab-click="addQueatOrArticle">
+                <el-tab-pane label="问诊" name="first">
+                    <el-checkbox-group v-model="questCheckList">
+                        <el-checkbox v-for="(text,index) in questList" :key="index" :label="text.id">{{text.title}}</el-checkbox><br />
+                    </el-checkbox-group>
 
-            </el-dialog>
-        </div>
+                </el-tab-pane>
+                <el-tab-pane label="文章" name="second">
+                    <el-checkbox-group v-model="articleCheckList">
+                        <el-checkbox v-for="(text,index) in articleList" :key="index" :label="text.id">{{text.title}}</el-checkbox>
+                    </el-checkbox-group>
+                </el-tab-pane>
+            </el-tabs>
+            <button @click="sureAddQuest()">确认</button>
+        </el-dialog> -->
     </div>
 </template>
 
 <script>
 import apiBaseURL from "../../enums/apiBaseURL.js";
 import { mapState } from "vuex";
-import {
-    getFamilyMemberInfo,
-    getModelTitleList,
-    createFollowUpPlan
-} from "../../api/apiAll.js";
-import { setTimeout } from "timers";
-import addQuestOrAritle from "../followUpBox/addQuestOrAritle.vue";
+import { getModelTitleList,update } from "../../api/apiAll.js";
 export default {
-    components: {
-        addQuestOrAritle
-    },
+    components: {},
     data() {
         return {
             addFollowBtnVis: true,
-            questVisible: false,
-            questCheckList: "",
-            articleCheckList: "",
-            questList: "",
-            articleList: ""
+            questVisible:false,
         };
     },
     computed: {
@@ -127,7 +105,6 @@ export default {
         })
     },
     methods: {
-        
         //添加问诊表
         async addQuest(index) {
             this.questOindex = index;
@@ -160,7 +137,7 @@ export default {
                 1
             );
         },
-        //添加一项
+         //添加一项
         addFollowTimeList() {
             this.addFollowData.itemModels.push({
                 calcVal: 1,
@@ -173,22 +150,25 @@ export default {
         deleteFollowTimeList(index) {
             this.addFollowData.itemModels.splice(index, 1);
         },
-        //创建随访计划
+        //新增随访表
         async addFollowTable() {
             let _this = this;
             let query = {
                 token: this.userState.token
             };
-            this.addFollowData.userId = this.sendToUserId;
             const options = this.addFollowData;
-            const res = await createFollowUpPlan(query, options);
+            const res = await update(query, options);
             if (res.data && res.data.errCode === 0) {
-                let oMessage = {
-                    id: res.data.body.planId,
-                    title: this.addFollowData.title,
-                    firstTreatmentTime: this.addFollowData.firstTreatmentTime
-                };
-                this.$emit("osendmessagechat", oMessage);
+                this.$notify.success({
+                    title: "成功",
+                    message: "编辑成功"
+                });
+                let oMessage={
+                    id:this.addFollowData.id,
+                    title:this.addFollowData.title,
+                    firstTreatmentTime:this.addFollowData.firstTreatmentTime
+                }
+                this.$emit('osendmessagechat',oMessage)
             } else {
                 //失败
                 this.$notify.error({
@@ -196,57 +176,20 @@ export default {
                     message: res.data.errMsg
                 });
             }
+            
         },
-
-        //确认选择的问诊和文章
-        sureQuestArticle(data) {
-            this.questCheckList = data.questCheckList;
-            this.articleCheckList = data.articleCheckList;
-            this.questList = data.questList;
-            this.articleList = data.articleList;
-            console.log(this.articleCheckList);
-            let _this = this;
-            _this.addFollowData.itemModels[
-                            _this.questOindex
-                        ].contentModels=[]
-            $.each(this.questList, function(index, text) {
-                $.each(_this.questCheckList, function(index1, text1) {
-                    if (text.id == text1) {
-                        _this.addFollowData.itemModels[
-                            _this.questOindex
-                        ].contentModels.push({
-                            followUpType: "INQUIRY",
-                            title: text.title,
-                            contentId: text.id
-                        });
-                    }
-                });
-            });
-            $.each(this.articleList, function(index2, text2) {
-                $.each(_this.articleCheckList, function(index3, text3) {
-                    if (text2.id == text3) {
-                        _this.addFollowData.itemModels[
-                            _this.questOindex
-                        ].contentModels.push({
-                            followUpType: "ESSAY",
-                            title: text2.title,
-                            contentId: text2.id
-                        });
-                    }
-                });
-            });
-            this.questVisible = false;
-        }
     },
-    props: {
-        addFollowData: Object,
-        sendToUserId: String
+      props: {
+        addFollowData: Object
     },
-    model: {
-        prop: ["addFollowData", "sendToUserId"],
+     model: {
+        prop: ["addFollowData"],
         event: "reBack"
     },
     created() {
+        //  this.addFollowData=this.followDetailData
+        //  console.log(this.followDetailData)
+        // this.getDrugsMessage();
     },
     beforeDestroy() {}
 };

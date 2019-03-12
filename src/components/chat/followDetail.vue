@@ -50,9 +50,9 @@
                                         <span class="questTableName">{{otext.title}}</span>
                                     </div>
 
-                                    <span @click="deleteQuest(index,oindex)" class="questDelete">
+                                    <!-- <span @click="deleteQuest(index,oindex)" class="questDelete">
                                         <img src="../../assets/img/addFollowDelete2.png" />
-                                    </span>
+                                    </span> -->
                                 </li>
                             </ul>
 
@@ -192,7 +192,7 @@ export default {
     created() {
         //  this.addFollowData=this.followDetailData
         //  console.log(this.followDetailData)
-        this.getDrugsMessage();
+        // this.getDrugsMessage();
     },
     beforeDestroy() {}
 };
