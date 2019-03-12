@@ -218,7 +218,7 @@
 	import historyAlert from '../../public/publicComponents/historyAlert.vue'
 	import { 
 		todayPlan, todayAlert, planHistory , todayFollowup , alertHistory , historyFollowup ,queryByDoctorPage, onlineRoomsByDoctor,
-		queryByManagerPage, synergyPage, indexCourseList
+		queryByManagerPage, synergyPage, indexCourseList, doctorInto
 	} from '../../api/apiAll.js'
 	import apiBaseURL from '../../enums/apiBaseURL.js'
 	
@@ -552,8 +552,18 @@
 			/**
 			 * 进入 门诊
 			 */
-			enterOutpatient(item){
+			async enterOutpatient(item){
 				console.log(item)
+				const res = await doctorInto({token:this.userInfo.token},{clinicId:item.clinicId});
+				if(res.data&&res.data.errCode===0){
+					
+				}else{
+					this.$notify({
+						title: '失败',
+						message: '进入诊室失败',
+						type: 'error'
+					});
+				}
 			},
 			/**
 			 * 获取 远程教育首页排课列表【医生web】
