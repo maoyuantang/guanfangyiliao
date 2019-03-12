@@ -499,7 +499,7 @@
                     </div>
                     <div>
                         <div v-if="myFollowVisable">
-                            <el-table :data="myFollowList" border style="width: 100%">
+                            <el-table :data="myFollowList" border style="width: 100%" @selection-change="followCheckChange">
                                 <el-table-column type="selection" width="55">
                                 </el-table-column>
                                 <el-table-column fixed prop="userName" label="姓名" width="150">
@@ -539,12 +539,22 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
-                            <el-select v-model="value" placeholder="请选择">
-                                <el-option key="0" label="新增组" value="0" @click="addGroup()">
+                            <!-- <el-select v-model="groupValue" placeholder="请选择" @change="addGroup(groupValue)">
+                                <el-option key="0" label="新增组" value="0">
                                 </el-option>
-                                <el-option v-for="item in groupList" :key="item.groupId" :label="item.groupName" :value="item.groupId" @click="fenGroup(item.groupId)">
+                                <el-option v-for="item in groupList" :key="item.groupId" :label="item.groupName" :value="item.groupId">
                                 </el-option>
-                            </el-select>
+                            </el-select> -->
+
+                            <div class="groupClass">
+                                <div>移动到</div>
+                                <ul>
+                                    <li :class="oGroupClick==-1?'groupClick':''" @click="addGroup()">新增组</li>
+                                    <li :class="oGroupClick==index?'groupClick':''" v-for="(item,index) in groupList" :key="index" @click="changeGroup(item.groupId,index)">
+                                        {{item.groupName}}
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         <tableList v-else :tableData="doctorList" :columns="doctorColumns" :checkVisable="docTableChecked" :tableBtn="doctorBtn"></tableList>
                     </div>
@@ -564,8 +574,9 @@
             </el-dialog>
         </div>
         <div v-if="groupVisible">
-            <el-dialog class="chatDialog" title="创建分组" :visible.sync="groupVisible" width="680px">
-                <el-input v-model="input" placeholder="请输入内容"></el-input>
+            <el-dialog title="创建分组" :visible.sync="groupVisible" width="680px">
+                <el-input v-model="groupName" placeholder="请输入内容"></el-input>
+                <el-button type="primary" @click="sureAddGroup()">确认</el-button>
             </el-dialog>
         </div>
     </div>
@@ -618,7 +629,10 @@ import {
     alertGet,
     alertSet,
     fetchChatSession,
-    groupList
+    groupList,
+    addGroupMember,
+    addfenzu,
+    groupSelects
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -654,6 +668,8 @@ export default {
     },
     data() {
         return {
+            groupValue: "",
+            groupName: "",
             groupVisible: false,
             doctorVis: 0,
             chatVisible: false,
@@ -1280,7 +1296,9 @@ export default {
             followDetailData: {},
             followDetailVisible: false,
             mydAddSuosuClassVis: false,
-            groupList: []
+            groupList: [],
+            oGroupClick: -1,
+            groupUserId: []
         };
     },
     computed: {
@@ -1296,6 +1314,7 @@ export default {
         this.circularData(this.odata["header"]);
         this.getFoList(); //随访列表
         this.getUsFollow(); //我的随访
+        this.getGroupList();
         this.screenPublic(this.oTab2, toolFollowupType, "类型"); //随访类型
         this.screenPublic(this.oTab3, toolFollowupMode, "方式"); //随访方式
         this.screenPublic(this.oTab4, toolFollowupContent, "内容"); //随访内容
@@ -2138,6 +2157,7 @@ export default {
                     (this.doctorTemplateVisiable = false);
                 this.docTableChecked = true;
                 this.getUsFollow();
+                this.getGroupList();
                 this.doctorBtn = [
                     {
                         name: "查看档案",
@@ -2365,10 +2385,9 @@ export default {
             let _this = this;
             let query = {
                 token: this.userState.token,
-                userId: this.userSelfInfo.userId,
                 homepage: true
             };
-            const res = await groupList(query);
+            const res = await groupSelects(query);
             if (res.data && res.data.errCode === 0) {
                 _this.groupList = res.data.body;
             } else {
@@ -2380,25 +2399,65 @@ export default {
             }
         },
         //新增组
-        addGroup() {
+        async addGroup(value) {
             this.groupVisible = true;
         },
+        followCheckChange(data) {
+            console.log(data);
+            let _this=this
+             _this.groupUserId=[]
+            $.each(data, function(index, text) {
+                _this.groupUserId.push(text.userId);
+            });
+        },
         //移动分组
-        async fenGroup(oid) {
+        async changeGroup(value, index) {
+            let groupUserId1=this.groupUserId.join(',')
+            this.oGroupClick = index;
             let _this = this;
             let query = {
                 token: this.userState.token
             };
             let options = {
-                groupId: "",
-                userId: ""
+                groupId: value,
+                userId: groupUserId1
             };
-            const res = await addGroupMember(query);
+            const res = await addGroupMember(query, options);
             if (res.data && res.data.errCode === 0) {
-               this.$notify.success({
+                this.$notify.success({
                     title: "成功",
-                    message: '移动成功！'
+                    message: "移动成功！"
                 });
+                 setTimeout(function() {
+                    _this.getUsFollow();
+                }, 1000);
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //确认添加组
+        async sureAddGroup() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                groupName: this.groupName
+            };
+            const res = await addfenzu(query, options);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "新增成功！"
+                });
+                setTimeout(function() {
+                    _this.groupVisible = false;
+                    _this.getGroupList();
+                }, 1000);
             } else {
                 //失败
                 this.$notify.error({
@@ -3427,5 +3486,44 @@ export default {
 }
 .firstDoctorTime .el-form-item__label {
     width: 110px;
+}
+.groupClass {
+    position: relative;
+    cursor: pointer;
+}
+.groupClass:hover ul {
+    display: block;
+}
+.groupClass > div:first-child {
+    width: 50px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    background: #c1d9f3;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #5e696e;
+    letter-spacing: 0;
+}
+.groupClass > ul {
+    position: absolute;
+    display: none;
+    padding-top: 10px;
+    padding-left: 10px;
+    width: 125px;
+
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #5e696e;
+    letter-spacing: 0;
+}
+.groupClass > ul > li {
+    padding-left: 5px;
+    width: 100%;
+    height: 22px;
+    background: #f4f8fa;
+}
+.groupClick {
+    background: #dbe1e5;
 }
 </style>

@@ -865,7 +865,8 @@
           clinicId: text.id,
           departmentId: text.departmentId,
           userId: text1.userId,
-          orgCode: text.orgCode
+          orgCode: text.orgCode,
+          clinicOrderId:text1.clinicOrderId
         };
         console.log(this.userMessage);
         let _this = this;
