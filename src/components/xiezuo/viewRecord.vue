@@ -195,4 +195,11 @@ export default {
     color: #939eab;
     font-size: 0.12rem;
 }
+
+/* 
+谭莹
+先掉14.4.拉取历史消息记录，获取到的消息放在storyMessage里面传过来
+<viewRecord :storyMessage="storyMessage"></viewRecord>
+ */
+
 </style>

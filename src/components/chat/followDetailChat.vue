@@ -18,7 +18,7 @@
                         </el-date-picker>
                     </el-form-item>
                     <ul>
-                        <li v-for="(text,index) in addFollowData.itemModels" :key="index">
+                        <li v-for="(text,index) in addFollowData.planItemResults" :key="index">
                             <div class="addFollowM-bot" style="display:flex">
                                 <el-form-item class="addFollowM-bot" label="距离首次治疗">
                                     <div class="DistanceFirst">
@@ -40,7 +40,7 @@
 
                             </div>
                             <ul class="questBox">
-                                <li v-for="(otext,oindex) in text.contentModels" :key="oindex">
+                                <li v-for="(otext,oindex) in text.itemContentResults" :key="oindex">
                                     <div>
                                         <span v-show="otext.followUpType=='REMIND'">提醒：</span>
                                         <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
@@ -50,9 +50,6 @@
                                         <span class="questTableName">{{otext.title}}</span>
                                     </div>
 
-                                    <!-- <span @click="deleteQuest(index,oindex)" class="questDelete">
-                                        <img src="../../assets/img/addFollowDelete2.png" />
-                                    </span> -->
                                 </li>
                             </ul>
 
@@ -203,7 +200,7 @@ export default {
     margin-left: 0 !important;
 }
 .addFollowBox .el-dialog__body {
-    padding: 25px 50px;
+    padding: 25px 26px;
 }
 .addFollowMain input {
     height: 27px;
@@ -250,9 +247,5 @@ export default {
 }
 .addFollowHou {
     width: 100px;
-}
-.addQuestBox .el-dialog__header,
-.addQuestBox .el-dialog__body {
-    background: #eff5fb;
 }
 </style>

@@ -127,24 +127,7 @@ export default {
         })
     },
     methods: {
-        //获取处方信息
-        async getDrugsMessage() {
-            this.followVisible = true;
-            let query = {
-                token: this.userState.token,
-                familyMemberId: ""
-            };
-            const res = await getFamilyMemberInfo(query);
-            if (res.data && res.data.errCode === 0) {
-                alert("dd");
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
-        },
+        
         //添加问诊表
         async addQuest(index) {
             this.questOindex = index;
@@ -190,7 +173,7 @@ export default {
         deleteFollowTimeList(index) {
             this.addFollowData.itemModels.splice(index, 1);
         },
-        //新增随访表
+        //创建随访计划
         async addFollowTable() {
             let _this = this;
             let query = {
@@ -264,7 +247,6 @@ export default {
         event: "reBack"
     },
     created() {
-        this.getDrugsMessage();
     },
     beforeDestroy() {}
 };
@@ -275,7 +257,11 @@ export default {
     margin-left: 0 !important;
 }
 .addFollowBox .el-dialog__body {
-    padding: 25px 26px;
+    padding: 25px 50px;
+}
+.addQuestBox .el-dialog__header,
+.addQuestBox .el-dialog__body {
+    background: #eff5fb;
 }
 .addFollowMain input {
     height: 27px;

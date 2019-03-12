@@ -5,7 +5,7 @@
         <transition>
             <router-view class="router-view-class" />
         </transition>
-        
+
         <websocket1 ref="mychild"></websocket1>
     </div>
 </template>
@@ -31,33 +31,23 @@ export default {
     computed: {
         ...mapState({
             userState: state => state.user.userInfo,
-            userSelfInfo:state => state.user.userSelfInfo, 
+            userSelfInfo: state => state.user.userSelfInfo,
             global: state => state.global
         })
     },
     created() {
-        this.lianjie();
-        // const test = this.lianjie();
-        // console.log(window.Manis);
-        // console.log(this.$store.state.user.userInfo.hasAuth)
-        // console.log(this.$store.state.user.userInfo.rooter)
-        //  console.log(this.$store.state.user.userInfo.manager)
+        if (this.userState.token) {
+            this.lianjie();
+        }
     },
     methods: {
         lianjie: function() {
-            //  websocket.close()
-            // console.log(this.userState.token)
-
-            // window.websocket = websocket.initWebSocket(this.userState.token);
-
             this.$nextTick(ev => {
                 console.log(this.$refs);
                 console.log(this.$refs.mychild);
                 this.$refs.mychild.initWebSocket(this.userState.token);
             });
-
-            // console.log(window.websocket)
-        },
+        }
     },
     watch: {}
 };

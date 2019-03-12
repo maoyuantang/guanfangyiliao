@@ -93,7 +93,7 @@
                     </div>
                     <div>
                         <div>
-                            总金额：{{countAllPrice}}
+                            <!-- 总金额：{{countAllPrice}} -->
                         </div>
                         <div>
                             <el-button type="primary">预览</el-button>
@@ -153,6 +153,7 @@ export default {
                 occurTime: "",
                 reviewTime: "",
                 remark: "",
+                rxRelOrderId:"",
                 drugDetails: [
                     {
                         id: "H33020485", //药品id
@@ -253,6 +254,7 @@ export default {
             this.chufangData.departmentId = this.userMessage.departmentId;
             this.chufangData.userId = this.userMessage.userId;
             this.chufangData.orgCode = this.userMessage.orgCode;
+            this.chufangData.rxRelOrderId=this.userMessage.clinicOrderId;
         }
     },
     props: {

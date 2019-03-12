@@ -865,7 +865,8 @@
           clinicId: text.id,
           departmentId: text.departmentId,
           userId: text1.userId,
-          orgCode: text.orgCode
+          orgCode: text.orgCode,
+          clinicOrderId:text1.clinicOrderId
         };
         console.log(this.userMessage);
         let _this = this;
@@ -1000,6 +1001,7 @@
         const res = await reviewList(query);
         if (res.data && res.data.errCode === 0) {
           console.log("医生端列表2(审核)+成功");
+          console.log(res)
           this.bcd = res.data.body;
           console.log(this.bcd);
           if (this.bcd[0]) {
