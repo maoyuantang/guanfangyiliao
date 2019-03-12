@@ -28,16 +28,16 @@
 					<!-- 表体 -->
 					<div class="dataBody">
 						<el-table :data="manageBodyData" border style="width: 100%">
-							<el-table-column prop="name" label="科室"></el-table-column>
-							<el-table-column fixed prop="date" label="类型"></el-table-column>
-							<el-table-column prop="province" label="使用者"></el-table-column>
-							<el-table-column prop="city" label="账号"></el-table-column>
-							<el-table-column prop="address" label="软件系统"></el-table-column>
-							<el-table-column prop="zip" label="软件版本"></el-table-column>
-							<el-table-column prop="zip" label="最近登录时间"></el-table-column>
-							<el-table-column prop="zip" label="使用频率"></el-table-column>
-							<el-table-column prop="zip" label="联网状态"></el-table-column>
-							<el-table-column prop="zip" label="总使用时长"></el-table-column>
+							<el-table-column prop="deptName" label="科室"></el-table-column>
+							<el-table-column fixed prop="type" label="类型"></el-table-column>
+							<el-table-column prop="useName" label="使用者"></el-table-column>
+							<el-table-column prop="account" label="账号"></el-table-column>
+							<el-table-column prop="softwareSystem" label="软件系统"></el-table-column>
+							<el-table-column prop="softwareVersion" label="软件版本"></el-table-column>
+							<el-table-column prop="loginDate" label="最近登录时间"></el-table-column>
+							<el-table-column prop="useFrequency" label="使用频率"></el-table-column>
+							<el-table-column prop="networkState" label="联网状态"></el-table-column>
+							<el-table-column prop="useTime" label="总使用时长"></el-table-column>
 							<el-table-column fixed="right" label="操作">
 								<template slot-scope="scope">
 									<el-button @click="viewFile(scope.row)" type="text" size="small">查看</el-button>
@@ -75,7 +75,12 @@
 		// 已使用接口
 		//筛选接口
 		toolDept,//1.21.1.管理  科室列表
-		toolMedicalType,//1.21.26.分级诊疗-类型
+		toolTerminalType,//1.21.29.终端管理-类型 
+		toolTerminalArea,//1.21.30.终端管理-区域 
+		//列表接口
+		queryByWebPage,//1.终端管理web分页列表
+		terminalManagementStatistics,//2.终端管理统计
+
 	} from "../api/apiAll.js";
 	//引入组件
 	import normalTab from '../public/publicComponents/normalTab.vue'
@@ -110,6 +115,9 @@
 				area: "",//区域id    selftag
 				searchValue: "",//返回搜索框输入   search
 				types: '', //String MANAGE账号是什么权限
+				pageNum: 1,//页数
+				pageSize: 10,//条数
+				yTotal1: 0,//统计y轴相加
 				//管理统计端  筛选工具栏  统计筛选返回值  接收参数
 				time0: "",///统计筛选开始时间
 				time1: "",//统计筛选结束时间
@@ -141,32 +149,17 @@
 						{
 							more: true,
 							title: '科室',
-							list: [
-								{
-									text: '测试',
-									value: ''
-								}
-							]
+							list: []
 						},
 						{
 							more: true,
 							title: '类型',
-							list: [
-								{
-									text: '测试',
-									value: ''
-								}
-							]
+							list: []
 						},
 						{
 							more: true,
 							title: '区域',
-							list: [
-								{
-									text: '测试',
-									value: ''
-								}
-							]
+							list: []
 						}
 					],
 				},
@@ -176,67 +169,23 @@
 						{
 							more: true,
 							title: '科室',
-							list: [
-								{
-									text: '测试',
-									value: ''
-								}
-							]
+							list: []
 						},
-					]
-				},
-				oTab4: {
-					more: false,
-					title: "日期",
-					list: [
-						{
-							text: "全部",
-							value: "ALL"
-						},
-						{
-							text: "今日",
-							value: "TODAY"
-						}
 					]
 				},
 				// 管理表体（自定义组件 ）
-				manageBodyData: [
-					{
-						date: '2016-05-03',
-						name: '王小虎',
-						province: '上海',
-						city: '普陀区',
-						address: '上海市普陀区金沙江路 1518 弄',
-						zip: 200333
-					}
-				],
+				manageBodyData: [],
 				//统计
 				//申请科室统计图
 				monthToYear: [],
 				drawData: {
-					dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-					data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-					title: "申请科室统计图", //图表标题
-					totalNumber: "555"
-				},
-				//发起科室统计图
-				drawDataStart: {
-					dataAxis: ['点', '击', '柱', '子', '点', '击', '柱', '子', '点', '击', '柱', '子'], //每个柱子代表的类名
-					data: [220, 182, 191, 234, 220, 182, 191, 234, 220, 182, 191, 234], //具体数值
-					title: "发起科室统计图", //图表标题
-					totalNumber: "555"
+					dataAxis: [],//每个柱子代表的类名
+					data: [],//具体数值
+					title: '',//图表标题
+					total: ''
 				},
 				//医生端列表（自定义组件 ）
-				docTableData: [
-					{
-						date: '2016-05-03',
-						name: '王小虎',
-						province: '上海',
-						city: '普陀区',
-						address: '上海市普陀区金沙江路 1518 弄',
-						zip: 200333
-					}
-				],
+				docTableData: [],
 			}
 		},
 		computed: {
@@ -250,7 +199,14 @@
 		methods: {
 			//自调用组件函数
 			//终端管理、统计、切换插件返回值（管理端）
-			getNav(data) { console.log(data) },
+			getNav(data) {
+				console.log(data.i)
+				if (data.i == 0) {
+					this.getList1();//管理列表1
+				} else if (data.i == 1) {
+					this.count();//统计表
+				}
+			},
 			//筛选返回值  管理端
 			getFilter0(data) {//科室筛选
 				this.departmentId = data.index.value;
@@ -284,7 +240,7 @@
 
 			//筛选列表  管理端
 			//1.21.1.科室筛选  工具栏 (管理) (管理)
-			async getSelect1(oindex) {
+			async getSelect1() {
 				if (this.userInfo.manager) {
 					this.types = 'MANAGE'
 				} else {
@@ -328,13 +284,12 @@
 				}
 			},
 			//1.21.26.类型筛选  工具栏 (管理)
-			async getSelect2(oindex) {
+			async getSelect2() {
 				let _this = this;
 				let query = {
 					token: this.userState.token,
-					// type: 'MANAGE'
 				};
-				const res = await toolMedicalType(query);
+				const res = await toolTerminalType(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('1.21.26.类型筛选  工具栏 +成功')
 					// console.log(res.data.body);
@@ -343,6 +298,7 @@
 					} else {
 						this.onLineList.topFlag[1].more = false;
 					}
+					this.onLineList.topFlag[1].list.length = 0
 					$.each(res.data.body, function (index, text) {
 						//终端系统   类型   筛选列表   管理1
 						_this.onLineList.topFlag[1].list.push({
@@ -360,13 +316,12 @@
 				}
 			},
 			//1.21.27.区域筛选  工具栏 (终端系统)
-			async getSelect3(oindex) {
+			async getSelect3() {
 				let _this = this;
 				let query = {
 					token: this.userState.token,
-					// type: 'MANAGE'
 				};
-				const res = await toolMedicalGrading(query);
+				const res = await toolTerminalArea(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('1.21.27.分级筛选  工具栏 移动查房管理+成功')
 					// console.log(res.data.body);
@@ -375,6 +330,7 @@
 					} else {
 						this.onLineList.topFlag[2].more = false;
 					}
+					this.onLineList.topFlag[2].list.length = 0
 					$.each(res.data.body, function (index, text) {
 						//终端系统   区域   筛选列表   管理1
 						_this.onLineList.topFlag[2].list.push({
@@ -404,8 +360,32 @@
 
 
 			// 管理1表
+			// queryByWebPage,//1.终端管理web分页列表
+			// terminalManagementStatistics,//2.终端管理统计
 			async getList1() {
-				console.log('管理1表接口还没出来')
+				console.log(this.searchValue)
+				let query = {// 7.11根据条件获取处方信息 
+					token: this.userState.token,
+					area: "",//区域
+					deptId: this.departmentId,//科室id
+					searchKey: this.searchValue,//查询条件
+					type: "",//类型（ROUNDS：移动查房）
+					pageNum: this.pageNum,//分页页码(默认1)
+					pageSize: this.pageSize,//分页条数（默认10）
+				};
+				const res = await queryByWebPage(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('列表1+成功')
+					console.log(res)
+					this.manageBodyData = res.data.body.data2.list
+				} else {
+					//失败
+					console.log('列表1+失败')
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
 			},
 			// 管理1表   操作区  
 			//查看
@@ -415,33 +395,43 @@
 			},
 			//管理2表（统计）
 			async count() {
-				console.log('统计接口还没出来')
-				// const _this = this
-				// let query = {
-				// 	token: this.userState.token,
-				// 	deptId: this.departmentId, //String false 科室ID 
-				// 	starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
-				// 	endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
-				// 	type: this.type //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
-				// };
-				// // console.log(query)
-				// const res = await orderYcmzCharts(query);
-				// if (res.data && res.data.errCode === 0) {
-				// 	console.log('统计图标数据+成功')
-				// 	// console.log(res)
-				// 	$.each(res.data.body.data, function (index, text) {
-				// 		//继续//把所有月份分成一年一年的，保存的参数意见建好了monthToYear
-				// 		// _this.drawData.dataAxis.push(text.x);
-				// 		// _this.drawData.data.push(text.y);
-				// 	});
-				// } else {
-				// 	//失败
-				// 	console.log('统计图标数据+失败')
-				// 	this.$notify.error({
-				// 		title: "警告",
-				// 		message: res.data.errMsg
-				// 	});
-				// }
+				const _this = this
+				let query = {
+					token: this.userState.token,
+					type: this.type, //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
+					startDate: this.time0, //String false 开始日期，示例：2019-01 - 01 
+					endDate: this.time1, //String false 结束日期，示例：2019-01 - 25 
+					deptId: this.departmentId, //String false 科室ID 
+				};
+				// console.log(query)
+				const res = await terminalManagementStatistics(query);
+				if (res.data && res.data.errCode === 0) {
+					console.log('统计图+移动查房终端+成功')
+					const lists = res.data.body.data
+					console.log(lists)
+					console.log(this.type)
+					this.yTotal1 = 0
+					this.drawData.dataAxis.length = 0
+					this.drawData.data.length = 0
+					$.each(lists, function (index, text) {
+						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
+						// _this.monthToYearDoor.months.push(text.x)
+						// _this.monthToYearDoor.years.push(text.y)
+						_this.yTotal1 += text.y;
+						_this.drawData.dataAxis.push(text.x)
+						_this.drawData.data.push(text.y)
+					});
+					this.drawData.title = "移动查房终端"
+					this.drawData.total = "总数：" + this.yTotal1
+					console.log(this.yTotal1)
+				} else {
+					//失败
+					console.log('统计图+移动查房终端+失败')
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
 			},
 		},
 		async created() {

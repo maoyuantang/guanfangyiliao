@@ -24,7 +24,7 @@
                         <span>{{inData.time || '时间'}}</span>
                     </div>
                     <div class="new-module-table-li-item-status new-module-table-li-item-time-spe">
-                        <span>{{inData.status || '状态'}}</span>
+                        <span :class="colorClassMap[inData.status]">{{colorClassMap[inData.status] || '状态'}}</span>
                     </div>
                     <div class="new-module-table-li-item-btns">
                         <slot></slot>
@@ -46,7 +46,13 @@
 		},
 		data(){
             return { 
-
+                colorClassMap:{
+                    '等待审核':'status0',
+                    '未开始':'status0',
+                    '等待接诊':'status1',
+                    '进行中':'status1',
+                    '等待出院':'status2',
+                }
             }
 		},
 		methods:{
@@ -151,9 +157,9 @@
     display: flex;
     align-items: center;
     font-family: PingFangSC-Regular;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     font-size: 14px;
-    color: #FFAB2B;
+    /* color: #FFAB2B; */
     text-align: center;
 }
 .new-module-table-li-item-btns{
@@ -172,5 +178,14 @@
 }
 .new-module-table-li-item-time-spe{
     padding-left: 0.1rem;
+}
+.status0{
+    color: #FFAB2B;
+}
+.status1{
+    color: #FE4D97;
+}
+.status2{
+    color: #6DD230;
 }
 </style>

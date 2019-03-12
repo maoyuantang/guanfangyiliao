@@ -9,7 +9,7 @@
 
     <!-- 我的诊室-循环 -->
 
-    <ul v-for="(text,index) in myHomes" :key="index" v-if="oconsulVisable==0" class="outpatient_s">
+    <ul v-for="(text,index1) in myHomes" :key="index1" v-if="oconsulVisable==0" class="outpatient_s">
       <li class="outpatient_left">
         <p class="title">{{text.orgName}}-{{text.clinicName}}</p>
         <div class="outpatient_user">
@@ -21,25 +21,32 @@
           </div>
         </div>
         <i></i>
+<<<<<<< HEAD
         <div v-for="(text,index) in tableDataList1" :key="index" v-show='myHomesBiao[index]==index' style="width: 90%;margin: auto;">
+=======
+        <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index'
+          style="width: 90%;margin: auto;">
+>>>>>>> 51b4c1445948d790fd16bd9c630a15179b38cfb1
           <el-table :data="text">
             <el-table-column prop="unProcess" label="未处理"></el-table-column>
             <el-table-column prop="process" label="已处理"></el-table-column>
-            <el-table-column prop="otherDocter" label="其他医生"></el-table-column>
+            <el-table-column prop="doctorCount" label="其他医生"></el-table-column>
           </el-table>
         </div>
         <el-button class="startConsul" type="text" @click="enterRoomBtn(text.id)">进入门诊</el-button>
+
       </li>
 
       <li class="outpatient_right">
         <!-- 病人个数循环 -->
-        <span class="dian" @click="lookList(text.clinicOrders)">...</span>
+        <!-- <span class="dian" @click="lookList(text.clinicOrders,text.doctor)">...</span> -->
+        <span class="dian" @click="lookList(text)">...</span>
         <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail">
 
           <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
             <h1>{{text1.userName}}</h1>
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-              <el-button type="success" plain>查看档案</el-button>
+              <el-button type="success" plain @click="seeHistory(text1.userId)">查看档案</el-button>
               <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button>
               <el-button type="info" plain>{{text.doctor.doctorStates?'未开始':'进行中'}}</el-button>
             </div>
@@ -477,9 +484,9 @@
               </div>
             </div>
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-              <el-button type="success" plain>查看档案</el-button>
-              <el-button type="danger" @click="sendMessage(text,text5)">发送</el-button>
-              <el-button type="info" plain>未开始</el-button>
+              <el-button type="success" plain @click="seeHistory(text5.userId)">查看档案</el-button>
+              <el-button type="danger" @click="sendMessage(huanzheList3,text5)">发送</el-button>
+              <el-button type="info" plain>{{huanzheList[index].doctorStates?'未开始':'进行中'}}</el-button>
             </div>
           </li>
 
@@ -505,9 +512,9 @@
           </li>
 
           <li>
-            <el-table :data="text5.clinicOrders">
+            <el-table :data="huanzheList">
               <el-table-column prop="askTime" label="接诊时间"></el-table-column>
-              <el-table-column prop="userName" label="首诊医生"></el-table-column>
+              <el-table-column prop="" label="首诊医生"></el-table-column>
               <el-table-column prop="askPrice" label="问诊费用"></el-table-column>
               <el-table-column prop="prescriptionPrice" label="处方费"></el-table-column>
             </el-table>
@@ -587,18 +594,100 @@ export default {
         ovideo
     },
     data() {
-        return {
-            //谭莹变量
-            VideoshowClose:false,
-            videoType: "门诊",
-            chatVisible1: true,
-            doctorVis: 1, //医生跟患者单聊
-            sessionId: "", //会话id
-            chatVisible: false,
-            userMessage: {},
-            createVideoRoomData: {
-                conferenceId: "",
-                conferenceNumber: ""
+      return {
+        //谭莹变量
+        videoType: "门诊",
+        chatVisible1: true,
+        doctorVis: 1, //医生跟患者单聊
+        sessionId: "", //会话id
+        chatVisible: false,
+        userMessage: {},
+        createVideoRoomData: {
+          conferenceId: "",
+          conferenceNumber: ""
+        },
+        oClinicId: [], //当前进入门诊id
+        //谭莹变量
+        // testData: {
+        //   select: {
+        //     name: 2
+        //   },
+        //   list: [
+        //     { name: 1 },
+        //     { name: 2 },
+        //     { name: 3 },
+        //   ]
+        // },
+
+        // new
+        myHomes: [],
+        tableDataList1: [
+          // [
+          //   {
+          //     unProcess: '1',
+          //     process: '2',
+          //     otherDocter: '3'
+          //   }
+          // ],
+        ],
+        whichUser: 0,
+        myHomesBiao: [],
+        imgChuFangDan: "",
+
+        //函数传参
+        // 公共
+        pageNum: 1, //页数
+        pageSize: 10, //条数
+        searchValue: "", //搜索框接收参数
+        businessType: "", //业务类型接收参数
+
+        orgCode: "", // 医院机构码
+        departmentId: "", //科室id
+        clinicId: "", //诊室id
+        secondDoctorId: "", // 审方医生id（为空）
+        prescriptionId: "0", //处方id     // 7.12根据处方id获取处方电子版  (预览)
+        reviewEnum0: "REVIEWED", // 7.9审核处方  审核状态（REVIEWED, //已审核；UNREVIEWED, //未审核；FAILREVIEWED, //不通过）
+        reviewEnum1: null, // 7.8开处方    审方状态（为空）
+        userId: "", //7.8用户id（患者id）
+        lookType: 0, //7.10查看类型(lookType ==0 待审核列表； lookType ==1 审核通过列表)
+        isShowPatient: false,//就诊列表是否出现
+        isShowPatientList: [],//就诊列表数据
+        text5Array: [],//就诊列表弹框底部table数据
+        huanzheList: [],
+        huanzheList2: [],
+        huanzheList3: {},
+        srcs: "",//处方id   用于拼接图片src
+
+
+        // 7.8开处方 医生端列表2
+        // firstDoctorId: '',//开方医生id
+        // complained: '',// 主诉
+        // medicalHistory: '',//现病史
+        // allergyHistory: '',//过敏史
+        // diagnosis: '',//门诊诊断
+        // report: true,// 疫情报告（true：勾选；false：不勾选）
+        // review: false,// 复诊（true：勾选；false：不勾选）
+        // occurTime: '',//发病日期
+        // reviewTime: '',//下次复查日期
+        // //药品详情（详情看返回值说明）
+        // drugId: '',                   //药品id
+        // drugPrice: '',                  //药品价格
+        // drugQuantity: '',                   //药品数量
+        // subtotal: '',                   //药品🐤小计
+        // doctorAsk: '', //医生嘱托
+
+        // checked1: true,
+        // checked2: false,
+        // value1: '',
+        // value2: '',
+        // searchValue: "",
+        oAdminTab: {
+          i: 0, //选中的是第几项，类型为int(注意：从0开始计数)
+          list: [
+            //选项列表，类型Array
+            {
+              // en: "", //选项英文，类型 string
+              zh: "我的诊室" //选项中文，类型string
             },
             oClinicId: [], //当前进入门诊id
             //谭莹变量
@@ -913,6 +1002,400 @@ this.centerDialogVisible=false;
         // getData(item, index) {
         //   this.testData.select = item
         // },
+      // 谭莹事件
+      //进入门诊
+      async enterRoomBtn(oid) {
+
+        this.oClinicId = oid;
+        let _this = this;
+        let query = {
+          token: this.userState.token
+        };
+        const options = {
+          clinicId: oid
+        };
+        const res = await doctorInto(query, options);
+        console.log(res);
+        if (res.data && res.data.errCode === 0) {
+          _this.centerDialogVisible = true;
+        } else {
+          //失败
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      //退出视频
+      // async closeVideo() {
+      //     let _this = this;
+      //     let query = {
+      //         token: this.userState.token
+      //     };
+      //     const options = {
+      //         conferenceId: this.createVideoRoomData.conferenceId,
+      //         state: "OFF"
+      //     };
+      //     const res = await storageUsers(query, options);
+      //     console.log(res);
+      //     if (res.data && res.data.errCode === 0) {
+      //         this.$notify.success({
+      //             title: "成功",
+      //             message: "退出成功！"
+      //         });
+      //         _this.createVideoVisable = false;
+      //         _this.sendMessageChat(6, "cancle", "VIDEO");
+      //     } else {
+      //         //失败
+      //         this.$notify.error({
+      //             title: "警告",
+      //             message: res.data.errMsg
+      //         });
+      //     }
+      // },
+      //退出诊室
+      async closeVideo() {
+        let _this = this;
+        let query = {
+          token: this.userState.token
+        };
+        const options = {
+          conferenceId: this.createVideoRoomData.conferenceId,
+          state: "OFF"
+        };
+        const res = await storageUsers(query, options);
+        console.log(res);
+        if (res.data && res.data.errCode === 0) {
+          this.$notify.success({
+            title: "成功",
+            message: "退出成功！"
+          });
+          _this.createVideoVisable = false;
+          _this.sendMessageChat(6, "cancle", "VIDEO");
+        } else {
+          //失败
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      // 我的诊室发送消息
+      async sendMessage(text, text1) {
+        console.log(text);
+        console.log(text1);
+        this.userMessage = {
+          clinicId: text.id,
+          departmentId: text.departmentId,
+          userId: text1.userId,
+          orgCode: text.orgCode,
+          clinicOrderId: text1.clinicOrderId
+        };
+        console.log(this.userMessage);
+        let _this = this;
+        let query = {
+          token: this.userState.token
+        };
+        let options = {
+          to: text1.userId
+        };
+        const res = await fetchChatSession(query, options);
+        if (res.data && res.data.errCode === 0) {
+          _this.sessionId = res.data.body;
+          _this.chatVisible = true;
+        } else {
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      //返回赋值函数
+      getConsulTabData(res) {
+        //顶部切换返回函数
+        this.oconsulVisable = res.i;
+        console.log(res.i);
+        if (res.i == 0) {
+          this.getList1();
+        } else if (res.i == 1) {
+          this.getList2().then(val => {
+            this.whichUserFun(0, this.bcd[0]);//刷新默认读取第一条数据
+          });
+        } else if (res.i == 2) {
+          this.getList3();
+        }
+      },
+      demonstration1(res) {
+        //时间插件返回函数
+        // console.log(res)
+      },
+      demonstration2(res) {
+        //时间插件返回函数
+        // console.log(res)
+      },
+      adminSearchChange(data) {
+        //审核列表
+        this.searchValue = data;
+        // console.log(data)
+      },
+      whichUserFun(index, data) {
+        console.log(index, data)
+        this.whichUser = index;
+        if (data) {
+          this.prescriptionId = data.pb.id;
+          this.secondDoctorId = data.reviewDoctor;
+          console.log(this.whichUser);
+          console.log(this.prescriptionId);
+          console.log(this.secondDoctorId);
+        }
+      },
+      dialogTableVisibleFun(row) {
+        console.log(row)
+        this.dialogTableVisible = true;
+        this.srcs = row
+        this.preLook();
+      },
+      // getData(item, index) {
+      //   this.testData.select = item
+      // },
+
+      //列表
+      // 7.6(WEB医生)获取所有该医生的在线诊室(医生端列表1)
+      async getList1() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        if (month < 10) {
+          month = "0" + month;
+        }
+        if (day < 10) {
+          day = "0" + day;
+        }
+        var nowDate = year + "-" + month + "-" + day;
+        this.time0 = nowDate;
+        this.time1 = nowDate;
+
+        const _this = this;
+        let query = {
+          token: this.userState.token,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize
+        };
+        const res = await onlineRoomsByDoctor(query);
+        if (res.data && res.data.errCode === 0) {
+          console.log("医生端列表1+成功");
+          console.log(this.time0)
+          console.log(this.time1)
+          this.myHomes = res.data.body.data2.list;
+          console.log(this.myHomes);
+          this.myHomesBiao.length = 0;
+          $.each(res.data.body.data2.list, function (index, text) {
+            _this.myHomesBiao.push(index);
+            _this.tableDataList1.push([
+              {
+                process: text.process,
+                unProcess: text.unProcess,
+                doctorCount: text.doctorCount,
+              }
+            ]);
+          });
+          console.log(this.tableDataList1);
+        } else {
+          //失败
+          console.log("医生端列表1+失败");
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      async lookList(data) {
+        const _this = this
+        this.isShowPatient = true
+        this.huanzheList = data.clinicOrders
+        this.huanzheList2 = data.doctor
+        this.huanzheList3 = data
+      },
+      async seeHistory(data) {
+        console.log(data)
+        this.$router.push({
+          path: "/docDetailed",
+          query: {
+            id: data
+          }
+        })
+      },
+      // 7.10.1按审方医生获取处方审核列表 (医生列表2)
+      async getList2() {
+        const _this = this;
+        let query = {
+          token: this.userState.token,
+          lookType: this.lookType
+        };
+        const res = await reviewList(query);
+        if (res.data && res.data.errCode === 0) {
+          console.log("医生端列表2(审核)+成功");
+          console.log(res)
+          this.bcd = res.data.body;
+          console.log(this.bcd);
+          if (this.bcd[0]) {
+            this.prescriptionId = this.bcd[0].pb.id;
+            $.each(this.bcd, function (index, text) {
+              _this.ARR.push(text.pb.prescriptionDrugs);
+            });
+          }
+        } else {
+          //失败
+          console.log("医生端列表2(审核)+失败");
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      // 7.10.2药品配送列表 (医生列表3)
+      async getList3() {
+        const _this = this;
+        let query = {
+          token: this.userState.token,
+          lookType: 1
+        };
+        const res = await reviewList(query);
+        if (res.data && res.data.errCode === 0) {
+          console.log("医生端列表3(发药)+成功");
+          console.log(res);
+          this.bcd = res.data.body;
+          console.log(this.bcd);
+          $.each(this.bcd, function (index, text) {
+            _this.ARR.length = 0;
+            _this.ARR.push(text.pb.prescriptionDrugs);
+          });
+          console.log(this.tableDataList3);
+        } else {
+          //失败
+          console.log("医生端列表3(发药)+失败");
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      // 7.12根据处方id获取处方电子版  (预览)
+      async preLook() {
+        // console.log(this.prescriptionId);
+
+        // let query = {
+        //   token: this.userState.token,
+        //   prescriptionId: this.prescriptionId
+        // };
+        // const res = await prescriptionDetailById(query);
+        // console.log(res.data);
+        // if (res.data && res.data.errCode === 0) {
+        //   console.log("预览+成功");
+        //   console.log(res);
+        // } else {
+        //   //失败
+        //   console.log("预览+失败");
+        //   this.$notify.error({
+        //     title: "警告",
+        //     message: res.data.errMsg
+        //   });
+        // }
+      },
+      // 1.9.文件下载
+      async getList4() {
+        const _this = this;
+        let query = {
+          id: xxxxx,
+          fileName: "门诊处方签",
+          width: 600,
+          height: 800
+        };
+        const res = await fsDownload(query);
+        if (res.data && res.data.errCode === 0) {
+          console.log("1.9.文件下载 +成功");
+          console.log(res);
+        } else {
+          //失败
+          console.log("1.9.文件下载 +失败");
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+
+      // 7.8开处方
+      // async addPrescription() {
+      //   let _this = this;
+      //   let query = {
+      //     token: this.userState.token
+      //   };
+      //   let options = {
+      //     id: this.prescriptionId,
+      //     clinicId: this.clinicId,
+      //     departmentId: this.departmentId,
+      //     userId: this.userId,
+      //     firstDoctorId: this.firstDoctorId,
+      //     secondDoctorId: this.secondDoctorId,
+      //     reviewEnum: this.reviewEnum,
+      //     orgCode: this.orgCode,
+      //     complained: this.complained,
+      //     medicalHistory: this.medicalHistory,
+      //     allergyHistory: this.allergyHistory,
+      //     diagnosis: this.diagnosis,
+      //     report: this.report,
+      //     review: this.review,
+      //     occurTime: this.occurTime,
+      //     reviewTime: this.reviewTime,
+      //     drugDetails:
+      //       [{
+      //         id: this.drugId,                   //药品id
+      //         drugPrice: this.drugPrice,                  //药品价格
+      //         drugQuantity: this.drugQuantity,                   //药品数量
+      //         subtotal: this.subtotal,                   //药品🐤小计
+      //         doctorAsk: this.doctorAsk //医生嘱托
+      //       }]
+      //   };
+      //   const res = await addPrescription(query, options);
+      //   if (res.data && res.data.errCode === 0) {
+      //     console.log('开处方医生列表2+成功')
+      //     console.log(res)
+      //   } else {
+      //     console.log('开处方医生列表2+失败')
+      //     this.$notify.error({
+      //       title: "警告",
+      //       message: res.data.errMsg
+      //     });
+      //   }
+      // },
+      // 7.9审核处方   点击生成处方
+      async checkPrescription() {
+        let _this = this;
+        let query = {
+          token: this.userState.token
+        };
+        let options = {
+          prescriptionId: this.prescriptionId,
+          secondDoctorId: this.secondDoctorId,
+          reviewEnum: "REVIEWED" //等待
+        };
+        const res = await updatePrescription(query, options);
+        if (res.data && res.data.errCode === 0) {
+          console.log("点击生成处方+成功");
+          console.log(res);
+          this.getList2()
+        } else {
+          console.log("点击生成处方+失败");
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      // 7.9审核处方   不通过
+      async checkPrescription0() {
 
         //列表
         // 7.6(WEB医生)获取所有该医生的在线诊室(医生端列表1)
