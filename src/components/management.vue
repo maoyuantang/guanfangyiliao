@@ -154,26 +154,12 @@
 						{
 							more: true,
 							title: '类型',
-							list: [
-								{
-									text: '死的',
-									value: '0'
-								},
-								{
-									text: '移动查房终端',
-									value: 'ROUNDS'
-								}
-							]
+							list: []
 						},
 						{
 							more: true,
 							title: '区域',
-							list: [
-								{
-									text: '死的',
-									value: '0'
-								}
-							]
+							list: []
 						}
 					],
 				},

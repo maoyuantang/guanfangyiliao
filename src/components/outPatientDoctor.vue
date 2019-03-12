@@ -13,7 +13,7 @@
 
     <!-- 我的诊室-循环 -->
 
-    <ul v-for="(text,index) in myHomes" :key="index" v-if="oconsulVisable==0" class="outpatient_s">
+    <ul v-for="(text,index1) in myHomes" :key="index1" v-if="oconsulVisable==0" class="outpatient_s">
       <li class="outpatient_left">
         <p class="title">{{text.orgName}}-{{text.clinicName}}</p>
         <div class="outpatient_user">
@@ -25,7 +25,7 @@
           </div>
         </div>
         <i></i>
-        <div v-for="(text,index) in tableDataList1" :key="index" v-show='myHomesBiao[index]==index'
+        <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index'
           style="width: 90%;margin: auto;">
           <el-table :data="text">
             <el-table-column prop="unProcess" label="未处理"></el-table-column>
@@ -34,6 +34,7 @@
           </el-table>
         </div>
         <el-button class="startConsul" type="text" @click="enterRoomBtn(text.id)">进入门诊</el-button>
+
       </li>
 
 
@@ -46,7 +47,7 @@
           <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
             <h1>{{text1.userName}}</h1>
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-              <el-button type="success" plain @click = "seeHistory(text1.userId)">查看档案</el-button>
+              <el-button type="success" plain @click="seeHistory(text1.userId)">查看档案</el-button>
               <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button>
               <el-button type="info" plain>{{text.doctor.doctorStates?'未开始':'进行中'}}</el-button>
             </div>
@@ -518,7 +519,7 @@
               </div>
             </div>
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-              <el-button type="success" plain  @click = "seeHistory(text5.userId)">查看档案</el-button>
+              <el-button type="success" plain @click="seeHistory(text5.userId)">查看档案</el-button>
               <el-button type="danger" @click="sendMessage(huanzheList3,text5)">发送</el-button>
               <el-button type="info" plain>{{huanzheList[index].doctorStates?'未开始':'进行中'}}</el-button>
             </div>
@@ -803,19 +804,19 @@
       // 谭莹事件
       //进入门诊
       async enterRoomBtn(oid) {
-        
+
         this.oClinicId = oid;
         let _this = this;
         let query = {
           token: this.userState.token
         };
         const options = {
-          clinicId:oid
+          clinicId: oid
         };
         const res = await doctorInto(query, options);
         console.log(res);
         if (res.data && res.data.errCode === 0) {
-         _this.centerDialogVisible = true;
+          _this.centerDialogVisible = true;
         } else {
           //失败
           this.$notify.error({
@@ -887,7 +888,7 @@
           departmentId: text.departmentId,
           userId: text1.userId,
           orgCode: text.orgCode,
-          clinicOrderId:text1.clinicOrderId
+          clinicOrderId: text1.clinicOrderId
         };
         console.log(this.userMessage);
         let _this = this;
@@ -987,13 +988,14 @@
           console.log(this.time1)
           this.myHomes = res.data.body.data2.list;
           console.log(this.myHomes);
+          this.myHomesBiao.length = 0;
           $.each(res.data.body.data2.list, function (index, text) {
             _this.myHomesBiao.push(index);
             _this.tableDataList1.push([
               {
                 process: text.process,
-                unProcess: text.unProcess
-                // process: text.otherDocter,
+                unProcess: text.unProcess,
+                doctorCount: text.doctorCount,
               }
             ]);
           });
@@ -1014,12 +1016,12 @@
         this.huanzheList2 = data.doctor
         this.huanzheList3 = data
       },
-      async seeHistory(data){
+      async seeHistory(data) {
         console.log(data)
         this.$router.push({
-          path:"/docDetailed",
-          query:{
-            id:data
+          path: "/docDetailed",
+          query: {
+            id: data
           }
         })
       },
