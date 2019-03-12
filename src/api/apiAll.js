@@ -2972,3 +2972,25 @@ export const myRounds = query => { //15.5（医生）我的查房
         }
     })
 }
+export const queryByWebPage = query => { //1.终端管理web分页列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.queryByWebPage,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const terminalManagementStatistics = query => { //2.终端管理统计
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.terminalManagementStatistics,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

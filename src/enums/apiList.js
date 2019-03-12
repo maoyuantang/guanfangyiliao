@@ -189,7 +189,7 @@ export default {
 
     // 健康档案系统
     getFamilyMemberInfo:'/m/v1/api/familyMember/getFamilyMemberInfo',//
-
+    
 
     businessType:'/m/v1/api/family/family/businessType',//17.3(管理、APP患者)获取所有业务类型
     addBusiness:'/m/v1/api/family/family/addBusiness',//17.4新增业务
@@ -282,5 +282,7 @@ export default {
     roundsManager:'/m/v1/api/roundsTerminal/rounds/roundsManager',//15.1（管理）移动查房管理
     roundsStatistics:'/m/v1/api/roundsTerminal/rounds/roundsStatistics',//15.2（管理）查房人次统计
     myRounds:'/m/v1/api/roundsTerminal/rounds/myRounds',//15.5（医生）我的查房
+    queryByWebPage:'/m/v1/api/roundsTerminal/terminal/queryByWebPage',//1.终端管理web分页列表
+    terminalManagementStatistics:'/m/v1/api/roundsTerminal/terminal/queryStatisticalData',//2.终端管理统计
 }
 
