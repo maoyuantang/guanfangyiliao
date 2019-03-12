@@ -284,5 +284,7 @@ export default {
     myRounds:'/m/v1/api/roundsTerminal/rounds/myRounds',//15.5（医生）我的查房
     queryByWebPage:'/m/v1/api/roundsTerminal/terminal/queryByWebPage',//1.终端管理web分页列表
     terminalManagementStatistics:'/m/v1/api/roundsTerminal/terminal/queryStatisticalData',//2.终端管理统计
+    toolTerminalType:'/m/v1/api/basics/common/toolTerminalType',//1.21.29.终端管理-类型
+    toolTerminalArea:'/m/v1/api/basics/common/toolTerminalArea',//1.21.30.终端管理-区域
 }
 

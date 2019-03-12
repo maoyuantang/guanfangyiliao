@@ -2994,3 +2994,25 @@ export const terminalManagementStatistics = query => { //2.终端管理统计
         }
     })
 }
+export const toolTerminalType = query => { //1.21.29.终端管理-类型
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolTerminalType,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toolTerminalArea = query => { //1.21.30.终端管理-区域
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toolTerminalArea,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

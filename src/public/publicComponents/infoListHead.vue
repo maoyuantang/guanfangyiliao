@@ -35,6 +35,18 @@
 					{
 						entry:'近期随访',
 						output:'查看历史随访'
+					},
+					{
+						entry:'双向转诊',
+						output:'查看更多'
+					},
+					{
+						entry:'远程协作',
+						output:'查看更多'
+					},
+					{
+						entry:'远程会诊',
+						output:'查看更多'
 					}
 				];
 				table.forEach(v=>{
