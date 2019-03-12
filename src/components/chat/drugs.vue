@@ -93,7 +93,7 @@
                     </div>
                     <div>
                         <div>
-                            总金额：{{countAllPrice}}
+                            <!-- 总金额：{{countAllPrice}} -->
                         </div>
                         <div>
                             <el-button type="primary">预览</el-button>
