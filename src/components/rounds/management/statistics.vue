@@ -53,6 +53,11 @@
                     this.setDepartmentData();
                 }
             },
+            'queryConditions.way.select':{
+                handler(n){
+                    this.getRoundsStatistics();
+                }
+            }
         },
 		data() {
 			return {
@@ -85,11 +90,11 @@
                         total:1000
                     }
                 },
-                chartData:{//图表数据  
+                chartData:{//图表数据   
                     chart1:{
                         dataAxis:['a','s','d','f'],
                         data:[12,45,36,52],
-                        title:'统计授课人次',
+                        title:'XXXX',
                         total:'666'
                     },
                     chart2:{
@@ -123,13 +128,19 @@
                     query.endTime = this.queryConditions.time[1]
                 }else{
                     const nowData = new Date();
-                    query.startTime = `${nowData.getFullYear()-1}-${nowData.getMonth()+1}-${nowData.getDate()}`;
-                    query.endTime = `${nowData.getFullYear()}-${nowData.getMonth()+1}-${nowData.getDate()}`;
+                    query.startTime = `${nowData.getFullYear()-1}-${nowData.getMonth()<9?'0'+(nowData.getMonth()+1):nowData.getMonth()+1}-${nowData.getDate()<10?'0'+nowData.getDate():nowData.getDate()}`;
+                    query.endTime = `${nowData.getFullYear()}-${nowData.getMonth()<9?'0'+(nowData.getMonth()+1):nowData.getMonth()+1}-${nowData.getDate()<10?'0'+nowData.getDate():nowData.getDate()}`;
                 }
+                console.log(query); 
                 const res = await roundsStatistics(query);
                 console.log(res);
                 if(res.data&&res.data.errCode===0){
-                    
+                    this.chartData.chart1.dataAxis = res.data.body.map(item=>item.x);
+                    this.chartData.chart1.data = res.data.body.map(item=>item.y);
+                    let initialValue=0;
+                    this.chartData.chart1.total = `总数：${res.data.body.reduce((a,b)=>a+b.y,initialValue)}`;
+                    this.chartData.chart1 = Object.assign({},this.chartData.chart1)
+                    console.log(this.chartData.chart1)
                 }else{
                     this.$notify({
 						title: '失败',
@@ -160,14 +171,16 @@
              */
             getDepartmentSelect(data){
                 this.queryConditions.department.select = data.index;
-                console.log(this.queryConditions.department.select)
+                console.log(this.queryConditions.department.select);
+                this.getRoundsStatistics();
             },
              /**
              * 获取 时间 选择
              */
             timeValueFun(time){
                 this.queryConditions.time = time;
-                console.log(this.queryConditions.time)
+                console.log(this.queryConditions.time);
+                this.getRoundsStatistics();
             },
 		},
 		async created(){

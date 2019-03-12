@@ -1,7 +1,7 @@
 <template>
 	<div class="info-enter">
 		<div class="info-enter-top">
-            <span class="info-enter-name">{{inData.orgName}}</span>
+            <span class="info-enter-name">{{inData.name}}</span>
             <el-button type="primary" @click.native="sendData(inData)">点击进入</el-button>
         </div>
         <div class="info-enter-bottom">

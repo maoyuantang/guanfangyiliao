@@ -1,22 +1,22 @@
 <template>
 	<div class="doctors-index">
-		{{courseList}}
 		<div class="top-info">
 			<div class="info-box-out">
 				<infoBox inData="远程门诊" @reback="getReData" v-if="auth['10000']">
-					<!-- <infoEnter v-for="(item,index) in onlineRoomsByDoctor" :key="index" :inData="item" @reback="getInfoClick"></infoEnter> -->
-					<infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter>
+					<infoEnter v-for="(item,index) in onlineRoomsByDoctor" :key="index" :inData="item" @reback="enterOutpatient"></infoEnter>
+					<!-- <infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter> -->
+					<h1 v-if="onlineRoomsByDoctor.length<=0">暂无数据</h1>
 				</infoBox>
 			</div>
 			<div class="info-box-out">
 				<infoBox inData="移动查房" @reback="getReData" v-if="auth['90000']">
-					<infoList :inData="infoListData"></infoList>	
+					<infoEnter :inData="testInfo" @reback="getInfoClick"></infoEnter>	
 				</infoBox>
 			</div>
 			<div class="info-box-out">
 				<infoBox inData="远程教育" @reback="getReData" v-if="auth['60000']">
 					<!-- <infoList :inData="infoListData"></infoList>	 -->         
-					<div class="distance-learning">
+					<div class="distance-learning" v-if="courseList.length>0">
 						<div class="distance-learning-content">
 							<div class="distance-learning-content-info">
 								<div class="distance-learning-content-info-left">
@@ -46,6 +46,7 @@
 							</div>
 						</div>
 					</div>
+					<h1 v-else>暂无数据</h1>
 				</infoBox>
 			</div>
 		</div>
@@ -494,7 +495,7 @@
 				},
 				testInfo:{
 					name:'急救中心',
-					unprocessed:12,
+					unprocessed:12,  
 					processed:28
 				},
 				infoListData:[
@@ -548,6 +549,12 @@
 			}
 		},
 		methods:{
+			/**
+			 * 进入 门诊
+			 */
+			enterOutpatient(item){
+				console.log(item)
+			},
 			/**
 			 * 获取 远程教育首页排课列表【医生web】
 			 */
@@ -862,7 +869,12 @@
 				});
 				console.log(res);
 				if(res.data&&res.data.errCode===0){
-					this.onlineRoomsByDoctor = res.data.body.data2.list
+					this.onlineRoomsByDoctor = res.data.body.data2.list.map(item=>{
+						item.name = item.clinicName;
+						item.unprocessed = item.unProcess;
+						item.processed = item.process;
+						return item;   
+					})
 				}else{
 					this.$notify({
 						title: '失败',

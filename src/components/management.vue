@@ -64,33 +64,7 @@
 		</div>
 		<!-- 医生端 -->
 		<div v-else>
-			<!-- <div class="doctorStyle">
-				<selftag :inData="oTab4" @reback="getOTab4"></selftag>
-				<statisticsWay1 v-model="time" @reBack="getFilterTime"></statisticsWay1>
-			</div>
-			<div>
-				<el-table :data="manageBodyData" border style="width: 100%">
-					<el-table-column fixed prop="date" label="时间"></el-table-column>
-					<el-table-column fixed prop="name" label="病区"></el-table-column>
-					<el-table-column fixed prop="province" label="床号"></el-table-column>
-					<el-table-column fixed prop="city" label="病人"></el-table-column>
-					<el-table-column fixed prop="address" label="病人ID"></el-table-column>
-					<el-table-column fixed prop="name" label="基本信息"></el-table-column>
-					<el-table-column fixed prop="zip" label="医嘱"></el-table-column>
-					<el-table-column fixed prop="zip" label="体征报表"></el-table-column>
-					<el-table-column fixed prop="zip" label="检验检查"></el-table-column>
-					<el-table-column fixed prop="zip" label="影像"></el-table-column>
-					<el-table-column fixed prop="zip" label="医嘱执行"></el-table-column>
-					<el-table-column fixed prop="zip" label="状态"></el-table-column>
-					<el-table-column fixed prop="zip" label="录音录像"></el-table-column>
-					<el-table-column fixed="right" label="" width="200">
-						<template slot-scope="scope">
-							<el-button v-if="scope.row.state" @click="isShowForbidFun(scope.row)" type="text" size="small">查看记录</el-button>
-							<el-button v-else @click="isShowForbidFun(scope.row)" type="text" size="small">已完成</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
-			</div> -->
+			<noData></noData>
 		</div>
 	</div>
 </template>
@@ -109,6 +83,7 @@
 	import normalColumnChart from '../public/publicComponents/normalColumnChart.vue'
 	import statisticsWay from '../public/publicComponents/statisticsWay.vue'
 	import search from '../public/publicComponents/search.vue'
+	import noData from '../public/publicComponents/noData.vue'
 
 	//引入token
 	import { mapState } from "vuex";
@@ -120,6 +95,7 @@
 			normalColumnChart,
 			statisticsWay,
 			search,
+			noData,
 		},
 		data() {
 			return {
@@ -133,6 +109,7 @@
 				typeId: "",//筛选类型id   selftag
 				area: "",//区域id    selftag
 				searchValue: "",//返回搜索框输入   search
+				types: '', //String MANAGE账号是什么权限
 				//管理统计端  筛选工具栏  统计筛选返回值  接收参数
 				time0: "",///统计筛选开始时间
 				time1: "",//统计筛选结束时间
@@ -308,10 +285,15 @@
 			//筛选列表  管理端
 			//1.21.1.科室筛选  工具栏 (管理) (管理)
 			async getSelect1(oindex) {
+				if (this.userInfo.manager) {
+					this.types = 'MANAGE'
+				} else {
+					this.types = 'DOCTOR'
+				}
 				let _this = this;
 				let query = {
 					token: this.userState.token,
-					type: 'MANAGE'
+					type: this.types
 				};
 				const res = await toolDept(query);
 				if (res.data && res.data.errCode === 0) {
@@ -409,6 +391,17 @@
 					});
 				}
 			},
+
+
+
+
+
+
+
+
+
+
+
 
 			// 管理1表
 			async getList1() {
