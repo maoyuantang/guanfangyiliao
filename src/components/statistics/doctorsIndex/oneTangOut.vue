@@ -15,7 +15,7 @@
       ...mapState({
         userInfo: state => state.user.userInfo,
         userSelfInfo: state => state.user.userSelfInfo
-      })
+      }),
     },
 
     data() {
@@ -36,7 +36,7 @@
 </script>
 
 <style>
-  .doctors-index-rounds {}
+  
 </style>
 <!--
     医生界面
