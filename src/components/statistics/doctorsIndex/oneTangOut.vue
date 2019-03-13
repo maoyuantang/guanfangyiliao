@@ -1,6 +1,21 @@
 <template>
   <div class="oneTangOut">
-    oneTangOut
+    <div class="top">
+      <div class="top1">远程门诊</div>
+      <div class="top2">...</div>
+    </div>
+    <div class="body">
+      <div v-for="" class="fors">
+        <div class="title">
+          <div class="title1">急救中心</div>
+          <el-button type="primary" size="mini">点击进入</el-button>
+        </div>
+        <div class="i1"></div>
+        <div class="jindu"><span class="jindu1">未处理 12人</span><span class="jindu2">/ 已处理 28人</span></div>
+        <div class="i2"></div>
+      </div>
+
+    </div>
   </div>
 </template>
 
@@ -35,8 +50,86 @@
   }
 </script>
 
-<style>
-  
+<style lang="scss" scoped>
+  .oneTangOut {
+    background: #FFFFFF;
+    border: 1px solid #E5EDF3;
+    box-shadow: 0 6px 36px 0 rgba(0, 62, 100, 0.04);
+    border-radius: 4px;
+    padding: 12px;
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .top1 {
+        padding: 6px 0 0 6px;
+        font-family: PingFangSC-Regular;
+        font-size: 18px;
+        color: #778CA2;
+      }
+
+      .top2 {
+        font-size: 25px;
+        cursor: pointer;
+        padding: 0 10px 0 0;
+      }
+    }
+
+    .body {
+      width: 70%;
+      margin: auto;
+
+      .fors {
+        margin: 25px 0 0 0;
+
+        .title {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .title1 {
+            font-family: PingFangSC-Regular;
+            font-size: 18px;
+            color: #252631;
+          }
+
+          .title2 {
+            background: #4285F4;
+            border-radius: 4px;
+          }
+        }
+
+        .i1 {
+          border: 1px solid #E8ECEF;
+          margin: 10px 0;
+        }
+
+        .jindu {
+          .jindu1 {
+            font-family: PingFangSC-Regular;
+            font-size: 14px;
+            color: #0067FF;
+            line-height: 21px;
+          }
+
+          .jindu2 {
+            font-family: PingFangSC-Regular;
+            font-size: 14px;
+            color: #3E0000;
+            line-height: 21px;
+          }
+        }
+
+        .i2 {
+          border-radius: 1px;
+          border: 2px solid #6DD230;
+          margin: 10px 0;
+        }
+      }
+    }
+  }
 </style>
 <!--
     医生界面
