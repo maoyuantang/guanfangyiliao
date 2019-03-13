@@ -629,19 +629,19 @@
 
       // 管理1表
       async getList1() {
-        var date = new Date();
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        if (month < 10) {
-          month = "0" + month;
-        }
-        if (day < 10) {
-          day = "0" + day;
-        }
-        var nowDate = year + "-" + month + "-" + day;
-        this.time0 = nowDate;
-        this.time1 = nowDate;
+        // var date = new Date();
+        // var year = date.getFullYear();
+        // var month = date.getMonth() + 1;
+        // var day = date.getDate();
+        // if (month < 10) {
+        //   month = "0" + month;
+        // }
+        // if (day < 10) {
+        //   day = "0" + day;
+        // }
+        // var nowDate = year + "-" + month + "-" + day;
+        // this.time0 = nowDate;
+        // this.time1 = nowDate;
 
         let _this = this;
         let query = {

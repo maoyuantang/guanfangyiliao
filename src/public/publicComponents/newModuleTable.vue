@@ -24,7 +24,7 @@
                         <span>{{inData.time || '时间'}}</span>
                     </div>
                     <div class="new-module-table-li-item-status new-module-table-li-item-time-spe">
-                        <span :class="colorClassMap[inData.status]">{{colorClassMap[inData.status] || '状态'}}</span>
+                        <span :class="colorClassMap[inData.status]">{{inData.status || '状态'}}</span>
                     </div>
                     <div class="new-module-table-li-item-btns">
                         <slot></slot>
