@@ -22,7 +22,7 @@
 
 
 				<div class="online-clinic-middle">
-					<el-table :data="tableData" border style="width: 100%;" :max-height="600" @cell-click="relateDoctors1">
+					<el-table :data="tableData" style="width: 100%;" :max-height="600" @cell-click="relateDoctors1">
 						<el-table-column fixed prop="id" label="业务编号"></el-table-column>
 						<el-table-column prop="departmentName" label="科室"></el-table-column>
 						<el-table-column prop="fullName" label="业务名"></el-table-column>
@@ -1913,4 +1913,5 @@
 		background: #F3F6FA;
 		border-radius: 4px;
 	}
+	
 </style>

@@ -40,7 +40,7 @@ export default {
 				/**
 				 * 
 				 * hasAuth.type => 权限类型,类型String，1,科室管理权限.2,医生业务
-				 * hasAuth.authorityId => 权限标识符,类型String
+				 * hasAuth.                                                                                                                                                                                                                                                                                                => 权限标识符,类型String
 				 * 
 				 *  */
 				// {"type": "1","authorityId": "10000"}
@@ -48,7 +48,7 @@ export default {
 			hospitalCode:'',//医院代码
 			userType:false,//用户类型，true表示医生/管理/超级管理，false表示用户
 		},
-		userSelfInfo:{//用户个人信息（由于后端将这两个信息分成了两个接口，我写的时候又不知道还有这个分法，前面那个变量其实更合适，但是已经与前面写的代码混了） 
+		userSelfInfo:{//用户个人信息（由于后端将这两个信息分成了两个接口，我写的时候又不知道还有这个分法，前面那个变量其实更合适，但是已经与前面写的代码混了）
 			userId:'',//用户ID: type => String
 			name:'',//用户名称: type => String
 			account:'',//账号: type => String

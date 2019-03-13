@@ -6,7 +6,7 @@
         </div>
         <div class="chatMessage">
             <ul class="chatRecord">
-                <li class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
+                <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
                         <!-- <img src="../../assets/img/日照宝宝.jpg" /> -->
@@ -402,7 +402,8 @@ export default {
                 "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=85690711,3884201894&fm=27&gp=0.jpg"
             ],
             oMsgId: "",
-            ReadMessage: "" //已读未读
+            ReadMessage: "", //已读未读
+            loadMoreVisable:false,//加载更多是否显示
         };
     },
     computed: {
@@ -507,10 +508,18 @@ export default {
                     console.log("发起了视频聊天！！！！");
                     oMessage = "发起了视频聊天";
                 }
-            }
-
-            console.log(childMessageType + oMessage);
-            if (childMessageType == "IMAGE") {
+            } else if (
+                childMessageType == "FOLLOWUP" ||
+                childMessageType == "INTERROGATION"
+            ) {
+                let oMessage1 = JSON.parse(oMessage);
+                this.messageList.push({
+                    from: ouserId,
+                    content: oMessage1,
+                    serverTime: oMessageTime,
+                    childMessageType: childMessageType
+                });
+            } else if (childMessageType == "IMAGE") {
                 this.messageList.push({
                     fromNickName: fromNickName,
                     from: ouserId,
@@ -519,15 +528,14 @@ export default {
                     childMessageType: childMessageType,
                     signImages: [this.imgUrl + oMessage]
                 });
+            } else {
+                this.messageList.push({
+                    from: ouserId,
+                    content: oMessage,
+                    serverTime: oMessageTime,
+                    childMessageType: childMessageType
+                });
             }
-            console.log(childMessageType);
-            console.log(oMessage);
-            this.messageList.push({
-                from: ouserId,
-                content: oMessage,
-                serverTime: oMessageTime,
-                childMessageType: childMessageType
-            });
         },
         sendMessage(agentData) {
             if (
@@ -570,6 +578,7 @@ export default {
         // 问诊
         getSendMessageChat1(oMessage) {
             let messageBody = JSON.stringify(oMessage);
+            console.log(messageBody);
             // this.childMessageType = 20;
             this.sendMessageChat(18, messageBody, "INTERROGATION");
             this.questDetailVisible = false;
@@ -727,7 +736,6 @@ export default {
         //普通档案
         openPublicFile() {
             this.puBlicFileData.show = true;
-            // this.puBlicFileData = Object({}, this.puBlicFileData);
             console.log(this.puBlicFileData);
             this.getFamily();
         },
@@ -872,7 +880,7 @@ export default {
         sendMessage2() {
             let ohtml = this.messageTicket.content;
         },
-         //随访模板详情
+        //随访模板详情
         async getFollowDetailMoban(oid) {
             console.log(this.userSelfInfo.userId);
             let query = {
@@ -980,9 +988,17 @@ export default {
             const res = await fetchHistoryMessage(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
+                if (res.data.body.length>0) {
+                    let oLengthMsgId = res.data.body.length;
+                    this.oMsgId = res.data.body[oLengthMsgId - 1].msgId;
+                     
+                     this.loadMoreVisable=true
+                }else{
+                    this.loadMoreVisable=false
+                }
                 let odata = res.data.body.reverse();
-                let oLengthMsgId = res.data.body.length;
-                this.oMsgId = res.data.body[oLengthMsgId - 1].msgId;
+               
+
                 $.each(odata, function(index, text) {
                     let timestamp4 = new Date(text.serverTime);
                     let y = timestamp4.getHours();
@@ -1005,15 +1021,15 @@ export default {
                         this.messageList[i].oRead = false;
                     }
                     var ImgObj = new Image(); //判断图片是否存在
-                    ImgObj.src = this.imgUrl+odata[i].from;
+                    ImgObj.src = this.imgUrl + odata[i].from;
                     //没有图片，则返回-1
                     if (
                         ImgObj.fileSize > 0 ||
                         (ImgObj.width > 0 && ImgObj.height > 0)
                     ) {
-                        odata[i]
+                        odata[i];
                     } else {
-                       odata[i]
+                        odata[i];
                     }
                     // 不是本人发
                     if (odata[i].from != this.userSelfInfo.userId) {
@@ -1281,14 +1297,7 @@ export default {
         },
         //视频组件传过来的事件
         videoclick(data) {
-            alert("qwqw");
-            if (data == "closeCancle") {
-                this.videoVisible = false;
-                this.sendMessageChat("6", "cancle", "VIDEO");
-            } else if (data == "closeComplete") {
-                this.videoVisible = false;
-                this.sendMessageChat("6", "complete", "VIDEO");
-            }
+            this.videoVisible = false;
         },
         //删除视频房间
         async deleteVideoRoom() {

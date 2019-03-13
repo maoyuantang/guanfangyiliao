@@ -8,9 +8,9 @@
             <div class="addFollowMain">
                 <ul class="addQuestUl">
                     <li v-for="(text,index) in addQuestData.bankModels" :key="index">
-                        <span class="deleteQuestList" @click="deleteQuestList(index)">
+                        <!-- <span class="deleteQuestList" @click="deleteQuestList(index)">
                             <img src="../../assets/img/questDelete.png" />
-                        </span>
+                        </span> -->
                         <div v-show="text.questionType=='RADIO'">
                             <el-form-item :label="index+1">
                                 <el-input class="" v-model="text.title" placeholder="请输入问诊标题"></el-input>

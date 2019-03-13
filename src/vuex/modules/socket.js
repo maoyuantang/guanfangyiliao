@@ -5,6 +5,7 @@ export default {
         IMessage: "",
         ifVideoImg: 0,
         synchroMessage: {},
+        ifEnterVideo:0,
         msgBox: {//消息盒子
             a: {
                 msg: [
@@ -48,7 +49,10 @@ export default {
         },
         IFVIDEOIMG(state, data) {
             state.ifVideoImg = data
-        }
+        },
+        IFENTERVIDEO(state, data) {
+            state.ifEnterVideo = data
+        },
     },
     actions: {
         setSocket(context, data) {
@@ -65,6 +69,9 @@ export default {
         },
         oIfVideoImg(context, data) {
             context.commit("IFVIDEOIMG", data);
+        },
+        oIfEnterVideo(context, data) {
+            context.commit("IFENTERVIDEO", data);
         },
     }
 }

@@ -79,9 +79,9 @@
                                     <input class="drugsListInput" disabled v-model="scope.row.drugQuantity * scope.row.drugPrice" type="text" />
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="ask" label="医生嘱托" width="120">
+                            <el-table-column prop="doctorAsk" label="医生嘱托" width="120">
                                 <template slot-scope="scope">
-                                    <input class="drugsListInput" v-model="scope.row.ask" type="text" />
+                                    <input class="drugsListInput" v-model="scope.row.doctorAsk" type="text" />
                                 </template>
                             </el-table-column>
                             <el-table-column fixed="right" label="操作" width="100">
@@ -249,6 +249,7 @@ export default {
             })
         },
         setMessage() {
+            console.log(this.userMessage.clinicOrderId)
             this.chufangData.firstDoctorId = this.userSelfInfo.userId;
             this.chufangData.clinicId = this.userMessage.clinicId;
             this.chufangData.departmentId = this.userMessage.departmentId;

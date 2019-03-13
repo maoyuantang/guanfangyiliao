@@ -140,7 +140,7 @@
             </div>
           </div>
           <div class="dataBody">
-            <el-table :data="manageBodyData" border style="width: 100%">
+            <el-table :data="manageBodyData" style="width: 100%">
               <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
               <el-table-column prop="deptName" label="科室"></el-table-column>
               <el-table-column prop="applyOrgName" label="申请医院"></el-table-column>
@@ -193,7 +193,7 @@
         <el-button class="startConsul" type="text" @click="addMove">新增转诊</el-button>
       </div>
       <div>
-        <el-table :data="docTableData" border style="width: 100%">
+        <el-table :data="docTableData" style="width: 100%">
           <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
           <el-table-column fixed prop="applyOrgName" label="申请医院"></el-table-column>
           <el-table-column fixed prop="applyDeptName" label="申请科室"></el-table-column>
