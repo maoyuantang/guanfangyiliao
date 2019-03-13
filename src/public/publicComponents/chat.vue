@@ -507,10 +507,18 @@ export default {
                     console.log("发起了视频聊天！！！！");
                     oMessage = "发起了视频聊天";
                 }
-            }
-
-            console.log(childMessageType + oMessage);
-            if (childMessageType == "IMAGE") {
+            } else if (
+                childMessageType == "FOLLOWUP" ||
+                childMessageType == "INTERROGATION"
+            ) {
+                let oMessage1=JSON.parse(oMessage)
+                  this.messageList.push({
+                    from: ouserId,
+                    content: oMessage1,
+                    serverTime: oMessageTime,
+                    childMessageType: childMessageType
+                });
+            } else if (childMessageType == "IMAGE") {
                 this.messageList.push({
                     fromNickName: fromNickName,
                     from: ouserId,
@@ -519,15 +527,14 @@ export default {
                     childMessageType: childMessageType,
                     signImages: [this.imgUrl + oMessage]
                 });
+            } else {
+                this.messageList.push({
+                    from: ouserId,
+                    content: oMessage,
+                    serverTime: oMessageTime,
+                    childMessageType: childMessageType
+                });
             }
-            console.log(childMessageType);
-            console.log(oMessage);
-            this.messageList.push({
-                from: ouserId,
-                content: oMessage,
-                serverTime: oMessageTime,
-                childMessageType: childMessageType
-            });
         },
         sendMessage(agentData) {
             if (
@@ -570,7 +577,7 @@ export default {
         // 问诊
         getSendMessageChat1(oMessage) {
             let messageBody = JSON.stringify(oMessage);
-            console.log(messageBody)
+            console.log(messageBody);
             // this.childMessageType = 20;
             this.sendMessageChat(18, messageBody, "INTERROGATION");
             this.questDetailVisible = false;
@@ -1281,7 +1288,7 @@ export default {
         },
         //视频组件传过来的事件
         videoclick(data) {
-                this.videoVisible = false;
+            this.videoVisible = false;
         },
         //删除视频房间
         async deleteVideoRoom() {
