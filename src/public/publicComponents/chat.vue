@@ -6,7 +6,7 @@
         </div>
         <div class="chatMessage">
             <ul class="chatRecord">
-                <li class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
+                <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
                         <!-- <img src="../../assets/img/日照宝宝.jpg" /> -->
@@ -402,7 +402,8 @@ export default {
                 "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=85690711,3884201894&fm=27&gp=0.jpg"
             ],
             oMsgId: "",
-            ReadMessage: "" //已读未读
+            ReadMessage: "", //已读未读
+            loadMoreVisable:false,//加载更多是否显示
         };
     },
     computed: {
@@ -511,8 +512,8 @@ export default {
                 childMessageType == "FOLLOWUP" ||
                 childMessageType == "INTERROGATION"
             ) {
-                let oMessage1=JSON.parse(oMessage)
-                  this.messageList.push({
+                let oMessage1 = JSON.parse(oMessage);
+                this.messageList.push({
                     from: ouserId,
                     content: oMessage1,
                     serverTime: oMessageTime,
@@ -987,9 +988,17 @@ export default {
             const res = await fetchHistoryMessage(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
+                if (res.data.body.length>0) {
+                    let oLengthMsgId = res.data.body.length;
+                    this.oMsgId = res.data.body[oLengthMsgId - 1].msgId;
+                     
+                     this.loadMoreVisable=true
+                }else{
+                    this.loadMoreVisable=false
+                }
                 let odata = res.data.body.reverse();
-                let oLengthMsgId = res.data.body.length;
-                this.oMsgId = res.data.body[oLengthMsgId - 1].msgId;
+               
+
                 $.each(odata, function(index, text) {
                     let timestamp4 = new Date(text.serverTime);
                     let y = timestamp4.getHours();
