@@ -941,6 +941,7 @@
         console.log(index, data)
         this.whichUser = index;
         if (data) {
+          console.log(data)
           this.prescriptionId = data.pb.id;
           this.secondDoctorId = data.reviewDoctor;
           console.log(this.whichUser);
