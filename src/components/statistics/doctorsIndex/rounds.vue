@@ -1,20 +1,12 @@
 <template>
-	<div class="doctors-index">
-		<div class="doctors-index-top">
-			<rounds></rounds>
-		</div>
-		<div class="doctors-index-suifang">
-
-		</div>
-		<div class="doctors-index-normal">
-
-		</div>
+	<div class="doctors-index-rounds">
+		sasakjkjaskj
 	</div>
 </template>
 
 <script>
 	import { mapState } from 'vuex'
-	import rounds from './doctorsIndex/rounds.vue'
+	
 	export default {
 		watch:{
 			
@@ -36,7 +28,6 @@
 			
 		},
 		components:{
-			rounds
 		},
 		async created(){
 			
@@ -45,7 +36,7 @@
 </script>
 
 <style >
-	.doctors-index{
+	.doctors-index-rounds{
 
 	}
 	
