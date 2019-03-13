@@ -257,7 +257,11 @@
             <div class="listBao">
               <div class="lists" v-for="(text,index) in ARR" :key="index" v-show='whichUser==index'>
                 <el-table :data="text" style="width: 100%">
+<<<<<<< HEAD
                   <el-table-column prop="index" label="序号"></el-table-column>
+=======
+                  <!-- <el-table-column prop="index" label="序号"></el-table-column> -->
+>>>>>>> 224ab41ee3ebb4c44ddaed9d3cca0e59ea4a7b3b
                   <el-table-column prop="drugName" label="药品名称">
                   </el-table-column>
                   <el-table-column prop="drugUse" label="用法">
