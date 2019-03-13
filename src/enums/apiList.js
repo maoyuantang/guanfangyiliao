@@ -286,5 +286,8 @@ export default {
     terminalManagementStatistics:'/m/v1/api/roundsTerminal/terminal/queryStatisticalData',//2.终端管理统计
     toolTerminalType:'/m/v1/api/basics/common/toolTerminalType',//1.21.29.终端管理-类型
     toolTerminalArea:'/m/v1/api/basics/common/toolTerminalArea',//1.21.30.终端管理-区域
+
+    // 谭莹
+    setRemark:"/m/v1/api/clinic/remark/set",//添加备注
 }
 

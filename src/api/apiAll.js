@@ -2807,6 +2807,19 @@ export const eduCourseCancel = (query, data) => {//4.取消排课计划
         }
     })
 }
+export const setRemark = (query, data) => {//添加备注
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.setRemark,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+
 export const webCourseList = query => { //12.7 web获取课程列表【医生web】
     const sign = postQueryHandle(query);
     return axios({
