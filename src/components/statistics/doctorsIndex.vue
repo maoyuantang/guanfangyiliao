@@ -1,13 +1,53 @@
 <template>
 	<div class="doctors-index">
+		<!-- 顶部三个模块  远程门诊  移动查房  远程教育 -->
 		<div class="doctors-index-top">
-			<rounds></rounds>
+			<div class="doctors-index-top-module">
+				<oneTangOut></oneTangOut>
+			</div>
+			<div class="doctors-index-top-fg"></div>
+			<div class="doctors-index-top-module">
+				<rounds></rounds>
+			</div>
+			<div class="doctors-index-top-fg"></div>
+			<div class="doctors-index-top-module">
+				远程教育
+			</div>
+			
 		</div>
+		<!-- 随访相关三个模块 今日计划 告警 近期随访 -->
 		<div class="doctors-index-suifang">
+			<!-- 今日计划 -->
+			<div class="doctors-index-suifang-module">
+				今日计划
+			</div>
 
+			<!-- 告警 -->
+			<div class="doctors-index-suifang-module">
+				告警
+			</div>
+
+			<!-- 近期随访 -->
+			<div class="doctors-index-suifang-module">
+				近期随访
+			</div>
 		</div>
+		<!-- 通用三个模块 双向转诊  远程会诊 远程协作 -->
 		<div class="doctors-index-normal">
+			<!-- 双向转诊 -->
+			<div class="doctors-index-normal-module">
+				<oneTangRef></oneTangRef>
+			</div>
 
+			<!-- 远程会诊 -->
+			<div class="doctors-index-normal-module">
+				远程会诊
+			</div>
+
+			<!-- 远程协作 -->
+			<div class="doctors-index-normal-module">
+				远程协作
+			</div>
 		</div>
 	</div>
 </template>
@@ -15,7 +55,18 @@
 <script>
 	import { mapState } from 'vuex'
 	import rounds from './doctorsIndex/rounds.vue'
+	import oneTangManage from './doctorsIndex/oneTangManage.vue'//终端系统
+	import oneTangMedical from './doctorsIndex/oneTangMedical.vue'//分级
+	import oneTangOut from './doctorsIndex/oneTangOut.vue'//门诊
+	import oneTangRef from './doctorsIndex/oneTangRef.vue'//双向转诊
 	export default {
+		components:{
+			rounds,
+			oneTangManage,
+			oneTangMedical,
+			oneTangOut,
+			oneTangRef
+		},
 		watch:{
 			
 		},
@@ -35,9 +86,6 @@
 			
 			
 		},
-		components:{
-			rounds
-		},
 		async created(){
 			
 		}
@@ -46,9 +94,22 @@
 
 <style >
 	.doctors-index{
-
+		padding-right: 0.37rem;
 	}
-	
+	/* .doctors-index>div{
+		margin-bottom: 0.42rem;
+	} */
+	.doctors-index-top{
+		display: flex;
+	}
+	.doctors-index-top-module{
+		flex: 1;
+		height: 3rem;
+		border: 1px solid red;
+	}
+	.doctors-index-top-fg{
+		width: 0.13rem;
+	}
 </style>
 <!--
     医生界面
