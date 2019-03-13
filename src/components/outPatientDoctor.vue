@@ -1141,7 +1141,8 @@ this.centerDialogVisible=false;
         };
         let options = {
           prescriptionId: this.prescriptionId,
-          secondDoctorId: this.secondDoctorId,
+          // secondDoctorId: this.secondDoctorId,
+          secondDoctorId: "",
           reviewEnum: "REVIEWED" //等待
         };
         const res = await updatePrescription(query, options);
