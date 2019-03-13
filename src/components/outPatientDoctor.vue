@@ -491,6 +491,7 @@
               <div>
                 <div class="drugDetail">
                   <div>
+                    
                     <ul v-for="(text,index) in text5.drugDetail" :key="index">
                       <li>（{{index+1}}）</li>
                       <li>{{text.drugName}}</li>
