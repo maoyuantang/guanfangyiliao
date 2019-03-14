@@ -18,7 +18,6 @@
                             <video class="localVideo1" id="video" width="640" height="480" autoplay></video>
                         </div>
                         <div>
-                            <!-- <video-chat></video-chat> -->
                             <div class="videoTopBtnBox">
                                 <div>
                                     <img src="./../../static/assets/img/danganVideo.png" /> 查档案
@@ -41,6 +40,7 @@
                             </div>
                             <div class="videoBtn" v-show="publicVideoVisable">
                                 <div @click="closeVideoRoom(3)">
+                                    <!-- 普通视频的挂断 -->
                                     <div><img src="./../../static/assets/img/gua1.png" /></div>
                                     <div>挂断</div>
 
@@ -172,8 +172,8 @@ export default {
         screenClick() {
             this.screenVisible = true;
         },
-        closeScreen(){
- this.screenVisible = false;
+        closeScreen() {
+            this.screenVisible = false;
         },
         //确认分享
         sureScreen() {
@@ -230,27 +230,50 @@ export default {
         // 添加消息到发送框
         addMessageK(ouserId, oMessage, oMessageTime, childMessageType) {
             if (childMessageType == "VIDEO") {
-                if ((oMessage = "cancle")) {
+                if (oMessage.indexOf("cancle") > -1) {
                     oMessage = "取消了视频通话";
-                } else if ((oMessage = "refuse")) {
+                } else if (oMessage.indexOf("refuse") > -1) {
                     oMessage = "拒绝了视频通话";
-                } else if ((oMessage = "videoing")) {
+                } else if (oMessage.indexOf("videoing") > -1) {
                     oMessage = "对方正在视频通话中";
-                } else if ((oMessage = "complete")) {
+                } else if (oMessage.indexOf("complete") > -1) {
                     oMessage = "视频通话已结束";
-                } else if ((oMessage = "accept")) {
+                } else if (oMessage.indexOf("accept") > -1) {
                     oMessage = "接受了视频聊天";
-                } else if ((oMessage = "complete")) {
+                } else if (oMessage.indexOf("complete") > -1) {
                     oMessage = "视频通话已结束";
+                } else if (oMessage.indexOf("sendroom") > -1) {
+                    console.log("发起了视频聊天！！！！");
+                    oMessage = "发起了视频聊天";
                 }
+            } else if (
+                childMessageType == "FOLLOWUP" ||
+                childMessageType == "INTERROGATION"
+            ) {
+                let oMessage1 = JSON.parse(oMessage);
+                this.messageList.push({
+                    from: ouserId,
+                    content: oMessage1,
+                    serverTime: oMessageTime,
+                    childMessageType: childMessageType
+                });
+            } else if (childMessageType == "IMAGE") {
+                this.messageList.push({
+                    fromNickName: fromNickName,
+                    from: ouserId,
+                    content: this.imgUrl + oMessage,
+                    serverTime: oMessageTime,
+                    childMessageType: childMessageType,
+                    signImages: [this.imgUrl + oMessage]
+                });
+            } else {
+                this.messageList.push({
+                    from: ouserId,
+                    content: oMessage,
+                    serverTime: oMessageTime,
+                    childMessageType: childMessageType
+                });
             }
-            console.log(childMessageType + oMessage);
-            this.messageList.push({
-                from: ouserId,
-                content: oMessage,
-                serverTime: oMessageTime,
-                childMessageType: childMessageType
-            });
         },
         sendMessage(agentData) {
             if (
@@ -317,12 +340,6 @@ export default {
             function noStream(err) {
                 alert(err);
             }
-
-            // document
-            //     .getElementById("snap")
-            //     .addEventListener("click", function() {
-            //         ctx.drawImage(aVideo, 0, 0, 640, 480); //将获取视频绘制在画布上
-            //     });
         },
         //进入诊室
         async enterRoomBtn() {
@@ -438,6 +455,7 @@ export default {
                         conferenceNumber: res.data.body.conferenceNumber
                     };
                     console.log("创建视频成功");
+                    _this.closeVideoBtnVieable = false; //关闭视频隐藏
                     _this.$store.commit("socket/IFENTERVIDEO", 1); //当前登录用户在视频中
                     _this.videoIng = 1;
                     _this.closePatientNumVisable = false;
@@ -471,6 +489,7 @@ export default {
         videoChatBtn() {
             if (this.videoChatVisable) {
                 this.videoChatVisable = false;
+
                 if (this.videoType == "门诊") {
                     this.guaVisable = true;
                 } else {
@@ -542,7 +561,7 @@ export default {
                 });
             }
         },
-        //关闭视频
+        //关闭视频退出诊室
         async closeVideo() {
             let _this = this;
             let query = {
@@ -557,11 +576,12 @@ export default {
                     title: "成功",
                     message: "退出诊室成功"
                 });
-                if (_this.$store.state.socket.ifEnterVideo == 0) {
-                    _this.$emit("reback", "closeVideoOnly");
-                } else if (_this.$store.state.socket.ifEnterVideo == 1) {
-                    this.closeVideoRoom(1);
-                }
+                // if (_this.$store.state.socket.ifEnterVideo == 0) {
+                //     _this.$emit("reback", "closeVideoOnly");
+                // } else if (_this.$store.state.socket.ifEnterVideo == 1) {
+                //     this.closeVideoRoom(1);
+                // }
+                _this.$emit("reback", "closeVideoOnly");
             } else {
                 //失败
                 this.$notify.error({
@@ -583,7 +603,7 @@ export default {
             const res = await storageUsers(query, options);
             if (res.data && res.data.errCode === 0) {
                 let childMessageType = "";
-                let messageBody = "MicroCinic&" + "hangup";
+                let messageBody = "complete";
 
                 if (num == 3) {
                     console.log("离开房间1");
@@ -603,9 +623,13 @@ export default {
                     _this.$store.commit("socket/IFVIDEOIMG", 0);
                 } else {
                     childMessageType = 7;
-                    _this.sendMessageChat(childMessageType, messageBody);
+                    _this.sendMessageChat(
+                        childMessageType,
+                        messageBody,
+                        "CRVIDEO"
+                    );
                 }
-
+                _this.closeVideoBtnVieable = true; //关闭视频显示
                 _this.deleteVideoRoom();
                 console.log("离开房间");
                 _this.leaveRoomBtn();
@@ -1154,7 +1178,7 @@ export default {
         },
         //初始化配置
         firstSet() {
-            alert("初始化配置");
+            // alert("初始化配置");
             let _this = this;
             var server = $("#server").val();
             // var server=this.oSeaver
@@ -1182,7 +1206,7 @@ export default {
         },
         //登录
         videoLogin() {
-            alert("登陆");
+            // alert("登陆");
             let _this = this;
             // var username = $("#username").val();
             // var username=this.oUser
@@ -1268,8 +1292,8 @@ export default {
          * 匿名加入到房间
          */
         anonymousJoinRoomBtn() {
-            alert("匿名加入到房间");
-            alert(this.createVideoRoomData1.conferenceNumber);
+            // alert("匿名加入到房间");
+            // alert(this.createVideoRoomData1.conferenceNumber);
             let _this = this;
             // var conferenceName = $("#anonymousConferenceName").val();
             let conferenceName = this.createVideoRoomData1.conferenceNumber;
@@ -1454,7 +1478,7 @@ export default {
         },
 
         screenShareBtn() {
-            let _this=this;
+            let _this = this;
             Manis.addScreenSourceToConnection(function(result) {
                 if (result.code == 200) {
                     console.info(
@@ -1464,9 +1488,11 @@ export default {
                 } else {
                     console.error(result);
                     _this.$notify.error({
-                    title: "警告",
-                    message: result.msg+',请确认是否安装屏幕共享插件，或查看安装'
-                });
+                        title: "警告",
+                        message:
+                            result.msg +
+                            ",请确认是否安装屏幕共享插件，或查看安装"
+                    });
                     // parent.layer.msg(''+result.msg+',请确认是否安装屏幕共享插件，或查看安装');
                 }
             });
@@ -1689,16 +1715,16 @@ export default {
             }
         });
     },
-    beforeCreate() {
-        const linkData = document.createElement("link");
-        linkData.id = "linkdata";
-        linkData.href =
-            "../../static/Manis-Meetings-Chrome-Extension_v0.0.9.crx";
-        document.body.appendChild(linkData);
-    },
-    beforeDestroy() {
-        document.body.removeChild(document.getElementById(linkdata));
-    },
+    // beforeCreate() {
+    //     const linkData = document.createElement("link");
+    //     linkData.id = "linkdata";
+    //     linkData.href =
+    //         "../../static/Manis-Meetings-Chrome-Extension_v0.0.9.crx";
+    //     document.body.appendChild(linkData);
+    // },
+    // beforeDestroy() {
+    //     document.body.removeChild(document.getElementById(linkdata));
+    // },
     watch: {
         "userSocketInfo.synchroMessage": {
             handler(n, o) {
@@ -1740,34 +1766,20 @@ export default {
                         }
 
                         if (oData.info.childMessageType == 6) {
-                            console.log("取消了视频");
                             childMessageType = "VIDEO";
                             if (messageBody == "refuse") {
                                 //对方拒绝了视频
-                                // this.closeVideo(messageBody, "other");
                             } else if (messageBody == "complete") {
                                 //对方挂断了视频
-                                // this.closeVideo(messageBody, "other");
                             } else if (messageBody == "accept") {
+                                console.log(messageBody);
                                 this.$store.commit("socket/IFVIDEOIMG", 1);
+                            } else if (messageBody == "videoing") {
+                                //对方正在通话中
                             } else if (
                                 messageBody.indexOf("sendroom") > -1 ||
                                 messageBody.indexOf("MicroCinicSendRoom") > -1
                             ) {
-                                //对方邀请你开视频
-                                // if (
-                                //     oData.info.body.split("&")[3] ==
-                                //     this.userSelfInfo.userId
-                                // ) {
-                                //     this.createVideoRoomData = {
-                                //         conferenceId: oData.info.body.split(
-                                //             "&"
-                                //         )[2],
-                                //         conferenceNumber: oData.info.body.split(
-                                //             "&"
-                                //         )[1]
-                                //     };
-                                // }
                             }
                         } else if (oData.info.childMessageType == 4) {
                             childMessageType = "AUDIO";
@@ -1785,6 +1797,13 @@ export default {
                             childMessageType = "FOLLOWUP";
                         }
                         console.log(messageBody);
+                        console.log(
+                            oUserId,
+                            messageBody,
+                            oMessageTime,
+                            childMessageType,
+                            oData.info.fromNickName
+                        );
                         this.addMessageK(
                             oUserId,
                             messageBody,
@@ -2016,6 +2035,7 @@ video {
     text-align: center;
     font-size: 15px;
     color: white;
+    cursor: pointer;
 }
 #participant_stream_ {
 }
@@ -2049,21 +2069,21 @@ video {
     left: 10px;
     cursor: pointer;
 }
-.screenClass{
-    width:100%;
-        height: 600px;
+.screenClass {
+    width: 100%;
+    height: 600px;
     overflow: auto;
 }
-.screenClass>img{
-    width:100%;
+.screenClass > img {
+    width: 100%;
 }
-.screenBtn>button{
-        height: 28px;
-        padding: 0 15px;
-            border: 1px solid #dedede;
-                border-radius: 2px;
-                    color: #333;
-                        background-color: #fff;
+.screenBtn > button {
+    height: 28px;
+    padding: 0 15px;
+    border: 1px solid #dedede;
+    border-radius: 2px;
+    color: #333;
+    background-color: #fff;
 }
 /* 
 门诊打开注意 

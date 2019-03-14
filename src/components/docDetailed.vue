@@ -1,12 +1,6 @@
 <template>
     <div class="doc-detailed">
-        <el-dialog
-      title=" "
-      :visible.sync="show"
-      :fullscreen="true"
-      :before-close="handleClose"
-    >
-      <div class="doc-detailed-alert">
+        <div class="doc-detailed-alert">
           <div class="doc-detailed-alert-content">
                 <div class="doc-detailed-tag">
                     <span 
@@ -33,7 +27,6 @@
             <div class="doc-detailed-content" :is="viewCurrent" :inData="topTag.list[topTag.index]"></div>
           </div>
       </div>
-    </el-dialog>
     </div>
 </template>
 
@@ -126,7 +119,24 @@ export default {
     created() {
         this.getUsersList();
     },
-    watch: {}
+    watch: {},
+    beforeRouteEnter(to,from,next){
+        console.log(to)
+        console.log(from)
+        let getSession = sessionStorage.getItem('page');
+        try{
+            getSession = JSON.parse(getSession)
+        }catch(e){
+            console.log(e);
+        }
+        sessionStorage.setItem('page',JSON.stringify({
+            name:"查看档案",
+            select:true,
+            path:"/docDetailed",
+            code:getSession?getSession.code:0
+        }));//存缓存
+        next()
+    },
 };
 </script>
 

@@ -11,7 +11,7 @@
 			</div>
 			<div class="doctors-index-top-fg"></div>
 			<div class="doctors-index-top-module">
-				远程教育
+				<education></education>
 			</div>
 			
 		</div>
@@ -19,17 +19,17 @@
 		<div class="doctors-index-suifang">
 			<!-- 今日计划 -->
 			<div class="doctors-index-suifang-module">
-				今日计划
+				<plan></plan>
 			</div>
 
 			<!-- 告警 -->
 			<div class="doctors-index-suifang-module">
-				告警
+				<alarm></alarm>
 			</div>
 
 			<!-- 近期随访 -->
 			<div class="doctors-index-suifang-module">
-				近期随访
+				<followUp></followUp>
 			</div>
 		</div>
 		<!-- 通用三个模块 双向转诊  远程会诊 远程协作 -->
@@ -41,12 +41,12 @@
 
 			<!-- 远程会诊 -->
 			<div class="doctors-index-normal-module">
-				远程会诊
+				<consultation></consultation>
 			</div>
 
 			<!-- 远程协作 -->
 			<div class="doctors-index-normal-module">
-				远程协作
+				<cooperation></cooperation>
 			</div>
 		</div>
 	</div>
@@ -55,17 +55,29 @@
 <script>
 	import { mapState } from 'vuex'
 	import rounds from './doctorsIndex/rounds.vue'
+	import education from './doctorsIndex/education.vue'
 	import oneTangManage from './doctorsIndex/oneTangManage.vue'//终端系统
 	import oneTangMedical from './doctorsIndex/oneTangMedical.vue'//分级
 	import oneTangOut from './doctorsIndex/oneTangOut.vue'//门诊
 	import oneTangRef from './doctorsIndex/oneTangRef.vue'//双向转诊
+	import consultation from './doctorsIndex/consultation.vue'//远程会诊
+	import cooperation from './doctorsIndex/cooperation.vue'//远程协作
+	import plan from './doctorsIndex/plan.vue'//今日计划
+	import alarm from './doctorsIndex/alarm.vue'//告警
+	import followUp from './doctorsIndex/followUp.vue'//近期随访
 	export default {
 		components:{
 			rounds,
+			education,
 			oneTangManage,
 			oneTangMedical,
 			oneTangOut,
-			oneTangRef
+			oneTangRef,
+			consultation,
+			cooperation,
+			plan,
+			alarm,
+			followUp
 		},
 		watch:{
 			
@@ -105,7 +117,7 @@
 	.doctors-index-top-module{
 		flex: 1;
 		height: 3rem;
-		border: 1px solid red;
+		/* border: 1px solid red; */
 	}
 	.doctors-index-top-fg{
 		width: 0.13rem;
