@@ -241,7 +241,7 @@
             <div class="listBao">
               <div class="lists" v-for="(text,index) in ARR" :key="index" v-show='whichUser==index'>
                 <el-table :data="text" style="width: 100%">
-                  <el-table-column prop="index" label="序号"></el-table-column>
+                  <!-- <el-table-column prop="index" label="序号"></el-table-column> -->
                   <el-table-column prop="drugName" label="药品名称">
                   </el-table-column>
                   <el-table-column prop="drugUse" label="用法">
@@ -267,7 +267,8 @@
               </div>
             </div>
           </li>
-          <textarea class="doctorTalk" name="" id="" placeholder="备注："></textarea>
+          <div>备注：</div>
+          <textarea class="doctorTalk" name="" id="" >{{text.remark}}</textarea>
           <li class="detailFooter">
             <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
             <el-button class="fail" type="info" @click='checkPrescription0'>不通过</el-button>
@@ -437,7 +438,7 @@
             <div class="listBao">
               <div class="lists" v-for="(text,index) in ARR" :key="index" v-show='whichUser==index'>
                 <el-table :data="text" style="width: 100%">
-                  <el-table-column prop="index" label="序号"></el-table-column>
+                  <!-- <el-table-column prop="index" label="序号"></el-table-column> -->
                   <el-table-column prop="drugName" label="药品名称">
                   </el-table-column>
                   <el-table-column prop="drugUse" label="用法">
@@ -463,10 +464,11 @@
               </div>
             </div>
           </li>
-          <textarea class="doctorTalk" name="" id="" placeholder="备注："></textarea>
+          <div>备注：</div>
+          <textarea class="doctorTalk" name="" id="" >{{text.remark}}</textarea>
           <li class="detailFooter">
             <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
-            <el-button class="ship" type="primary" plain>发货</el-button>
+            <el-button class="ship" type="primary" plain @click = "goMy">发货</el-button>
           </li>
         </ul>
       </li>
@@ -923,11 +925,16 @@
           console.log(this.secondDoctorId);
         }
       },
+      // 预览
       dialogTableVisibleFun(row) {
         console.log(row)
         this.dialogTableVisible = true;
         this.srcs = row
         this.preLook();
+      },
+      // 发货
+      goMy(){
+        alert("没有接口")
       },
       // getData(item, index) {
       //   this.testData.select = item

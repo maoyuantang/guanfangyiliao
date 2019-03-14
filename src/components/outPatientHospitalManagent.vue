@@ -168,37 +168,13 @@
 			<el-dialog title="物流状态" :visible.sync="roadStatusList2" center>
 				<div class="visiting">
 					<Timeline>
-						<TimelineItem>
-							<p class="visiting-hospital">重庆市医科大学第三附属医院</p>
+						<TimelineItem v-for="(text,index) in roadStatusList2List" :key="index">
+							<!-- <p class="visiting-hospital">重庆市医科大学第三附属医院</p> -->
 							<p class="visiting-department">
 								<span class="visiting-department-on">on</span>
-								<span class="visiting-department-name">科室名称 | 门诊</span>
+								<span class="visiting-department-name">{{text.key}}</span>
 							</p>
-							<p class="visiting-content">主诉: 小孩夜晚不咳嗽，白天咳嗽；咳嗽无痰。</p>
-						</TimelineItem>
-						<TimelineItem>
-							<p class="visiting-hospital">重庆市医科大学第三附属医院</p>
-							<p class="visiting-department">
-								<span class="visiting-department-on">on</span>
-								<span class="visiting-department-name">科室名称 | 门诊</span>
-							</p>
-							<p class="visiting-content">主诉: 小孩夜晚不咳嗽，白天咳嗽；咳嗽无痰。</p>
-						</TimelineItem>
-						<TimelineItem>
-							<p class="visiting-hospital">重庆市医科大学第三附属医院</p>
-							<p class="visiting-department">
-								<span class="visiting-department-on">on</span>
-								<span class="visiting-department-name">科室名称 | 门诊</span>
-							</p>
-							<p class="visiting-content">主诉: 小孩夜晚不咳嗽，白天咳嗽；咳嗽无痰。</p>
-						</TimelineItem>
-						<TimelineItem>
-							<p class="visiting-hospital">重庆市医科大学第三附属医院</p>
-							<p class="visiting-department">
-								<span class="visiting-department-on">on</span>
-								<span class="visiting-department-name">科室名称 | 门诊</span>
-							</p>
-							<p class="visiting-content">主诉: 小孩夜晚不咳嗽，白天咳嗽；咳嗽无痰。</p>
+							<p class="visiting-content">{{text.value}}</p>
 						</TimelineItem>
 					</Timeline>
 				</div>
@@ -250,7 +226,7 @@
 		drugSendRecord,//7.13根据处方id获取处方发货记录
 		drugsByCondition,//7.16药品名称搜索药品信息
 		clinicOrders,//7.18(WEB医生)获取所有该诊室的订单信息
-
+		drugHaulStatus,//7.2.5根据处方id获取处方的物流状态 
 		// 非筛选条件下的科室列表
 		fetchHospitalDepts,//2.2.获取医院科室列表
 	} from "../api/apiAll.js";
@@ -286,6 +262,7 @@
 
 				chuFangDetailList2: false,//处方详情   管理表2操作区按钮
 				roadStatusList2: false,//物流状态   管理表2操作区按钮
+				roadStatusList2List: [],//物流状态   管理表2操作区按钮
 				viewRecordList2: false,//查看记录   管理表2操作区按钮
 				status1: false,//状态（禁用按钮）
 				// 医生端  就诊列表  弹框
@@ -1554,22 +1531,25 @@
 				// }
 			},
 			//物流状态   管理2表
-			async roadStatusList2Fun() {
+			async roadStatusList2Fun(index, row) {
+				console.log(index, row)
 				this.roadStatusList2 = true;
-				// let query = {
-				// 	token: this.userState.token
-				// };
-				// const res = await xxxxx(query);//接口还没写
-				// if (res.data && res.data.errCode === 0) {
-				// 	console.log(res)
-				// 	console.log("物流状态+成功");
-				// } else {
-				// 	console.log('物流状态+失败')
-				// 	this.$notify.error({
-				// 		title: "警告",
-				// 		message: res.data.errMsg
-				// 	});
-				// }
+				let query = {
+					token: this.userState.token,
+					prescriptionId: row.id
+				};
+				const res = await drugHaulStatus(query);//接口还没写
+				if (res.data && res.data.errCode === 0) {
+					console.log(res)
+					this.roadStatusList2List = res.data.body
+					console.log("物流状态+成功");
+				} else {
+					console.log('物流状态+失败')
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
 			},
 			//处方发货记录   管理2表
 			async viewRecordList2Fun(index, row) {
@@ -1898,7 +1878,7 @@
 
 	.visiting-department-on {
 		font-family: var(--fontFamily4);
-		font-size: var(--fontSize1);
+		font-size: var(--fontSize2);
 		color: var(--color19);
 		line-height: 0.22rem;
 	}
@@ -1909,9 +1889,9 @@
 	}
 
 	.visiting-content {
+		margin: 10px 0 0 0;
 		height: 0.76rem;
-		background: #F3F6FA;
+		/* background: #F3F6FA; */
 		border-radius: 4px;
 	}
-	
 </style>
