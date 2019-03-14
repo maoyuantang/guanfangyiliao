@@ -183,7 +183,7 @@
     border: 1px solid #E5EDF3;
     box-shadow: 0 6px 36px 0 rgba(0, 62, 100, 0.04);
     border-radius: 4px;
-    padding: 12px;
+    padding: 15px;
 
     .top {
       display: flex;
@@ -218,7 +218,7 @@
 
           .title1 {
             font-family: PingFangSC-Regular;
-            font-size: 18px;
+            font-size: 15px;
             color: #252631;
           }
 
@@ -251,7 +251,7 @@
 
         .i2 {
           border-radius: 1px;
-          border: 2px solid #6DD230;
+          border: 1.5px solid #6DD230;
           margin: 10px 0;
         }
       }
