@@ -131,7 +131,7 @@ checkVisable: Boolean, //父组件传来的是否有多选框      //表格前�
                 {
                     prop:"age",
                     label:"年龄"
-                }c   
+                }   
             ],
    //列表数据格式
    tableDataList: [

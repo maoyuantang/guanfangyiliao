@@ -45,6 +45,9 @@
 							</el-table-column>
 						</el-table>
 					</div>
+					<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+						@current-change="currentChange1">
+					</el-pagination>
 				</div>
 				<!-- 统计 -->
 				<div v-else-if="navInfo.i===1" class="count">
@@ -106,7 +109,7 @@
 			return {
 				//管理1表 查看  弹框
 				isShowmoveUser: false,//显示转诊记录
-
+				totals:0,
 
 				//筛选返回值接收
 				//管理1端  筛选工具栏  筛选返回值  接收参数
@@ -116,7 +119,7 @@
 				searchValue: "",//返回搜索框输入   search
 				types: '', //String MANAGE账号是什么权限
 				pageNum: 1,//页数
-				pageSize: 10,//条数
+				pageSize: 1,//条数
 				yTotal1: 0,//统计y轴相加
 				//管理统计端  筛选工具栏  统计筛选返回值  接收参数
 				time0: "",///统计筛选开始时间
@@ -376,7 +379,12 @@
 				const res = await queryByWebPage(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表1+成功')
-					console.log(res)
+					console.log("time0:", this.time0)
+					console.log("time1:", this.time1)
+					console.log("res:", res)
+					console.log("list:", res.data.body.data2.list)
+					console.log("total:", res.data.body.data2.total)
+					this.totals = res.data.body.data2.total
 					this.manageBodyData = res.data.body.data2.list
 				} else {
 					//失败
@@ -423,6 +431,7 @@
 					});
 					this.drawData.title = "移动查房终端"
 					this.drawData.total = "总数：" + this.yTotal1
+          this.drawData = Object.assign({}, this.drawData);
 					console.log(this.yTotal1)
 				} else {
 					//失败
@@ -432,6 +441,15 @@
 						message: res.data.errMsg
 					});
 				}
+			},
+
+
+
+			// 分页
+			currentChange1(data) {
+				console.log(data)
+				this.pageNum = data
+				this.getList1()
 			},
 		},
 		async created() {

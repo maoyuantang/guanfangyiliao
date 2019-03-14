@@ -37,7 +37,7 @@
 
     <div v-if="isShowmoveUser2">
       <el-dialog title="查看反馈" :visible.sync="isShowmoveUser2" width="40%" center>
-        <el-table :data="rebackInformation" :max-height="600">
+        <el-table :data="rebackInformation" :max-height="550">
           <el-table-column property="1" label="医院"></el-table-column>
           <el-table-column property="2" label="科室"></el-table-column>
           <el-table-column property="3" label="姓名"></el-table-column>
@@ -140,7 +140,7 @@
             </div>
           </div>
           <div class="dataBody">
-            <el-table :data="manageBodyData" :max-height="600" style="width: 100%">
+            <el-table :data="manageBodyData" :max-height="550" style="width: 100%">
               <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
               <el-table-column prop="deptName" label="科室"></el-table-column>
               <el-table-column prop="applyOrgName" label="申请医院"></el-table-column>
@@ -163,6 +163,9 @@
               </el-table-column>
             </el-table>
           </div>
+          <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+            @current-change="currentChange1">
+          </el-pagination>
         </div>
         <!-- 统计 -->
         <div v-else-if="navInfo.i===1" class="count">
@@ -193,7 +196,7 @@
         <el-button class="startConsul" type="text" @click="addMove">新增转诊</el-button>
       </div>
       <div>
-        <el-table :data="docTableData" style="width: 100%" :max-height="600">
+        <el-table :data="docTableData" style="width: 100%" :max-height="550">
           <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
           <el-table-column fixed prop="applyOrgName" label="申请医院"></el-table-column>
           <el-table-column fixed prop="applyDeptName" label="申请科室"></el-table-column>
@@ -207,7 +210,7 @@
           <el-table-column fixed="right" label="" width="400">
             <template slot-scope="scope">
               <el-button @click="dualReferralRecord2(scope.row)" type="success" plain size="mini"
-                style="margin:0.05rem 0 0.05rem 0;">查看记录（转诊记录）</el-button>
+                style="margin:0.05rem 0 0.05rem 0;">转诊记录</el-button>
               <el-button v-for="(text,index) in scope.row.buttons" :key="index"
                 @click="list2Done(text.btnCommand,scope.row)" type="success" plain size="mini"
                 style="margin:0 0.05rem;">
@@ -216,6 +219,9 @@
           </el-table-column>
         </el-table>
       </div>
+      <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+        @current-change="currentChange2">
+      </el-pagination>
     </div>
 
   </div>
@@ -292,7 +298,8 @@
         direction: "",//方向：into转入，转出out    selftag   筛选工具栏
         searchValue: "",//返回搜索框输入   search
         pageNum: 1,
-        pageSize: 15,
+        pageSize: 1,
+        totals:0,
         //管理统计端  筛选工具栏  统计筛选返回值  接收参数
         time0: "",///统计筛选开始时间     DatePicker 日期选择器
         time1: "",//统计筛选结束时间      DatePicker 日期选择器
@@ -646,8 +653,8 @@
         let _this = this;
         let query = {
           token: this.userState.token,
-          pageNum: 1,
-          pageSize: 10,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
           deptId: this.departmentId,
           direction: this.direction,
           query: this.searchValue,
@@ -655,10 +662,13 @@
         const res = await dualReferralManagePage(query);            //14.3.双向转诊-WEB管理端-管理列表
         if (res.data && res.data.errCode === 0) {
           console.log('管理1表+成功')
-          console.log(this.time0)
-          console.log(this.time1)
-          console.log(res)
+          console.log("time0",this.time0)
+          console.log("time1",this.time1)
+          console.log("res",res)
+          console.log("list",res.data.body.data2.list)
+          console.log("total",res.data.body.data2.total)
           const lists = res.data.body.data2.list
+          this.totals = res.data.body.data2.total
           this.manageBodyData = lists
         } else {
           console.log('管理1表+失败')
@@ -699,6 +709,7 @@
           });
           this.testdata1.title = "转入人次"
           this.testdata1.total = "总数：" + this.yTotal1
+          this.testdata1 = Object.assign({}, this.testdata1);
           console.log(this.yTotal1)
           console.log(this.testdata1)
         } else {
@@ -735,6 +746,7 @@
           });
           this.testdata2.title = "转出人次"
           this.testdata2.total = "总数：" + this.yTotal2
+          this.testdata2 = Object.assign({}, this.testdata2);
           console.log(this.yTotal2)
           console.log(this.testdata2)
         } else {
@@ -751,8 +763,8 @@
         let _this = this;
         const options = {
           token: this.userState.token,
-          pageNum: 1,
-          pageSize: 15,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
           startTime: this.time0,//时间段返回值
           endTime: this.time1,
           query: this.doctorDate,//查询数据  (不能用)用的日期筛选返回值
@@ -761,8 +773,13 @@
         const res = await dualReferralPage(options);                  //14.5.双向转诊-WEB医生端-列表
         if (res.data && res.data.errCode === 0) {
           console.log('医生表+成功')
-          console.log(res)
+          console.log("time0:", this.time0)
+          console.log("time1:", this.time1)
+          console.log("res:", res)
+          console.log("list:", res.data.body.data2.list)
+          console.log("total:", res.data.body.data2.total)
           const lists = res.data.body.data2.list
+          this.totals = res.data.body.data2.total
           this.docTableData = lists
         } else {
           //失败
@@ -1242,6 +1259,23 @@
             message: res.data.errMsg
           });
         }
+      },
+
+
+
+
+
+
+      // 、、分页
+      currentChange1(data) {
+        console.log(data)
+        this.pageNum = data
+        this.getList1()
+      },
+      currentChange2(data) {
+        console.log(data)
+        this.pageNum = data
+        this.DoctorList()
       },
     },
 
