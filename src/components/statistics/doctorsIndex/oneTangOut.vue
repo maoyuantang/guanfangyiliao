@@ -1,5 +1,17 @@
 <template>
   <div class="oneTangOut">
+
+
+    <div v-if="centerDialogVisible">
+      <el-dialog title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
+        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"
+          @reback="videoclick">
+        </ovideo>
+      </el-dialog>
+    </div>
+
+
+
     <div class="top">
       <div class="top1">远程门诊</div>
       <div class="top2" @click = "goMore()">...</div>
@@ -22,6 +34,9 @@
 <script>
   import { mapState } from 'vuex'
 
+  import ovideo from "../../../video/oVideo.vue";
+
+
   export default {
     watch: {
 
@@ -37,6 +52,7 @@
       return {
         myHomes: [],
         myHomesBiao: [],
+        centerDialogVisible:false,
       }
     },
 
@@ -112,7 +128,8 @@
         })
       },
       async goShiPin(){
-        
+        // 等待请求函数的引入
+        this.centerDialogVisible = true
       }
 
 
