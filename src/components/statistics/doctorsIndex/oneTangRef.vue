@@ -101,7 +101,7 @@
 
 
     <div class="top">
-      <div class="top1">远程门诊</div>
+      <div class="top1">双向转诊</div>
       <el-button type="primary" size="small" @click = "goMore">查看更多</el-button>
     </div>
     <div class="body">
@@ -116,10 +116,11 @@
         <el-table-column fixed prop="intention" label="目的"></el-table-column>
         <el-table-column fixed prop="typeName" label="转诊类型"></el-table-column>
         <el-table-column fixed prop="stateName" label="转诊状态"></el-table-column>
-        <el-table-column fixed="right" label="" width="400">
+        <el-table-column fixed="right" label="" width="300">
           <template slot-scope="scope">
             <el-button @click="dualReferralRecord2(scope.row)" type="success" plain size="mini"
-              style="margin:0.05rem 0 0.05rem 0;">查看记录（转诊记录）</el-button>
+              style="margin:0.05rem 0 0.05rem 0;">转诊记录</el-button>
+              <!-- style="margin:0.05rem 0 0.05rem 0;">查看记录（转诊记录）</el-button> -->
             <el-button v-for="(text,index) in scope.row.buttons" :key="index"
               @click="list2Done(text.btnCommand,scope.row)" type="success" plain size="mini" style="margin:0 0.05rem;">
               {{text.btnName}}</el-button>
