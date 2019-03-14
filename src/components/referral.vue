@@ -37,7 +37,7 @@
 
     <div v-if="isShowmoveUser2">
       <el-dialog title="查看反馈" :visible.sync="isShowmoveUser2" width="40%" center>
-        <el-table :data="rebackInformation">
+        <el-table :data="rebackInformation" :max-height="600">
           <el-table-column property="1" label="医院"></el-table-column>
           <el-table-column property="2" label="科室"></el-table-column>
           <el-table-column property="3" label="姓名"></el-table-column>
@@ -140,7 +140,7 @@
             </div>
           </div>
           <div class="dataBody">
-            <el-table :data="manageBodyData" style="width: 100%">
+            <el-table :data="manageBodyData" :max-height="600" style="width: 100%">
               <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
               <el-table-column prop="deptName" label="科室"></el-table-column>
               <el-table-column prop="applyOrgName" label="申请医院"></el-table-column>
@@ -193,7 +193,7 @@
         <el-button class="startConsul" type="text" @click="addMove">新增转诊</el-button>
       </div>
       <div>
-        <el-table :data="docTableData" style="width: 100%">
+        <el-table :data="docTableData" style="width: 100%" :max-height="600">
           <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
           <el-table-column fixed prop="applyOrgName" label="申请医院"></el-table-column>
           <el-table-column fixed prop="applyDeptName" label="申请科室"></el-table-column>

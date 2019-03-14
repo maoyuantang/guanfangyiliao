@@ -124,7 +124,7 @@
 		<!-- 总+今日+订单详情+弹框 -->
 		<div v-if="isShowRecord">
 			<el-dialog class="  " title="订单详情" :visible.sync="isShowRecord" center width=70%>
-				<el-table :data="tableDataChat" border style="width: 100%;" @cell-click="relateDoctors2">
+				<el-table :data="tableDataChat" border style="width: 100%;" @cell-click="relateDoctors2" :max-height="600">
 					<el-table-column fixed prop="orderNo" label="订单号"></el-table-column>
 					<el-table-column prop="doctorName" label="接诊医生"></el-table-column>
 					<el-table-column prop="mode" label="接诊方式"></el-table-column>
