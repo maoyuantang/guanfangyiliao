@@ -14,16 +14,18 @@
 
     <div class="top">
       <div class="top1">远程门诊</div>
-      <div class="top2" @click = "goMore()">...</div>
+      <div class="top2" @click="goMore()">...</div>
     </div>
     <div class="body">
-      <div v-for="" class="fors">
+
+      <div v-for="(text,index1) in myHomes" :key="index1" class="fors" v-if="index1 < 2">
         <div class="title">
-          <div class="title1">急救中心</div>
-          <el-button type="primary" size="mini" @click = "goShiPin">点击进入</el-button>
+          <div class="title1">{{text.orgName}}-{{text.clinicName}}</div>
+          <el-button type="primary" size="mini" @click="goShiPin(text)">点击进入</el-button>
         </div>
         <div class="i1"></div>
-        <div class="jindu"><span class="jindu1">未处理 12人</span><span class="jindu2">/ 已处理 28人</span></div>
+        <div class="jindu"><span class="jindu1">未处理 {{text.unProcess}}人</span><span class="jindu2">/ 已处理
+            {{text.process}}人</span></div>
         <div class="i2"></div>
       </div>
 
@@ -32,15 +34,21 @@
 </template>
 
 <script>
+  //引入接口
+  import {
+    doctorInto,//20.1医生进入诊室
+    onlineRoomsByDoctor,//7.6(WEB医生)获取所有该医生的在线诊室
+  } from "../../../api/apiAll.js";
   import { mapState } from 'vuex'
 
   import ovideo from "../../../video/oVideo.vue";
 
 
   export default {
-    watch: {
-
+    components: {
+      ovideo,
     },
+    watch: {},
     computed: {
       ...mapState({
         userInfo: state => state.user.userInfo,
@@ -52,7 +60,14 @@
       return {
         myHomes: [],
         myHomesBiao: [],
-        centerDialogVisible:false,
+        centerDialogVisible: false,
+
+        createVideoRoomData: {
+          conferenceId: "",
+          conferenceNumber: ""
+        },
+        videoType: "门诊",
+        oClinicId: "",//当前门诊id
       }
     },
 
@@ -75,7 +90,7 @@
 
         const _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           pageNum: this.pageNum,
           pageSize: this.pageSize
         };
@@ -86,18 +101,18 @@
           console.log(this.time1)
           this.myHomes = res.data.body.data2.list;
           console.log(this.myHomes);
-          this.myHomesBiao.length = 0;
-          $.each(res.data.body.data2.list, function (index, text) {
-            _this.myHomesBiao.push(index);
-            _this.tableDataList1.push([
-              {
-                process: text.process,
-                unProcess: text.unProcess,
-                doctorCount: text.doctorCount,
-              }
-            ]);
-          });
-          console.log(this.tableDataList1);
+          // this.myHomesBiao.length = 0;
+          // $.each(res.data.body.data2.list, function (index, text) {
+          //   _this.myHomesBiao.push(index);
+          //   _this.tableDataList1.push([
+          //     {
+          //       process: text.process,
+          //       unProcess: text.unProcess,
+          //       doctorCount: text.doctorCount,
+          //     }
+          //   ]);
+          // });
+          // console.log(this.tableDataList1);
         } else {
           //失败
           console.log("医生端列表1+失败");
@@ -122,22 +137,42 @@
 
 
 
-      async goMore(){
+      async goMore() {
         this.$router.push({
           path: "/outpatient",
         })
       },
-      async goShiPin(){
-        // 等待请求函数的引入
-        this.centerDialogVisible = true
-      }
+      async goShiPin(data) {
+        this.oClinicId = data.id;
+        let _this = this;
+        let query = {
+          token: this.userInfo.token
+        };
+        const options = {
+          clinicId: data.id
+        };
+        const res = await doctorInto(query, options);
+        console.log(res);
+        if (res.data && res.data.errCode === 0) {
+          _this.centerDialogVisible = true;
+        } else {
+          //失败
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+
+      },
+      videoclick(data) {
+        this.centerDialogVisible = false;
+      },
 
 
     },
-    components: {
-    },
+
     async created() {
-
+      this.getList1()
     }
   }
 </script>
