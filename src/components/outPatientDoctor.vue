@@ -37,7 +37,7 @@
         <!-- 病人个数循环 -->
         <!-- <span class="dian" @click="lookList(text.clinicOrders,text.doctor)">...</span> -->
         <span class="dian" @click="lookList(text)">...</span>
-        <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail">
+        <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-if="index <2">
 
           <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
             <h1>{{text1.userName}}</h1>
@@ -175,8 +175,8 @@
       </li>
       <li v-for="(text,index) in bcd" :key="index" v-show='whichUser==index' class="prescriptionDetail">
         <ul>
-          <li class="detailHead">
-          </li>
+          <!-- <li class="detailHead">
+          </li> -->
           <li class="detailCount">
             <div class="sign">
               <ul>
@@ -198,17 +198,17 @@
               <div class="front">
                 <ul>
                   <li>
-                    <el-checkbox v-model="text.pb.report">疫情报告</el-checkbox>
+                    <el-checkbox v-model="text.pb.report" disabled>疫情报告</el-checkbox>
                   </li>
                   <li>
-                    <el-checkbox v-model="text.pb.review">复诊</el-checkbox>
+                    <el-checkbox v-model="text.pb.review" disabled>复诊</el-checkbox>
                   </li>
                   <li>
 
                     <div class="block">
                       <span class="demonstration">发病日期：</span>
                       <el-date-picker @blur="demonstration1" v-model="text.pb.occurTime" align="right" type="date"
-                        placeholder="选择日期">
+                        placeholder="选择日期" disabled>
                       </el-date-picker>
                     </div>
                   </li>
@@ -218,7 +218,7 @@
                 <div class="block">
                   <span class="demonstration">下次复查日期:</span>
                   <el-date-picker @blur="demonstration2" v-model="text.pb.reviewTime" align="right" type="date"
-                    placeholder="选择日期">
+                    placeholder="选择日期" disabled>
                   </el-date-picker>
                 </div>
               </div>
@@ -395,17 +395,17 @@
               <div class="front">
                 <ul>
                   <li>
-                    <el-checkbox v-model="text.pb.report">疫情报告</el-checkbox>
+                    <el-checkbox v-model="text.pb.report" disabled>疫情报告</el-checkbox>
                   </li>
                   <li>
-                    <el-checkbox v-model="text.pb.review">复诊</el-checkbox>
+                    <el-checkbox v-model="text.pb.review" disabled>复诊</el-checkbox>
                   </li>
                   <li>
 
                     <div class="block">
                       <span class="demonstration">发病日期：</span>
                       <el-date-picker @blur="demonstration1" v-model="text.pb.occurTime" align="right" type="date"
-                        placeholder="选择日期">
+                        placeholder="选择日期" disabled>
                       </el-date-picker>
                     </div>
                   </li>
@@ -415,7 +415,7 @@
                 <div class="block">
                   <span class="demonstration">下次复查日期:</span>
                   <el-date-picker @blur="demonstration2" v-model="text.pb.reviewTime" align="right" type="date"
-                    placeholder="选择日期">
+                    placeholder="选择日期" disabled>
                   </el-date-picker>
                 </div>
               </div>
@@ -1177,6 +1177,7 @@
           this.getList2()
         } else {
           console.log("点击生成处方+失败");
+          this.getList2()
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1202,6 +1203,7 @@
           this.getList2()
         } else {
           console.log("不通过+失败");
+          this.getList2()
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1633,7 +1635,7 @@
 
   .prescriptionDetail {
     width: 55%;
-    height: 95%;
+    /* height: 95%; */
     /* background: #FFFFFF; */
     /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.20); */
     margin: 0 0 0 0.2rem;
@@ -2014,7 +2016,7 @@
 
     .prescriptionDetail {
       width: 55%;
-      height: 95%;
+      /* height: 95%; */
       /* background: #FFFFFF; */
       /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.20); */
       margin: 0 0 0 0.2rem;

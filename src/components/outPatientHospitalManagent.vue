@@ -1551,7 +1551,7 @@
 					});
 				}
 			},
-			//处方发货记录   管理2表
+			//聊天记录   管理2表
 			async viewRecordList2Fun(index, row) {
 				this.viewRecordList2 = true;
 				console.log(index, row)
@@ -1568,15 +1568,17 @@
 				if (res.data && res.data.errCode === 0) {
 					console.log(res)
 					this.messageRecord = res.data.body
-					console.log("处方发货记录+成功");
+					console.log("聊天记录+成功");
 				} else {
-					console.log('处方发货记录+失败')
+					console.log('聊天记录+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
 					});
 				}
 
+
+				//废弃接口
 				// let query = {
 				// 	token: this.userState.token,
 				// 	prescriptionId: row.id
