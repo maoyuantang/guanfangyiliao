@@ -22,7 +22,7 @@
 
 
 				<div class="online-clinic-middle">
-					<el-table :data="tableData" style="width: 100%;" :max-height="600" @cell-click="relateDoctors1">
+					<el-table :data="tableData" style="width: 100%;" :max-height="550" @cell-click="relateDoctors1">
 						<el-table-column fixed prop="id" label="业务编号"></el-table-column>
 						<el-table-column prop="departmentName" label="科室"></el-table-column>
 						<el-table-column prop="fullName" label="业务名"></el-table-column>
@@ -47,7 +47,7 @@
 						</el-table-column>
 					</el-table>
 				</div>
-				<el-pagination background layout="prev, pager, next" :total="1000" @current-change="currentChange">
+				<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
 				</el-pagination>
 			</div>
 
@@ -72,7 +72,7 @@
 				<div class="online-clinic-middle">
 					<publicList :columns="prescriptionAuditDistribution.tableBody.columns"
 						:tableData="prescriptionAuditDistribution.tableBody.tableData"
-						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn">
+						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :total="totals" @reback="currentChange2">
 					</publicList>
 				</div>
 			</div>
@@ -102,8 +102,8 @@
 			:sureVisiable="sureVisiable"></addNewFrame>
 		<!-- 表一查看关联医生弹框 -->
 		<div v-if="isShowrelationalDoctor">
-			<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="503px" hight="470px"
-				center>
+			<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="500px"
+				max-hight="450px" center>
 				<ul>
 					<li v-for="(text,index) in relationalDoctor" :key="index">
 						<div class="evaluateCont1">
@@ -124,7 +124,7 @@
 		<!-- 总+今日+订单详情+弹框 -->
 		<div v-if="isShowRecord">
 			<el-dialog class="  " title="订单详情" :visible.sync="isShowRecord" center width=70%>
-				<el-table :data="tableDataChat" border style="width: 100%;" @cell-click="relateDoctors2">
+				<el-table :data="tableDataChat" border style="width: 100%;" @cell-click="relateDoctors2" :max-height="450">
 					<el-table-column fixed prop="orderNo" label="订单号"></el-table-column>
 					<el-table-column prop="doctorName" label="接诊医生"></el-table-column>
 					<el-table-column prop="mode" label="接诊方式"></el-table-column>
@@ -271,7 +271,8 @@
 
 				// 常用参数
 				pageNum: 1,//页数
-				pageSize: 10,//条数
+				pageSize: 1,//条数
+				totals: 0,
 				srcs: "",//处方id   用于拼接图片src
 
 
@@ -515,6 +516,7 @@
 					],
 					//2、表格
 					tableBody: {
+						total: 10,
 						//2.1表头
 						columns: [
 							{
@@ -928,10 +930,13 @@
 				const res = await searchClinic(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表1+成功')
-					console.log(this.time0)
-					console.log(this.time1)
-					console.log(res)
+					console.log("time0:", this.time0)
+					console.log("time1:", this.time1)
+					console.log("res:", res)
+					console.log("list:", res.data.body.data2.list)
+					console.log("total:", res.data.body.data2.total)
 					const lists = res.data.body.data2.list
+					this.totals = res.data.body.data2.total
 					for (let j = 0; j < lists.length; j++) {
 						for (let i = 0; i < lists[j].doctors.length; i++) {
 							// console.log(lists[j].doctors[i].doctorStates)
@@ -987,6 +992,8 @@
 					const res = await searchClinic(query);
 					if (res.data && res.data.errCode === 0) {
 						console.log('二次请求列表1关联医生+成功')
+						console.log(res.data.body.data2.list)
+						console.log(row.doctor1)
 						const lists = res.data.body.data2.list
 						this.relationalDoctor = row.doctor1
 					} else {
@@ -1065,7 +1072,13 @@
 				const res = await prescriptionDetailByCondition(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表2+成功')
-					console.log(res)
+					console.log("time0:", this.time0)
+					console.log("time1:", this.time1)
+					console.log("res:", res)
+					console.log("list:", res.data.body.data2.list)
+					console.log("total:", res.data.body.data2.total)
+					this.totals = res.data.body.data2.total;
+					console.log(this.totals)
 					const lists = res.data.body.data2.list
 					$.each(lists, function (index, text) {
 						if (text.reviewEnum == "UNREVIEWED") {
@@ -1139,6 +1152,7 @@
 					});
 					this.testdata1.title = "门诊订单"
 					this.testdata1.total = "总数：" + this.yTotal1
+          this.testdata1 = Object.assign({}, this.testdata1);
 					console.log(this.yTotal1)
 				} else {
 					//失败
@@ -1179,6 +1193,7 @@
 					});
 					this.testdata2.title = "处方订单"
 					this.testdata2.total = "总数：" + this.yTotal2
+          this.testdata2 = Object.assign({}, this.testdata2);
 					console.log(this.yTotal2)
 					console.log(this.testdata2)
 				} else {
@@ -1220,6 +1235,7 @@
 					});
 					this.testdata3.title = "就诊人次"
 					this.testdata3.total = "总数：" + this.yTotal3
+          this.testdata3 = Object.assign({}, this.testdata3);
 					console.log(this.yTotal3)
 				} else {
 					//失败
@@ -1551,7 +1567,7 @@
 					});
 				}
 			},
-			//处方发货记录   管理2表
+			//聊天记录   管理2表
 			async viewRecordList2Fun(index, row) {
 				this.viewRecordList2 = true;
 				console.log(index, row)
@@ -1568,15 +1584,17 @@
 				if (res.data && res.data.errCode === 0) {
 					console.log(res)
 					this.messageRecord = res.data.body
-					console.log("处方发货记录+成功");
+					console.log("聊天记录+成功");
 				} else {
-					console.log('处方发货记录+失败')
+					console.log('聊天记录+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
 					});
 				}
 
+
+				//废弃接口
 				// let query = {
 				// 	token: this.userState.token,
 				// 	prescriptionId: row.id
@@ -1679,11 +1697,24 @@
 					this.addData.show = false
 				}
 			},
-			currentChange(data) {
+			// 分页
+			// 组件返回函数
+			currentChange1(data) {
 				console.log(data)
 				this.pageNum = data
 				this.getList1()
 			},
+			currentChange2(data) {
+				console.log(data)
+				this.pageNum = data;
+				this.getList2();
+
+			}
+
+
+
+
+
 		},
 
 
@@ -1776,6 +1807,8 @@
 	}
 
 	.evaluateBox1 {
+		overflow-y: scroll;
+
 		ul {
 			li {
 				display: flex;

@@ -37,7 +37,7 @@
         <!-- 病人个数循环 -->
         <!-- <span class="dian" @click="lookList(text.clinicOrders,text.doctor)">...</span> -->
         <span class="dian" @click="lookList(text)">...</span>
-        <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail">
+        <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-if="index <2">
 
           <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
             <h1>{{text1.userName}}</h1>
@@ -175,8 +175,8 @@
       </li>
       <li v-for="(text,index) in bcd" :key="index" v-show='whichUser==index' class="prescriptionDetail">
         <ul>
-          <li class="detailHead">
-          </li>
+          <!-- <li class="detailHead">
+          </li> -->
           <li class="detailCount">
             <div class="sign">
               <ul>
@@ -198,17 +198,17 @@
               <div class="front">
                 <ul>
                   <li>
-                    <el-checkbox v-model="text.pb.report">疫情报告</el-checkbox>
+                    <el-checkbox v-model="text.pb.report" disabled>疫情报告</el-checkbox>
                   </li>
                   <li>
-                    <el-checkbox v-model="text.pb.review">复诊</el-checkbox>
+                    <el-checkbox v-model="text.pb.review" disabled>复诊</el-checkbox>
                   </li>
                   <li>
 
                     <div class="block">
                       <span class="demonstration">发病日期：</span>
                       <el-date-picker @blur="demonstration1" v-model="text.pb.occurTime" align="right" type="date"
-                        placeholder="选择日期">
+                        placeholder="选择日期" disabled>
                       </el-date-picker>
                     </div>
                   </li>
@@ -218,7 +218,7 @@
                 <div class="block">
                   <span class="demonstration">下次复查日期:</span>
                   <el-date-picker @blur="demonstration2" v-model="text.pb.reviewTime" align="right" type="date"
-                    placeholder="选择日期">
+                    placeholder="选择日期" disabled>
                   </el-date-picker>
                 </div>
               </div>
@@ -268,7 +268,7 @@
             </div>
           </li>
           <div>备注：</div>
-          <textarea class="doctorTalk" name="" id="" >{{text.remark}}</textarea>
+          <textarea class="doctorTalk" name="" id="">{{text.remark}}</textarea>
           <li class="detailFooter">
             <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
             <el-button class="fail" type="info" @click='checkPrescription0'>不通过</el-button>
@@ -395,17 +395,17 @@
               <div class="front">
                 <ul>
                   <li>
-                    <el-checkbox v-model="text.pb.report">疫情报告</el-checkbox>
+                    <el-checkbox v-model="text.pb.report" disabled>疫情报告</el-checkbox>
                   </li>
                   <li>
-                    <el-checkbox v-model="text.pb.review">复诊</el-checkbox>
+                    <el-checkbox v-model="text.pb.review" disabled>复诊</el-checkbox>
                   </li>
                   <li>
 
                     <div class="block">
                       <span class="demonstration">发病日期：</span>
                       <el-date-picker @blur="demonstration1" v-model="text.pb.occurTime" align="right" type="date"
-                        placeholder="选择日期">
+                        placeholder="选择日期" disabled>
                       </el-date-picker>
                     </div>
                   </li>
@@ -415,7 +415,7 @@
                 <div class="block">
                   <span class="demonstration">下次复查日期:</span>
                   <el-date-picker @blur="demonstration2" v-model="text.pb.reviewTime" align="right" type="date"
-                    placeholder="选择日期">
+                    placeholder="选择日期" disabled>
                   </el-date-picker>
                 </div>
               </div>
@@ -465,10 +465,10 @@
             </div>
           </li>
           <div>备注：</div>
-          <textarea class="doctorTalk" name="" id="" >{{text.remark}}</textarea>
+          <textarea class="doctorTalk" name="" id="">{{text.remark}}</textarea>
           <li class="detailFooter">
             <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
-            <el-button class="ship" type="primary" plain @click = "goMy">发货</el-button>
+            <el-button class="ship" type="primary" plain @click="goMy">发货</el-button>
           </li>
         </ul>
       </li>
@@ -933,7 +933,7 @@
         this.preLook();
       },
       // 发货
-      goMy(){
+      goMy() {
         alert("没有接口")
       },
       // getData(item, index) {
@@ -1177,6 +1177,7 @@
           this.getList2()
         } else {
           console.log("点击生成处方+失败");
+          this.getList2()
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1202,6 +1203,7 @@
           this.getList2()
         } else {
           console.log("不通过+失败");
+          this.getList2()
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1449,15 +1451,16 @@
   }
 
   .checkList {
-    width: 23%;
+    width: 20%;
+    height: 7rem;
     background: #ffffff;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.14);
     border-radius: 3px 3px 0 0;
-    height: 100%;
+
     display: flex;
     flex-direction: column;
     padding: 0.1rem 0;
-    height: 100%;
+    overflow-y: scroll;
 
     .title {
       display: flex;
@@ -1478,11 +1481,11 @@
         color: #5c5c5c;
         letter-spacing: 0;
         font-weight: bold;
+        opacity: 0;
       }
     }
 
     .div {
-      overflow-y: scroll;
 
       ul {
         display: flex;
@@ -1632,14 +1635,14 @@
   }
 
   .prescriptionDetail {
-    width: 55%;
-    height: 95%;
+    width: 65%;
+    /* height: 95%; */
     /* background: #FFFFFF; */
     /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.20); */
     margin: 0 0 0 0.2rem;
 
     ul {
-      height: 100%;
+
 
       .detailHead {
         width: 100%;
@@ -1797,53 +1800,42 @@
 
       .detailFooter {
         width: 100%;
-        height: 8%;
         margin: 2.5% 0 0 0;
         background: #ffffff;
         border: 1px solid #e4e8eb;
         display: flex;
-        align-items: center;
-        position: relative;
 
-        .preview {
-          position: absolute;
-          right: 3rem;
-        }
+        .preview {}
 
-        .fail {
-          position: absolute;
-          right: 2rem;
-        }
+        .fail {}
 
-        .success {
-          position: absolute;
-          right: 0.5rem;
-        }
+        .success {}
       }
     }
   }
 
   .prescriptionCheck {
     display: flex;
-    height: 100%;
+
     margin: 0.4rem 0 0 0;
   }
 
   .transport {
     display: flex;
-    height: 100%;
+
     margin: 0.4rem 0 0 0;
 
     .checkList {
-      width: 23%;
+      width: 20%;
+      height: 7rem;
       background: #ffffff;
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.14);
       border-radius: 3px 3px 0 0;
-      height: 100%;
+
       display: flex;
       flex-direction: column;
       padding: 0.1rem 0;
-      height: 100%;
+      overflow-y: scroll;
 
       .title {
         display: flex;
@@ -1864,11 +1856,11 @@
           color: #5c5c5c;
           letter-spacing: 0;
           font-weight: bold;
+          opacity: 0;
         }
       }
 
       .div {
-        overflow-y: scroll;
 
         ul {
           display: flex;
@@ -2013,14 +2005,14 @@
     }
 
     .prescriptionDetail {
-      width: 55%;
-      height: 95%;
+      width: 65%;
+      /* height: 95%; */
       /* background: #FFFFFF; */
       /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.20); */
       margin: 0 0 0 0.2rem;
 
       ul {
-        height: 100%;
+
 
         .detailHead {
           width: 100%;
@@ -2146,7 +2138,6 @@
           .listBao {
             margin: 3% 0 0 0;
             height: 85%;
-            overflow-y: scroll;
 
             .lists {
               margin: 0.3rem 0 0 0;
@@ -2179,23 +2170,14 @@
 
         .detailFooter {
           width: 100%;
-          height: 8%;
           margin: 2.5% 0 0 0;
           background: #ffffff;
           border: 1px solid #e4e8eb;
           display: flex;
-          align-items: center;
-          position: relative;
 
-          .preview {
-            position: absolute;
-            right: 1.5rem;
-          }
+          .preview {}
 
-          .ship {
-            position: absolute;
-            right: 0.5rem;
-          }
+          .ship {}
         }
       }
     }

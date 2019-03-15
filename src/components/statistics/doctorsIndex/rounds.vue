@@ -8,14 +8,14 @@
             <span></span>
         </div>
         <div class="doctors-index-rounds-body">
-            <div class="doctors-index-rounds-body-item" v-for="(item,index) in 2" :key="index">
+            <div class="doctors-index-rounds-body-item">
                 <div class="doctors-index-rounds-body-item-top">
-                    <span class="info-enter-name">xxx</span>
-                    <el-button type="primary" size="mini">点击进入</el-button>
+                    <span class="info-enter-name">今日查房 {{info.todayMan}}</span>
+                    <el-button type="primary" size="mini" @click="gotoPage">点击进入</el-button>
                 </div>
                 <div class="doctors-index-rounds-body-item-bottom">
-                    <span class="unprocessed">未处理20人</span>
-                    <span class="processed">/ 已处理20人</span>
+                    <span class="unprocessed">未处理{{info.waitMan}}人</span>
+                    <!-- <span class="processed">/ 已处理20人</span> -->
                 </div>
             </div>
         </div>
@@ -24,7 +24,7 @@
 
 <script>
 	import { mapState } from 'vuex'
-	
+    import {todayRounds} from '../../../api/apiAll.js' 
 	export default {
 		watch:{
 		},
@@ -37,15 +37,41 @@
 		
 		data () {
 			return {	
+                info:{
+                    todayMan:'',//今日查房数
+                    waitMan:'',//未处理数
+                }
 			}
 		},
 		
 		methods:{	
+            /**
+             * 获取 列表 数据
+             */
+            async getTodayRounds(){
+                const res = await todayRounds({token:this.userInfo.token});
+                console.log(res);
+                if(res.data&&res.data.errCode===0){
+                    this.info = res.data.body;
+                }else{
+                    this.$notify({
+						title: '失败',
+						message: '列表数据获取失败',
+						type: 'error'
+					});
+                }
+            },
+            gotoPage(){
+                sessionStorage.setItem('page',JSON.stringify({
+                    name:"移动查房系统",select:true,path:"/rounds",code:"90000"
+                }));//存缓存
+				this.$router.push({path:'/rounds'});//路由跳转
+            },
 		},
 		components:{
 		},
 		async created(){
-			
+			this.getTodayRounds();
 		}
 	}
 </script>
@@ -55,6 +81,8 @@
         height: 100%;
         border: 1px solid #E5EDF3;
         border-radius: 4px;
+        /* display: flex;
+        flex-direction: column; */
 	}
     .doctors-index-rounds-head{
         display: flex;
@@ -67,6 +95,10 @@
         margin: 0 auto; */
         padding-left: .63rem;
         padding-right: .63rem;
+        padding-top: .5rem;
+        /* flex: 1;
+        display: flex;
+        justify-content: center; */
     }
     .doctors-index-rounds-name{
         font-family: PingFangSC-Regular;
