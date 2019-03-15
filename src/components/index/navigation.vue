@@ -52,6 +52,9 @@ import { parse } from 'protobufjs';
 						this.$router.push({path:rePage.path});
 					}
 				}
+			},
+			$route(){
+				this.restorePage();
 			}
 		},
 		data(){

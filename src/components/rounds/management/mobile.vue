@@ -42,8 +42,16 @@
                         <th>{{item.ward}}</th>
                         <th>{{item.bedNo}}</th>
                         <th>{{item.patient}}</th>
-                        <th>{{item.patientId}}</th>
-                        <th>{{item.lastTime}}</th>
+                        <th>
+                            <el-tooltip class="item" effect="light" :content="item.patientId" placement="top">
+                                <div>{{item.patientId.length>7?`${item.patientId.substring(0,7)}...`:item.patientId}}</div>
+                            </el-tooltip>
+                        </th>
+                        <th>
+                             <el-tooltip class="item" effect="light" :content="item.lastTime" placement="top">
+                                <div>{{item.lastTime.length>7?`${item.lastTime.substring(0,7)}...`:item.lastTime}}</div>
+                            </el-tooltip>
+                        </th>
                         <th>{{item.disInformation}}</th>
                         <th>{{item.disAsk}}</th>
                         <th>{{item.disReport}}</th>
@@ -170,8 +178,10 @@
                     query.endTime = this.queryConditions.time[1];
                 }else{//如果没有选择时间，默认时间去年的今天到现在的
                     const nowData = new Date();
-                    query.startTime = `${nowData.getFullYear()-1}-${nowData.getMonth()}-${nowData.getDate()}`;
-                    query.endTime = `${nowData.getFullYear()}-${nowData.getMonth()+1}-${nowData.getDate()}`;
+                    query.startTime = `${nowData.getFullYear()-1}-${nowData.getMonth()<9?'0'+(nowData.getMonth()+1):nowData.getMonth()+1}-${nowData.getDate()<10?'0'+nowData.getDate():nowData.getDate()}`;
+                    query.endTime = `${nowData.getFullYear()}-${nowData.getMonth()<9?'0'+(nowData.getMonth()+1):nowData.getMonth()+1}-${nowData.getDate()<10?'0'+nowData.getDate():nowData.getDate()}`;
+                    // query.startTime = `${nowData.getFullYear()-1}-${nowData.getMonth()}-${nowData.getDate()}`;
+                    // query.endTime = `${nowData.getFullYear()}-${nowData.getMonth()+1}-${nowData.getDate()}`;
                 }
                 console.log(query)
                 const res = await roundsManager(query);

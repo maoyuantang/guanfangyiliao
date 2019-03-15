@@ -1067,6 +1067,7 @@ export default {
             };
             const res = await queryStatisticalByApplication(options);
             if (res.data && res.data.errCode === 0) {
+                res.data.body.data.splice(1,res.data.body.data.length)
                 $.each(res.data.body.data, function(index, text) {
                     _this.drawData1.dataAxis.push(text.x);
                     _this.drawData1.data.push(text.y);

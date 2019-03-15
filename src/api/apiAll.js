@@ -3016,3 +3016,14 @@ export const toolTerminalArea = query => { //1.21.30.终端管理-区域
         }
     })
 }
+export const todayRounds = query => { //15.9（医生）首页-移动查房
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.todayRounds,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
