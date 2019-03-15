@@ -491,9 +491,6 @@
 		align-items: center;
 	}
 
-	.manager_count_top>div {
-		/* flex: 1; */
-	}
 
 	/* 医生端样式 */
 	.doctorStyle {

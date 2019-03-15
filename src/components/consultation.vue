@@ -1223,8 +1223,6 @@ export default {
     color: #4d7cfe;
     line-height: 3px;
 }
-.consultation {
-}
 .startGroup input {
     width: 162px;
     height: 28px;

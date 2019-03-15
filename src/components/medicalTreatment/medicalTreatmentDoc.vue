@@ -7,28 +7,25 @@
 <script>
 	import normalTab from './../../public/publicComponents/normalTab.vue'
 	import noData from './../../public/publicComponents/noData.vue'
-	
+
 	export default {
-		components:{
+		components: {
 			normalTab,
 			noData
 		},
-		data () {
+		data() {
 			return {
-				
+
 			}
 		},
-		methods:{
-			
+		methods: {
+
 		},
-		async created(){
+		async created() {
 
 		}
 	}
 </script>
 
 <style scoped>
-	.medical-treatment-doc{
-
-    }
 </style>

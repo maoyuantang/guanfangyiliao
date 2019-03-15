@@ -37,6 +37,4 @@
 </script>
 
 <style scoped>
-	.out-border {
-	}
 </style>
