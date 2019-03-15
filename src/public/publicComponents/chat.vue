@@ -253,9 +253,9 @@
                 <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId"></ovideo>
             </el-dialog>
         </div>
-        <!-- 录入档案 -->
-        <WomanDoc :inData="puBlicManData" @reback="addPublicMan"></WomanDoc>
         <!-- 孕妇档案 -->
+        <WomanDoc :inData="puBlicManData" @reback="addPublicMan"></WomanDoc>
+        <!-- 录入档案 -->
         <norDocAlert :inData="puBlicFileData" @reback="addPublicFile"></norDocAlert>
     </div>
 </template>

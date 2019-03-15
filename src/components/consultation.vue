@@ -116,7 +116,10 @@
                     </div>
                     <div style="display:flex">
                         {{drawData1}}
+<<<<<<< HEAD
                         <!-- {{drawDataStart}} -->
+=======
+>>>>>>> e5ce4f30d3a71adf81811ab0343181dfa3403afb
                         <normalColumnChart :inData="drawData1"> </normalColumnChart>
                         <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
                     </div>
@@ -336,7 +339,7 @@ export default {
                 ]
             },
             adminPageNum: 1,
-            docPageNum:1,
+            docPageNum: 1,
             //医生端
             consultationId: "",
             invitationSelectList: [],
@@ -929,18 +932,6 @@ export default {
             const res = await queryConsultationInformList(query);
             if (res.data && res.data.errCode === 0) {
                 _this.invitationData = res.data.body;
-                // $.each(res.data.body, function(index, text) {
-                //     _this.invitationData.push({
-                //         label: text.name,
-                //         children: []
-                //     });
-                //     $.each(text.children, function(oindex, otext) {
-                //         _this.invitationData[oindex].children.push({
-                //             label: text.name,
-                //             id: otext.id
-                //         });
-                //     });
-                // });
             } else {
                 //失败
                 this.$notify.error({

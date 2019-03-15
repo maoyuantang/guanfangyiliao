@@ -163,9 +163,11 @@
               </el-table-column>
             </el-table>
           </div>
-          <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
-            @current-change="currentChange1">
-          </el-pagination>
+          <div style="text-align: center;padding: 10px 0;">
+            <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+              @current-change="currentChange1">
+            </el-pagination>
+          </div>
         </div>
         <!-- 统计 -->
         <div v-else-if="navInfo.i===1" class="count">
@@ -195,33 +197,36 @@
         </div>
         <el-button class="startConsul" type="text" @click="addMove">新增转诊</el-button>
       </div>
-      <div>
-        <el-table :data="docTableData" style="width: 100%" :max-height="550">
-          <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
-          <el-table-column fixed prop="applyOrgName" label="申请医院"></el-table-column>
-          <el-table-column fixed prop="applyDeptName" label="申请科室"></el-table-column>
-          <el-table-column fixed prop="" label="申请人"></el-table-column>
-          <el-table-column fixed prop="phone" label="手机号"></el-table-column>
-          <el-table-column fixed prop="applyTime" label="申请时间"></el-table-column>
-          <el-table-column fixed prop="patientName" label="病人"></el-table-column>
-          <el-table-column fixed prop="intention" label="目的"></el-table-column>
-          <el-table-column fixed prop="typeName" label="转诊类型"></el-table-column>
-          <el-table-column fixed prop="stateName" label="转诊状态"></el-table-column>
-          <el-table-column fixed="right" label="" width="400">
-            <template slot-scope="scope">
-              <el-button @click="dualReferralRecord2(scope.row)" type="success" plain size="mini"
-                style="margin:0.05rem 0 0.05rem 0;">转诊记录</el-button>
-              <el-button v-for="(text,index) in scope.row.buttons" :key="index"
-                @click="list2Done(text.btnCommand,scope.row)" type="success" plain size="mini"
-                style="margin:0 0.05rem;">
-                {{text.btnName}}</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+      <div class="doctorStyleBody">
+        <div>
+          <el-table :data="docTableData" style="width: 100%" :max-height="550">
+            <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
+            <el-table-column fixed prop="applyOrgName" label="申请医院"></el-table-column>
+            <el-table-column fixed prop="applyDeptName" label="申请科室"></el-table-column>
+            <el-table-column fixed prop="" label="申请人"></el-table-column>
+            <el-table-column fixed prop="phone" label="手机号"></el-table-column>
+            <el-table-column fixed prop="applyTime" label="申请时间"></el-table-column>
+            <el-table-column fixed prop="patientName" label="病人"></el-table-column>
+            <el-table-column fixed prop="intention" label="目的"></el-table-column>
+            <el-table-column fixed prop="typeName" label="转诊类型"></el-table-column>
+            <el-table-column fixed prop="stateName" label="转诊状态"></el-table-column>
+            <el-table-column fixed="right" label="" width="400">
+              <template slot-scope="scope">
+                <el-button @click="dualReferralRecord2(scope.row)" type="success" plain size="mini"
+                  style="margin:0.05rem 0 0.05rem 0;">转诊记录</el-button>
+                <el-button v-for="(text,index) in scope.row.buttons" :key="index" @click="list2Done(text.btnCommand,scope.row)"
+                  type="success" plain size="mini" style="margin:0 0.05rem;">
+                  {{text.btnName}}</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div style="text-align: center;padding: 10px 0;">
+          <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+            @current-change="currentChange2">
+          </el-pagination>
+        </div>
       </div>
-      <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
-        @current-change="currentChange2">
-      </el-pagination>
     </div>
 
   </div>
@@ -299,7 +304,7 @@
         searchValue: "",//返回搜索框输入   search
         pageNum: 1,
         pageSize: 1,
-        totals:0,
+        totals: 0,
         //管理统计端  筛选工具栏  统计筛选返回值  接收参数
         time0: "",///统计筛选开始时间     DatePicker 日期选择器
         time1: "",//统计筛选结束时间      DatePicker 日期选择器
@@ -662,11 +667,11 @@
         const res = await dualReferralManagePage(query);            //14.3.双向转诊-WEB管理端-管理列表
         if (res.data && res.data.errCode === 0) {
           console.log('管理1表+成功')
-          console.log("time0",this.time0)
-          console.log("time1",this.time1)
-          console.log("res",res)
-          console.log("list",res.data.body.data2.list)
-          console.log("total",res.data.body.data2.total)
+          console.log("time0", this.time0)
+          console.log("time1", this.time1)
+          console.log("res", res)
+          console.log("list", res.data.body.data2.list)
+          console.log("total", res.data.body.data2.total)
           const lists = res.data.body.data2.list
           this.totals = res.data.body.data2.total
           this.manageBodyData = lists
@@ -1302,7 +1307,7 @@
     padding-top: 0.32rem;
     padding-right: 0.69rem;
     padding-left: 0.38rem;
-    min-height: 76vh;
+    /* min-height: 76vh; */
     margin-right: 0.36rem;
     margin-top: 0.42rem;
   }
@@ -1330,6 +1335,18 @@
     /* justify-content: space-evenly; */
     align-items: baseline;
     margin-bottom: 52px;
+  }
+  .doctorStyleBody{
+    background: #FFF;
+    border: 1px solid var(--color5);
+    box-shadow: 0 0.06rem 0.36rem 0 rgba(0, 62, 100, 0.04);
+    border-radius: 0.04rem;
+    padding-top: 0.32rem;
+    padding-right: 0.69rem;
+    padding-left: 0.38rem;
+    /* min-height: 76vh; */
+    margin-right: 0.36rem;
+    margin-top: 0.42rem;
   }
 
   .startConsul {

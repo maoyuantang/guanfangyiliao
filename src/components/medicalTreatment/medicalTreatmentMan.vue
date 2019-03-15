@@ -133,8 +133,12 @@
           </el-table-column>
         </el-table>
       </div>
-      <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
-      </el-pagination>
+      <div style="text-align: center;padding: 10px 0;">
+        <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+          @current-change="currentChange1">
+        </el-pagination>
+      </div>
+
     </div>
     <!-- 管理   流程和权限控制 -->
     <div v-if="barInfo.i == 1" class="medical_body1">
@@ -166,8 +170,11 @@
           </el-table-column>
         </el-table>
       </div>
-      <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange2">
-      </el-pagination>
+      <div style="text-align: center;padding: 10px 0;">
+        <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+          @current-change="currentChange2">
+        </el-pagination>
+      </div>
     </div>
 
 

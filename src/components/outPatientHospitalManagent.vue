@@ -47,8 +47,11 @@
 						</el-table-column>
 					</el-table>
 				</div>
-				<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
-				</el-pagination>
+				<div style="text-align: center;padding: 10px 0;">
+					<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+						@current-change="currentChange1">
+					</el-pagination>
+				</div>
 			</div>
 
 
@@ -271,7 +274,7 @@
 
 				// 常用参数
 				pageNum: 1,//页数
-				pageSize: 1,//条数
+				pageSize: 2,//条数
 				totals: 0,
 				srcs: "",//处方id   用于拼接图片src
 
@@ -985,7 +988,7 @@
 						token: this.userState.token,
 						string: this.searchValue,
 						pageNum: this.pageNum,
-						pageSize: this.pageSize,
+						pageSize: "",
 						departmentId: this.departmentId,
 						businessType: this.businessType
 					};
@@ -1013,7 +1016,7 @@
 						token: this.userState.token,
 						businessId: row.id,//String true 远程门诊业务id 
 						pageNum: this.pageNum,
-						pageSize: this.pageSize
+						pageSize: ""
 					};
 					const res = await fetchMzOrderInfo(query);
 					// console.log(query)
@@ -1152,7 +1155,7 @@
 					});
 					this.testdata1.title = "门诊订单"
 					this.testdata1.total = "总数：" + this.yTotal1
-          this.testdata1 = Object.assign({}, this.testdata1);
+					this.testdata1 = Object.assign({}, this.testdata1);
 					console.log(this.yTotal1)
 				} else {
 					//失败
@@ -1193,7 +1196,7 @@
 					});
 					this.testdata2.title = "处方订单"
 					this.testdata2.total = "总数：" + this.yTotal2
-          this.testdata2 = Object.assign({}, this.testdata2);
+					this.testdata2 = Object.assign({}, this.testdata2);
 					console.log(this.yTotal2)
 					console.log(this.testdata2)
 				} else {
@@ -1235,7 +1238,7 @@
 					});
 					this.testdata3.title = "就诊人次"
 					this.testdata3.total = "总数：" + this.yTotal3
-          this.testdata3 = Object.assign({}, this.testdata3);
+					this.testdata3 = Object.assign({}, this.testdata3);
 					console.log(this.yTotal3)
 				} else {
 					//失败
@@ -1746,7 +1749,7 @@
 		padding-top: 0.32rem;
 		padding-right: 0.69rem;
 		padding-left: 0.38rem;
-		min-height: 76vh;
+		/* min-height: 76vh; */
 		margin-right: 0.36rem;
 		margin-top: 0.42rem;
 	}
