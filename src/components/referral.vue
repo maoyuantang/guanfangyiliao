@@ -153,7 +153,7 @@
               <el-table-column prop="" label="方向"></el-table-column>
               <el-table-column prop="receiveTime" label="接诊时间"></el-table-column>
               <el-table-column prop="stateName" label="转诊状态"></el-table-column>
-              <el-table-column fixed="right" label="操作" width="250">
+              <el-table-column fixed="right" label="操作" width="280">
                 <template slot-scope="scope">
                   <el-button @click="dualReferralRecord1(scope.row)" type="success" plain size="mini"
                     style="margin:0.05rem 0 0.05rem 0;">查看记录</el-button>
@@ -199,7 +199,7 @@
       </div>
       <div class="doctorStyleBody">
         <div>
-          <el-table :data="docTableData" style="width: 100%" :max-height="550">
+          <el-table :data="docTableData" style="width: 100%" :max-height="500">
             <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
             <el-table-column fixed prop="applyOrgName" label="申请医院"></el-table-column>
             <el-table-column fixed prop="applyDeptName" label="申请科室"></el-table-column>
