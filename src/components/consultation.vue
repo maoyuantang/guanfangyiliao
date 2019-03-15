@@ -116,6 +116,10 @@
                     </div>
                     <div style="display:flex">
                         {{drawData1}}
+<<<<<<< HEAD
+                        <!-- {{drawDataStart}} -->
+=======
+>>>>>>> e5ce4f30d3a71adf81811ab0343181dfa3403afb
                         <normalColumnChart :inData="drawData1"> </normalColumnChart>
                         <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
                     </div>
@@ -1043,6 +1047,7 @@ export default {
         },
         //获取管理端申请科室统计列表
         async getApplyTjList() {
+            // debugger
             this.drawData1.dataAxis = [];
             this.drawData1.data = [];
             let _this = this;
@@ -1055,12 +1060,25 @@ export default {
             };
             const res = await queryStatisticalByApplication(options);
             if (res.data && res.data.errCode === 0) {
+<<<<<<< HEAD
                 console.log(res.data.body.data[0])
                 res.data.body.data = [res.data.body.data[0]]
                 $.each(res.data.body.data, function(index, text) {
                     _this.drawData1.dataAxis.push(text.x);
                     _this.drawData1.data.push(text.y);
                 });
+=======
+                res.data.body.data.splice(1,res.data.body.data.length);
+                this.drawData1.dataAxis = res.data.body.data.map(item=>item.x)
+                this.drawData1.data = res.data.body.data.map(item=>item.y)
+                this.drawData1 = Object.assign({},this.drawData1)
+                console.log(this.drawData1)
+                // console.log(res.data.body.data)
+                // $.each(res.data.body.data, function(index, text) {
+                //     _this.drawData1.dataAxis.push(text.x);
+                //     _this.drawData1.data.push(text.y);
+                // });
+>>>>>>> 2551a65c9ce9fdf79d5fd52b4cfbedd777fa382b
             } else {
                 //失败
                 this.$notify.error({
@@ -1223,8 +1241,6 @@ export default {
     font-size: 12px;
     color: #4d7cfe;
     line-height: 3px;
-}
-.consultation {
 }
 .startGroup input {
     width: 162px;

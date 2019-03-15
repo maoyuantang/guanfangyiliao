@@ -45,9 +45,11 @@
 							</el-table-column>
 						</el-table>
 					</div>
-					<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
-						@current-change="currentChange1">
-					</el-pagination>
+					<div style="text-align: center;padding: 10px 0;">
+						<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+							@current-change="currentChange1">
+						</el-pagination>
+					</div>
 				</div>
 				<!-- 统计 -->
 				<div v-else-if="navInfo.i===1" class="count">
@@ -109,7 +111,7 @@
 			return {
 				//管理1表 查看  弹框
 				isShowmoveUser: false,//显示转诊记录
-				totals:0,
+				totals: 0,
 
 				//筛选返回值接收
 				//管理1端  筛选工具栏  筛选返回值  接收参数
@@ -431,7 +433,7 @@
 					});
 					this.drawData.title = "移动查房终端"
 					this.drawData.total = "总数：" + this.yTotal1
-          this.drawData = Object.assign({}, this.drawData);
+					this.drawData = Object.assign({}, this.drawData);
 					console.log(this.yTotal1)
 				} else {
 					//失败
@@ -472,7 +474,7 @@
 		padding-top: 0.32rem;
 		padding-right: 0.69rem;
 		padding-left: 0.38rem;
-		min-height: 76vh;
+		/* min-height: 76vh; */
 		margin-right: 0.36rem;
 		margin-top: 0.42rem;
 	}
@@ -489,9 +491,6 @@
 		align-items: center;
 	}
 
-	.manager_count_top>div {
-		/* flex: 1; */
-	}
 
 	/* 医生端样式 */
 	.doctorStyle {
