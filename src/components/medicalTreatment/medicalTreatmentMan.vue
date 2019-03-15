@@ -315,7 +315,7 @@
         gradeId: "",//分级id   selftag
         searchValue: "",//返回搜索框输入   search
         pageNum: 1,
-        pageSize: 1,
+        pageSize: 5,
         // 管理1.2表  表体点击  范围  传入参数
         doctorVisible: false,
         doctorDetailData: [
