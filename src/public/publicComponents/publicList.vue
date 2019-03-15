@@ -72,7 +72,7 @@
                 }
             },
             changeCurrent(data) {
-                this.$emit("reback", data);
+                this.$emit("rebackFenye", data);
             }
         },
         props: {

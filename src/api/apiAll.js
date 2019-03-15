@@ -2809,6 +2809,30 @@ export const countTeacher = query => { //1. 统计授课人次
         }
     })
 }
+export const SETEQUIPMENT = query => { //1. 统计授课人次
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.SETEQUIPMENT,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const SETFOLLOWCHART = query => { //1. 统计授课人次
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.SETFOLLOWCHART,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
+
 export const countStudent = query => { //2. 统计听课人次
     const sign = postQueryHandle(query);
     return axios({

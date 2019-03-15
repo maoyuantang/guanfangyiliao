@@ -3,8 +3,9 @@
 </template>
 
 <script>
-    // import echarts from '../../plugs/echarts.js'
-    import echarts from 'echarts/lib/echarts'
+    import echarts from '../../plugs/echarts.js'
+    // import echarts from 'echarts'
+    // import echarts from 'echarts/lib/echarts'
     require('echarts/lib/chart/bar')
     require('echarts/lib/component/title')
 	export default {

@@ -295,5 +295,7 @@ export default {
     // 谭莹
     setRemark:"/m/v1/api/clinic/remark/set",//添加备注
     seeRemark:'/m/v1/api/clinic/remark/fetch',//查看备注
+    SETEQUIPMENT  :'/m/v1/api/followup/followupRemind/countAlert',
+   SETFOLLOWCHART   :'/m/v1/api/followup/followupRemind/countFollowup',
 }
 
