@@ -1810,7 +1810,7 @@
 	}
 
 	.evaluateBox1 {
-		overflow-y: scroll;
+		overflow-y: auto;
 
 		ul {
 			li {

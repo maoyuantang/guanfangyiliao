@@ -9,86 +9,88 @@
 
     <!-- 我的诊室-循环 -->
 
-    <ul v-for="(text,index1) in myHomes" :key="index1" v-if="oconsulVisable==0" class="outpatient_s">
-      <li class="outpatient_left">
-        <p class="title">{{text.orgName}}-{{text.clinicName}}</p>
-        <div class="outpatient_user">
-          <img src="../assets/img/ME.png" alt="">
-          <div class="outpatient_name">
-            <p class="p1">{{text.orgName}}</p>
-            <!-- <p class="p1">{{text.doctor.doctorName}}</p> -->
-            <p class="p2">{{text.doctor.doctorStates?'没接诊':'接诊中...'}}</p>
+    <div class="myOuts" v-if="oconsulVisable==0">
+      <ul v-for="(text,index1) in myHomes" :key="index1" class="outpatient_s">
+        <li class="outpatient_left">
+          <p class="title">{{text.orgName}}-{{text.clinicName}}</p>
+          <div class="outpatient_user">
+            <img src="../assets/img/ME.png" alt="">
+            <div class="outpatient_name">
+              <p class="p1">{{text.orgName}}</p>
+              <!-- <p class="p1">{{text.doctor.doctorName}}</p> -->
+              <p class="p2">{{text.doctor.doctorStates?'没接诊':'接诊中...'}}</p>
+            </div>
           </div>
-        </div>
-        <i></i>
-        <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index'
-          style="width: 90%;margin: auto;">
-          <el-table :data="text">
-            <el-table-column prop="unProcess" label="未处理"></el-table-column>
-            <el-table-column prop="process" label="已处理"></el-table-column>
-            <el-table-column prop="doctorCount" label="其他医生"></el-table-column>
-          </el-table>
-        </div>
-        <el-button class="startConsul" type="text" @click="enterRoomBtn(text.id)">进入门诊</el-button>
+          <i></i>
+          <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index'
+            style="width: 90%;margin: auto;">
+            <el-table :data="text">
+              <el-table-column prop="unProcess" label="未处理"></el-table-column>
+              <el-table-column prop="process" label="已处理"></el-table-column>
+              <el-table-column prop="doctorCount" label="其他医生"></el-table-column>
+            </el-table>
+          </div>
+          <el-button class="startConsul" type="text" @click="enterRoomBtn(text.id)">进入门诊</el-button>
 
-      </li>
+        </li>
 
-      <li class="outpatient_right">
-        <!-- 病人个数循环 -->
-        <!-- <span class="dian" @click="lookList(text.clinicOrders,text.doctor)">...</span> -->
-        <span class="dian" @click="lookList(text)">...</span>
-        <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-if="index <2">
+        <li class="outpatient_right">
+          <!-- 病人个数循环 -->
+          <!-- <span class="dian" @click="lookList(text.clinicOrders,text.doctor)">...</span> -->
+          <span class="dian" @click="lookList(text)">...</span>
+          <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-if="index <2">
 
-          <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
-            <h1>{{text1.userName}}</h1>
-            <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-              <el-button type="success" plain @click="seeHistory(text1.userId)">查看档案</el-button>
-              <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button>
-              <el-button type="info" plain>{{text.doctor.doctorStates?'未开始':'进行中'}}</el-button>
-            </div>
-          </li>
-          <li class="medicalExpenses">
-            问诊费用
-            <span>
-              <span>￥</span>
-              {{text1.askPrice}}
-            </span>
-          </li>
-          <li class="drug">
-            <div class="fee">处方费用 ¥
-              <span>{{text1.prescriptionPrice}}</span>
-            </div>
-            <ul>
-              <li class="drugTitle">Rx:</li>
-              <li>
-                <ul class="drugDetail">
-                  <li>
-                    <ul v-for="(text,index) in text.drugDetail" :key="index">
-                      <li>（{{index+1}}）</li>
-                      <li>{{text.drugName}}</li>
-                      <li>{{text.norm}}</li>
-                      <li>{{text.drugQuantity}}</li>
-                      <li>{{text.drugDosage}}</li>
-                      <li>{{text.drugUse}}</li>
-                      <li>{{text.drugTimes}}</li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li class="orderTime">
-            <span>下单时间:</span>
-            <span class="span">{{text1.clinicOrderTime}}</span>
-          </li>
-          <li class="acceptTime">
-            <span>接诊时间:</span>
-            <span class="span">{{text1.askTime}}</span>
-          </li>
-        </ul>
+            <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
+              <h1>{{text1.userName}}</h1>
+              <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
+                <el-button type="success" plain @click="seeHistory(text1.userId)">查看档案</el-button>
+                <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button>
+                <el-button type="info" plain>{{text.doctor.doctorStates?'未开始':'进行中'}}</el-button>
+              </div>
+            </li>
+            <li class="medicalExpenses">
+              问诊费用
+              <span>
+                <span>￥</span>
+                {{text1.askPrice}}
+              </span>
+            </li>
+            <li class="drug">
+              <div class="fee">处方费用 ¥
+                <span>{{text1.prescriptionPrice}}</span>
+              </div>
+              <ul>
+                <li class="drugTitle">Rx:</li>
+                <li>
+                  <ul class="drugDetail">
+                    <li>
+                      <ul v-for="(text,index) in text.drugDetail" :key="index">
+                        <li>（{{index+1}}）</li>
+                        <li>{{text.drugName}}</li>
+                        <li>{{text.norm}}</li>
+                        <li>{{text.drugQuantity}}</li>
+                        <li>{{text.drugDosage}}</li>
+                        <li>{{text.drugUse}}</li>
+                        <li>{{text.drugTimes}}</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li class="orderTime">
+              <span>下单时间:</span>
+              <span class="span">{{text1.clinicOrderTime}}</span>
+            </li>
+            <li class="acceptTime">
+              <span>接诊时间:</span>
+              <span class="span">{{text1.askTime}}</span>
+            </li>
+          </ul>
 
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </div>
 
     <ul v-if="oconsulVisable == 1" class="prescriptionCheck">
       <li class="checkList">
@@ -372,8 +374,8 @@
       </li>
       <li v-for="(text,index) in bcd" :key="index" v-show='whichUser==index' class="prescriptionDetail">
         <ul>
-          <li class="detailHead">
-          </li>
+          <!-- <li class="detailHead">
+          </li> -->
           <li class="detailCount">
             <div class="sign">
               <ul>
@@ -1232,10 +1234,22 @@
 </script>
 
 <style lang="scss" scoped>
+  .myOuts {
+    background: #FFF;
+    border: 1px solid var(--color5);
+    box-shadow: 0 0.06rem 0.36rem 0 rgba(0, 62, 100, 0.04);
+    border-radius: 0.04rem;
+    padding: 0rem 0.2rem;
+    margin: 0.3rem 0.3rem 0.3rem 0;
+
+    overflow-y: auto;
+    max-height: 750px;
+  }
+
   .outpatient_s {
     display: flex;
     background: #fff;
-    margin: 60px 0 0 0;
+    margin: 20px 0 30px 0;
     padding: 0.3rem 0;
     background: #ffffff;
     border: 1px solid #e5edf3;
@@ -1243,6 +1257,7 @@
     border-radius: 4px;
     width: 98%;
     position: relative;
+
 
     .outpatient_left {
       width: 30%;
@@ -1460,7 +1475,6 @@
     display: flex;
     flex-direction: column;
     padding: 0.1rem 0;
-    overflow-y: scroll;
 
     .title {
       display: flex;
@@ -1472,7 +1486,6 @@
         font-family: PingFangSC-Regular;
         font-size: 14px;
         color: #5c5c5c;
-        padding-top: 0.1rem;
       }
 
       .title2 {
@@ -1486,6 +1499,7 @@
     }
 
     .div {
+      overflow-y: auto;
 
       ul {
         display: flex;
@@ -1802,7 +1816,7 @@
         width: 100%;
         margin: 2.5% 0 0 0;
         background: #ffffff;
-        border: 1px solid #e4e8eb;
+        /* border: 1px solid #e4e8eb; */
         display: flex;
 
         .preview {}
@@ -1815,15 +1829,29 @@
   }
 
   .prescriptionCheck {
-    display: flex;
+    background: #FFF;
+    border: 1px solid var(--color5);
+    box-shadow: 0 0.06rem 0.36rem 0 rgba(0, 62, 100, 0.04);
+    border-radius: 0.04rem;
+    padding: 0.1rem;
+    margin: 0.3rem 0.3rem 0.3rem 0;
 
-    margin: 0.4rem 0 0 0;
+    display: flex;
+    max-height: 750px;
+    overflow: auto;
   }
 
   .transport {
-    display: flex;
+    background: #FFF;
+    border: 1px solid var(--color5);
+    box-shadow: 0 0.06rem 0.36rem 0 rgba(0, 62, 100, 0.04);
+    border-radius: 0.04rem;
+    padding: 0.1rem;
+    margin: 0.3rem 0.3rem 0.3rem 0;
 
-    margin: 0.4rem 0 0 0;
+    display: flex;
+    max-height: 750px;
+    overflow: auto;
 
     .checkList {
       width: 20%;
@@ -1835,7 +1863,6 @@
       display: flex;
       flex-direction: column;
       padding: 0.1rem 0;
-      overflow-y: scroll;
 
       .title {
         display: flex;
@@ -1847,7 +1874,6 @@
           font-family: PingFangSC-Regular;
           font-size: 14px;
           color: #5c5c5c;
-          padding-top: 0.1rem;
         }
 
         .title2 {
@@ -1861,6 +1887,7 @@
       }
 
       .div {
+        overflow-y: auto;
 
         ul {
           display: flex;
@@ -2172,7 +2199,7 @@
           width: 100%;
           margin: 2.5% 0 0 0;
           background: #ffffff;
-          border: 1px solid #e4e8eb;
+          /* border: 1px solid #e4e8eb; */
           display: flex;
 
           .preview {}
