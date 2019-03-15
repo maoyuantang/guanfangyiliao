@@ -116,10 +116,7 @@
                     </div>
                     <div style="display:flex">
                         {{drawData1}}
-<<<<<<< HEAD
                         <!-- {{drawDataStart}} -->
-=======
->>>>>>> e5ce4f30d3a71adf81811ab0343181dfa3403afb
                         <normalColumnChart :inData="drawData1"> </normalColumnChart>
                         <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
                     </div>
@@ -1060,14 +1057,6 @@ export default {
             };
             const res = await queryStatisticalByApplication(options);
             if (res.data && res.data.errCode === 0) {
-<<<<<<< HEAD
-                console.log(res.data.body.data[0])
-                res.data.body.data = [res.data.body.data[0]]
-                $.each(res.data.body.data, function(index, text) {
-                    _this.drawData1.dataAxis.push(text.x);
-                    _this.drawData1.data.push(text.y);
-                });
-=======
                 res.data.body.data.splice(1,res.data.body.data.length);
                 this.drawData1.dataAxis = res.data.body.data.map(item=>item.x)
                 this.drawData1.data = res.data.body.data.map(item=>item.y)
@@ -1078,7 +1067,6 @@ export default {
                 //     _this.drawData1.dataAxis.push(text.x);
                 //     _this.drawData1.data.push(text.y);
                 // });
->>>>>>> 2551a65c9ce9fdf79d5fd52b4cfbedd777fa382b
             } else {
                 //失败
                 this.$notify.error({
