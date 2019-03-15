@@ -534,12 +534,13 @@ export const planHistory = query => {//13.3.5 历史计划【医生web】
         }
     })
 }
-export const signStatus = query => {//13.3.6 标记计划状态
-    const sign = postQueryHandle(query);
+
+export const signStatus = (query, data) => {//13.4.4 取消计划
+    const sign = postQueryHandle(Object.assign({}, data, query));
     return axios({
-        method: 'get',
-        url: apiList.signStatus,
-        params: query,
+        method: 'post',
+        url: `${apiList.signStatus}?token=${query.token}`,
+        data: data,
         headers: {
             sign
         }
@@ -2843,7 +2844,31 @@ export const setRemark = (query, data) => {//添加备注
         }
     })
 }
+export const warnStatus = (query, data) => {//添加备注
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.warnStatus,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
 
+
+export const seeRemark = query => { //查看备注
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.seeRemark,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
 export const webCourseList = query => { //12.7 web获取课程列表【医生web】
     const sign = postQueryHandle(query);
     return axios({
@@ -3047,6 +3072,17 @@ export const toolTerminalArea = query => { //1.21.30.终端管理-区域
     return axios({
         method: 'get',
         url: apiList.toolTerminalArea,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const todayRounds = query => { //15.9（医生）首页-移动查房
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.todayRounds,
         params: query,
         headers: {
             sign

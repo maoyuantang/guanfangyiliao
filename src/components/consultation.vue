@@ -115,7 +115,7 @@
                         <statisticsWay @reBack="getTjData"></statisticsWay>
                     </div>
                     <div style="display:flex">
-                        {{drawData1}}{{drawDataStart}}
+                        {{drawData1}}
                         <normalColumnChart :inData="drawData1"> </normalColumnChart>
                         <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
                     </div>
@@ -335,7 +335,7 @@ export default {
                 ]
             },
             adminPageNum: 1,
-            docPageNum:1,
+            docPageNum: 1,
             //医生端
             consultationId: "",
             invitationSelectList: [],
@@ -928,18 +928,6 @@ export default {
             const res = await queryConsultationInformList(query);
             if (res.data && res.data.errCode === 0) {
                 _this.invitationData = res.data.body;
-                // $.each(res.data.body, function(index, text) {
-                //     _this.invitationData.push({
-                //         label: text.name,
-                //         children: []
-                //     });
-                //     $.each(text.children, function(oindex, otext) {
-                //         _this.invitationData[oindex].children.push({
-                //             label: text.name,
-                //             id: otext.id
-                //         });
-                //     });
-                // });
             } else {
                 //失败
                 this.$notify.error({
@@ -1067,6 +1055,11 @@ export default {
             };
             const res = await queryStatisticalByApplication(options);
             if (res.data && res.data.errCode === 0) {
+<<<<<<< HEAD
+                console.log(res.data.body.data[0])
+=======
+                res.data.body.data.splice(1,res.data.body.data.length)
+>>>>>>> 90a08569b747c0a299bfe97030f2b032e8ea9ef5
                 $.each(res.data.body.data, function(index, text) {
                     _this.drawData1.dataAxis.push(text.x);
                     _this.drawData1.data.push(text.y);

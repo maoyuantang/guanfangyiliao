@@ -32,11 +32,19 @@
                 </thead>
                 <tbody class="rounds-doctor-tbody">
                     <tr v-for="(item,index) in tableData" :key="index">
-                        <th>{{item.time}}</th>
+                        <th>
+                             <el-tooltip class="item" effect="light" :content="item.time" placement="top">
+                                <div>{{item.time.length>7?`${item.time.substring(0,7)}...`:item.time}}</div>
+                            </el-tooltip>
+                        </th>
                         <th>{{item.ward}}</th>
                         <th>{{item.bedNo}}</th>
                         <th>{{item.patient}}</th>
-                        <th>{{item.patientId}}</th>
+                        <th>
+                            <el-tooltip class="item" effect="light" :content="item.patientId" placement="top">
+                                <div>{{item.patientId.length>7?`${item.patientId.substring(0,7)}...`:item.patientId}}</div>
+                            </el-tooltip>
+                        </th>
                         <th>{{item.disInformation}}</th>
                         <th>{{item.disAsk}}</th>
                         <th>{{item.disReport}}</th>
@@ -46,7 +54,7 @@
                         <th>{{item.todayStatus}}</th>
                         <th><i class="iconfont vedio-icon" @click="showVedio(item)">&#xe614;</i></th>
                         <th>
-                            <el-button type="primary" size="mini" @click="recording(item)" plain>查看记录</el-button>
+                            <el-button type="primary" size="mini" @click="recording(item,index)" plain>查看记录</el-button>
                         </th>
                     </tr>
                 </tbody>
@@ -65,6 +73,27 @@
             ></el-pagination>
         </div>
         <playVedio :inData="vedio"></playVedio>
+        <!-- 查看记录 弹窗 -->
+        <el-dialog
+        title=" "
+        append-to-body
+        width="393px"
+        min-height="486px"
+        :visible.sync="alertInfo.show"
+        :fullscreen="false"
+        :before-close="closeAlert"
+        >
+        <div class="rounds-doctor-alert">
+           <div class="rounds-doctor-alert-headimg">
+               <img :src="alertInfo.data?alertInfo.data.imgSrc||'../../../static/assets/img/a-6.png':'../../../static/assets/img/a-6.png'" alt="">
+           </div>
+           <p class="rounds-doctor-alert-name">{{alertInfo.data?alertInfo.data.patient:''}}</p>
+           <p class="rounds-doctor-alert-start">住院时间{{alertInfo.data?alertInfo.data.inTime:''}}</p>
+           <div v-if="alertInfo.data" class="rounds-doctor-alert-list">
+               <p v-for="(item,index) in alertInfo.data.list" :key="index">{{item}}</p>       
+           </div>
+        </div>
+        </el-dialog>
 	</div>
 </template>
 
@@ -74,7 +103,7 @@
     import publicTime from '../../public/publicComponents/publicTime.vue'
     import playVedio from '../../public/publicComponents/playVedio.vue'
     import {myRounds} from '../../api/apiAll.js' 
-    
+    import apiBaseURL from "../../enums/apiBaseURL.js"
 	export default {
 		components: {
             tag,
@@ -129,6 +158,11 @@
                     //     "ward": "病区"
                     // }
                 ],
+                alertInfo:{//弹窗 数据 
+                    show:false,
+                    data:null,
+                    index:null
+                }
 			}
 		},
 		computed: {
@@ -140,10 +174,24 @@
 		},
 		methods: {
             /**
+             * 关闭 弹窗
+             */
+            closeAlert(){
+                this.alertInfo = {
+                    show:false,
+                    data:null,
+                    index:null
+                }
+            },
+            /**
              * 查看记录
              */
-            recording(item){
-
+            recording(item,index){
+                this.alertInfo.data = item;  
+                this.alertInfo.index = index;
+                this.alertInfo.data.imgSrc = this.alertInfo.data.patientHeadId?`${apiBaseURL.developmentEnvironment}/m/v1/api/hdfs/fs/download/${this.alertInfo.data.patientHeadId}`:this.alertInfo.data.patientHeadId;
+                this.alertInfo.show = true;
+                console.log(item)
             },
             /**
              * 获取 列表 数据
@@ -159,8 +207,10 @@
                     query.endTime = this.queryConditions.time[1]
                 }else{
                     const nowData = new Date();
-                    query.startTime = `${nowData.getFullYear()-1}-${nowData.getMonth()+1}-${nowData.getDate()}`;
-                    query.endTime = `${nowData.getFullYear()}-${nowData.getMonth()+1}-${nowData.getDate()}`;
+                    query.startTime = `${nowData.getFullYear()-1}-${nowData.getMonth()<9?'0'+(nowData.getMonth()+1):nowData.getMonth()+1}-${nowData.getDate()<10?'0'+nowData.getDate():nowData.getDate()}`;
+                    query.endTime = `${nowData.getFullYear()}-${nowData.getMonth()<9?'0'+(nowData.getMonth()+1):nowData.getMonth()+1}-${nowData.getDate()<10?'0'+nowData.getDate():nowData.getDate()}`;
+                    // query.startTime = `${nowData.getFullYear()-1}-${nowData.getMonth()+1}-${nowData.getDate()}`;
+                    // query.endTime = `${nowData.getFullYear()}-${nowData.getMonth()+1}-${nowData.getDate()}`;
                 }
                 const res = await myRounds(query);
                 console.log(res);
@@ -246,5 +296,35 @@
     .vedio-icon{
         color: #DF63AD;
         cursor: pointer;
+    }
+    .rounds-doctor-alert-headimg>img{
+        display: flex;
+        width:1.48rem;
+        height: 1.48rem;
+        border-radius: 50%;
+        margin: 0 auto;
+    }
+    .rounds-doctor-alert-name{
+        font-family: Helvetica;
+        font-size: 20px;
+        color: #252631;
+        text-align: center;
+        padding-top: .12rem;
+    }
+    .rounds-doctor-alert-start{
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #98A9BC;
+        text-align: center;
+        line-height: 21px;
+        padding-top: .3rem;
+        padding-bottom: .4rem;
+    }
+    .rounds-doctor-alert-list>p{
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #98A9BC;
+        line-height: 31px;
+        padding-left: .6rem;
     }
 </style>

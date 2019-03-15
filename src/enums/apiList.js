@@ -51,6 +51,7 @@ export default {
     todayPlan:'/m/v1/api/followup/plan/todayPlan',//13.3.4 今日计划【医生web】
     planHistory:'/m/v1/api/followup/plan/planHistory',//13.3.5 历史计划【医生web】
     signStatus:'/m/v1/api/followup/plan/changeStatus',//13.3.6 标记计划状态
+    warnStatus:'/m/v1/api/device/house/changeStatus',
     savePlan:'/m/v1/api/followup/plan/savePlan',//13.4.1 创建计划
     changePlan:'/m/v1/api/followup/plan/savePlan',//13.4.2 修改计划
     getPlan:'/m/v1/api/followup/plan/getPlan',//13.4.3 查看计划详情
@@ -289,8 +290,10 @@ export default {
     terminalManagementStatistics:'/m/v1/api/roundsTerminal/terminal/queryStatisticalData',//2.终端管理统计
     toolTerminalType:'/m/v1/api/basics/common/toolTerminalType',//1.21.29.终端管理-类型
     toolTerminalArea:'/m/v1/api/basics/common/toolTerminalArea',//1.21.30.终端管理-区域
+    todayRounds:'/m/v1/api/roundsTerminal/rounds/todayRounds',//15.9（医生）首页-移动查房
 
     // 谭莹
     setRemark:"/m/v1/api/clinic/remark/set",//添加备注
+    seeRemark:'/m/v1/api/clinic/remark/fetch',//查看备注
 }
 
