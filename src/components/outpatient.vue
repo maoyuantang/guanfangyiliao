@@ -98,10 +98,8 @@
 
 <style>
     .outpatient {
-        height: 100%;
     }
     .outPatientDoctor{
-        height: 100%;
     }
 
     .outpatient-alert {

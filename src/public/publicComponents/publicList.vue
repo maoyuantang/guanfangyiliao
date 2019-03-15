@@ -1,7 +1,7 @@
 <template>
 
     <div class="public-list">
-        <el-table :data="tableData" ref="multipleTable" style="width: 100%" @selection-change="reBackFn" :cell-class-name="cellClassName" @cell-click="cellClick">
+        <el-table :data="tableData" ref="multipleTable" style="width: 100%" @selection-change="reBackFn" :cell-class-name="cellClassName" @cell-click="cellClick" :max-height="450">
 
             <el-table-column v-if="checkVisable" type="selection" width="55">
             </el-table-column>
@@ -131,7 +131,7 @@ checkVisable: Boolean, //父组件传来的是否有多选框      //表格前�
                 {
                     prop:"age",
                     label:"年龄"
-                }c   
+                }   
             ],
    //列表数据格式
    tableDataList: [

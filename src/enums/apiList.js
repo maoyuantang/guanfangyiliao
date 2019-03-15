@@ -139,7 +139,10 @@ export default {
     reviewList:'/m/v1/api/prescription/prescription/reviewList',//7.10按审方医生获取处方审核列表
     prescriptionDetailByCondition:'/m/v1/api/prescription/prescription/prescriptionDetailByCondition',//7.11根据条件获取处方信息
     prescriptionDetailById:'/m/v1/api/prescription/prescription/prescriptionDetailById',//7.12根据处方id获取处方电子版
-    drugSendRecord:'/m/v1/api/prescription/prescription/drugSendRecord',//7.13根据处方id获取处方发货记录
+    drugSendRecord: '/m/v1/api/prescription/prescription/drugSendRecord',//7.13根据处方id获取处方发货记录
+
+    drugHaulStatus: '/m/v1/api/prescription/prescription/drugHaulStatus',////7.2.5根据处方id获取处方的物流状态             //唐茂原
+
     drugsByCondition:'/m/v1/api/prescription/prescription/drugsByCondition',//7.16药品名称搜索药品信息
     clinicOrders:'/m/v1/api/clinic/clinic/clinicOrder',//7.18(WEB医生)获取所有该诊室的订单信息
     settingsUpdate:'/m/v1/api/basics/synergySystem/settingsUpdate',//8.10超级管理员更新协作人员
@@ -287,5 +290,8 @@ export default {
     toolTerminalType:'/m/v1/api/basics/common/toolTerminalType',//1.21.29.终端管理-类型
     toolTerminalArea:'/m/v1/api/basics/common/toolTerminalArea',//1.21.30.终端管理-区域
     todayRounds:'/m/v1/api/roundsTerminal/rounds/todayRounds',//15.9（医生）首页-移动查房
+
+    // 谭莹
+    setRemark:"/m/v1/api/clinic/remark/set",//添加备注
 }
 

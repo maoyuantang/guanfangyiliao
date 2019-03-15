@@ -22,7 +22,7 @@
 
 
 				<div class="online-clinic-middle">
-					<el-table :data="tableData" style="width: 100%;" :max-height="600" @cell-click="relateDoctors1">
+					<el-table :data="tableData" style="width: 100%;" :max-height="550" @cell-click="relateDoctors1">
 						<el-table-column fixed prop="id" label="业务编号"></el-table-column>
 						<el-table-column prop="departmentName" label="科室"></el-table-column>
 						<el-table-column prop="fullName" label="业务名"></el-table-column>
@@ -47,7 +47,7 @@
 						</el-table-column>
 					</el-table>
 				</div>
-				<el-pagination background layout="prev, pager, next" :total="1000" @current-change="currentChange">
+				<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
 				</el-pagination>
 			</div>
 
@@ -72,7 +72,7 @@
 				<div class="online-clinic-middle">
 					<publicList :columns="prescriptionAuditDistribution.tableBody.columns"
 						:tableData="prescriptionAuditDistribution.tableBody.tableData"
-						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn">
+						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :total="totals" @reback="currentChange2">
 					</publicList>
 				</div>
 			</div>
@@ -102,8 +102,8 @@
 			:sureVisiable="sureVisiable"></addNewFrame>
 		<!-- 表一查看关联医生弹框 -->
 		<div v-if="isShowrelationalDoctor">
-			<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="503px" hight="470px"
-				center>
+			<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="500px"
+				max-hight="450px" center>
 				<ul>
 					<li v-for="(text,index) in relationalDoctor" :key="index">
 						<div class="evaluateCont1">
@@ -124,7 +124,7 @@
 		<!-- 总+今日+订单详情+弹框 -->
 		<div v-if="isShowRecord">
 			<el-dialog class="  " title="订单详情" :visible.sync="isShowRecord" center width=70%>
-				<el-table :data="tableDataChat" border style="width: 100%;" @cell-click="relateDoctors2">
+				<el-table :data="tableDataChat" border style="width: 100%;" @cell-click="relateDoctors2" :max-height="450">
 					<el-table-column fixed prop="orderNo" label="订单号"></el-table-column>
 					<el-table-column prop="doctorName" label="接诊医生"></el-table-column>
 					<el-table-column prop="mode" label="接诊方式"></el-table-column>
@@ -168,37 +168,13 @@
 			<el-dialog title="物流状态" :visible.sync="roadStatusList2" center>
 				<div class="visiting">
 					<Timeline>
-						<TimelineItem>
-							<p class="visiting-hospital">重庆市医科大学第三附属医院</p>
+						<TimelineItem v-for="(text,index) in roadStatusList2List" :key="index">
+							<!-- <p class="visiting-hospital">重庆市医科大学第三附属医院</p> -->
 							<p class="visiting-department">
 								<span class="visiting-department-on">on</span>
-								<span class="visiting-department-name">科室名称 | 门诊</span>
+								<span class="visiting-department-name">{{text.key}}</span>
 							</p>
-							<p class="visiting-content">主诉: 小孩夜晚不咳嗽，白天咳嗽；咳嗽无痰。</p>
-						</TimelineItem>
-						<TimelineItem>
-							<p class="visiting-hospital">重庆市医科大学第三附属医院</p>
-							<p class="visiting-department">
-								<span class="visiting-department-on">on</span>
-								<span class="visiting-department-name">科室名称 | 门诊</span>
-							</p>
-							<p class="visiting-content">主诉: 小孩夜晚不咳嗽，白天咳嗽；咳嗽无痰。</p>
-						</TimelineItem>
-						<TimelineItem>
-							<p class="visiting-hospital">重庆市医科大学第三附属医院</p>
-							<p class="visiting-department">
-								<span class="visiting-department-on">on</span>
-								<span class="visiting-department-name">科室名称 | 门诊</span>
-							</p>
-							<p class="visiting-content">主诉: 小孩夜晚不咳嗽，白天咳嗽；咳嗽无痰。</p>
-						</TimelineItem>
-						<TimelineItem>
-							<p class="visiting-hospital">重庆市医科大学第三附属医院</p>
-							<p class="visiting-department">
-								<span class="visiting-department-on">on</span>
-								<span class="visiting-department-name">科室名称 | 门诊</span>
-							</p>
-							<p class="visiting-content">主诉: 小孩夜晚不咳嗽，白天咳嗽；咳嗽无痰。</p>
+							<p class="visiting-content">{{text.value}}</p>
 						</TimelineItem>
 					</Timeline>
 				</div>
@@ -250,7 +226,7 @@
 		drugSendRecord,//7.13根据处方id获取处方发货记录
 		drugsByCondition,//7.16药品名称搜索药品信息
 		clinicOrders,//7.18(WEB医生)获取所有该诊室的订单信息
-
+		drugHaulStatus,//7.2.5根据处方id获取处方的物流状态 
 		// 非筛选条件下的科室列表
 		fetchHospitalDepts,//2.2.获取医院科室列表
 	} from "../api/apiAll.js";
@@ -286,6 +262,7 @@
 
 				chuFangDetailList2: false,//处方详情   管理表2操作区按钮
 				roadStatusList2: false,//物流状态   管理表2操作区按钮
+				roadStatusList2List: [],//物流状态   管理表2操作区按钮
 				viewRecordList2: false,//查看记录   管理表2操作区按钮
 				status1: false,//状态（禁用按钮）
 				// 医生端  就诊列表  弹框
@@ -294,7 +271,8 @@
 
 				// 常用参数
 				pageNum: 1,//页数
-				pageSize: 10,//条数
+				pageSize: 1,//条数
+				totals: 0,
 				srcs: "",//处方id   用于拼接图片src
 
 
@@ -538,6 +516,7 @@
 					],
 					//2、表格
 					tableBody: {
+						total: 10,
 						//2.1表头
 						columns: [
 							{
@@ -951,10 +930,13 @@
 				const res = await searchClinic(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表1+成功')
-					console.log(this.time0)
-					console.log(this.time1)
-					console.log(res)
+					console.log("time0:", this.time0)
+					console.log("time1:", this.time1)
+					console.log("res:", res)
+					console.log("list:", res.data.body.data2.list)
+					console.log("total:", res.data.body.data2.total)
 					const lists = res.data.body.data2.list
+					this.totals = res.data.body.data2.total
 					for (let j = 0; j < lists.length; j++) {
 						for (let i = 0; i < lists[j].doctors.length; i++) {
 							// console.log(lists[j].doctors[i].doctorStates)
@@ -1010,6 +992,8 @@
 					const res = await searchClinic(query);
 					if (res.data && res.data.errCode === 0) {
 						console.log('二次请求列表1关联医生+成功')
+						console.log(res.data.body.data2.list)
+						console.log(row.doctor1)
 						const lists = res.data.body.data2.list
 						this.relationalDoctor = row.doctor1
 					} else {
@@ -1088,7 +1072,13 @@
 				const res = await prescriptionDetailByCondition(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('列表2+成功')
-					console.log(res)
+					console.log("time0:", this.time0)
+					console.log("time1:", this.time1)
+					console.log("res:", res)
+					console.log("list:", res.data.body.data2.list)
+					console.log("total:", res.data.body.data2.total)
+					this.totals = res.data.body.data2.total;
+					console.log(this.totals)
 					const lists = res.data.body.data2.list
 					$.each(lists, function (index, text) {
 						if (text.reviewEnum == "UNREVIEWED") {
@@ -1162,6 +1152,7 @@
 					});
 					this.testdata1.title = "门诊订单"
 					this.testdata1.total = "总数：" + this.yTotal1
+          this.testdata1 = Object.assign({}, this.testdata1);
 					console.log(this.yTotal1)
 				} else {
 					//失败
@@ -1202,6 +1193,7 @@
 					});
 					this.testdata2.title = "处方订单"
 					this.testdata2.total = "总数：" + this.yTotal2
+          this.testdata2 = Object.assign({}, this.testdata2);
 					console.log(this.yTotal2)
 					console.log(this.testdata2)
 				} else {
@@ -1243,6 +1235,7 @@
 					});
 					this.testdata3.title = "就诊人次"
 					this.testdata3.total = "总数：" + this.yTotal3
+          this.testdata3 = Object.assign({}, this.testdata3);
 					console.log(this.yTotal3)
 				} else {
 					//失败
@@ -1554,24 +1547,27 @@
 				// }
 			},
 			//物流状态   管理2表
-			async roadStatusList2Fun() {
+			async roadStatusList2Fun(index, row) {
+				console.log(index, row)
 				this.roadStatusList2 = true;
-				// let query = {
-				// 	token: this.userState.token
-				// };
-				// const res = await xxxxx(query);//接口还没写
-				// if (res.data && res.data.errCode === 0) {
-				// 	console.log(res)
-				// 	console.log("物流状态+成功");
-				// } else {
-				// 	console.log('物流状态+失败')
-				// 	this.$notify.error({
-				// 		title: "警告",
-				// 		message: res.data.errMsg
-				// 	});
-				// }
+				let query = {
+					token: this.userState.token,
+					prescriptionId: row.id
+				};
+				const res = await drugHaulStatus(query);//接口还没写
+				if (res.data && res.data.errCode === 0) {
+					console.log(res)
+					this.roadStatusList2List = res.data.body
+					console.log("物流状态+成功");
+				} else {
+					console.log('物流状态+失败')
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
 			},
-			//处方发货记录   管理2表
+			//聊天记录   管理2表
 			async viewRecordList2Fun(index, row) {
 				this.viewRecordList2 = true;
 				console.log(index, row)
@@ -1588,15 +1584,17 @@
 				if (res.data && res.data.errCode === 0) {
 					console.log(res)
 					this.messageRecord = res.data.body
-					console.log("处方发货记录+成功");
+					console.log("聊天记录+成功");
 				} else {
-					console.log('处方发货记录+失败')
+					console.log('聊天记录+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
 					});
 				}
 
+
+				//废弃接口
 				// let query = {
 				// 	token: this.userState.token,
 				// 	prescriptionId: row.id
@@ -1699,11 +1697,24 @@
 					this.addData.show = false
 				}
 			},
-			currentChange(data) {
+			// 分页
+			// 组件返回函数
+			currentChange1(data) {
 				console.log(data)
 				this.pageNum = data
 				this.getList1()
 			},
+			currentChange2(data) {
+				console.log(data)
+				this.pageNum = data;
+				this.getList2();
+
+			}
+
+
+
+
+
 		},
 
 
@@ -1796,6 +1807,8 @@
 	}
 
 	.evaluateBox1 {
+		overflow-y: scroll;
+
 		ul {
 			li {
 				display: flex;
@@ -1898,7 +1911,7 @@
 
 	.visiting-department-on {
 		font-family: var(--fontFamily4);
-		font-size: var(--fontSize1);
+		font-size: var(--fontSize2);
 		color: var(--color19);
 		line-height: 0.22rem;
 	}
@@ -1909,9 +1922,9 @@
 	}
 
 	.visiting-content {
+		margin: 10px 0 0 0;
 		height: 0.76rem;
-		background: #F3F6FA;
+		/* background: #F3F6FA; */
 		border-radius: 4px;
 	}
-	
 </style>

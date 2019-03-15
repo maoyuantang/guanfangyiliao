@@ -9,8 +9,8 @@
                 <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
-                        <!-- <img src="../../assets/img/日照宝宝.jpg" /> -->
-                        <img v-if="imgUrl+text.from" :src="imgUrl+text.from" />
+                        <!-- <img v-if="imgUrl+text.from" :src="imgUrl+text.from" /> -->
+                        <img src="../../assets/img/publicHeadImg.png" />
                     </div>
                     <div class="otherCon">
                         <h4>
@@ -28,7 +28,7 @@
 
                             <div>
                                 <!-- 显示文本 -->
-                                <div v-show="text.childMessageType=='DEFAULT'">
+                                <div v-show="text.childMessageType=='DEFAULT' || text.childMessageType=='CRVIDEO'">
                                     {{text.content}}
                                 </div>
                                 <!-- 显示图片 -->
@@ -147,7 +147,7 @@
             </span>
         </div>
         <div>
-            <el-input class="chatInputK" type="textarea" :rows="2" placeholder="请输入内容" v-model="messageBody" @keyup.enter="sendMessageChat(0,messageBody,'DEFAULT')">
+            <el-input class="chatInputK" type="textarea" :rows="2" placeholder="请输入内容" v-model="messageBody" @keyup.enter.native="sendMessageChat(0,messageBody,'DEFAULT')">
             </el-input>
             <button class="sendMessage" @click="sendMessageChat(0,messageBody,'DEFAULT')">发送</button>
         </div>
@@ -159,8 +159,7 @@
                         <el-input type="textarea" v-model="remarkData.remarkCon"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="onSubmit">确认</el-button>
-                        <el-button>取消</el-button>
+                        <el-button type="primary" @click="sureRemark()">确认</el-button>
                     </el-form-item>
                 </el-form>
             </el-dialog>
@@ -294,7 +293,8 @@ import {
     queryListByUserId,
     addWomanMessage,
     addOrdinaryArchives,
-    getFollowUpPlan
+    getFollowUpPlan,
+    setRemark
 } from "../../api/apiAll.js";
 import ovideo from "../../video/oVideo.vue";
 import { setTimeout } from "timers";
@@ -403,7 +403,7 @@ export default {
             ],
             oMsgId: "",
             ReadMessage: "", //已读未读
-            loadMoreVisable:false,//加载更多是否显示
+            loadMoreVisable: false //加载更多是否显示
         };
     },
     computed: {
@@ -739,6 +739,33 @@ export default {
             console.log(this.puBlicFileData);
             this.getFamily();
         },
+        //添加备注
+        async sureRemark() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                content: this.remarkData.remarkCon,
+                userId: this.userMessage.userId
+            };
+            const res = await setRemark(query, options);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "添加备注成功"
+                });
+                setTimeout(function() {
+                    _this.remarkVisible = false;
+                }, 1000);
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         //孕妇档案
         openManFile() {
             this.puBlicManData.show = true;
@@ -988,16 +1015,15 @@ export default {
             const res = await fetchHistoryMessage(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
-                if (res.data.body.length>0) {
+                if (res.data.body.length > 0) {
                     let oLengthMsgId = res.data.body.length;
                     this.oMsgId = res.data.body[oLengthMsgId - 1].msgId;
-                     
-                     this.loadMoreVisable=true
-                }else{
-                    this.loadMoreVisable=false
+
+                    this.loadMoreVisable = true;
+                } else {
+                    this.loadMoreVisable = false;
                 }
                 let odata = res.data.body.reverse();
-               
 
                 $.each(odata, function(index, text) {
                     let timestamp4 = new Date(text.serverTime);
@@ -1050,10 +1076,15 @@ export default {
                             //音频
                             this.messageList[i].content =
                                 "该消息为音频消息,请在手机上查看";
-                        } else if (odata[i].childMessageType == "VIDEO") {
+                        } else if (
+                            odata[i].childMessageType == "VIDEO" ||
+                            odata[i].childMessageType == "CRVIDEO"
+                        ) {
                             //视频
                             if (odata[i].body.indexOf("refuse") > -1) {
                                 this.messageList[i].content = "挂断了视频";
+                            } else if (odata[i].body.indexOf("videoing") > -1) {
+                                this.messageList[i].content = "对方正在视频中";
                             } else if (
                                 odata[i].body.indexOf("sendroom") > -1 ||
                                 odata[i].body.indexOf("MicroCinicSendRoom") > -1
@@ -1083,9 +1114,27 @@ export default {
                             this.messageList[i].content = JSON.parse(
                                 odata[i].body
                             );
-                        } else if (odata[i].childMessageType == "CRVIDEO") {
+                        } else if (
+                            odata[i].childMessageType == "VIDEO" ||
+                            odata[i].childMessageType == "CRVIDEO"
+                        ) {
                             //视频
-                            this.messageList[i].content = "视频";
+                            if (odata[i].body.indexOf("refuse") > -1) {
+                                this.messageList[i].content = "挂断了视频";
+                            } else if (odata[i].body.indexOf("videoing") > -1) {
+                                this.messageList[i].content = "对方正在视频中";
+                            } else if (
+                                odata[i].body.indexOf("sendroom") > -1 ||
+                                odata[i].body.indexOf("MicroCinicSendRoom") > -1
+                            ) {
+                                this.messageList[i].content = "发起了视频聊天";
+                            } else if (odata[i].body.indexOf("complete") > -1) {
+                                this.messageList[i].content = "视频通话已结束";
+                            } else if (odata[i].body.indexOf("cancle") > -1) {
+                                this.messageList[i].content = "取消了视频";
+                            } else if (odata[i].body.indexOf("accept") > -1) {
+                                this.messageList[i].content = "接受了视频";
+                            }
                         } else if (odata[i].childMessageType == "FOLLOWUP") {
                             //随访
                             // this.messageList[i].content = "随访";
@@ -1272,20 +1321,20 @@ export default {
             const res = await storageUsers(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
-                this.$notify.success({
-                    title: "成功",
-                    message: "退出成功！"
-                });
-                _this.createVideoVisable = false;
-                if (this.userSocketInfo.ifVideoImg == 1) {
-                    oMessageType = "complete";
-                } else {
-                    oMessageType = "cancle";
-                }
-                if (closeUser == "us") {
-                    _this.sendMessageChat(6, oMessageType, "VIDEO");
-                    this.$store.commit("socket/IFVIDEOIMG", 0);
-                }
+                // this.$notify.success({
+                //     title: "成功",
+                //     message: "退出成功！"
+                // });
+                // _this.createVideoVisable = false;
+                // if (this.userSocketInfo.ifVideoImg == 1) {
+                //     oMessageType = "complete";
+                // } else {
+                //     oMessageType = "cancle";
+                // }
+                // if (closeUser == "us") {
+                //     _this.sendMessageChat(6, oMessageType, "VIDEO");
+                //     this.$store.commit("socket/IFVIDEOIMG", 0);
+                // }
                 _this.deleteVideoRoom();
             } else {
                 //失败
@@ -1349,7 +1398,6 @@ export default {
                         }
 
                         if (oData.info.childMessageType == 6) {
-                            console.log("取消了视频");
                             childMessageType = "VIDEO";
                             if (messageBody == "refuse") {
                                 //对方拒绝了视频
@@ -1359,24 +1407,19 @@ export default {
                                 // this.closeVideo(messageBody, "other");
                             } else if (messageBody == "accept") {
                                 this.$store.commit("socket/IFVIDEOIMG", 1);
+                            } else if (messageBody == "videoing") {
+                                this.$store.commit("socket/IFVIDEOIMG", 0);
+                                //对方正在视频中
+                                this.closeVideo();
+                                this.videoVisible = false;
+                                this.$notify.error({
+                                    title: "警告",
+                                    message: "对方正在视频中"
+                                });
                             } else if (
                                 messageBody.indexOf("sendroom") > -1 ||
                                 messageBody.indexOf("MicroCinicSendRoom") > -1
                             ) {
-                                //对方邀请你开视频
-                                // if (
-                                //     oData.info.body.split("&")[3] ==
-                                //     this.userSelfInfo.userId
-                                // ) {
-                                //     this.createVideoRoomData = {
-                                //         conferenceId: oData.info.body.split(
-                                //             "&"
-                                //         )[2],
-                                //         conferenceNumber: oData.info.body.split(
-                                //             "&"
-                                //         )[1]
-                                //     };
-                                // }
                             }
                         } else if (oData.info.childMessageType == 4) {
                             childMessageType = "AUDIO";

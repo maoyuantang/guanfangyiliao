@@ -117,7 +117,7 @@
         </div>
       </div>
       <div class="medical_body0_table">
-        <el-table :data="medical_body0_Data" style="width: 100%" @cell-click="cellClick1">
+        <el-table :data="medical_body0_Data" style="width: 100%" @cell-click="cellClick1" :max-height="400">
           <el-table-column prop="deptName" label="科室"></el-table-column>
           <el-table-column prop="typeName" label="类型"></el-table-column>
           <el-table-column prop="id" label="编号"></el-table-column>
@@ -133,7 +133,8 @@
           </el-table-column>
         </el-table>
       </div>
-
+      <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
+      </el-pagination>
     </div>
     <!-- 管理   流程和权限控制 -->
     <div v-if="barInfo.i == 1" class="medical_body1">
@@ -147,7 +148,8 @@
         </div>
       </div>
       <div class="medical_body1_table">
-        <el-table :data="medical_body1_Data" style="width: 100%" @cell-click="cellClick2" :key="Math.random()">
+        <el-table :data="medical_body1_Data" :max-height="550" style="width: 100%" @cell-click="cellClick2"
+          :key="Math.random()">
           <el-table-column prop="deptName" label="科室"></el-table-column>
           <el-table-column prop="direction" label="方向"></el-table-column>
           <el-table-column prop="scope" label="范围"></el-table-column>
@@ -164,6 +166,8 @@
           </el-table-column>
         </el-table>
       </div>
+      <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange2">
+      </el-pagination>
     </div>
 
 
@@ -296,7 +300,7 @@
         editKuang: false,//显示  编辑
         adds: "",//保存表一新增弹框，编辑时某一行的id
         adds2: "",//保存表2新增弹框，编辑时某一行的id
-
+        totals: 0,
         //筛选返回值接收
         //管理1端  筛选工具栏  筛选返回值  接收参数
         departmentId: "",//科室id   selftag
@@ -304,7 +308,7 @@
         gradeId: "",//分级id   selftag
         searchValue: "",//返回搜索框输入   search
         pageNum: 1,
-        pageSize: 15,
+        pageSize: 1,
         // 管理1.2表  表体点击  范围  传入参数
         doctorVisible: false,
         doctorDetailData: [
@@ -603,8 +607,8 @@
         let _this = this;
         let query = {
           token: this.userState.token,
-          pageNum: 1,
-          pageSize: 10,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
           deptId: this.departmentId,
           search: this.searchValue,
           level: this.gradeId,
@@ -613,9 +617,13 @@
         const res = await fetchMedicalClassify(query);                               // 13.1.分类管理-列表 
         if (res.data && res.data.errCode === 0) {
           console.log('管理1.1表+成功')
-          console.log(this.time0)
-          console.log(this.time1)
-          console.log(res)
+          console.log("time0:", this.time0)
+          console.log("time1:", this.time1)
+          console.log("res:", res)
+          console.log("list:", res.data.body.data2.list)
+          console.log("total:", res.data.body.data2.total)
+          this.totals = res.data.body.data2.total
+          console.log(this.totals)
           this.medical_body0_Data = res.data.body.data2.list
         } else {
           console.log('管理1.1表+失败')
@@ -630,14 +638,20 @@
         let _this = this;
         let query = {
           token: this.userState.token,
-          pageNum: 1,
-          pageSize: 10,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
           deptId: this.departmentId,
         };
         const res = await fetchMedicalControl(query);                               //13.11.权限控制-列表 
         if (res.data && res.data.errCode === 0) {
           console.log('管理1.2表+成功')
-          console.log(res)
+          console.log("time0:", this.time0)
+          console.log("time1:", this.time1)
+          console.log("res:", res)
+          console.log("list:", res.data.body.data2.list)
+          console.log("total", res.data.body.data2.total)
+          this.totals = res.data.body.data2.total
+          console.log(this.totals)
           this.medical_body1_Data = res.data.body.data2.list
         } else {
           console.log('管理1.2表+失败')
@@ -670,6 +684,7 @@
           });
           this.testdata1.title = "疾病库"
           this.testdata1.total = "总数：" + this.yTotal1
+          this.testdata1 = Object.assign({}, this.testdata1);
           console.log(this.yTotal1)
           console.log(this.testdata1)
         } else {
@@ -1244,6 +1259,20 @@
           ok: true,
           data: reJson
         }
+      },
+
+
+
+      // 、、分页
+      currentChange1(data) {
+        console.log(data)
+        this.pageNum = data
+        this.getList1()
+      },
+      currentChange2(data) {
+        console.log(data)
+        this.pageNum = data
+        this.getList2()
       },
     },
 
