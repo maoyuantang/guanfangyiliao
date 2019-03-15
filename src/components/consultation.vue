@@ -1060,25 +1060,13 @@ export default {
             };
             const res = await queryStatisticalByApplication(options);
             if (res.data && res.data.errCode === 0) {
-<<<<<<< HEAD
                 // res.data.body.data.splice(1,res.data.body.data.length);
                 this.drawData1.totalNumber=res.data.body.totalNumber
-=======
-                res.data.body.data.splice(1,res.data.body.data.length);
->>>>>>> 2c1bb082373c92fef594d379fbdc525e5bb9bead
                 this.drawData1.dataAxis = res.data.body.data.map(item=>item.x)
                 this.drawData1.data = res.data.body.data.map(item=>item.y)
                 this.drawData1 = Object.assign({},this.drawData1)
                 console.log(this.drawData1)
-<<<<<<< HEAD
                
-=======
-                // console.log(res.data.body.data)
-                // $.each(res.data.body.data, function(index, text) {
-                //     _this.drawData1.dataAxis.push(text.x);
-                //     _this.drawData1.data.push(text.y);
-                // });
->>>>>>> 2c1bb082373c92fef594d379fbdc525e5bb9bead
             } else {
                 //失败
                 this.$notify.error({
