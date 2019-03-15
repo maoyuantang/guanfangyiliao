@@ -681,7 +681,7 @@
 				console.log(data)
 				this.reviewEnum = data.index.value;
 				console.log(this.reviewEnum)
-				this.getList1();
+				// this.getList1();
 				this.getList2();
 			},
 			getSelect2(data) {//配送状态
@@ -1105,6 +1105,7 @@
 					console.log("list:", res.data.body.data2.list)
 					console.log("total:", res.data.body.data2.total)
 					this.totals = res.data.body.data2.total;
+					
 					console.log(this.totals)
 					const lists = res.data.body.data2.list
 					$.each(lists, function (index, text) {
