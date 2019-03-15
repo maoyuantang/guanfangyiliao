@@ -115,4 +115,7 @@
     .chatDialog .el-dialog__body {
         padding-top: 0px
     }
+    .ceshi {
+		color: red !important;
+	}
 </style>

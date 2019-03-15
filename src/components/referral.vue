@@ -303,7 +303,7 @@
         direction: "",//方向：into转入，转出out    selftag   筛选工具栏
         searchValue: "",//返回搜索框输入   search
         pageNum: 1,
-        pageSize: 1,
+        pageSize: 5,
         totals: 0,
         //管理统计端  筛选工具栏  统计筛选返回值  接收参数
         time0: "",///统计筛选开始时间     DatePicker 日期选择器
