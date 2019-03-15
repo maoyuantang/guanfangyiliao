@@ -53,7 +53,7 @@
 				</div>
 				<!-- 统计 -->
 				<div v-else-if="navInfo.i===1" class="count">
-					<div class="manager_count_top mainTab">
+					<div class="manager_count_top ">
 						<div class="manager_count_top_left">
 							<selftag v-model="statistics.topFlag[0]" @reback="getFilter0"></selftag>
 						</div>
@@ -489,6 +489,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		display: -webkit-flex;
 	}
 
 
@@ -571,9 +572,9 @@
 		line-height: 21px;
 	}
 
-	.mainTab {
+	/* .mainTab {
 		display: flex;
 		display: -webkit-flex;
 		justify-content: space-between;
-	}
+	} */
 </style>
