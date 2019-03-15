@@ -291,11 +291,19 @@
 		<norDocAlert :inData="puBlicFileData" @reback="addPublicFile"></norDocAlert>
 		<!-- 孕妇档案 -->
 		<WomanDoc :inData="puBlicManData" @reback="addPublicMan"></WomanDoc>
-		<!-- 邀请弹框 -->
+		<!-- 会诊邀请弹框 -->
 		<div v-if="invitationVisible">
 			<el-dialog class="evaluateBox evaluateBox2" title=" 邀请医生" :visible.sync="invitationVisible" width="602px" hight="356px" center>
 				<el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
 				<el-button type="primary" @click="sureInvitation()">确认邀请</el-button>
+			</el-dialog>
+		</div>
+
+		<!-- 协作邀请弹框 -->
+		<div v-if="invitationVisible">
+			<el-dialog class="evaluateBox evaluateBox2" title=" 邀请医生" :visible.sync="invitationVisible" width="602px" hight="356px" center>
+				<el-tree :data="invitationDataXiez" :props="defaultProps" @check="handleCheckChangeXiez" show-checkbox></el-tree>
+				<el-button type="primary" @click="sureInvitationXiez()">确认邀请</el-button>
 			</el-dialog>
 		</div>
 	</div>
@@ -323,7 +331,9 @@ import {
     signStatus,
     queryConsultationInformList,
 	sponsorConsultationInform,
-	synergyPage
+	synergyPage,
+    enableSynergyDoctor,
+    sendSynergy
 } from "../../../api/apiAll.js";
 export default {
     components: {
@@ -345,6 +355,7 @@ export default {
                 label: "name"
             },
             invitationData: [],
+            invitationDataXiez: [],
             showHeadViable: false,
             planData: [],
             followData: [],
@@ -385,7 +396,10 @@ export default {
                 addr: "", //地址
                 LastMenstrualPeriod: null //末次月经
             },
-            invitationSelectList: []
+            invitationSelectList: [],
+            invitationSelectListXiez: [],
+            consultationId:'',
+            xiezuoId:''
         };
     },
 
@@ -832,7 +846,17 @@ export default {
             console.log(this.invitationSelectList);
             console.log(odata);
         },
-        //确认邀请
+         handleCheckChangeXiez(data, checked, indeterminate) {
+            console.log(checked);
+            let _this = this;
+            $.each(checked.checkedNodes, function(index, text) {
+                if (text.type == 3) {
+                    console.log(_this.requestXiezuo);
+                    _this.invitationSelectListXiez.push(text.id);
+                }
+            });
+        },
+        //会诊确认邀请
         async sureInvitation() {
             if (this.invitationSelectList.length > 0) {
                 let _this = this;
@@ -866,6 +890,7 @@ export default {
                 });
             }
 		},
+        
 		//协作
 		 //获取邀请列表
         async invitedUserXie(row) {
@@ -878,7 +903,7 @@ export default {
             };
             const res = await enableSynergyDoctor(query);
             if (res.data && res.data.errCode === 0) {
-                _this.invitationData = res.data.body;
+                _this.invitationDataXiez = res.data.body;
             } else {
                 //失败
                 this.$notify.error({
@@ -887,6 +912,35 @@ export default {
                 });
             }
         },
+        //会诊确认邀请
+        async sureInvitationXiez() {
+           let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                id: this.xiezuoId,
+                intention: "",
+                recordId: "",
+                receiverId: this.invitationSelectListXiez
+            };
+            const res = await sendSynergy(query, options);
+            if (res.data && res.data.errCode === 0) {
+                this.$notify.success({
+                    title: "成功",
+                    message: "邀请成功"
+                });
+                setTimeout(function() {
+                    _this.invitationVisible = false;
+                }, 1000);
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+		},
     },
     async created() {
         this.getPlanList();
