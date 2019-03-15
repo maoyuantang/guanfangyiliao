@@ -25,7 +25,7 @@
         </el-table>
 
         <div style="text-align:center;padding:10px 0">
-            <el-pagination background layout="prev, pager, next" :total="total" @current-change="changeCurrent">
+            <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total" @current-change="changeCurrent">
             </el-pagination>
         </div>
     </div>
@@ -81,10 +81,11 @@
             tableBtn: Array, //父组件传来的 列表按钮 数据
             checkVisable: Boolean, //父组件传来的是否有多选框
             cellColor: Array, // 添加类名和事件
-            total: Number
+            total: Number,
+            pageSize: Number,
         },
         model: {
-            prop: ["tableData", "columns", "tableBtn", "checkVisable", "cellColor", "adminTotal"],
+            prop: ["tableData", "columns", "tableBtn", "checkVisable", "cellColor", "adminTotal","pageSize"],
             event: "reBack"
         },
         async created() {

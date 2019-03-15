@@ -75,7 +75,7 @@
 				<div class="online-clinic-middle">
 					<publicList :columns="prescriptionAuditDistribution.tableBody.columns"
 						:tableData="prescriptionAuditDistribution.tableBody.tableData"
-						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :total="totals" @reback="currentChange2">
+						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :pageSize="pageSize" :total="totals" @reback="currentChange2">
 					</publicList>
 				</div>
 			</div>
