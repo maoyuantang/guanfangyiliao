@@ -151,8 +151,8 @@
 		<!-- 查看详情弹框中的聊天弹框 -->
 		<div v-if="isShowRecordChat">
 			<el-dialog class="" title="聊天记录" :visible.sync="isShowRecordChat" center>
-				<viewRecord :storyMessage="messageRecord" v-if="messageRecord.length != 0"></viewRecord>
-				<noData v-if="messageRecord.length == 0"></noData>
+				<viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord>
+				<noData v-if="!messageRecord"></noData>
 			</el-dialog>
 		</div>
 
@@ -191,8 +191,8 @@
 		<!-- 查看处方配送记录 -->
 		<div v-if="viewRecordList2">
 			<el-dialog class="  " title="处方配送聊天记录" :visible.sync="viewRecordList2" width="602px" hight="356px" center>
-				<viewRecord :storyMessage="messageRecord" v-if="messageRecord.length != 0"></viewRecord>
-				<noData v-if="messageRecord.length == 0"></noData>
+				<viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord>
+				<noData v-if="!messageRecord"></noData>
 			</el-dialog>
 		</div>
 
@@ -323,7 +323,7 @@
 				sendDoctorId: "",//发药医生
 				reviewDoctorId: "",//审核医生
 				sendEnum: "",//配送状态（UNSEND, //未配送；SENDING, //配送中；SENDOVER, //已签收）
-				messageRecord: [],//查看记录拉回来的历史消息
+				messageRecord: "",//查看记录拉回来的历史消息
 				//管理统计端  统计筛选返回值  接收参数
 				time0: "2017-06-01",//统计筛选起始时间
 				time1: "2019-01-25",//统计筛选结束时间
@@ -1055,27 +1055,28 @@
 			async isShowRecordChatFun(data) {
 				this.isShowRecordChat = true;
 				console.log(data)
-				let query = {
-					token: this.userState.token
-				};
-				let options = {
-					userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
-					sessionId: [data.bindSessionId],//目标会话ID集合/数组
-					msgId: 100,//拉取节点（从这个节点开始拉取历史消息）
-					pageNums: 15//每页拉取数量
-				};
-				const res = await fetchHistoryMessage(query, options);
-				if (res.data && res.data.errCode === 0) {
-					console.log(res)
-					this.messageRecord = res.data.body
-					console.log("聊天记录+成功");
-				} else {
-					console.log('聊天记录+失败')
-					this.$notify.error({
-						title: "警告",
-						message: res.data.errMsg
-					});
-				}
+				this.messageRecord = data.bindSessionId
+				// let query = {
+				// 	token: this.userState.token
+				// };
+				// let options = {
+				// 	userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
+				// 	sessionId: [data.bindSessionId],//目标会话ID集合/数组
+				// 	msgId: 100,//拉取节点（从这个节点开始拉取历史消息）
+				// 	pageNums: 15//每页拉取数量
+				// };
+				// const res = await fetchHistoryMessage(query, options);
+				// if (res.data && res.data.errCode === 0) {
+				// 	console.log(res)
+				// 	this.messageRecord = res.data.body
+				// 	console.log("聊天记录+成功");
+				// } else {
+				// 	console.log('聊天记录+失败')
+				// 	this.$notify.error({
+				// 		title: "警告",
+				// 		message: res.data.errMsg
+				// 	});
+				// }
 			},
 			async relateDoctors2(row, column, cell, event) {
 				console.log(row, column)
@@ -1595,27 +1596,28 @@
 			async viewRecordList2Fun(index, row) {
 				this.viewRecordList2 = true;
 				console.log(index, row)
-				let query = {
-					token: this.userState.token
-				};
-				let options = {
-					userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
-					sessionId: [row.prescriptionSessionId],//目标会话ID集合/数组
-					msgId: 100,//拉取节点（从这个节点开始拉取历史消息）
-					pageNums: 15//每页拉取数量
-				};
-				const res = await fetchHistoryMessage(query, options);
-				if (res.data && res.data.errCode === 0) {
-					console.log(res)
-					this.messageRecord = res.data.body
-					console.log("聊天记录+成功");
-				} else {
-					console.log('聊天记录+失败')
-					this.$notify.error({
-						title: "警告",
-						message: res.data.errMsg
-					});
-				}
+				this.messageRecord = row.prescriptionSessionId
+				// let query = {
+				// 	token: this.userState.token
+				// };
+				// let options = {
+				// 	userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
+				// 	sessionId: [row.prescriptionSessionId],//目标会话ID集合/数组
+				// 	msgId: 100,//拉取节点（从这个节点开始拉取历史消息）
+				// 	pageNums: 15//每页拉取数量
+				// };
+				// const res = await fetchHistoryMessage(query, options);
+				// if (res.data && res.data.errCode === 0) {
+				// 	console.log(res)
+				// 	this.messageRecord = res.data.body
+				// 	console.log("聊天记录+成功");
+				// } else {
+				// 	console.log('聊天记录+失败')
+				// 	this.$notify.error({
+				// 		title: "警告",
+				// 		message: res.data.errMsg
+				// 	});
+				// }
 
 
 				//废弃接口
