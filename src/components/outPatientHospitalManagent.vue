@@ -687,17 +687,17 @@
 			getSelect2(data) {//配送状态
 				console.log(data)
 				this.sendEnum = data.index.value;
-				this.getList1();
+				// this.getList1();
 				this.getList2();
 			},
 			getSelect3(data) {//审核医生
 				this.reviewDoctorId = data.index.value;
-				this.getList1();
+				// this.getList1();
 				this.getList2();
 			},
 			getSelect4(data) {//发药医生
 				this.sendDoctorId = data.index.value;
-				this.getList1();
+				// this.getList1();
 				this.getList2();
 			},
 			adminSearchOne(data) {
@@ -1105,8 +1105,6 @@
 					console.log("list:", res.data.body.data2.list)
 					console.log("total:", res.data.body.data2.total)
 					this.totals = res.data.body.data2.total;
-					
-					console.log(this.totals)
 					const lists = res.data.body.data2.list
 					$.each(lists, function (index, text) {
 						if (text.reviewEnum == "UNREVIEWED") {
