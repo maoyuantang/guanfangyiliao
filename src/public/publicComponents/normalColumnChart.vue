@@ -8,6 +8,8 @@
     // import echarts from 'echarts/lib/echarts'
     require('echarts/lib/chart/bar')
     require('echarts/lib/component/title')
+    require('echarts/lib/component/dataZoom')
+    
 	export default {
 		data () {
 			return {	

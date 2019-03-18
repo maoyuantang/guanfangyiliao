@@ -151,7 +151,8 @@
 		<!-- 查看详情弹框中的聊天弹框 -->
 		<div v-if="isShowRecordChat">
 			<el-dialog class="" title="聊天记录" :visible.sync="isShowRecordChat" center>
-				<viewRecord :storyMessage="messageRecord"></viewRecord>
+				<viewRecord :storyMessage="messageRecord" v-if="messageRecord.length != 0"></viewRecord>
+				<noData v-if="messageRecord.length == 0"></noData>
 			</el-dialog>
 		</div>
 
@@ -190,7 +191,8 @@
 		<!-- 查看处方配送记录 -->
 		<div v-if="viewRecordList2">
 			<el-dialog class="  " title="处方配送聊天记录" :visible.sync="viewRecordList2" width="602px" hight="356px" center>
-				<viewRecord :storyMessage="messageRecord"></viewRecord>
+				<viewRecord :storyMessage="messageRecord" v-if="messageRecord.length != 0"></viewRecord>
+				<noData v-if="messageRecord.length == 0"></noData>
 			</el-dialog>
 		</div>
 
@@ -241,6 +243,7 @@
 	import search from '../public/publicComponents/search.vue'
 	import publicList from '../public/publicComponents/publicList.vue'
 	import normalColumnChart from '../public/publicComponents/normalColumnChart.vue'
+	import noData from '../public/publicComponents/noData.vue'
 	import statisticsWay from '../public/publicComponents/statisticsWay.vue'
 	import addNewFrame from '../public/publicComponents/addNewFrame.vue'
 	import viewRecord from './xiezuo/viewRecord.vue'
@@ -256,6 +259,7 @@
 			statisticsWay,
 			addNewFrame,
 			viewRecord,
+			noData,
 		},
 		data() {
 			return {
@@ -687,17 +691,17 @@
 			getSelect2(data) {//配送状态
 				console.log(data)
 				this.sendEnum = data.index.value;
-				this.getList1();
+				// this.getList1();
 				this.getList2();
 			},
 			getSelect3(data) {//审核医生
 				this.reviewDoctorId = data.index.value;
-				this.getList1();
+				// this.getList1();
 				this.getList2();
 			},
 			getSelect4(data) {//发药医生
 				this.sendDoctorId = data.index.value;
-				this.getList1();
+				// this.getList1();
 				this.getList2();
 			},
 			adminSearchOne(data) {
@@ -1105,8 +1109,6 @@
 					console.log("list:", res.data.body.data2.list)
 					console.log("total:", res.data.body.data2.total)
 					this.totals = res.data.body.data2.total;
-					
-					console.log(this.totals)
 					const lists = res.data.body.data2.list
 					$.each(lists, function (index, text) {
 						if (text.reviewEnum == "UNREVIEWED") {
@@ -1164,6 +1166,7 @@
 				const res = await orderYcmzCharts(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('统计图+门诊订单+成功')
+					console.log(res)
 					const lists = res.data.body.data
 					console.log(lists)
 					console.log(this.type)
@@ -1205,6 +1208,7 @@
 				const res = await orderRxCharts(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('统计图+处方订单+成功')
+					console.log(res)
 					const lists = res.data.body.data
 					console.log(lists)
 					console.log(this.type)
@@ -1247,7 +1251,8 @@
 				const res = await statisticsPeople(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('统计图+就诊人次+成功')
-					const lists = res.data.body.data
+					console.log(res)
+					const lists = res.data.body
 					console.log(lists)
 					console.log(this.type)
 					this.yTotal3 = 0
@@ -1950,6 +1955,4 @@
 		/* background: #F3F6FA; */
 		border-radius: 4px;
 	}
-	
-
 </style>

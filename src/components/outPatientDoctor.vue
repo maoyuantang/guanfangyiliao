@@ -34,11 +34,12 @@
 
         </li>
 
-        <li class="outpatient_right">
+        <li class="outpatient_right" >
           <!-- 病人个数循环 -->
-          <!-- <span class="dian" @click="lookList(text.clinicOrders,text.doctor)">...</span> -->
-          <span class="dian" @click="lookList(text)">...</span>
-          <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-if="index <2">
+          <noData v-if="text.clinicOrders.length == 0"></noData>
+          <span class="dian" @click="lookList(text)" v-if="text.clinicOrders.length != 0">...</span>
+          <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-show="index <2"
+            v-if="text.clinicOrders.length != 0">
 
             <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
               <h1>{{text1.userName}}</h1>
@@ -596,12 +597,14 @@
   import chat from "../public/publicComponents/chat.vue";
   import doctorTab from "../public/publicComponents/doctorTab.vue";
   import search from "../public/publicComponents/search.vue";
+  import noData from "../public/publicComponents/noData.vue";
   import ovideo from "../video/oVideo.vue";
   export default {
     components: {
       doctorTab,
       search,
       chat,
+      noData,
       ovideo
     },
     data() {
