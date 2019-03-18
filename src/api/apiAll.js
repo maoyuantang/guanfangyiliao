@@ -3089,3 +3089,14 @@ export const todayRounds = query => { //15.9（医生）首页-移动查房
         }
     })
 }
+export const patientInfo = query => { //1.获取患者信息
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.patientInfo,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

@@ -158,6 +158,7 @@
         flex-direction: column;
         height: 1.5rem;
         border-bottom: 1px solid #E5E7E9;
+        cursor:pointer;
     }
     .new-content-body-nav-item:last-child{
         /* border: none; */

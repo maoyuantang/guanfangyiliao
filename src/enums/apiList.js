@@ -295,5 +295,6 @@ export default {
     // 谭莹
     setRemark:"/m/v1/api/clinic/remark/set",//添加备注
     seeRemark:'/m/v1/api/clinic/remark/fetch',//查看备注
+    patientInfo:'/m/v1/api/record/nosocomialRecord/patientInfo',//1.获取患者信息
 }
 

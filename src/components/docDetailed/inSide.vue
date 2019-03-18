@@ -14,34 +14,78 @@
                 </div>
             </div>
             <div class="new-content-content">
-                <div class="new-content-content-item" v-for="(item,index) in 9" :key="index">
-                    <p class="new-content-content-item-title">门诊记录</p>
-                    <p class="new-content-content-item-info">就诊医院：xxx医院</p>
-                    <p class="new-content-content-item-info">就诊时间：2018-12-12</p>
-                    <p class="new-content-content-item-info">就诊医院：xxx科室</p>
-                    <p class="new-content-content-item-info">接诊医生：xxx</p>
+                <div class="new-content-content-item" 
+                v-for="(item,index) in navList"
+                :key="index"
+                :class="nowNav===index?'new-content-content-item-select':''"
+                @click="setNowNav(item,index)">
+                    <p class="new-content-content-item-title">{{item.name}}</p>
+                    <p class="new-content-content-item-info" v-for="(value,key) in item.infoList" :key="key">{{value}}</p>
                 </div>
             </div>
         </div>
         <div class="new-content-body">
             <div class="new-content-body-nav">
-                <div class="new-content-body-nav-item">
-                    <div class="new-content-body-nav-item-name">首次入院记录</div>
-                    <div class="new-content-body-nav-item-time">2018-12-12</div>
+                <!-- <div class="new-content-body-nav-item" 
+                :class="navList[nowNav]?(navList[nowNav].childModuleIndex===index?'new-content-body-nav-item-select':''):''"
+                v-for="(item,index) in navList[nowNav]?navList[nowNav].childModule:[]" 
+                :key="index" 
+                @click="selectChildItem(item,index)">
+                    <div class="new-content-body-nav-item-name">{{item.name}}</div>
+                    <div class="new-content-body-nav-item-time">{{item.time}}</div>
+                </div> -->
+                <div class="new-content-body-nav-item" 
+                :class="showModules.index===index?'new-content-body-nav-item-select':''"
+                v-for="(item,index) in showModules.list" 
+                :key="index" 
+                @click="selectChildItem(item,index)">
+                    <div class="new-content-body-nav-item-name">{{item.name}}</div>
+                    <div class="new-content-body-nav-item-time">{{item.time}}</div>
                 </div>
             </div>
             <div class="new-content-body-content">
-                inside
+                {{navList[nowNav].childModule[navList[nowNav].childModuleIndex].code}}
+                
+                <div 
+                :is="showModules.list[showModules.index]?showModules.list[showModules.index].code:''"
+                :in-data="showModules.list[showModules.index]?showModules.list[showModules.index].data:{}"></div>
+                <!-- <div 
+                :is="navList[nowNav]?navList[nowNav].childModule[navList[nowNav].childModuleIndex].code:''"
+                :in-data="navList[nowNav].childModule[navList[nowNav].childModuleIndex].data"></div> -->
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import visitingRecord from './inSide/visitingRecord.vue'//就诊记录
+    import prescription from './inSide/prescription.vue'//处方
+    import check from './inSide/check.vue'//检验
+    import oimage from './inSide/image.vue'//影像检查
+    import admissionRecord from './inSide/admissionRecord.vue'//入院记录
+    import medicalOrder from './inSide/medicalOrder.vue'//医嘱
+    import anaesthesia from './inSide/anaesthesia.vue'//手术麻醉
+    import nursing from './inSide/nursing.vue'//护理记录
+    import examinationRecord from './inSide/examinationRecord.vue'//体检记录
+    import allItems from './inSide/allItems.vue'//所有项目
+    import hospitalizationOrder from './inSide/hospitalizationOrder.vue'//住院医嘱
+    import comprehensive from './inSide/comprehensive.vue'//综合影像
+    
 	export default {
         props: ['inData'],
 		components:{
-			
+            visitingRecord,
+            prescription,
+            check,
+            oimage,
+            admissionRecord,
+            medicalOrder,
+            anaesthesia,
+            nursing,
+            examinationRecord,
+            allItems,
+            hospitalizationOrder,
+            comprehensive
 		},
 		watch:{
 			
@@ -52,11 +96,166 @@
 		
 		data () {
 			return {	
+                nowNav:0,//当前模块索引
+                showModules:{//显示子模块索列表，，，心烦  
+                    index:0,
+                    list:[]
+                },
+                navList:[
+                    {
+                        name:'门诊记录',//模块名称  navList[nowNav]?        
+                        infoList:[//名称下边 信息
+                            '就诊医院：XXXX医院',
+                            '就诊时间：2018-12-25',
+                            '就诊医院： XXXX科室',
+                            '接诊医生：XXX'
+                        ],
+                        childModuleIndex:0,//显示子模块索引
+                        childModule:[//子模块
+                            {
+                                name:'就诊记录',
+                                code:'visitingRecord',
+                                time:'2018-12-25',
+                                data:{
+                                    a:111
+                                }
+                            },
+                            {
+                                name:'处方',
+                                code:'prescription',
+                                time:'2018-12-25',
+                                data:{
+                                    b:22
+                                }
+                            },
+                            {
+                                name:'检验',
+                                code:'check',
+                                time:'2018-12-25',
+                                data:{
+                                    c:333
+                                }
+                            },
+                            {
+                                name:'影像检查',
+                                code:'oimage',
+                                time:'2018-12-25',
+                                data:{
+                                    d:444
+                                }
+                            },
+                            {
+                                name:'住院医嘱',
+                                code:'hospitalizationOrder',
+                                time:'2018-12-25',
+                                data:{
+                                    d:444
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name:'住院记录',//模块名称
+                        infoList:[//名称下边 信息
+                            '入住医院: 住院记录',
+                            '入院时间: 2018-12-25',
+                            '入住科室: XXXX科室',
+                            '床 号:外科大楼5楼504'
+                        ],
+                        childModuleIndex:0,//显示子模块索引
+                        childModule:[//子模块
+                            {
+                                name:'入院记录',
+                                code:'admissionRecord',
+                                time:'2018-12-25',
+                                data:{
+                                    e:555
+                                }
+                            },
+                            {
+                                name:'医嘱',
+                                code:'medicalOrder',
+                                time:'2018-12-25',
+                                data:{
+                                    f:666
+                                }
+                            },
+                            {
+                                name:'检验',
+                                code:'check',
+                                time:'2018-12-25',
+                                data:{
+                                    g:777
+                                }
+                            },
+                            {
+                                name:'影像检查',
+                                code:'oimage',
+                                time:'2018-12-25',
+                                data:{
+                                    h:888
+                                }
+                            },
+                            {
+                                name:'手术麻醉',
+                                code:'anaesthesia',
+                                time:'2018-12-25',
+                                data:{
+                                    i:999
+                                }
+                            },
+                            {
+                                name:'护理记录',
+                                code:'nursing',
+                                time:'2018-12-25',
+                                data:{
+                                    j:10
+                                }
+                            },
+                            {
+                                name:'体检记录',
+                                code:'examinationRecord',
+                                time:'2018-12-25',
+                                data:{
+                                    k:11-11
+                                }
+                            },
+                            {
+                                name:'所有项目',
+                                code:'allItems',
+                                time:'2018-12-25',
+                                data:{
+                                    l:12-12
+                                }
+                            },
+                            {
+                                name:'综合影像',
+                                code:'comprehensive',
+                                time:'2018-12-25',
+                                data:{
+                                    m:13-13
+                                }
+                            }
+                        ]
+                    },
+                ],
+                
 			}
 		},
 		
 		methods:{
-			
+			setNowNav(item,index){
+                this.nowNav = index;
+                this.showModules.list = item.childModule;
+                // this.showModules.list = this.navList[this.nowNav].childModule
+            },
+            selectChildItem(item,index){
+                // console.log(item)
+                // console.log(index)
+                // item.index = index;
+                // this.navList[this.nowNav].childModuleIndex = index;
+                this.showModules.index = index;
+            },
 			
 		},
 		async created(){
@@ -158,6 +357,7 @@
         flex-direction: column;
         height: 1.5rem;
         border-bottom: 1px solid #E5E7E9;
+        cursor:pointer;
     }
     .new-content-body-nav-item:last-child{
         /* border: none; */
@@ -173,5 +373,11 @@
         font-size: 13px;
         color: #97A3B4;
         line-height: 22px;
+    }
+    .new-content-content-item-select{
+        background-color: #e3f5ff;
+    }
+    .new-content-body-nav-item-select{
+        border-left: #00A3FF 2px solid !important;
     }
 </style>
