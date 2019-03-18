@@ -80,7 +80,7 @@
         <!-- 查看记录 -->
         <div v-if="recordVisible">
             <el-dialog class="  " title="  " :visible.sync="recordVisible" width="602px" hight="356px" center>
-                <viewRecord :storyMessage="storyMessage"></viewRecord>
+                <viewRecord :sessionId="sessionId"></viewRecord>
             </el-dialog>
         </div>
 
@@ -172,8 +172,10 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <div style="text-align:center;padding:10px 0">
                 <el-pagination background layout="prev, pager, next" :total="docTotal" @current-change="changeCurrentDoc">
                 </el-pagination>
+                </div>
             </div>
 
         </div>
@@ -239,7 +241,7 @@ export default {
         return {
             docTotal: 0,
             adminTotal: 0,
-            storyMessage: [],
+            // storyMessage: [],
             doctorDetailData: [],
             doctorVis: 0, //0是医生跟医生聊天
             cellColor: [
@@ -697,27 +699,28 @@ export default {
         },
         //查看记录
         async historicalRecord(row) {
+            this.sessionId=row.sessionId
             this.recordVisible = true;
-            let _this = this;
-            let query = {
-                token: this.userState.token
-            };
-            let options = {
-                userId: this.userSelfInfo.userId,
-                sessionId: [row.sessionId],
-                msgId: this.$store.state.socket.messageTicket.oMsgId,
-                pageNums: 15
-            };
-            const res = await fetchHistoryMessage(query, options);
-            if (res.data && res.data.errCode === 0) {
-                _this.storyMessage = res.data.body;
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
+            // let _this = this;
+            // let query = {
+            //     token: this.userState.token
+            // };
+            // let options = {
+            //     userId: this.userSelfInfo.userId,
+            //     sessionId: [row.sessionId],
+            //     msgId: this.$store.state.socket.messageTicket.oMsgId,
+            //     pageNums: 15
+            // };
+            // const res = await fetchHistoryMessage(query, options);
+            // if (res.data && res.data.errCode === 0) {
+            //     _this.storyMessage = res.data.body;
+            // } else {
+            //     //失败
+            //     this.$notify.error({
+            //         title: "警告",
+            //         message: res.data.errMsg
+            //     });
+            // }
         },
         //获取医生详情
         // async getDoctorDetail() {

@@ -1980,6 +1980,7 @@ video {
 }
 .videoBtn {
     position: absolute;
+    z-index: 9999999999;
     display: flex;
     display: -webkit-flex;
 
@@ -2003,6 +2004,7 @@ video {
 .videoTopBtnBox {
     position: absolute;
     top: 10px;
+    z-index: 999999;
     width: 100%;
     display: flex;
     display: -webkit-flex;

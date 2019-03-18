@@ -18,23 +18,58 @@
                 </ul>
             </li>
         </ul>
-           <noData v-show="nodataVisable"></noData>
+        <noData v-show="nodataVisable"></noData>
     </div>
 </template>
 <script>
+import apiBaseURL from "../../enums/apiBaseURL.js";
+import { mapState } from "vuex";
+import { fetchHistoryMessage } from "../../api/apiAll.js";
 import noData from "../../public/publicComponents/noData.vue";
+
 export default {
-    components:{
+    components: {
         noData
+    },
+    computed: {
+        ...mapState({
+            userState: state => state.user.userInfo,
+            userSelfInfo: state => state.user.userSelfInfo
+        })
     },
     data() {
         return {
             messageList: [],
             timeList: [],
-            nodataVisable:false,
+            nodataVisable: false,
+            storyMessage:[]
         };
     },
     methods: {
+        //获取历史记录
+        async getStoryMessage(index) {
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+            };
+            let options = {
+                userId: this.userSelfInfo.userId,
+                sessionId: [this.sessionId],
+                msgId: this.$store.state.socket.messageTicket.oMsgId,
+                pageNums: 15
+            };
+            const res = await fetchHistoryMessage(query,options);
+            if (res.data && res.data.errCode === 0) {
+                _this.storyMessage = res.data.body
+                _this.resolveMessage()
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         resolveMessage() {
             let _this = this;
             this.timeList = [];
@@ -42,8 +77,7 @@ export default {
             $.each(this.storyMessage, function(index, text) {
                 if (text.childMessageType == "INTERROGATION") {
                     //问诊
-                    text.body =
-                        '问诊表';
+                    text.body = "问诊表";
                 } else if (text.childMessageType == "ARTICLE") {
                     //文章
                     text.body = "文章";
@@ -55,8 +89,7 @@ export default {
                     text.body = "随访";
                 } else if (text.childMessageType == "AUDIO") {
                     //音频
-                   text.body =
-                        "该消息为音频消息,请在手机上查看";
+                    text.body = "该消息为音频消息,请在手机上查看";
                 } else if (text.childMessageType == "VIDEO") {
                     //视频
                     if (text.indexOf("refuse") > -1) {
@@ -65,13 +98,13 @@ export default {
                         text.indexOf("sendroom") > -1 ||
                         text.indexOf("MicroCinicSendRoom") > -1
                     ) {
-                       text.body = "发起了视频聊天";
+                        text.body = "发起了视频聊天";
                     } else if (odata[i].body.indexOf("complete") > -1) {
-                        text.body= "视频通话已结束";
+                        text.body = "视频通话已结束";
                     } else if (odata[i].body.indexOf("cancle") > -1) {
-                       text.body = "取消了视频";
+                        text.body = "取消了视频";
                     } else if (odata[i].body.indexOf("accept") > -1) {
-                       text.body= "接受了视频";
+                        text.body = "接受了视频";
                     }
                 } else if (text.childMessageType == "IMAGE") {
                 } else {
@@ -130,8 +163,9 @@ export default {
         }
     },
     created() {
-        this.resolveMessage();
-        console.log(this.storyMessage)
+        this.getStoryMessage();
+        // this.resolveMessage();
+        // console.log(this.storyMessage);
         // if(this.storyMessage.length>0){
         //     this.nodataVisable=false
         // }else{
@@ -139,10 +173,10 @@ export default {
         // }
     },
     props: {
-        storyMessage: Array
+        sessionId: String
     },
     model: {
-        prop: ["storyMessage"],
+        prop: ["sessionId"],
         event: "reBack"
     }
 };
@@ -201,5 +235,4 @@ export default {
 先掉14.4.拉取历史消息记录，获取到的消息放在storyMessage里面传过来
 <viewRecord :storyMessage="storyMessage"></viewRecord>
  */
-
 </style>

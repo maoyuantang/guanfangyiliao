@@ -66,8 +66,10 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <div style="text-align:center;padding:10px 0">
                 <el-pagination background layout="prev, pager, next" :total="docTotal" @current-change="changeCurrentDoc">
                 </el-pagination>
+                </div>
             </div>
         </div>
 
