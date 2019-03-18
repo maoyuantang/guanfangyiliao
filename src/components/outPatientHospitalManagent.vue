@@ -22,7 +22,8 @@
 
 
 				<div class="online-clinic-middle">
-					<el-table :data="tableData" style="width: 100%;" :max-height="550" @cell-click="relateDoctors1">
+					<el-table :data="tableData" style="width: 100%;" :max-height="550" :cell-class-name="ceshi0"
+						@cell-click="relateDoctors1">
 						<el-table-column fixed prop="id" label="业务编号"></el-table-column>
 						<el-table-column prop="departmentName" label="科室"></el-table-column>
 						<el-table-column prop="fullName" label="业务名"></el-table-column>
@@ -37,7 +38,7 @@
 							<template slot-scope="scope">
 								<el-button @click="isShowViewDetailFun(scope.row)" type="success" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">查看详情</el-button>
-								<el-button @click="isShowEditFun(scope.row)" type="success" plain size="mini"
+								<el-button @click="isShowEditFun(scope.row)" type="primary" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">编辑</el-button>
 								<el-button v-if="scope.row.state" @click="isShowForbidFun(scope.row)" type="danger" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">禁用</el-button>
@@ -75,7 +76,8 @@
 				<div class="online-clinic-middle">
 					<publicList :columns="prescriptionAuditDistribution.tableBody.columns"
 						:tableData="prescriptionAuditDistribution.tableBody.tableData"
-						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :total="totals" @reback="currentChange2">
+						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :cellColor="cellColor" :pageSize="pageSize"
+						:total="totals" @reback="currentChange2">
 					</publicList>
 				</div>
 			</div>
@@ -127,7 +129,7 @@
 		<!-- 总+今日+订单详情+弹框 -->
 		<div v-if="isShowRecord">
 			<el-dialog class="  " title="订单详情" :visible.sync="isShowRecord" center width=70%>
-				<el-table :data="tableDataChat" border style="width: 100%;" @cell-click="relateDoctors2" :max-height="450">
+				<el-table :data="tableDataChat" style="width: 100%;" @cell-click="relateDoctors2" :max-height="450">
 					<el-table-column fixed prop="orderNo" label="订单号"></el-table-column>
 					<el-table-column prop="doctorName" label="接诊医生"></el-table-column>
 					<el-table-column prop="mode" label="接诊方式"></el-table-column>
@@ -139,7 +141,7 @@
 					<el-table-column prop="rxFee" label="问诊费"></el-table-column>
 					<el-table-column fixed="right" label="" width="200px">
 						<template slot-scope="scope">
-							<el-button @click="isShowRecordChatFun(scope.row)" type="text" size="small">门诊交流</el-button>
+							<el-button @click="isShowRecordChatFun(scope.row)" type="text" size="small">聊天记录</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -148,8 +150,8 @@
 
 		<!-- 查看详情弹框中的聊天弹框 -->
 		<div v-if="isShowRecordChat">
-			<el-dialog class="" title="聊天模块" :visible.sync="isShowRecordChat" center>
-				聊天模块
+			<el-dialog class="" title="聊天记录" :visible.sync="isShowRecordChat" center>
+				<viewRecord :storyMessage="messageRecord"></viewRecord>
 			</el-dialog>
 		</div>
 
@@ -187,7 +189,7 @@
 
 		<!-- 查看处方配送记录 -->
 		<div v-if="viewRecordList2">
-			<el-dialog class="  " title="查看处方配送记录" :visible.sync="viewRecordList2" width="602px" hight="356px" center>
+			<el-dialog class="  " title="处方配送聊天记录" :visible.sync="viewRecordList2" width="602px" hight="356px" center>
 				<viewRecord :storyMessage="messageRecord"></viewRecord>
 			</el-dialog>
 		</div>
@@ -274,7 +276,7 @@
 
 				// 常用参数
 				pageNum: 1,//页数
-				pageSize: 2,//条数
+				pageSize: 5,//条数
 				totals: 0,
 				srcs: "",//处方id   用于拼接图片src
 
@@ -342,13 +344,6 @@
 				todayPeople: null,//业务人次
 				totalIncome: null,//业务人次
 				totalPeople: null,//业务人次
-				cellColor: [
-					{
-						cell: 4,
-						value: "关联医生",
-						oclass: "ooRed"
-					},
-				],
 
 
 
@@ -463,6 +458,13 @@
 				},
 
 				//处方审核和配送
+				cellColor: [
+					{
+						cell: 4,//cell代表你要给第几列添加类名或者事件
+						value: "审核状态",//这是要改变的列的表头名称
+						oclass: "ceshi"//这是给要改变列添加的类名，添加类名之后，自己写样式，不改样式只添加事件可传空
+					},
+				],
 				prescriptionAuditDistribution: {
 					// 1、筛选
 					topFlag: [
@@ -577,21 +579,21 @@
 						tableBtn: [
 							{
 								name: "处方详情",
-								oclass: "recordBtn",
+								oclass: "btn1",
 								method: (index, row) => {
 									this.chuFangDetailList2Fun(index, row);
 								}
 							},
 							{
 								name: "物流状态",
-								oclass: "recordBtn",
+								oclass: "btn2",
 								method: (index, row) => {
 									this.roadStatusList2Fun(index, row);
 								}
 							},
 							{
 								name: "聊天记录",
-								oclass: "recordBtn",
+								oclass: "btn3",
 								method: (index, row) => {
 									this.viewRecordList2Fun(index, row);
 								}
@@ -679,23 +681,23 @@
 				console.log(data)
 				this.reviewEnum = data.index.value;
 				console.log(this.reviewEnum)
-				this.getList1();
+				// this.getList1();
 				this.getList2();
 			},
 			getSelect2(data) {//配送状态
 				console.log(data)
 				this.sendEnum = data.index.value;
-				this.getList1();
+				// this.getList1();
 				this.getList2();
 			},
 			getSelect3(data) {//审核医生
 				this.reviewDoctorId = data.index.value;
-				this.getList1();
+				// this.getList1();
 				this.getList2();
 			},
 			getSelect4(data) {//发药医生
 				this.sendDoctorId = data.index.value;
-				this.getList1();
+				// this.getList1();
 				this.getList2();
 			},
 			adminSearchOne(data) {
@@ -1040,14 +1042,36 @@
 
 
 
-			//查看详情   再中发起会谈
 
 
 
 
-
-			isShowRecordChatFun() {
+			// 管理1表
+			//业务人次   中发起会谈
+			async isShowRecordChatFun(data) {
 				this.isShowRecordChat = true;
+				console.log(data)
+				let query = {
+					token: this.userState.token
+				};
+				let options = {
+					userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
+					sessionId: [data.bindSessionId],//目标会话ID集合/数组
+					msgId: 100,//拉取节点（从这个节点开始拉取历史消息）
+					pageNums: 15//每页拉取数量
+				};
+				const res = await fetchHistoryMessage(query, options);
+				if (res.data && res.data.errCode === 0) {
+					console.log(res)
+					this.messageRecord = res.data.body
+					console.log("聊天记录+成功");
+				} else {
+					console.log('聊天记录+失败')
+					this.$notify.error({
+						title: "警告",
+						message: res.data.errMsg
+					});
+				}
 			},
 			async relateDoctors2(row, column, cell, event) {
 				console.log(row, column)
@@ -1081,7 +1105,6 @@
 					console.log("list:", res.data.body.data2.list)
 					console.log("total:", res.data.body.data2.total)
 					this.totals = res.data.body.data2.total;
-					console.log(this.totals)
 					const lists = res.data.body.data2.list
 					$.each(lists, function (index, text) {
 						if (text.reviewEnum == "UNREVIEWED") {
@@ -1529,7 +1552,7 @@
 				}
 			},
 			// 管理2表   操作区  
-			//处方详情   管理2表
+			//处方详情   管理2表(图片)
 			async chuFangDetailList2Fun(index, row) {
 				this.chuFangDetailList2 = true;
 				this.srcs = row.id
@@ -1578,10 +1601,10 @@
 					token: this.userState.token
 				};
 				let options = {
-					userId: this.userSelfInfo.userId,
-					sessionId: [row.prescriptionSessionId],
-					msgId: 100,
-					pageNums: 15
+					userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
+					sessionId: [row.prescriptionSessionId],//目标会话ID集合/数组
+					msgId: 100,//拉取节点（从这个节点开始拉取历史消息）
+					pageNums: 15//每页拉取数量
 				};
 				const res = await fetchHistoryMessage(query, options);
 				if (res.data && res.data.errCode === 0) {
@@ -1712,6 +1735,12 @@
 				this.pageNum = data;
 				this.getList2();
 
+			},
+			//表格样式
+			ceshi0(data) {
+				if (data.columnIndex == 4 || data.columnIndex == 5) {
+					return 'ceshi'
+				}
 			}
 
 
@@ -1810,7 +1839,7 @@
 	}
 
 	.evaluateBox1 {
-		overflow-y: scroll;
+		overflow-y: auto;
 
 		ul {
 			li {
@@ -1889,17 +1918,6 @@
 		color: red !important;
 	}
 
-	.recordBtn {
-		width: 57px;
-		height: 20px;
-		background: rgba(66, 133, 244, 0.1);
-		border: 1px solid rgba(66, 133, 244, 0.6);
-		border-radius: 3px;
-		font-family: PingFangSC-Regular;
-		font-size: 12px;
-		color: #4d7cfe;
-		line-height: 3px;
-	}
 
 	.mainTab {
 		display: flex;
@@ -1930,4 +1948,6 @@
 		/* background: #F3F6FA; */
 		border-radius: 4px;
 	}
+	
+
 </style>

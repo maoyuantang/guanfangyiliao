@@ -152,7 +152,7 @@
         </div>
       </div>
       <div class="medical_body1_table">
-        <el-table :data="medical_body1_Data" :max-height="550" style="width: 100%" @cell-click="cellClick2"
+        <el-table :data="medical_body1_Data" :max-height="550" style="width: 100%" @cell-click="cellClick2" :cell-class-name="ceshi0"
           :key="Math.random()">
           <el-table-column prop="deptName" label="科室"></el-table-column>
           <el-table-column prop="direction" label="方向"></el-table-column>
@@ -315,7 +315,7 @@
         gradeId: "",//分级id   selftag
         searchValue: "",//返回搜索框输入   search
         pageNum: 1,
-        pageSize: 1,
+        pageSize: 5,
         // 管理1.2表  表体点击  范围  传入参数
         doctorVisible: false,
         doctorDetailData: [
@@ -1281,6 +1281,14 @@
         this.pageNum = data
         this.getList2()
       },
+
+
+      //表格样式
+      ceshi0(data) {
+        if (data.columnIndex == 2) {
+          return 'ceshi'
+        }
+      }
     },
 
 
@@ -1388,4 +1396,7 @@
       /* flex-wrap: wrap; */
     }
   }
+  .ceshi {
+		color: red !important;
+	}
 </style>

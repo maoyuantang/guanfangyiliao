@@ -103,7 +103,7 @@
                         <search @searchValue="adminSearchChange"></search>
                     </div>
                     <div>
-                        <tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData" :total="adminTotal" @reback="changeCurrent"> </tableList>
+                        <tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData" :total="adminTotal" @rebackFenye="changeCurrent"> </tableList>
                     </div>
                 </div>
                 <!-- 统计 -->
@@ -115,7 +115,6 @@
                         <statisticsWay @reBack="getTjData"></statisticsWay>
                     </div>
                     <div style="display:flex">
-                        {{drawData1}}
                         <normalColumnChart :inData="drawData1"> </normalColumnChart>
                         <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
                     </div>
@@ -521,15 +520,15 @@ export default {
             drawData1: {
                 dataAxis: ["点"], //每个柱子代表的类名
                 data: [220], //具体数值
-                title: "测试测试", //图表标题
-                total: "565"
+                title: "申请科室", //图表标题
+                total: "234"
             },
             //发起科室统计图
             drawDataStart: {
                 dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
-                title: " ", //图表标题
-                totalNumber: ""
+                title: "发起科室", //图表标题
+                totalNumber: "34"
             },
             oUserType: ""
         };
@@ -1057,15 +1056,12 @@ export default {
             const res = await queryStatisticalByApplication(options);
             if (res.data && res.data.errCode === 0) {
                 // res.data.body.data.splice(1,res.data.body.data.length);
+                this.drawData1.totalNumber=res.data.body.totalNumber
                 this.drawData1.dataAxis = res.data.body.data.map(item=>item.x)
                 this.drawData1.data = res.data.body.data.map(item=>item.y)
                 this.drawData1 = Object.assign({},this.drawData1)
                 console.log(this.drawData1)
-                // console.log(res.data.body.data)
-                // $.each(res.data.body.data, function(index, text) {
-                //     _this.drawData1.dataAxis.push(text.x);
-                //     _this.drawData1.data.push(text.y);
-                // });
+               
             } else {
                 //失败
                 this.$notify.error({
@@ -1088,10 +1084,16 @@ export default {
             };
             const res = await queryStatisticalBySponsor(options);
             if (res.data && res.data.errCode === 0) {
-                $.each(res.data.body.data, function(index, text) {
-                    _this.drawDataStart.dataAxis.push(text.x);
-                    _this.drawDataStart.data.push(text.y);
-                });
+                // $.each(res.data.body.data, function(index, text) {
+                //     _this.drawDataStart.dataAxis.push(text.x);
+                //     _this.drawDataStart.data.push(text.y);
+                // });
+                // res.data.body.data.splice(1,res.data.body.data.length);
+                this.drawDataStart.totalNumber=res.data.body.totalNumber
+                this.drawDataStart.dataAxis = res.data.body.data.map(item=>item.x)
+                this.drawDataStart.data = res.data.body.data.map(item=>item.y)
+                this.drawDataStart = Object.assign({},this.drawDataStart)
+                console.log(this.drawDataStart)
             } else {
                 //失败
                 this.$notify.error({
@@ -1228,8 +1230,6 @@ export default {
     font-size: 12px;
     color: #4d7cfe;
     line-height: 3px;
-}
-.consultation {
 }
 .startGroup input {
     width: 162px;

@@ -53,7 +53,7 @@
 				</div>
 				<!-- 统计 -->
 				<div v-else-if="navInfo.i===1" class="count">
-					<div class="manager_count_top mainTab">
+					<div class="manager_count_top ">
 						<div class="manager_count_top_left">
 							<selftag v-model="statistics.topFlag[0]" @reback="getFilter0"></selftag>
 						</div>
@@ -121,7 +121,7 @@
 				searchValue: "",//返回搜索框输入   search
 				types: '', //String MANAGE账号是什么权限
 				pageNum: 1,//页数
-				pageSize: 1,//条数
+				pageSize: 5,//条数
 				yTotal1: 0,//统计y轴相加
 				//管理统计端  筛选工具栏  统计筛选返回值  接收参数
 				time0: "",///统计筛选开始时间
@@ -489,11 +489,9 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		display: -webkit-flex;
 	}
 
-	.manager_count_top>div {
-		/* flex: 1; */
-	}
 
 	/* 医生端样式 */
 	.doctorStyle {
@@ -574,9 +572,9 @@
 		line-height: 21px;
 	}
 
-	.mainTab {
+	/* .mainTab {
 		display: flex;
 		display: -webkit-flex;
 		justify-content: space-between;
-	}
+	} */
 </style>

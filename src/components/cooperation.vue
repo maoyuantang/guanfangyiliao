@@ -21,7 +21,7 @@
                         <search @searchValue="adminSearchChange"></search>
                     </div>
                     <div>
-                        <publicList :tableData="adminLists" :columns="adminColumns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData" :total="adminTotal" @reback="changeCurrent"></publicList>
+                        <publicList :tableData="adminLists" :columns="adminColumns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData" :total="adminTotal" @rebackFenye="changeCurrent"></publicList>
                     </div>
                 </div>
                 <!-- 统计 -->
@@ -373,35 +373,11 @@ export default {
             monthToYear: [],
             drawData: {
                 dataAxis: [
-                    "点",
-                    "击",
-                    "柱",
-                    "子",
-                    "点",
-                    "击",
-                    "柱",
-                    "子",
-                    "点",
-                    "击",
-                    "柱",
-                    "子"
                 ], //每个柱子代表的类名
                 data: [
-                    220,
-                    182,
-                    191,
-                    234,
-                    220,
-                    182,
-                    191,
-                    234,
-                    220,
-                    182,
-                    191,
-                    234
                 ], //具体数值
-                title: "申请科室统计图", //图表标题
-                totalNumber: "555"
+                title: "协作管理统计图", //图表标题
+                totalNumber: ""
             },
             // 医生端
             //可协作医生列表
@@ -877,10 +853,14 @@ export default {
             };
             const res = await manageStatistics(options);
             if (res.data && res.data.errCode === 0) {
-                $.each(res.data.body.data, function(index, text) {
-                    _this.drawData.dataAxis.push(text.unit);
-                    _this.drawData.data.push(text.number);
-                });
+                // $.each(res.data.body.data, function(index, text) {
+                //     _this.drawData.dataAxis.push(text.unit);
+                //     _this.drawData.data.push(text.number);
+                // });
+                  this.drawData.totalNumber=res.data.body.totalNumber
+                this.drawData.dataAxis = res.data.body.data.map(item=>item.x)
+                this.drawData.data = res.data.body.data.map(item=>item.y)
+                this.drawData = Object.assign({},this.drawData)
                 console.log("统计表+成功");
             } else {
                 console.log("统计表+失败");

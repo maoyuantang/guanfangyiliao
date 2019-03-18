@@ -390,9 +390,7 @@
                         <search @searchValue="adminSearchChange"></search>
                     </div>
                     <div>
-                        <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn"></tableList>
-                        <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
-                        </el-pagination> -->
+                        <tableList :tableData="tableDataList" :columns="columns" :tableBtn="tableBtn" :total="adminTotal1" @rebackFenye="changeCurrent1"></tableList>
                     </div>
                 </div>
                 <!-- 满意度调查 -->
@@ -441,8 +439,12 @@
                         <tableList :tableData="satisfiedList" :columns="satisfiedColumns" :tableBtn="SatisfiedBtn" :checkVisable="mydTableChecked" @reBack="getUserId"></tableList>
 
                     </div>
-                    <!-- 123
-                    <pieChart></pieChart> -->
+                    <div class="pieChartClass">
+                        <pieChart :inData="pieChart1"></pieChart>
+                        <pieChart :inData="pieChart2"></pieChart>
+                        <pieChart :inData="pieChart3"></pieChart>
+                    </div>
+
                 </div>
                 <!-- 家用设备检测 -->
                 <div v-show="2==oMainShow">
@@ -468,9 +470,15 @@
                         </div>
                         <statisticsWay @reBack="tjTimeValueFun"></statisticsWay>
                     </div>
-                    <div style="display:flex">
-                        <normalColumnChart :inData="drawData"> </normalColumnChart>
-                        <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
+                    <div>
+                        <div style="display:flex">
+                            <normalColumnChart :inData="drawData"> </normalColumnChart>
+                            <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
+                        </div>
+                        <div style="display:flex">
+                            <normalColumnChart :inData="drawDataEquipment"> </normalColumnChart>
+                            <normalColumnChart :inData="drawDataFollow"> </normalColumnChart>
+                        </div>
 
                     </div>
                 </div>
@@ -632,7 +640,9 @@ import {
     groupList,
     addGroupMember,
     addfenzu,
-    groupSelects
+    groupSelects,
+    SETEQUIPMENT,
+    SETFOLLOWCHART
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -668,6 +678,11 @@ export default {
     },
     data() {
         return {
+            pieChart1:{
+                id:'myChart1'
+            },
+            pieChart2:{id:'myChart2'},
+            pieChart3:{id:'myChart3'},
             groupValue: "",
             groupName: "",
             groupVisible: false,
@@ -1102,14 +1117,26 @@ export default {
             drawData: {
                 dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
-                title: " ", //图表标题
+                title: "住院随访统计 ", //图表标题
                 total: "555"
             },
             //发起科室统计图
             drawDataStart: {
                 dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
-                title: " ", //图表标题
+                title: " 门诊随访统计", //图表标题
+                total: "555"
+            },
+            drawDataEquipment: {
+                dataAxis: [], //每个柱子代表的类名
+                data: [], //具体数值
+                title: " 设备监测人次", //图表标题
+                total: "555"
+            },
+            drawDataFollow: {
+                dataAxis: [], //每个柱子代表的类名
+                data: [], //具体数值
+                title: "智能随访人次 ", //图表标题
                 total: "555"
             },
             tjType: "DEPT",
@@ -1298,7 +1325,20 @@ export default {
             mydAddSuosuClassVis: false,
             groupList: [],
             oGroupClick: -1,
-            groupUserId: []
+            groupUserId: [],
+            // 分页变量
+            adminPageNum1: "",
+            adminPageNum2: "",
+            adminPageNum3: "",
+            adminPageNum4: "",
+            adminPageNum5: "",
+            adminTotal1: 0,
+            adminTotal2: "",
+
+            adminTotal3: "",
+            adminTotal4: "",
+            adminTotal5: "",
+            adminTotal6: ""
         };
     },
     computed: {
@@ -1337,6 +1377,30 @@ export default {
     },
     mounted() {},
     methods: {
+        // 分页
+        // 随访管理
+        changeCurrent1(data) {
+            this.adminPageNum1 = data;
+            this.getFoList();
+        },
+        // 满意度调查
+        changeCurrent2(data) {
+            this.adminPageNum2 = data;
+            this.oGetResultList();
+            this.oGetModelList();
+        },
+        changeCurrent3(data) {
+            this.adminPageNum3 = data;
+            this.getAdminList();
+        },
+        changeCurrent4(data) {
+            this.adminPageNum4 = data;
+            this.getAdminList();
+        },
+        changeCurrent5(data) {
+            this.adminPageNum5 = data;
+            this.getAdminList();
+        },
         oTab66Remove() {
             console.log(this.oTab66.list);
             this.oTab66.list = this.oTab6.list.slice(0);
@@ -1403,14 +1467,6 @@ export default {
                 });
             }
         },
-
-        //满意度新增模板借口
-        // async handleChange(value) {
-        //     console.log(value);
-
-        //     this.sendTemplateList1(value, "");
-        //     console.log(this.mydTemplateTitle);
-        // },
         onEditorReady(editor) {},
 
         //筛选
@@ -1423,6 +1479,8 @@ export default {
             } else if (this.switchNum == 3) {
                 this.oGetFollowupGraph();
                 this.oGetFollowupRemarks();
+                this.oGetFollowupFollow();
+                this.oGetFollowupEquipment();
             }
 
             // this.oGetModelList();
@@ -1476,7 +1534,7 @@ export default {
             this.getUsFollow();
         },
         //随访计划接口
-        //获取随访列表
+        //获取随访管理列表
         async getFoList() {
             let _this = this;
             const options = {
@@ -1486,7 +1544,7 @@ export default {
                 type: this.otype,
                 mode: this.oTheWay,
                 content: this.oContent,
-                pageNum: 1,
+                pageNum: this.adminPageNum1,
                 pageSize: 10
             };
             const res = await managerGetPlanList(options);
@@ -1696,7 +1754,7 @@ export default {
                 mode: this.mydMode,
                 search: this.mydSearchData,
                 department: this.odepartment,
-                pageNum: 1,
+                pageNum: this.adminPageNum2,
                 pageSize: 10
             };
             const res = await getResultList(options);
@@ -1722,7 +1780,7 @@ export default {
                 department: this.odepartment,
                 start: this.mydStartTime,
                 end: this.mydEndTime,
-                pageNum: 1,
+                pageNum: this.adminPageNum2,
                 pageSize: 10
             };
             const res = await getModelInsert(options);
@@ -2033,11 +2091,15 @@ export default {
             };
             const res = await INHOSPITAL(options);
             if (res.data && res.data.errCode === 0) {
-                _this.drawData.totalNumber = res.data.body.total;
-                $.each(res.data.body.data, function(index, text) {
-                    _this.drawData.dataAxis.push(text.x);
-                    _this.drawData.data.push(text.y);
-                });
+                // _this.drawData.totalNumber = res.data.body.total;
+                // $.each(res.data.body.data, function(index, text) {
+                //     _this.drawData.dataAxis.push(text.x);
+                //     _this.drawData.data.push(text.y);
+                // });
+                this.drawData.totalNumber = res.data.body.totalNumber;
+                this.drawData.dataAxis = res.data.body.data.map(item => item.x);
+                this.drawData.data = res.data.body.data.map(item => item.y);
+                this.drawData = Object.assign({}, this.drawData);
             } else {
                 //失败
                 this.$notify.error({
@@ -2060,11 +2122,82 @@ export default {
             };
             const res = await OUTPATIENT(options);
             if (res.data && res.data.errCode === 0) {
-                _this.drawDataStart.totalNumber = res.data.body.total;
-                $.each(res.data.body.data, function(index, text) {
-                    _this.drawDataStart.dataAxis.push(text.x);
-                    _this.drawDataStart.data.push(text.y);
+                // _this.drawDataStart.totalNumber = res.data.body.total;
+                // $.each(res.data.body.data, function(index, text) {
+                //     _this.drawDataStart.dataAxis.push(text.x);
+                //     _this.drawDataStart.data.push(text.y);
+                // });
+                this.drawDataStart.totalNumber = res.data.body.totalNumber;
+                this.drawDataStart.dataAxis = res.data.body.data.map(
+                    item => item.x
+                );
+                this.drawDataStart.data = res.data.body.data.map(
+                    item => item.y
+                );
+                this.drawDataStart = Object.assign({}, this.drawDataStart);
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
                 });
+            }
+        },
+        // 获取设备监测人次
+        async oGetFollowupEquipment() {
+            this.drawDataEquipment.dataAxis = [];
+            this.drawDataEquipment.data = [];
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                department: this.odepartment,
+                type: this.tjType,
+                startDate: this.tjStartTime,
+                endDate: this.tjEndTime
+            };
+            const res = await SETEQUIPMENT(options);
+            if (res.data && res.data.errCode === 0) {
+                this.drawDataEquipment.totalNumber = res.data.body.totalNumber;
+                this.drawDataEquipment.dataAxis = res.data.body.data.map(
+                    item => item.x
+                );
+                this.drawDataEquipment.data = res.data.body.data.map(
+                    item => item.y
+                );
+                this.drawDataEquipment = Object.assign(
+                    {},
+                    this.drawDataEquipment
+                );
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        // 获取智能随访人次
+        async oGetFollowupFollow() {
+            this.drawDataFollow.dataAxis = [];
+            this.drawDataFollow.data = [];
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                department: this.odepartment,
+                type: this.tjType,
+                startDate: this.tjStartTime,
+                endDate: this.tjEndTime
+            };
+            const res = await SETFOLLOWCHART(options);
+            if (res.data && res.data.errCode === 0) {
+                this.drawDataFollow.totalNumber = res.data.body.totalNumber;
+                this.drawDataFollow.dataAxis = res.data.body.data.map(
+                    item => item.x
+                );
+                this.drawDataFollow.data = res.data.body.data.map(
+                    item => item.y
+                );
+                this.drawDataFollow = Object.assign({}, this.drawDataFollow);
             } else {
                 //失败
                 this.$notify.error({
@@ -2077,10 +2210,15 @@ export default {
         tjTimeValueFun(data) {
             console.log(data);
             this.tjType = data.select.value;
-            this.tjStartTime = data.time[0];
-            this.tjEndTime = data.time[0];
+            if (data.time) {
+                this.tjStartTime = data.time[0];
+                this.tjEndTime = data.time[0];
+            }
+
             this.oGetFollowupGraph();
             this.oGetFollowupRemarks();
+            this.oGetFollowupFollow();
+            this.oGetFollowupEquipment();
         },
 
         getConsulTabData(res) {
@@ -2096,6 +2234,8 @@ export default {
             } else if (res.i == 3) {
                 this.oGetFollowupGraph();
                 this.oGetFollowupRemarks();
+                this.oGetFollowupFollow();
+                this.oGetFollowupEquipment();
             }
         },
         // 表格分页
@@ -2404,15 +2544,15 @@ export default {
         },
         followCheckChange(data) {
             console.log(data);
-            let _this=this
-             _this.groupUserId=[]
+            let _this = this;
+            _this.groupUserId = [];
             $.each(data, function(index, text) {
                 _this.groupUserId.push(text.userId);
             });
         },
         //移动分组
         async changeGroup(value, index) {
-            let groupUserId1=this.groupUserId.join(',')
+            let groupUserId1 = this.groupUserId.join(",");
             this.oGroupClick = index;
             let _this = this;
             let query = {
@@ -2428,7 +2568,7 @@ export default {
                     title: "成功",
                     message: "移动成功！"
                 });
-                 setTimeout(function() {
+                setTimeout(function() {
                     _this.getUsFollow();
                 }, 1000);
             } else {
@@ -3525,5 +3665,9 @@ export default {
 }
 .groupClick {
     background: #dbe1e5;
+}
+.pieChartClass{
+    /* display: flex;
+    display: -webkit-flex */
 }
 </style>
