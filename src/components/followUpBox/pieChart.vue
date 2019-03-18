@@ -1,24 +1,35 @@
 <template>
     <div>
+        {{inData}}
         <div :id='inData.id' style='width：600px;height:600px'>
         </div>
     </div>
 </template>
 
 <script>
-import echarts from "../../plugs/echarts.js";
-// import echarts from "echarts";
+// import echarts from "../../plugs/echarts.js";
+import echarts from "echarts";
 export default {
+    watch:{
+        inData(n){
+            this.$nextTick(arg=>this.drawLine())
+        }
+    },
     data() {
-        return {};
+        return {
+            oX:[],
+            oY:[],
+        };
     },
     mounted() {
-        this.drawLine();
+       
+        
     },
     methods: {
-        drawLine() {
+         async drawLine() {
+            // debugger
             // 基于准备好的dom，初始化echarts实例
-            let myChart1 = echarts.init(document.getElementById(this.inData.id));
+            let myChart1 = await echarts.init(document.getElementById(this.inData.id));
             // 绘制图表
             myChart1.setOption({
                 title: {
@@ -71,7 +82,14 @@ export default {
         prop: ["inData"],
         event: "reBack"
     },
-    async created() {},
+    async created() {
+        //  this.$nextTick(arg=>this.drawLine())
+        $.each(inData.data.data,function(index,text){
+            this.oX.push(text.x)
+             this.oY.push(text.y)
+        })
+        this.drawLine();
+    },
     async beforeMount() {}
 };
 </script>

@@ -436,13 +436,14 @@
 
                     </div>
                     <div>
-                        <tableList :tableData="satisfiedList" :columns="satisfiedColumns" :tableBtn="SatisfiedBtn" :checkVisable="mydTableChecked" @reBack="getUserId"></tableList>
+                        <tableList :tableData="satisfiedList" :columns="satisfiedColumns" :tableBtn="SatisfiedBtn" :checkVisable="mydTableChecked" @reBack="getUserId" :total="adminTotal2" @rebackFenye="changeCurrent2"></tableList>
 
                     </div>
                     <div class="pieChartClass">
+                        {{getManyiduChartList}}
                         <pieChart :inData="pieChart1"></pieChart>
-                        <pieChart :inData="pieChart2"></pieChart>
-                        <pieChart :inData="pieChart3"></pieChart>
+                        <!-- <pieChart :inData="pieChart2"></pieChart>
+                        <pieChart :inData="pieChart3"></pieChart> -->
                     </div>
 
                 </div>
@@ -457,9 +458,7 @@
                         <search @searchValue="searchChange"></search>
                     </div>
                     <div>
-                        <tableList :tableData="tableDataListFa" :columns="columnsFa"></tableList>
-                        <!-- <el-pagination background layout="prev, pager, next" :total="total" :page-size="opageSize" @current-change="seeCurrentChange">
-                        </el-pagination> -->
+                        <tableList :tableData="tableDataListFa" :columns="columnsFa" :total="adminTotal3" @rebackFenye="changeCurrent3"></tableList>
                     </div>
                 </div>
                 <!-- 统计 -->
@@ -547,13 +546,8 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
-                            <!-- <el-select v-model="groupValue" placeholder="请选择" @change="addGroup(groupValue)">
-                                <el-option key="0" label="新增组" value="0">
-                                </el-option>
-                                <el-option v-for="item in groupList" :key="item.groupId" :label="item.groupName" :value="item.groupId">
-                                </el-option>
-                            </el-select> -->
-
+                            <el-pagination background layout="prev, pager, next" :total="adminTotal5" :current-change="changeCurrent5">
+                            </el-pagination>
                             <div class="groupClass">
                                 <div>移动到</div>
                                 <ul>
@@ -564,7 +558,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <tableList v-else :tableData="doctorList" :columns="doctorColumns" :checkVisable="docTableChecked" :tableBtn="doctorBtn"></tableList>
+                        <tableList v-else :tableData="doctorList" :columns="doctorColumns" :checkVisable="docTableChecked" :tableBtn="doctorBtn" :total="adminTotal4" @rebackFenye="changeCurrent4"></tableList>
                     </div>
                 </div>
             </div>
@@ -678,11 +672,13 @@ export default {
     },
     data() {
         return {
-            pieChart1:{
-                id:'myChart1'
+            getManyiduChartList: [],
+            pieChart1: {
+                id: "myChart1",
+                data: {}
             },
-            pieChart2:{id:'myChart2'},
-            pieChart3:{id:'myChart3'},
+            pieChart2: { id: "myChart2", data: {} },
+            pieChart3: { id: "myChart3", data: {} },
             groupValue: "",
             groupName: "",
             groupVisible: false,
@@ -1327,18 +1323,18 @@ export default {
             oGroupClick: -1,
             groupUserId: [],
             // 分页变量
-            adminPageNum1: "",
-            adminPageNum2: "",
-            adminPageNum3: "",
-            adminPageNum4: "",
-            adminPageNum5: "",
+            adminPageNum1: 0,
+            adminPageNum2: 0,
+            adminPageNum3: 0,
+            adminPageNum4: 0,
+            adminPageNum5: 0,
             adminTotal1: 0,
-            adminTotal2: "",
+            adminTotal2: 0,
 
-            adminTotal3: "",
-            adminTotal4: "",
-            adminTotal5: "",
-            adminTotal6: ""
+            adminTotal3: 0,
+            adminTotal4: 0,
+            adminTotal5: 0,
+            adminTotal6: 0
         };
     },
     computed: {
@@ -1374,6 +1370,7 @@ export default {
             this.partDoctorType = "DOCTOR";
         }
         this.getDepartment(); //科室列表
+        this.oGetResultGraph(); //满意度统计
     },
     mounted() {},
     methods: {
@@ -1391,11 +1388,19 @@ export default {
         },
         changeCurrent3(data) {
             this.adminPageNum3 = data;
-            this.getAdminList();
+            this.oManagerGetDeviceList();
         },
         changeCurrent4(data) {
             this.adminPageNum4 = data;
-            this.getAdminList();
+            if (this.oDocThis == 1) {
+                this.oGetTemplate();
+            } else if (this.oDocThis == 2) {
+                this.oQueryList();
+            } else if (this.oDocThis == 3) {
+                this.oQueryArticleList();
+            } else if (this.oDocThis == 4) {
+                this.getQueryPageByDoctorWeb();
+            }
         },
         changeCurrent5(data) {
             this.adminPageNum5 = data;
@@ -1482,10 +1487,6 @@ export default {
                 this.oGetFollowupFollow();
                 this.oGetFollowupEquipment();
             }
-
-            // this.oGetModelList();
-            // this.oGetResultList();
-            // this.oGetMissileList();
         },
         getOTab2(data) {
             this.otype = data.index.value;
@@ -1549,6 +1550,7 @@ export default {
             };
             const res = await managerGetPlanList(options);
             if (res.data && res.data.errCode === 0) {
+                this.adminTotal1 = res.data.body.data2.total;
                 this.tableDataList = res.data.body.data2.list;
                 console.log(this.tableDataList);
             } else {
@@ -2062,11 +2064,12 @@ export default {
                 houseDeviceType: this.houseDeviceType,
                 search: this.searchData,
                 department: this.department,
-                pageNum: 1,
+                pageNum: this.adminPageNum3,
                 pageSize: 10
             };
             const res = await managerGetDeviceList(options);
             if (res.data && res.data.errCode === 0) {
+                _this.adminTotal3 = res.data.body.data2.total;
                 _this.tableDataListFa = res.data.body.data2.list;
             } else {
                 //失败
@@ -2254,6 +2257,7 @@ export default {
         //医生端tab切换
         docTab(oindex) {
             this.oDocThis = oindex;
+            this.adminPageNum4 = 1;
             this.docSearchData = "";
             if (oindex == 0) {
                 this.doctorSxVisiable = true;
@@ -2323,6 +2327,7 @@ export default {
                 ];
             } else if (oindex == 1) {
                 //随访模板
+
                 this.myFollowVisable = false;
                 this.docAddTemplate = true;
                 (this.doctorColumns = [
@@ -2681,7 +2686,7 @@ export default {
             };
             const res = await myFollowup(options);
             if (res.data && res.data.errCode === 0) {
-                // _this.doctorList = res.data.body.data2.list;
+                _this.adminTotal5=res.data.body.data2.total
                 _this.myFollowList = res.data.body.data2.list;
             } else {
                 //失败
@@ -2701,11 +2706,12 @@ export default {
                 token: this.userState.token,
                 search: this.docSearchData,
                 department: this.docDepartment,
-                pageNum: 1,
+                pageNum: this.adminPageNum4,
                 pageSize: 10
             };
             const res = await getTemplate(options);
             if (res.data && res.data.errCode === 0) {
+                _this.adminTotal4 = res.data.body.data2.total;
                 _this.doctorList = res.data.body.data2.list;
             } else {
                 //失败
@@ -2723,11 +2729,12 @@ export default {
                 token: this.userState.token,
                 search: this.docSearchData,
                 department: this.docDepartment,
-                pageNum: 1,
+                pageNum: this.adminPageNum4,
                 pageSize: 10
             };
             const res = await queryList(options);
             if (res.data && res.data.errCode === 0) {
+                _this.adminTotal4 = res.data.body.data2.total;
                 _this.doctorList = res.data.body.data2.list;
             } else {
                 //失败
@@ -2745,11 +2752,12 @@ export default {
                 token: this.userState.token,
                 search: this.docSearchData,
                 department: this.docDepartment,
-                pageNum: 1,
+                pageNum: this.adminPageNum4,
                 pageSize: 10
             };
             const res = await queryArticleList(options);
             if (res.data && res.data.errCode === 0) {
+                _this.adminTotal4 = res.data.body.data2.total;
                 _this.doctorList = res.data.body.data2.list;
             } else {
                 //失败
@@ -2765,11 +2773,12 @@ export default {
             let _this = this;
             const query = {
                 token: this.userState.token,
-                pageNum: 1,
+                pageNum: this.adminPageNum4,
                 pageSize: 10
             };
             const res = await queryPageByDoctorWeb(query);
             if (res.data && res.data.errCode === 0) {
+                _this.adminTotal4 = res.data.body.data2.total;
                 _this.doctorList = res.data.body.data2.list;
             } else {
                 //失败
@@ -2992,6 +3001,10 @@ export default {
             };
             const res = await getResultGraph(query);
             if (res.data && res.data.errCode === 0) {
+                _this.getManyiduChartList = res.data.body;
+                _this.pieChart1.data = red.data.body.reply;
+                _this.pieChart2.data = red.data.body.age;
+                _this.pieChart3.data = red.data.body.department;
             } else {
                 //失败
                 this.$notify.error({
@@ -3666,7 +3679,7 @@ export default {
 .groupClick {
     background: #dbe1e5;
 }
-.pieChartClass{
+.pieChartClass {
     /* display: flex;
     display: -webkit-flex */
 }
