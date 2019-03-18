@@ -22,7 +22,8 @@
 
 
 				<div class="online-clinic-middle">
-					<el-table :data="tableData" style="width: 100%;" :max-height="550" :cell-class-name="ceshi0" @cell-click="relateDoctors1">
+					<el-table :data="tableData" style="width: 100%;" :max-height="550" :cell-class-name="ceshi0"
+						@cell-click="relateDoctors1">
 						<el-table-column fixed prop="id" label="业务编号"></el-table-column>
 						<el-table-column prop="departmentName" label="科室"></el-table-column>
 						<el-table-column prop="fullName" label="业务名"></el-table-column>
@@ -37,7 +38,7 @@
 							<template slot-scope="scope">
 								<el-button @click="isShowViewDetailFun(scope.row)" type="success" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">查看详情</el-button>
-								<el-button @click="isShowEditFun(scope.row)" type="success" plain size="mini"
+								<el-button @click="isShowEditFun(scope.row)" type="primary" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">编辑</el-button>
 								<el-button v-if="scope.row.state" @click="isShowForbidFun(scope.row)" type="danger" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">禁用</el-button>
@@ -578,21 +579,21 @@
 						tableBtn: [
 							{
 								name: "处方详情",
-								oclass: "recordBtn",
+								oclass: "btn1",
 								method: (index, row) => {
 									this.chuFangDetailList2Fun(index, row);
 								}
 							},
 							{
 								name: "物流状态",
-								oclass: "recordBtn",
+								oclass: "btn2",
 								method: (index, row) => {
 									this.roadStatusList2Fun(index, row);
 								}
 							},
 							{
 								name: "聊天记录",
-								oclass: "recordBtn",
+								oclass: "btn3",
 								method: (index, row) => {
 									this.viewRecordList2Fun(index, row);
 								}
@@ -680,7 +681,7 @@
 				console.log(data)
 				this.reviewEnum = data.index.value;
 				console.log(this.reviewEnum)
-				this.getList1();
+				// this.getList1();
 				this.getList2();
 			},
 			getSelect2(data) {//配送状态
@@ -1104,6 +1105,7 @@
 					console.log("list:", res.data.body.data2.list)
 					console.log("total:", res.data.body.data2.total)
 					this.totals = res.data.body.data2.total;
+					
 					console.log(this.totals)
 					const lists = res.data.body.data2.list
 					$.each(lists, function (index, text) {
@@ -1552,7 +1554,7 @@
 				}
 			},
 			// 管理2表   操作区  
-			//处方详情   管理2表
+			//处方详情   管理2表(图片)
 			async chuFangDetailList2Fun(index, row) {
 				this.chuFangDetailList2 = true;
 				this.srcs = row.id
@@ -1736,8 +1738,9 @@
 				this.getList2();
 
 			},
-			ceshi0(data){
-				 if (data.columnIndex == 4 || data.columnIndex == 5) {
+			//表格样式
+			ceshi0(data) {
+				if (data.columnIndex == 4 || data.columnIndex == 5) {
 					return 'ceshi'
 				}
 			}
@@ -1917,17 +1920,6 @@
 		color: red !important;
 	}
 
-	.recordBtn {
-		width: 57px;
-		height: 20px;
-		background: rgba(66, 133, 244, 0.1);
-		border: 1px solid rgba(66, 133, 244, 0.6);
-		border-radius: 3px;
-		font-family: PingFangSC-Regular;
-		font-size: 12px;
-		color: #4d7cfe;
-		line-height: 3px;
-	}
 
 	.mainTab {
 		display: flex;
@@ -1958,6 +1950,6 @@
 		/* background: #F3F6FA; */
 		border-radius: 4px;
 	}
-
 	
+
 </style>
