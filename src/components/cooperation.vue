@@ -21,7 +21,7 @@
                         <search @searchValue="adminSearchChange"></search>
                     </div>
                     <div>
-                        <publicList :tableData="adminLists" :columns="adminColumns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData" :total="adminTotal" @rebackFenye="changeCurrent"></publicList>
+                        <publicList :tableData="adminLists" :columns="adminColumns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData" :total="adminTotal" @rebackFenye="changeCurrent" pageSize="10"></publicList>
                     </div>
                 </div>
                 <!-- 统计 -->
@@ -377,7 +377,7 @@ export default {
                 data: [
                 ], //具体数值
                 title: "协作管理统计图", //图表标题
-                totalNumber: ""
+                total: 0
             },
             // 医生端
             //可协作医生列表
@@ -857,7 +857,7 @@ export default {
                 //     _this.drawData.dataAxis.push(text.unit);
                 //     _this.drawData.data.push(text.number);
                 // });
-                  this.drawData.totalNumber=res.data.body.totalNumber
+                  this.drawData.totalNumber=res.data.body.total
                 this.drawData.dataAxis = res.data.body.data.map(item=>item.x)
                 this.drawData.data = res.data.body.data.map(item=>item.y)
                 this.drawData = Object.assign({},this.drawData)

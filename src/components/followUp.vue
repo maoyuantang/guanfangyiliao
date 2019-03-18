@@ -440,7 +440,7 @@
 
                     </div>
                     <div class="pieChartClass">
-                        {{getManyiduChartList}}
+                        {{pieChart1}}
                         <pieChart :inData="pieChart1"></pieChart>
                         <!-- <pieChart :inData="pieChart2"></pieChart>
                         <pieChart :inData="pieChart3"></pieChart> -->
@@ -672,10 +672,33 @@ export default {
     },
     data() {
         return {
-            getManyiduChartList: [],
             pieChart1: {
                 id: "myChart1",
-                data: {}
+                data: {
+                    total: 95,
+                    data: [
+                        {
+                            x: "没问题？？",
+                            y: 1
+                        },
+                        {
+                            x: "1",
+                            y: 31
+                        },
+                        {
+                            x: "2",
+                            y: 31
+                        },
+                        {
+                            x: "3",
+                            y: 31
+                        },
+                        {
+                            x: "好的满意",
+                            y: 1
+                        }
+                    ]
+                }
             },
             pieChart2: { id: "myChart2", data: {} },
             pieChart3: { id: "myChart3", data: {} },
@@ -1114,26 +1137,26 @@ export default {
                 dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
                 title: "住院随访统计 ", //图表标题
-                total: "555"
+                total: 0
             },
             //发起科室统计图
             drawDataStart: {
                 dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
                 title: " 门诊随访统计", //图表标题
-                total: "555"
+                total: 0
             },
             drawDataEquipment: {
                 dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
                 title: " 设备监测人次", //图表标题
-                total: "555"
+                total: 0
             },
             drawDataFollow: {
                 dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
                 title: "智能随访人次 ", //图表标题
-                total: "555"
+                total: 0
             },
             tjType: "DEPT",
             tjStartTime: "",
@@ -2099,7 +2122,7 @@ export default {
                 //     _this.drawData.dataAxis.push(text.x);
                 //     _this.drawData.data.push(text.y);
                 // });
-                this.drawData.totalNumber = res.data.body.totalNumber;
+                this.drawData.total = res.data.body.total;
                 this.drawData.dataAxis = res.data.body.data.map(item => item.x);
                 this.drawData.data = res.data.body.data.map(item => item.y);
                 this.drawData = Object.assign({}, this.drawData);
@@ -2130,7 +2153,7 @@ export default {
                 //     _this.drawDataStart.dataAxis.push(text.x);
                 //     _this.drawDataStart.data.push(text.y);
                 // });
-                this.drawDataStart.totalNumber = res.data.body.totalNumber;
+                this.drawDataStart.total = res.data.body.total;
                 this.drawDataStart.dataAxis = res.data.body.data.map(
                     item => item.x
                 );
@@ -2160,7 +2183,7 @@ export default {
             };
             const res = await SETEQUIPMENT(options);
             if (res.data && res.data.errCode === 0) {
-                this.drawDataEquipment.totalNumber = res.data.body.totalNumber;
+                this.drawDataEquipment.total = res.data.body.total;
                 this.drawDataEquipment.dataAxis = res.data.body.data.map(
                     item => item.x
                 );
@@ -2193,7 +2216,7 @@ export default {
             };
             const res = await SETFOLLOWCHART(options);
             if (res.data && res.data.errCode === 0) {
-                this.drawDataFollow.totalNumber = res.data.body.totalNumber;
+                this.drawDataFollow.total = res.data.body.total;
                 this.drawDataFollow.dataAxis = res.data.body.data.map(
                     item => item.x
                 );
@@ -2686,7 +2709,7 @@ export default {
             };
             const res = await myFollowup(options);
             if (res.data && res.data.errCode === 0) {
-                _this.adminTotal5=res.data.body.data2.total
+                _this.adminTotal5 = res.data.body.data2.total;
                 _this.myFollowList = res.data.body.data2.list;
             } else {
                 //失败
@@ -3001,10 +3024,10 @@ export default {
             };
             const res = await getResultGraph(query);
             if (res.data && res.data.errCode === 0) {
-                _this.getManyiduChartList = res.data.body;
-                _this.pieChart1.data = red.data.body.reply;
-                _this.pieChart2.data = red.data.body.age;
-                _this.pieChart3.data = red.data.body.department;
+                console.log(res.data.body);
+                // _this.pieChart1.data = red.data.body.reply;
+                // _this.pieChart2.data = red.data.body.age;
+                // _this.pieChart3.data = red.data.body.department;
             } else {
                 //失败
                 this.$notify.error({
@@ -3680,7 +3703,7 @@ export default {
     background: #dbe1e5;
 }
 .pieChartClass {
-    /* display: flex;
-    display: -webkit-flex */
+    display: flex;
+    display: -webkit-flex
 }
 </style>

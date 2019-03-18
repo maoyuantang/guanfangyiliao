@@ -103,7 +103,7 @@
                         <search @searchValue="adminSearchChange"></search>
                     </div>
                     <div>
-                        <tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData" :total="adminTotal" @rebackFenye="changeCurrent"> </tableList>
+                        <tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData" :total="adminTotal" @rebackFenye="changeCurrent" pageSize="10"> </tableList>
                     </div>
                 </div>
                 <!-- 统计 -->
@@ -115,11 +115,6 @@
                         <statisticsWay @reBack="getTjData"></statisticsWay>
                     </div>
                     <div style="display:flex">
-<<<<<<< HEAD
-=======
-                        {{drawData1}}
-                        <!-- {{drawDataStart}} -->
->>>>>>> 2c1bb082373c92fef594d379fbdc525e5bb9bead
                         <normalColumnChart :inData="drawData1"> </normalColumnChart>
                         <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
                     </div>
@@ -526,7 +521,7 @@ export default {
                 dataAxis: ["点"], //每个柱子代表的类名
                 data: [220], //具体数值
                 title: "申请科室", //图表标题
-                total: "234"
+                total: 0
             },
             //发起科室统计图
             drawDataStart: {
@@ -1061,7 +1056,7 @@ export default {
             const res = await queryStatisticalByApplication(options);
             if (res.data && res.data.errCode === 0) {
                 // res.data.body.data.splice(1,res.data.body.data.length);
-                this.drawData1.totalNumber=res.data.body.totalNumber
+                this.drawData1.total=res.data.body.totalNumber
                 this.drawData1.dataAxis = res.data.body.data.map(item=>item.x)
                 this.drawData1.data = res.data.body.data.map(item=>item.y)
                 this.drawData1 = Object.assign({},this.drawData1)
@@ -1094,7 +1089,7 @@ export default {
                 //     _this.drawDataStart.data.push(text.y);
                 // });
                 // res.data.body.data.splice(1,res.data.body.data.length);
-                this.drawDataStart.totalNumber=res.data.body.totalNumber
+                this.drawDataStart.total=res.data.body.totalNumber
                 this.drawDataStart.dataAxis = res.data.body.data.map(item=>item.x)
                 this.drawDataStart.data = res.data.body.data.map(item=>item.y)
                 this.drawDataStart = Object.assign({},this.drawDataStart)

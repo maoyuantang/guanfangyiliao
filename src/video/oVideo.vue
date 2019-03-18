@@ -5,13 +5,13 @@
             <div class="row">
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
-                        <div id="remoteVideos"></div>
+                        <div id="remoteVideos" v-loading="loadingOther" element-loading-text="正在等待对方接受邀请" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)"></div>
                         <div class="videoChatBtn" v-show="questVisable" @click="videoChatBtn()">
                             问诊工具
                         </div>
                     </div>
                     <div class="col-xs-12 media-box us-media">
-                        <div id="localVideos">
+                        <div id="localVideos" v-loading="loadingUs" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
 
                         </div>
                         <div class="localVideos1" v-if="localVideoVisable">
@@ -162,9 +162,10 @@ export default {
             closePatientNumVisable: false,
             videoChatVisable: false,
             doctorVis: 1,
-            videoIng: 0
+            videoIng: 0,
+            loadingUs:true,
             // loadingUs:true,
-            // loadingOther:true,
+            loadingOther:true,
         };
     },
     methods: {
