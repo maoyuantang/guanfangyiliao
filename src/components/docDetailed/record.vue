@@ -14,37 +14,57 @@
                 </div>
             </div>
             <div class="new-content-content">
-                <div class="new-content-content-item" v-for="(item,index) in 9" :key="index">
-                    <p class="new-content-content-item-title">门诊记录</p>
-                    <p class="new-content-content-item-info">就诊医院：xxx医院</p>
-                    <p class="new-content-content-item-info">就诊时间：2018-12-12</p>
-                    <p class="new-content-content-item-info">就诊医院：xxx科室</p>
-                    <p class="new-content-content-item-info">接诊医生：xxx</p>
+                <div class="new-content-content-item" 
+                v-for="(item,index) in userInfo.list" 
+                :key="index" @click="selectModule(item,index)" 
+                :class="nowNav===index?'new-content-content-item-select':''">
+                    <!-- <p class="new-content-content-item-title">门诊记录</p> -->
+                    <p class="new-content-content-item-info">入住医院:{{item.name}}</p>
+                    <p class="new-content-content-item-info">入院时间{{item.time}}</p>
+                    <p class="new-content-content-item-info">入住科室:{{item.department}}</p>
+                    <p class="new-content-content-item-info">床    号:{{item.bedNum}}</p>
                 </div>
             </div>
         </div>
         <div class="new-content-body">
             <div class="new-content-body-nav">
-                <div class="new-content-body-nav-item">
-                    <div class="new-content-body-nav-item-name">首次入院记录</div>
-                    <div class="new-content-body-nav-item-time">2018-12-12</div>
+                <div class="new-content-body-nav-item" 
+                @click="selectChildModule(item,index)" 
+                v-for="(item,index) in userInfo.list[nowNav]?userInfo.list[nowNav].childModules:[]" 
+                :class="userInfo.list[nowNav]?(userInfo.list[nowNav].showChildModuleIndex===index?'new-content-body-nav-item-select':''):''"
+                :key="index">
+                <!-- {{userInfo.list[nowNav]?(userInfo.list[nowNav].showChildModuleIndex===index?'new-content-body-nav-item-select':''):''}} -->
+                    <div class="new-content-body-nav-item-name">{{item.name}}</div>
+                    <div class="new-content-body-nav-item-time">{{item.time}}</div>
                 </div>
             </div>
             <div class="new-content-body-content">
-                record
+                <!-- {{userInfo.list[nowNav].childModules[userInfo.list[nowNav].showChildModuleIndex].code}} -->
+                <!-- {{userInfo.list[nowNav].showChildModuleIndex}} -->
+                <div 
+                :is="userInfo.list[nowNav].childModules[userInfo.list[nowNav].showChildModuleIndex].code"
+                :inData="userInfo.list[nowNav].childModules[userInfo.list[nowNav].showChildModuleIndex].data"></div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import beHospitalized from './record/beHospitalized.vue'//首次入院记录
+    import diseaseCourse from './record/diseaseCourse.vue'//首次病程记录
+    import dailyDiseaseCourse from './record/dailyDiseaseCourse.vue'//日常病程记录
+    import leaveHospital from './record/leaveHospital.vue'//出院记录
+    import clinicalThermometer from './record/clinicalThermometer.vue'//体温表
 	export default {
         props: ['inData'],
 		components:{
-			
+            beHospitalized,
+            diseaseCourse,
+            dailyDiseaseCourse,
+            leaveHospital,
+            clinicalThermometer
 		},
 		watch:{
-			
 		},
 		computed:{
 			
@@ -52,19 +72,177 @@
 		
 		data () {
 			return {
+                nowNav:0,
                 /**
                  * 用户信息
                  */
                 userInfo:{
-                    // headImg:'',//头像
-                    // name:'',//姓名
-                    // sex:'',//性别
-                    // age:30,//年龄
-                    // IDCard:'',//省份证号
-                    // hospitalizationInfo:[//住院信息
-                    //     {}
-                    // ]
-                }	
+                    list:[//住院信息  userInfo.list             userInfo.list[nowNav].childModules  
+                        {
+                            name:'XXXX医院',//入住医院,
+                            time:'208-12-25 10:00',//入院时间
+                            department:'XXXX科室',//入住科室
+                            bedNum:'外科大楼5楼504',//床    号
+                            showChildModuleIndex:0,//展示子模块索引（展示第几个子模块）
+                            childModules:[//子模块
+                                {
+                                    code:'beHospitalized',//子模块识别码
+                                    name:'首次入院记录',//子模块名称
+                                    time:'208-12-25 10:00',//子模块时间
+                                    data:{
+                                        a:55
+                                    },//子模块显示数据
+                                },
+                                {
+                                    code:'diseaseCourse',//子模块识别码
+                                    name:'首次病程记录',//子模块名称
+                                    time:'208-12-25 10:00',//子模块时间
+                                    data:{
+                                        b:111
+                                    },//子模块显示数据
+                                },
+                                {
+                                    code:'dailyDiseaseCourse',//子模块识别码
+                                    name:'日常病程记录',//子模块名称
+                                    time:'208-12-25 10:00',//子模块时间
+                                    data:{
+                                        c:222
+                                    },//子模块显示数据
+                                },
+                                {
+                                    code:'leaveHospital',//子模块识别码
+                                    name:'出院记录',//子模块名称
+                                    time:'208-12-25 10:00',//子模块时间
+                                    data:{
+                                        d:333
+                                    },//子模块显示数据
+                                },
+                                {
+                                    code:'clinicalThermometer',//子模块识别码
+                                    name:'体温表',//子模块名称
+                                    time:'208-12-25 10:00',//子模块时间
+                                    data:{
+                                        e:444
+                                    },//子模块显示数据
+                                },
+                            ]
+                        },
+                        {
+                            name:'XXXX医院',//入住医院,
+                            time:'208-12-25 10:00',//入院时间
+                            department:'XXXX科室',//入住科室
+                            bedNum:'外科大楼5楼504',//床    号
+                            showChildModuleIndex:0,//展示子模块索引（展示第几个子模块）
+                            childModules:[//子模块
+                                {
+                                    code:'beHospitalized',//子模块识别码
+                                    name:'首次入院记录',//子模块名称
+                                    time:'208-12-25 10:00',//子模块时间
+                                    data:{
+                                        f:666
+                                    },//子模块显示数据
+                                },
+                                {
+                                    code:'diseaseCourse',//子模块识别码
+                                    name:'首次病程记录',//子模块名称
+                                    time:'208-12-25 10:00',//子模块时间
+                                    data:{
+                                        g:777
+                                    },//子模块显示数据
+                                },
+                                {
+                                    code:'dailyDiseaseCourse',//子模块识别码
+                                    name:'日常病程记录',//子模块名称
+                                    time:'208-12-25 10:00',//子模块时间
+                                    data:{
+                                        h:888
+                                    },//子模块显示数据
+                                }
+                            ]
+                        },
+                        // {
+                        //     name:'XXXX医院',//入住医院,
+                        //     time:'208-12-25 10:00',//入院时间
+                        //     department:'XXXX科室',//入住科室
+                        //     bedNum:'外科大楼5楼504',//床    号
+                        //     hospitalInfo:{//患者在该医院信息
+                        //         showModule:'beHospitalized',
+                        //         beHospitalized:{//首次入院记录
+                        //             name:'首次入院记录2',
+                        //             data:{
+                        //                 name:'2nd 首次入院记录2'
+                        //             }
+                        //         },
+                        //         diseaseCourse:{//首次病程记录
+                        //             name:'首次病程记录2',
+                        //             data:{
+                        //                 name:'2nd 首次病程记录2'
+                        //             }
+                        //         },
+                        //         dailyDiseaseCourse:{//日常病程记录
+                        //             name:'日常病程记录2',
+                        //             data:{
+                        //                 name:'2nd 日常病程记录2'
+                        //             }
+                        //         },
+                        //         leaveHospital:{//出院记录
+                        //             name:'出院记录2',
+                        //             data:{
+                        //                 name:'2nd 出院记录2'
+                        //             }
+                        //         },
+                        //         clinicalThermometer:{//体温表
+                        //             name:'体温表2',
+                        //             data:{
+                        //                 name:'2nd 体温表2'
+                        //             }
+                        //         }
+                        //     },
+                        // },
+                        // {
+                        //     name:'XXXX医院',//入住医院,
+                        //     time:'208-12-25 10:00',//入院时间
+                        //     department:'XXXX科室',//入住科室
+                        //     bedNum:'外科大楼5楼504',//床    号
+                        //     hospitalInfo:{//患者在该医院信息
+                        //         showModule:'beHospitalized',
+                        //         beHospitalized:{//首次入院记录
+                        //             name:'首次入院记录3',
+                        //             data:{
+                        //                 name:'3th 首次入院记录3'
+                        //             }
+                        //         },
+                        //         diseaseCourse:{//首次病程记录
+                        //             name:'首次病程记录3',
+                        //             data:{
+                        //                 name:'3th 首次病程记录3'
+                        //             }
+                        //         },
+                        //         dailyDiseaseCourse:{//日常病程记录
+                        //             name:'日常病程记录3',
+                        //             data:{
+                        //                 name:'3th 日常病程记录3'
+                        //             }
+                        //         },
+                        //         leaveHospital:{//出院记录
+                        //             name:'出院记录3',
+                        //             data:{
+                        //                 name:'3th 出院记录3'
+                        //             }
+                        //         },
+                        //         clinicalThermometer:{//体温表
+                        //             name:'体温表3',
+                        //             data:{
+                        //                 name:'3th 体温表3'
+                        //             }
+                        //         }
+                        //     },
+                        // },
+                    ],
+                },
+                
+                
+                
 			}
 		},
 		
@@ -75,7 +253,13 @@
             async getUserInfo(){
 
             },
-			
+            selectModule(item,index){
+                this.nowNav = index;
+            },
+			selectChildModule(item,index){
+                // this.userInfo.list[this.nowNav].hospitalInfo.showModule = item;
+                this.userInfo.list[this.nowNav].showChildModuleIndex = index;
+            },
 		},
 		async created(){
 			console.log(this.inData)
@@ -130,6 +314,9 @@
         padding-left: .15rem;
         cursor: pointer;
     }
+    .new-content-content-item-select{
+        background-color: #e3f5ff;
+    }
     .new-content-content-item:hover{
         background-color: #e3f5ff;
     }
@@ -153,7 +340,7 @@
         font-family: PingFangSC-Regular;
         font-size: 13px;
         color: #97A3B4;
-        line-height: 22px;
+        line-height: 32px;
     }
     .new-content-body{
         border: 1px solid #E5E7E9;
@@ -176,6 +363,10 @@
         flex-direction: column;
         height: 1.5rem;
         border-bottom: 1px solid #E5E7E9;
+        cursor:pointer;
+    }
+    .new-content-body-nav-item-select{
+        border-left: #00A3FF 2px solid !important;
     }
     .new-content-body-nav-item:last-child{
         /* border: none; */

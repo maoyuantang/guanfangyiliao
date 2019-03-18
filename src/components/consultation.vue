@@ -115,11 +115,6 @@
                         <statisticsWay @reBack="getTjData"></statisticsWay>
                     </div>
                     <div style="display:flex">
-<<<<<<< HEAD
-=======
-                        {{drawData1}}
-                        <!-- {{drawDataStart}} -->
->>>>>>> 2c1bb082373c92fef594d379fbdc525e5bb9bead
                         <normalColumnChart :inData="drawData1"> </normalColumnChart>
                         <normalColumnChart :inData="drawDataStart"> </normalColumnChart>
                     </div>
