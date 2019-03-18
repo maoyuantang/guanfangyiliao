@@ -1174,9 +1174,6 @@
 					this.testdata1.dataAxis.length = 0
 					this.testdata1.data.length = 0
 					$.each(lists, function (index, text) {
-						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
-						// _this.monthToYearDoor.months.push(text.x)
-						// _this.monthToYearDoor.years.push(text.y)
 						_this.yTotal1 += text.y;
 						_this.testdata1.dataAxis.push(text.x)
 						_this.testdata1.data.push(text.y)
@@ -1216,9 +1213,6 @@
 					this.testdata2.dataAxis.length = 0
 					this.testdata2.data.length = 0
 					$.each(lists, function (index, text) {
-						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
-						// _this.monthToYearDoor.months.push(text.x)
-						// _this.monthToYearDoor.years.push(text.y)
 						_this.yTotal2 += text.y;
 						_this.testdata2.dataAxis.push(text.x)
 						_this.testdata2.data.push(text.y)
@@ -1259,9 +1253,6 @@
 					this.testdata3.dataAxis.length = 0
 					this.testdata3.data.length = 0
 					$.each(lists, function (index, text) {
-						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
-						// _this.monthToYearDoor.months.push(text.x)
-						// _this.monthToYearDoor.years.push(text.y)
 						_this.yTotal3 += text.y;
 						_this.testdata3.dataAxis.push(text.x)
 						_this.testdata3.data.push(text.y)

@@ -424,9 +424,6 @@
 					this.drawData.dataAxis.length = 0
 					this.drawData.data.length = 0
 					$.each(lists, function (index, text) {
-						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
-						// _this.monthToYearDoor.months.push(text.x)
-						// _this.monthToYearDoor.years.push(text.y)
 						_this.yTotal1 += text.y;
 						_this.drawData.dataAxis.push(text.x)
 						_this.drawData.data.push(text.y)
