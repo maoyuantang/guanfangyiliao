@@ -102,10 +102,10 @@
 
     <div class="top">
       <div class="top1">双向转诊</div>
-      <el-button type="primary" size="small" @click = "goMore">查看更多</el-button>
+      <el-button type="primary" size="small" @click="goMore">查看更多</el-button>
     </div>
     <div class="body">
-      <el-table :data="docTableData" style="width: 100%">
+      <el-table :data="docTableData" style="width: 100%" :show-header="false">
         <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
         <el-table-column fixed prop="applyOrgName" label="申请医院"></el-table-column>
         <el-table-column fixed prop="applyDeptName" label="申请科室"></el-table-column>
@@ -120,7 +120,7 @@
           <template slot-scope="scope">
             <el-button @click="dualReferralRecord2(scope.row)" type="success" plain size="mini"
               style="margin:0.05rem 0 0.05rem 0;">转诊记录</el-button>
-              <!-- style="margin:0.05rem 0 0.05rem 0;">查看记录（转诊记录）</el-button> -->
+            <!-- style="margin:0.05rem 0 0.05rem 0;">查看记录（转诊记录）</el-button> -->
             <el-button v-for="(text,index) in scope.row.buttons" :key="index"
               @click="list2Done(text.btnCommand,scope.row)" type="success" plain size="mini" style="margin:0 0.05rem;">
               {{text.btnName}}</el-button>
