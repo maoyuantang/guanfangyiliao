@@ -96,10 +96,10 @@
         <!-- 查看记录 -->
         <div v-if="recordVisible">
             <el-dialog class="evaluateBox evaluateBox2" title=" 查看记录" :visible.sync="recordVisible" width="602px" hight="356px" center>
-                <viewRecord :storyMessage="storyMessage"></viewRecord>
+                <viewRecord :sessionId="sessionId"></viewRecord>
             </el-dialog>
         </div>
-        <!-- 接收科室 -->
+        <!-- 协作医生 -->
         <div v-if="departVisible">
             <el-dialog class="evaluateBox" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
                 <receiveDepartent :receptionDepartment="receptionDepartment"></receiveDepartent>
@@ -818,27 +818,28 @@ export default {
         // 管理1表   操作区
         //查看记录
         async historicalRecord(row) {
+            this.sessionId=row.sessionId
             this.recordVisible = true;
-            let _this = this;
-            let query = {
-                token: this.userState.token
-            };
-            let options = {
-                userId: this.userSelfInfo.userId,
-                sessionId: [row.sessionId],
-                msgId: this.$store.state.socket.messageTicket.oMsgId,
-                pageNums: 15
-            };
-            const res = await fetchHistoryMessage(query, options);
-            if (res.data && res.data.errCode === 0) {
-                _this.storyMessage = res.data.body;
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
+            // let _this = this;
+            // let query = {
+            //     token: this.userState.token
+            // };
+            // let options = {
+            //     userId: this.userSelfInfo.userId,
+            //     sessionId: [row.sessionId],
+            //     msgId: this.$store.state.socket.messageTicket.oMsgId,
+            //     pageNums: 15
+            // };
+            // const res = await fetchHistoryMessage(query, options);
+            // if (res.data && res.data.errCode === 0) {
+            //     _this.storyMessage = res.data.body;
+            // } else {
+            //     //失败
+            //     this.$notify.error({
+            //         title: "警告",
+            //         message: res.data.errMsg
+            //     });
+            // }
         },
 
         //管理2表（统计表）

@@ -14,7 +14,7 @@
                     </span>
                 </template>
             </el-table-column>
-            <el-table-column fixed="right" label="操作" v-if="handleVisiable" width="350">
+            <el-table-column fixed="right" label="操作" v-if="handleVisiable" width="100">
                 <template slot-scope="scope">
                     <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method(index,scope.row)"
                         :class="text.oclass" type="text" size="small" :key="index">
