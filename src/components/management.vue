@@ -246,15 +246,15 @@
 			//筛选列表  管理端
 			//1.21.1.科室筛选  工具栏 (管理) (管理)
 			async getSelect1() {
-				if (this.userInfo.manager) {
-					this.types = 'MANAGE'
-				} else {
-					this.types = 'DOCTOR'
-				}
+				// if (this.userInfo.manager) {
+				// 	this.types = 'MANAGE'
+				// } else {
+				// 	this.types = 'DOCTOR'
+				// }
 				let _this = this;
 				let query = {
 					token: this.userState.token,
-					type: this.types
+					type: 'MANAGE'
 				};
 				const res = await toolDept(query);
 				if (res.data && res.data.errCode === 0) {

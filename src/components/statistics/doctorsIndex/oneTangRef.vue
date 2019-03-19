@@ -680,6 +680,12 @@
         this.isShowaddMove = false
       },
       async goMore(data) {
+        sessionStorage.setItem('page', JSON.stringify({//存缓存
+          name: '双向转诊系统',
+          select: false,
+          path: '/referral',
+          code: '80000'
+        }));
         console.log(data)
         this.$router.push({
           path: "/referral",

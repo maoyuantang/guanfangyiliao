@@ -1,5 +1,5 @@
 <template>
-  <div class="oneTangOut">
+  <div class="oneTangOut" v-show="myHomes.length != 0">
 
 
     <div v-if="centerDialogVisible">
@@ -14,7 +14,7 @@
 
     <div class="top">
       <div class="top1">远程门诊</div>
-      <div class="top2" @click="goMore()">...</div>
+      <i class=" top2 iconfont" @click="goMore()">&#xe612;</i>
     </div>
     <div class="body">
 
@@ -138,6 +138,12 @@
 
 
       async goMore() {
+        sessionStorage.setItem('page', JSON.stringify({//存缓存
+          name: '远程门诊系统',
+          select: true,
+          path: '/outpatient',
+          code: '10000'
+        }));
         this.$router.push({
           path: "/outpatient",
         })
@@ -197,11 +203,7 @@
         color: #778CA2;
       }
 
-      .top2 {
-        font-size: 25px;
-        cursor: pointer;
-        padding: 0 10px 0 0;
-      }
+      .top2 {}
     }
 
     .body {

@@ -565,15 +565,15 @@
       async getSelect1(oindex) {
         // console.log(this.userInfo.rooter)
         // console.log(this.userInfo.manager)
-        if (this.userInfo.manager) {
-          this.types = 'MANAGE'
-        } else {
-          this.types = 'DOCTOR'
-        }
+        // if (this.userInfo.manager) {
+        //   this.types = 'MANAGE'
+        // } else {
+        //   this.types = 'DOCTOR'
+        // }
         let _this = this;
         let query = {
           token: this.userState.token,
-          type: this.types
+          type: 'MANAGE'
         };
         const res = await toolDept(query);                     //1.21.1.科室筛选  工具栏 (管理) (管理)
         if (res.data && res.data.errCode === 0) {

@@ -7,14 +7,14 @@
             <el-table-column v-if="checkVisable" type="selection" width="55">
             </el-table-column>
             <el-table-column v-for="(column, index) in columns" :prop="column.prop" :key="index" :label="column.label"
-                :width="column.width" label-class-name="tableHeadColor">
+                :width="column.width" label-class-name="tableHeadColor" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
                     <span :class="scope.row.oclass">
                         {{scope.row[column.prop]?scope.row[column.prop]:0}}
                     </span>
                 </template>
             </el-table-column>
-            <el-table-column fixed="right" label="操作" v-if="handleVisiable" width="350">
+            <el-table-column fixed="right" label="操作" v-if="handleVisiable" width="300">
                 <template slot-scope="scope">
                     <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method(index,scope.row)"
                         :class="text.oclass" type="text" size="small" :key="index">
@@ -25,7 +25,8 @@
         </el-table>
 
         <div style="text-align:center;padding:10px 0">
-            <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total" @current-change="changeCurrent">
+            <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
+                @current-change="changeCurrent">
             </el-pagination>
         </div>
     </div>
@@ -85,7 +86,7 @@
             pageSize: Number,
         },
         model: {
-            prop: ["tableData", "columns", "tableBtn", "checkVisable", "cellColor", "adminTotal","pageSize"],
+            prop: ["tableData", "columns", "tableBtn", "checkVisable", "cellColor", "adminTotal", "pageSize"],
             event: "reBack"
         },
         async created() {
@@ -121,6 +122,21 @@
         font-size: var(--fontSize2);
         color: #5e6875;
         letter-spacing: 0;
+    }
+
+    .public-list /deep/ .el-table__header-wrapper .el-table__header .has-gutter tr th div {
+		text-align: center;
+		white-space: nowrap !important;
+		padding: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+	}
+    .public-list /deep/ .el-table__body-wrapper tbody tr td .cell span {
+        text-align: center;
+        white-space: nowrap !important;
+        padding: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     /* 表格公共组件

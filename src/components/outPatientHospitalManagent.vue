@@ -24,17 +24,17 @@
 				<div class="online-clinic-middle">
 					<el-table :data="tableData" style="width: 100%;" :max-height="550" :cell-class-name="ceshi0"
 						@cell-click="relateDoctors1">
-						<el-table-column fixed prop="id" label="业务编号"></el-table-column>
-						<el-table-column prop="departmentName" label="科室"></el-table-column>
-						<el-table-column prop="fullName" label="业务名"></el-table-column>
-						<el-table-column prop="price" label="价格"></el-table-column>
-						<el-table-column prop="doctors" label="关联医生"></el-table-column>
-						<el-table-column prop="totalPeople" label="业务人次"></el-table-column>
-						<el-table-column prop="totalIncome" label="总收入"></el-table-column>
-						<el-table-column prop="queuePeople" label="当前排队"></el-table-column>
-						<el-table-column prop="updateTime" label="最近修改"></el-table-column>
+						<el-table-column prop="id" label="业务编号" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="departmentName" label="科室" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="fullName" label="业务名" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="price" label="价格" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="doctors" label="关联医生" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="totalPeople" label="业务人次" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="totalIncome" label="总收入" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="queuePeople" label="当前排队" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="updateTime" label="最近修改" :show-overflow-tooltip="true"></el-table-column>
 
-						<el-table-column fixed="right" label="" width="300">
+						<el-table-column fixed="right" label="操作" width="230px">
 							<template slot-scope="scope">
 								<el-button @click="isShowViewDetailFun(scope.row)" type="success" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">查看详情</el-button>
@@ -729,16 +729,18 @@
 			async getFilter0(data) {
 				// console.log(this.userInfo.rooter)
 				// console.log(this.userInfo.manager)
-				if (this.userInfo.manager) {
-					this.types = 'MANAGE'
-				} else {
-					this.types = 'DOCTOR'
-				}
+				// if (this.userState.manager) {
+				// 	this.types = 'MANAGE'
+				// } else {
+				// 	this.types = 'DOCTOR'
+				// }
 				const _this = this
 				let query = {
 					token: this.userState.token,
-					type: this.types
+					type: 'MANAGE'
 				};
+				console.log(this.userInfo.manager)
+				console.log(query)
 				const res = await toolDept(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('1.21.1.科室工具栏 +成功')
@@ -1947,5 +1949,19 @@
 		height: 0.76rem;
 		/* background: #F3F6FA; */
 		border-radius: 4px;
+	}
+
+	.online-clinic-middle /deep/ .el-table__header-wrapper .el-table__header .has-gutter tr th div {
+		text-align: center;
+		white-space: nowrap !important;
+		padding: 0;
+	}
+
+	.online-clinic-middle /deep/ .el-table__body-wrapper tr .cell {
+		text-align: center;
+		white-space: nowrap !important;
+		padding: 0;
+	}
+	.online-clinic-middle /deep/ .el-table__fixed-right .el-table__fixed-body-wrapper .cell  {
 	}
 </style>

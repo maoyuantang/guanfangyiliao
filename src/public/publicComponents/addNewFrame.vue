@@ -22,7 +22,7 @@
                 <div class="input-item-div" v-if="inData.type==='1'">
                     <span class="input-item-name">业务类型:</span>
                     <div class="input-item-value-div">
-                        <el-input placeholder="请输入内容" size="mini" v-model="inData.businessTypeList.default.label" clearable :disabled="sureVisiable===1">
+                        <el-input placeholder="请输入内容" size="mini" v-model="inData.businessTypeList.default.label" clearable :disabled="true">
                         </el-input>
                     </div>
                 </div>
