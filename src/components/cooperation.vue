@@ -565,6 +565,7 @@ export default {
                 });
                 setTimeout(function() {
                     _this.centerDialogVisible = false;
+                    _this.DoctorList()
                 }, 1000);
             } else {
                 //失败

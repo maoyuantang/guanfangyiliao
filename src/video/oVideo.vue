@@ -1179,11 +1179,12 @@ export default {
         },
         //初始化配置
         firstSet() {
-            alert("初始化配置");
+            
             let _this = this;
-            var server = $("#server").val();
+            // var server = $("#server").val();
             // var server=this.oSeaver
             var server = "meet.xiaoqiangio.com";
+            alert("初始化配置"+server);
             if (!server) {
                 alert("请输入服务器地址");
                 return false;
