@@ -48,7 +48,7 @@
             </div>
             <div>
                 <el-table :data="docTableData" border style="width: 100%">
-                    <el-table-column fixed prop="synergyUserHead" label="协作编号"></el-table-column>
+                    <el-table-column fixed prop="synergyNo" label="协作编号"></el-table-column>
                     <el-table-column fixed prop="applyDeptName" label="发起科室"></el-table-column>
                     <el-table-column fixed prop="applyUserName" label="发起医生"></el-table-column>
                     <el-table-column fixed prop="createTime" label="发起时间"></el-table-column>
@@ -99,7 +99,7 @@
                 <viewRecord :sessionId="sessionId"></viewRecord>
             </el-dialog>
         </div>
-        <!-- 协作医生 -->
+        <!-- 接收科室 -->
         <div v-if="departVisible">
             <el-dialog class="evaluateBox" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
                 <receiveDepartent :receptionDepartment="receptionDepartment"></receiveDepartent>

@@ -1179,7 +1179,7 @@ export default {
         },
         //初始化配置
         firstSet() {
-            // alert("初始化配置");
+            alert("初始化配置");
             let _this = this;
             var server = $("#server").val();
             // var server=this.oSeaver
@@ -1207,7 +1207,7 @@ export default {
         },
         //登录
         videoLogin() {
-            // alert("登陆");
+            alert("登陆");
             let _this = this;
             // var username = $("#username").val();
             // var username=this.oUser
@@ -1293,8 +1293,7 @@ export default {
          * 匿名加入到房间
          */
         anonymousJoinRoomBtn() {
-            // alert("匿名加入到房间");
-            // alert(this.createVideoRoomData1.conferenceNumber);
+            alert("匿名加入到房间"+this.createVideoRoomData1.conferenceNumber);
             let _this = this;
             // var conferenceName = $("#anonymousConferenceName").val();
             let conferenceName = this.createVideoRoomData1.conferenceNumber;
