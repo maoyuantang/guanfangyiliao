@@ -204,7 +204,9 @@ export default {
             ).finish();
 
             //ws地址
-            let wsUrl = "wss://demo.chuntaoyisheng.com:10002/chat";
+            let wsUrl = "wss://demo.chuntaoyisheng.com:10002/chat";//测试
+            // let wsUrl = "wss://demo.chuntaoyisheng.com:10002/chat";//开发
+            
             if (!window.webSocket) {
                 let owebsocket = new WebSocket(wsUrl);
                 this.$store.commit("socket/SETSOCKET", owebsocket);

@@ -103,7 +103,7 @@
                         <search @searchValue="adminSearchChange"></search>
                     </div>
                     <div>
-                        <tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData" :total="adminTotal" @rebackFenye="changeCurrent" pageSize="10"> </tableList>
+                        <tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData" :total="adminTotal" @rebackFenye="changeCurrent" :pageSize="pageSizeNum"> </tableList>
                     </div>
                 </div>
                 <!-- 统计 -->
@@ -532,7 +532,8 @@ export default {
                 title: "发起科室", //图表标题
                 totalNumber: "34"
             },
-            oUserType: ""
+            oUserType: "",
+            pageSizeNum:10,
         };
     },
     computed: {

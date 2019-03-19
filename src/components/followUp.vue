@@ -538,11 +538,11 @@
 
                                     </template>
                                 </el-table-column>
-                                <el-table-column fixed="right" label="操作" width="100">
+                                <el-table-column fixed="right" label="操作" width="250">
                                     <template slot-scope="scope">
-                                        <el-button @click="handleClick(scope.row)" type="text" size="small">查看档案</el-button>
-                                        <el-button @click="sendMessage(scope.row)" type="text" size="small">发送</el-button>
-                                        <el-button @click="myFollowDetail(scope.row)" type="text" size="small">查看详情</el-button>
+                                        <el-button class='seeDanganClass' @click="seeDanganClick(scope.row)" type="text" size="small">查看档案</el-button>
+                                        <el-button class='sendMessage' @click="sendMessage(scope.row)" type="text" size="small">发送</el-button>
+                                        <el-button class='seeDetail' @click="myFollowDetail(scope.row)" type="text" size="small">查看详情</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -2328,21 +2328,21 @@ export default {
                 this.doctorBtn = [
                     {
                         name: "查看档案",
-                        oclass: "viewFollow",
+                        oclass: "seeDanganClass",
                         method: (index, row) => {
                             this.docFollowDelete0(index, row);
                         }
                     },
                     {
                         name: "发送",
-                        oclass: "viewFollow",
+                        oclass: "sendMessage",
                         method: (index, row) => {
                             this.docFollowDelete0(index, row);
                         }
                     },
                     {
                         name: "查看详情",
-                        oclass: "viewFollow",
+                        oclass: "seeDetail",
                         method: (index, row) => {
                             this.myFollowDetail(index, row);
                         }
@@ -3231,6 +3231,15 @@ export default {
                     message: res.data.errMsg
                 });
             }
+        },
+        //查看档案
+        seeDanganClick(row) {
+            this.$router.push({
+                path: "/docDetailed",
+                query: {
+                    id: row.userId
+                }
+            });
         }
     }
 };
@@ -3704,6 +3713,39 @@ export default {
 }
 .pieChartClass {
     display: flex;
-    display: -webkit-flex
+    display: -webkit-flex;
+}
+.seeDanganClass {
+    width: 57px;
+    height: 20px;
+    background: rgba(255, 171, 43, 0.1);
+    border: 1px solid rgba(255, 171, 43, 0.6);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #ffab2b;
+    line-height: 1px;
+}
+.sendMessage {
+    width: 57px;
+    height: 20px;
+    background: rgba(255, 0, 0, 0.1);
+    border: 1px solid #ea2929;
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #ff0000;
+    line-height: 1px;
+}
+.seeDetail {
+    width: 57px;
+    height: 20px;
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid rgba(66, 133, 244, 0.6);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    line-height: 1px;
+    color: #4d7cfe;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="viewClass">
         <ul>
             <li class="ohisList" v-for="(text,index) in messageList" :key="index">
                 <h3>{{text.time}}</h3>
@@ -12,11 +12,15 @@
                             <div>{{text1.fromNickName}}
                                 <span> {{text1.serverTime2}}</span>
                             </div>
-                            <div>{{text1.body}}</div>
+                            <div class="imgClass" v-if="text1.childMessageType=='IMAGE'">
+                                <img :src="text1.body" />
+                            </div>
+                            <div v-else>{{text1.body}}</div>
                         </div>
                     </li>
                 </ul>
             </li>
+            <li v-show="moreLoadVisable" class="moreLoad" @click="moreLoadMessage()">加载更多</li>
         </ul>
         <noData v-show="nodataVisable"></noData>
     </div>
@@ -42,7 +46,11 @@ export default {
             messageList: [],
             timeList: [],
             nodataVisable: false,
-            storyMessage:[]
+            storyMessage: [],
+            msgId: "",
+            imgUrl:
+                "https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/",
+                moreLoadVisable:false,
         };
     },
     methods: {
@@ -50,18 +58,27 @@ export default {
         async getStoryMessage(index) {
             let _this = this;
             let query = {
-                token: this.userState.token,
+                token: this.userState.token
             };
             let options = {
                 userId: this.userSelfInfo.userId,
                 sessionId: [this.sessionId],
-                msgId: this.$store.state.socket.messageTicket.oMsgId,
+                msgId: this.msgId,
                 pageNums: 15
             };
-            const res = await fetchHistoryMessage(query,options);
+            const res = await fetchHistoryMessage(query, options);
             if (res.data && res.data.errCode === 0) {
-                _this.storyMessage = res.data.body
-                _this.resolveMessage()
+                let oLength = res.data.body.length;
+                if (res.data.body.length < 1) {
+                    _this.nodataVisable = true;
+                    _this.moreLoadVisable=false
+                } else {
+                    _this.nodataVisable = false;
+                    _this.moreLoadVisable=true
+                    _this.msgId = res.data.body[oLength - 1].msgId;
+                }
+                _this.storyMessage = res.data.body;
+                _this.resolveMessage();
             } else {
                 //失败
                 this.$notify.error({
@@ -73,7 +90,7 @@ export default {
         resolveMessage() {
             let _this = this;
             this.timeList = [];
-            this.messageList = [];
+            // this.messageList = [];
             $.each(this.storyMessage, function(index, text) {
                 if (text.childMessageType == "INTERROGATION") {
                     //问诊
@@ -90,23 +107,27 @@ export default {
                 } else if (text.childMessageType == "AUDIO") {
                     //音频
                     text.body = "该消息为音频消息,请在手机上查看";
-                } else if (text.childMessageType == "VIDEO") {
+                } else if (
+                    text.childMessageType == "VIDEO" ||
+                    text.childMessageType == "CRVIDEO"
+                ) {
                     //视频
-                    if (text.indexOf("refuse") > -1) {
+                    if (text.body.indexOf("refuse") > -1) {
                         text.body = "挂断了视频";
                     } else if (
-                        text.indexOf("sendroom") > -1 ||
-                        text.indexOf("MicroCinicSendRoom") > -1
+                        text.body.indexOf("sendroom") > -1 ||
+                        text.body.indexOf("MicroCinicSendRoom") > -1
                     ) {
                         text.body = "发起了视频聊天";
-                    } else if (odata[i].body.indexOf("complete") > -1) {
+                    } else if (text.body.indexOf("complete") > -1) {
                         text.body = "视频通话已结束";
-                    } else if (odata[i].body.indexOf("cancle") > -1) {
+                    } else if (text.body.indexOf("cancle") > -1) {
                         text.body = "取消了视频";
-                    } else if (odata[i].body.indexOf("accept") > -1) {
+                    } else if (text.body.indexOf("accept") > -1) {
                         text.body = "接受了视频";
                     }
                 } else if (text.childMessageType == "IMAGE") {
+                    text.body = _this.imgUrl + text.body;
                 } else {
                     text.body = text.body;
                 }
@@ -160,17 +181,14 @@ export default {
         },
         ogetTime(s) {
             return s < 10 ? "0" + s : s;
+        },
+        moreLoadMessage() {
+            this.getStoryMessage();
         }
     },
     created() {
+        // this.msgId=this.$store.state.socket.messageTicket.oMsgId
         this.getStoryMessage();
-        // this.resolveMessage();
-        // console.log(this.storyMessage);
-        // if(this.storyMessage.length>0){
-        //     this.nodataVisable=false
-        // }else{
-        //     this.nodataVisable=true
-        // }
     },
     props: {
         sessionId: String
@@ -229,7 +247,22 @@ export default {
     color: #939eab;
     font-size: 0.12rem;
 }
-
+.moreLoad {
+    text-align: center;
+    cursor: pointer;
+}
+.viewClass {
+    overflow: auto;
+    height: 520px;
+}
+.imgClass{
+    width:50px;
+    height: 40px;
+}
+.imgClass>img{
+    width:100%;
+    height: 100%;
+}
 /* 
 谭莹
 先掉14.4.拉取历史消息记录，获取到的消息放在storyMessage里面传过来

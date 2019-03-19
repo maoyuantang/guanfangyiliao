@@ -1,21 +1,19 @@
 <template>
 
-    <div>
+    <div style="    overflow: auto;
+    height: 520px;">
         <ul>
             <li v-for="(text,index) in doctorDetailData" :key="index">
 
                 <div class="headImg">
                     <img v-if="text.userHeadId" :src="imgUrl+text.userHeadId" />
-                    <img v-else  src="../../assets/img/publicHeadImg.png" />
-                    
+                    <img v-else src="../../assets/img/publicHeadImg.png" />
+
                 </div>
                 <div class="evaluateCont">
                     <h5>{{text.userName}}</h5>
                     <div>{{text.hospital}} {{text.department}} </div>
                 </div>
-                <!-- <div>
-                    文字
-                </div> -->
             </li>
         </ul>
         <noData v-show="nodataVisable"></noData>

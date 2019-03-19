@@ -48,7 +48,7 @@
             </div>
             <div>
                 <el-table :data="docTableData" border style="width: 100%">
-                    <el-table-column fixed prop="synergyUserHead" label="协作编号"></el-table-column>
+                    <el-table-column fixed prop="synergyNo" label="协作编号"></el-table-column>
                     <el-table-column fixed prop="applyDeptName" label="发起科室"></el-table-column>
                     <el-table-column fixed prop="applyUserName" label="发起医生"></el-table-column>
                     <el-table-column fixed prop="createTime" label="发起时间"></el-table-column>
@@ -96,7 +96,7 @@
         <!-- 查看记录 -->
         <div v-if="recordVisible">
             <el-dialog class="evaluateBox evaluateBox2" title=" 查看记录" :visible.sync="recordVisible" width="602px" hight="356px" center>
-                <viewRecord :storyMessage="storyMessage"></viewRecord>
+                <viewRecord :sessionId="sessionId"></viewRecord>
             </el-dialog>
         </div>
         <!-- 接收科室 -->
@@ -565,6 +565,7 @@ export default {
                 });
                 setTimeout(function() {
                     _this.centerDialogVisible = false;
+                    _this.DoctorList()
                 }, 1000);
             } else {
                 //失败
@@ -818,27 +819,28 @@ export default {
         // 管理1表   操作区
         //查看记录
         async historicalRecord(row) {
+            this.sessionId=row.sessionId
             this.recordVisible = true;
-            let _this = this;
-            let query = {
-                token: this.userState.token
-            };
-            let options = {
-                userId: this.userSelfInfo.userId,
-                sessionId: [row.sessionId],
-                msgId: this.$store.state.socket.messageTicket.oMsgId,
-                pageNums: 15
-            };
-            const res = await fetchHistoryMessage(query, options);
-            if (res.data && res.data.errCode === 0) {
-                _this.storyMessage = res.data.body;
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
+            // let _this = this;
+            // let query = {
+            //     token: this.userState.token
+            // };
+            // let options = {
+            //     userId: this.userSelfInfo.userId,
+            //     sessionId: [row.sessionId],
+            //     msgId: this.$store.state.socket.messageTicket.oMsgId,
+            //     pageNums: 15
+            // };
+            // const res = await fetchHistoryMessage(query, options);
+            // if (res.data && res.data.errCode === 0) {
+            //     _this.storyMessage = res.data.body;
+            // } else {
+            //     //失败
+            //     this.$notify.error({
+            //         title: "警告",
+            //         message: res.data.errMsg
+            //     });
+            // }
         },
 
         //管理2表（统计表）

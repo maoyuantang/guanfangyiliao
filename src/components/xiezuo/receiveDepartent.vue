@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div style="  overflow: auto;
+    height: 520px;">
         <ul class="departmentDetail">
             <li v-for="(text,index) in receptionDepartment" :key="index">
                 <!-- <div>
@@ -17,11 +18,11 @@
 export default {
     data() {
         return {
-            imgUrl: "https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"
+            imgUrl:
+                "https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"
         };
     },
-    created() {
-    },
+    created() {},
     props: {
         receptionDepartment: Array
     },
@@ -32,9 +33,11 @@ export default {
 };
 </script>
 <style>
-.departmentDetail>li{
+.departmentDetail {
+}
+.departmentDetail > li {
     display: flex;
     display: -webkit-flex;
-    margin-bottom:10px;
+    margin-bottom: 10px;
 }
 </style>
