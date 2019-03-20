@@ -114,7 +114,8 @@
 						<div class="evaluateCont1">
 							<!-- 待头像 -->
 							<img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-							<img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'	alt="医生头像">
+							<img v-if="text.headId"
+								:src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
 							<h5>{{text.doctorName}}</h5>
 						</div>
 						<div class="evaluateCont2">
@@ -129,7 +130,7 @@
 
 		<!-- 总+今日+订单详情+弹框 -->
 		<div v-if="isShowRecord">
-			<el-dialog class="  " title="订单详情" :visible.sync="isShowRecord" center width=70%>
+			<el-dialog class="offerDetial" title="订单详情" :visible.sync="isShowRecord" center width=70%>
 				<el-table :data="tableDataChat" style="width: 100%;" @cell-click="relateDoctors2" :max-height="450">
 					<el-table-column fixed prop="orderNo" label="订单号"></el-table-column>
 					<el-table-column prop="doctorName" label="接诊医生"></el-table-column>
@@ -955,7 +956,7 @@
 							if (lists[j].doctors[i].doctorStates & lists[j].doctors[i].doctorStates === true) {
 								lists[j].doctors[i].doctorStates = '接诊中...'
 							} else {
-								lists[j].doctors[i].doctorStates = '离线中'
+								lists[j].doctors[i].doctorStates = '未接诊'
 							}
 						}
 					}
@@ -1775,6 +1776,12 @@
 
 	.hospital-management-outpatient-nav {}
 
+	.offerDetial {
+		/deep/ .el-dialog {
+			margin-top: 22vh !important;
+		}
+	}
+
 	.out-border {
 		background: #FFF;
 		border: 1px solid var(--color5);
@@ -1786,6 +1793,8 @@
 		/* min-height: 76vh; */
 		margin-right: 0.36rem;
 		margin-top: 0.42rem;
+
+
 	}
 
 	.online-clinic {}
@@ -1846,10 +1855,18 @@
 	.evaluateBox1 {
 		overflow-y: auto;
 
+		/deep/ .el-dialog {
+			margin-top: 32vh !important;
+		}
+
 		ul {
 			li {
 				display: flex;
 				align-items: center;
+				margin: 10px 0;
+				display: flex;
+				justify-content: space-between;
+				padding: 0 30px 0 0;
 
 				.evaluateCont1 {
 					display: flex;
@@ -1965,6 +1982,6 @@
 		white-space: nowrap !important;
 		padding: 0;
 	}
-	.online-clinic-middle /deep/ .el-table__fixed-right .el-table__fixed-body-wrapper .cell  {
-	}
+
+	.online-clinic-middle /deep/ .el-table__fixed-right .el-table__fixed-body-wrapper .cell {}
 </style>
