@@ -209,4 +209,56 @@
         background: #F56C6C;
         color: #FFF;
     }
+
+    .chaKanXiangQing {
+        width: 57px;
+        height: 20px;
+        background: rgba(66, 133, 244, 0.1);
+        border: 1px solid rgba(66, 133, 244, 0.6);
+        border-radius: 3px;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #4d7cfe;
+        line-height: 3px;
+        margin: 0 14px 0 14px;
+    }
+
+    .bianJi {
+        width: 57px;
+        height: 20px;
+        background: rgba(46, 189, 65, 0.10);
+        border: 1px solid rgba(46, 189, 65, 0.60);
+        border-radius: 3px;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #2EBD41;
+        line-height: 3px;
+        margin: 0 14px 0 14px;
+    }
+
+    .jingYong {
+        width: 57px;
+        height: 20px;
+        background: rgba(254, 77, 151, 0.10);
+        border: 1px solid rgba(254, 77, 151, 0.60);
+        border-radius: 3px;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #FE4D97;
+        line-height: 3px;
+        margin: 0 14px 0 14px;
+    }
+
+    .jieChuJingYong {
+        width: 57px;
+        height: 20px;
+        background: rgba(255, 171, 43, 0.10);
+        border: 1px solid rgba(255, 171, 43, 0.60);
+        border-radius: 3px;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #FFAB2B;
+        line-height: 3px;
+        margin: 0 14px 0 14px;
+    }
 </style>
