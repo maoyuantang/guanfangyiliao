@@ -502,7 +502,7 @@
                             <selftag :inData="oTab11" @reback="getOTab11" v-show="doctorSxVisiable"></selftag>
                         </div>
                         <search @searchValue="docSearchChange"></search>
-                        <el-button class="startConsul" v-show="docAddTemplate" type="text" @click="docAddTemplateFun()">新增模板</el-button>
+                        <el-button class="startConsul myStartConsul" v-show="docAddTemplate" type="text" @click="docAddTemplateFun()">新增模板</el-button>
                     </div>
                     <div>
                         <div v-if="myFollowVisable"  class="public-list">
@@ -3282,7 +3282,10 @@ export default {
     text-align: center;
     line-height: 0px;
 }
-
+.myStartConsul{
+ margin-top: 0px;
+ 
+}
 /* 医生样式 */
 .followDoc .titleTop {
     display: flex;
