@@ -55,20 +55,26 @@
                     <el-table-column fixed prop="synergyIntention" label="目的"></el-table-column>
                     <el-table-column fixed prop="synergyDeptName" label="协作科室"></el-table-column>
                     <el-table-column fixed prop="synergyUserName" label="协作医生"></el-table-column>
-                    <el-table-column fixed prop="synergyStatus" label="状态"></el-table-column>
+                    <el-table-column fixed prop="synergyStatus" label="状态">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.synergyStatus==0">未开始</span>
+                            <span v-if="scope.row.synergyStatus==1">进行中</span>
+                            <span v-if="scope.row.synergyStatus==1">结束</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column fixed="right" label="操作" width="100">
                         <template slot-scope="scope">
-                            <el-button @click="handleClick(scope.row)" type="text" size="small">病历</el-button>
-                            <el-button @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
-                            <el-button v-show="scope.row.synergyStatus==2" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
-                            <el-button v-show="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="toConsultation(scope.row)" type="text" size="small">进入协作</el-button>
-                            <el-button v-show="scope.row.departmentId==userState.userId" @click="handleClick(scope.row)" type="text" size="small">结束</el-button>
+                            <el-button class="seeDanganClass"  @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
+                            <el-button class="inviteUserClass"  @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
+                            <el-button class="seeHistoryMessage"  v-show="scope.row.synergyStatus==2" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
+                            <el-button class="goTohuizhen"  v-show="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="toConsultation(scope.row)" type="text" size="small">进入协作</el-button>
+                            <el-button class="overClass"  v-show="scope.row.synergyStatus==1" @click="xiezOver(scope.row)" type="text" size="small">结束</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
                 <div style="text-align:center;padding:10px 0">
-                <el-pagination background layout="prev, pager, next" :total="docTotal" @current-change="changeCurrentDoc">
-                </el-pagination>
+                    <el-pagination background layout="prev, pager, next" :total="docTotal" @current-change="changeCurrentDoc">
+                    </el-pagination>
                 </div>
             </div>
         </div>
@@ -147,7 +153,8 @@ import {
     receiveDoctor, //9.10本院参与医生
     sponsorConsultationInform,
     queryConsultationInformList,
-    fetchHistoryMessage
+    fetchHistoryMessage,
+    synergyChangeStatus
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -180,7 +187,7 @@ export default {
     },
     data() {
         return {
-            docTotal:0,
+            docTotal: 0,
             storyMessage: [],
             doctorVis: 0,
             receptionDepartment: [],
@@ -210,8 +217,8 @@ export default {
             adminLists: [],
             adminPageNum: 1,
             adminTotal: 0,
-            docToatal:0,
-            docPageNum:1,
+            docToatal: 0,
+            docPageNum: 1,
             //管理端  切换管理和统计
             manageOrCount: true, //切换管理和统计
             //医生端  发起协作  弹框
@@ -374,10 +381,8 @@ export default {
             //申请科室统计图
             monthToYear: [],
             drawData: {
-                dataAxis: [
-                ], //每个柱子代表的类名
-                data: [
-                ], //具体数值
+                dataAxis: [], //每个柱子代表的类名
+                data: [], //具体数值
                 title: "协作管理统计图", //图表标题
                 total: 0
             },
@@ -418,6 +423,45 @@ export default {
             //     oObject.state="UNDERWAY"
             //     this.overclick(oObject, "on");
             // }
+        },
+        //协作
+        async xiezOver(row) {
+            if (row.applyUserId == this.userSelfInfo.userId) {
+                this.invitationData1 = [];
+                let _this = this;
+                let query = {
+                    token: this.userState.token,
+                    id: row.id,
+                    status: row.synergyStatus
+                };
+                const res = await synergyChangeStatus(query);
+                if (res.data && res.data.errCode === 0) {
+                    this.$notify.success({
+                        title: "成功",
+                        message: "请求成功"
+                    });
+                } else {
+                    //失败
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
+            } else {
+                this.$notify.error({
+                    title: "警告",
+                    message: "不是本人发起的协作不能结束"
+                });
+            }
+        },
+        //病历
+        goToDangan(row) {
+            this.$router.push({
+                path: "/docDetailed",
+                query: {
+                    id: row.userId
+                }
+            });
         },
         handleCheckChange(data, checked, indeterminate) {
             console.log(checked);
@@ -565,7 +609,7 @@ export default {
                 });
                 setTimeout(function() {
                     _this.centerDialogVisible = false;
-                    _this.DoctorList()
+                    _this.DoctorList();
                 }, 1000);
             } else {
                 //失败
@@ -580,7 +624,7 @@ export default {
             this.adminPageNum = data;
             this.getList1();
         },
-// 医生端分页
+        // 医生端分页
         changeCurrentDoc(data) {
             this.docPageNum = data;
             this.DoctorList();
@@ -633,10 +677,10 @@ export default {
             //选择管理？统计？
             if (res.i == 0) {
                 this.manageOrCount = true;
-                this.getList1()
+                this.getList1();
             } else if (res.i == 1) {
                 this.manageOrCount = false;
-                this.getList2()
+                this.getList2();
             }
         },
         getOTab1(data) {
@@ -672,12 +716,12 @@ export default {
                     day = "0" + day;
                 }
                 this.docTime0 = year + "-" + month + "-" + day;
-                this.docTime1=year + "-" + month + "-" + day;
-            }else{
-                 this.docTime0 = "";
-                this.docTime1="";
+                this.docTime1 = year + "-" + month + "-" + day;
+            } else {
+                this.docTime0 = "";
+                this.docTime1 = "";
             }
-            
+
             this.DoctorList(); //医生端列表
         },
         getOTab5(data) {
@@ -819,7 +863,7 @@ export default {
         // 管理1表   操作区
         //查看记录
         async historicalRecord(row) {
-            this.sessionId=row.sessionId
+            this.sessionId = row.sessionId;
             this.recordVisible = true;
             // let _this = this;
             // let query = {
@@ -861,10 +905,10 @@ export default {
                 //     _this.drawData.dataAxis.push(text.unit);
                 //     _this.drawData.data.push(text.number);
                 // });
-                  this.drawData.totalNumber=res.data.body.total
-                this.drawData.dataAxis = res.data.body.data.map(item=>item.x)
-                this.drawData.data = res.data.body.data.map(item=>item.y)
-                this.drawData = Object.assign({},this.drawData)
+                this.drawData.totalNumber = res.data.body.total;
+                this.drawData.dataAxis = res.data.body.data.map(item => item.x);
+                this.drawData.data = res.data.body.data.map(item => item.y);
+                this.drawData = Object.assign({}, this.drawData);
                 console.log("统计表+成功");
             } else {
                 console.log("统计表+失败");
@@ -893,7 +937,7 @@ export default {
             const res = await synergyPage(options);
             if (res.data && res.data.errCode === 0) {
                 _this.docTableData = res.data.body.data2.list;
-                _this.docTotal=res.data.body.data2.total
+                _this.docTotal = res.data.body.data2.total;
                 $.each(_this.docTableData, function(index, text) {
                     text.synergyDeptName = text.synergyDeptName.length;
                     text.synergyUserName = text.synergyUserName.length;

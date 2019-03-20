@@ -15,10 +15,10 @@
                         </el-radio-group>
                     </el-form-item>
                     <div class="addFollowMain addFollowMain1">
-                        <el-form-item class="addFollowM-bot firstZhiliao" label="首次治疗">
+                        <!-- <el-form-item class="addFollowM-bot firstZhiliao" label="首次治疗">
                             <el-date-picker class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
                             </el-date-picker>
-                        </el-form-item>
+                        </el-form-item> -->
                         <ul>
                             <li v-for="(text,index) in addFollowData.itemModels" :key="index">
                                 <div class="addFollowM-bot" style="display:flex">

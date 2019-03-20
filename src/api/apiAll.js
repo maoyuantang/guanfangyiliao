@@ -920,11 +920,11 @@ export const sendSynergy = (query, data) => {//9.6发起协作
         }
     })
 }
-export const synergyChangeStatus = (query) => {//9.7开始/结束协作
-    const sign = postQueryHandle(Object.assign({}, query));
+export const synergyChangeStatus = query => {//9.8进入协作
+    const sign = postQueryHandle(query);
     return axios({
-        method: 'post',
-        url: `${apiList.synergyChangeStatus}`,
+        method: 'get',
+        url: apiList.synergyChangeStatus,
         params: query,
         headers: {
             sign

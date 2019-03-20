@@ -132,7 +132,7 @@
             </div>
 
             <div>
-                <el-table :data="docTableData" border style="width: 100%">
+                <el-table class='tablePublicClass' :data="docTableData" border style="width: 100%">
                     <el-table-column fixed prop="consultationId" label="会诊编号" width="150">
                     </el-table-column>
                     <el-table-column prop="hospital" label="发起医院" width="120">
@@ -162,19 +162,19 @@
                             <span v-else-if="scope.row.status=='OVER'">结束</span>
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" label="操作" width="100">
+                    <el-table-column fixed="right" label="操作" width="300">
                         <template slot-scope="scope">
-                            <el-button @click="handleClick(scope.row)" type="text" size="small">病历</el-button>
-                            <el-button @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
-                            <el-button v-show="scope.row.status=='OVER'" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
-                            <el-button v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="toConsultation(scope.row)" type="text" size="small">进入会诊</el-button>
-                            <el-button v-show="scope.row.status=='UNDERWAY'" @click="overclick(scope.row,'OFF')" type="text" size="small">结束</el-button>
+                            <el-button class="seeDanganClass" @click="handleClick(scope.row)" type="text" size="small">病历</el-button>
+                            <el-button class="inviteUserClass" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
+                            <el-button class="seeHistoryMessage" v-show="scope.row.status=='OVER'" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
+                            <el-button class="goTohuizhen" v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="toConsultation(scope.row)" type="text" size="small">进入会诊</el-button>
+                            <el-button class="overClass" v-show="scope.row.status=='UNDERWAY'" @click="overclick(scope.row,'OFF')" type="text" size="small">结束</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
                 <div style="text-align:center;padding:10px 0">
-                <el-pagination background layout="prev, pager, next" :total="docTotal" @current-change="changeCurrentDoc">
-                </el-pagination>
+                    <el-pagination background layout="prev, pager, next" :total="docTotal" @current-change="changeCurrentDoc">
+                    </el-pagination>
                 </div>
             </div>
 
@@ -392,7 +392,7 @@ export default {
                 },
                 {
                     prop: "applicationTime",
-                    label: "发起时间"
+                    label: "申请时间"
                 },
                 {
                     prop: "type",
@@ -533,7 +533,7 @@ export default {
                 totalNumber: "34"
             },
             oUserType: "",
-            pageSizeNum:10,
+            pageSizeNum: 10
         };
     },
     computed: {
@@ -700,7 +700,7 @@ export default {
         },
         //查看记录
         async historicalRecord(row) {
-            this.sessionId=row.sessionId
+            this.sessionId = row.sessionId;
             this.recordVisible = true;
             // let _this = this;
             // let query = {
@@ -1060,12 +1060,13 @@ export default {
             const res = await queryStatisticalByApplication(options);
             if (res.data && res.data.errCode === 0) {
                 // res.data.body.data.splice(1,res.data.body.data.length);
-                this.drawData1.total=res.data.body.totalNumber
-                this.drawData1.dataAxis = res.data.body.data.map(item=>item.x)
-                this.drawData1.data = res.data.body.data.map(item=>item.y)
-                this.drawData1 = Object.assign({},this.drawData1)
-                console.log(this.drawData1)
-               
+                this.drawData1.total = res.data.body.totalNumber;
+                this.drawData1.dataAxis = res.data.body.data.map(
+                    item => item.x
+                );
+                this.drawData1.data = res.data.body.data.map(item => item.y);
+                this.drawData1 = Object.assign({}, this.drawData1);
+                console.log(this.drawData1);
             } else {
                 //失败
                 this.$notify.error({
@@ -1093,11 +1094,15 @@ export default {
                 //     _this.drawDataStart.data.push(text.y);
                 // });
                 // res.data.body.data.splice(1,res.data.body.data.length);
-                this.drawDataStart.total=res.data.body.totalNumber
-                this.drawDataStart.dataAxis = res.data.body.data.map(item=>item.x)
-                this.drawDataStart.data = res.data.body.data.map(item=>item.y)
-                this.drawDataStart = Object.assign({},this.drawDataStart)
-                console.log(this.drawDataStart)
+                this.drawDataStart.total = res.data.body.totalNumber;
+                this.drawDataStart.dataAxis = res.data.body.data.map(
+                    item => item.x
+                );
+                this.drawDataStart.data = res.data.body.data.map(
+                    item => item.y
+                );
+                this.drawDataStart = Object.assign({}, this.drawDataStart);
+                console.log(this.drawDataStart);
             } else {
                 //失败
                 this.$notify.error({
@@ -1341,5 +1346,77 @@ export default {
 .addHospital > img {
     width: 100%;
     height: 100%;
+}
+.tablePublicClass {
+    border: none;
+}
+.tablePublicClass .el-table td,
+.tablePublicClass .el-table th {
+    font-family: PingFangSC-Semibold;
+    font-size: 14px;
+    color: #5e6875;
+    letter-spacing: 0;
+    border-right: none;
+}
+.tablePublicClass .el-table td {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #5e6875;
+    letter-spacing: 0;
+}
+.seeDanganClass {
+    width: 57px;
+    height: 20px;
+    background: rgba(255, 171, 43, 0.1);
+    border: 1px solid rgba(255, 171, 43, 0.6);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #ffab2b;
+    line-height: 1px;
+}
+.inviteUserClass {
+    width: 57px;
+    height: 20px;
+    line-height: 1px;
+    background: rgba(254, 77, 151, 0.1);
+    border: 1px solid rgba(254, 77, 151, 0.6);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+font-size: 12px;
+color: #FE4D97;
+}
+.seeHistoryMessage {
+    width: 57px;
+    height: 20px;
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid rgba(66, 133, 244, 0.6);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #4d7cfe;
+    line-height: 1px;
+}
+.goTohuizhen {
+    width: 57px;
+    height: 20px;
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid rgba(66, 133, 244, 0.6);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #4d7cfe;
+    line-height: 1px;
+}
+.overClass {
+    width: 57px;
+    height: 20px;
+    background: rgba(119, 140, 162, 0.1);
+    border: 1px solid rgba(119, 140, 162, 0.6);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #778ca2;
+    line-height: 1px;
 }
 </style>
