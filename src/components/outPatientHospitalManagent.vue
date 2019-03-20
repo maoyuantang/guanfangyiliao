@@ -36,10 +36,10 @@
 
 						<el-table-column label="操作" width="300">
 							<template slot-scope="scope">
-								<button class="chaKanXiangQing" @click="isShowViewDetailFun(scope.row)">查看详情</button>
-								<button class="bianJi" @click="isShowEditFun(scope.row)">编辑</button>
-								<button class="jingYong" v-if="scope.row.state" @click="isShowForbidFun(scope.row)">禁用</button>
-								<button class="jieChuJingYong" v-else @click="isShowForbidFun(scope.row)">解除禁用</button>
+								<button class="lanSe" @click="isShowViewDetailFun(scope.row)">查看详情</button>
+								<button class="lvSe" @click="isShowEditFun(scope.row)">编辑</button>
+								<button class="fenSe" v-if="scope.row.state" @click="isShowForbidFun(scope.row)">禁用</button>
+								<button class="huangSe" v-else @click="isShowForbidFun(scope.row)">解除禁用</button>
 								<!-- <el-button @click="isShowViewDetailFun(scope.row)" type="success" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">查看详情</el-button>
 								<el-button @click="isShowEditFun(scope.row)" type="primary" plain size="mini"
@@ -589,21 +589,21 @@
 						tableBtn: [
 							{
 								name: "处方详情",
-								oclass: "btn1",
+								oclass: "lanSe",
 								method: (index, row) => {
 									this.chuFangDetailList2Fun(index, row);
 								}
 							},
 							{
 								name: "物流状态",
-								oclass: "btn2",
+								oclass: "lanSe",
 								method: (index, row) => {
 									this.roadStatusList2Fun(index, row);
 								}
 							},
 							{
 								name: "聊天记录",
-								oclass: "btn3",
+								oclass: "lanSe",
 								method: (index, row) => {
 									this.viewRecordList2Fun(index, row);
 								}
@@ -1872,7 +1872,7 @@
 	}
 
 	.evaluateBox1 {
-		overflow-y: auto;
+		overflow: auto;
 
 		/deep/ .el-dialog {
 			margin-top: 32vh !important;

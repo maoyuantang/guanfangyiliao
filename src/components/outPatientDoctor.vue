@@ -1262,7 +1262,7 @@
     padding: 0rem 0.2rem;
     margin: 0.3rem 0.3rem 0.3rem 0;
 
-    overflow-y: auto;
+    overflow: auto;
     max-height: 750px;
   }
 
@@ -1486,7 +1486,7 @@
   }
 
   .checkList {
-    width: 20%;
+    /* width: 20%; */
     height: 7rem;
     background: #ffffff;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.14);
@@ -1519,7 +1519,7 @@
     }
 
     .div {
-      overflow-y: auto;
+      overflow: auto;
 
       ul {
         display: flex;
@@ -1562,7 +1562,7 @@
   }
 
   .waitPeople {
-    width: 15%;
+    /* width: 15%; */
     /* height: 95%; */
     background: #ffffff;
     border: 1px solid #e4e8eb;
@@ -1669,7 +1669,7 @@
   }
 
   .prescriptionDetail {
-    width: 65%;
+    /* width: 65%; */
     /* height: 95%; */
     /* background: #FFFFFF; */
     /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.20); */
@@ -1874,7 +1874,7 @@
     overflow: auto;
 
     .checkList {
-      width: 20%;
+      /* width: 20%; */
       height: 7rem;
       background: #ffffff;
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.14);
@@ -1907,7 +1907,7 @@
       }
 
       .div {
-        overflow-y: auto;
+        overflow: auto;
 
         ul {
           display: flex;
@@ -1950,7 +1950,7 @@
     }
 
     .waitPeople {
-      width: 15%;
+      /* width: 15%; */
       /* height: 95%; */
       background: #ffffff;
       border: 1px solid #e4e8eb;
@@ -2052,7 +2052,7 @@
     }
 
     .prescriptionDetail {
-      width: 65%;
+      /* width: 65%; */
       /* height: 95%; */
       /* background: #FFFFFF; */
       /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.20); */

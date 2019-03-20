@@ -210,7 +210,7 @@
         color: #FFF;
     }
 
-    .chaKanXiangQing {
+    .lanSe {
         width: 57px;
         height: 20px;
         background: rgba(66, 133, 244, 0.1);
@@ -223,7 +223,7 @@
         margin: 0 14px 0 14px;
     }
 
-    .bianJi {
+    .lvSe {
         width: 57px;
         height: 20px;
         background: rgba(46, 189, 65, 0.10);
@@ -236,7 +236,7 @@
         margin: 0 14px 0 14px;
     }
 
-    .jingYong {
+    .fenSe {
         width: 57px;
         height: 20px;
         background: rgba(254, 77, 151, 0.10);
@@ -249,7 +249,7 @@
         margin: 0 14px 0 14px;
     }
 
-    .jieChuJingYong {
+    .huangSe {
         width: 57px;
         height: 20px;
         background: rgba(255, 171, 43, 0.10);
