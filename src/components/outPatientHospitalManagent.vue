@@ -34,7 +34,7 @@
 						<el-table-column prop="queuePeople" label="当前排队" :show-overflow-tooltip="true"></el-table-column>
 						<el-table-column prop="updateTime" label="最近修改" :show-overflow-tooltip="true"></el-table-column>
 
-						<el-table-column label="操作" width="270px">
+						<el-table-column label="操作" width="300">
 							<template slot-scope="scope">
 								<button class="chaKanXiangQing" @click="isShowViewDetailFun(scope.row)">查看详情</button>
 								<button class="bianJi" @click="isShowEditFun(scope.row)">编辑</button>
@@ -136,7 +136,7 @@
 		<div v-if="isShowRecord">
 			<el-dialog class="offerDetial" title="订单详情" :visible.sync="isShowRecord" center width=70%>
 				<el-table :data="tableDataChat" style="width: 100%;" @cell-click="relateDoctors2" :max-height="450">
-					<el-table-column fixed prop="orderNo" label="订单号"></el-table-column>
+					<el-table-column prop="orderNo" label="订单号"></el-table-column>
 					<el-table-column prop="doctorName" label="接诊医生"></el-table-column>
 					<el-table-column prop="mode" label="接诊方式"></el-table-column>
 					<el-table-column prop="fee" label="门诊费"></el-table-column>
@@ -145,7 +145,7 @@
 					<el-table-column prop="userName" label="病人"></el-table-column>
 					<el-table-column prop="orderTime" label="问诊时间"></el-table-column>
 					<el-table-column prop="rxFee" label="问诊费"></el-table-column>
-					<el-table-column label="">
+					<el-table-column label="操作" width="300">
 						<template slot-scope="scope">
 							<el-button @click="isShowRecordChatFun(scope.row)" type="text" size="small">聊天记录</el-button>
 						</template>
@@ -1802,6 +1802,21 @@
 	}
 
 	.online-clinic {}
+
+
+	/deep/ .el-table__header-wrapper th {
+		font-family: PingFangSC-Semibold;
+		font-size: 14px;
+		color: #5E6875;
+		letter-spacing: 0;
+	}
+
+	/deep/ .el-table__body-wrapper td {
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #5E6875;
+		letter-spacing: 0;
+	}
 
 	.online-clinic-top {
 		display: flex;

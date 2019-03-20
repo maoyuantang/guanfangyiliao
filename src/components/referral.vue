@@ -144,7 +144,7 @@
           </div>
           <div class="dataBody">
             <el-table :data="manageBodyData" :max-height="550" style="width: 100%">
-              <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
+              <el-table-column prop="referralNo" label="编号"></el-table-column>
               <el-table-column prop="deptName" label="科室"></el-table-column>
               <el-table-column prop="applyOrgName" label="申请医院"></el-table-column>
               <el-table-column prop="applyDeptName" label="申请科室"></el-table-column>
@@ -156,7 +156,7 @@
               <el-table-column prop="" label="方向"></el-table-column>
               <el-table-column prop="receiveTime" label="接诊时间"></el-table-column>
               <el-table-column prop="stateName" label="转诊状态"></el-table-column>
-              <el-table-column label="操作">
+              <el-table-column label="操作" width="300">
                 <template slot-scope="scope">
                   <button class="lanSe" @click="dualReferralRecord1(scope.row)">查看记录</button>
                   <!-- <el-button @click="viewFile2(scope.row)" type="warning" plain size="mini"
@@ -202,17 +202,17 @@
       <div class="doctorStyleBody">
         <div>
           <el-table :data="docTableData" style="width: 100%" :max-height="500">
-            <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
-            <el-table-column fixed prop="applyOrgName" label="申请医院"></el-table-column>
-            <el-table-column fixed prop="applyDeptName" label="申请科室"></el-table-column>
-            <el-table-column fixed prop="" label="申请人"></el-table-column>
-            <el-table-column fixed prop="phone" label="手机号"></el-table-column>
-            <el-table-column fixed prop="applyTime" label="申请时间"></el-table-column>
-            <el-table-column fixed prop="patientName" label="病人"></el-table-column>
-            <el-table-column fixed prop="intention" label="目的"></el-table-column>
-            <el-table-column fixed prop="typeName" label="转诊类型"></el-table-column>
-            <el-table-column fixed prop="stateName" label="转诊状态"></el-table-column>
-            <el-table-column label="操作" :show-overflow-tooltip="true">
+            <el-table-column prop="referralNo" label="编号"></el-table-column>
+            <el-table-column prop="applyOrgName" label="申请医院"></el-table-column>
+            <el-table-column prop="applyDeptName" label="申请科室"></el-table-column>
+            <el-table-column prop="" label="申请人"></el-table-column>
+            <el-table-column prop="phone" label="手机号"></el-table-column>
+            <el-table-column prop="applyTime" label="申请时间"></el-table-column>
+            <el-table-column prop="patientName" label="病人"></el-table-column>
+            <el-table-column prop="intention" label="目的"></el-table-column>
+            <el-table-column prop="typeName" label="转诊类型"></el-table-column>
+            <el-table-column prop="stateName" label="转诊状态"></el-table-column>
+            <el-table-column label="操作" width="300">
               <template slot-scope="scope">
                 <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
                 <!-- <button class="jieChuJingYong" v-for="(text,index) in scope.row.buttons" :key="index"
@@ -1518,5 +1518,19 @@
     color: #FFAB2B;
     line-height: 3px;
     margin: 0 14px 0 14px;
+  }
+
+  /deep/ .el-table__header-wrapper th {
+    font-family: PingFangSC-Semibold;
+    font-size: 14px;
+    color: #5E6875;
+    letter-spacing: 0;
+  }
+
+  /deep/ .el-table__body-wrapper td {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #5E6875;
+    letter-spacing: 0;
   }
 </style>

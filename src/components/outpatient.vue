@@ -261,4 +261,18 @@
         line-height: 3px;
         margin: 0 14px 0 14px;
     }
+
+    /deep/ .el-table__header-wrapper th {
+        font-family: PingFangSC-Semibold;
+        font-size: 14px;
+        color: #5E6875;
+        letter-spacing: 0;
+    }
+
+    /deep/ .el-table__body-wrapper td {
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #5E6875;
+        letter-spacing: 0;
+    }
 </style>

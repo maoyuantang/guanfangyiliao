@@ -107,7 +107,8 @@
             :class="whichUser==index?'backgroundUser':''">
             <li>
               <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-              <img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
+              <img v-if="text.headId"
+                :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
               <div>
                 <p class="name">{{text.userName}}</p>
                 <p class="depart">问诊医生:

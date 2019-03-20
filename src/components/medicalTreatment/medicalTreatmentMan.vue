@@ -123,7 +123,7 @@
           <el-table-column prop="id" label="编号"></el-table-column>
           <el-table-column prop="medicalName" label="名称"></el-table-column>
           <el-table-column prop="levelName" label="分级"></el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="300">
             <template slot-scope="scope">
               <button class="bianJi" @click="editList1(scope.row)">编 辑</button>
               <button class="jingYong" @click="delectList1(scope.row)">删 除</button>
@@ -160,7 +160,7 @@
           <el-table-column prop="direction" label="方向"></el-table-column>
           <el-table-column prop="scope" label="范围"></el-table-column>
           <el-table-column prop="levelDesc" label="疾病等级"></el-table-column>
-          <el-table-column label="操作" width="250">
+          <el-table-column label="操作" width="300">
             <template slot-scope="scope">
               <button class="bianJi" @click="editList2(scope.row)">编 辑</button>
               <button class="jingYong" @click="delectList2(scope.row)">删 除</button>
@@ -1406,55 +1406,70 @@
   .ceshi {
     color: red !important;
   }
+
   .chaKanXiangQing {
-        width: 57px;
-        height: 20px;
-        background: rgba(66, 133, 244, 0.1);
-        border: 1px solid rgba(66, 133, 244, 0.6);
-        border-radius: 3px;
-        font-family: PingFangSC-Regular;
-        font-size: 12px;
-        color: #4d7cfe;
-        line-height: 3px;
-        margin: 0 14px 0 14px;
-    }
+    width: 57px;
+    height: 20px;
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid rgba(66, 133, 244, 0.6);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #4d7cfe;
+    line-height: 3px;
+    margin: 0 14px 0 14px;
+  }
 
-    .bianJi {
-        width: 57px;
-        height: 20px;
-        background: rgba(46, 189, 65, 0.10);
-        border: 1px solid rgba(46, 189, 65, 0.60);
-        border-radius: 3px;
-        font-family: PingFangSC-Regular;
-        font-size: 12px;
-        color: #2EBD41;
-        line-height: 3px;
-        margin: 0 14px 0 14px;
-    }
+  .bianJi {
+    width: 57px;
+    height: 20px;
+    background: rgba(46, 189, 65, 0.10);
+    border: 1px solid rgba(46, 189, 65, 0.60);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #2EBD41;
+    line-height: 3px;
+    margin: 0 14px 0 14px;
+  }
 
-    .jingYong {
-        width: 57px;
-        height: 20px;
-        background: rgba(254, 77, 151, 0.10);
-        border: 1px solid rgba(254, 77, 151, 0.60);
-        border-radius: 3px;
-        font-family: PingFangSC-Regular;
-        font-size: 12px;
-        color: #FE4D97;
-        line-height: 3px;
-        margin: 0 14px 0 14px;
-    }
+  .jingYong {
+    width: 57px;
+    height: 20px;
+    background: rgba(254, 77, 151, 0.10);
+    border: 1px solid rgba(254, 77, 151, 0.60);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #FE4D97;
+    line-height: 3px;
+    margin: 0 14px 0 14px;
+  }
 
-    .jieChuJingYong {
-        width: 57px;
-        height: 20px;
-        background: rgba(255, 171, 43, 0.10);
-        border: 1px solid rgba(255, 171, 43, 0.60);
-        border-radius: 3px;
-        font-family: PingFangSC-Regular;
-        font-size: 12px;
-        color: #FFAB2B;
-        line-height: 3px;
-        margin: 0 14px 0 14px;
-    }
+  .jieChuJingYong {
+    width: 57px;
+    height: 20px;
+    background: rgba(255, 171, 43, 0.10);
+    border: 1px solid rgba(255, 171, 43, 0.60);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #FFAB2B;
+    line-height: 3px;
+    margin: 0 14px 0 14px;
+  }
+
+  /deep/ .el-table__header-wrapper th {
+    font-family: PingFangSC-Semibold;
+    font-size: 14px;
+    color: #5E6875;
+    letter-spacing: 0;
+  }
+
+  /deep/ .el-table__body-wrapper td {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #5E6875;
+    letter-spacing: 0;
+  }
 </style>
