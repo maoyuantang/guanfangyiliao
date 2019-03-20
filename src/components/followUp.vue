@@ -505,11 +505,11 @@
                         <el-button class="startConsul" v-show="docAddTemplate" type="text" @click="docAddTemplateFun()">新增模板</el-button>
                     </div>
                     <div>
-                        <div v-if="myFollowVisable">
+                        <div v-if="myFollowVisable"  class="public-list">
                             <el-table :data="myFollowList" border style="width: 100%" @selection-change="followCheckChange">
                                 <el-table-column type="selection" width="55">
                                 </el-table-column>
-                                <el-table-column fixed prop="userName" label="姓名" width="150">
+                                <el-table-column  prop="userName" label="姓名" width="150">
                                 </el-table-column>
                                 <el-table-column prop="origin" label="来源" width="120">
                                 </el-table-column>
@@ -538,7 +538,7 @@
 
                                     </template>
                                 </el-table-column>
-                                <el-table-column fixed="right" label="操作" width="250">
+                                <el-table-column label="操作" width="250">
                                     <template slot-scope="scope">
                                         <el-button class='seeDanganClass' @click="seeDanganClick(scope.row)" type="text" size="small">查看档案</el-button>
                                         <el-button class='sendMessage' @click="sendMessage(scope.row)" type="text" size="small">发送</el-button>

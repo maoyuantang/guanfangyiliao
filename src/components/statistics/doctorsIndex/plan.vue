@@ -12,7 +12,7 @@
 
             <div class="indexClassTable">
                 <el-table :data="planData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column fixed label=" " width="70">
+                    <el-table-column  label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -43,7 +43,7 @@
 
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" label=" " width="100">
+                    <el-table-column  label=" " width="100">
                         <template slot-scope="scope">
                             <el-button class="solveOver" @click="solveOver(scope.row,0)" type="text" size="small">处理完成</el-button>
                         </template>
@@ -63,7 +63,7 @@
 
             <div class="indexClassTable">
                 <el-table :data="warnData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column fixed label=" " width="70">
+                    <el-table-column  label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -96,7 +96,7 @@
 
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" label=" " width="100">
+                    <el-table-column label=" " width="100">
                         <template slot-scope="scope">
                             <el-button class="solveOver" @click="solveOver(scope.row,1)" type="text" size="small">处理完成</el-button>
                         </template>
@@ -116,7 +116,7 @@
 
             <div class="indexClassTable">
                 <el-table :data="followData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column fixed label=" " width="70">
+                    <el-table-column  label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -165,7 +165,7 @@
 
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" label=" " width="100">
+                    <el-table-column  label=" " width="100">
                         <template slot-scope="scope">
                             <el-button class="solveOver" @click="solveOver(scope.row,2)" type="text" size="small">处理完成</el-button>
                         </template>
@@ -185,7 +185,7 @@
 
             <div class="indexClassTable">
                 <el-table :data="consultationData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column fixed label=" " width="70">
+                    <el-table-column  label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -209,7 +209,7 @@
 
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" label=" " width="220">
+                    <el-table-column label=" " width="220">
                         <template slot-scope="scope">
                             <el-button class="seeDanganClass" @click="sendArchives(scope.row)" type="text" size="small">查看档案</el-button>
                             <el-button class="enterHuizClass" @click="enterHuiz(scope.row)" type="text" size="small">进入会诊</el-button>
@@ -232,7 +232,7 @@
 
             <div class="indexClassTable">
                 <el-table :data="cooperationData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column fixed label=" " width="70">
+                    <el-table-column  label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -262,7 +262,7 @@
 
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" label=" " width="220">
+                    <el-table-column  label=" " width="220">
                         <template slot-scope="scope">
                             <el-button class="seeDanganClass" @click="sendArchives(scope.row)" type="text" size="small">查看档案</el-button>
                             <el-button class="enterHuizClass" @click="enterHuiz(scope.row)" type="text" size="small">进入协作</el-button>

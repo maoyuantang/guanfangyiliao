@@ -46,8 +46,8 @@
                 <statisticsWay1 @reBack="getTjData"></statisticsWay1>
                 <el-button class="startConsul" type="text" @click="initiateCollaboration() ">发起协作</el-button>
             </div>
-            <div>
-                <el-table :data="docTableData" border style="width: 100%">
+            <div class="public-list">
+                <el-table   :data="docTableData" border style="width: 100%">
                     <el-table-column fixed prop="synergyNo" label="协作编号"></el-table-column>
                     <el-table-column fixed prop="applyDeptName" label="发起科室"></el-table-column>
                     <el-table-column fixed prop="applyUserName" label="发起医生"></el-table-column>
@@ -62,7 +62,7 @@
                             <span v-if="scope.row.synergyStatus==1">结束</span>
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" label="操作" width="100">
+                    <el-table-column label="操作" width="300">
                         <template slot-scope="scope">
                             <el-button class="seeDanganClass"  @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
                             <el-button class="inviteUserClass"  @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>

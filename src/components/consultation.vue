@@ -1,7 +1,7 @@
 <template>
     <!-- 远程会诊系统 -->
 
-    <div class="consultation">
+    <div class="consultationBox">
         <!-- 发起会诊弹窗 -->
         <div v-if="centerDialogVisible">
             <el-dialog class="startGroup" title="发起会诊" :visible.sync="centerDialogVisible" width="602px" hight="607px" center>
@@ -131,9 +131,9 @@
                 <el-button class="startConsul" type="text" @click="startHuizhen()">发起会诊</el-button>
             </div>
 
-            <div>
-                <el-table class='tablePublicClass' :data="docTableData" border style="width: 100%">
-                    <el-table-column fixed prop="consultationId" label="会诊编号" width="150">
+            <div class="public-list">
+                <el-table class='' :data="docTableData" border style="width: 100%">
+                    <el-table-column prop="consultationId" label="会诊编号" width="150">
                     </el-table-column>
                     <el-table-column prop="hospital" label="发起医院" width="120">
                     </el-table-column>
@@ -141,7 +141,7 @@
                     </el-table-column>
                     <el-table-column prop="doctor" label="发起医生" width="120">
                     </el-table-column>
-                    <el-table-column prop="applicationTime" label="发起时间" width="300">
+                    <el-table-column prop="applicationTime" label="发起时间" width="150">
                     </el-table-column>
                     <el-table-column prop="type" label="会诊类型" width="120">
                         <template slot-scope="scope">
@@ -162,9 +162,9 @@
                             <span v-else-if="scope.row.status=='OVER'">结束</span>
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" label="操作" width="300">
+                    <el-table-column   label="操作" width="300">
                         <template slot-scope="scope">
-                            <el-button class="seeDanganClass" @click="handleClick(scope.row)" type="text" size="small">病历</el-button>
+                            <el-button class="seeDanganClass" @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
                             <el-button class="inviteUserClass" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
                             <el-button class="seeHistoryMessage" v-show="scope.row.status=='OVER'" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
                             <el-button class="goTohuizhen" v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="toConsultation(scope.row)" type="text" size="small">进入会诊</el-button>
@@ -376,7 +376,8 @@ export default {
             columnsDoc: [
                 {
                     prop: "consultationId",
-                    label: "会诊编号"
+                    label: "会诊编号",
+                    width:'300px'
                 },
                 {
                     prop: "hospital",
@@ -698,50 +699,20 @@ export default {
                 });
             }
         },
+        //病历
+        goToDangan(row) {
+            this.$router.push({
+                path: "/docDetailed",
+                query: {
+                    id: row.userId
+                }
+            });
+        },
         //查看记录
         async historicalRecord(row) {
             this.sessionId = row.sessionId;
             this.recordVisible = true;
-            // let _this = this;
-            // let query = {
-            //     token: this.userState.token
-            // };
-            // let options = {
-            //     userId: this.userSelfInfo.userId,
-            //     sessionId: [row.sessionId],
-            //     msgId: this.$store.state.socket.messageTicket.oMsgId,
-            //     pageNums: 15
-            // };
-            // const res = await fetchHistoryMessage(query, options);
-            // if (res.data && res.data.errCode === 0) {
-            //     _this.storyMessage = res.data.body;
-            // } else {
-            //     //失败
-            //     this.$notify.error({
-            //         title: "警告",
-            //         message: res.data.errMsg
-            //     });
-            // }
         },
-        //获取医生详情
-        // async getDoctorDetail() {
-        //     this.doctorVisible = true;
-        //     let _this = this;
-        //     let query = {
-        //         token: this.userState.token,
-        //         consultationId: 会诊ID
-        //     };
-        //     const res = await queryConsultationDoctorList(query);
-        //     if (res.data && res.data.errCode === 0) {
-        //         _this.doctorDetailData = res.data.body;
-        //     } else {
-        //         //失败
-        //         this.$notify.error({
-        //             title: "警告",
-        //             message: res.data.errMsg
-        //         });
-        //     }
-        // },
         getOTab4(data) {
             console.log(data);
             this.oDocTime = data.index.value;
@@ -1195,10 +1166,20 @@ export default {
     width: 100%;
 }
 /* 医生端样式 */
-.consultation .doc-title {
+.consultationBox{
+        padding-top: 50px;
+}
+.doc-title {
     display: flex;
     display: -webkit-flex;
     margin-bottom: 52px;
+    justify-content:space-between
+}
+.doc-title>div:nth-child(2){
+        margin-left: 178px;
+}
+.doc-title>button{
+    margin-top: -7px;
 }
 .evaluateBtn {
     width: 57px;
@@ -1418,5 +1399,8 @@ color: #FE4D97;
     font-size: 12px;
     color: #778ca2;
     line-height: 1px;
+}
+.el-table--border td, .el-table--border th, .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed{
+    border-right: none
 }
 </style>
