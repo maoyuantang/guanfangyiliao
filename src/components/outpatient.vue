@@ -119,6 +119,16 @@
         color: red !important;
     }
 
+    .ceshiLan {
+        color: #0064D9 !important;
+
+    }
+
+    .ceshiHui {
+        color: #97A3B4 !important;
+
+    }
+
     .btn1 {
         background: #f0f9eb;
         border-color: #c2e7b0;

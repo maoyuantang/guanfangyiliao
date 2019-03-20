@@ -34,7 +34,7 @@
 						<el-table-column prop="queuePeople" label="当前排队" :show-overflow-tooltip="true"></el-table-column>
 						<el-table-column prop="updateTime" label="最近修改" :show-overflow-tooltip="true"></el-table-column>
 
-						<el-table-column fixed="right" label="操作" width="230px">
+						<el-table-column fixed="right" label="操作" width="270px">
 							<template slot-scope="scope">
 								<el-button @click="isShowViewDetailFun(scope.row)" type="success" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">查看详情</el-button>
@@ -113,7 +113,8 @@
 					<li v-for="(text,index) in relationalDoctor" :key="index">
 						<div class="evaluateCont1">
 							<!-- 待头像 -->
-							<img src="../assets/img/ME.png" />
+							<img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
+							<img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'	alt="医生头像">
 							<h5>{{text.doctorName}}</h5>
 						</div>
 						<div class="evaluateCont2">
@@ -397,50 +398,50 @@
 					},
 					departmentList: {//科室列表 
 						default: {
-							label: '',
-							value: '1'
+							// label: '',
+							// value: '1'
 						},
 						list: [
-							{
-								label: '科室列表1',
-								value: '1'
-							},
-							{
-								label: '科室列表2',
-								value: '2'
-							}
+							// {
+							// 	label: '科室列表1',
+							// 	value: '1'
+							// },
+							// {
+							// 	label: '科室列表2',
+							// 	value: '2'
+							// }
 						]
 					},
 					doctorList: {//医生列表 
 						default: [
-							'1'
+							// '1'
 						],
 						list: [
-							{
-								label: '医生1',
-								value: '1'
-							},
-							{
-								label: '医生2',
-								value: '2'
-							},
-							{
-								label: '医生3',
-								value: '3'
-							}
+							// {
+							// 	label: '医生1',
+							// 	value: '1'
+							// },
+							// {
+							// 	label: '医生2',
+							// 	value: '2'
+							// },
+							// {
+							// 	label: '医生3',
+							// 	value: '3'
+							// }
 						]
 					},
 					businessDescription: '',//业务描述
 					servicePhone: '',//服务电话
 					agreement: {
 						default: {
-							label: '协议1',
-							value: '1'
+							// label: '协议1',
+							// value: '1'
 						},
 
 						list: [
-							{ label: '协议1', value: '1' },
-							{ label: '协议2', value: '2' },
+							// { label: '协议1', value: '1' },
+							// { label: '协议2', value: '2' },
 						],
 						showContent: ''
 					},
@@ -678,8 +679,8 @@
 				this.departmentId = data.index.value;
 				console.log(this.departmentId)
 				this.getList1();
-				this.getList2();
-				this.getList3();
+				// this.getList2();
+				// this.getList3();
 			},
 			getSelect1(data) {//审核状态
 				console.log(data)
@@ -1467,7 +1468,7 @@
 					this.addData.departmentList.default = departmentLista;//科室
 					$.each(lists.doctors, function (index, text) {
 						_this.addData.doctorList.default.push(JSON.stringify(text.doctorId))//关联医生
-						_this.addData.doctorList.list.push({ label: text.doctorName, value: JSON.stringify(text.doctorId) })
+						// _this.addData.doctorList.list.push({ label: text.doctorName, value: JSON.stringify(text.doctorId) })
 					})
 					this.addData.agreement.default = { label: lists.protocolName, value: JSON.stringify(lists.protocolId) }//协议id
 					this.addData.agreement.list.push({ label: lists.protocolName, value: JSON.stringify(lists.protocolId) })
@@ -1511,7 +1512,7 @@
 					this.addData.departmentList.default = departmentLista;//科室
 					$.each(lists.doctors, function (index, text) {
 						_this.addData.doctorList.default.push(text.doctorId)//关联医生
-						_this.addData.doctorList.list.push({ label: text.doctorName, value: text.doctorId })
+						// _this.addData.doctorList.list.push({ label: text.doctorName, value: text.doctorId })
 						console.log(text.doctorId)
 					})
 					this.addData.agreement.default = { label: lists.protocolName, value: lists.protocolId }//协议id
@@ -1663,14 +1664,16 @@
 						clinicType: data.businessTypeList.default.label,//String true 远程门诊类型 
 						clinicName: data.businessName.label,//String true 远程门诊名 
 						clinicPrice: data.businessPrice.label,//long true 远程门诊价格 
-						clinicDepartmentId: data.departmentList.default.value,//待请求的  String true 远程门诊科室id 
+						clinicDepartmentId: data.departmentList.default.value,//String true 远程门诊科室id 
+
+						orgCode: this.userInfo.hospitalCode,//String true 远程门诊医院id 
 						clinicDoctors: data.doctorList.default,//List true 远程门诊医生 
 						clinicDesc: data.businessDescription,//String true 远程门诊描述 
-						clinicProtocolContent: this.addData.agreement.showContent,//String true 远程门诊协议内容 
-						clinicPhone: data.servicePhone,//String true 远程门诊电话 
-						orgCode: this.userInfo.hospitalCode,//医院代码
+
 						clinicProtocolId: this.clinicProtocolId,//String false 远程门诊协议id（选择协议时必传，非选择的协议可不传） 
 						clinicProtocolName: this.clinicProtocolName,//String true 远程门诊协议名 
+						clinicProtocolContent: this.addData.agreement.showContent,//String true 远程门诊协议内容 
+						clinicPhone: data.servicePhone,//String true 远程门诊电话 
 						status: this.state//boolean false 远程门诊状态（禁用操作时值必传） 
 					};
 					// console.log(query, options)

@@ -12,13 +12,15 @@
         <div class="moved">
           <!-- 头像姓名 -->
           <div class="moved_top">
-            <img src="../assets/img/a-6.png" />
+            <img v-if="dualReferralRecordFile.headId == null" src="../assets/img/a-6.png" alt="医生头像">
+            <img v-if="dualReferralRecordFile.headId"
+              :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+dualReferralRecordFile.headId' alt="医生头像">
             <p>{{dualReferralRecordFile.patientName}}</p>
           </div>
           <!-- 转院路程 -->
           <div class="moved_middle">
             <span class="Hospital1">{{dualReferralRecordFile.applyOrgName}}</span>
-            <img src="../assets/img/a-6.png" />
+            <i class="el-icon-refresh"></i>
             <span class="Hospital1">{{dualReferralRecordFile.receiveOrgName}}</span>
           </div>
           <!-- 转院详情 -->
@@ -1377,6 +1379,9 @@
 
   .moved .moved_middle {
     margin: 10px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .moved .moved_footer {
@@ -1447,5 +1452,10 @@
       align-items: center;
       /* flex-wrap: wrap; */
     }
+  }
+  .el-icon-refresh{
+    margin: 0 20px;
+    font-size: 30px;
+    color: #27AD9A;
   }
 </style>

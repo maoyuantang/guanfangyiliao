@@ -12,29 +12,32 @@
     <div class="myOuts" v-if="oconsulVisable==0">
       <ul v-for="(text,index1) in myHomes" :key="index1" class="outpatient_s">
         <li class="outpatient_left">
-          <p class="title">{{text.orgName}}-{{text.clinicName}}</p>
+          <!-- <p class="title">{{text.orgName}}-{{text.clinicName}}</p> -->
+          <p class="title">{{text.clinicName}}</p>
           <div class="outpatient_user">
-            <img src="../assets/img/ME.png" alt="">
+            <img v-if="text.doctor[0].headId == null" src="../assets/img/a-6.png" alt="医生头像">
+            <img v-if="text.doctor[0].headId"
+              :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.doctor[0].headId'
+              alt="医生头像">
             <div class="outpatient_name">
-              <p class="p1">{{text.orgName}}</p>
-              <!-- <p class="p1">{{text.doctor.doctorName}}</p> -->
-              <p class="p2">{{text.doctor.doctorStates?'没接诊':'接诊中...'}}</p>
+              <p class="p1">{{text.doctor[0].doctorName}}</p>
+              <p class="p2">{{text.doctor[0].doctorStates?'接诊中...':'未接诊'}}</p>
             </div>
           </div>
           <i></i>
           <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index'
             style="width: 90%;margin: auto;">
-            <el-table :data="text">
+            <el-table :data="text" :cell-class-name="ceshi0">
               <el-table-column prop="unProcess" label="未处理"></el-table-column>
               <el-table-column prop="process" label="已处理"></el-table-column>
               <el-table-column prop="doctorCount" label="其他医生"></el-table-column>
             </el-table>
           </div>
-          <el-button class="startConsul" type="text" @click="enterRoomBtn(text.id)">进入门诊</el-button>
+          <el-button class="startConsul" type="text" @click="enterRoomBtn(text.id)">进入诊室</el-button>
 
         </li>
 
-        <li class="outpatient_right" >
+        <li class="outpatient_right">
           <!-- 病人个数循环 -->
           <noData v-if="text.clinicOrders.length == 0"></noData>
           <span class="dian" @click="lookList(text)" v-if="text.clinicOrders.length != 0">...</span>
@@ -103,7 +106,8 @@
           <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index,text)'
             :class="whichUser==index?'backgroundUser':''">
             <li>
-              <img src="../assets/img/ME.png" alt="头像">
+              <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
+              <img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
               <div>
                 <p class="name">{{text.userName}}</p>
                 <p class="depart">问诊医生:
@@ -301,7 +305,9 @@
           <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index)'
             :class="whichUser==index?'backgroundUser':''">
             <li>
-              <img src="../assets/img/ME.png" alt="头像">
+              <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
+              <img v-if="text.headId"
+                :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
               <div>
                 <p class="name">{{text.userName}}</p>
                 <p class="depart">问诊医生:
@@ -1213,6 +1219,16 @@
             title: "警告",
             message: res.data.errMsg
           });
+        }
+      },
+
+      //表格样式
+      ceshi0(data) {
+        if (data.columnIndex == 0) {
+          return 'ceshiLan'
+        }
+        else if (data.columnIndex == 1 || data.columnIndex == 2) {
+          return 'ceshiHui'
         }
       }
     },
