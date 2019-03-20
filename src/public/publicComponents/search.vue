@@ -53,6 +53,10 @@ color: #0067FF;
     width:100%;
     height: 100%;
 }
+.search input{
+    width: 293px;
+    height: 38px;
+}
 /* 备注
 
 父组件引入
