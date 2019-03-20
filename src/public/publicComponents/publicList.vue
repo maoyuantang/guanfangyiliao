@@ -1,23 +1,20 @@
 <template>
 
     <div class="public-list">
-        <el-table :data="tableData" ref="multipleTable" style="width: 100%" @selection-change="reBackFn"
-            :cell-class-name="cellClassName" @cell-click="cellClick" :max-height="450">
+        <el-table :data="tableData" ref="multipleTable" style="width: 100%" @selection-change="reBackFn" :cell-class-name="cellClassName" @cell-click="cellClick" :max-height="450">
 
             <el-table-column v-if="checkVisable" type="selection" width="55">
             </el-table-column>
-            <el-table-column v-for="(column, index) in columns" :prop="column.prop" :key="index" :label="column.label"
-                :width="column.width" label-class-name="tableHeadColor" :show-overflow-tooltip="true">
+            <el-table-column v-for="(column, index) in columns" :prop="column.prop" :key="index" :label="column.label" :width="column.width" label-class-name="tableHeadColor" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
                     <span :class="scope.row.oclass">
                         {{scope.row[column.prop]?scope.row[column.prop]:0}}
                     </span>
                 </template>
             </el-table-column>
-            <el-table-column fixed="right" label="操作" v-if="handleVisiable" width="300">
+            <el-table-column label="操作" v-if="handleVisiable" width="300">
                 <template slot-scope="scope">
-                    <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method(index,scope.row)"
-                        :class="text.oclass" type="text" size="small" :key="index">
+                    <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method(index,scope.row)" :class="text.oclass" type="text" size="small" :key="index">
                         {{text.name}}
                     </el-button>
                 </template>
@@ -25,121 +22,143 @@
         </el-table>
 
         <div style="text-align:center;padding:10px 0">
-            <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
-                @current-change="changeCurrent">
+            <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total" @current-change="changeCurrent">
             </el-pagination>
         </div>
     </div>
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                otrue: true,
-                multipleTable: [],
-                handleVisiable: false
-            };
+export default {
+    data() {
+        return {
+            otrue: true,
+            multipleTable: [],
+            handleVisiable: false
+        };
+    },
+    methods: {
+        reBackFn(val) {
+            this.$emit("reBack", val);
         },
-        methods: {
-            reBackFn(val) {
-                this.$emit("reBack", val);
-            },
-            cellClassName(data) {
-                if (this.cellColor) {
-                    for (let i = 0; i < this.cellColor.length; i++) {
-                        if (data.columnIndex == this.cellColor[i].cell) {
-                            return this.cellColor[i].oclass;
-                        }
+        cellClassName(data) {
+            if (this.cellColor) {
+                for (let i = 0; i < this.cellColor.length; i++) {
+                    if (data.columnIndex == this.cellColor[i].cell) {
+                        return this.cellColor[i].oclass;
                     }
                 }
-            },
-            cellClick(row, column, cell, event) {
-                if (this.cellColor) {
-                    for (let i = 0; i < this.cellColor.length; i++) {
-                        if (column.label == this.cellColor[i].value) {
-                            console.log(column);
-                            this.$emit("cellClickData", [row, column]);
-                        }
-                    }
-                }
-            },
-            //如果不传按钮则操作隐藏
-            hideHandle() {
-                if (this.tableBtn || this.tableBtn.length < 1) {
-                    this.handleVisiable = true;
-                } else {
-                    this.handleVisiable = false;
-                }
-            },
-            changeCurrent(data) {
-                this.$emit("rebackFenye", data);
             }
         },
-        props: {
-            tableData: Array, //父组件传来的 列表 数据
-            columns: Array, //父组件传来的 列表标题 数据
-            tableBtn: Array, //父组件传来的 列表按钮 数据
-            checkVisable: Boolean, //父组件传来的是否有多选框
-            cellColor: Array, // 添加类名和事件
-            total: Number,
-            pageSize: Number,
+        cellClick(row, column, cell, event) {
+            if (this.cellColor) {
+                for (let i = 0; i < this.cellColor.length; i++) {
+                    if (column.label == this.cellColor[i].value) {
+                        console.log(column);
+                        this.$emit("cellClickData", [row, column]);
+                    }
+                }
+            }
         },
-        model: {
-            prop: ["tableData", "columns", "tableBtn", "checkVisable", "cellColor", "adminTotal", "pageSize"],
-            event: "reBack"
+        //如果不传按钮则操作隐藏
+        hideHandle() {
+            if (this.tableBtn || this.tableBtn.length < 1) {
+                this.handleVisiable = true;
+            } else {
+                this.handleVisiable = false;
+            }
         },
-        async created() {
-            this.reBackFn();
-            this.hideHandle();
+        changeCurrent(data) {
+            this.$emit("rebackFenye", data);
         }
-    };
+    },
+    props: {
+        tableData: Array, //父组件传来的 列表 数据
+        columns: Array, //父组件传来的 列表标题 数据
+        tableBtn: Array, //父组件传来的 列表按钮 数据
+        checkVisable: Boolean, //父组件传来的是否有多选框
+        cellColor: Array, // 添加类名和事件
+        total: Number,
+        pageSize: Number
+    },
+    model: {
+        prop: [
+            "tableData",
+            "columns",
+            "tableBtn",
+            "checkVisable",
+            "cellColor",
+            "adminTotal",
+            "pageSize"
+        ],
+        event: "reBack"
+    },
+    async created() {
+        this.reBackFn();
+        this.hideHandle();
+    }
+};
 </script>
 
 <style>
-    .public-list td {
-        padding: 8px 0;
-        font-family: PingFangSC-Regular;
-        font-size: var(--fontSize1);
-        color: #5e6875;
-        letter-spacing: 0;
-    }
+.public-list td {
+    padding: 8px 0;
+    font-family: PingFangSC-Regular;
+    font-size: var(--fontSize1);
+    color: #5e6875;
+    letter-spacing: 0;
+}
 
-    .public-list th .cell {
-        display: flex;
-        justify-content: start;
-        align-items: center;
-    }
+.public-list th .cell {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.public-list th {
+    font-family: PingFangSC-Semibold;
+    font-size: var(--fontSize2);
+    color: #5e6875;
+    letter-spacing: 0;
+}
 
-    .public-list td .cell {
-        display: flex;
-        justify-content: start;
-        align-items: center;
-    }
-
-    .tableHeadColor {
+.public-list td .cell {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.public-list > div {
+    border: none;
+}
+/* .tableHeadColor {
         font-family: PingFangSC-Semibold;
         font-size: var(--fontSize2);
         color: #5e6875;
         letter-spacing: 0;
-    }
+    } */
 
-    .public-list /deep/ .el-table__header-wrapper .el-table__header .has-gutter tr th div {
-		text-align: center;
-		white-space: nowrap !important;
-		padding: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-	}
-    .public-list /deep/ .el-table__body-wrapper tbody tr td .cell span {
-        text-align: center;
-        white-space: nowrap !important;
-        padding: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+.public-list
+    /deep/
+    .el-table__header-wrapper
+    .el-table__header
+    .has-gutter
+    tr
+    th
+    div {
+    text-align: center;
+    white-space: nowrap !important;
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.public-list /deep/ .el-table__body-wrapper tbody tr td .cell span {
+    text-align: center;
+    white-space: nowrap !important;
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
-    /* 表格公共组件
+/* 表格公共组件
  <tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData"> </tableList>
 父组件一共需要传入的参数
         tableData: Array, //父组件传来的 列表 数据

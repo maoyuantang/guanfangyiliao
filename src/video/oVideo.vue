@@ -11,12 +11,13 @@
                         </div>
                     </div>
                     <div class="col-xs-12 media-box us-media">
-                        <div id="localVideos" v-loading="loadingUs" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
-
-                        </div>
                         <div class="localVideos1" v-if="localVideoVisable">
                             <video class="localVideo1" id="video" width="640" height="480" autoplay></video>
                         </div>
+                        <div v-else id="localVideos" v-loading="loadingUs" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
+
+                        </div>
+                        
                         <div>
                             <div class="videoTopBtnBox">
                                 <div>
@@ -1980,7 +1981,7 @@ video {
 }
 .videoBtn {
     position: absolute;
-    z-index: 9999999999;
+    z-index: 9999;
     display: flex;
     display: -webkit-flex;
 
