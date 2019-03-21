@@ -558,7 +558,7 @@
 
     <!-- 视频聊天 -->
     <div v-if="centerDialogVisible">
-      <el-dialog title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
+      <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()"  :showClose="VideoshowClose">
         <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"
           @reback="videoclick">
         </ovideo>
@@ -617,6 +617,7 @@
     data() {
       return {
         //谭莹变量
+        VideoshowClose:false,
         videoType: "门诊",
         chatVisible1: true,
         doctorVis: 1, //医生跟患者单聊

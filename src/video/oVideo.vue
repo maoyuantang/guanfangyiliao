@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="container-fluid bs-docs-container">
-            {{userSocketInfo.ifVideoImg}}
+            <!-- {{userSocketInfo.ifVideoImg}} -->
             <div class="row">
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
@@ -1833,15 +1833,14 @@ export default {
 <style  scope>
 video {
     width: 100%;
-    padding: 0.2em 0em;
-    background-color: #222;
+    /* padding: 0.2em 0em; */
+    /* background-color: #222; */
 }
 
 #localVideos div,
 #remoteVideos div {
     background-color: #222;
     color: #fefefe;
-    margin-top: 0.2em;
 }
 
 .nav > li {
@@ -1883,11 +1882,12 @@ video {
 .mani-media-box {
     display: flex;
     display: -webkit-flex;
+    height: 100%;
 }
 .us-media {
     position: relative;
     padding: 0;
-    height: 1000px;
+    height: 100%;
 }
 .us-media video {
     height: 100%;
@@ -1904,17 +1904,23 @@ video {
     width: 30%;
 }
 .other-media video {
-    height: 300px;
+        height: 100%;
+    padding: 0;
 }
 .us-media {
     width: 70%;
 }
 
 #remoteVideos {
-    height: 930px;
+    height: 100%;
     padding: 10px;
     background: white;
-    border-right: 11px solid #888888;
+}
+#localVideos>div{
+    height: 100%;
+}
+#localVideos>div>div{
+    height: 100%;
 }
 #localVideos div,
 #remoteVideos div {
@@ -1931,12 +1937,13 @@ video {
 }
 .patientClass {
     position: fixed;
-    right: 0;
-    top: 0px;
+    right: 16px;
+    top: 28px;
+    z-index: 999;
     padding-top: 68px;
     width: 304px;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
+    height: 90% !important;
+    background: rgba(0, 0, 0, 0.8);
     color: white;
 }
 .patientClass0 h3 {
@@ -2005,7 +2012,8 @@ video {
 .videoTopBtnBox {
     position: absolute;
     top: 10px;
-    z-index: 999999;
+    z-index: 999;
+        padding: 35px 20px 0px 20px;
     width: 100%;
     display: flex;
     display: -webkit-flex;
@@ -2025,6 +2033,7 @@ video {
 .videoTopBtnBox > div:nth-child(2) {
     display: flex;
     display: -webkit-flex;
+        margin-top: -13px;
 }
 .videoTopBtnBox > div:nth-child(2) > div {
     /* position: relative;
@@ -2088,6 +2097,19 @@ video {
     border-radius: 2px;
     color: #333;
     background-color: #fff;
+}
+.videoClassBox .el-dialog__header{
+height: 3%;
+padding:0
+}
+.videoClassBox .el-dialog__body{
+    height: 96%;
+    padding:0 !important
+}
+.videoClassBox .el-dialog__body>div,
+.videoClassBox .el-dialog__body>div>div,
+.videoClassBox .el-dialog__body>div>div>div{
+    height: 100%
 }
 /* 
 门诊打开注意 
