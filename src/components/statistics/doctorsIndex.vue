@@ -1,6 +1,5 @@
 <template>
 	<div class="doctors-index">
-		{{authMap.find(item=>item.authorityId==='3000')}}
 		<!-- 顶部三个模块  远程门诊  移动查房  远程教育 -->
 		<div class="doctors-index-top">
 			<div class="doctors-index-top-module" v-if="authMap.find(item=>item.authorityId==='10000')">
@@ -108,7 +107,7 @@
 	}
 </script>
 
-<style >
+<style scoped>
 	.doctors-index{
 		padding-right: 0.37rem;
 	}
@@ -120,8 +119,8 @@
 	}
 	.doctors-index-top-module{
 		/* flex: 1; */
-		width:5.2rem;
-		height: 3rem;
+		/* width:5.2rem;
+		height: 3rem; */
 		/* border: 1px solid red; */
 	}
 	.doctors-index-top-fg{

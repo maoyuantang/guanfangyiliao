@@ -172,6 +172,7 @@ import { parse } from 'protobufjs';
 			 * 该函数恢复页面，主要用在刷新之后
 			 */
 			restorePage(){
+				// return
 				let rePage = sessionStorage.getItem('page');
 				if(rePage){//说明以前有记录，恢复他
 					try{

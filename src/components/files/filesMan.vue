@@ -116,22 +116,18 @@ export default {
     normalColumnChart
   },
   watch: {
-    "global.departmentList": {
+    "global.manToolDept": {
       handler(n) {
-        this.listCondition.departmentList.list = [
-          { text: "全部", deptId: "" },
-          ...n.map(item => {
-            item.text = item.deptName;
+        this.listCondition.departmentList.list = n.map(item => {
+            item.text = item.name;
+            item.deptId = item.id;
             return item;
-          })
-        ];
-        this.chartCondition.departmentList.list = [
-          { text: "全部", deptId: "" },
-          ...n.map(item => {
-            item.text = item.deptName;
+          });
+        this.chartCondition.departmentList.list = n.map(item => {
+            item.text = item.name;
+            item.deptId = item.id;
             return item;
-          })
-        ];
+          });
       }
     },
     'chartCondition.statisticsMethods.select.value':{
@@ -306,20 +302,16 @@ export default {
      * 获取科室列表
      */
     getDepartmentList() {
-      this.listCondition.departmentList.list = [
-        { text: "全部", deptId: "" },
-        ...this.global.departmentList.map(item => {
-          item.text = item.deptName;
+      this.listCondition.departmentList.list = this.global.manToolDept.map(item => {
+          item.text = item.name;
+          item.deptId = item.id;
           return item;
-        })
-      ];
-      this.chartCondition.departmentList.list = [
-        { text: "全部", deptId: "" },
-        ...this.global.departmentList.map(item => {
-          item.text = item.deptName;
+        });
+      this.chartCondition.departmentList.list = this.global.manToolDept.map(item => {
+          item.text = item.name;
+          item.deptId = item.id;
           return item;
-        })
-      ];
+        });
     },
 
     /**

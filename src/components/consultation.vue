@@ -366,6 +366,7 @@ export default {
                         text: "今日",
                         value: "TODAY"
                     }
+<<<<<<< HEAD
                 ]
             },
             columnsDoc: [
@@ -385,6 +386,13 @@ export default {
                 {
                     prop: "doctor",
                     label: "发起医生"
+=======
+                ],
+                invitationData: [],
+                defaultProps: {
+                    children: "children",
+                    label: "name"
+>>>>>>> 4dea425ab2290317b6e70c66fd3a0f87e2a1a1a0
                 },
                 {
                     prop: "applicationTime",
@@ -842,6 +850,66 @@ export default {
                         });
                     }
                 } else {
+<<<<<<< HEAD
+=======
+                    if (row.doctorId == this.userSelfInfo.userId) {
+                        let _this = this;
+                        let query = {
+                            token: this.userState.token
+                        };
+                        let options = {
+                            consultationId: row.id,
+                            status: row.status
+                        };
+                        const res = await updateConsultationStatus(query, options);
+                        if (res.data && res.data.errCode === 0) {
+                            this.$notify.success({
+                                title: "警告",
+                                message: "结束成功"
+                            });
+                        } else {
+                            //失败
+                            this.$notify.error({
+                                title: "警告",
+                                message: res.data.errMsg
+                            });
+                        }
+                    } else {
+                        this.$notify.error({
+                            title: "警告",
+                            message: "发起医生才能结束会诊"
+                        });
+                    }
+                }
+            },
+            //管理端事件
+            getConsulTabData(res) {
+                console.log(res.i)
+                if (res.i == 0) {
+                    this.oconsulVisable = true;
+                    this.getAdminList();
+                } else if (res.i == 1) {
+                    this.oconsulVisable = false;
+                    this.getApplyTjList();
+                    this.getAdminTjList();
+                }
+            }, //获取医院列表
+            async getHospitalment() {
+                let _this = this;
+                let query = {
+                    token: this.userState.token
+                };
+                const res = await getAllHospital(query);
+                if (res.data && res.data.errCode === 0) {
+                    $.each(res.data.body, function (index, text) {
+                        _this.hospitalList.push({
+                            name: text.orgName,
+                            value: text.orgCode
+                        });
+                    });
+                } else {
+                    //失败
+>>>>>>> 4dea425ab2290317b6e70c66fd3a0f87e2a1a1a0
                     this.$notify.error({
                         title: "警告",
                         message: "发起医生才能结束会诊"
@@ -974,6 +1042,7 @@ export default {
                         name: text.name,
                         value: text.id
                     });
+<<<<<<< HEAD
                 });
             } else {
                 //失败
@@ -1007,6 +1076,165 @@ export default {
                     }
                 });
                 this.adminTotal = res.data.body.data2.total;
+=======
+                }
+            },
+            //获取科室列表
+            async getDepartment1(orgCode) {
+                this.departmentList = [];
+                let _this = this;
+                let query = {
+                    orgCode: orgCode,
+                    deptId: ""
+                };
+                const res = await fetchHospitalDepts(query);
+                if (res.data && res.data.errCode === 0) {
+                    $.each(res.data.body, function (index, text) {
+                        _this.departmentList.push({
+                            name: text.deptName,
+                            value: text.deptId
+                        });
+                    });
+                } else {
+                    //失败
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
+            },
+            //获取科室列表
+            async getDepartment2(oindex, orgCode) {
+                this.startHz.consultationHospitalDept[oindex].departmentListOO = [];
+                let _this = this;
+                let query = {
+                    orgCode: orgCode,
+                    deptId: ""
+                };
+                const res = await fetchHospitalDepts(query);
+                if (res.data && res.data.errCode === 0) {
+                    $.each(res.data.body, function (index, text) {
+                        _this.startHz.consultationHospitalDept[
+                            oindex
+                        ].departmentListOO.push({
+                            name: text.deptName,
+                            value: text.deptId
+                        });
+                    });
+                } else {
+                    //失败
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
+            },
+            //获取管理端列表
+            async getAdminList() {
+                let _this = this;
+                const options = {
+                    token: this.userState.token,
+                    searchKey: this.searchValue,
+                    applicationDeptId: this.applicationDeptId,
+                    receiveDeptId: this.receiveDeptId,
+                    pageNum: this.adminPageNum,
+                    pageSize: 10,
+                    type: this.adminType,
+                    status: this.adminStatus
+                };
+                const res = await queryByManagerPage(options);
+                if (res.data && res.data.errCode === 0) {
+                    this.adminTableData = res.data.body.data2.list;
+                    this.adminTotal = res.data.body.data2.total;
+
+                    console.log(res);
+                } else {
+                    //失败
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
+            },
+            //获取管理端申请科室统计列表
+            async getApplyTjList() {
+                // debugger
+                this.drawData1.dataAxis = [];
+                this.drawData1.data = [];
+                let _this = this;
+                const options = {
+                    token: this.userState.token,
+                    type: this.statisticsType,
+                    startDate: this.statisticsStart,
+                    endDate: this.statisticsEnd,
+                    deptId: this.applicationDeptId2
+                };
+                const res = await queryStatisticalByApplication(options);
+                if (res.data && res.data.errCode === 0) {
+                    // res.data.body.data.splice(1,res.data.body.data.length);
+                    this.drawData1.total = res.data.body.totalNumber;
+                    this.drawData1.dataAxis = res.data.body.data.map(
+                        item => item.x
+                    );
+                    this.drawData1.data = res.data.body.data.map(item => item.y);
+                    this.drawData1 = Object.assign({}, this.drawData1);
+                    console.log(this.drawData1);
+                } else {
+                    //失败
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
+            },
+            //获取管理端发起科室统计列表
+            async getAdminTjList() {
+                this.drawDataStart.dataAxis = [];
+                this.drawDataStart.data = [];
+                let _this = this;
+                const options = {
+                    token: this.userState.token,
+                    type: this.statisticsType,
+                    startDate: this.statisticsStart,
+                    endDate: this.statisticsEnd,
+                    deptId: this.applicationDeptId2
+                };
+                const res = await queryStatisticalBySponsor(options);
+                if (res.data && res.data.errCode === 0) {
+                    // $.each(res.data.body.data, function(index, text) {
+                    //     _this.drawDataStart.dataAxis.push(text.x);
+                    //     _this.drawDataStart.data.push(text.y);
+                    // });
+                    // res.data.body.data.splice(1,res.data.body.data.length);
+                    this.drawDataStart.total = res.data.body.totalNumber;
+                    this.drawDataStart.dataAxis = res.data.body.data.map(
+                        item => item.x
+                    );
+                    this.drawDataStart.data = res.data.body.data.map(
+                        item => item.y
+                    );
+                    this.drawDataStart = Object.assign({}, this.drawDataStart);
+                    console.log(this.drawDataStart);
+                } else {
+                    //失败
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
+            },
+            //获取统计类型
+            getTjData(data) {
+                console.log(data);
+                this.statisticsType = data.select.value;
+                if (data.time) {
+                    this.statisticsStart = data.time[0];
+                    this.statisticsEnd = data.time[1];
+                } else {
+                    var myDate = new Date();
+                    this.statisticsStart = "";
+                }
+>>>>>>> 4dea425ab2290317b6e70c66fd3a0f87e2a1a1a0
 
                 console.log(res);
             } else {
@@ -1122,6 +1350,7 @@ export default {
                 });
             }
         }
+<<<<<<< HEAD
     },
     async created() {
         this.getAdminList();
@@ -1462,4 +1691,314 @@ line-height: 33px;
 .startGroup .el-form-item {
     margin-bottom: 19px;
 }
+=======
+    };
+</script>
+
+<style>
+    /* 公共样式 */
+    .Admin-title {
+        margin-bottom: 42px;
+    }
+
+    .admin-oMain {
+        padding: 30px 38px;
+        background: #ffffff;
+        border: 1px solid #e5edf3;
+        box-shadow: 0 6px 36px 0 rgba(0, 62, 100, 0.04);
+        border-radius: 4px;
+    }
+
+    .admin-oMain>div {
+        position: relative;
+    }
+
+    .mainTab {
+        display: flex;
+        display: -webkit-flex;
+    }
+
+    .mainTab>div:first-child {
+        width: 100%;
+    }
+
+    /* 医生端样式 */
+    .consultationBox {
+        padding-top: 50px;
+    }
+
+    .doc-title {
+        display: flex;
+        display: -webkit-flex;
+        margin-bottom: 52px;
+        justify-content: space-between
+    }
+
+    .doc-title>div:nth-child(2) {
+        margin-left: 178px;
+    }
+
+    .doc-title>button {
+        margin-top: -7px;
+    }
+
+    .evaluateBtn {
+        width: 57px;
+        height: 20px;
+        background: rgba(119, 140, 162, 0.1);
+        border: 1px solid rgba(119, 140, 162, 0.6);
+        border-radius: 3px;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #778ca2;
+        line-height: 3px;
+    }
+
+    .startConsul {
+        width: 196px;
+        height: 40px;
+        background: #4da1ff;
+        border-radius: 4px;
+        font-family: PingFangSC-Semibold;
+        font-size: 22px;
+        color: #ffffff;
+        letter-spacing: 0.92px;
+        text-align: center;
+        line-height: 0px;
+    }
+
+    /* 管理端端样式 */
+
+    .mainTab {
+        margin-bottom: 30px;
+    }
+
+    .recordBtn {
+        width: 57px;
+        height: 20px;
+        background: rgba(66, 133, 244, 0.1);
+        border: 1px solid rgba(66, 133, 244, 0.6);
+        border-radius: 3px;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #4d7cfe;
+        line-height: 3px;
+    }
+
+    .startGroup input {
+        width: 162px;
+        height: 28px;
+    }
+
+    .confirmBtn {
+        width: 100%;
+        height: 39px;
+        background: #4da1ff;
+        border-radius: 4px;
+        color: white;
+        font-size: 12px;
+        line-height: 21px;
+    }
+
+    .confirmBtnBox>div {
+        margin-left: 0;
+    }
+
+    .evaluateInput>textarea {
+        width: 478px;
+        height: 177px;
+    }
+
+    .evaluateMargin1 {
+        margin-bottom: 68px;
+    }
+
+    .evaluateMargin>div {
+        margin-left: 0px !important;
+    }
+
+    .evaluateBox .el-dialog__body {
+        padding: 25px 60px;
+    }
+
+    .evaluateCont {
+        width: 90%;
+    }
+
+    .evaluateCont>h5 {
+        font-family: Helvetica;
+        font-size: 0.14rem;
+        color: #252631;
+    }
+
+    .evaluateCont>div {
+        font-family: PingFangSC-Regular;
+        font-size: 0.12rem;
+        color: #98a9bc;
+        line-height: 21px;
+    }
+
+    .evaluateBox2 li {
+        margin-bottom: 18px;
+        display: flex;
+        display: -webkit-flex;
+        justify-content: space-between;
+    }
+
+    /* 查看记录 */
+    .hisMain {
+        padding: 10px 28px;
+    }
+
+    .ohisList {
+        margin-bottom: 25px;
+    }
+
+    .ohisList>h3 {
+        margin-bottom: 15px;
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #000000;
+        letter-spacing: -0.4px;
+        font-weight: normal;
+    }
+
+    .ohisListMain {
+        display: flex;
+        display: -webkit-flex;
+        margin-bottom: 15px;
+    }
+
+    .ohisListMain>div:first-child {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        margin-right: 12px;
+    }
+
+    .ohisListMain>div:first-child>img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+    }
+
+    .ohisListRg>div {
+        font-size: 0.14rem;
+        font-family: PingFangSC-Regular;
+        color: #323c47;
+    }
+
+    .ohisListRg>div:first-child {
+        color: #939eab;
+        font-size: 0.12rem;
+    }
+
+    .ooRed {
+        color: red !important;
+    }
+
+    .addHospitalBox {
+        position: relative;
+    }
+
+    .addHospital {
+        position: absolute;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        right: 20px;
+        top: 8px;
+    }
+
+    .addHospital>img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .tablePublicClass {
+        border: none;
+    }
+
+    .tablePublicClass .el-table td,
+    .tablePublicClass .el-table th {
+        font-family: PingFangSC-Semibold;
+        font-size: 14px;
+        color: #5e6875;
+        letter-spacing: 0;
+        border-right: none;
+    }
+
+    .tablePublicClass .el-table td {
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #5e6875;
+        letter-spacing: 0;
+    }
+
+    .seeDanganClass {
+        width: 57px;
+        height: 20px;
+        background: rgba(255, 171, 43, 0.1);
+        border: 1px solid rgba(255, 171, 43, 0.6);
+        border-radius: 3px;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #ffab2b;
+        line-height: 1px;
+    }
+
+    .inviteUserClass {
+        width: 57px;
+        height: 20px;
+        line-height: 1px;
+        background: rgba(254, 77, 151, 0.1);
+        border: 1px solid rgba(254, 77, 151, 0.6);
+        border-radius: 3px;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #FE4D97;
+    }
+
+    .seeHistoryMessage {
+        width: 57px;
+        height: 20px;
+        background: rgba(66, 133, 244, 0.1);
+        border: 1px solid rgba(66, 133, 244, 0.6);
+        border-radius: 3px;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #4d7cfe;
+        line-height: 1px;
+    }
+
+    .goTohuizhen {
+        width: 57px;
+        height: 20px;
+        background: rgba(66, 133, 244, 0.1);
+        border: 1px solid rgba(66, 133, 244, 0.6);
+        border-radius: 3px;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #4d7cfe;
+        line-height: 1px;
+    }
+
+    .overClass {
+        width: 57px;
+        height: 20px;
+        background: rgba(119, 140, 162, 0.1);
+        border: 1px solid rgba(119, 140, 162, 0.6);
+        border-radius: 3px;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #778ca2;
+        line-height: 1px;
+    }
+
+    .el-table--border td,
+    .el-table--border th,
+    .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
+        border-right: none
+    }
+>>>>>>> 4dea425ab2290317b6e70c66fd3a0f87e2a1a1a0
 </style>

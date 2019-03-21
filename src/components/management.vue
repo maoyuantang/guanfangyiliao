@@ -46,8 +46,7 @@
 						</el-table>
 					</div>
 					<div style="text-align: center;padding: 10px 0;">
-						<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
-							@current-change="currentChange1">
+						<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
 						</el-pagination>
 					</div>
 				</div>
@@ -196,7 +195,6 @@
 		computed: {
 			//引入token
 			...mapState({
-				userState: state => state.user.userInfo,
 				userSelfInfo: state => state.user.userSelfInfo,
 				userInfo: state => state.user.userInfo,
 			}),
@@ -253,7 +251,7 @@
 				// }
 				let _this = this;
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 					type: 'MANAGE'
 				};
 				const res = await toolDept(query);
@@ -292,7 +290,7 @@
 			async getSelect2() {
 				let _this = this;
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 				};
 				const res = await toolTerminalType(query);
 				if (res.data && res.data.errCode === 0) {
@@ -324,7 +322,7 @@
 			async getSelect3() {
 				let _this = this;
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 				};
 				const res = await toolTerminalArea(query);
 				if (res.data && res.data.errCode === 0) {
@@ -370,7 +368,7 @@
 			async getList1() {
 				console.log(this.searchValue)
 				let query = {// 7.11根据条件获取处方信息 
-					token: this.userState.token,
+					token: this.userInfo.token,
 					area: "",//区域
 					deptId: this.departmentId,//科室id
 					searchKey: this.searchValue,//查询条件
@@ -407,7 +405,7 @@
 			async count() {
 				const _this = this
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 					type: this.type, //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
 					startDate: this.time0, //String false 开始日期，示例：2019-01 - 01 
 					endDate: this.time1, //String false 结束日期，示例：2019-01 - 25 

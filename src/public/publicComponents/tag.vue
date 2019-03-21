@@ -1,10 +1,10 @@
 <template>
   <div class="self-tag">
     <span class="el-tag tag-title">{{inData.title}}:</span>
-    <el-tag v-for="(item,index) in inData.list" :key="index" :class="inData.select===index?'all':null" @click.native="selectItem(item,index)">
+    <el-tag v-for="(item,index) in inData.more?inData.list.slice(0,5):inData.list" :key="index" :class="inData.select===index?'all':null" @click.native="selectItem(item,index)">
         {{item.label}}
     </el-tag>
-    <el-tag v-if="inData.more">更多…</el-tag>
+    <el-tag @click.native="showMore" v-if="inData.more">更多…</el-tag>
   </div>
   <!-- @click.native.prevent="reBackFn(item,index)" -->
   <!-- @click.native="reBackFn(-1)" v-if="inData.more" -->
@@ -20,11 +20,29 @@ export default {
     selectItem(item,index){
         this.$emit("reback",{item,index});
     },
+    showMore(){
+      this.inData.more = false;
+    },
+    isMore(){
+      if(this.inData.list.length>5){
+          this.inData.more = true;
+        }
+    },
   },
   props:[
       "inData"
   ],
+  watch:{
+    'inData.list':{
+      handler(n){
+        if(n.length>5){
+          this.inData.more = true;
+        }
+      }
+    }
+  },
    created() {
+     this.isMore();
   }
 };
 </script>

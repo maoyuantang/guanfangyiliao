@@ -8,17 +8,17 @@
            <table class="super-management-middle-table">
                <thead>
                     <tr class="super-management-middle-table-tr table-thead-tr">
-                       <th ><span>{{tableData.head.name||'缺失'}}</span></th>
-                       <th ><span>{{tableData.head.account||'缺失'}}</span></th>
-                       <th ><span>{{tableData.head.subSystemNum||'缺失'}}</span></th>
-                       <th ><span>{{tableData.head.deptNum||'缺失'}}</span></th>
-                       <th ><span>{{tableData.head.deptManageNum||'缺失'}}</span></th>
-                       <th ><span>{{tableData.head.doctorNum||'缺失'}}</span></th>
-                       <th ><span>{{tableData.head.superOrgNum||'缺失'}}</span></th>
-                       <th ><span>{{tableData.head.childOrgNum||'缺失'}}</span></th>
-                       <th ><span>{{tableData.head.teamNum||'缺失'}}</span></th>
-                       <th ><span>{{tableData.head.consNum||'缺失'}}</span></th>
-                       <th ><span>{{tableData.head.deviceNum||'缺失'}}</span></th>
+                       <th ><span>{{tableData.head.name||'0'}}</span></th>
+                       <th ><span>{{tableData.head.account||'0'}}</span></th>
+                       <th ><span>{{tableData.head.subSystemNum||'0'}}</span></th>
+                       <th ><span>{{tableData.head.deptNum||'0'}}</span></th>
+                       <th ><span>{{tableData.head.deptManageNum||'0'}}</span></th>
+                       <th ><span>{{tableData.head.doctorNum||'0'}}</span></th>
+                       <th ><span>{{tableData.head.superOrgNum||'0'}}</span></th>
+                       <th ><span>{{tableData.head.childOrgNum||'0'}}</span></th>
+                       <th ><span>{{tableData.head.teamNum||'0'}}</span></th>
+                       <th ><span>{{tableData.head.consNum||'0'}}</span></th>
+                       <th ><span>{{tableData.head.deviceNum||'0'}}</span></th>
                        <th v-if="tableData.operating.length>0"><span>操作</span></th>
                     </tr>
                </thead>
@@ -26,14 +26,14 @@
                    <tr v-for="(item,index) in tableData.data" :key="index" class="super-management-middle-table-tr table-tbody-tr" @click="setNowItem(item)">
                        <th><span>{{item.name}}</span></th>
                        <th><span>{{item.account}}</span></th>
-                       <th @click="subSystemNum({type:'subSystemNum',value:item})"><span>{{item.subSystemNum||'缺失'}}</span></th>
-                       <th @click="deptNum({type:'deptNum',value:item})"><span>{{item.deptNum||'缺失'}}</span></th>
-                       <th @click="deptManageNum({type:'deptManageNum',value:item})"><span>{{item.deptManageNum||'缺失'}}</span></th>
-                       <th @click="doctorNum({type:'doctorNum',value:item})"><span>{{item.doctorNum||'缺失'}}</span></th>
-                       <th @click="superOrgNum({type:'superOrgNum',value:item})"><span>{{item.superOrgNum||'缺失'}}</span></th>
-                       <th @click="superOrgNum({type:'childOrgNum',value:item})"><span>{{item.childOrgNum||'缺失'}}</span></th>
-                       <th @click="teamNum({type:'teamNum',value:item})"><span>{{item.teamNum||'缺失'}}</span></th>
-                       <th @click="consNum({type:'consNum',value:item})"><span>{{item.consNum||'缺失'}}</span></th>
+                       <th @click="subSystemNum({type:'subSystemNum',value:item})"><span>{{item.subSystemNum||'0'}}</span></th>
+                       <th @click="deptNum({type:'deptNum',value:item})"><span>{{item.deptNum||'0'}}</span></th>
+                       <th @click="deptManageNum({type:'deptManageNum',value:item})"><span>{{item.deptManageNum||'0'}}</span></th>
+                       <th @click="doctorNum({type:'doctorNum',value:item})"><span>{{item.doctorNum||'0'}}</span></th>
+                       <th @click="superOrgNum({type:'superOrgNum',value:item})"><span>{{item.superOrgNum||'0'}}</span></th>
+                       <th @click="superOrgNum({type:'childOrgNum',value:item})"><span>{{item.childOrgNum||'0'}}</span></th>
+                       <th @click="teamNum({type:'teamNum',value:item})"><span>{{item.teamNum||'0'}}</span></th>
+                       <th @click="consNum({type:'consNum',value:item})"><span>{{item.consNum||'0'}}</span></th>
                        <th ><span>{{item.deviceNum}}</span></th>
                        <th v-if="tableData.operating.length>0">
                            <span v-for="(v,k) in tableData.operating" :key="k" class="operating-span">

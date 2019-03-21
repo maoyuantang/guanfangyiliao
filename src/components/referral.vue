@@ -13,8 +13,7 @@
           <!-- 头像姓名 -->
           <div class="moved_top">
             <img v-if="dualReferralRecordFile.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-            <img v-if="dualReferralRecordFile.headId"
-              :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+dualReferralRecordFile.headId'
+            <img v-if="dualReferralRecordFile.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+dualReferralRecordFile.headId'
               alt="医生头像">
             <p>{{dualReferralRecordFile.patientName}}</p>
           </div>
@@ -58,47 +57,40 @@
           <div style="display:flex;margin:10px 0;">
             <el-form-item label="转诊类型:" :label-width="formLabelWidth">
               <el-select v-model="addForm.typeList.value" placeholder="上转/下转" clearable @change='upOrDown()'>
-                <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label"
-                  :value="item.value"></el-option>
+                <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label="疾病名称:" :label-width="formLabelWidth">
-              <el-select v-model="addForm.diseaseName.value" placeholder="请选择" clearable @change='diseaseNameId()'
-                ref="ceshi1">
-                <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label"
-                  :value="item.value"></el-option>
+              <el-select v-model="addForm.diseaseName.value" placeholder="请选择" clearable @change='diseaseNameId()' ref="ceshi1">
+                <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </div>
 
           <el-form-item label="病     人:" :label-width="formLabelWidth">
             <el-select v-model="addForm.patient.value" placeholder="请选择" clearable ref="ceshi2">
-              <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label"
-                :value="item.value">
+              <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
 
           <div class="block" style="margin-bottom: 22px;">
-            <span class="demonstration"
-              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
-            <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.value"
-              @change="handleChange" clearable ref="ceshi3">
+            <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
+            <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.value" @change="handleChange"
+              clearable ref="ceshi3">
             </el-cascader>
           </div>
 
           <el-form-item label="病历授权:" :label-width="formLabelWidth">
             <el-select v-model="addForm.giveRight.value" placeholder="单选" clearable>
-              <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label"
-                :value="item.value">
+              <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
 
           <div class="block" style="margin-bottom: 22px;">
-            <span class="demonstration"
-              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
+            <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
             <el-date-picker v-model="addForm.moveTime.value" type="datetime" placeholder="请选择" default-time="12:00:00">
             </el-date-picker>
           </div>
@@ -166,8 +158,7 @@
             </el-table>
           </div>
           <div style="text-align: center;padding: 10px 0;">
-            <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
-              @current-change="currentChange1">
+            <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
             </el-pagination>
           </div>
         </div>
@@ -217,10 +208,8 @@
                 <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
                 <!-- <button class="jieChuJingYong" v-for="(text,index) in scope.row.buttons" :key="index"
                   @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button> -->
-                <button
-                  :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
-                  v-for="(text,index) in scope.row.buttons" :key="index"
-                  @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button>
+                <button :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
+                  v-for="(text,index) in scope.row.buttons" :key="index" @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button>
                 <!-- <el-button @click="dualReferralRecord2(scope.row)" type="success" plain size="mini"
                   style="margin:0.05rem 0 0.05rem 0;">转诊记录</el-button>
                 <el-button v-for="(text,index) in scope.row.buttons" :key="index" @click="list2Done(text.btnCommand,scope.row)"
@@ -231,8 +220,7 @@
           </el-table>
         </div>
         <div style="text-align: center;padding: 10px 0;">
-          <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
-            @current-change="currentChange2">
+          <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange2">
           </el-pagination>
         </div>
       </div>
@@ -482,7 +470,6 @@
     computed: {
       //引入token
       ...mapState({
-        userState: state => state.user.userInfo,
         userSelfInfo: state => state.user.userSelfInfo,
         userInfo: state => state.user.userInfo,
       }),
@@ -581,7 +568,7 @@
         // }
         let _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           type: 'MANAGE'
         };
         const res = await toolDept(query);                     //1.21.1.科室筛选  工具栏 (管理) (管理)
@@ -620,7 +607,7 @@
       async getSelect3(oindex) {
         let _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
         };
         const res = await toolReferralType(query);                     //1.21.28.方向筛选  工具栏 (管理)
         if (res.data && res.data.errCode === 0) {
@@ -666,7 +653,7 @@
 
         let _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           deptId: this.departmentId,
@@ -701,7 +688,7 @@
       async getList21() {
         const _this = this
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           deptId: this.departmentId, //String false 科室ID 
           statisticalType: this.type, //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
           direction: "into",//方向：into转入，转出out
@@ -738,7 +725,7 @@
       async getList22() {
         const _this = this
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           deptId: this.departmentId, //String false 科室ID 
           statisticalType: this.type, //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
           direction: "out",//方向：into转入，转出out
@@ -776,7 +763,7 @@
       async DoctorList() {
         let _this = this;
         const options = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           startTime: this.time0,//时间段返回值
@@ -849,7 +836,7 @@
         console.log(this.referralType)
         let _this = this;
         const options = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           referralType: this.referralType,//方向，UP上转，DOWN下转
         };
         const res = await readMedicals(options);                  //14.1.双向转诊-WEB医生端-疾病名称下拉框 
@@ -880,7 +867,7 @@
         console.log(this.referralType)
         let _this = this;
         const options = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           referralType: this.referralType,//方向，UP上转，DOWN下转
           medicalId: this.medicalId//疾病ID(readMedicals  接口返回)
         };
@@ -923,7 +910,7 @@
       async dualReferralAdd1() {
         console.log(this.addForm)
         let query = {
-          token: this.userState.token
+          token: this.userInfo.token
         };
         let options = {
           referralType: this.addForm.typeList.value,
@@ -991,7 +978,7 @@
         this.isShowmoveUser1 = !this.isShowmoveUser1
         let _this = this;
         const options = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           referralId: data.referralId,//转诊ID
         };
         const res = await dualReferralRecord(options);                  //14.7.双向转诊-WEB医生端-查询记录 
@@ -1058,7 +1045,7 @@
         this.isShowmoveUser1 = !this.isShowmoveUser1
         let _this = this;
         const options = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           referralId: data.referralId,//转诊ID
         };
         const res = await dualReferralRecord(options);                  //14.7.双向转诊-WEB医生端-查询记录 
@@ -1086,7 +1073,7 @@
         console.log(data2)
         let _this = this;
         const options = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           referralId: data2.referralId,//转诊ID
         };
         const res = await dualReferralRecord(options);                  //14.7.双向转诊-WEB医生端-查询记录 
@@ -1117,7 +1104,7 @@
       async dualReferralAdd2(data2) {
         console.log(this.addForm)
         let query = {
-          token: this.userState.token
+          token: this.userInfo.token
         };
         let options = {
           id: this.referralId,//ID
@@ -1159,7 +1146,7 @@
       async applicantCANCEL(data2) {
         let _this = this;
         const query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
         };
         const options = {
           referralId: data2.referralId,//转诊ID
@@ -1182,7 +1169,7 @@
       //审核通过      (按钮)
       async receptionAudit(data2) {
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
         };
         let options = {
           referralId: data2.referralId,//转诊ID
@@ -1205,7 +1192,7 @@
       //接诊     (按钮)
       async dualReferralReception1(data2) {
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           operate: 'RECEPTION'
         };
         let options = {
@@ -1229,7 +1216,7 @@
       //出院     (按钮)
       async dualReferralReception2(data2) {
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           operate: 'LEAVE_HOSPITAL'
         };
         let options = {
@@ -1253,7 +1240,7 @@
       //转诊     (按钮)
       async dualReferralReception3(data2) {
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           operate: 'REFERRAL'
         };
         let options = {
@@ -1466,6 +1453,22 @@
     margin: 0 20px;
     font-size: 30px;
     color: #27AD9A;
+  }
+
+  .lanSe:focus {
+    outline: none;
+  }
+
+  .lvSe:focus {
+    outline: none;
+  }
+
+  .fenSe:focus {
+    outline: none;
+  }
+
+  .huangSe:focus {
+    outline: none;
   }
 
   .lanSe {

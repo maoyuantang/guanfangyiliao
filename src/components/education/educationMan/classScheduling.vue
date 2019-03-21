@@ -190,7 +190,7 @@
 
 <script>
     import { mapState } from "vuex"
-    import { typeList, arrangeList, eduCourseArrange, doctorsByOrgCodeAndDeptId, getArrange, eduCourseEdit, eduCourseCancel } from '../../../api/apiAll.js'
+    import { typeList, arrangeList, eduCourseArrange, doctorsByOrgCodeAndDeptId, getArrange, eduCourseEdit, eduCourseCancel, fetchHospitalDeptAuth } from '../../../api/apiAll.js'
     import Check from '../../../public/publicJs/check.js'
     import tag from '../../../public/publicComponents/tag.vue'
     import search from '../../../public/publicComponents/search.vue'
@@ -633,16 +633,39 @@
              * 获取科室列表
              */
             setDepartmentData(){
-                this.queryConditions.department.list = this.global.departmentList.map(item=>{
-                    item.label = item.deptName;
-                    item.value = item.deptId;
+                this.queryConditions.department.list = this.global.manToolDept.map(item=>{
+                    item.label = item.name;
+                    item.value = item.id;
                     return item;
                 });
-                this.alertData.data.departmentList = this.global.departmentList.map(item=>{
-                    item.label = item.deptName;
-                    item.value = item.deptId;
-                    return item;
+                // this.alertData.data.departmentList = this.global.manToolDept.map(item=>{
+                //     item.label = item.name;
+                //     item.value = item.id;
+                //     return item;
+                // });
+            },
+            /**
+             * 弹窗中的 科室列表  获取   我是真的无语
+             */
+            async getNewAddedDepartment(){
+                const res = await fetchHospitalDeptAuth({
+                    orgCode: this.userSelfInfo.orgCode,
+                    token: this.userState.token,
+                    type:'MANAGE'
                 });
+                if(res.data && res.data.errCode === 0){
+                   this.alertData.data.departmentList = res.data.body.map(item=>{
+                        item.label = item.deptName;
+                        item.value = item.deptId;
+                        return item;
+                   });
+                }else{
+                    this.$notify({
+                        title: '科室列表获取失败',
+                        message: res.data.errCode,
+                        type: 'error'
+                    });
+                }
             },
             /**
              * 获取张状态列表
@@ -665,6 +688,7 @@
             this.setStatusData();
             this.getArrangeList();
             this.getDoctorsByOrgCodeAndDeptId();
+            this.getNewAddedDepartment();
 		}
 	}
 </script>

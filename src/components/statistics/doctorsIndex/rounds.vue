@@ -2,7 +2,7 @@
     移动查房
 -->
 <template>
-	<div class="doctors-index-rounds">
+	<div class="doctors-index-rounds" v-if="info.todayMan || info.waitMan">
 		<div class="doctors-index-rounds-head">
             <span class="doctors-index-rounds-name">移动查房</span>
             <span></span>
@@ -46,7 +46,7 @@
 		
 		methods:{	
             /**
-             * 获取 列表 数据
+             * 获取 列表 数据   
              */
             async getTodayRounds(){
                 const res = await todayRounds({token:this.userInfo.token});
@@ -76,9 +76,11 @@
 	}
 </script>
 
-<style >
+<style scoped>
 	.doctors-index-rounds{
-        height: 100%;
+        /* height: 100%; */
+        width:5.2rem;
+		height: 3rem;
         border: 1px solid #E5EDF3;
         border-radius: 4px;
         /* display: flex;

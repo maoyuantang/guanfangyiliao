@@ -46,8 +46,8 @@
                         <th><el-button type="danger" plain size="mini" @click="changeStatus(item,index)">服务变更</el-button></th>
                         <th class="family-medicine-doctor-body-spe">
                             <el-button type="warning" size="mini" plain @click="checkDoc(item,index)">查看档案</el-button>
-                            <el-button type="success" size="mini" plain>发送</el-button>
-                            <el-button type="primary" size="mini" plain>查看记录</el-button>
+                            <el-button type="success" size="mini" plain @click="sendMsg(item)">发送</el-button>
+                            <el-button type="primary" size="mini" plain @click="checkRcord(item)">查看记录</el-button>
                         </th>
                     </tr>
                 </tbody>
@@ -101,6 +101,16 @@
             <el-button type="primary" @click="alertInfo.show = false">确 定</el-button>
         </span> -->
         </el-dialog>
+        <el-dialog
+        :visible.sync="chatData.show">
+            <chat :sessionId="chatData.sessionId" :doctorVis="chatData.doctorVis"></chat>
+        </el-dialog>
+        <el-dialog
+        title="历史记录"
+        :visible.sync="record.show">
+            <viewRecord :storyMessage="record.storyMessage"></viewRecord>
+        </el-dialog>
+        
 	</div>
 </template>
 
@@ -109,12 +119,17 @@
     import selftag from './../../public/publicComponents/selftag.vue'
     import tag from './../../public/publicComponents/tag.vue'
     import publicTime from './../../public/publicComponents/publicTime.vue'
-    import { stencilName, fetchOrderInfo, updateOrderServices } from '../../api/apiAll.js'
+    import { stencilName, fetchOrderInfo, updateOrderServices, fetchChatSession, fetchHistoryMessage } from '../../api/apiAll.js'
+    import chat from '../../public/publicComponents/chat.vue'
+    import viewRecord from './../xiezuo/viewRecord.vue'
+    
 	export default {
         components:{
             selftag,
             publicTime,
-            tag
+            tag,
+            chat,
+            viewRecord
         },
         computed:{
 			...mapState({
@@ -138,6 +153,15 @@
         },
 		data () {
 			return {
+                chatData:{//谭颖的组件 数据   
+                    sessionId:'',
+                    doctorVis:0,
+                    show:false
+                },
+                record:{//谭颖的组件 数据    
+                    storyMessage:[],
+                    show:false
+                },
                 queryConditions:{//查询条件  
                     date:{//日期
                         title:'日期',//标题
@@ -193,6 +217,76 @@
 			}
 		},
 		methods:{
+            /**
+             * 查看记录
+             */
+            async checkRcord(item){
+                console.log(item)
+                // return
+                let postData = [
+                    // {token:this.userInfo.token},
+                    // {
+                    //     userId:item.userId,
+                    //     sessionId
+                    // }
+                ];
+                const session = await fetchChatSession({token:this.userInfo.token},{
+                    to:item.userId
+                });
+                if(session.data&&session.data.errCode===0){
+                    postData = [
+                        {token:this.userInfo.token},
+                        {
+                            userId:this.userSelfInfo.userId,
+                            sessionId:[session.data.body],
+                            msgId:100,
+                            pageNums:15
+                        }
+                    ];
+                }else{
+                    this.$notify({
+						title: '失败',
+						message: 'sessionId获取失败',
+						type: 'error'
+					});
+                }
+                const res = await fetchHistoryMessage(...postData);
+                console.log(res);
+                if(res.data&&res.data.errCode===0){
+                    this.record.storyMessagesa = res.data.body;
+                    this.record.show = true;
+                }else{
+                    this.$notify({
+						title: '失败',
+						message: '历史记录获取失败',
+						type: 'error'
+					});
+                }
+                
+            },
+            /**
+             * 发送消息
+             */
+            async sendMsg(item){
+                const res = await fetchChatSession({token:this.userInfo.token},{
+                    to:item.userId
+                });
+                console.log(res)
+                if(res.data&&res.data.errCode===0){
+                    this.chatData.sessionId = res.data.body;
+                    this.chatData.show = true;
+                }else{
+
+                }
+
+
+            },
+            // /**
+            //  * 获取 Sessionid
+            //  */
+            // async fetchChatSession(){
+
+            // },
             /**
              * 分页
              */
@@ -251,7 +345,7 @@
                     token:this.userInfo.token,
                     pageNum:this.queryConditions.page.current,
                     pageSize:this.queryConditions.page.size,
-                    model:this.queryConditions.busModules.list[this.queryConditions.busModules.select].value || '',
+                    model:this.queryConditions.busModules.list[this.queryConditions.busModules.select]?this.queryConditions.busModules.list[this.queryConditions.busModules.select].value : '',
                 };
                 if(this.queryConditions.time.length>=2){
                     query.starTime = this.queryConditions.time[0];

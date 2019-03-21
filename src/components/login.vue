@@ -4,7 +4,7 @@
             <p class="login-title">账号登录</p>
             <div class="login-input-div">
                 <span class="login-input-name">账号</span>
-                <input type="text" name="" placeholder="请输入手机号/账号" class="login-input" v-model="account.text">
+                <input type="text" name="" placeholder="请输入手机号/账号" class="login-input" v-model="account.text" @keyup="listenLogin($event)">
             </div>
             <div class="login-check-box-div">
                 <el-radio-group v-model="way">
@@ -14,13 +14,14 @@
             </div>
             <div class="login-input-div">
                 <span class="login-input-name">{{way?"密码":"验证码"}}</span>
-                <input type="password" name="" placeholder="请输入手机号/账号" class="login-input" v-model="passwd.text">
+                <input type="password" name="" placeholder="请输入手机号/账号" class="login-input" v-model="passwd.text" @keyup="listenLogin($event)">
                 <span class="get-code" v-if="!way" @click="getCode">发送验证码</span>
             </div>
             <div class="login-btn-div">
                 <span class="login-btn" @click="loginMethod">登录</span>
             </div>
         </div>
+        <div class="login-welcome"><p>welcome</p></div>
         <websocket1 ref="mychild"></websocket1>
     </div>
 </template>
@@ -141,6 +142,15 @@ export default {
     },
     methods: {
         /**
+         * 监听 键盘事件 回车登录
+         */
+        listenLogin(e){
+            console.log(e)
+            if(e.keyCode === 13){
+                this.loginMethod();
+            }
+        },
+        /**
          * 传入 字符串
          * 输出 json
          * {
@@ -188,6 +198,7 @@ export default {
                 }
             }
             this.account.ok = true;
+            return true;
         },
 
         /**
@@ -205,6 +216,7 @@ export default {
                 return false;
             }
             this.passwd.ok = true;
+            return true;
         },
 
         /**
@@ -257,7 +269,9 @@ export default {
          * 登录
          */
         async loginMethod() {
-            if (!this.account.ok || !this.passwd.ok) return; //账号信息是否有误
+            if(!this.checkAccount())return
+            if(!this.checkPasswd())return
+            // if (!this.account.ok || !this.passwd.ok) return; //账号信息是否有误
             const options = {
                 account: this.account.text,
                 agreement: true,
@@ -414,7 +428,8 @@ export default {
     height: 100%;
     /* background: url(../assets/img/login_background.png) no-repeat; */
     background: url(../../static/assets/img/login_background.png) no-repeat;
-    background-size: cover;
+    /* background-size: cover; */
+    position: relative;
 }
 .login-content {
     width: 3.8rem;
@@ -483,5 +498,16 @@ export default {
 .login-check-box-div {
     margin-top: 0.21rem;
     margin-bottom: 0.32rem;
+}
+.login-welcome{
+    position: absolute;
+    top: 2.7rem;
+    left: 2.5rem;
+    font-family: Helvetica-Bold;
+    font-size: 60px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    text-align: right;
+    line-height: 80px;
 }
 </style>

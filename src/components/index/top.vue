@@ -1,12 +1,19 @@
 <template>
 	<div class="top">
-		<div class="change-root" v-if="!userInfo.rooter">
+        <!-- {{viewRoot.now}}
+        {{userInfo.hasAuth.filter(item=>item.type==='1')}} -->
+		<!-- <div class="change-root" v-if="!userInfo.rooter">
+			<el-menu :default-active="viewRoot.now.type" class="el-menu-demo" mode="horizontal" @select="handleSelect" v-if="showTopNav">
+				<el-menu-item index="1">管理权限</el-menu-item>
+				<el-menu-item index="2" :disabled="!canGotoDoctor">医生端</el-menu-item>
+			</el-menu>
+		</div> -->
+        <div class="change-root" v-if="!userInfo.rooter">
 			<el-menu :default-active="viewRoot.now.type" class="el-menu-demo" mode="horizontal" @select="handleSelect">
 				<el-menu-item index="1">管理权限</el-menu-item>
 				<el-menu-item index="2" :disabled="!canGotoDoctor">医生端</el-menu-item>
 			</el-menu>
 		</div>
-
 		<div class="top-left">
 			<marquee class="title-marquee">{{marquee}}</marquee>
 			<div class="msg" @click="openNotice()">
@@ -15,8 +22,8 @@
 		</div>
 		<div class="top-right">
 			<div class="top-right-posi">
-				<img src="../../assets/logo.png" alt="" class="user-head">
-				<span class="user-name">{{userSelfInfo.userName}}</span>
+				<img :src="imgSrc" alt="" class="user-head">
+				<span class="user-name">{{userSelfInfo.name}}</span>
 				<Dropdown>
 					<a href="javascript:void(0)">
 						<i class="iconfont user-select">&#xe65a;</i>
@@ -41,8 +48,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import notice from "../publicFrame/notice.vue";
+import { mapState } from "vuex"
+import notice from "../publicFrame/notice.vue"
+import apiBaseURL from '../../enums/apiBaseURL.js'
 export default {
     name: "top",
     components: {
@@ -50,25 +58,33 @@ export default {
     },
     computed: {
         ...mapState({
-            userSelfInfo: state => state.user.userSelfInfo
-        }),
-        ...mapState({
-            viewRoot: state => state.user.viewRoot
-        }),
-        ...mapState({
-            userInfo: state => state.user.userInfo
-        }),
-        ...mapState({
+            userSelfInfo: state => state.user.userSelfInfo,
+            viewRoot: state => state.user.viewRoot,
+            userInfo: state => state.user.userInfo,
             userSocketInfo: state => state.socket
-        })
+        }),
+        // ...mapState({
+        //     viewRoot: state => state.user.viewRoot
+        // }),
+        // ...mapState({
+        //     userInfo: state => state.user.userInfo
+        // }),
+        // ...mapState({
+        //     userSocketInfo: state => state.socket
+        // }),
+        imgSrc(){
+            return this.userSelfInfo.headId ? `${apiBaseURL.developmentEnvironment}/m/v1/api/hdfs/fs/download/${this.userSelfInfo.headId}` : "../../../static/assets/img/a-6.png"
+        },
+        
     },
     data() {
         return {
             noticeRedVisable: true,
             noticeVisible: false,
 			marquee:"tanying",
-			            canGotoManager: true,
-            canGotoDoctor: true
+            canGotoManager: true,
+            canGotoDoctor: true,
+            showTopNav:false
         };
     },
     methods: {
@@ -76,6 +92,7 @@ export default {
             console.log("444");
         },
         handleSelect(index) {
+            console.log(index)
             const obj = {
                 "1": "manager",
                 "2": "doctors"
@@ -96,7 +113,11 @@ export default {
         logout() {
             this.$store.commit("user/CLEARUSERINFO");
             this.$store.commit("user/CLAERUSERSELFINFO");
-            location.reload();
+            sessionStorage.clear();
+            this.$router.replace({
+                path: "/login",
+            });
+            // location.reload();
         },
         setCanClic() {
             if (this.userInfo.manager && this.$route.path === "/") {
@@ -105,13 +126,69 @@ export default {
         },
         openNotice() {
             this.noticeVisible = true;
+        },
+        /**
+         * 新增功能 只有管理权限和医生权限才显示顶部视图切换
+         */
+        countShowWhich(){
+            // const doc = this.userInfo.hasAuth.filter(item=>item.type==='2');
+            // const man = this.userInfo.hasAuth.filter(item=>item.type==='1');
+            if(this.userInfo.rooter)return;//超级管理员不要判断,在以前的地方处理过
+            if(this.userInfo.hasAuth.filter(item=>item.type==='1').length<=0){
+                this.showTopNav = false;
+                this.$store.commit("user/CHANGEVIEWAUTH", {
+                    name:'doctors',
+                    type:'2'
+                });
+            }else if(this.userInfo.hasAuth.filter(item=>item.type==='2').length<=0){
+                this.showTopNav = false;
+                this.$store.commit("user/CHANGEVIEWAUTH", {
+                    name:'manager',
+                    type:'1'
+                });
+            }else{
+                this.showTopNav = true;
+                this.$store.commit("user/CHANGEVIEWAUTH", {
+                    name:'manager',
+                    type:'1'
+                });
+            }
+            sessionStorage.setItem("viewRoot", JSON.stringify(this.viewRoot));
         }
     },
     async created() {
-        // console.log(this.$store.state.user.viewRoot.now)
-        // console.log(this.$route.path==='/');
-        // this.setCanClic();
+        this.countShowWhich();
     },
+    // beforeRouteEnter(to,from,next){
+    //     next(vm=>{
+    //         console.log(vm);
+    //             const doc = this.userInfo.hasAuth.filter(item=>item.type==='2');
+    //             const man = this.userInfo.hasAuth.filter(item=>item.type==='1');
+    //             console.log(doc)
+    //             console.log(man)
+    //             return;
+    //             if(man.length<=0){//没有管理权限
+    //                 vm.showTopNav = false;
+    //                 vm.$store.commit("user/CHANGEVIEWAUTH", {
+    //                     name:'doctors',
+    //                     type:'2'
+    //                 });
+    //             }else if(doc.length<=0){//没有医生权限
+    //                 vm.showTopNav = false;
+    //                 vm.$store.commit("user/CHANGEVIEWAUTH", {
+    //                     name:'manager',
+    //                     type:'1'
+    //                 });
+    //             }else{
+    //                 vm.showTopNav = true;
+    //                 vm.$store.commit("user/CHANGEVIEWAUTH", {
+    //                     name:'manager',
+    //                     type:'1'
+    //                 });
+    //             }
+    //             sessionStorage.setItem("viewRoot", JSON.stringify(this.viewRoot));
+    //     });
+    // },
     watch: {
         "userSocketInfo.synchroMessage": {
             handler(n, o) {

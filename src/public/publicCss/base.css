@@ -115,3 +115,9 @@ body{
 	width:100%
 }
 
+#app .el-button--mini{
+	width: .57rem;
+	height: .2rem;
+	line-height: .2rem;
+	padding: 0;
+}
