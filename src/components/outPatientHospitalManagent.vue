@@ -22,8 +22,7 @@
 
 
 				<div class="online-clinic-middle">
-					<el-table :data="tableData" style="width: 100%;" :max-height="550" :cell-class-name="ceshi0"
-						@cell-click="relateDoctors1">
+					<el-table :data="tableData" style="width: 100%;" :max-height="550" :cell-class-name="ceshi0" @cell-click="relateDoctors1">
 						<el-table-column prop="id" label="业务编号" :show-overflow-tooltip="true"></el-table-column>
 						<el-table-column prop="departmentName" label="科室" :show-overflow-tooltip="true"></el-table-column>
 						<el-table-column prop="fullName" label="业务名" :show-overflow-tooltip="true"></el-table-column>
@@ -53,8 +52,7 @@
 					</el-table>
 				</div>
 				<div style="text-align: center;padding: 10px 0;">
-					<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
-						@current-change="currentChange1">
+					<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
 					</el-pagination>
 				</div>
 			</div>
@@ -78,10 +76,9 @@
 
 				</div>
 				<div class="online-clinic-middle">
-					<publicList :columns="prescriptionAuditDistribution.tableBody.columns"
-						:tableData="prescriptionAuditDistribution.tableBody.tableData"
-						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :cellColor="cellColor" :pageSize="pageSize"
-						:total="totals" @reback="currentChange2">
+					<publicList :columns="prescriptionAuditDistribution.tableBody.columns" :tableData="prescriptionAuditDistribution.tableBody.tableData"
+					 :tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :cellColor="cellColor" :pageSize="pageSize" :total="totals"
+					 @reback="currentChange2">
 					</publicList>
 				</div>
 			</div>
@@ -108,18 +105,18 @@
 		</div>
 		<!-- 新增门诊弹框 -->
 		<addNewFrame :inData="addData" @reback="getData" @department="getDepartment" @getAgreementSelect="getSelectInfo"
-			:sureVisiable="sureVisiable"></addNewFrame>
+		 :sureVisiable="sureVisiable"></addNewFrame>
 		<!-- 表一查看关联医生弹框 -->
 		<div v-if="isShowrelationalDoctor">
-			<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="500px"
-				max-hight="450px" center>
+			<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="500px" max-hight="450px"
+			 center>
 				<ul>
 					<li v-for="(text,index) in relationalDoctor" :key="index">
 						<div class="evaluateCont1">
 							<!-- 待头像 -->
 							<img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-							<img v-if="text.headId"
-								:src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
+							<img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'
+							 alt="医生头像">
 							<h5>{{text.doctorName}}</h5>
 						</div>
 						<div class="evaluateCont2">
@@ -168,8 +165,7 @@
 		<!-- 处方详情 -->
 		<div v-if="chuFangDetailList2">
 			<el-dialog title="处方详情" :visible.sync="chuFangDetailList2" center>
-				<img style="width:100%"
-					:src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userState.token+"&prescriptionId="+srcs'>
+				<img style="width:100%" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userState.token+"&prescriptionId="+srcs'>
 			</el-dialog>
 		</div>
 
