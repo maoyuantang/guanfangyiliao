@@ -162,7 +162,7 @@
                             <span v-else-if="scope.row.status=='OVER'">结束</span>
                         </template>
                     </el-table-column>
-                    <el-table-column   label="操作" width="300">
+                    <el-table-column label="操作" width="300">
                         <template slot-scope="scope">
                             <el-button class="seeDanganClass" @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
                             <el-button class="inviteUserClass" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
@@ -377,7 +377,7 @@ export default {
                 {
                     prop: "consultationId",
                     label: "会诊编号",
-                    width:'300px'
+                    width: "300px"
                 },
                 {
                     prop: "hospital",
@@ -1004,6 +1004,13 @@ export default {
             const res = await queryByManagerPage(options);
             if (res.data && res.data.errCode === 0) {
                 this.adminTableData = res.data.body.data2.list;
+                $.each(this.adminTableData, function() {
+                    if (this.adminTableData.type == "SPECIALIST") {
+                        this.adminTableData.type = "专科会诊";
+                    } else if (this.adminTableData.type == "EXPERT") {
+                        this.adminTableData.type = "专家会诊";
+                    }
+                });
                 this.adminTotal = res.data.body.data2.total;
 
                 console.log(res);
@@ -1133,11 +1140,14 @@ export default {
         console.log(this.userState.rooter);
         console.log(this.userState.manager);
 
-        if (this.userState.rooter || this.userState.manager) {
-            this.oUserType = "MANAGE";
-        } else {
-            this.oUserType = "DOCTOR";
-        }
+        // if ($store.state.user.viewRoot.now.name==='manager') {
+        //     this.oUserType = "MANAGE";
+        //     alert('ddd')
+        //     this.getToolDept()
+        // } else {
+        //     this.oUserType = "DOCTOR";
+        //     this.getToolDept()
+        // }
         this.getToolDept();
     }
 };
@@ -1166,19 +1176,19 @@ export default {
     width: 100%;
 }
 /* 医生端样式 */
-.consultationBox{
-        padding-top: 50px;
+.consultationBox {
+    padding-top: 50px;
 }
 .doc-title {
     display: flex;
     display: -webkit-flex;
     margin-bottom: 52px;
-    justify-content:space-between
+    justify-content: space-between;
 }
-.doc-title>div:nth-child(2){
-        margin-left: 178px;
+.doc-title > div:nth-child(2) {
+    margin-left: 178px;
 }
-.doc-title>button{
+.doc-title > button {
     margin-top: -7px;
 }
 .evaluateBtn {
@@ -1364,8 +1374,8 @@ export default {
     border: 1px solid rgba(254, 77, 151, 0.6);
     border-radius: 3px;
     font-family: PingFangSC-Regular;
-font-size: 12px;
-color: #FE4D97;
+    font-size: 12px;
+    color: #fe4d97;
 }
 .seeHistoryMessage {
     width: 57px;
@@ -1400,7 +1410,9 @@ color: #FE4D97;
     color: #778ca2;
     line-height: 1px;
 }
-.el-table--border td, .el-table--border th, .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed{
-    border-right: none
+.el-table--border td,
+.el-table--border th,
+.el-table__body-wrapper .el-table--border.is-scrolling-left ~ .el-table__fixed {
+    border-right: none;
 }
 </style>

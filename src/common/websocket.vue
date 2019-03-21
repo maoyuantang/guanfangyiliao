@@ -8,7 +8,7 @@
         </el-dialog> -->
         <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose">
             <div>
-                <h4>某某某要求你视频</h4>
+                <h4>{{startVideoName}}邀请你视频</h4>
                 <div>
                     <button @click="receiveVideo()">接收</button>
                     <button @click="refuseVideo()">拒绝</button>
@@ -41,6 +41,7 @@ export default {
     computed: {},
     data() {
         return {
+            startVideoName:'',
             receiveVideoVisable: false,
             VideoVisable: false,
             webSocket: null,
@@ -493,6 +494,7 @@ export default {
                                         "&"
                                     )[1]
                                 };
+                                _this.startVideoName= odata.info.fromNickName
                                 _this.receiveVideoVisable = true;
                                 // this.$notify({
                                 //     title: "请注意",

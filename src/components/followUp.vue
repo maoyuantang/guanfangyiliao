@@ -509,24 +509,24 @@
                             <el-table :data="myFollowList" border style="width: 100%" @selection-change="followCheckChange">
                                 <el-table-column type="selection" width="55">
                                 </el-table-column>
-                                <el-table-column  prop="userName" label="姓名" width="150">
+                                <el-table-column  prop="userName" label="姓名" >
                                 </el-table-column>
-                                <el-table-column prop="origin" label="来源" width="120">
+                                <el-table-column prop="origin" label="来源"  >
                                 </el-table-column>
-                                <el-table-column prop="phone" label="手机号" width="120">
+                                <el-table-column prop="phone" label="手机号"  >
                                 </el-table-column>
-                                <el-table-column prop="group" label="分组" width="120">
+                                <el-table-column prop="group" label="分组"  >
                                 </el-table-column>
-                                <el-table-column prop="nearlyFollowup" label="近期随访" width="300">
+                                <el-table-column prop="nearlyFollowup" label="近期随访"  >
                                 </el-table-column>
-                                <el-table-column prop="phoneFollowup" label="电话随访" width="120">
+                                <el-table-column prop="phoneFollowup" label="电话随访"  >
                                     <template slot-scope="scope">
                                         <el-switch v-model="scope.row.phoneFollowup" active-color="#13ce66" inactive-color="#ff4949" @change="phoneFollow(scope.row)">
                                         </el-switch>
                                     </template>
 
                                 </el-table-column>
-                                <el-table-column prop="deviceAlert" label="设备告警" width="120">
+                                <el-table-column prop="deviceAlert" label="设备告警"  >
                                     <template slot-scope="scope">
                                         <div class="warnNumBox">
                                             <el-switch v-model="scope.row.deviceAlert" active-color="#13ce66" inactive-color="#ff4949" @change="warnFollow(scope.row)">
@@ -3284,7 +3284,7 @@ export default {
 }
 .myStartConsul{
  margin-top: 0px;
- 
+
 }
 /* 医生样式 */
 .followDoc .titleTop {
@@ -3622,6 +3622,10 @@ export default {
 }
 .ArcticClass .el-form-item__content {
     margin-left: 0px !important;
+}
+.ArcticClass .el-dialog__header,
+.ArcticClass .el-dialog__body,{
+    background: #eff5fb;
 }
 
 .choiceItemBox > span {
