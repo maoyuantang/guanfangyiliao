@@ -141,7 +141,7 @@
                 <span>{{text.birthday}}</span>
               </li>
               <li class="phoneNumber">联系方式:
-                <span>{{text.birthday}}</span>
+                <span>{{text.phone}}</span>
               </li>
               <li class="address">常用地址:
                 <span>{{text.address}}</span>
@@ -241,7 +241,7 @@
             </div>
           </li>
           <li class="detailList">
-            <search @searchValue="adminSearchChange"></search>
+            <!-- <search @searchValue="adminSearchChange"></search> -->
             <div class="listBao">
               <div class="lists" v-for="(text,index) in ARR" :key="index" v-show='whichUser==index'>
                 <el-table :data="text" style="width: 100%">
@@ -271,8 +271,8 @@
               </div>
             </div>
           </li>
-          <div>备注：</div>
-          <textarea class="doctorTalk" name="" id="">{{text.remark}}</textarea>
+          <!-- <div style="font-family: PingFangSC-Semibold;font-size: 14px;color: #5E6875;letter-spacing: 0;font-weight: bold;">备注：</div> -->
+          <textarea class="doctorTalk" name="" id="" placeholder="备注：">{{text.remark}}</textarea>
           <li class="detailFooter">
             <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
             <el-button class="fail" type="info" @click='checkPrescription0'>不通过</el-button>
@@ -339,7 +339,7 @@
                 <span>{{text.birthday}}</span>
               </li>
               <li class="phoneNumber">联系方式:
-                <span>{{text.birthday}}</span>
+                <span>{{text.phone}}</span>
               </li>
               <li class="address">常用地址:
                 <span>{{text.address}}</span>
@@ -439,7 +439,7 @@
             </div>
           </li>
           <li class="detailList">
-            <search @searchValue="adminSearchChange"></search>
+            <!-- <search @searchValue="adminSearchChange"></search> -->
             <div class="listBao">
               <div class="lists" v-for="(text,index) in ARR" :key="index" v-show='whichUser==index'>
                 <el-table :data="text" style="width: 100%">
@@ -469,8 +469,8 @@
               </div>
             </div>
           </li>
-          <div>备注：</div>
-          <textarea class="doctorTalk" name="" id="">{{text.remark}}</textarea>
+          <!-- <div style="font-family: PingFangSC-Semibold;font-size: 14px;color: #5E6875;letter-spacing: 0;font-weight: bold;">备注：</div> -->
+          <textarea class="doctorTalk" name="" id="" placeholder="备注：">{{text.remark}}</textarea>
           <li class="detailFooter">
             <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
             <el-button class="ship" type="primary" plain @click="goMy">发货</el-button>
@@ -1814,6 +1814,7 @@
               position: absolute;
               right: 20%;
               bottom: 20%;
+              font-weight: bold;
 
               span {
                 font-family: PingFangSC-Semibold;
@@ -1830,6 +1831,14 @@
         padding: 2px;
         width: 100%;
         height: 10%;
+        background: #FFFFFF;
+        border: 1px solid #E4E8EB;
+
+        font-family: PingFangSC-Semibold;
+        font-size: 14px;
+        color: rgb(94, 104, 117);
+        letter-spacing: 0px;
+        font-weight: bold;
       }
 
       .detailFooter {
@@ -2204,6 +2213,7 @@
                 position: absolute;
                 right: 20%;
                 bottom: 20%;
+                font-weight: bold;
 
                 span {
                   font-family: PingFangSC-Semibold;
@@ -2220,6 +2230,14 @@
           padding: 2px;
           width: 100%;
           height: 10%;
+          background: #FFFFFF;
+          border: 1px solid #E4E8EB;
+
+          font-family: PingFangSC-Semibold;
+          font-size: 14px;
+          color: rgb(94, 104, 117);
+          letter-spacing: 0px;
+          font-weight: bold;
         }
 
         .detailFooter {
