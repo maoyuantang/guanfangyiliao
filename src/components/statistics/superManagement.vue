@@ -61,7 +61,7 @@
                         <span>医院编码:</span>
                         <el-input
                             placeholder="请输入内容"
-                            v-model="addHospitalInfo.name"
+                            v-model="addHospitalInfo.hospitalCode"
                             clearable>
                         </el-input>
                     </div>
@@ -200,6 +200,7 @@ export default {
             showAdd:false,//是否显示添加医院
             addHospitalInfo:{//手机添加医院的信息
                 name:'',
+                hospitalCode:'',
                 account:'',
                 passwd:''
             },
