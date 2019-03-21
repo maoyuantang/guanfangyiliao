@@ -29,7 +29,7 @@
 					<div class="dataBody">
 						<el-table :data="manageBodyData" style="width: 100%">
 							<el-table-column prop="deptName" label="科室"></el-table-column>
-							<el-table-column fixed prop="type" label="类型"></el-table-column>
+							<el-table-column prop="type" label="类型"></el-table-column>
 							<el-table-column prop="useName" label="使用者"></el-table-column>
 							<el-table-column prop="account" label="账号"></el-table-column>
 							<el-table-column prop="softwareSystem" label="软件系统"></el-table-column>
@@ -38,9 +38,9 @@
 							<el-table-column prop="useFrequency" label="使用频率"></el-table-column>
 							<el-table-column prop="networkState" label="联网状态"></el-table-column>
 							<el-table-column prop="useTime" label="总使用时长"></el-table-column>
-							<el-table-column fixed="right" label="操作">
+							<el-table-column label="操作" width="300">
 								<template slot-scope="scope">
-									<el-button @click="viewFile(scope.row)" type="text" size="small">查看</el-button>
+									<button class="chaKanXiangQing" @click="viewFile(scope.row)">查看</button>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -574,4 +574,69 @@
 		display: -webkit-flex;
 		justify-content: space-between;
 	} */
+	.chaKanXiangQing {
+		width: 57px;
+		height: 20px;
+		background: rgba(66, 133, 244, 0.1);
+		border: 1px solid rgba(66, 133, 244, 0.6);
+		border-radius: 3px;
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #4d7cfe;
+		line-height: 3px;
+		margin: 0 14px 0 14px;
+	}
+
+	.bianJi {
+		width: 57px;
+		height: 20px;
+		background: rgba(46, 189, 65, 0.10);
+		border: 1px solid rgba(46, 189, 65, 0.60);
+		border-radius: 3px;
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #2EBD41;
+		line-height: 3px;
+		margin: 0 14px 0 14px;
+	}
+
+	.jingYong {
+		width: 57px;
+		height: 20px;
+		background: rgba(254, 77, 151, 0.10);
+		border: 1px solid rgba(254, 77, 151, 0.60);
+		border-radius: 3px;
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #FE4D97;
+		line-height: 3px;
+		margin: 0 14px 0 14px;
+	}
+
+	.jieChuJingYong {
+		width: 57px;
+		height: 20px;
+		background: rgba(255, 171, 43, 0.10);
+		border: 1px solid rgba(255, 171, 43, 0.60);
+		border-radius: 3px;
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #FFAB2B;
+		line-height: 3px;
+		margin: 0 14px 0 14px;
+	}
+
+	/deep/ .el-table__header-wrapper th {
+		font-family: PingFangSC-Semibold;
+		font-size: 14px;
+		color: #5E6875;
+		letter-spacing: 0;
+	}
+
+	/deep/ .el-table__body-wrapper td {
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #5E6875;
+		letter-spacing: 0;
+	}
 </style>

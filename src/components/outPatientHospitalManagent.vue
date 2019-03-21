@@ -34,16 +34,20 @@
 						<el-table-column prop="queuePeople" label="当前排队" :show-overflow-tooltip="true"></el-table-column>
 						<el-table-column prop="updateTime" label="最近修改" :show-overflow-tooltip="true"></el-table-column>
 
-						<el-table-column fixed="right" label="操作" width="270px">
+						<el-table-column label="操作" width="300">
 							<template slot-scope="scope">
-								<el-button @click="isShowViewDetailFun(scope.row)" type="success" plain size="mini"
+								<button class="lanSe" @click="isShowViewDetailFun(scope.row)">查看详情</button>
+								<button class="lvSe" @click="isShowEditFun(scope.row)">编辑</button>
+								<button class="fenSe" v-if="scope.row.state" @click="isShowForbidFun(scope.row)">禁用</button>
+								<button class="huangSe" v-else @click="isShowForbidFun(scope.row)">解除禁用</button>
+								<!-- <el-button @click="isShowViewDetailFun(scope.row)" type="success" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">查看详情</el-button>
 								<el-button @click="isShowEditFun(scope.row)" type="primary" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">编辑</el-button>
 								<el-button v-if="scope.row.state" @click="isShowForbidFun(scope.row)" type="danger" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">禁用</el-button>
 								<el-button v-else @click="isShowForbidFun(scope.row)" type="danger" plain size="mini"
-									style="margin:0.05rem 0 0.05rem 0;">解除禁用</el-button>
+									style="margin:0.05rem 0 0.05rem 0;">解除禁用</el-button> -->
 							</template>
 						</el-table-column>
 					</el-table>
@@ -132,7 +136,7 @@
 		<div v-if="isShowRecord">
 			<el-dialog class="offerDetial" title="订单详情" :visible.sync="isShowRecord" center width=70%>
 				<el-table :data="tableDataChat" style="width: 100%;" @cell-click="relateDoctors2" :max-height="450">
-					<el-table-column fixed prop="orderNo" label="订单号"></el-table-column>
+					<el-table-column prop="orderNo" label="订单号"></el-table-column>
 					<el-table-column prop="doctorName" label="接诊医生"></el-table-column>
 					<el-table-column prop="mode" label="接诊方式"></el-table-column>
 					<el-table-column prop="fee" label="门诊费"></el-table-column>
@@ -141,7 +145,7 @@
 					<el-table-column prop="userName" label="病人"></el-table-column>
 					<el-table-column prop="orderTime" label="问诊时间"></el-table-column>
 					<el-table-column prop="rxFee" label="问诊费"></el-table-column>
-					<el-table-column fixed="right" label="" width="200px">
+					<el-table-column label="操作" width="300">
 						<template slot-scope="scope">
 							<el-button @click="isShowRecordChatFun(scope.row)" type="text" size="small">聊天记录</el-button>
 						</template>
@@ -585,21 +589,21 @@
 						tableBtn: [
 							{
 								name: "处方详情",
-								oclass: "btn1",
+								oclass: "lanSe",
 								method: (index, row) => {
 									this.chuFangDetailList2Fun(index, row);
 								}
 							},
 							{
 								name: "物流状态",
-								oclass: "btn2",
+								oclass: "lanSe",
 								method: (index, row) => {
 									this.roadStatusList2Fun(index, row);
 								}
 							},
 							{
 								name: "聊天记录",
-								oclass: "btn3",
+								oclass: "lanSe",
 								method: (index, row) => {
 									this.viewRecordList2Fun(index, row);
 								}
@@ -1799,6 +1803,21 @@
 
 	.online-clinic {}
 
+
+	/deep/ .el-table__header-wrapper th {
+		font-family: PingFangSC-Semibold;
+		font-size: 14px;
+		color: #5E6875;
+		letter-spacing: 0;
+	}
+
+	/deep/ .el-table__body-wrapper td {
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #5E6875;
+		letter-spacing: 0;
+	}
+
 	.online-clinic-top {
 		display: flex;
 		justify-content: space-between;
@@ -1853,7 +1872,7 @@
 	}
 
 	.evaluateBox1 {
-		overflow-y: auto;
+		overflow: auto;
 
 		/deep/ .el-dialog {
 			margin-top: 32vh !important;
@@ -1984,4 +2003,52 @@
 	}
 
 	.online-clinic-middle /deep/ .el-table__fixed-right .el-table__fixed-body-wrapper .cell {}
+
+	/* .chaKanXiangQing {
+		width: 57px;
+		height: 20px;
+		background: rgba(66, 133, 244, 0.1);
+		border: 1px solid rgba(66, 133, 244, 0.6);
+		border-radius: 3px;
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #4d7cfe;
+		line-height: 3px;
+	}
+
+	.bianJi {
+		width: 57px;
+		height: 20px;
+		background: rgba(46, 189, 65, 0.10);
+		border: 1px solid rgba(46, 189, 65, 0.60);
+		border-radius: 3px;
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #2EBD41;
+		line-height: 3px;
+	}
+
+	.jingYong {
+		width: 57px;
+		height: 20px;
+		background: rgba(254, 77, 151, 0.10);
+		border: 1px solid rgba(254, 77, 151, 0.60);
+		border-radius: 3px;
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #FE4D97;
+		line-height: 3px;
+	}
+
+	.jieChuJingYong {
+		width: 57px;
+		height: 20px;
+		background: rgba(255, 171, 43, 0.10);
+		border: 1px solid rgba(255, 171, 43, 0.60);
+		border-radius: 3px;
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #FFAB2B;
+		line-height: 3px;
+	} */
 </style>

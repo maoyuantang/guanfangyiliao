@@ -107,7 +107,8 @@
             :class="whichUser==index?'backgroundUser':''">
             <li>
               <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-              <img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
+              <img v-if="text.headId"
+                :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
               <div>
                 <p class="name">{{text.userName}}</p>
                 <p class="depart">问诊医生:
@@ -1261,7 +1262,7 @@
     padding: 0rem 0.2rem;
     margin: 0.3rem 0.3rem 0.3rem 0;
 
-    overflow-y: auto;
+    overflow: auto;
     max-height: 750px;
   }
 
@@ -1485,7 +1486,7 @@
   }
 
   .checkList {
-    width: 20%;
+    /* width: 20%; */
     height: 7rem;
     background: #ffffff;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.14);
@@ -1518,7 +1519,7 @@
     }
 
     .div {
-      overflow-y: auto;
+      overflow: auto;
 
       ul {
         display: flex;
@@ -1561,7 +1562,7 @@
   }
 
   .waitPeople {
-    width: 15%;
+    /* width: 15%; */
     /* height: 95%; */
     background: #ffffff;
     border: 1px solid #e4e8eb;
@@ -1668,7 +1669,7 @@
   }
 
   .prescriptionDetail {
-    width: 65%;
+    /* width: 65%; */
     /* height: 95%; */
     /* background: #FFFFFF; */
     /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.20); */
@@ -1873,7 +1874,7 @@
     overflow: auto;
 
     .checkList {
-      width: 20%;
+      /* width: 20%; */
       height: 7rem;
       background: #ffffff;
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.14);
@@ -1906,7 +1907,7 @@
       }
 
       .div {
-        overflow-y: auto;
+        overflow: auto;
 
         ul {
           display: flex;
@@ -1949,7 +1950,7 @@
     }
 
     .waitPeople {
-      width: 15%;
+      /* width: 15%; */
       /* height: 95%; */
       background: #ffffff;
       border: 1px solid #e4e8eb;
@@ -2051,7 +2052,7 @@
     }
 
     .prescriptionDetail {
-      width: 65%;
+      /* width: 65%; */
       /* height: 95%; */
       /* background: #FFFFFF; */
       /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.20); */
