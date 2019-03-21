@@ -210,6 +210,22 @@
         color: #FFF;
     }
 
+    .lanSe:focus {
+        outline: none;
+    }
+
+    .lvSe:focus {
+        outline: none;
+    }
+
+    .fenSe:focus {
+        outline: none;
+    }
+
+    .huangSe:focus {
+        outline: none;
+    }
+
     .lanSe {
         width: 57px;
         height: 20px;
@@ -261,6 +277,7 @@
         line-height: 3px;
         margin: 0 14px 0 14px;
     }
+
 
     /deep/ .el-table__header-wrapper th {
         font-family: PingFangSC-Semibold;

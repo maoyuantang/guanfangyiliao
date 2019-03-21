@@ -16,8 +16,7 @@
           <p class="title">{{text.clinicName}}</p>
           <div class="outpatient_user">
             <img v-if="text.doctor[0].headId == null" src="../assets/img/a-6.png" alt="医生头像">
-            <img v-if="text.doctor[0].headId"
-              :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.doctor[0].headId'
+            <img v-if="text.doctor[0].headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.doctor[0].headId'
               alt="医生头像">
             <div class="outpatient_name">
               <p class="p1">{{text.doctor[0].doctorName}}</p>
@@ -25,8 +24,7 @@
             </div>
           </div>
           <i></i>
-          <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index'
-            style="width: 90%;margin: auto;">
+          <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index' style="width: 90%;margin: auto;">
             <el-table :data="text" :cell-class-name="ceshi0">
               <el-table-column prop="unProcess" label="未处理"></el-table-column>
               <el-table-column prop="process" label="已处理"></el-table-column>
@@ -41,8 +39,7 @@
           <!-- 病人个数循环 -->
           <noData v-if="text.clinicOrders.length == 0"></noData>
           <span class="dian" @click="lookList(text)" v-if="text.clinicOrders.length != 0">...</span>
-          <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-show="index <2"
-            v-if="text.clinicOrders.length != 0">
+          <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-show="index <2" v-if="text.clinicOrders.length != 0">
 
             <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
               <h1>{{text1.userName}}</h1>
@@ -103,12 +100,11 @@
           <span class="title2">...</span>
         </div>
         <div class="div">
-          <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index,text)'
-            :class="whichUser==index?'backgroundUser':''">
+          <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index,text)' :class="whichUser==index?'backgroundUser':''">
             <li>
               <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-              <img v-if="text.headId"
-                :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
+              <img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'
+                alt="医生头像">
               <div>
                 <p class="name">{{text.userName}}</p>
                 <p class="depart">问诊医生:
@@ -145,7 +141,7 @@
                 <span>{{text.birthday}}</span>
               </li>
               <li class="phoneNumber">联系方式:
-                <span>{{text.birthday}}</span>
+                <span>{{text.phone}}</span>
               </li>
               <li class="address">常用地址:
                 <span>{{text.address}}</span>
@@ -245,7 +241,7 @@
             </div>
           </li>
           <li class="detailList">
-            <search @searchValue="adminSearchChange"></search>
+            <!-- <search @searchValue="adminSearchChange"></search> -->
             <div class="listBao">
               <div class="lists" v-for="(text,index) in ARR" :key="index" v-show='whichUser==index'>
                 <el-table :data="text" style="width: 100%">
@@ -275,8 +271,8 @@
               </div>
             </div>
           </li>
-          <div>备注：</div>
-          <textarea class="doctorTalk" name="" id="">{{text.remark}}</textarea>
+          <!-- <div style="font-family: PingFangSC-Semibold;font-size: 14px;color: #5E6875;letter-spacing: 0;font-weight: bold;">备注：</div> -->
+          <textarea class="doctorTalk" name="" id="" placeholder="备注：">{{text.remark}}</textarea>
           <li class="detailFooter">
             <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
             <el-button class="fail" type="info" @click='checkPrescription0'>不通过</el-button>
@@ -303,12 +299,11 @@
           <span class="title2">...</span>
         </div>
         <div class="div">
-          <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index)'
-            :class="whichUser==index?'backgroundUser':''">
+          <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index)' :class="whichUser==index?'backgroundUser':''">
             <li>
               <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-              <img v-if="text.headId"
-                :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
+              <img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'
+                alt="医生头像">
               <div>
                 <p class="name">{{text.userName}}</p>
                 <p class="depart">问诊医生:
@@ -344,7 +339,7 @@
                 <span>{{text.birthday}}</span>
               </li>
               <li class="phoneNumber">联系方式:
-                <span>{{text.birthday}}</span>
+                <span>{{text.phone}}</span>
               </li>
               <li class="address">常用地址:
                 <span>{{text.address}}</span>
@@ -444,7 +439,7 @@
             </div>
           </li>
           <li class="detailList">
-            <search @searchValue="adminSearchChange"></search>
+            <!-- <search @searchValue="adminSearchChange"></search> -->
             <div class="listBao">
               <div class="lists" v-for="(text,index) in ARR" :key="index" v-show='whichUser==index'>
                 <el-table :data="text" style="width: 100%">
@@ -474,8 +469,8 @@
               </div>
             </div>
           </li>
-          <div>备注：</div>
-          <textarea class="doctorTalk" name="" id="">{{text.remark}}</textarea>
+          <!-- <div style="font-family: PingFangSC-Semibold;font-size: 14px;color: #5E6875;letter-spacing: 0;font-weight: bold;">备注：</div> -->
+          <textarea class="doctorTalk" name="" id="" placeholder="备注：">{{text.remark}}</textarea>
           <li class="detailFooter">
             <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
             <el-button class="ship" type="primary" plain @click="goMy">发货</el-button>
@@ -488,8 +483,7 @@
     <!-- //某诊室的所有病人列表 -->
     <div v-if="isShowPatient">
       <el-dialog title="就诊列表" :visible.sync="isShowPatient" width="60%" center>
-        <ul v-for="(text5,index) in huanzheList" :key="index" class=""
-          style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px;">
+        <ul v-for="(text5,index) in huanzheList" :key="index" class="" style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px;">
           <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;margin:0 0 20px 0;">
             <div>
               <h1 style="margin: 0 0 10px 0;">{{text5.userName}}</h1>
@@ -543,8 +537,7 @@
     <!-- 预览弹窗 -->
     <div v-if="dialogTableVisible">
       <el-dialog title="预览" :visible.sync="dialogTableVisible" center>
-        <img style="width:100%"
-          :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userState.token+"&prescriptionId="+srcs'>
+        <img style="width:100%" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
       </el-dialog>
     </div>
 
@@ -558,7 +551,7 @@
 
     <!-- 视频聊天 -->
     <div v-if="centerDialogVisible">
-      <el-dialog title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
+      <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()"  :showClose="VideoshowClose">
         <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"
           @reback="videoclick">
         </ovideo>
@@ -617,6 +610,7 @@
     data() {
       return {
         //谭莹变量
+        VideoshowClose:false,
         videoType: "门诊",
         chatVisible1: true,
         doctorVis: 1, //医生跟患者单聊
@@ -780,7 +774,7 @@
     computed: {
       //引入token
       ...mapState({
-        userState: state => state.user.userInfo,
+        userInfo: state => state.user.userInfo,
         userSelfInfo: state => state.user.userSelfInfo,
         userSocketInfo: state => state.socket
       })
@@ -796,7 +790,7 @@
         this.oClinicId = oid;
         let _this = this;
         let query = {
-          token: this.userState.token
+          token: this.userInfo.token
         };
         const options = {
           clinicId: oid
@@ -817,7 +811,7 @@
       // async closeVideo() {
       //     let _this = this;
       //     let query = {
-      //         token: this.userState.token
+      //         token: this.userInfo.token
       //     };
       //     const options = {
       //         conferenceId: this.createVideoRoomData.conferenceId,
@@ -844,7 +838,7 @@
       async closeVideo() {
         let _this = this;
         let query = {
-          token: this.userState.token
+          token: this.userInfo.token
         };
         const options = {
           conferenceId: this.createVideoRoomData.conferenceId,
@@ -881,7 +875,7 @@
         console.log(this.userMessage);
         let _this = this;
         let query = {
-          token: this.userState.token
+          token: this.userInfo.token
         };
         let options = {
           to: text1.userId
@@ -971,7 +965,7 @@
 
         const _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           pageNum: this.pageNum,
           pageSize: this.pageSize
         };
@@ -1030,7 +1024,7 @@
       async getList2() {
         const _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           lookType: this.lookType
         };
         const res = await reviewList(query);
@@ -1058,7 +1052,7 @@
       async getList3() {
         const _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           lookType: 1
         };
         const res = await reviewList(query);
@@ -1086,7 +1080,7 @@
         // console.log(this.prescriptionId);
 
         // let query = {
-        //   token: this.userState.token,
+        //   token: this.userInfo.token,
         //   prescriptionId: this.prescriptionId
         // };
         // const res = await prescriptionDetailById(query);
@@ -1130,7 +1124,7 @@
       // async addPrescription() {
       //   let _this = this;
       //   let query = {
-      //     token: this.userState.token
+      //     token: this.userInfo.token
       //   };
       //   let options = {
       //     id: this.prescriptionId,
@@ -1174,7 +1168,7 @@
       async checkPrescription() {
         let _this = this;
         let query = {
-          token: this.userState.token
+          token: this.userInfo.token
         };
         let options = {
           prescriptionId: this.prescriptionId,
@@ -1201,7 +1195,7 @@
 
         let _this = this;
         let query = {
-          token: this.userState.token
+          token: this.userInfo.token
         };
         let options = {
           prescriptionId: this.prescriptionId,
@@ -1473,7 +1467,7 @@
           }
 
           .span {
-            color: red;
+            /* color: red; */
           }
         }
       }
@@ -1505,7 +1499,8 @@
       .title1 {
         font-family: PingFangSC-Regular;
         font-size: 14px;
-        color: #5c5c5c;
+        color: #5C5C5C;
+        letter-spacing: 0;
       }
 
       .title2 {
@@ -1545,13 +1540,13 @@
             .name {
               font-family: PingFangSC-Regular;
               font-size: 14px;
-              color: #000;
+              color: #1B1E24;
             }
 
             .depart {
               font-family: PingFangSC-Regular;
               font-size: 14px;
-              color: #000;
+              color: #98A9BC;
               letter-spacing: 0.2px;
               line-height: 21px;
             }
@@ -1623,9 +1618,10 @@
         }
 
         .name {
+          opacity: 1;
           font-family: PingFangSC-Medium;
           font-size: 14px;
-          color: black;
+          color: #212223;
           line-height: 20px;
         }
       }
@@ -1766,12 +1762,12 @@
               span {
                 font-family: PingFangSC-Regular;
                 font-size: 13px;
-                color: #97a3b4;
+                color: #97A3B4;
                 line-height: 22px;
               }
 
               .span {
-                color: red;
+                /* color: red; */
               }
             }
 
@@ -1785,7 +1781,7 @@
               }
 
               .span {
-                color: red;
+                /* color: red; */
               }
             }
           }
@@ -1812,15 +1808,22 @@
             position: relative;
 
             .totalMoney {
-              color: red;
               font-family: PingFangSC-Semibold;
               font-size: 14px;
-              color: #5e6875;
+              color: #5E6875;
               letter-spacing: 0;
               margin: 0 0 0 0;
               position: absolute;
               right: 20%;
               bottom: 20%;
+              font-weight: bold;
+
+              span {
+                font-family: PingFangSC-Semibold;
+                font-size: 14px;
+                color: #5E6875;
+                letter-spacing: 0;
+              }
             }
           }
         }
@@ -1830,6 +1833,14 @@
         padding: 2px;
         width: 100%;
         height: 10%;
+        background: #FFFFFF;
+        border: 1px solid #E4E8EB;
+
+        font-family: PingFangSC-Semibold;
+        font-size: 14px;
+        color: rgb(94, 104, 117);
+        letter-spacing: 0px;
+        font-weight: bold;
       }
 
       .detailFooter {
@@ -1933,13 +1944,13 @@
               .name {
                 font-family: PingFangSC-Regular;
                 font-size: 14px;
-                color: #000;
+                color: #1B1E24;
               }
 
               .depart {
                 font-family: PingFangSC-Regular;
                 font-size: 14px;
-                color: #000;
+                color: #98A9BC;
                 letter-spacing: 0.2px;
                 line-height: 21px;
               }
@@ -2011,9 +2022,10 @@
           }
 
           .name {
+            opacity: 1;
             font-family: PingFangSC-Medium;
             font-size: 14px;
-            color: black;
+            color: #212223;
             line-height: 20px;
           }
         }
@@ -2149,12 +2161,12 @@
                 span {
                   font-family: PingFangSC-Regular;
                   font-size: 13px;
-                  color: #97a3b4;
+                  color: #97A3B4;
                   line-height: 22px;
                 }
 
                 .span {
-                  color: red;
+                  /* color: red; */
                 }
               }
 
@@ -2195,15 +2207,22 @@
               position: relative;
 
               .totalMoney {
-                color: red;
                 font-family: PingFangSC-Semibold;
                 font-size: 14px;
-                color: #5e6875;
+                color: #5E6875;
                 letter-spacing: 0;
                 margin: 0 0 0 0;
                 position: absolute;
                 right: 20%;
                 bottom: 20%;
+                font-weight: bold;
+
+                span {
+                  font-family: PingFangSC-Semibold;
+                  font-size: 14px;
+                  color: #5E6875;
+                  letter-spacing: 0;
+                }
               }
             }
           }
@@ -2213,6 +2232,14 @@
           padding: 2px;
           width: 100%;
           height: 10%;
+          background: #FFFFFF;
+          border: 1px solid #E4E8EB;
+
+          font-family: PingFangSC-Semibold;
+          font-size: 14px;
+          color: rgb(94, 104, 117);
+          letter-spacing: 0px;
+          font-weight: bold;
         }
 
         .detailFooter {
@@ -2245,5 +2272,19 @@
     flex: 1;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  /deep/ .el-table__header-wrapper th {
+    font-family: PingFangSC-Semibold;
+    font-size: 14px;
+    color: #5E6875;
+    letter-spacing: 0;
+  }
+
+  /deep/ .el-table__body-wrapper td {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #5E6875;
+    letter-spacing: 0;
   }
 </style>

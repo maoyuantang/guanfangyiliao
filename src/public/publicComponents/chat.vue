@@ -149,13 +149,13 @@
         <div>
             <el-input class="chatInputK" type="textarea" :rows="2" placeholder="请输入内容" v-model="messageBody" @keyup.enter.native="sendMessageChat(0,messageBody,'DEFAULT')">
             </el-input>
-            <button class="sendMessage" @click="sendMessageChat(0,messageBody,'DEFAULT')">发送</button>
+            <button class="sendMessageChat" @click="sendMessageChat(0,messageBody,'DEFAULT')">发送</button>
         </div>
         <!-- 备注 -->
         <div v-if="remarkVisible">
-            <el-dialog title="备注" :visible.sync="remarkVisible" center append-to-body>
+            <el-dialog class='remarkClass' title="备注" :visible.sync="remarkVisible" center append-to-body>
                 <el-form ref="form" :model="remarkData" label-width="80px">
-                    <el-form-item label="活动形式">
+                    <el-form-item label="">
                         <el-input type="textarea" v-model="remarkData.remarkCon"></el-input>
                     </el-form-item>
                     <el-form-item>
@@ -243,13 +243,13 @@
         </div>
         <!-- 药品处方 -->
         <div v-if="drugsVisible">
-            <el-dialog title="药品处方" :visible.sync="drugsVisible" width="100%" center append-to-body>
-                <drugs :sendToUserId="sendToUserId" :userMessage="userMessage"></drugs>
+            <el-dialog class='drugsDialogClass' title="药品处方" :visible.sync="drugsVisible" width="100%" center append-to-body>
+                <drugs :sendToUserId="sendToUserId" :userMessage="userMessage" @reback='drugsFunc'></drugs>
             </el-dialog>
         </div>
         <!-- 视频聊天 -->
         <div v-if="videoVisible">
-            <el-dialog title="视频" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo('cancle','us')" :showClose="VideoshowClose">
+            <el-dialog class='videoClassBox' title="" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo('cancle','us')" :showClose="VideoshowClose">
                 <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId"></ovideo>
             </el-dialog>
         </div>
@@ -772,6 +772,11 @@ export default {
             this.puBlicManData.show = true;
             this.getFamily();
         },
+        // 提交审核成功后关闭处方界面
+        drugsFunc(){
+            this.drugsVisible=false
+
+        },
         async addPublicFile(data) {
             console.log(data);
             let _this = this;
@@ -1286,7 +1291,7 @@ export default {
                 token: this.userState.token
             };
             const options = {
-                userId: this.userSelfInfo.userId,
+                userId: this.userMessage.userId,
                 content: this.planData.planCon,
                 executeTime: this.planData.planTime
             };
@@ -1460,6 +1465,9 @@ export default {
 </script>
 
 <style>
+.sendMessageChat{
+
+}
 .chat {
     width: 636px;
     height: 568px;
@@ -1765,5 +1773,16 @@ export default {
     text-align: center;
     line-height: 23px;
     font-size: 11px;
+}
+.remarkClass .el-form-item__content{
+    margin-left:0
+}
+.drugsDialogClass{
+    
+    height: 100%;
+}
+.drugsDialogClass>div{
+margin-top: 0 !important;
+height: 100%;
 }
 </style>

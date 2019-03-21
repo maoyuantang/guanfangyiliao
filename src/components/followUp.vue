@@ -15,10 +15,6 @@
                         </el-radio-group>
                     </el-form-item>
                     <div class="addFollowMain addFollowMain1">
-                        <!-- <el-form-item class="addFollowM-bot firstZhiliao" label="首次治疗">
-                            <el-date-picker class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
-                            </el-date-picker>
-                        </el-form-item> -->
                         <ul>
                             <li v-for="(text,index) in addFollowData.itemModels" :key="index">
                                 <div class="addFollowM-bot" style="display:flex">
@@ -42,6 +38,12 @@
 
                                 </div>
                                 <ul class="questBox">
+                                    <li>
+                                        <div>
+                                            <span>复查提醒：</span>
+                                                <input style="border:none" type='text' />
+                                        </div>
+                                    </li>
                                     <li v-for="(otext,oindex) in text.contentModels" :key="oindex">
                                         <div>
                                             <span v-show="otext.followUpType=='REMIND'">提醒：</span>
@@ -263,18 +265,22 @@
                     <div class="addArticleImg">
                         <el-upload class="avatar-uploader" :action="articleImg" :show-file-list="false" :on-success="articleImgSuccess">
                             <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            <img v-else   src="../assets/img/addImg.png" class="addImgClass">
+                            <i style="display:none"  class="el-icon-plus avatar-uploader-icon"></i>
+
+
+                            
                         </el-upload>
                     </div>
                     <div>
-                        <div>
+                        <div class='articleContent'>
                             您可以通过自编原创、URL转载、从Word导入完成文章编辑
                         </div>
                         <div class="addArticleEditor">
                             <quill-editor v-model="addArticleData.content" ref="myQuillEditor" class="editer" :options="infoForm.editorOption" @ready="onEditorReady($event)">
                             </quill-editor>
                         </div>
-                        <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
+                        <!-- <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="请输入随访标题"></el-input> -->
                     </div>
                     <div class="addFollowMain">
                         <div>
@@ -404,7 +410,7 @@
 
                     <div class="mainTab">
                         <div>
-                            <selftag :inData="oTab1" @reback="getOTab1"></selftag>
+                            <selftag :inData="oTab1" @reback="getOTab13"></selftag>
                             <selftag :inData="oTab6" @reback="getOTab6" v-show="wayVisible1"></selftag>
                             <selftag :inData="oTab8" @reback="getOTab8" v-show="wayVisible2"></selftag>
                             <selftag :inData="oTab7" @reback="getOTab7" v-show="wayVisible3"></selftag>
@@ -505,28 +511,28 @@
                         <el-button class="startConsul myStartConsul" v-show="docAddTemplate" type="text" @click="docAddTemplateFun()">新增模板</el-button>
                     </div>
                     <div>
-                        <div v-if="myFollowVisable"  class="public-list">
+                        <div v-if="myFollowVisable" class="public-list">
                             <el-table :data="myFollowList" border style="width: 100%" @selection-change="followCheckChange">
                                 <el-table-column type="selection" width="55">
                                 </el-table-column>
-                                <el-table-column  prop="userName" label="姓名" >
+                                <el-table-column prop="userName" label="姓名">
                                 </el-table-column>
-                                <el-table-column prop="origin" label="来源"  >
+                                <el-table-column prop="origin" label="来源">
                                 </el-table-column>
-                                <el-table-column prop="phone" label="手机号"  >
+                                <el-table-column prop="phone" label="手机号">
                                 </el-table-column>
-                                <el-table-column prop="group" label="分组"  >
+                                <el-table-column prop="group" label="分组">
                                 </el-table-column>
-                                <el-table-column prop="nearlyFollowup" label="近期随访"  >
+                                <el-table-column prop="nearlyFollowup" label="近期随访">
                                 </el-table-column>
-                                <el-table-column prop="phoneFollowup" label="电话随访"  >
+                                <el-table-column prop="phoneFollowup" label="电话随访">
                                     <template slot-scope="scope">
                                         <el-switch v-model="scope.row.phoneFollowup" active-color="#13ce66" inactive-color="#ff4949" @change="phoneFollow(scope.row)">
                                         </el-switch>
                                     </template>
 
                                 </el-table-column>
-                                <el-table-column prop="deviceAlert" label="设备告警"  >
+                                <el-table-column prop="deviceAlert" label="设备告警">
                                     <template slot-scope="scope">
                                         <div class="warnNumBox">
                                             <el-switch v-model="scope.row.deviceAlert" active-color="#13ce66" inactive-color="#ff4949" @change="warnFollow(scope.row)">
@@ -730,7 +736,7 @@ export default {
                 type: "INHOSPITAL",
                 remindMe: true,
                 remindHe: true,
-                remindDays: "",
+                remindDays: 1,
                 itemModels: [
                     {
                         calcVal: 1,
@@ -791,6 +797,10 @@ export default {
             ],
             wayVisible1: true,
             odepartment: "",
+            odepartment1: "",
+            odepartment2: "",
+            odepartment3: "",
+            odepartment4: "",
             otype: "",
             oTheWay: "",
             equiType: "", //设备类型 血压计 血糖计
@@ -1171,7 +1181,7 @@ export default {
             docAddTemplate: false,
             doctorTemplateVisiable: false,
             docTableChecked: false,
-            hadFollowup: true, //有无随访计划
+            hadFollowup: "", //有无随访计划
             docStartTime: "",
             docEndTime: "",
             groupId: "",
@@ -1498,34 +1508,53 @@ export default {
         onEditorReady(editor) {},
 
         //筛选
+        // 管理端科室
         getOTab1(data) {
             this.odepartment = data.index.value;
+            // 随访管理
             if (this.switchNum == 0) {
                 this.getFoList();
             } else if (this.switchNum == 2) {
+                // 家用设备
                 this.oManagerGetDeviceList();
             } else if (this.switchNum == 3) {
+                // 统计
                 this.oGetFollowupGraph();
                 this.oGetFollowupRemarks();
                 this.oGetFollowupFollow();
                 this.oGetFollowupEquipment();
             }
         },
+        // 满意度调查科室1
+        getOTab13(data) {
+            this.odepartment1 = data.index.value;
+            if (this.indexTab2 == 0) {
+                this.oGetResultList();
+            } else if (this.indexTab2 == 1) {
+                this.oGetModelList();
+            } else if (this.indexTab2 == 2) {
+                this.oGetMissileList();
+            }
+        },
+        // 管理端类型
         getOTab2(data) {
             this.otype = data.index.value;
             this.getFoList();
-            this.getUsFollow();
-            this.oQueryList();
+            // this.getUsFollow();
+            // this.oQueryList();
         },
+        // 管理端方式
         getOTab3(data) {
             this.oTheWay = data.index.value;
             this.getFoList();
-            this.getUsFollow();
+            // this.getFoList();
+            // this.getUsFollow();
         },
+        // 管理端内容
         getOTab4(data) {
             this.oContent = data.index.value;
             this.getFoList();
-            this.getUsFollow();
+            // this.getUsFollow();
         },
         getOTab5(data) {
             this.equiType = data.index.value;
@@ -1534,22 +1563,55 @@ export default {
         },
         getOTab6(data) {
             this.mydType = data.index.value;
-            this.oGetModelList();
-            this.oGetResultList();
+            if (this.indexTab2 == 0) {
+                this.oGetResultList();
+            } else if (this.indexTab2 == 1) {
+                this.oGetModelList();
+            }
+            // this.oGetModelList();
+            // this.oGetResultList();
         },
         getOTab7(data) {
             this.userType = data.index.value;
             this.oGetMissileList();
         },
-        getOTab8() {},
+        getOTab8(data) {
+            this.mydMode = data.index.value;
+            if (this.indexTab2 == 0) {
+                this.oGetResultList();
+            } else if (this.indexTab2 == 1) {
+                this.oGetModelList();
+            }
+        },
         //有无随访计划
         getOTab9(data) {
-            this.houseDeviceType = data.index.value;
+            this.hadFollowup = data.index.value;
             this.getUsFollow();
         },
         //有无随访时间
         getOTab10(data) {
-            this.houseDeviceType = data.index.value;
+            console.log(data);
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            if (month < 10) {
+                month = "0" + month;
+            }
+            if (day < 10) {
+                day = "0" + day;
+            }
+
+            if (data.index.text == "今天") {
+                this.docStartTime = year + "-" + month + "-" + day;
+                this.docEndTime = year + "-" + month + "-" + day;
+                console.log(this.docStartTime);
+            } else if (data.index.text == "未来3天") {
+                oday = day + 2;
+                this.docStartTime = year + "-" + month + "-" + day;
+                this.docEndTime = year + "-" + month + "-" + oday;
+            }
+
             this.getUsFollow();
         },
         //有无随访类型
@@ -1609,6 +1671,7 @@ export default {
         followUp2Fun(index) {
             this.mydChoice = index;
             this.indexTab2 = index;
+            this.odepartment1 = "";
             if (index == 0) {
                 this.oGetResultList();
                 this.oGetResultGraph();
@@ -1778,7 +1841,7 @@ export default {
                 type: this.mydType,
                 mode: this.mydMode,
                 search: this.mydSearchData,
-                department: this.odepartment,
+                department: this.odepartment1,
                 pageNum: this.adminPageNum2,
                 pageSize: 10
             };
@@ -1802,13 +1865,35 @@ export default {
                 token: this.userState.token,
                 type: this.mydType,
                 search: this.mydSearchData,
-                department: this.odepartment,
+                department: this.odepartment1,
                 start: this.mydStartTime,
                 end: this.mydEndTime,
                 pageNum: this.adminPageNum2,
                 pageSize: 10
             };
             const res = await getModelInsert(options);
+            if (res.data && res.data.errCode === 0) {
+                _this.satisfiedList = res.data.body.data2.list;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //获取可发送的用户列表3
+        async oGetMissileList() {
+            let _this = this;
+            const options = {
+                token: this.userState.token,
+                userType: this.userType,
+                search: this.mydSearchData,
+                department: this.odepartment1,
+                pageNum: 1,
+                pageSize: 10
+            };
+            const res = await getMissileList(options);
             if (res.data && res.data.errCode === 0) {
                 _this.satisfiedList = res.data.body.data2.list;
             } else {
@@ -2056,28 +2141,7 @@ export default {
             }
         },
         //  三
-        //获取可发送的用户列表3
-        async oGetMissileList() {
-            let _this = this;
-            const options = {
-                token: this.userState.token,
-                userType: this.userType,
-                search: this.mydSearchData,
-                department: this.odepartment,
-                pageNum: 1,
-                pageSize: 10
-            };
-            const res = await getMissileList(options);
-            if (res.data && res.data.errCode === 0) {
-                _this.satisfiedList = res.data.body.data2.list;
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
-        },
+
         //家用设备接口
         //家用设备列表接口
         async oManagerGetDeviceList() {
@@ -2110,7 +2174,7 @@ export default {
             let _this = this;
             const options = {
                 token: this.userState.token,
-                department: this.odepartment,
+                department: this.odepartment4,
                 type: this.tjType,
                 startDate: this.tjStartTime,
                 endDate: this.tjEndTime
@@ -2141,7 +2205,7 @@ export default {
             let _this = this;
             const options = {
                 token: this.userState.token,
-                department: this.odepartment,
+                department: this.odepartment4,
                 type: this.tjType,
                 startDate: this.tjStartTime,
                 endDate: this.tjEndTime
@@ -2176,7 +2240,7 @@ export default {
             let _this = this;
             const options = {
                 token: this.userState.token,
-                department: this.odepartment,
+                department: this.odepartment4,
                 type: this.tjType,
                 startDate: this.tjStartTime,
                 endDate: this.tjEndTime
@@ -2209,7 +2273,7 @@ export default {
             let _this = this;
             const options = {
                 token: this.userState.token,
-                department: this.odepartment,
+                department: this.odepartment4,
                 type: this.tjType,
                 startDate: this.tjStartTime,
                 endDate: this.tjEndTime
@@ -2251,6 +2315,7 @@ export default {
             this.oMainShow = res.i;
             this.odepartment = "";
             this.switchNum = res.i;
+            this.odepartment = "";
             if (res.i == 0) {
                 this.getFoList();
             } else if (res.i == 1) {
@@ -2689,11 +2754,17 @@ export default {
         //切换
         docDeperment(data) {
             this.docDepartment = data.index.value;
-            this.getUsFollow();
-            this.oGetTemplate();
-            this.oQueryList();
-            this.oQueryArticleList();
-            this.getQueryPageByDoctorWeb();
+            if (this.oDocThis == 0) {
+                this.getUsFollow();
+            } else if (this.oDocThis == 1) {
+                this.oGetTemplate();
+            } else if (this.oDocThis == 2) {
+                this.oQueryList();
+            } else if (this.oDocThis == 3) {
+                this.oQueryArticleList();
+            } else if (this.oDocThis == 4) {
+                this.getQueryPageByDoctorWeb();
+            }
         },
         //我的随访
         async getUsFollow() {
@@ -2702,7 +2773,7 @@ export default {
                 token: this.userState.token,
                 hadFollowup: this.hadFollowup,
                 search: this.docSearchData,
-                groupId: this.docDepartment,
+                groupId: "",
                 startTime: this.docStartTime,
                 endTime: this.docEndTime,
                 mode: ""
@@ -2974,6 +3045,7 @@ export default {
                 });
             }
         },
+        //完成新增文章
         async addArticleTable() {
             let _this = this;
             let query = {
@@ -3020,7 +3092,7 @@ export default {
                 type: this.mydType,
                 mode: this.mydMode,
                 search: this.mydSearchData,
-                department: this.odepartment
+                department: this.odepartment1
             };
             const res = await getResultGraph(query);
             if (res.data && res.data.errCode === 0) {
@@ -3282,9 +3354,8 @@ export default {
     text-align: center;
     line-height: 0px;
 }
-.myStartConsul{
- margin-top: 0px;
-
+.myStartConsul {
+    margin-top: 0px;
 }
 /* 医生样式 */
 .followDoc .titleTop {
@@ -3453,11 +3524,13 @@ export default {
     bottom: 0;
     text-align: center;
     line-height: 24px;
-    background: rgba(0, 0, 0, 0.6);
     font-family: .PingFangSC-Regular;
     font-size: 12px;
     color: #ffffff;
     letter-spacing: -0.17px;
+}
+.addArticleImg input{
+    display:none !important
 }
 .ql-container {
     height: 144px;
@@ -3624,10 +3697,49 @@ export default {
     margin-left: 0px !important;
 }
 .ArcticClass .el-dialog__header,
-.ArcticClass .el-dialog__body,{
+.ArcticClass .el-dialog__body {
     background: #eff5fb;
 }
-
+.ArcticClass .el-dialog__body{
+        padding: 0px 6% 30px;
+}
+.ArcticClass .el-select .el-input__inner{
+    width:338px;
+    height: 27px;
+}
+.ArcticClass .el-select{
+    margin-bottom: 10px;
+}
+.articleContent{
+    font-family: .PingFangSC-Regular;
+font-size: 12px;
+color: #646464;
+letter-spacing: -0.17px;
+}
+.addFollowMain>div:first-child{
+    padding-left: 2.4%;
+    padding-top: 3px;
+        margin-bottom: 4.1%;
+    width:509px;
+    height: 27px;
+    background: #FFFFFF;
+border: 1px solid #D4E1F0;
+}
+.addFollowMain .el-checkbox__label{
+    font-family: .PingFangSC-Regular;
+font-size: 14px;
+color: #030303 !important;
+letter-spacing: -0.17px;
+}
+.addFollowMain>button{
+    width:169px;
+    height: 38px;
+    background: #6CA4FC;
+    font-family: .PingFangSC-Regular;
+font-size: 18px;
+color: #FFFFFF;
+letter-spacing: -0.25px;
+}
 .choiceItemBox > span {
     display: inline-block;
     margin: 0 5px;
@@ -3754,5 +3866,10 @@ export default {
     font-size: 12px;
     line-height: 1px;
     color: #4d7cfe;
+}
+.addImgClass{
+    position: absolute;
+    left: 0;
+    top:0
 }
 </style>
