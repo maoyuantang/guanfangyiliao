@@ -18,33 +18,29 @@
         <el-form :model="kuangData1.form">
           <el-form-item label="科室" :label-width="kuangData1.formLabelWidth">
             <el-select v-model="kuangData1.options1.value" placeholder="选择科室（单选）" style="width:80%">
-              <el-option v-for="item in kuangData1.options1.list||[]" :key="item.value" :label="item.label"
-                :value="item.value"></el-option>
+              <el-option v-for="item in kuangData1.options1.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="类型" :label-width="kuangData1.formLabelWidth">
-            <el-select v-model="kuangData1.options2.value" filterable allow-create default-first-option
-              placeholder="填写或选择" style="width: 80%;" @change='isHaveDepartment11' ref="ceshi1">
-              <el-option v-for="(item,index) in kuangData1.options2.list||[]" :key="index" :label="item.label"
-                :value="item.value">
+            <el-select v-model="kuangData1.options2.value" filterable allow-create default-first-option placeholder="填写或选择"
+              style="width: 80%;" @change='isHaveDepartment11' ref="ceshi1">
+              <el-option v-for="(item,index) in kuangData1.options2.list||[]" :key="index" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="名称" :label-width="kuangData1.formLabelWidth">
-            <el-select v-model="kuangData1.options3.value" filterable allow-create default-first-option
-              placeholder="填写或选择" style="width: 80%;" @change="inputReturn12" ref="ceshi2">
-              <el-option v-for="(item,index) in kuangData1.options3.list||[]" :key="index" :label="item.label"
-                :value="item.value">
+            <el-select v-model="kuangData1.options3.value" filterable allow-create default-first-option placeholder="填写或选择"
+              style="width: 80%;" @change="inputReturn12" ref="ceshi2">
+              <el-option v-for="(item,index) in kuangData1.options3.list||[]" :key="index" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="分级" :label-width="kuangData1.formLabelWidth">
             <el-select v-model="kuangData1.options4.value" placeholder="请选择1-4级" style="width:80%">
-              <el-option v-for="item in kuangData1.options4.list||[]" :key="item.value" :label="item.label"
-                :value="item.value"></el-option>
+              <el-option v-for="item in kuangData1.options4.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -66,25 +62,20 @@
         <el-form>
           <!-- :model="kuangData2.options" -->
           <el-form-item label="科         室:" :label-width="kuangData2.formLabelWidth">
-            <el-select v-model="kuangData2.options1.value" placeholder="单选" style="width:80%"
-              @change='isHaveDepartment21'>
-              <el-option v-for="item in kuangData2.options1.list||[]" :key="item.value" :label="item.label"
-                :value="item.value"></el-option>
+            <el-select v-model="kuangData2.options1.value" placeholder="单选" style="width:80%" @change='isHaveDepartment21'>
+              <el-option v-for="item in kuangData2.options1.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="接诊疾病等级:" :label-width="kuangData2.formLabelWidth">
-            <el-select v-model="kuangData2.options2.value" multiple placeholder="多选" style="width:80%"
-              @change="inputReturn21">
-              <el-option v-for="item in kuangData2.options2.list||[]" :key="item.value" :label="item.label"
-                :value="item.value">
+            <el-select v-model="kuangData2.options2.value" multiple placeholder="多选" style="width:80%" @change="inputReturn21">
+              <el-option v-for="item in kuangData2.options2.list||[]" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
 
           <div class="block" style="margin-bottom: 22px;">
-            <span class="demonstration"
-              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室:</span>
+            <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室:</span>
             <el-cascader :options="kuangData2.options3.list" v-model="kuangData2.options3.value" @change="inputReturn22"
               placeholder="多选" clearable style="width:65%;">
             </el-cascader>
@@ -136,8 +127,7 @@
         </el-table>
       </div>
       <div style="text-align: center;padding: 10px 0;">
-        <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
-          @current-change="currentChange1">
+        <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
         </el-pagination>
       </div>
 
@@ -177,8 +167,7 @@
         </el-table>
       </div>
       <div style="text-align: center;padding: 10px 0;">
-        <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
-          @current-change="currentChange2">
+        <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange2">
         </el-pagination>
       </div>
     </div>
@@ -229,6 +218,7 @@
     medicalControlCharts,//13.12.统计-统计图
     fetchMedicalType,//13.13.分级管理-类型下拉数据
     fetchMedicalDict,//13.14.分级管理-名称与类型联动的名称下拉列表
+    fetchHospitalDeptAuth,//1.2.1.获取医院科室列表（新）主要用于表单选择
   } from "../../api/apiAll.js";
   //引入组件
   import normalTab from './../../public/publicComponents/normalTab.vue'
@@ -252,7 +242,7 @@
     },
     computed: {
       ...mapState({
-        userState: state => state.user.userInfo,
+        userInfo: state => state.user.userInfo,
         userSelfInfo: state => state.user.userSelfInfo,
         global: state => state.global
       }),
@@ -495,16 +485,16 @@
       //筛选工具栏  请求  管理端
       //1.21.1.科室筛选  工具栏 (管理) (管理)
       async getSelect1(oindex) {
-        // console.log(this.userState.rooter)
-        // console.log(this.userState.manager)
-        // if (this.userState.manager) {
+        // console.log(this.userInfo.rooter)
+        // console.log(this.userInfo.manager)
+        // if (this.userInfo.manager) {
         //   this.types = 'MANAGE'
         // } else {
         //   this.types = 'DOCTOR'
         // }
         let _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           type: 'MANAGE'
         };
         const res = await toolDept(query);                                       //1.21.1.科室筛选  工具栏 (管理) (管理)
@@ -539,7 +529,7 @@
       async getSelect2(oindex) {
         let _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
         };
         const res = await toolMedicalType(query);                                     //1.21.26.类型筛选  工具栏 (管理)
         if (res.data && res.data.errCode === 0) {
@@ -571,7 +561,7 @@
       async getSelect3(oindex) {
         let _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
         };
         const res = await toolMedicalGrading(query);                                        //1.21.27.分级诊疗-分级
         if (res.data && res.data.errCode === 0) {
@@ -619,7 +609,7 @@
 
         let _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           deptId: this.departmentId,
@@ -650,7 +640,7 @@
       async getList2() {
         let _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           deptId: this.departmentId,
@@ -678,7 +668,7 @@
       async getList3() {
         const _this = this
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           deptId: this.departmentId, //String false 科室ID 
           type: "DEPT", //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
         };
@@ -802,7 +792,7 @@
       //表一编辑提交函数
       async editMedicalClassify() {
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
         };
         let options = {//访问data里面自定义的参数（表格value）
           id: this.adds,//此行id
@@ -835,7 +825,7 @@
         console.log(data)
         const _this = this
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
         };
         let options = {
           id: data.id
@@ -882,7 +872,7 @@
       //表2编辑提交函数 
       async editMedicalControl() {
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
         };
         let options = {
           id: this.adds2,
@@ -915,7 +905,7 @@
         console.log(data)
         const _this = this
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
         };
         let options = {
           id: data.id
@@ -963,10 +953,12 @@
         const _this = this
         // 获取下拉   科室
         let query1 = {
-          orgCode: "1545649424290",//医院代码
-          deptId: ""//科室ID，无该参数则返回医院全部科室，有该参数则会过滤科室列表
+          orgCode: this.userInfo.hospitalCode,
+          token: this.userInfo.token,//用户登录标识
+          deptId: "",//科室ID，无该参数则返回医院全部科室，有该参数则会过滤科室列表
+          type: "MANAGE"//使用来源，DOCTOR医生端标签来源，MANAGE管理端标签页使用
         };
-        const res1 = await fetchHospitalDepts(query1);                                 //2.2.获取医院科室列表
+        const res1 = await fetchHospitalDeptAuth(query1);                                 //1.2.1.获取医院科室列表（新）主要用于表单选择()
         if (res1.data && res1.data.errCode === 0) {
           console.log('表1-新增2.2.获取医院科室列表 +成功')
           console.log(res1)
@@ -987,7 +979,7 @@
         }
         //获取类型下拉
         let query2 = {
-          token: this.userState.token,
+          token: this.userInfo.token,
         };
         const res2 = await fetchMedicalType(query2);                                //13.13.分级管理-类型下拉数据
         if (res2.data && res2.data.errCode === 0) {
@@ -1017,7 +1009,7 @@
           this.kuangData1.options3.value = ""
           this.kuangData1.options3.list.length = 0
           let query3 = {
-            token: this.userState.token,
+            token: this.userInfo.token,
             diseaseTypeId: this.kuangData1.options2.value//类型ID
           };
           const res = await fetchMedicalDict(query3);                                 //13.14.分级管理-名称与类型联动的名称下拉列表
@@ -1070,7 +1062,7 @@
       //表一新增提交函数
       async addMedicalClassify1() {
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
         };
         let options = {//访问data里面自定义的参数（表格value）
           deptId: this.kuangData1.options1.value,
@@ -1098,7 +1090,7 @@
       },
       async addMedicalClassify2() {
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
         };
         let options = {//访问data里面自定义的参数（表格value）
           deptId: this.kuangData1.options1.value,
@@ -1137,9 +1129,13 @@
       async chooseDept() {
         const _this = this
         let query1 = {
-          token: this.userState.token,
+          orgCode: this.userInfo.hospitalCode,
+          token: this.userInfo.token,//用户登录标识
+          deptId: "",//科室ID，无该参数则返回医院全部科室，有该参数则会过滤科室列表
+          type: "MANAGE"//使用来源，DOCTOR医生端标签来源，MANAGE管理端标签页使用
         };
-        const res1 = await chooseDept(query1);                                            //13.5.权限控制-科室列表下拉框 
+
+        const res1 = await fetchHospitalDeptAuth(query1);                                            //1.2.1.获取医院科室列表（新）主要用于表单选择()
         if (res1.data && res1.data.errCode === 0) {
           console.log('权限控制-科室列表下拉框 +成功')
           console.log(res1)
@@ -1155,7 +1151,7 @@
           });
         }
         let query2 = {
-          token: this.userState.token,
+          token: this.userInfo.token,
         };
         const res2 = await chooseApplyDept(query2);                                 //13.7.权限控制-申请医院和科室下拉框 
         if (res2.data && res2.data.errCode === 0) {
@@ -1197,7 +1193,7 @@
       async isHaveDepartment21() {
         if (this.kuangData2.options1.value != "") {
           let query = {
-            token: this.userState.token,
+            token: this.userInfo.token,
             deptId: this.kuangData2.options1.value//依靠   上面一层获取科室id
           };
           const res = await chooseAcceptsLevel(query);                                 //13.6.权限控制-接诊疾病等级下拉框
@@ -1223,7 +1219,7 @@
         console.log(this.kuangData2.options3.value)
         this.kuangData2.show = false
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
         };
         let options = {
           deptId: this.kuangData2.options1.value,

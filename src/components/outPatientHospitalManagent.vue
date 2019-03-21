@@ -165,7 +165,7 @@
 		<!-- 处方详情 -->
 		<div v-if="chuFangDetailList2">
 			<el-dialog title="处方详情" :visible.sync="chuFangDetailList2" center>
-				<img style="width:100%" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userState.token+"&prescriptionId="+srcs'>
+				<img style="width:100%" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
 			</el-dialog>
 		</div>
 
@@ -205,6 +205,7 @@
 	//引入接口
 	import {
 		// 已使用接口
+		fetchHospitalDeptAuth,//1.2.1.获取医院科室列表（新）主要用于表单选择
 		doctorsByOrgCodeAndDeptId,//1.22医院机构码和科室id获取医生集合
 		addClinic,//7.1新增业务
 		searchClinic,//7.5门诊列表1
@@ -649,7 +650,6 @@
 		computed: {
 			//引入token
 			...mapState({
-				userState: state => state.user.userInfo,
 				userSelfInfo: state => state.user.userSelfInfo,
 				userInfo: state => state.user.userInfo,
 			}),
@@ -731,14 +731,14 @@
 			async getFilter0(data) {
 				// console.log(this.userInfo.rooter)
 				// console.log(this.userInfo.manager)
-				// if (this.userState.manager) {
+				// if (this.userInfo.manager) {
 				// 	this.types = 'MANAGE'
 				// } else {
 				// 	this.types = 'DOCTOR'
 				// }
 				const _this = this
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 					type: 'MANAGE'
 				};
 				console.log(this.userInfo.manager)
@@ -788,7 +788,7 @@
 			async getFilter1() {
 				const _this = this
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 				};
 				const res = await toolRxReviewStatus(query);
 				if (res.data && res.data.errCode === 0) {
@@ -820,7 +820,7 @@
 			async getFilter2() {
 				const _this = this
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 				};
 				const res = await toolRxSendStatus(query);
 				if (res.data && res.data.errCode === 0) {
@@ -851,7 +851,7 @@
 			async getFilter3() {
 				const _this = this
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 				};
 				const res = await toolRxReviewDoctors(query);
 				if (res.data && res.data.errCode === 0) {
@@ -882,7 +882,7 @@
 			async getFilter4() {
 				const _this = this
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 				};
 				const res = await toolRxSendDoctors(query);
 				if (res.data && res.data.errCode === 0) {
@@ -933,7 +933,7 @@
 				this.time1 = nowDate;
 
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 					string: this.searchValue,
 					pageNum: this.pageNum,
 					pageSize: this.pageSize,
@@ -942,12 +942,12 @@
 				};
 				const res = await searchClinic(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('列表1+成功')
-					console.log("time0:", this.time0)
-					console.log("time1:", this.time1)
-					console.log("res:", res)
-					console.log("list:", res.data.body.data2.list)
-					console.log("total:", res.data.body.data2.total)
+					// console.log('列表1+成功')
+					// console.log("time0:", this.time0)
+					// console.log("time1:", this.time1)
+					// console.log("res:", res)
+					// console.log("list:", res.data.body.data2.list)
+					// console.log("total:", res.data.body.data2.total)
 					const lists = res.data.body.data2.list
 					this.totals = res.data.body.data2.total
 					for (let j = 0; j < lists.length; j++) {
@@ -995,7 +995,7 @@
 				if (column.label === "关联医生") {
 					this.isShowrelationalDoctor = true;
 					let query = {
-						token: this.userState.token,
+						token: this.userInfo.token,
 						string: this.searchValue,
 						pageNum: this.pageNum,
 						pageSize: "",
@@ -1023,7 +1023,7 @@
 					this.isShowRecord = true;
 					// fetchMzOrderInfo,6.8.远程门诊订单列表弹框数据（WEB端使用） 
 					let query = {
-						token: this.userState.token,
+						token: this.userInfo.token,
 						businessId: row.id,//String true 远程门诊业务id 
 						pageNum: this.pageNum,
 						pageSize: ""
@@ -1061,7 +1061,7 @@
 				console.log(data)
 				this.messageRecord = data.bindSessionId
 				// let query = {
-				// 	token: this.userState.token
+				// 	token: this.userInfo.token
 				// };
 				// let options = {
 				// 	userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
@@ -1095,7 +1095,7 @@
 			async getList2() {
 				console.log(this.searchValue)
 				let query = {// 7.11根据条件获取处方信息 
-					token: this.userState.token,
+					token: this.userInfo.token,
 					departmentId: this.departmentId,
 					reviewEnum: this.reviewEnum,
 					sendEnum: this.sendEnum,
@@ -1161,7 +1161,7 @@
 			async getList31() {
 				const _this = this
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 					deptId: this.departmentId, //String false 科室ID 
 					starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
 					endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
@@ -1200,7 +1200,7 @@
 			async getList32() {
 				const _this = this
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 					deptId: this.departmentId, //String false 科室ID 
 					starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
 					endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
@@ -1240,7 +1240,7 @@
 			async getList33() {
 				const _this = this
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 					deptId: this.departmentId, //String false 科室ID 
 					starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
 					endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
@@ -1311,13 +1311,16 @@
 				console.log(this.addData)
 				const _this = this;
 				let query = {
-					orgCode: this.userInfo.hospitalCode,	//String true 医院代码 
-					deptId: this.departmentId,	//String false 科室ID，无该参数则返回医院全部科室，有该参数则会过滤科室列表 
+					orgCode: this.userInfo.hospitalCode,
+					token: this.userInfo.token,//用户登录标识
+					deptId: "",//科室ID，无该参数则返回医院全部科室，有该参数则会过滤科室列表
+					type: "MANAGE"//使用来源，DOCTOR医生端标签来源，MANAGE管理端标签页使用
 				}
-				const res = await fetchHospitalDepts(query);
+
+				const res = await fetchHospitalDeptAuth(query);								//1.2.1.获取医院科室列表（新）主要用于表单选择()
 				if (res.data && res.data.errCode === 0) {
 					console.log('新增弹框渲染+科室+成功')
-					// console.log(res)
+					console.log(res)
 					$.each(res.data.body, function (index, text) {
 						_this.addData.departmentList.list.push({
 							label: text.deptName,
@@ -1346,7 +1349,7 @@
 			async newClinic1() {
 				const _this = this;
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 					orgCode: this.userInfo.hospitalCode,	//String true 医院代码 
 					deptId: this.departmentId,//String false 科室id 
 				};
@@ -1374,11 +1377,11 @@
 			},
 			//根据科室获取定义协议
 			async newClinic2() {
-				// console.log(this.userState.token)
+				// console.log(this.userInfo.token)
 				// console.log(this.userSelfInfo.userId)
 				const _this = this;
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 					departmentId: this.departmentId,//String false 科室id 
 				};
 				const res = await protocols(query);
@@ -1407,7 +1410,7 @@
 				// console.log(data.item.value)//插件返回值//获取协议选择情况
 				//根据协议id获取协议内容
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 					protocolId: data.item.value//String true 协议id 
 				};
 				const res = await protocolById(query);
@@ -1450,7 +1453,7 @@
 				this.sureVisiable = 1;
 				this.newClinic0();//新增门诊弹框内容渲染
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 					clinicId: row.id,//String true 远程门诊业务id 
 				};
 				const res = await clinicDetail(query);// clinicDetail,//7.3查看远程门诊业务详情
@@ -1494,7 +1497,7 @@
 				this.sureVisiable = 2;
 				this.newClinic0();//新增门诊弹框内容渲染
 				let query0 = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 					clinicId: row.id,//String true 远程门诊业务id 
 				};
 				const res = await clinicDetail(query0);
@@ -1532,7 +1535,7 @@
 			async isShowForbidFun(row) {
 				console.log(row)
 				let query = {
-					token: this.userState.token
+					token: this.userInfo.token
 				};
 				let options = {
 					clinicId: row.id,
@@ -1540,11 +1543,13 @@
 				};
 				const res = await disableClinic(query, options);
 				if (res.data && res.data.errCode === 0) {
-					if (this.status1 == true) {
-						this.status1 = false;
-					} else {
-						this.status1 = true;
-					}
+					// if (this.status1 == true) {
+					// 	this.status1 = false;
+					// } else {
+					// 	this.status1 = true;
+					// }
+					this.status1 = !this.status1
+					console.log(this.status1)
 					this.getList1()
 				} else {
 					console.log('禁用失败')
@@ -1560,7 +1565,7 @@
 				this.chuFangDetailList2 = true;
 				this.srcs = row.id
 				// let query = {
-				// 	token: this.userState.token,
+				// 	token: this.userInfo.token,
 				// 	prescriptionId:row.id
 				// };
 				// const res = await prescriptionDetailById(query);
@@ -1580,7 +1585,7 @@
 				console.log(index, row)
 				this.roadStatusList2 = true;
 				let query = {
-					token: this.userState.token,
+					token: this.userInfo.token,
 					prescriptionId: row.id
 				};
 				const res = await drugHaulStatus(query);//接口还没写
@@ -1602,7 +1607,7 @@
 				console.log(index, row)
 				this.messageRecord = row.prescriptionSessionId
 				// let query = {
-				// 	token: this.userState.token
+				// 	token: this.userInfo.token
 				// };
 				// let options = {
 				// 	userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
@@ -1626,7 +1631,7 @@
 
 				//废弃接口
 				// let query = {
-				// 	token: this.userState.token,
+				// 	token: this.userInfo.token,
 				// 	prescriptionId: row.id
 				// };
 
@@ -1657,7 +1662,7 @@
 				console.log(data)
 				if (this.sureVisiable == 0) {
 					let query = {
-						token: this.userState.token
+						token: this.userInfo.token
 					};
 					// console.log(this.clinicProtocolName)
 					const options = {
@@ -1694,7 +1699,7 @@
 				}
 				else if (this.sureVisiable == 2) {
 					let query = {
-						token: this.userState.token
+						token: this.userInfo.token
 					};
 					const options = {
 						clinicId: this.onLineId,//String false 远程门诊id（新增为空，编辑不为空） 

@@ -544,7 +544,7 @@
     <div v-if="dialogTableVisible">
       <el-dialog title="预览" :visible.sync="dialogTableVisible" center>
         <img style="width:100%"
-          :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userState.token+"&prescriptionId="+srcs'>
+          :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
       </el-dialog>
     </div>
 
@@ -780,7 +780,7 @@
     computed: {
       //引入token
       ...mapState({
-        userState: state => state.user.userInfo,
+        userInfo: state => state.user.userInfo,
         userSelfInfo: state => state.user.userSelfInfo,
         userSocketInfo: state => state.socket
       })
@@ -796,7 +796,7 @@
         this.oClinicId = oid;
         let _this = this;
         let query = {
-          token: this.userState.token
+          token: this.userInfo.token
         };
         const options = {
           clinicId: oid
@@ -817,7 +817,7 @@
       // async closeVideo() {
       //     let _this = this;
       //     let query = {
-      //         token: this.userState.token
+      //         token: this.userInfo.token
       //     };
       //     const options = {
       //         conferenceId: this.createVideoRoomData.conferenceId,
@@ -844,7 +844,7 @@
       async closeVideo() {
         let _this = this;
         let query = {
-          token: this.userState.token
+          token: this.userInfo.token
         };
         const options = {
           conferenceId: this.createVideoRoomData.conferenceId,
@@ -881,7 +881,7 @@
         console.log(this.userMessage);
         let _this = this;
         let query = {
-          token: this.userState.token
+          token: this.userInfo.token
         };
         let options = {
           to: text1.userId
@@ -971,7 +971,7 @@
 
         const _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           pageNum: this.pageNum,
           pageSize: this.pageSize
         };
@@ -1030,7 +1030,7 @@
       async getList2() {
         const _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           lookType: this.lookType
         };
         const res = await reviewList(query);
@@ -1058,7 +1058,7 @@
       async getList3() {
         const _this = this;
         let query = {
-          token: this.userState.token,
+          token: this.userInfo.token,
           lookType: 1
         };
         const res = await reviewList(query);
@@ -1086,7 +1086,7 @@
         // console.log(this.prescriptionId);
 
         // let query = {
-        //   token: this.userState.token,
+        //   token: this.userInfo.token,
         //   prescriptionId: this.prescriptionId
         // };
         // const res = await prescriptionDetailById(query);
@@ -1130,7 +1130,7 @@
       // async addPrescription() {
       //   let _this = this;
       //   let query = {
-      //     token: this.userState.token
+      //     token: this.userInfo.token
       //   };
       //   let options = {
       //     id: this.prescriptionId,
@@ -1174,7 +1174,7 @@
       async checkPrescription() {
         let _this = this;
         let query = {
-          token: this.userState.token
+          token: this.userInfo.token
         };
         let options = {
           prescriptionId: this.prescriptionId,
@@ -1201,7 +1201,7 @@
 
         let _this = this;
         let query = {
-          token: this.userState.token
+          token: this.userInfo.token
         };
         let options = {
           prescriptionId: this.prescriptionId,
