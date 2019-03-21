@@ -349,7 +349,7 @@
 	import { 
 		stencilName, toolBusinessType, toolDept, doctorsByOrgCodeAndDeptId, fetchHospitalDepts, businessType, protocols, protocolById,
 		addBusiness, stencilModel, getChildrenByDepartmentId, businessCondition, disableClinic, updateBusiness, queryStatisticalData,
-		pushStatisticalData
+		pushStatisticalData, fetchHospitalDeptAuth
 	} from '../../api/apiAll.js'
 	import apiBaseURL from '../../enums/apiBaseURL.js'
 	export default {
@@ -796,19 +796,42 @@
 			 * 获取科室列表
 			 */
 			async getFetchHospitalDepts(){
-				const res = await fetchHospitalDepts({
-					orgCode:this.userSelfInfo.orgCode,
-					deptId:''
+				this.departmentList.list = this.global.manToolDept.map(item=>{
+					item.text = item.name;
+					// item.value = item.id;
+					return item;
+				});
+				
+				this.statisticsInfo.departmentList.list = this.global.manToolDept.map(item=>{
+					item.text = item.name;
+					// item.value = item.id;
+					return item;
+				});
+				// this.testData.departmentList.list = this.global.manToolDept.map(item=>{
+				// 	return {
+				// 		label:item.name,
+				// 		value:item.id
+				// 	}
+				// });
+				// this.getSelectDepartment(this.testData.departmentList.list[0].value);
+				// this.getProtocols(this.testData.departmentList.list[0].value);
+				// return;
+				const res = await fetchHospitalDeptAuth({
+					// orgCode:this.userSelfInfo.orgCode,
+					// deptId:'',
+					orgCode: this.userSelfInfo.orgCode,
+                    token: this.userInfo.token,
+                    type:'MANAGE'
 				});
 				console.log(res)
 				if(res.data&&res.data.errCode===0){
-					const initArr = [{text:'全部'}];
-					res.data.body.forEach(element => {
-						element.text = element.deptName;
-						initArr.push(element);
-					});
-					this.departmentList.list = initArr.slice(0,initArr.length);
-					this.statisticsInfo.departmentList.list = initArr.slice(0,initArr.length);
+					// const initArr = [{text:'全部'}];
+					// res.data.body.forEach(element => {
+					// 	element.text = element.deptName;
+					// 	initArr.push(element);
+					// });
+					// this.departmentList.list = initArr.slice(0,initArr.length);
+					// this.statisticsInfo.departmentList.list = initArr.slice(0,initArr.length);
 					this.testData.departmentList.list = res.data.body.map(item => {
 						return {
 							label:item.deptName,
@@ -849,7 +872,8 @@
 			 */
 			getDepartmentSelect(item){
 				console.log(item)
-				this.searchCondition.department.id = item.index.deptId || '';
+				// return;
+				this.searchCondition.department.id = item.index.id || '';
 				this.searchCondition.pageNum = 1;
 				this.getBussByCondition();
 				// this.getPushStatisticalData();

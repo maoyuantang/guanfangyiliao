@@ -2,7 +2,7 @@
     远程教育
 -->
 <template>
-<div class="doctors-index-education">
+<div class="doctors-index-education" v-if="show">
     <div class="doctors-index-rounds">
 		<div class="doctors-index-rounds-head">
             <span class="doctors-index-rounds-name">远程教育</span>
@@ -63,7 +63,8 @@
 		
 		data () {
 			return {	
-                info:{}
+                info:{},
+                show:false
 			}
 		},
 		
@@ -179,12 +180,14 @@
                     console.log(reData.action);
                     reData.btnName = btnStatus[reData.action]?btnStatus[reData.action].label:'';
                     this.info = reData;
+                    this.show = true;
                 }else{
                      this.$notify({
                         title: '课程列表获取失败',
                         message: res.data.errMsg,
                         type: 'error'
                     });
+                    this.show = false;
                 }
             },
 		},
@@ -196,9 +199,11 @@
 	}
 </script>
 
-<style >
+<style scoped>
     .doctors-index-education{
-        height: 100%;
+        /* height: 100%; */
+        width:5.2rem;
+		height: 3rem;
     }
 	.doctors-index-rounds{
         height: 100%;

@@ -207,9 +207,9 @@
              * 获取科室列表
              */
             setDepartmentData(){
-                this.queryConditions.department.list = this.global.departmentList.map(item=>{
-                    item.label = item.deptName;
-                    item.value = item.deptId;
+                this.queryConditions.department.list = this.global.manToolDept.map(item=>{
+                    item.label = item.name;
+                    item.value = item.id;
                     return item;
                 });
             },
@@ -284,7 +284,7 @@
         flex: 1;
         text-align: center;
         display: flex;
-        justify-content: center;
+        justify-content: start;
     }
     .mobile-th-spe{
         text-align: center;
@@ -298,5 +298,17 @@
     .vedio-icon{
         color: #DF63AD;
         cursor: pointer;
+    }
+    .mobile-thead th{
+        font-family: PingFangSC-Semibold;
+        font-size: 14px;
+        color: #5E6875;
+        letter-spacing: 0;
+    }
+    .mobile-tbody th{
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #5E6875;
+        letter-spacing: 0;
     }
 </style>

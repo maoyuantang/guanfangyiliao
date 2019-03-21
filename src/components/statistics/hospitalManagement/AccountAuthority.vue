@@ -1,5 +1,6 @@
 <template>
   <div class="Account-authority">
+    {{ourStafAlert.data.manDepartment.select}}
     <div class="select-div">
       <el-radio-group v-model="tabPosition" style="margin-bottom: 30px;">
         <el-radio-button label="left" :class="tabPosition==='left'?'left-btn-select':''">本院人员</el-radio-button>
@@ -37,12 +38,19 @@
                 <th>{{item.name}}</th>
                 <th>{{item.account}}</th>
                 <th>{{item.phone}}</th>
-                <th>{{item.busRange.length}}</th>
-                <th>{{item.regTime}}</th>
+                <th>
+                  <el-tooltip class="item" effect="light" placement="right">
+                    <div slot="content" v-loading="item.pendding">
+                      <p v-for="(value,key) in item.addAttribute" :key="key">{{value.name}}</p>
+                    </div>
+                    <div class="Account-authority-append-class" @mouseenter="getItemInfo(item,index)">{{item.busRange.length}}</div>
+                  </el-tooltip>
+                  </th>
+                <th>{{item.newTime}}</th>
                 <th>{{item.hasDeptManage?'有':'无'}}</th>
                 <th>
                   <el-button type="success" size="mini" plain @click="modifyUserInfo(item)">编辑</el-button>
-                  <el-button type="danger" size="mini" plain>删除</el-button>
+                  <el-button type="danger" size="mini" plain @click='deleteItem(item,index)'>删除</el-button>
                 </th>
               </tr>
             </tbody>
@@ -88,7 +96,7 @@
               </tr>
             </thead>
             <tbody class="account-authority-tbody">
-              <tr v-for="(item,index) in 9" :key="index">
+              <tr v-for="(item,index) in outerCourt.list" :key="index">
                 <th>item.departmentName</th>
                 <th>item.name</th>
                 <th>item.account</th>
@@ -132,6 +140,7 @@
     <el-dialog
       :title="ourStafAlert.type===0?'新增':'修改'"
       :visible.sync="ourStafAlert.show"
+      v-if="ourStafAlert.show"
       width="602px"
       hight="607px"
       center
@@ -141,7 +150,16 @@
         <div class="ourStaf-alert-item-text">
           <div class="ourStaf-alert-item-text-ch">
             <span>姓名:</span>
-            <el-input placeholder="请输入内容" v-model="ourStafAlert.data.name" size="mini" clearable></el-input>
+            <el-autocomplete
+              v-if="ourStafAlert.type===0"
+              class="Account-authority-append-class-new-class"
+              v-model="ourStafAlert.data.name"
+              size="mini"
+              :fetch-suggestions="querySearch"
+              placeholder="请输入内容"
+              @select="handleSelect"
+            ></el-autocomplete>
+            <el-input placeholder="请输入内容" v-else v-model="ourStafAlert.data.name" size="mini" clearable></el-input>
             <i class="iconfont ourStaf-alert-icon">&#xe7b0;</i>
           </div>
           <div class="ourStaf-alert-item-text-ch">
@@ -153,12 +171,12 @@
         <div class="ourStaf-alert-item-text">
           <div class="ourStaf-alert-item-text-ch">
             <span>账号:</span>
-            <el-input placeholder="请输入内容" v-model="ourStafAlert.data.account" size="mini" clearable></el-input>
+            <el-input placeholder="请输入内容" v-model="ourStafAlert.data.account" size="mini" clearable :disabled="ourStafAlert.type!==0"></el-input>
             <i class="iconfont ourStaf-alert-icon">&#xe7b0;</i>
           </div>
           <div class="ourStaf-alert-item-text-ch">
             <span>密码:</span>
-            <el-input placeholder="请输入内容" v-model="ourStafAlert.data.psd" size="mini" clearable></el-input>
+            <el-input placeholder="***************" v-model="ourStafAlert.data.psd" size="mini" clearable type="password"></el-input>
             <i class="iconfont ourStaf-alert-icon">&#xe7b0;</i>
           </div>
         </div>
@@ -168,7 +186,6 @@
             <el-select
               v-model="ourStafAlert.data.department.select"
               size="mini"
-              multiple
               placeholder="请选择"
             >
               <el-option
@@ -209,6 +226,7 @@
             <el-select
               v-model="ourStafAlert.data.manDepartment.select"
               size="mini"
+              multiple
               placeholder="请选择"
             >
               <el-option
@@ -310,7 +328,11 @@ import {
   userList,
   userInfo,
   updateUser,
-  synergyManageInvite
+  synergyManageInvite,
+  getUserItemInfo,
+  deleteUserItem,
+  listBusRange,
+  fetchHospitalDeptAuth
 } from "../../../api/apiAll.js";
 
 export default {
@@ -323,6 +345,62 @@ export default {
   },
   data() {
     return {
+      newAppend:[//新增功能 边输入边筛选 原始数据
+        // {value:'aaa'},
+        // {value:'bbb'},
+        // {value:'ccc'},
+        // {value:'ddd'},
+        // {value:'eee'},
+        // {value:'fff'},
+        { "value": "三全鲜食（北新泾店）", "address": "长宁区新渔路144号" },
+          { "value": "Hot honey 首尔炸鸡（仙霞路）", "address": "上海市长宁区淞虹路661号" },
+          { "value": "新旺角茶餐厅", "address": "上海市普陀区真北路988号创邑金沙谷6号楼113" },
+          { "value": "泷千家(天山西路店)", "address": "天山西路438号" },
+          { "value": "胖仙女纸杯蛋糕（上海凌空店）", "address": "上海市长宁区金钟路968号1幢18号楼一层商铺18-101" },
+          { "value": "贡茶", "address": "上海市长宁区金钟路633号" },
+          { "value": "豪大大香鸡排超级奶爸", "address": "上海市嘉定区曹安公路曹安路1685号" },
+          { "value": "茶芝兰（奶茶，手抓饼）", "address": "上海市普陀区同普路1435号" },
+          { "value": "十二泷町", "address": "上海市北翟路1444弄81号B幢-107" },
+          { "value": "星移浓缩咖啡", "address": "上海市嘉定区新郁路817号" },
+          { "value": "阿姨奶茶/豪大大", "address": "嘉定区曹安路1611号" },
+          { "value": "新麦甜四季甜品炸鸡", "address": "嘉定区曹安公路2383弄55号" },
+          { "value": "Monica摩托主题咖啡店", "address": "嘉定区江桥镇曹安公路2409号1F，2383弄62号1F" },
+          { "value": "浮生若茶（凌空soho店）", "address": "上海长宁区金钟路968号9号楼地下一层" },
+          { "value": "NONO JUICE  鲜榨果汁", "address": "上海市长宁区天山西路119号" },
+          { "value": "CoCo都可(北新泾店）", "address": "上海市长宁区仙霞西路" },
+          { "value": "快乐柠檬（神州智慧店）", "address": "上海市长宁区天山西路567号1层R117号店铺" },
+          { "value": "Merci Paul cafe", "address": "上海市普陀区光复西路丹巴路28弄6号楼819" },
+          { "value": "猫山王（西郊百联店）", "address": "上海市长宁区仙霞西路88号第一层G05-F01-1-306" },
+          { "value": "枪会山", "address": "上海市普陀区棕榈路" },
+          { "value": "纵食", "address": "元丰天山花园(东门) 双流路267号" },
+          { "value": "钱记", "address": "上海市长宁区天山西路" },
+          { "value": "壹杯加", "address": "上海市长宁区通协路" },
+          { "value": "唦哇嘀咖", "address": "上海市长宁区新泾镇金钟路999号2幢（B幢）第01层第1-02A单元" },
+          { "value": "爱茜茜里(西郊百联)", "address": "长宁区仙霞西路88号1305室" },
+          { "value": "爱茜茜里(近铁广场)", "address": "上海市普陀区真北路818号近铁城市广场北区地下二楼N-B2-O2-C商铺" },
+          { "value": "鲜果榨汁（金沙江路和美广店）", "address": "普陀区金沙江路2239号金沙和美广场B1-10-6" },
+          { "value": "开心丽果（缤谷店）", "address": "上海市长宁区威宁路天山路341号" },
+          { "value": "超级鸡车（丰庄路店）", "address": "上海市嘉定区丰庄路240号" },
+          { "value": "妙生活果园（北新泾店）", "address": "长宁区新渔路144号" },
+          { "value": "香宜度麻辣香锅", "address": "长宁区淞虹路148号" },
+          { "value": "凡仔汉堡（老真北路店）", "address": "上海市普陀区老真北路160号" },
+          { "value": "港式小铺", "address": "上海市长宁区金钟路968号15楼15-105室" },
+          { "value": "蜀香源麻辣香锅（剑河路店）", "address": "剑河路443-1" },
+          { "value": "北京饺子馆", "address": "长宁区北新泾街道天山西路490-1号" },
+          { "value": "饭典*新简餐（凌空SOHO店）", "address": "上海市长宁区金钟路968号9号楼地下一层9-83室" },
+          { "value": "焦耳·川式快餐（金钟路店）", "address": "上海市金钟路633号地下一层甲部" },
+          { "value": "动力鸡车", "address": "长宁区仙霞西路299弄3号101B" },
+          { "value": "浏阳蒸菜", "address": "天山西路430号" },
+          { "value": "四海游龙（天山西路店）", "address": "上海市长宁区天山西路" },
+          { "value": "樱花食堂（凌空店）", "address": "上海市长宁区金钟路968号15楼15-105室" },
+          { "value": "壹分米客家传统调制米粉(天山店)", "address": "天山西路428号" },
+          { "value": "福荣祥烧腊（平溪路店）", "address": "上海市长宁区协和路福泉路255弄57-73号" },
+          { "value": "速记黄焖鸡米饭", "address": "上海市长宁区北新泾街道金钟路180号1层01号摊位" },
+          { "value": "红辣椒麻辣烫", "address": "上海市长宁区天山西路492号" },
+          { "value": "(小杨生煎)西郊百联餐厅", "address": "长宁区仙霞西路88号百联2楼" },
+          { "value": "阳阳麻辣烫", "address": "天山西路389号" },
+          { "value": "南拳妈妈龙虾盖浇饭", "address": "普陀区金沙江路1699号鑫乐惠美食广场A13" }
+      ],
       addData: {
         //新增时，收集信息
         name: "", //姓名
@@ -401,12 +479,12 @@ export default {
           psd: "", //密码
           department: {
             //科室
-            select: [], //选中 科室
+            select: '', //选中 科室
             list: [] // 科室列表
           },
           manDepartment: {
             //管理科室
-            select: "", //选中 科室
+            select: [], //选中 科室
             list: [] // 科室列表
           },
           docBus: {
@@ -437,16 +515,24 @@ export default {
     /**
      * 监听科室变化
      */
-    "global.departmentList": {
+    "global.manToolDept": {
       handler(n) {
-        this.ourStafAlert.data.department.list = [
-          { text: "全部", deptId: "" },
-          ...deepCopy(n)
-        ];
-        this.ourStafAlert.data.manDepartment.list = [
-          { text: "全部", deptId: "" },
-          ...deepCopy(n)
-        ];
+        this.ourStafAlert.data.department.list = n.map(item=>{
+          item.text = item.name;
+          item.deptId = item.value
+        });
+        // [
+        //   { text: "全部", deptId: "" },
+        //   ...deepCopy(n)
+        // ];
+        this.ourStafAlert.data.manDepartment.list = n.map(item=>{
+          item.text = item.name;
+          item.deptId = item.value
+        });
+        // [
+        //   { text: "全部", deptId: "" },
+        //   ...deepCopy(n)
+        // ];
       }
     },
     /**
@@ -460,6 +546,64 @@ export default {
     }
   },
   methods: {
+    /**
+     * 新增 需求 边输入边筛选
+     */
+    querySearch(queryString,cb){
+        // 调用 callback 返回建议列表的数据
+        cb(queryString ? this.newAppend.filter(item=>item.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1) : this.newAppend);
+    },
+    /**
+     * 新增需求  选中
+     */
+    handleSelect(item){
+      console.log(item)
+    },
+    /**
+     * 删除 用户
+     */
+    async deleteItem(item,index){
+      // console.log('enter')
+      const res = await deleteUserItem({
+        token: this.userInfo.token,
+        userId: item.id,
+      });
+      if (res.data && res.data.errCode === 0){
+        this.ourStaff.ourStaffUser.list.splice(index,1);
+      }else{
+        this.$notify.error({
+          title: "删除失败",
+          message: res.data.errMsg
+        });
+      }
+    },
+    /**
+     * 获取 具体业务范围
+     */
+    async getItemInfo(item,index){
+      console.log(item)
+      console.log(index)
+      // return;
+      if(this.ourStaff.ourStaffUser.list[index].addAttribute)return;
+      if(this.ourStaff.ourStaffUser.list[index].pendding)return;
+      this.ourStaff.ourStaffUser.list[index].pendding = true;
+      const res = await listBusRange({
+        token: this.userInfo.token,
+        userId: item.id,
+      });
+      console.log(res);
+      if (res.data && res.data.errCode === 0){
+        this.ourStaff.ourStaffUser.list[index].addAttribute = res.data.body;
+      }else{
+
+      }
+      this.ourStaff.ourStaffUser.list[index].pendding = false;
+      this.ourStaff = Object.assign({},this.ourStaff);
+    },
+    // /**
+    //  * 删除 本院人员 数据
+    //  */
+    // async deleteItem(item){},
     /**
      * 修改协作 按钮 被点击
      */
@@ -553,6 +697,7 @@ export default {
         query: this.outerCourt.searchKey,
         departmentId: this.outerCourt.departmentSelect.orgCode || ""
       });
+      console.log(res)
       if (res.data.errCode === 0) {
         this.outerCourt.list = res.data.body.data2.list;
         this.outerCourt.page.total = res.data.body.data2.total;
@@ -587,10 +732,12 @@ export default {
       this.ourStafAlert.data.phone = "";
       this.ourStafAlert.data.account = "";
       this.ourStafAlert.data.psd = "";
-      this.ourStafAlert.data.department.select = [];
-      this.ourStafAlert.data.manDepartment.select = "";
+      this.ourStafAlert.data.department.select = '';
+      this.ourStafAlert.data.manDepartment.select = [];
       this.ourStafAlert.data.docBus.select = [];
       this.ourStafAlert.data.manbus.select = [];
+      this.ourStafAlert = Object.assign({},this.ourStafAlert);
+      
     },
     /**
      * 本院人员 页码被选中
@@ -711,7 +858,7 @@ export default {
      */
     ourStafClose(done) {
       this.initOurStafAlertData();
-      done();
+      // done();
     },
     /**
      * 取出嵌套数组需要的值
@@ -849,8 +996,8 @@ export default {
           name: this.ourStafAlert.data.name,
           passwd: this.ourStafAlert.data.psd,
           phone: this.ourStafAlert.data.phone,
-          deptIds: this.ourStafAlert.data.department.select,
-          manageDeptId: [this.ourStafAlert.data.manDepartment.select],
+          deptIds: [this.ourStafAlert.data.department.select],
+          manageDeptId: this.ourStafAlert.data.manDepartment.select,
           authorizes: [
             ...this.ourStafAlert.data.docBus.select.map(item => {
               return {
@@ -867,6 +1014,8 @@ export default {
           ]
         }
       ];
+
+      console.log(postData)
       const res = await updateUser(...postData);
       console.log(res);
       if (res.data.errCode === 0) {
@@ -895,8 +1044,8 @@ export default {
         passwd: this.ourStafAlert.data.psd,
         phone: this.ourStafAlert.data.phone,
         userType: "0",
-        deptIds: this.ourStafAlert.data.department.select,
-        manageDeptId: [this.ourStafAlert.data.manDepartment.select],
+        deptIds: [this.ourStafAlert.data.department.select],
+        manageDeptId: this.ourStafAlert.data.manDepartment.select,
         authorizes: [],
         authorizes: [
           ...this.ourStafAlert.data.manbus.select.map(item => {
@@ -935,29 +1084,46 @@ export default {
      * 获取科室列表
      */
     async getDepartmentList() {
-      const res = await fetchHospitalDepts({
-        orgCode: this.userSelfInfo.orgCode
+      // this.departmentlist = this.global.manToolDept.map(item=>{
+      //   item.
+      // });
+
+      this.ourStaff.department.list = this.global.manToolDept.map(item=>{
+        item.text = item.name;
+        item.value = item.id;
+        return item;
       });
+      this.outerCourt.department.list = this.global.manToolDept.map(item=>{
+        item.text = item.name;
+        item.value = item.id;
+        return item;
+      });
+       const res = await fetchHospitalDeptAuth({
+        orgCode: this.userSelfInfo.orgCode,
+        token: this.userInfo.token,
+        type:'MANAGE'
+      });
+      console.log(res)
       if (res.data.errCode === 0) {
         this.departmentlist = JSON.parse(JSON.stringify(res.data.body));
-        this.ourStaff.department.list = JSON.parse(
-          JSON.stringify([
-            { text: "全部", deptId: "" },
-            ...res.data.body.map(item => {
-              item.text = item.deptName;
-              return item;
-            })
-          ])
-        );
-        this.outerCourt.department.list = JSON.parse(
-          JSON.stringify([
-            { text: "全部", deptId: "" },
-            ...res.data.body.map(item => {
-              item.text = item.deptName;
-              return item;
-            })
-          ])
-        );
+        // this.ourStaff.department.list = JSON.parse(
+        //   JSON.stringify([
+        //     { text: "全部", deptId: "" },
+        //     ...res.data.body.map(item => {
+        //       item.text = item.deptName;
+        //       return item;
+        //     })
+        //   ])
+        // );
+        // this.outerCourt.department.list = JSON.parse(
+        //   JSON.stringify([
+        //     { text: "全部", deptId: "" },
+        //     ...res.data.body.map(item => {
+        //       item.text = item.deptName;
+        //       return item;
+        //     })
+        //   ])
+        // );
         console.log(this.departmentlist);
       } else {
         this.$notify.error({
@@ -1017,11 +1183,15 @@ export default {
         token: this.userInfo.token,
         pageNum: this.ourStaff.ourStaffUser.page.pageNum,
         pageSize: this.ourStaff.ourStaffUser.page.pageSize,
-        departmentId: this.ourStaff.departmentSelect.deptId || ''
+        departmentId: this.ourStaff.departmentSelect.value || ''
       });
       if (res.data && res.data.errCode === 0) {
         console.log(res);
-        this.ourStaff.ourStaffUser.list = res.data.body.data2.list;
+        this.ourStaff.ourStaffUser.list = res.data.body.data2.list.map(item=>{
+          const now = new Date(item.regTime);
+          item.newTime = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;
+          return item;
+        });
         this.ourStaff.ourStaffUser.page.total = res.data.body.data2.size;
       } else {
       }
@@ -1354,5 +1524,14 @@ export default {
 .pagination-div {
   display: flex;
   justify-content: center;
+}
+.Account-authority-append-class{
+  color: red;
+}
+.ourStaf-alert-sub>button{
+  width:100%;
+}
+.Account-authority-append-class-new-class{
+  width: 2.04rem;
 }
 </style>

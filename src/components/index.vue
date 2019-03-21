@@ -23,7 +23,7 @@
 		toolRxSendStatus, toolRxReviewDoctors, toolRxSendDoctors, toolConsultationType, toolConsultationStatus, toolSynergyStatus, 	
 		toolArchivesSource, toolBusinessModel, toolBusinessType, toolFollowupType, toolFollowupMode, toolFollowupContent, toolSurveyType,
 		toolSurveyMode, toolDeviceType, toolFollowupHasPlan, queryTypeList, toolMedicalType, toolMedicalGrading, toolReferralType,
-		getAllHospital
+		getAllHospital, toolDept, stateList
 	} from '../api/apiAll.js'//api
 	
 export default {
@@ -33,6 +33,46 @@ export default {
     }
   },
   methods:{
+	  /**
+	   * 获取 筛选 科室列表(管理端)
+	   */
+	  async getManToolDept(){
+		  const res = await toolDept({
+			  	type:'MANAGE',
+				token:this.userState.token
+		  });
+		  console.log(res);
+			if(res.data&&res.data.errCode===0){
+				this.$store.commit("global/SETMANTOOLDEPT", res.data.body);
+				console.log(this.global.manToolDept)
+			}else{
+				this.$notify({
+					title: '失败',
+					message: '管理端筛选栏科室列表获取失败', 
+					type: 'error'
+				});
+			}
+	  },
+	  /**
+	   * 获取 筛选 科室列表(医生端)
+	   */
+	  async getDocToolDept(){
+		  const res = await toolDept({
+			  	type:'DOCTOR',
+				token:this.userState.token
+		  });
+		  console.log(res);
+			if(res.data&&res.data.errCode===0){
+				this.$store.commit("global/SETDOCTOOLDEPT", res.data.body);
+				console.log(this.global.docToolDept)
+			}else{
+				this.$notify({
+					title: '失败',
+					message: '医生端筛选栏科室列表获取失败', 
+					type: 'error'
+				});
+			}
+	  },
 	  /**
 	   * 获取 所有医院
 	   */
@@ -318,8 +358,8 @@ export default {
 		/**
 		 * 获取 会诊状态
 		 */
-		async getToolConsultationStatus(){
-			const res = await toolConsultationStatus({token:this.userState.token});
+		async getStateList(){
+			const res = await stateList({token:this.userState.token});
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETCONSULTATIONSTATUS", res.data.body);
@@ -530,7 +570,7 @@ export default {
 				this.getToolRxReviewDoctors(),
 				this.getToolRxSendDoctors(),
 				this.getToolConsultationType(),
-				this.getToolConsultationStatus(),
+				this.getStateList(),
 				this.getToolSynergyStatus(),
 				this.getToolArchivesSource(),
 				this.getToolBusinessModel(),
@@ -547,6 +587,8 @@ export default {
 				this.getToolMedicalGrading(),
 				this.getToolReferralType(),
 				this.getAllHospital(),
+				this.getManToolDept(),
+				this.getDocToolDept()
 			]);
 		}
   },
@@ -558,43 +600,13 @@ export default {
 		...mapState({
 				userState: state => state.user.userInfo,
 				userSelfInfo:state => state.user.userSelfInfo, 
-				global: state => state.global
+				global: state => state.global,
 		}),
   },
   created(){
-	  this.fetchAll();
-	//   debugger
-		// Promise.all([
-		// 	this.getHospitalDepts(),
-		// 	this.getGroup(),
-		// 	this.getDocumentsClassification(),
-		// 	this.getUserSource(),
-		// 	this.getHospitalArchives(),
-		// 	this.getToolRxReviewStatus(),
-		// 	this.getToolRxSendStatus(),
-		// 	this.getToolRxReviewDoctors(),
-		// 	this.getToolRxSendDoctors(),
-		// 	this.getToolConsultationType(),
-		// 	this.getToolConsultationStatus(),
-		// 	this.getToolSynergyStatus(),
-		// 	this.getToolArchivesSource(),
-		// 	this.getToolBusinessModel(),
-		// 	this.getToolBusinessType(),
-		// 	this.getToolFollowupType(),
-		// 	this.getToolFollowupMode(),
-		// 	this.getToolFollowupContent(),
-		// 	this.getToolSurveyType(),
-		// 	this.getToolSurveyMode(),
-		// 	this.getToolDeviceType(),
-		// 	this.getToolFollowupHasPlan(),
-		// 	this.getQueryTypeList(),
-		// 	this.getToolMedicalType(),
-		// 	this.getToolMedicalGrading(),
-		// 	this.getToolReferralType(),
-		// 	this.getAllHospital(),
-		// ]);
-		
-  }
+	this.fetchAll();
+  },
+  
 }
 </script>
 

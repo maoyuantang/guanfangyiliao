@@ -3124,3 +3124,59 @@ export const patientInfo = query => { //1.获取患者信息
         }
     })
 }
+export const getUserItemInfo = query => { //3.8获取用户信息
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.getUserItemInfo,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const deleteUserItem = (query, data) => {//3.5首页-账号及权限-删除用户
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.deleteUserItem,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const listBusRange = query => { //3.9获取医生业务范围
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.listBusRange,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const fetchHospitalDeptAuth = query => { //1.2.1.获取医院科室列表（新）主要用于表单选择
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.fetchHospitalDeptAuth,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const stateList = query => { //7.进行状态筛选条件列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.stateList,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

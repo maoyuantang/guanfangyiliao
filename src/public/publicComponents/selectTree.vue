@@ -1,5 +1,7 @@
 <template>
   <div class="select-tree" @click.stop>
+      <!-- {{select.map(item=>item.id)}} -->
+      <!-- {{checked}} -->
      <div class="inner">
         <el-input
             placeholder="本账号范围内可多选"
@@ -14,7 +16,8 @@
                     :data="inData"
                     show-checkbox
                     node-key="id"
-                    :default-checked-keys="select.map(item=>item.id)"
+                    :default-checked-keys="checked"
+                    :check-change="test"
                     ref="tree"
                     @check="selectItem">
                 </el-tree>
@@ -26,18 +29,25 @@
 
 <script>
 export default {
+  watch:{
+      select(n){
+          console.log(n)
+      }
+  },
   data() {
     return {
+        checked:[],
         show:false
     };
   },
   methods:{
+    test(){},
     isShow(){
         this.show = !this.show
     },
     selectItem(){
         console.log(this.$refs.tree.getCheckedKeys())
-        this.$emit("reback",this.$refs.tree.getCheckedNodes(false,true));
+        this.$emit("reback",this.$refs.tree.getCheckedNodes(false,false));
     },
     unShow(){
         this.show = false;
@@ -56,6 +66,14 @@ export default {
   created() {
     this.documentClick();
     console.log(this.inData)
+    console.log(this.select)
+    let arr = [];
+    this.select.forEach(item => {
+        if (item.id) {
+            arr.push(item.id);
+        }
+    });
+    this.checked = arr;
   },
   beforeDestroy(){
     this.clearListen();
@@ -80,7 +98,7 @@ export default {
 }
 .list-inner{
     position: relative;
-    transition: 2s;
+    transition: 1s;
     /* overflow: hidden; */
     border-radius: 4px;
     border: 1px solid #E5EDF3;

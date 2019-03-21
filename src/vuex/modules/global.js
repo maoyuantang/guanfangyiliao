@@ -29,9 +29,22 @@ export default {
         classificationDiagnosisTreatment:[],//分级诊疗 分级
         TwoReferralDirection:[],//双向转诊 方向
         allHospital:[],//所有医院
-
+        manToolDept:[],//筛选 科室列表(管理端)
+        docToolDept:[],//筛选 科室列表(医生端)
 	},
 	mutations:{
+        /**
+         * 设置 筛选 科室列表(医生端)
+         */
+        SETDOCTOOLDEPT(state,data){
+            state.docToolDept = data;
+        },
+        /**
+         * 设置 筛选 科室列表(管理端)
+         */
+        SETMANTOOLDEPT(state,data){
+            state.manToolDept = data;
+        },
          /**
          * 设置 所有医院
          */

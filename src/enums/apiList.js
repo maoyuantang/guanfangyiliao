@@ -297,6 +297,11 @@ export default {
     seeRemark:'/m/v1/api/clinic/remark/fetch',//查看备注
     patientInfo:'/m/v1/api/record/nosocomialRecord/patientInfo',//1.获取患者信息
     SETEQUIPMENT  :'/m/v1/api/followup/followupRemind/countAlert',
-   SETFOLLOWCHART   :'/m/v1/api/followup/followupRemind/countFollowup',
+    SETFOLLOWCHART   :'/m/v1/api/followup/followupRemind/countFollowup',
+    getUserItemInfo:'/m/v1/api/user/user/userInfo',//3.8获取用户信息
+    deleteUserItem:'/m/v1/api/user/deleteUser',//3.5首页-账号及权限-删除用户
+    listBusRange:'/m/v1/api/user/user/listBusRange',//3.9获取医生业务范围
+    fetchHospitalDeptAuth:'/m/v1/api/basics/hospital/fetchHospitalDeptAuth',//1.2.1.获取医院科室列表（新）主要用于表单选择
+    stateList:'/m/v1/api/inquiry/eduCourse/stateList',//7.进行状态筛选条件列表
 }
 

@@ -58,6 +58,8 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex'
+
     import visitingRecord from './inSide/visitingRecord.vue'//就诊记录
     import prescription from './inSide/prescription.vue'//处方
     import check from './inSide/check.vue'//检验
@@ -71,6 +73,7 @@
     import hospitalizationOrder from './inSide/hospitalizationOrder.vue'//住院医嘱
     import comprehensive from './inSide/comprehensive.vue'//综合影像
     
+    import {patientInfo} from '../../api/apiAll.js' 
 	export default {
         props: ['inData'],
 		components:{
@@ -91,7 +94,10 @@
 			
 		},
 		computed:{
-			
+			...mapState({
+                userInfo:state => state.user.userInfo,
+                userSelfInfo:state => state.user.userSelfInfo
+			}),
 		},
 		
 		data () {
@@ -256,10 +262,22 @@
                 // this.navList[this.nowNav].childModuleIndex = index;
                 this.showModules.index = index;
             },
+            /**
+             * 获取 患者信息
+             */
+            async getPatientInfo(){
+                const res = await patientInfo({
+                    token:this.userInfo.token,
+                    orgCode:this.userSelfInfo.orgCode,
+                    familyMemberId:this.inData.id
+                });
+                console.log(res)
+            },
 			
 		},
 		async created(){
-			console.log(this.inData)
+            console.log(this.inData);
+            this.getPatientInfo();
 		}
 	}
 </script>

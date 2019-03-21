@@ -32,7 +32,7 @@
 		methods: {
 		},
 		async created(){
-		}
+		},
 	}
 </script>
 

@@ -200,6 +200,89 @@ const router = new Router({
  * 作用：路由跳转，设置title，未登录重定向
  */
 router.beforeEach((to, from, next) => {
+	const routerMap = [
+		{
+			name:'首页',
+			select:true,
+			path:'/',
+			code:0
+		},
+		{
+			name:'远程门诊系统',
+			select:false,
+			path:'/outpatient',
+			code:'10000'
+		},
+		{
+			name:'远程会诊系统',
+			select:false,
+			path:'/consultation',
+			code:'20000'
+		},
+		{
+			name:'远程协作系统',
+			select:false,
+			path:'/cooperation',
+			code:'30000'
+		},
+		{
+			name:'智能随访系统',
+			select:false,
+			path:'/followUp',
+			code:'40000'
+		},
+		{
+			name:'健康档案系统',
+			select:false,
+			path:'/files',
+			code:'50000'
+		},
+		{
+			name:'远程教育系统',
+			select:false,
+			path:'/education',
+			code:'60000'
+		},
+			{
+			name:'分级诊疗系统',
+			select:false,
+			path:'/medicalTreatment',
+			code:'70000'
+		},
+			{
+			name:'双向转诊系统',
+			select:false,
+			path:'/referral',
+			code:'80000'
+		},
+			{
+			name:'移动查房系统',
+			select:false,
+			path:'/rounds',
+			code:'90000'
+		},
+			{
+			name:'终端管理系统',
+			select:false,
+			path:'/management',
+			code:'100000'
+		},
+		{
+			name:'家医服务',
+			select:false,
+			path:'/familyMedicine',   
+			code:'110000'
+		},
+	];
+	console.log(to);
+	if(to.path === './docDetailed'){//这是新增功能 真是让人头大
+		sessionStorage.setItem('page',JSON.stringify({
+			name:to.meta.title,
+			select:true,
+			path: to.path,
+			code:routerMap.find(item=>item.path === to.path)?routerMap.find(item=>item.path === to.path).code:''
+		}));//存缓存
+	}
 	if(!store.state.user.userInfo.isLogin&&to.path!=='/login'){//vuex中没有用户信息，并且不在登录页面,检查缓存中有没有数据，判断是否是刷新
 		let userInfo = sessionStorage.getItem('userInfo');//用户信息
 		let userSelfInfo = sessionStorage.getItem('userSelfInfo');//用户个人信息
