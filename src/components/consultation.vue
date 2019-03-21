@@ -366,7 +366,6 @@ export default {
                         text: "今日",
                         value: "TODAY"
                     }
-<<<<<<< HEAD
                 ]
             },
             columnsDoc: [
@@ -386,13 +385,12 @@ export default {
                 {
                     prop: "doctor",
                     label: "发起医生"
-=======
+					}
                 ],
                 invitationData: [],
                 defaultProps: {
                     children: "children",
                     label: "name"
->>>>>>> 4dea425ab2290317b6e70c66fd3a0f87e2a1a1a0
                 },
                 {
                     prop: "applicationTime",

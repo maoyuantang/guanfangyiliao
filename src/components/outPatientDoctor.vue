@@ -551,14 +551,9 @@
 
     <!-- 视频聊天 -->
     <div v-if="centerDialogVisible">
-<<<<<<< HEAD
       <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()"  :showClose="VideoshowClose">
         <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"
           @reback="videoclick">
-=======
-      <el-dialog title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
-        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick">
->>>>>>> 4dea425ab2290317b6e70c66fd3a0f87e2a1a1a0
         </ovideo>
       </el-dialog>
     </div>
