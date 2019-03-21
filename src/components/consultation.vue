@@ -875,6 +875,7 @@
             },
             //管理端事件
             getConsulTabData(res) {
+                console.log(res.i)
                 if (res.i == 0) {
                     this.oconsulVisable = true;
                     this.getAdminList();

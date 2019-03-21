@@ -1319,6 +1319,7 @@
     padding-left: 0.38rem;
     margin-right: 0.36rem;
     margin-top: 0.42rem;
+    overflow: auto;
   }
 
   .medical_body1 {
@@ -1350,6 +1351,7 @@
     display: -webkit-flex;
     justify-content: space-between;
     margin: 0 0 0.2rem 0;
+    white-space: nowrap;
   }
 
   .medical_nav_left {
