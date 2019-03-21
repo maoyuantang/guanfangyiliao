@@ -96,7 +96,7 @@
         </div>
         <div class="sendIcon">
             <span title="发送图片">
-                <el-upload class="upload-demo upload-demo-chat" :action="ourl" :on-success="imgUpload" :limit="1">
+                <el-upload class="upload-demo upload-demo-chat" :action="ourl" :on-success="imgUpload" :multiple='oImgVisable'>
                     <el-button size="small" type="primary">点击上传</el-button>
 
                 </el-upload>
@@ -403,7 +403,8 @@ export default {
             ],
             oMsgId: "",
             ReadMessage: "", //已读未读
-            loadMoreVisable: false //加载更多是否显示
+            loadMoreVisable: false, //加载更多是否显示
+            oImgVisable:false,
         };
     },
     computed: {

@@ -5,18 +5,19 @@
             <div class="row">
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
-                        <div id="remoteVideos"></div>
+                        <div id="remoteVideos" v-loading="loadingOther" element-loading-text="正在等待对方接受邀请" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)"></div>
                         <div class="videoChatBtn" v-show="questVisable" @click="videoChatBtn()">
                             问诊工具
                         </div>
                     </div>
                     <div class="col-xs-12 media-box us-media">
-                        <div id="localVideos">
-
-                        </div>
                         <div class="localVideos1" v-if="localVideoVisable">
                             <video class="localVideo1" id="video" width="640" height="480" autoplay></video>
                         </div>
+                        <div v-else id="localVideos" v-loading="loadingUs" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
+
+                        </div>
+                        
                         <div>
                             <div class="videoTopBtnBox">
                                 <div>
@@ -162,9 +163,10 @@ export default {
             closePatientNumVisable: false,
             videoChatVisable: false,
             doctorVis: 1,
-            videoIng: 0
+            videoIng: 0,
+            loadingUs:true,
             // loadingUs:true,
-            // loadingOther:true,
+            loadingOther:true,
         };
     },
     methods: {
@@ -1178,11 +1180,12 @@ export default {
         },
         //初始化配置
         firstSet() {
-            // alert("初始化配置");
+            
             let _this = this;
-            var server = $("#server").val();
+            // var server = $("#server").val();
             // var server=this.oSeaver
             var server = "meet.xiaoqiangio.com";
+            alert("初始化配置"+server);
             if (!server) {
                 alert("请输入服务器地址");
                 return false;
@@ -1206,7 +1209,7 @@ export default {
         },
         //登录
         videoLogin() {
-            // alert("登陆");
+            alert("登陆");
             let _this = this;
             // var username = $("#username").val();
             // var username=this.oUser
@@ -1292,8 +1295,7 @@ export default {
          * 匿名加入到房间
          */
         anonymousJoinRoomBtn() {
-            // alert("匿名加入到房间");
-            // alert(this.createVideoRoomData1.conferenceNumber);
+            alert("匿名加入到房间"+this.createVideoRoomData1.conferenceNumber);
             let _this = this;
             // var conferenceName = $("#anonymousConferenceName").val();
             let conferenceName = this.createVideoRoomData1.conferenceNumber;
@@ -1979,6 +1981,7 @@ video {
 }
 .videoBtn {
     position: absolute;
+    z-index: 9999;
     display: flex;
     display: -webkit-flex;
 
@@ -2002,6 +2005,7 @@ video {
 .videoTopBtnBox {
     position: absolute;
     top: 10px;
+    z-index: 999999;
     width: 100%;
     display: flex;
     display: -webkit-flex;

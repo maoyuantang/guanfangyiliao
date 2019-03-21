@@ -22,35 +22,37 @@
 
 
 				<div class="online-clinic-middle">
-					<el-table :data="tableData" style="width: 100%;" :max-height="550" :cell-class-name="ceshi0"
-						@cell-click="relateDoctors1">
-						<el-table-column fixed prop="id" label="业务编号"></el-table-column>
-						<el-table-column prop="departmentName" label="科室"></el-table-column>
-						<el-table-column prop="fullName" label="业务名"></el-table-column>
-						<el-table-column prop="price" label="价格"></el-table-column>
-						<el-table-column prop="doctors" label="关联医生"></el-table-column>
-						<el-table-column prop="totalPeople" label="业务人次"></el-table-column>
-						<el-table-column prop="totalIncome" label="总收入"></el-table-column>
-						<el-table-column prop="queuePeople" label="当前排队"></el-table-column>
-						<el-table-column prop="updateTime" label="最近修改"></el-table-column>
+					<el-table :data="tableData" style="width: 100%;" :max-height="550" :cell-class-name="ceshi0" @cell-click="relateDoctors1">
+						<el-table-column prop="id" label="业务编号" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="departmentName" label="科室" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="fullName" label="业务名" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="price" label="价格" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="doctors" label="关联医生" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="totalPeople" label="业务人次" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="totalIncome" label="总收入" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="queuePeople" label="当前排队" :show-overflow-tooltip="true"></el-table-column>
+						<el-table-column prop="updateTime" label="最近修改" :show-overflow-tooltip="true"></el-table-column>
 
-						<el-table-column fixed="right" label="" width="300">
+						<el-table-column label="操作" width="300">
 							<template slot-scope="scope">
-								<el-button @click="isShowViewDetailFun(scope.row)" type="success" plain size="mini"
+								<button class="lanSe" @click="isShowViewDetailFun(scope.row)">查看详情</button>
+								<button class="lvSe" @click="isShowEditFun(scope.row)">编辑</button>
+								<button class="fenSe" v-if="scope.row.state" @click="isShowForbidFun(scope.row)">禁用</button>
+								<button class="huangSe" v-else @click="isShowForbidFun(scope.row)">解除禁用</button>
+								<!-- <el-button @click="isShowViewDetailFun(scope.row)" type="success" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">查看详情</el-button>
 								<el-button @click="isShowEditFun(scope.row)" type="primary" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">编辑</el-button>
 								<el-button v-if="scope.row.state" @click="isShowForbidFun(scope.row)" type="danger" plain size="mini"
 									style="margin:0.05rem 0 0.05rem 0;">禁用</el-button>
 								<el-button v-else @click="isShowForbidFun(scope.row)" type="danger" plain size="mini"
-									style="margin:0.05rem 0 0.05rem 0;">解除禁用</el-button>
+									style="margin:0.05rem 0 0.05rem 0;">解除禁用</el-button> -->
 							</template>
 						</el-table-column>
 					</el-table>
 				</div>
 				<div style="text-align: center;padding: 10px 0;">
-					<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
-						@current-change="currentChange1">
+					<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
 					</el-pagination>
 				</div>
 			</div>
@@ -74,10 +76,9 @@
 
 				</div>
 				<div class="online-clinic-middle">
-					<publicList :columns="prescriptionAuditDistribution.tableBody.columns"
-						:tableData="prescriptionAuditDistribution.tableBody.tableData"
-						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :cellColor="cellColor" :pageSize="pageSize"
-						:total="totals" @reback="currentChange2">
+					<publicList :columns="prescriptionAuditDistribution.tableBody.columns" :tableData="prescriptionAuditDistribution.tableBody.tableData"
+					 :tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :cellColor="cellColor" :pageSize="pageSize" :total="totals"
+					 @reback="currentChange2">
 					</publicList>
 				</div>
 			</div>
@@ -104,16 +105,18 @@
 		</div>
 		<!-- 新增门诊弹框 -->
 		<addNewFrame :inData="addData" @reback="getData" @department="getDepartment" @getAgreementSelect="getSelectInfo"
-			:sureVisiable="sureVisiable"></addNewFrame>
+		 :sureVisiable="sureVisiable"></addNewFrame>
 		<!-- 表一查看关联医生弹框 -->
 		<div v-if="isShowrelationalDoctor">
-			<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="500px"
-				max-hight="450px" center>
+			<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="500px" max-hight="450px"
+			 center>
 				<ul>
 					<li v-for="(text,index) in relationalDoctor" :key="index">
 						<div class="evaluateCont1">
 							<!-- 待头像 -->
-							<img src="../assets/img/ME.png" />
+							<img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
+							<img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'
+							 alt="医生头像">
 							<h5>{{text.doctorName}}</h5>
 						</div>
 						<div class="evaluateCont2">
@@ -128,9 +131,9 @@
 
 		<!-- 总+今日+订单详情+弹框 -->
 		<div v-if="isShowRecord">
-			<el-dialog class="  " title="订单详情" :visible.sync="isShowRecord" center width=70%>
+			<el-dialog class="offerDetial" title="订单详情" :visible.sync="isShowRecord" center width=70%>
 				<el-table :data="tableDataChat" style="width: 100%;" @cell-click="relateDoctors2" :max-height="450">
-					<el-table-column fixed prop="orderNo" label="订单号"></el-table-column>
+					<el-table-column prop="orderNo" label="订单号"></el-table-column>
 					<el-table-column prop="doctorName" label="接诊医生"></el-table-column>
 					<el-table-column prop="mode" label="接诊方式"></el-table-column>
 					<el-table-column prop="fee" label="门诊费"></el-table-column>
@@ -139,7 +142,7 @@
 					<el-table-column prop="userName" label="病人"></el-table-column>
 					<el-table-column prop="orderTime" label="问诊时间"></el-table-column>
 					<el-table-column prop="rxFee" label="问诊费"></el-table-column>
-					<el-table-column fixed="right" label="" width="200px">
+					<el-table-column label="操作" width="300">
 						<template slot-scope="scope">
 							<el-button @click="isShowRecordChatFun(scope.row)" type="text" size="small">聊天记录</el-button>
 						</template>
@@ -151,7 +154,8 @@
 		<!-- 查看详情弹框中的聊天弹框 -->
 		<div v-if="isShowRecordChat">
 			<el-dialog class="" title="聊天记录" :visible.sync="isShowRecordChat" center>
-				<viewRecord :storyMessage="messageRecord"></viewRecord>
+				<viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord>
+				<noData v-if="!messageRecord"></noData>
 			</el-dialog>
 		</div>
 
@@ -161,8 +165,7 @@
 		<!-- 处方详情 -->
 		<div v-if="chuFangDetailList2">
 			<el-dialog title="处方详情" :visible.sync="chuFangDetailList2" center>
-				<img style="width:100%"
-					:src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userState.token+"&prescriptionId="+srcs'>
+				<img style="width:100%" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userState.token+"&prescriptionId="+srcs'>
 			</el-dialog>
 		</div>
 
@@ -190,7 +193,8 @@
 		<!-- 查看处方配送记录 -->
 		<div v-if="viewRecordList2">
 			<el-dialog class="  " title="处方配送聊天记录" :visible.sync="viewRecordList2" width="602px" hight="356px" center>
-				<viewRecord :storyMessage="messageRecord"></viewRecord>
+				<viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord>
+				<noData v-if="!messageRecord"></noData>
 			</el-dialog>
 		</div>
 
@@ -241,6 +245,7 @@
 	import search from '../public/publicComponents/search.vue'
 	import publicList from '../public/publicComponents/publicList.vue'
 	import normalColumnChart from '../public/publicComponents/normalColumnChart.vue'
+	import noData from '../public/publicComponents/noData.vue'
 	import statisticsWay from '../public/publicComponents/statisticsWay.vue'
 	import addNewFrame from '../public/publicComponents/addNewFrame.vue'
 	import viewRecord from './xiezuo/viewRecord.vue'
@@ -256,6 +261,7 @@
 			statisticsWay,
 			addNewFrame,
 			viewRecord,
+			noData,
 		},
 		data() {
 			return {
@@ -319,7 +325,7 @@
 				sendDoctorId: "",//发药医生
 				reviewDoctorId: "",//审核医生
 				sendEnum: "",//配送状态（UNSEND, //未配送；SENDING, //配送中；SENDOVER, //已签收）
-				messageRecord: [],//查看记录拉回来的历史消息
+				messageRecord: "",//查看记录拉回来的历史消息
 				//管理统计端  统计筛选返回值  接收参数
 				time0: "2017-06-01",//统计筛选起始时间
 				time1: "2019-01-25",//统计筛选结束时间
@@ -393,50 +399,50 @@
 					},
 					departmentList: {//科室列表 
 						default: {
-							label: '',
-							value: '1'
+							// label: '',
+							// value: '1'
 						},
 						list: [
-							{
-								label: '科室列表1',
-								value: '1'
-							},
-							{
-								label: '科室列表2',
-								value: '2'
-							}
+							// {
+							// 	label: '科室列表1',
+							// 	value: '1'
+							// },
+							// {
+							// 	label: '科室列表2',
+							// 	value: '2'
+							// }
 						]
 					},
 					doctorList: {//医生列表 
 						default: [
-							'1'
+							// '1'
 						],
 						list: [
-							{
-								label: '医生1',
-								value: '1'
-							},
-							{
-								label: '医生2',
-								value: '2'
-							},
-							{
-								label: '医生3',
-								value: '3'
-							}
+							// {
+							// 	label: '医生1',
+							// 	value: '1'
+							// },
+							// {
+							// 	label: '医生2',
+							// 	value: '2'
+							// },
+							// {
+							// 	label: '医生3',
+							// 	value: '3'
+							// }
 						]
 					},
 					businessDescription: '',//业务描述
 					servicePhone: '',//服务电话
 					agreement: {
 						default: {
-							label: '协议1',
-							value: '1'
+							// label: '协议1',
+							// value: '1'
 						},
 
 						list: [
-							{ label: '协议1', value: '1' },
-							{ label: '协议2', value: '2' },
+							// { label: '协议1', value: '1' },
+							// { label: '协议2', value: '2' },
 						],
 						showContent: ''
 					},
@@ -579,21 +585,21 @@
 						tableBtn: [
 							{
 								name: "处方详情",
-								oclass: "btn1",
+								oclass: "lanSe",
 								method: (index, row) => {
 									this.chuFangDetailList2Fun(index, row);
 								}
 							},
 							{
 								name: "物流状态",
-								oclass: "btn2",
+								oclass: "lanSe",
 								method: (index, row) => {
 									this.roadStatusList2Fun(index, row);
 								}
 							},
 							{
 								name: "聊天记录",
-								oclass: "btn3",
+								oclass: "lanSe",
 								method: (index, row) => {
 									this.viewRecordList2Fun(index, row);
 								}
@@ -674,8 +680,8 @@
 				this.departmentId = data.index.value;
 				console.log(this.departmentId)
 				this.getList1();
-				this.getList2();
-				this.getList3();
+				// this.getList2();
+				// this.getList3();
 			},
 			getSelect1(data) {//审核状态
 				console.log(data)
@@ -725,16 +731,18 @@
 			async getFilter0(data) {
 				// console.log(this.userInfo.rooter)
 				// console.log(this.userInfo.manager)
-				if (this.userInfo.manager) {
-					this.types = 'MANAGE'
-				} else {
-					this.types = 'DOCTOR'
-				}
+				// if (this.userState.manager) {
+				// 	this.types = 'MANAGE'
+				// } else {
+				// 	this.types = 'DOCTOR'
+				// }
 				const _this = this
 				let query = {
 					token: this.userState.token,
-					type: this.types
+					type: 'MANAGE'
 				};
+				console.log(this.userInfo.manager)
+				console.log(query)
 				const res = await toolDept(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('1.21.1.科室工具栏 +成功')
@@ -948,7 +956,7 @@
 							if (lists[j].doctors[i].doctorStates & lists[j].doctors[i].doctorStates === true) {
 								lists[j].doctors[i].doctorStates = '接诊中...'
 							} else {
-								lists[j].doctors[i].doctorStates = '离线中'
+								lists[j].doctors[i].doctorStates = '未接诊'
 							}
 						}
 					}
@@ -1051,27 +1059,28 @@
 			async isShowRecordChatFun(data) {
 				this.isShowRecordChat = true;
 				console.log(data)
-				let query = {
-					token: this.userState.token
-				};
-				let options = {
-					userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
-					sessionId: [data.bindSessionId],//目标会话ID集合/数组
-					msgId: 100,//拉取节点（从这个节点开始拉取历史消息）
-					pageNums: 15//每页拉取数量
-				};
-				const res = await fetchHistoryMessage(query, options);
-				if (res.data && res.data.errCode === 0) {
-					console.log(res)
-					this.messageRecord = res.data.body
-					console.log("聊天记录+成功");
-				} else {
-					console.log('聊天记录+失败')
-					this.$notify.error({
-						title: "警告",
-						message: res.data.errMsg
-					});
-				}
+				this.messageRecord = data.bindSessionId
+				// let query = {
+				// 	token: this.userState.token
+				// };
+				// let options = {
+				// 	userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
+				// 	sessionId: [data.bindSessionId],//目标会话ID集合/数组
+				// 	msgId: 100,//拉取节点（从这个节点开始拉取历史消息）
+				// 	pageNums: 15//每页拉取数量
+				// };
+				// const res = await fetchHistoryMessage(query, options);
+				// if (res.data && res.data.errCode === 0) {
+				// 	console.log(res)
+				// 	this.messageRecord = res.data.body
+				// 	console.log("聊天记录+成功");
+				// } else {
+				// 	console.log('聊天记录+失败')
+				// 	this.$notify.error({
+				// 		title: "警告",
+				// 		message: res.data.errMsg
+				// 	});
+				// }
 			},
 			async relateDoctors2(row, column, cell, event) {
 				console.log(row, column)
@@ -1162,6 +1171,7 @@
 				const res = await orderYcmzCharts(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('统计图+门诊订单+成功')
+					console.log(res)
 					const lists = res.data.body.data
 					console.log(lists)
 					console.log(this.type)
@@ -1169,9 +1179,6 @@
 					this.testdata1.dataAxis.length = 0
 					this.testdata1.data.length = 0
 					$.each(lists, function (index, text) {
-						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
-						// _this.monthToYearDoor.months.push(text.x)
-						// _this.monthToYearDoor.years.push(text.y)
 						_this.yTotal1 += text.y;
 						_this.testdata1.dataAxis.push(text.x)
 						_this.testdata1.data.push(text.y)
@@ -1203,6 +1210,7 @@
 				const res = await orderRxCharts(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('统计图+处方订单+成功')
+					console.log(res)
 					const lists = res.data.body.data
 					console.log(lists)
 					console.log(this.type)
@@ -1210,9 +1218,6 @@
 					this.testdata2.dataAxis.length = 0
 					this.testdata2.data.length = 0
 					$.each(lists, function (index, text) {
-						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
-						// _this.monthToYearDoor.months.push(text.x)
-						// _this.monthToYearDoor.years.push(text.y)
 						_this.yTotal2 += text.y;
 						_this.testdata2.dataAxis.push(text.x)
 						_this.testdata2.data.push(text.y)
@@ -1245,16 +1250,14 @@
 				const res = await statisticsPeople(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('统计图+就诊人次+成功')
-					const lists = res.data.body.data
+					console.log(res)
+					const lists = res.data.body
 					console.log(lists)
 					console.log(this.type)
 					this.yTotal3 = 0
 					this.testdata3.dataAxis.length = 0
 					this.testdata3.data.length = 0
 					$.each(lists, function (index, text) {
-						//默认开始结束时间还没有获取，需要获取new data  ，还没有处理后台数据
-						// _this.monthToYearDoor.months.push(text.x)
-						// _this.monthToYearDoor.years.push(text.y)
 						_this.yTotal3 += text.y;
 						_this.testdata3.dataAxis.push(text.x)
 						_this.testdata3.data.push(text.y)
@@ -1466,7 +1469,7 @@
 					this.addData.departmentList.default = departmentLista;//科室
 					$.each(lists.doctors, function (index, text) {
 						_this.addData.doctorList.default.push(JSON.stringify(text.doctorId))//关联医生
-						_this.addData.doctorList.list.push({ label: text.doctorName, value: JSON.stringify(text.doctorId) })
+						// _this.addData.doctorList.list.push({ label: text.doctorName, value: JSON.stringify(text.doctorId) })
 					})
 					this.addData.agreement.default = { label: lists.protocolName, value: JSON.stringify(lists.protocolId) }//协议id
 					this.addData.agreement.list.push({ label: lists.protocolName, value: JSON.stringify(lists.protocolId) })
@@ -1510,7 +1513,7 @@
 					this.addData.departmentList.default = departmentLista;//科室
 					$.each(lists.doctors, function (index, text) {
 						_this.addData.doctorList.default.push(text.doctorId)//关联医生
-						_this.addData.doctorList.list.push({ label: text.doctorName, value: text.doctorId })
+						// _this.addData.doctorList.list.push({ label: text.doctorName, value: text.doctorId })
 						console.log(text.doctorId)
 					})
 					this.addData.agreement.default = { label: lists.protocolName, value: lists.protocolId }//协议id
@@ -1597,27 +1600,28 @@
 			async viewRecordList2Fun(index, row) {
 				this.viewRecordList2 = true;
 				console.log(index, row)
-				let query = {
-					token: this.userState.token
-				};
-				let options = {
-					userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
-					sessionId: [row.prescriptionSessionId],//目标会话ID集合/数组
-					msgId: 100,//拉取节点（从这个节点开始拉取历史消息）
-					pageNums: 15//每页拉取数量
-				};
-				const res = await fetchHistoryMessage(query, options);
-				if (res.data && res.data.errCode === 0) {
-					console.log(res)
-					this.messageRecord = res.data.body
-					console.log("聊天记录+成功");
-				} else {
-					console.log('聊天记录+失败')
-					this.$notify.error({
-						title: "警告",
-						message: res.data.errMsg
-					});
-				}
+				this.messageRecord = row.prescriptionSessionId
+				// let query = {
+				// 	token: this.userState.token
+				// };
+				// let options = {
+				// 	userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
+				// 	sessionId: [row.prescriptionSessionId],//目标会话ID集合/数组
+				// 	msgId: 100,//拉取节点（从这个节点开始拉取历史消息）
+				// 	pageNums: 15//每页拉取数量
+				// };
+				// const res = await fetchHistoryMessage(query, options);
+				// if (res.data && res.data.errCode === 0) {
+				// 	console.log(res)
+				// 	this.messageRecord = res.data.body
+				// 	console.log("聊天记录+成功");
+				// } else {
+				// 	console.log('聊天记录+失败')
+				// 	this.$notify.error({
+				// 		title: "警告",
+				// 		message: res.data.errMsg
+				// 	});
+				// }
 
 
 				//废弃接口
@@ -1661,14 +1665,16 @@
 						clinicType: data.businessTypeList.default.label,//String true 远程门诊类型 
 						clinicName: data.businessName.label,//String true 远程门诊名 
 						clinicPrice: data.businessPrice.label,//long true 远程门诊价格 
-						clinicDepartmentId: data.departmentList.default.value,//待请求的  String true 远程门诊科室id 
+						clinicDepartmentId: data.departmentList.default.value,//String true 远程门诊科室id 
+
+						orgCode: this.userInfo.hospitalCode,//String true 远程门诊医院id 
 						clinicDoctors: data.doctorList.default,//List true 远程门诊医生 
 						clinicDesc: data.businessDescription,//String true 远程门诊描述 
-						clinicProtocolContent: this.addData.agreement.showContent,//String true 远程门诊协议内容 
-						clinicPhone: data.servicePhone,//String true 远程门诊电话 
-						orgCode: this.userInfo.hospitalCode,//医院代码
+
 						clinicProtocolId: this.clinicProtocolId,//String false 远程门诊协议id（选择协议时必传，非选择的协议可不传） 
 						clinicProtocolName: this.clinicProtocolName,//String true 远程门诊协议名 
+						clinicProtocolContent: this.addData.agreement.showContent,//String true 远程门诊协议内容 
+						clinicPhone: data.servicePhone,//String true 远程门诊电话 
 						status: this.state//boolean false 远程门诊状态（禁用操作时值必传） 
 					};
 					// console.log(query, options)
@@ -1770,6 +1776,12 @@
 
 	.hospital-management-outpatient-nav {}
 
+	.offerDetial {
+		/deep/ .el-dialog {
+			margin-top: 22vh !important;
+		}
+	}
+
 	.out-border {
 		background: #FFF;
 		border: 1px solid var(--color5);
@@ -1781,9 +1793,26 @@
 		/* min-height: 76vh; */
 		margin-right: 0.36rem;
 		margin-top: 0.42rem;
+
+
 	}
 
 	.online-clinic {}
+
+
+	/deep/ .el-table__header-wrapper th {
+		font-family: PingFangSC-Semibold;
+		font-size: 14px;
+		color: #5E6875;
+		letter-spacing: 0;
+	}
+
+	/deep/ .el-table__body-wrapper td {
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #5E6875;
+		letter-spacing: 0;
+	}
 
 	.online-clinic-top {
 		display: flex;
@@ -1839,12 +1868,20 @@
 	}
 
 	.evaluateBox1 {
-		overflow-y: auto;
+		overflow: auto;
+
+		/deep/ .el-dialog {
+			margin-top: 32vh !important;
+		}
 
 		ul {
 			li {
 				display: flex;
 				align-items: center;
+				margin: 10px 0;
+				display: flex;
+				justify-content: space-between;
+				padding: 0 30px 0 0;
 
 				.evaluateCont1 {
 					display: flex;
@@ -1948,6 +1985,66 @@
 		/* background: #F3F6FA; */
 		border-radius: 4px;
 	}
-	
 
+	.online-clinic-middle /deep/ .el-table__header-wrapper .el-table__header .has-gutter tr th div {
+		text-align: center;
+		white-space: nowrap !important;
+		padding: 0;
+	}
+
+	.online-clinic-middle /deep/ .el-table__body-wrapper tr .cell {
+		text-align: center;
+		white-space: nowrap !important;
+		padding: 0;
+	}
+
+	.online-clinic-middle /deep/ .el-table__fixed-right .el-table__fixed-body-wrapper .cell {}
+
+	/* .chaKanXiangQing {
+		width: 57px;
+		height: 20px;
+		background: rgba(66, 133, 244, 0.1);
+		border: 1px solid rgba(66, 133, 244, 0.6);
+		border-radius: 3px;
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #4d7cfe;
+		line-height: 3px;
+	}
+
+	.bianJi {
+		width: 57px;
+		height: 20px;
+		background: rgba(46, 189, 65, 0.10);
+		border: 1px solid rgba(46, 189, 65, 0.60);
+		border-radius: 3px;
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #2EBD41;
+		line-height: 3px;
+	}
+
+	.jingYong {
+		width: 57px;
+		height: 20px;
+		background: rgba(254, 77, 151, 0.10);
+		border: 1px solid rgba(254, 77, 151, 0.60);
+		border-radius: 3px;
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #FE4D97;
+		line-height: 3px;
+	}
+
+	.jieChuJingYong {
+		width: 57px;
+		height: 20px;
+		background: rgba(255, 171, 43, 0.10);
+		border: 1px solid rgba(255, 171, 43, 0.60);
+		border-radius: 3px;
+		font-family: PingFangSC-Regular;
+		font-size: 12px;
+		color: #FFAB2B;
+		line-height: 3px;
+	} */
 </style>

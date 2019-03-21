@@ -12,7 +12,7 @@
 
             <div class="indexClassTable">
                 <el-table :data="planData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column fixed label=" " width="70">
+                    <el-table-column  label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -43,7 +43,7 @@
 
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" label=" " width="100">
+                    <el-table-column  label=" " width="100">
                         <template slot-scope="scope">
                             <el-button class="solveOver" @click="solveOver(scope.row,0)" type="text" size="small">处理完成</el-button>
                         </template>
@@ -63,7 +63,7 @@
 
             <div class="indexClassTable">
                 <el-table :data="warnData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column fixed label=" " width="70">
+                    <el-table-column  label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -96,7 +96,7 @@
 
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" label=" " width="100">
+                    <el-table-column label=" " width="100">
                         <template slot-scope="scope">
                             <el-button class="solveOver" @click="solveOver(scope.row,1)" type="text" size="small">处理完成</el-button>
                         </template>
@@ -116,7 +116,7 @@
 
             <div class="indexClassTable">
                 <el-table :data="followData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column fixed label=" " width="70">
+                    <el-table-column  label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -165,7 +165,7 @@
 
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" label=" " width="100">
+                    <el-table-column  label=" " width="100">
                         <template slot-scope="scope">
                             <el-button class="solveOver" @click="solveOver(scope.row,2)" type="text" size="small">处理完成</el-button>
                         </template>
@@ -185,7 +185,7 @@
 
             <div class="indexClassTable">
                 <el-table :data="consultationData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column fixed label=" " width="70">
+                    <el-table-column  label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -209,7 +209,7 @@
 
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" label=" " width="220">
+                    <el-table-column label=" " width="220">
                         <template slot-scope="scope">
                             <el-button class="seeDanganClass" @click="sendArchives(scope.row)" type="text" size="small">查看档案</el-button>
                             <el-button class="enterHuizClass" @click="enterHuiz(scope.row)" type="text" size="small">进入会诊</el-button>
@@ -232,7 +232,7 @@
 
             <div class="indexClassTable">
                 <el-table :data="cooperationData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column fixed label=" " width="70">
+                    <el-table-column  label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -248,7 +248,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="synergyNo" label=" " width="200">
-                         <template slot-scope="scope">
+                        <template slot-scope="scope">
                             {{scope.row.synergyNo}}(协作编号)
                         </template>
                     </el-table-column>
@@ -262,7 +262,7 @@
 
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" label=" " width="220">
+                    <el-table-column  label=" " width="220">
                         <template slot-scope="scope">
                             <el-button class="seeDanganClass" @click="sendArchives(scope.row)" type="text" size="small">查看档案</el-button>
                             <el-button class="enterHuizClass" @click="enterHuiz(scope.row)" type="text" size="small">进入协作</el-button>
@@ -304,35 +304,82 @@
 
         <!-- 协作邀请弹框 -->
         <div v-if="invitationVisible">
-            <el-dialog class="evaluateBox evaluateBox2" title=" 邀请医生" :visible.sync="invitationVisible" width="602px" hight="356px" center>
+            <el-dialog class="planWarnClass" title=" 邀请医生" :visible.sync="invitationVisible" width="602px" hight="356px" center>
                 <el-tree :data="invitationDataXiez" :props="defaultProps" @check="handleCheckChangeXiez" show-checkbox></el-tree>
                 <el-button type="primary" @click="sureInvitationXiez()">确认邀请</el-button>
             </el-dialog>
         </div>
         <!-- 更对计划 -->
         <div v-if="planVisible">
-            <el-dialog class="evaluateBox evaluateBox2" title="历史计划" :visible.sync="planVisible" width="602px" hight="356px" center>
+            <el-dialog class="evaluateBox evaluateBox2" title="历史计划" :visible.sync="planVisible" width="782px" hight="356px" center :show-header="showHeadViable">
                 <el-table :data="morePlanList" style="width: 100%">
-                    <el-table-column prop="date" label="日期" width="180">
+                    <el-table-column label="" width="60">
+                        <template slot-scope="scope">
+                            <img src="../../../assets/img/publicHeadImg.png" />
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="name" label="姓名" width="180">
+                    <el-table-column label=" " width="120">
+                        <template slot-scope="scope">
+                            <div>
+                                <h4>张某人</h4>
+                                <div class='planWarnPhone'>18912345689</div>
+                            </div>
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="address" label="地址">
+                    <el-table-column label=" " width="200">
+                        <template slot-scope="scope">
+                            制定时间{{scope.row.planCreateTime}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label=" " width="220">
+                        <template slot-scope="scope">
+                            开始时间{{scope.row.planStartTime}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="planStatus" label=" " width="80">
+                        <template slot-scope="scope">
+                            <span class="statusClass">{{scope.row.planStatus}}</span>
+                        </template>
                     </el-table-column>
                 </el-table>
+                <el-pagination background layout="prev, pager, next" page-sizes="10" :total="planTotal" :current-change="currentChangePlan">
+                </el-pagination>
             </el-dialog>
         </div>
         <!-- 更对告警 -->
         <div v-if="warnVisible">
-            <el-dialog class="evaluateBox evaluateBox2" title="历史告警" :visible.sync="warnVisible" width="602px" hight="356px" center>
+            <el-dialog class="planWarnClass" title="历史告警" :visible.sync="warnVisible" width="782px" hight="356px" center>
                 <el-table :data="moreWarnList" style="width: 100%">
-                    <el-table-column prop="date" label="日期" width="180">
+                    <el-table-column label="" width="60">
+                        <template slot-scope="scope">
+                            <img src="../../../assets/img/publicHeadImg.png" />
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="name" label="姓名" width="180">
+                    <el-table-column label=" " width="120">
+                        <template slot-scope="scope">
+                            <div>
+                                <h4>张某人</h4>
+                                <div class='planWarnPhone'>18912345689</div>
+                            </div>
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="address" label="地址">
+
+                    <el-table-column label=" " width="460">
+                        <template slot-scope="scope">
+                            血压项
+                            <span class="redWord">{{scope.row.value}}</span>
+                        </template>
                     </el-table-column>
+
+                    <el-table-column prop="planStatus" label=" " width="80">
+                        <template slot-scope="scope">
+                            <span class="statusClass">{{scope.row.planStatus}}</span>
+                        </template>
+                    </el-table-column>
+
                 </el-table>
+                <el-pagination background layout="prev, pager, next" page-sizes="10" :total="warnTotal" :current-change="currentChangeWarn">
+                </el-pagination>
             </el-dialog>
         </div>
     </div>
@@ -382,8 +429,8 @@ export default {
     },
     data() {
         return {
-            planVisible:false,
-            warnVisible:false,
+            planVisible: false,
+            warnVisible: false,
             defaultProps: {
                 children: "children",
                 label: "name"
@@ -435,11 +482,24 @@ export default {
             consultationId: "",
             xiezuoId: "",
             morePlanList: [],
-            moreWarnList:[]
+            moreWarnList: [],
+            planTotal:0,
+            warnTotal:0,
+            warnNum:0,
+            planNum:0
         };
     },
 
     methods: {
+        // 分页
+        currentChangePlan(data){
+            this.planNum=data;
+            this.getMorePlanList()
+        },
+        currentChangeWarn(data){
+ this.warnNum=data;
+            this.getMoreWarnList()
+        },
         //计划列表
         async getPlanList(index) {
             let _this = this;
@@ -465,11 +525,12 @@ export default {
                 search: "",
                 startTime: "",
                 endTime: "",
-                pageNum: 1,
+                pageNum: this.planNum,
                 pageSize: 10
             };
             const res = await planHistory(query);
             if (res.data && res.data.errCode === 0) {
+                _this.planTotal=res.data.body.total
                 _this.morePlanList = res.data.body.list;
             } else {
                 //失败
@@ -504,11 +565,12 @@ export default {
                 search: "",
                 startTime: "",
                 endTime: "",
-                pageNum: 1,
+                pageNum: this.warnNum,
                 pageSize: 10
             };
             const res = await alertHistory(query);
             if (res.data && res.data.errCode === 0) {
+                _this.warnTotal=res.data.body.total
                 _this.moreWarnList = res.data.body.list;
             } else {
                 //失败
@@ -1177,5 +1239,29 @@ export default {
 }
 .startIng {
     color: #fe4d97;
+}
+.planWarnClass {
+    font-size: 14px;
+}
+.planWarnClass h4 {
+    font-family: PingFangSC-Semibold;
+    font-size: 12px;
+    color: #323c47;
+    letter-spacing: 0.5px;
+    line-height: 23px;
+}
+.planWarnPhone {
+    font-family: Lato-Regular;
+    font-size: 14px;
+    color: #939eab;
+    letter-spacing: 0;
+    line-height: 27px;
+}
+.statusClass {
+    font-family: Lato-Regular;
+    font-size: 14px;
+    color: #939eab;
+    letter-spacing: 0;
+    line-height: 27px;
 }
 </style>

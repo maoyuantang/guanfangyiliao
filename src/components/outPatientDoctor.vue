@@ -12,33 +12,37 @@
     <div class="myOuts" v-if="oconsulVisable==0">
       <ul v-for="(text,index1) in myHomes" :key="index1" class="outpatient_s">
         <li class="outpatient_left">
-          <p class="title">{{text.orgName}}-{{text.clinicName}}</p>
+          <!-- <p class="title">{{text.orgName}}-{{text.clinicName}}</p> -->
+          <p class="title">{{text.clinicName}}</p>
           <div class="outpatient_user">
-            <img src="../assets/img/ME.png" alt="">
+            <img v-if="text.doctor[0].headId == null" src="../assets/img/a-6.png" alt="医生头像">
+            <img v-if="text.doctor[0].headId"
+              :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.doctor[0].headId'
+              alt="医生头像">
             <div class="outpatient_name">
-              <p class="p1">{{text.orgName}}</p>
-              <!-- <p class="p1">{{text.doctor.doctorName}}</p> -->
-              <p class="p2">{{text.doctor.doctorStates?'没接诊':'接诊中...'}}</p>
+              <p class="p1">{{text.doctor[0].doctorName}}</p>
+              <p class="p2">{{text.doctor[0].doctorStates?'接诊中...':'未接诊'}}</p>
             </div>
           </div>
           <i></i>
           <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index'
             style="width: 90%;margin: auto;">
-            <el-table :data="text">
+            <el-table :data="text" :cell-class-name="ceshi0">
               <el-table-column prop="unProcess" label="未处理"></el-table-column>
               <el-table-column prop="process" label="已处理"></el-table-column>
               <el-table-column prop="doctorCount" label="其他医生"></el-table-column>
             </el-table>
           </div>
-          <el-button class="startConsul" type="text" @click="enterRoomBtn(text.id)">进入门诊</el-button>
+          <el-button class="startConsul" type="text" @click="enterRoomBtn(text.id)">进入诊室</el-button>
 
         </li>
 
         <li class="outpatient_right">
           <!-- 病人个数循环 -->
-          <!-- <span class="dian" @click="lookList(text.clinicOrders,text.doctor)">...</span> -->
-          <span class="dian" @click="lookList(text)">...</span>
-          <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-if="index <2">
+          <noData v-if="text.clinicOrders.length == 0"></noData>
+          <span class="dian" @click="lookList(text)" v-if="text.clinicOrders.length != 0">...</span>
+          <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-show="index <2"
+            v-if="text.clinicOrders.length != 0">
 
             <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
               <h1>{{text1.userName}}</h1>
@@ -102,7 +106,9 @@
           <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index,text)'
             :class="whichUser==index?'backgroundUser':''">
             <li>
-              <img src="../assets/img/ME.png" alt="头像">
+              <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
+              <img v-if="text.headId"
+                :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
               <div>
                 <p class="name">{{text.userName}}</p>
                 <p class="depart">问诊医生:
@@ -300,7 +306,9 @@
           <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index)'
             :class="whichUser==index?'backgroundUser':''">
             <li>
-              <img src="../assets/img/ME.png" alt="头像">
+              <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
+              <img v-if="text.headId"
+                :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
               <div>
                 <p class="name">{{text.userName}}</p>
                 <p class="depart">问诊医生:
@@ -596,12 +604,14 @@
   import chat from "../public/publicComponents/chat.vue";
   import doctorTab from "../public/publicComponents/doctorTab.vue";
   import search from "../public/publicComponents/search.vue";
+  import noData from "../public/publicComponents/noData.vue";
   import ovideo from "../video/oVideo.vue";
   export default {
     components: {
       doctorTab,
       search,
       chat,
+      noData,
       ovideo
     },
     data() {
@@ -1211,6 +1221,16 @@
             message: res.data.errMsg
           });
         }
+      },
+
+      //表格样式
+      ceshi0(data) {
+        if (data.columnIndex == 0) {
+          return 'ceshiLan'
+        }
+        else if (data.columnIndex == 1 || data.columnIndex == 2) {
+          return 'ceshiHui'
+        }
       }
     },
 
@@ -1242,7 +1262,7 @@
     padding: 0rem 0.2rem;
     margin: 0.3rem 0.3rem 0.3rem 0;
 
-    overflow-y: auto;
+    overflow: auto;
     max-height: 750px;
   }
 
@@ -1466,7 +1486,7 @@
   }
 
   .checkList {
-    width: 20%;
+    /* width: 20%; */
     height: 7rem;
     background: #ffffff;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.14);
@@ -1499,7 +1519,7 @@
     }
 
     .div {
-      overflow-y: auto;
+      overflow: auto;
 
       ul {
         display: flex;
@@ -1542,7 +1562,7 @@
   }
 
   .waitPeople {
-    width: 15%;
+    /* width: 15%; */
     /* height: 95%; */
     background: #ffffff;
     border: 1px solid #e4e8eb;
@@ -1649,7 +1669,7 @@
   }
 
   .prescriptionDetail {
-    width: 65%;
+    /* width: 65%; */
     /* height: 95%; */
     /* background: #FFFFFF; */
     /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.20); */
@@ -1854,7 +1874,7 @@
     overflow: auto;
 
     .checkList {
-      width: 20%;
+      /* width: 20%; */
       height: 7rem;
       background: #ffffff;
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.14);
@@ -1887,7 +1907,7 @@
       }
 
       .div {
-        overflow-y: auto;
+        overflow: auto;
 
         ul {
           display: flex;
@@ -1930,7 +1950,7 @@
     }
 
     .waitPeople {
-      width: 15%;
+      /* width: 15%; */
       /* height: 95%; */
       background: #ffffff;
       border: 1px solid #e4e8eb;
@@ -2032,7 +2052,7 @@
     }
 
     .prescriptionDetail {
-      width: 65%;
+      /* width: 65%; */
       /* height: 95%; */
       /* background: #FFFFFF; */
       /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.20); */

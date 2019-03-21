@@ -12,13 +12,16 @@
         <div class="moved">
           <!-- 头像姓名 -->
           <div class="moved_top">
-            <img src="../assets/img/a-6.png" />
+            <img v-if="dualReferralRecordFile.headId == null" src="../assets/img/a-6.png" alt="医生头像">
+            <img v-if="dualReferralRecordFile.headId"
+              :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+dualReferralRecordFile.headId'
+              alt="医生头像">
             <p>{{dualReferralRecordFile.patientName}}</p>
           </div>
           <!-- 转院路程 -->
           <div class="moved_middle">
             <span class="Hospital1">{{dualReferralRecordFile.applyOrgName}}</span>
-            <img src="../assets/img/a-6.png" />
+            <i class="el-icon-refresh"></i>
             <span class="Hospital1">{{dualReferralRecordFile.receiveOrgName}}</span>
           </div>
           <!-- 转院详情 -->
@@ -141,7 +144,7 @@
           </div>
           <div class="dataBody">
             <el-table :data="manageBodyData" :max-height="550" style="width: 100%">
-              <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
+              <el-table-column prop="referralNo" label="编号"></el-table-column>
               <el-table-column prop="deptName" label="科室"></el-table-column>
               <el-table-column prop="applyOrgName" label="申请医院"></el-table-column>
               <el-table-column prop="applyDeptName" label="申请科室"></el-table-column>
@@ -153,10 +156,9 @@
               <el-table-column prop="" label="方向"></el-table-column>
               <el-table-column prop="receiveTime" label="接诊时间"></el-table-column>
               <el-table-column prop="stateName" label="转诊状态"></el-table-column>
-              <el-table-column fixed="right" label="操作" width="280">
+              <el-table-column label="操作" width="300">
                 <template slot-scope="scope">
-                  <el-button @click="dualReferralRecord1(scope.row)" type="success" plain size="mini"
-                    style="margin:0.05rem 0 0.05rem 0;">查看记录</el-button>
+                  <button class="lanSe" @click="dualReferralRecord1(scope.row)">查看记录</button>
                   <!-- <el-button @click="viewFile2(scope.row)" type="warning" plain size="mini"
                     style="margin:0.05rem 0 0.05rem 0;">查看反馈</el-button> -->
                 </template>
@@ -200,23 +202,30 @@
       <div class="doctorStyleBody">
         <div>
           <el-table :data="docTableData" style="width: 100%" :max-height="500">
-            <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
-            <el-table-column fixed prop="applyOrgName" label="申请医院"></el-table-column>
-            <el-table-column fixed prop="applyDeptName" label="申请科室"></el-table-column>
-            <el-table-column fixed prop="" label="申请人"></el-table-column>
-            <el-table-column fixed prop="phone" label="手机号"></el-table-column>
-            <el-table-column fixed prop="applyTime" label="申请时间"></el-table-column>
-            <el-table-column fixed prop="patientName" label="病人"></el-table-column>
-            <el-table-column fixed prop="intention" label="目的"></el-table-column>
-            <el-table-column fixed prop="typeName" label="转诊类型"></el-table-column>
-            <el-table-column fixed prop="stateName" label="转诊状态"></el-table-column>
-            <el-table-column fixed="right" label="" width="400">
+            <el-table-column prop="referralNo" label="编号"></el-table-column>
+            <el-table-column prop="applyOrgName" label="申请医院"></el-table-column>
+            <el-table-column prop="applyDeptName" label="申请科室"></el-table-column>
+            <el-table-column prop="" label="申请人"></el-table-column>
+            <el-table-column prop="phone" label="手机号"></el-table-column>
+            <el-table-column prop="applyTime" label="申请时间"></el-table-column>
+            <el-table-column prop="patientName" label="病人"></el-table-column>
+            <el-table-column prop="intention" label="目的"></el-table-column>
+            <el-table-column prop="typeName" label="转诊类型"></el-table-column>
+            <el-table-column prop="stateName" label="转诊状态"></el-table-column>
+            <el-table-column label="操作" width="300">
               <template slot-scope="scope">
-                <el-button @click="dualReferralRecord2(scope.row)" type="success" plain size="mini"
+                <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
+                <!-- <button class="jieChuJingYong" v-for="(text,index) in scope.row.buttons" :key="index"
+                  @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button> -->
+                <button
+                  :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
+                  v-for="(text,index) in scope.row.buttons" :key="index"
+                  @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button>
+                <!-- <el-button @click="dualReferralRecord2(scope.row)" type="success" plain size="mini"
                   style="margin:0.05rem 0 0.05rem 0;">转诊记录</el-button>
                 <el-button v-for="(text,index) in scope.row.buttons" :key="index" @click="list2Done(text.btnCommand,scope.row)"
                   type="success" plain size="mini" style="margin:0 0.05rem;">
-                  {{text.btnName}}</el-button>
+                  {{text.btnName}}</el-button> -->
               </template>
             </el-table-column>
           </el-table>
@@ -565,15 +574,15 @@
       async getSelect1(oindex) {
         // console.log(this.userInfo.rooter)
         // console.log(this.userInfo.manager)
-        if (this.userInfo.manager) {
-          this.types = 'MANAGE'
-        } else {
-          this.types = 'DOCTOR'
-        }
+        // if (this.userInfo.manager) {
+        //   this.types = 'MANAGE'
+        // } else {
+        //   this.types = 'DOCTOR'
+        // }
         let _this = this;
         let query = {
           token: this.userState.token,
-          type: this.types
+          type: 'MANAGE'
         };
         const res = await toolDept(query);                     //1.21.1.科室筛选  工具栏 (管理) (管理)
         if (res.data && res.data.errCode === 0) {
@@ -1336,7 +1345,8 @@
     align-items: baseline;
     margin-bottom: 52px;
   }
-  .doctorStyleBody{
+
+  .doctorStyleBody {
     background: #FFF;
     border: 1px solid var(--color5);
     box-shadow: 0 0.06rem 0.36rem 0 rgba(0, 62, 100, 0.04);
@@ -1377,6 +1387,9 @@
 
   .moved .moved_middle {
     margin: 10px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .moved .moved_footer {
@@ -1447,5 +1460,77 @@
       align-items: center;
       /* flex-wrap: wrap; */
     }
+  }
+
+  .el-icon-refresh {
+    margin: 0 20px;
+    font-size: 30px;
+    color: #27AD9A;
+  }
+
+  .lanSe {
+    width: 57px;
+    height: 20px;
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid rgba(66, 133, 244, 0.6);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #4d7cfe;
+    line-height: 3px;
+    margin: 0 14px 0 14px;
+  }
+
+  .lvSe {
+    width: 57px;
+    height: 20px;
+    background: rgba(46, 189, 65, 0.10);
+    border: 1px solid rgba(46, 189, 65, 0.60);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #2EBD41;
+    line-height: 3px;
+    margin: 0 14px 0 14px;
+  }
+
+  .fenSe {
+    width: 57px;
+    height: 20px;
+    background: rgba(254, 77, 151, 0.10);
+    border: 1px solid rgba(254, 77, 151, 0.60);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #FE4D97;
+    line-height: 3px;
+    margin: 0 14px 0 14px;
+  }
+
+  .huangSe {
+    width: 57px;
+    height: 20px;
+    background: rgba(255, 171, 43, 0.10);
+    border: 1px solid rgba(255, 171, 43, 0.60);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #FFAB2B;
+    line-height: 3px;
+    margin: 0 14px 0 14px;
+  }
+
+  /deep/ .el-table__header-wrapper th {
+    font-family: PingFangSC-Semibold;
+    font-size: 14px;
+    color: #5E6875;
+    letter-spacing: 0;
+  }
+
+  /deep/ .el-table__body-wrapper td {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #5E6875;
+    letter-spacing: 0;
   }
 </style>
