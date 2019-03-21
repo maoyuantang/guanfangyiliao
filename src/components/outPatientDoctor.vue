@@ -16,8 +16,7 @@
           <p class="title">{{text.clinicName}}</p>
           <div class="outpatient_user">
             <img v-if="text.doctor[0].headId == null" src="../assets/img/a-6.png" alt="医生头像">
-            <img v-if="text.doctor[0].headId"
-              :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.doctor[0].headId'
+            <img v-if="text.doctor[0].headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.doctor[0].headId'
               alt="医生头像">
             <div class="outpatient_name">
               <p class="p1">{{text.doctor[0].doctorName}}</p>
@@ -25,8 +24,7 @@
             </div>
           </div>
           <i></i>
-          <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index'
-            style="width: 90%;margin: auto;">
+          <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index' style="width: 90%;margin: auto;">
             <el-table :data="text" :cell-class-name="ceshi0">
               <el-table-column prop="unProcess" label="未处理"></el-table-column>
               <el-table-column prop="process" label="已处理"></el-table-column>
@@ -41,8 +39,7 @@
           <!-- 病人个数循环 -->
           <noData v-if="text.clinicOrders.length == 0"></noData>
           <span class="dian" @click="lookList(text)" v-if="text.clinicOrders.length != 0">...</span>
-          <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-show="index <2"
-            v-if="text.clinicOrders.length != 0">
+          <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-show="index <2" v-if="text.clinicOrders.length != 0">
 
             <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
               <h1>{{text1.userName}}</h1>
@@ -103,12 +100,11 @@
           <span class="title2">...</span>
         </div>
         <div class="div">
-          <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index,text)'
-            :class="whichUser==index?'backgroundUser':''">
+          <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index,text)' :class="whichUser==index?'backgroundUser':''">
             <li>
               <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-              <img v-if="text.headId"
-                :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
+              <img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'
+                alt="医生头像">
               <div>
                 <p class="name">{{text.userName}}</p>
                 <p class="depart">问诊医生:
@@ -303,12 +299,11 @@
           <span class="title2">...</span>
         </div>
         <div class="div">
-          <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index)'
-            :class="whichUser==index?'backgroundUser':''">
+          <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index)' :class="whichUser==index?'backgroundUser':''">
             <li>
               <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-              <img v-if="text.headId"
-                :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
+              <img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'
+                alt="医生头像">
               <div>
                 <p class="name">{{text.userName}}</p>
                 <p class="depart">问诊医生:
@@ -488,8 +483,7 @@
     <!-- //某诊室的所有病人列表 -->
     <div v-if="isShowPatient">
       <el-dialog title="就诊列表" :visible.sync="isShowPatient" width="60%" center>
-        <ul v-for="(text5,index) in huanzheList" :key="index" class=""
-          style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px;">
+        <ul v-for="(text5,index) in huanzheList" :key="index" class="" style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px;">
           <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;margin:0 0 20px 0;">
             <div>
               <h1 style="margin: 0 0 10px 0;">{{text5.userName}}</h1>
@@ -543,8 +537,7 @@
     <!-- 预览弹窗 -->
     <div v-if="dialogTableVisible">
       <el-dialog title="预览" :visible.sync="dialogTableVisible" center>
-        <img style="width:100%"
-          :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
+        <img style="width:100%" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
       </el-dialog>
     </div>
 
@@ -559,8 +552,7 @@
     <!-- 视频聊天 -->
     <div v-if="centerDialogVisible">
       <el-dialog title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
-        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"
-          @reback="videoclick">
+        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick">
         </ovideo>
       </el-dialog>
     </div>

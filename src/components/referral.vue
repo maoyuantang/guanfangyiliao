@@ -13,8 +13,7 @@
           <!-- 头像姓名 -->
           <div class="moved_top">
             <img v-if="dualReferralRecordFile.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-            <img v-if="dualReferralRecordFile.headId"
-              :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+dualReferralRecordFile.headId'
+            <img v-if="dualReferralRecordFile.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+dualReferralRecordFile.headId'
               alt="医生头像">
             <p>{{dualReferralRecordFile.patientName}}</p>
           </div>
@@ -58,47 +57,40 @@
           <div style="display:flex;margin:10px 0;">
             <el-form-item label="转诊类型:" :label-width="formLabelWidth">
               <el-select v-model="addForm.typeList.value" placeholder="上转/下转" clearable @change='upOrDown()'>
-                <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label"
-                  :value="item.value"></el-option>
+                <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label="疾病名称:" :label-width="formLabelWidth">
-              <el-select v-model="addForm.diseaseName.value" placeholder="请选择" clearable @change='diseaseNameId()'
-                ref="ceshi1">
-                <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label"
-                  :value="item.value"></el-option>
+              <el-select v-model="addForm.diseaseName.value" placeholder="请选择" clearable @change='diseaseNameId()' ref="ceshi1">
+                <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </div>
 
           <el-form-item label="病     人:" :label-width="formLabelWidth">
             <el-select v-model="addForm.patient.value" placeholder="请选择" clearable ref="ceshi2">
-              <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label"
-                :value="item.value">
+              <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
 
           <div class="block" style="margin-bottom: 22px;">
-            <span class="demonstration"
-              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
-            <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.value"
-              @change="handleChange" clearable ref="ceshi3">
+            <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
+            <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.value" @change="handleChange"
+              clearable ref="ceshi3">
             </el-cascader>
           </div>
 
           <el-form-item label="病历授权:" :label-width="formLabelWidth">
             <el-select v-model="addForm.giveRight.value" placeholder="单选" clearable>
-              <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label"
-                :value="item.value">
+              <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
 
           <div class="block" style="margin-bottom: 22px;">
-            <span class="demonstration"
-              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
+            <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
             <el-date-picker v-model="addForm.moveTime.value" type="datetime" placeholder="请选择" default-time="12:00:00">
             </el-date-picker>
           </div>
@@ -166,8 +158,7 @@
             </el-table>
           </div>
           <div style="text-align: center;padding: 10px 0;">
-            <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
-              @current-change="currentChange1">
+            <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
             </el-pagination>
           </div>
         </div>
@@ -217,10 +208,8 @@
                 <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
                 <!-- <button class="jieChuJingYong" v-for="(text,index) in scope.row.buttons" :key="index"
                   @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button> -->
-                <button
-                  :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
-                  v-for="(text,index) in scope.row.buttons" :key="index"
-                  @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button>
+                <button :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
+                  v-for="(text,index) in scope.row.buttons" :key="index" @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button>
                 <!-- <el-button @click="dualReferralRecord2(scope.row)" type="success" plain size="mini"
                   style="margin:0.05rem 0 0.05rem 0;">转诊记录</el-button>
                 <el-button v-for="(text,index) in scope.row.buttons" :key="index" @click="list2Done(text.btnCommand,scope.row)"
@@ -231,8 +220,7 @@
           </el-table>
         </div>
         <div style="text-align: center;padding: 10px 0;">
-          <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
-            @current-change="currentChange2">
+          <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange2">
           </el-pagination>
         </div>
       </div>
@@ -1465,6 +1453,22 @@
     margin: 0 20px;
     font-size: 30px;
     color: #27AD9A;
+  }
+
+  .lanSe:focus {
+    outline: none;
+  }
+
+  .lvSe:focus {
+    outline: none;
+  }
+
+  .fenSe:focus {
+    outline: none;
+  }
+
+  .huangSe:focus {
+    outline: none;
   }
 
   .lanSe {

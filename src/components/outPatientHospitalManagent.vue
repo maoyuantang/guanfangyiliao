@@ -942,12 +942,12 @@
 				};
 				const res = await searchClinic(query);
 				if (res.data && res.data.errCode === 0) {
-					// console.log('列表1+成功')
-					// console.log("time0:", this.time0)
-					// console.log("time1:", this.time1)
-					// console.log("res:", res)
-					// console.log("list:", res.data.body.data2.list)
-					// console.log("total:", res.data.body.data2.total)
+					console.log('列表1+成功')
+					console.log("time0:", this.time0)
+					console.log("time1:", this.time1)
+					console.log("res:", res)
+					console.log("list:", res.data.body.data2.list)
+					console.log("total:", res.data.body.data2.total)
 					const lists = res.data.body.data2.list
 					this.totals = res.data.body.data2.total
 					for (let j = 0; j < lists.length; j++) {
@@ -1471,11 +1471,11 @@
 					const departmentLista = { label: lists.departmentName, value: lists.departmentId }
 					this.addData.departmentList.default = departmentLista;//科室
 					$.each(lists.doctors, function (index, text) {
-						_this.addData.doctorList.default.push(JSON.stringify(text.doctorId))//关联医生
+						_this.addData.doctorList.default.push(text.doctorId)//关联医生	
 						// _this.addData.doctorList.list.push({ label: text.doctorName, value: JSON.stringify(text.doctorId) })
 					})
-					this.addData.agreement.default = { label: lists.protocolName, value: JSON.stringify(lists.protocolId) }//协议id
-					this.addData.agreement.list.push({ label: lists.protocolName, value: JSON.stringify(lists.protocolId) })
+					this.addData.agreement.default = { label: lists.protocolName, value: lists.protocolId }//协议id
+					// this.addData.agreement.list.push({ label: lists.protocolName, value: JSON.stringify(lists.protocolId) })
 
 					console.log(this.addData)
 					// this.addData = Object.assign({},this.addData);
@@ -1520,7 +1520,7 @@
 						console.log(text.doctorId)
 					})
 					this.addData.agreement.default = { label: lists.protocolName, value: lists.protocolId }//协议id
-					this.addData.agreement.list.push({ label: lists.protocolName, value: lists.protocolId })
+					// this.addData.agreement.list.push({ label: lists.protocolName, value: lists.protocolId })
 				} else {
 					//失败
 					console.log('编辑表格渲染+失败')
@@ -1543,12 +1543,11 @@
 				};
 				const res = await disableClinic(query, options);
 				if (res.data && res.data.errCode === 0) {
-					// if (this.status1 == true) {
-					// 	this.status1 = false;
-					// } else {
-					// 	this.status1 = true;
-					// }
-					this.status1 = !this.status1
+					if (this.status1 == true) {
+						this.status1 = false;
+					} else {
+						this.status1 = true;
+					}
 					console.log(this.status1)
 					this.getList1()
 				} else {
