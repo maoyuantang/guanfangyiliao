@@ -1465,7 +1465,7 @@
           }
 
           .span {
-            color: red;
+            /* color: red; */
           }
         }
       }
@@ -1497,7 +1497,8 @@
       .title1 {
         font-family: PingFangSC-Regular;
         font-size: 14px;
-        color: #5c5c5c;
+        color: #5C5C5C;
+        letter-spacing: 0;
       }
 
       .title2 {
@@ -1537,13 +1538,13 @@
             .name {
               font-family: PingFangSC-Regular;
               font-size: 14px;
-              color: #000;
+              color: #1B1E24;
             }
 
             .depart {
               font-family: PingFangSC-Regular;
               font-size: 14px;
-              color: #000;
+              color: #98A9BC;
               letter-spacing: 0.2px;
               line-height: 21px;
             }
@@ -1615,9 +1616,10 @@
         }
 
         .name {
+          opacity: 1;
           font-family: PingFangSC-Medium;
           font-size: 14px;
-          color: black;
+          color: #212223;
           line-height: 20px;
         }
       }
@@ -1758,12 +1760,12 @@
               span {
                 font-family: PingFangSC-Regular;
                 font-size: 13px;
-                color: #97a3b4;
+                color: #97A3B4;
                 line-height: 22px;
               }
 
               .span {
-                color: red;
+                /* color: red; */
               }
             }
 
@@ -1777,7 +1779,7 @@
               }
 
               .span {
-                color: red;
+                /* color: red; */
               }
             }
           }
@@ -1804,15 +1806,21 @@
             position: relative;
 
             .totalMoney {
-              color: red;
               font-family: PingFangSC-Semibold;
               font-size: 14px;
-              color: #5e6875;
+              color: #5E6875;
               letter-spacing: 0;
               margin: 0 0 0 0;
               position: absolute;
               right: 20%;
               bottom: 20%;
+
+              span {
+                font-family: PingFangSC-Semibold;
+                font-size: 14px;
+                color: #5E6875;
+                letter-spacing: 0;
+              }
             }
           }
         }
@@ -1925,13 +1933,13 @@
               .name {
                 font-family: PingFangSC-Regular;
                 font-size: 14px;
-                color: #000;
+                color: #1B1E24;
               }
 
               .depart {
                 font-family: PingFangSC-Regular;
                 font-size: 14px;
-                color: #000;
+                color: #98A9BC;
                 letter-spacing: 0.2px;
                 line-height: 21px;
               }
@@ -2003,9 +2011,10 @@
           }
 
           .name {
+            opacity: 1;
             font-family: PingFangSC-Medium;
             font-size: 14px;
-            color: black;
+            color: #212223;
             line-height: 20px;
           }
         }
@@ -2141,12 +2150,12 @@
                 span {
                   font-family: PingFangSC-Regular;
                   font-size: 13px;
-                  color: #97a3b4;
+                  color: #97A3B4;
                   line-height: 22px;
                 }
 
                 .span {
-                  color: red;
+                  /* color: red; */
                 }
               }
 
@@ -2187,15 +2196,21 @@
               position: relative;
 
               .totalMoney {
-                color: red;
                 font-family: PingFangSC-Semibold;
                 font-size: 14px;
-                color: #5e6875;
+                color: #5E6875;
                 letter-spacing: 0;
                 margin: 0 0 0 0;
                 position: absolute;
                 right: 20%;
                 bottom: 20%;
+
+                span {
+                  font-family: PingFangSC-Semibold;
+                  font-size: 14px;
+                  color: #5E6875;
+                  letter-spacing: 0;
+                }
               }
             }
           }
@@ -2237,5 +2252,19 @@
     flex: 1;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  /deep/ .el-table__header-wrapper th {
+    font-family: PingFangSC-Semibold;
+    font-size: 14px;
+    color: #5E6875;
+    letter-spacing: 0;
+  }
+
+  /deep/ .el-table__body-wrapper td {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #5E6875;
+    letter-spacing: 0;
   }
 </style>
