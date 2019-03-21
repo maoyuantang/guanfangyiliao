@@ -45,7 +45,7 @@
                             <el-form-item label="发病日期: ">
                                 <el-date-picker type="date" placeholder="选择日期" v-model="chufangData.occurTime" style="width: 100%;"></el-date-picker>
                             </el-form-item>
-                            <el-form-item label="下次复查日期: ">
+                            <el-form-item class="nextTimeClass" label="下次复查日期: ">
                                 <el-date-picker type="date" placeholder="选择日期" v-model="chufangData.reviewTime" style="width: 100%;"></el-date-picker>
                             </el-form-item>
                         </div>
@@ -55,7 +55,7 @@
                 </div>
                 <div>
                     <search></search>
-                    <div>
+                    <div class="public-list drugTable">
                         <el-table :data="chufangData.drugDetails" border style="width: 100%">
                             <el-table-column fixed prop="date" label="序号" width="150">
                             </el-table-column>
@@ -92,10 +92,11 @@
                         </el-table>
                     </div>
                     <div>
-                        <div>
-                            <!-- 总金额：{{countAllPrice}} -->
+                        <div class="allPrice">
+                            总金额：
+                            <!-- {{countAllPrice}} -->
                         </div>
-                        <div>
+                        <div class="drugsBtnClass">
                             <el-button type="primary">预览</el-button>
                             <el-button type="primary" @click="submitAudit()">提交审核</el-button>
                         </div>
@@ -234,6 +235,8 @@ export default {
                     title: "成功",
                     message: "审核成功"
                 });
+                  this.$emit('reback')
+
             } else {
                 //失败
                 this.$notify.error({
@@ -378,5 +381,54 @@ line-height: 20px;
         width: 77px;
     height: 20px;
     font-size: 12px;
+}
+.nextTimeClass label{
+    width: 104px !important;
+}
+.nextTimeClass .el-form-item__content{
+        margin-left: 104px !important;
+}
+.drugTable .el-table--border th,
+.drugTable .el-table--border td{
+    border-right:none
+}
+.drugsBtnClass{
+     display: -webkit-flex; /* Safari */
+  display: flex;
+  justify-content:flex-end;
+    padding-top: 12px;
+    height: 60px;
+    background: #FFFFFF;
+border: 1px solid #E4E8EB;
+}
+.drugsBtnClass>button:first-child{
+width:80px;
+height: 32px;
+border: 1px solid #4285F4;
+border-radius: 3px;
+font-family: PingFangSC-Regular;
+font-size: 12px;
+color: #4285F4;
+background: white;
+    line-height: 0px;
+}
+.drugsBtnClass>button:last-child{
+    width:80px;
+height: 32px;
+border: 1px solid #4285F4;
+background: #4285F4;
+border-radius: 3px;
+font-family: PingFangSC-Regular;
+font-size: 12px;
+color: #FFFFFF;
+    line-height: 0px;
+}
+.allPrice{
+    text-align: right;
+    line-height: 70px;
+    font-family: PingFangSC-Semibold;
+font-size: 14px;
+color: #5E6875;
+letter-spacing: 0;
 }
 </style>

@@ -2,7 +2,7 @@
     <div class="publicTime">
         <div class="block">
             <span class="demonstration">时间段</span>
-            <el-date-picker v-model="valueTime" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" @change="timeChange()" value-format="yyyy-MM-dd" prefix-icon="" size="small" clear-icon=" ">
+            <el-date-picker v-model="valueTime" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" @change="timeChange()" value-format="yyyy-MM-dd" prefix-icon="" size="small" >
             </el-date-picker>
         </div>
     </div>

@@ -297,6 +297,9 @@ export default {
     seeRemark:'/m/v1/api/clinic/remark/fetch',//查看备注
     patientInfo:'/m/v1/api/record/nosocomialRecord/patientInfo',//1.获取患者信息
     SETEQUIPMENT  :'/m/v1/api/followup/followupRemind/countAlert',
+   SETFOLLOWCHART   :'/m/v1/api/followup/followupRemind/countFollowup',
+   CONSULTATIONHOSPITAL:'/m/v1/api/consultation/queryConsultationHospitalScope',
+   CONSULTATIONDER:'/m/v1/api/consultation/queryConsultationDeptScope',
     SETFOLLOWCHART   :'/m/v1/api/followup/followupRemind/countFollowup',
     getUserItemInfo:'/m/v1/api/user/user/userInfo',//3.8获取用户信息
     deleteUserItem:'/m/v1/api/user/deleteUser',//3.5首页-账号及权限-删除用户

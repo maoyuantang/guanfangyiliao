@@ -953,6 +953,29 @@ export const receiveDept = query => {//9.9本院参与科室
         }
     })
 }
+export const CONSULTATIONHOSPITAL = query => {//9.9本院参与科室
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.CONSULTATIONHOSPITAL,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const CONSULTATIONDER = query => {//9.9本院参与科室
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.CONSULTATIONDER,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
 export const receiveDoctor = query => {//9.10本院参与科室
     const sign = postQueryHandle(query);
     return axios({
