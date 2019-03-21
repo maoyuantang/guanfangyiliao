@@ -341,7 +341,7 @@
                 if (res.data && res.data.errCode === 0){
                     this.upDoc.alertData.list = res.data.body.data2.list.map(item=>{
                         item.imgs = item.imgs.map(ele=>{
-                            ele.imgUrl = `${apiBaseURL.developmentEnvironment}/m/v1/api/hdfs/fs/download/${ele.imgId}`;
+                            ele.imgUrl = `${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${ele.imgId}`;
                             return ele;
                         });
                         return item;

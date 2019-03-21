@@ -1195,6 +1195,10 @@ export default {
   border: 1px solid var(--color5);
   box-shadow: 0 0.06rem 0.36rem 0 rgba(0, 62, 100, 0.04);
   border-radius: 0.04rem;
+  padding-top: .32rem;
+  padding-left: .38rem;
+  padding-right: .68rem;
+  padding-bottom: .68rem;	
 }
 .left-model-head-operating .el-input__inner {
   border-radius: 0.22rem;
@@ -1497,5 +1501,8 @@ export default {
 }
 .Account-authority-append-class-new-class{
   width: 2.04rem;
+}
+.account-authority-tbody th{
+  font-weight: 100;
 }
 </style>

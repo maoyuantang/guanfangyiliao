@@ -1019,7 +1019,7 @@
 					this.testData.doctorList.list = res.data.body.map(item => {
 						item.label = item.doctorName;
 						item.value = item.doctorId;
-						item.imgSrc = item.headId ? `${apiBaseURL.developmentEnvironment}/m/v1/api/hdfs/fs/download/${item.headId}` : item.headId;
+						item.imgSrc = item.headId ? `${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${item.headId}` : item.headId;
 						return item;
 					});
 					// this.testData.doctorList.default = [this.testData.doctorList.list[0].value,this.testData.doctorList.list[2].value]

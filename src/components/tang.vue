@@ -710,7 +710,7 @@
 					};
 					this.courseList = res.data.body.map(item => {
 						item.actionCount = actionMap[item.action] || actionMap.NULL;
-						item.headImgURL = item.headId ? `${apiBaseURL.developmentEnvironment}/m/v1/api/hdfs/fs/download/${item.headId}` : item.headId;
+						item.headImgURL = item.headId ? `${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${item.headId}` : item.headId;
 						return item;
 					})
 				} else {

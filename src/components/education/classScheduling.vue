@@ -581,9 +581,9 @@
              * 获取科室列表
              */
             setDepartmentData(){
-                this.queryConditions.department.list = this.global.departmentList.map(item=>{
-                    item.label = item.deptName;
-                    item.value = item.deptId;
+                this.queryConditions.department.list = this.global.manToolDept.map(item=>{
+                    item.label = item.name;
+                    item.value = item.id;
                     return item;
                 });
                 this.alertData.data.departmentList = this.global.departmentList.map(item=>{

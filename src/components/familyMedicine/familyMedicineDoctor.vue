@@ -469,7 +469,13 @@
         padding-top: 0.1rem;
         padding-bottom: 0.12rem;
         flex: 1;
-        text-align: center;
+        text-align: left;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #5E6875;
+    }
+    .family-medicine-doctor-body tbody th{
+        font-weight: 200;
     }
     .family-medicine-doctor-body table .family-medicine-doctor-body-spe{
         flex: 2;

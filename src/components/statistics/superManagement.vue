@@ -58,6 +58,14 @@
                         </el-input>
                     </div>
                     <div class="data-item">
+                        <span>医院编码:</span>
+                        <el-input
+                            placeholder="请输入内容"
+                            v-model="addHospitalInfo.name"
+                            clearable>
+                        </el-input>
+                    </div>
+                    <div class="data-item">
                         <span>账号:</span>
                         <el-input
                             placeholder="请输入内容"
@@ -989,6 +997,7 @@ export default {
 }
 .pagination{
     text-align: center;
+    width:100%;
 }
 </style>
 <!--

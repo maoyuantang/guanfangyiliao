@@ -1,79 +1,5 @@
 <template>
-  <div class="files-man">
-    <div class="files-man-top">
-      <normalTab v-model="barInfo" @reBack="getBar"></normalTab>
-    </div>
-    <div class="files-man-body">
-      <div :is="viewCurrent"></div>
-      <!-- <div class="files-man-list" v-if="barInfo.i===0"> -->
-        <!-- <div class="files-man-body-top">
-          <div class="files-man-body-top-left">
-            <selftag v-model="listCondition.departmentList" @reback="DepartmentListSelect"></selftag>
-            <selftag v-model="listCondition.types" @reback="getTypeSelect"></selftag>
-          </div>
-          <div class="files-man-body-top-right">
-            <search @searchValue="searchChange"></search>
-          </div>
-        </div>
-        <div class="files-man-body-list">
-          <table class="files-man-body-list-table">
-            <thead class="files-man-body-list-thead">
-              <tr>
-                <th>科室</th>
-                <th>姓名</th>
-                <th>手机号</th>
-                <th>ID</th>
-                <th>档案类型</th>
-                <th>档案人</th>
-                <th>类型</th>
-                <th>提取方式</th>
-                <th>时间</th>
-              </tr>
-            </thead>
-            <tbody class="files-man-body-list-tbody">
-              <tr v-for="(item,index) in listData" :key="index">
-                <th>{{item.deptName || '暂缺'}}</th>
-                <th>{{item.userName || '暂缺'}}</th>
-                <th>{{item.phone || '暂缺'}}</th>
-                <th>{{item.recordId || '暂缺'}}</th>
-                <th class="limit-size">
-                  <el-tooltip class="item" effect="light" :content="item.recordType" placement="top">
-                    <div>{{item.recordType.length>7?`${item.recordType.substring(0,7)}...`:item.recordType}}</div>
-                  </el-tooltip>
-                </th>
-                <th>
-                  <el-tooltip class="item" effect="light" :content="item.recordUserName" placement="top">
-                    <div>{{item.recordUserName.length>7?`${item.recordUserName.substring(0,7)}...`:item.recordUserName}}</div>
-                  </el-tooltip>
-                  </th>
-                <th>{{item.type || '暂缺'}}</th>
-                <th>
-                  <el-tooltip class="item" effect="light" :content="item.extractType" placement="top">
-                    <div>{{item.extractType.length>7?`${item.extractType.substring(0,7)}...`:item.extractType}}</div>
-                  </el-tooltip>
-                </th>
-                <th>
-                  <el-tooltip class="item" effect="light" :content="item.createTime" placement="top">
-                    <div>{{item.createTime.length>7?`${item.createTime.substring(0,7)}...`:item.createTime}}</div>
-                  </el-tooltip>
-                </th>
-              </tr>
-            </tbody>
-          </table>
-          <div class="files-man-page">
-            <el-pagination
-              background
-              layout="prev, pager, next"
-              :page-size="10"
-              @current-change="listSelectPage"
-              :current-page="parseInt(listCondition.page.pageNum)"
-              v-if="listCondition.page.total!=0"
-              :total="listCondition.page.total"
-            ></el-pagination>
-          </div>
-        </div> -->
-      <!-- </div> -->
-      <!-- <div class="files-man-chart" v-if="barInfo.i===1">
+    <div>
         <div class="files-man-body-top">
           <div class="files-man-body-top-left">
             <selftag v-model="chartCondition.departmentList" @reback="chartDepartmentListSelect"></selftag>
@@ -95,36 +21,23 @@
             <normalColumnChart :inData="chartData.queryData"></normalColumnChart>
             <normalColumnChart :inData="chartData.pushData"></normalColumnChart>
         </div>
-      </div> -->
     </div>
-  </div>
 </template>
-
 <script>
-import queryPush from './filesMan/queryPush.vue'
-import doc from './filesMan/doc.vue'
-import statistics from './filesMan/statistics.vue'
-
-// 下面的全部基本没用了，分到子组件里去了
-
-
 import { mapState } from "vuex";
-import normalTab from "../../public/publicComponents/normalTab.vue";
-import selftag from "../../public/publicComponents/selftag.vue";
-import search from "../../public/publicComponents/search.vue";
-import publicTime from "../../public/publicComponents/publicTime.vue";
-import normalColumnChart from "../../public/publicComponents/normalColumnChart.vue";
-import { queryPageByPushAndQuery, queryStatisticalData, pushStatisticalData } from "../../api/apiAll.js";
+import normalTab from "../../../public/publicComponents/normalTab.vue";
+import selftag from "../../../public/publicComponents/selftag.vue";
+import search from "../../../public/publicComponents/search.vue";
+import publicTime from "../../../public/publicComponents/publicTime.vue";
+import normalColumnChart from "../../../public/publicComponents/normalColumnChart.vue";
+import { queryPageByPushAndQuery, queryStatisticalData, pushStatisticalData } from "../../../api/apiAll.js";
 export default {
   components: {
     normalTab,
     selftag,
     search,
     publicTime,
-    normalColumnChart,
-    queryPush,
-    doc,
-    statistics
+    normalColumnChart
   },
   watch: {
     "global.manToolDept": {
@@ -154,10 +67,7 @@ export default {
       userInfo: state => state.user.userInfo,
       userSelfInfo: state => state.user.userSelfInfo,
       global: state => state.global
-    }),
-    viewCurrent(){
-      return this.barInfo.list[this.barInfo.i].page
-    }	
+    })
   },
   data() {
     return {
@@ -166,18 +76,11 @@ export default {
         list: [
           {
             en: "Archives Inquiry & Delivery",
-            zh: "档案查询和推送",
-            page:'queryPush'
-          },
-          {
-            en: "Health records",
-            zh: "健康档案",
-            page:'doc'
+            zh: "档案查询和推送"
           },
           {
             en: "STATISTICS",
-            zh: "统计",
-            page:'statistics'
+            zh: "统计"
           }
         ]
       },
@@ -554,7 +457,6 @@ export default {
   }
 };
 </script>
-
 <style>
 .files-man {
 }

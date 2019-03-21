@@ -1,12 +1,6 @@
 <template>
-  <div class="files-man">
-    <div class="files-man-top">
-      <normalTab v-model="barInfo" @reBack="getBar"></normalTab>
-    </div>
-    <div class="files-man-body">
-      <div :is="viewCurrent"></div>
-      <!-- <div class="files-man-list" v-if="barInfo.i===0"> -->
-        <!-- <div class="files-man-body-top">
+    <div class="queryPush">
+        <div class="files-man-body-top">
           <div class="files-man-body-top-left">
             <selftag v-model="listCondition.departmentList" @reback="DepartmentListSelect"></selftag>
             <selftag v-model="listCondition.types" @reback="getTypeSelect"></selftag>
@@ -71,60 +65,24 @@
               :total="listCondition.page.total"
             ></el-pagination>
           </div>
-        </div> -->
-      <!-- </div> -->
-      <!-- <div class="files-man-chart" v-if="barInfo.i===1">
-        <div class="files-man-body-top">
-          <div class="files-man-body-top-left">
-            <selftag v-model="chartCondition.departmentList" @reback="chartDepartmentListSelect"></selftag>
-          </div>
-          <div class="files-man-body-top-right">
-            <publicTime @timeValue="timeValueFun"></publicTime>
-            <el-select v-model="chartCondition.statisticsMethods.select.value" clearable placeholder="请选择">
-                <el-option
-                v-for="item in chartCondition.statisticsMethods.list"
-                :key="item.value"
-                :label="item.label"
-                size="mini"
-                :value="item.value">
-                </el-option>
-            </el-select>
-          </div>
         </div>
-        <div class="files-man-chart-body">
-            <normalColumnChart :inData="chartData.queryData"></normalColumnChart>
-            <normalColumnChart :inData="chartData.pushData"></normalColumnChart>
-        </div>
-      </div> -->
     </div>
-  </div>
 </template>
-
 <script>
-import queryPush from './filesMan/queryPush.vue'
-import doc from './filesMan/doc.vue'
-import statistics from './filesMan/statistics.vue'
-
-// 下面的全部基本没用了，分到子组件里去了
-
-
 import { mapState } from "vuex";
-import normalTab from "../../public/publicComponents/normalTab.vue";
-import selftag from "../../public/publicComponents/selftag.vue";
-import search from "../../public/publicComponents/search.vue";
-import publicTime from "../../public/publicComponents/publicTime.vue";
-import normalColumnChart from "../../public/publicComponents/normalColumnChart.vue";
-import { queryPageByPushAndQuery, queryStatisticalData, pushStatisticalData } from "../../api/apiAll.js";
+import normalTab from "../../../public/publicComponents/normalTab.vue";
+import selftag from "../../../public/publicComponents/selftag.vue";
+import search from "../../../public/publicComponents/search.vue";
+import publicTime from "../../../public/publicComponents/publicTime.vue";
+import normalColumnChart from "../../../public/publicComponents/normalColumnChart.vue";
+import { queryPageByPushAndQuery, queryStatisticalData, pushStatisticalData } from "../../../api/apiAll.js";
 export default {
   components: {
     normalTab,
     selftag,
     search,
     publicTime,
-    normalColumnChart,
-    queryPush,
-    doc,
-    statistics
+    normalColumnChart
   },
   watch: {
     "global.manToolDept": {
@@ -154,10 +112,7 @@ export default {
       userInfo: state => state.user.userInfo,
       userSelfInfo: state => state.user.userSelfInfo,
       global: state => state.global
-    }),
-    viewCurrent(){
-      return this.barInfo.list[this.barInfo.i].page
-    }	
+    })
   },
   data() {
     return {
@@ -166,18 +121,11 @@ export default {
         list: [
           {
             en: "Archives Inquiry & Delivery",
-            zh: "档案查询和推送",
-            page:'queryPush'
-          },
-          {
-            en: "Health records",
-            zh: "健康档案",
-            page:'doc'
+            zh: "档案查询和推送"
           },
           {
             en: "STATISTICS",
-            zh: "统计",
-            page:'statistics'
+            zh: "统计"
           }
         ]
       },
@@ -553,9 +501,8 @@ export default {
 
   }
 };
-</script>
-
-<style>
+</script>      
+<style scoped>
 .files-man {
 }
 .files-man-body-top {
@@ -604,5 +551,17 @@ export default {
   font-size: var(--fontSize1);
   color: var(--color3);
   letter-spacing: 0;
+}
+.queryPush{
+    background: #FFFFFF;
+    border: 1px solid #E5EDF3;
+    box-shadow: 0 6px 36px 0 rgba(0,62,100,0.04);
+    border-radius: 4px;
+    padding-top: .32rem;
+    padding-left: .38rem;
+    padding-right: .68rem;
+    padding-bottom: .68rem;	
+    margin-top: .44rem;
+		
 }
 </style>

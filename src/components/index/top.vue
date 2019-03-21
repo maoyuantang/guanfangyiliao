@@ -73,7 +73,7 @@ export default {
         //     userSocketInfo: state => state.socket
         // }),
         imgSrc(){
-            return this.userSelfInfo.headId ? `${apiBaseURL.developmentEnvironment}/m/v1/api/hdfs/fs/download/${this.userSelfInfo.headId}` : "../../../static/assets/img/a-6.png"
+            return this.userSelfInfo.headId ? `${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${this.userSelfInfo.headId}` : "../../../static/assets/img/a-6.png"
         },
         
     },

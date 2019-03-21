@@ -160,7 +160,7 @@
                 console.log(res);
                 if(res.data && res.data.errCode === 0){
                     const reData = res.data.body.list[0];
-                    reData.imgUrl = reData.headId?`${apiBaseURL.developmentEnvironment}/m/v1/api/hdfs/fs/download/${reData.headId}`:reData.headId;
+                    reData.imgUrl = reData.headId?`${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${reData.headId}`:reData.headId;
                     const newTime = new Date(reData.teachStartTime);
                     reData.time = `${newTime.getFullYear()}-${newTime.getMonth()+1}-${newTime.getDate()}`;
                     const btnStatus = {
