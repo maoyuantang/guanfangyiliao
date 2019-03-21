@@ -21,7 +21,7 @@
                         <search @searchValue="adminSearchChange"></search>
                     </div>
                     <div>
-                        <publicList :tableData="adminLists" :columns="adminColumns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData" :total="adminTotal" @rebackFenye="changeCurrent" pageSize="10"></publicList>
+                        <publicList :tableData="adminLists" :columns="adminColumns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData" :total="adminTotal" @rebackFenye="changeCurrent" :pageSize="pageSizeNum"></publicList>
                     </div>
                 </div>
                 <!-- 统计 -->
@@ -187,6 +187,7 @@ export default {
     },
     data() {
         return {
+            pageSizeNum:10,
             docTotal: 0,
             storyMessage: [],
             doctorVis: 0,
@@ -830,7 +831,7 @@ export default {
                 token: this.userState.token,
                 query: this.searchValue,
                 pageNum: this.adminPageNum,
-                pageSize: 10,
+                pageSize: this.pageSizeNum,
                 status: this.adminStatus,
                 applyDeptId: this.initiateDepartmentId,
                 synergyDeptId: this.acceptDepartmentId,
@@ -927,7 +928,7 @@ export default {
                 token: this.userState.token,
                 query: "",
                 pageNum: this.docPageNum,
-                pageSize: 10,
+                pageSize: this.pageSizeNum,
                 status: this.adminStatus,
                 applyDeptId: this.applyDepartmentId,
                 synergyDeptId: this.acceptDepartmentId,
