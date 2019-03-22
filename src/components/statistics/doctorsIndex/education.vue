@@ -26,7 +26,7 @@
                     </div>
                     <div class="education-body-content-bottom-item">
                         <p class="education-body-content-bottom-item-key">报名人数</p>
-                        <p class="education-body-content-bottom-item-value">{{info.num || ''}}</p>
+                        <p class="education-body-content-bottom-item-value">{{info.num || 0}}</p>
                     </div>
                     <div class="education-body-content-bottom-item">
                         <p class="education-body-content-bottom-item-key">状态</p>

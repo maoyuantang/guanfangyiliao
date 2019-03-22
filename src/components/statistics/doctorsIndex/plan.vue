@@ -2,7 +2,7 @@
 <template>
     <div>
         <!-- 今日计划 -->
-        <div class="indexClassBox">
+        <div class="indexClassBox" v-if="planTableVisable">
             <div>
                 <h4>今日计划</h4>
                 <div @click='seeMore(1)'>
@@ -12,7 +12,7 @@
 
             <div class="indexClassTable">
                 <el-table :data="planData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column  label=" " width="70">
+                    <el-table-column label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -43,7 +43,7 @@
 
                         </template>
                     </el-table-column>
-                    <el-table-column  label=" " width="100">
+                    <el-table-column label=" " width="100">
                         <template slot-scope="scope">
                             <el-button class="solveOver" @click="solveOver(scope.row,0)" type="text" size="small">处理完成</el-button>
                         </template>
@@ -53,7 +53,7 @@
             </div>
         </div>
         <!-- 今日告警 -->
-        <div class="indexClassBox">
+        <div class="indexClassBox" v-if="warnTableVisable">
             <div>
                 <h4>今日告警</h4>
                 <div @click='seeMore(2)'>
@@ -63,7 +63,7 @@
 
             <div class="indexClassTable">
                 <el-table :data="warnData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column  label=" " width="70">
+                    <el-table-column label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -106,17 +106,17 @@
             </div>
         </div>
         <!-- 随访计划 -->
-        <div class="indexClassBox">
+        <div class="indexClassBox" v-if="followTableVisable">
             <div>
                 <h4>近期随访</h4>
                 <div @click='seeMore(3)'>
-                    查看更多
+                    查看历史随访
                 </div>
             </div>
 
             <div class="indexClassTable">
                 <el-table :data="followData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column  label=" " width="70">
+                    <el-table-column label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -146,7 +146,7 @@
                     </el-table-column>
                     <el-table-column label=" " width="100">
                         <template slot-scope="scope">
-                            <el-button class="btnClass" @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                            <el-button class="btnClass" @click="seeFollowPlan(scope.row)" type="text" size="small">查看</el-button>
 
                         </template>
                     </el-table-column>
@@ -165,7 +165,7 @@
 
                         </template>
                     </el-table-column>
-                    <el-table-column  label=" " width="100">
+                    <el-table-column label=" " width="100">
                         <template slot-scope="scope">
                             <el-button class="solveOver" @click="solveOver(scope.row,2)" type="text" size="small">处理完成</el-button>
                         </template>
@@ -175,7 +175,7 @@
             </div>
         </div>
         <!-- 会诊 -->
-        <div class="indexClassBox">
+        <div class="indexClassBox" v-if="huizTableVisable">
             <div>
                 <h4>远程会诊</h4>
                 <div @click='seeMore(4)'>
@@ -185,7 +185,7 @@
 
             <div class="indexClassTable">
                 <el-table :data="consultationData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column  label=" " width="70">
+                    <el-table-column label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -222,7 +222,7 @@
             </div>
         </div>
         <!-- 协作 -->
-        <div class="indexClassBox">
+        <div class="indexClassBox" v-if="xiezTableVisable">
             <div>
                 <h4>远程协作</h4>
                 <div @click='seeMore(5)'>
@@ -232,7 +232,7 @@
 
             <div class="indexClassTable">
                 <el-table :data="cooperationData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column  label=" " width="70">
+                    <el-table-column label=" " width="70">
                         <template slot-scope="scope">
                             <img src="../../../assets/img/publicHeadImg.png" />
                         </template>
@@ -262,7 +262,7 @@
 
                         </template>
                     </el-table-column>
-                    <el-table-column  label=" " width="220">
+                    <el-table-column label=" " width="220">
                         <template slot-scope="scope">
                             <el-button class="seeDanganClass" @click="sendArchives(scope.row)" type="text" size="small">查看档案</el-button>
                             <el-button class="enterHuizClass" @click="enterHuiz(scope.row)" type="text" size="small">进入协作</el-button>
@@ -309,7 +309,7 @@
                 <el-button type="primary" @click="sureInvitationXiez()">确认邀请</el-button>
             </el-dialog>
         </div>
-        <!-- 更对计划 -->
+        <!-- 更多计划 -->
         <div v-if="planVisible">
             <el-dialog class="evaluateBox evaluateBox2" title="历史计划" :visible.sync="planVisible" width="782px" hight="356px" center :show-header="showHeadViable">
                 <el-table :data="morePlanList" style="width: 100%">
@@ -321,7 +321,7 @@
                     <el-table-column label=" " width="120">
                         <template slot-scope="scope">
                             <div>
-                                <h4>张某人</h4>
+                                <h4>{{scope.row.userName}}</h4>
                                 <div class='planWarnPhone'>18912345689</div>
                             </div>
                         </template>
@@ -346,7 +346,7 @@
                 </el-pagination>
             </el-dialog>
         </div>
-        <!-- 更对告警 -->
+        <!-- 更多告警 -->
         <div v-if="warnVisible">
             <el-dialog class="planWarnClass" title="历史告警" :visible.sync="warnVisible" width="782px" hight="356px" center>
                 <el-table :data="moreWarnList" style="width: 100%">
@@ -382,6 +382,12 @@
                 </el-pagination>
             </el-dialog>
         </div>
+        <!-- 查看随访计划详情 -->
+        <div v-if="followPlanVisible">
+            <el-dialog class="planWarnClass" title="历史告警" :visible.sync="followPlanVisible" width="782px" hight="356px" center>
+                <followDetail :addFollowData="addFollowData"></followDetail>
+            </el-dialog>
+        </div>
     </div>
 </template>
 
@@ -390,6 +396,8 @@ import WomanDoc from "../../../public/publicComponents/WomanDoc.vue";
 import norDocAlert from "../../../public/publicComponents/norDocAlert.vue";
 import apiBaseURL from "../../../enums/apiBaseURL.js";
 import chat from "../../../public/publicComponents/chat.vue";
+import followDetail from "../../followUpBox/followDetail.vue";
+
 import { mapState } from "vuex";
 import {
     todayPlan,
@@ -411,14 +419,16 @@ import {
     enableSynergyDoctor,
     sendSynergy,
     alertHistory,
-    planHistory
+    planHistory,
+    getFollowUpPlan
 } from "../../../api/apiAll.js";
 import { exists } from "fs";
 export default {
     components: {
         chat,
         WomanDoc,
-        norDocAlert
+        norDocAlert,
+        followDetail
     },
     watch: {},
     computed: {
@@ -429,6 +439,13 @@ export default {
     },
     data() {
         return {
+            addFollowData:{},
+            followPlanVisible:false,
+            planTableVisable: false,
+            warnTableVisable: false,
+            followTableVisable: false,
+            huizTableVisable: false,
+            xiezTableVisable: false,
             planVisible: false,
             warnVisible: false,
             defaultProps: {
@@ -446,7 +463,7 @@ export default {
             sessionId: "",
             chatVisible: false,
             doctorVis: 0,
-            remarks: "",
+            remarks: [],
             remarksVisible: false,
             invitationVisible: false,
             puBlicFileData: {
@@ -483,22 +500,22 @@ export default {
             xiezuoId: "",
             morePlanList: [],
             moreWarnList: [],
-            planTotal:0,
-            warnTotal:0,
-            warnNum:0,
-            planNum:0
+            planTotal: 0,
+            warnTotal: 0,
+            warnNum: 0,
+            planNum: 0
         };
     },
 
     methods: {
         // 分页
-        currentChangePlan(data){
-            this.planNum=data;
-            this.getMorePlanList()
+        currentChangePlan(data) {
+            this.planNum = data;
+            this.getMorePlanList();
         },
-        currentChangeWarn(data){
- this.warnNum=data;
-            this.getMoreWarnList()
+        currentChangeWarn(data) {
+            this.warnNum = data;
+            this.getMoreWarnList();
         },
         //计划列表
         async getPlanList(index) {
@@ -509,6 +526,11 @@ export default {
             const res = await todayPlan(query);
             if (res.data && res.data.errCode === 0) {
                 _this.planData = res.data.body;
+                if (res.data.body.length > 0) {
+                    _this.planTableVisable = true;
+                } else {
+                    _this.planTableVisable = false;
+                }
             } else {
                 //失败
                 this.$notify.error({
@@ -530,7 +552,7 @@ export default {
             };
             const res = await planHistory(query);
             if (res.data && res.data.errCode === 0) {
-                _this.planTotal=res.data.body.total
+                _this.planTotal = res.data.body.total;
                 _this.morePlanList = res.data.body.list;
             } else {
                 //失败
@@ -549,7 +571,12 @@ export default {
             };
             const res = await todayAlert(query);
             if (res.data && res.data.errCode === 0) {
-                this.remarks = res.data.body;
+                this.warnData = res.data.body;
+                if (res.data.body.length > 0) {
+                    _this.warnTableVisable = true;
+                } else {
+                    _this.warnTableVisable = false;
+                }
             } else {
                 //失败
                 this.$notify.error({
@@ -570,7 +597,7 @@ export default {
             };
             const res = await alertHistory(query);
             if (res.data && res.data.errCode === 0) {
-                _this.warnTotal=res.data.body.total
+                _this.warnTotal = res.data.body.total;
                 _this.moreWarnList = res.data.body.list;
             } else {
                 //失败
@@ -589,6 +616,11 @@ export default {
             const res = await todayFollowup(query);
             if (res.data && res.data.errCode === 0) {
                 _this.followData = res.data.body;
+                if (res.data.body.length > 0) {
+                    _this.followTableVisable = true;
+                } else {
+                    _this.followTableVisable = false;
+                }
             } else {
                 //失败
                 this.$notify.error({
@@ -611,6 +643,11 @@ export default {
             const res = await queryByDoctorPage(query);
             if (res.data && res.data.errCode === 0) {
                 _this.consultationData = res.data.body.data2.list;
+                if (res.data.body.length > 0) {
+                    _this.huizTableVisable = true;
+                } else {
+                    _this.huizTableVisable = false;
+                }
             } else {
                 //失败
                 this.$notify.error({
@@ -636,6 +673,11 @@ export default {
             const res = await synergyPage(query);
             if (res.data && res.data.errCode === 0) {
                 _this.cooperationData = res.data.body.data2.list;
+                if (res.data.body.length > 0) {
+                    _this.xiezTableVisable = true;
+                } else {
+                    _this.xiezTableVisable = false;
+                }
             } else {
                 //失败
                 this.$notify.error({
@@ -657,19 +699,37 @@ export default {
                 }
             });
         },
-        //看备注remarks
-        async seeRemarks() {
+        //查看随访计划详情
+        async seeFollowPlan(row) {
             let _this = this;
             let query = {
-                token: this.userState.token
+                token: this.userState.token,
+                planId: row.followupPlanId
             };
-            let options = {
-                to: row.userId
-            };
-            const res = await seeRemark(query, options);
+            const res = await getFollowUpPlan(query);
             if (res.data && res.data.errCode === 0) {
-                this.sessionId = res.data.body;
-                this.chatVisible = true;
+                _this.addFollowData = res.data.body;
+                _this.followPlanVisible=true;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //看备注remarks
+        async seeRemarks(row) {
+            console.log(row);
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                userId: row.userId
+            };
+            const res = await seeRemark(query);
+            if (res.data && res.data.errCode === 0) {
+                this.remarks = res.data.body;
+                this.remarksVisible = true;
             } else {
                 //失败
                 this.$notify.error({

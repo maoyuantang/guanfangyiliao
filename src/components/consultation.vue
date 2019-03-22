@@ -3,6 +3,7 @@
 
     <div class="consultationBox">
         <!-- 发起会诊弹窗 -->
+
         <div v-if="centerDialogVisible">
             <el-dialog class="startGroup" title="发起会诊" :visible.sync="centerDialogVisible" width="602px" hight="607px" center>
                 <el-form ref="form" :model="startHz" label-width="80px">
@@ -999,11 +1000,11 @@ export default {
             const res = await queryByManagerPage(options);
             if (res.data && res.data.errCode === 0) {
                 this.adminTableData = res.data.body.data2.list;
-                $.each(this.adminTableData, function() {
-                    if (this.adminTableData.type == "SPECIALIST") {
-                        this.adminTableData.type = "专科会诊";
-                    } else if (this.adminTableData.type == "EXPERT") {
-                        this.adminTableData.type = "专家会诊";
+                $.each(this.adminTableData, function(index, text) {
+                    if (text.type == "SPECIALIST") {
+                        text.type = "专科会诊";
+                    } else if (text.type == "EXPERT") {
+                        text.type = "专家会诊";
                     }
                 });
                 this.adminTotal = res.data.body.data2.total;
@@ -1144,6 +1145,14 @@ export default {
         //     this.getToolDept()
         // }
         this.getToolDept();
+        // alert(this.$store.state.user.viewRoot.now.name);
+    },
+    watch: {
+        "$store.state.user.viewRoot.now.name": {
+            handler(data) {
+                this.oUserType=data
+            }
+        }
     }
 };
 </script>
@@ -1448,13 +1457,13 @@ export default {
     color: #939eab;
     letter-spacing: 0;
 }
-.startGroup .el-dialog__title{
-font-family: PingFangSC-Regular;
-font-size: 23px;
-color: #323C47;
-letter-spacing: 0;
-text-align: center;
-line-height: 33px;
+.startGroup .el-dialog__title {
+    font-family: PingFangSC-Regular;
+    font-size: 23px;
+    color: #323c47;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 33px;
 }
 .startGroup .el-dialog__body {
     padding: 3px 45px 1px;

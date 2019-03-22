@@ -2,7 +2,6 @@
     <div class="chat">
         <div :title="chatUser" class="otherNumClass">
             {{chatUser}}
-
         </div>
         <div class="chatMessage">
             <ul class="chatRecord">

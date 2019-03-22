@@ -15,7 +15,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <div class="addFollowMain addFollowMain1">
-                        <ul>
+                        <ul class='addQuestBoxUlBox'>
                             <li v-for="(text,index) in addFollowData.itemModels" :key="index">
                                 <div class="addFollowM-bot" style="display:flex">
                                     <el-form-item class="addFollowM-bot firstDoctorTime" label="距离首次治疗">
@@ -41,10 +41,11 @@
                                     <li>
                                         <div>
                                             <span>复查提醒：</span>
-                                                <input style="border:none" type='text' />
+                                            <input class='remindText' style="border:none" type='text' />
                                         </div>
                                     </li>
                                     <li v-for="(otext,oindex) in text.contentModels" :key="oindex">
+
                                         <div>
                                             <span v-show="otext.followUpType=='REMIND'">提醒：</span>
                                             <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
@@ -121,12 +122,12 @@
                                 </span>
                                 <div v-show="text.questionType=='RADIO'">
                                     <el-form-item :label="index+1">
-                                        <el-input class="" v-model="text.title" placeholder="请输入问诊标题"></el-input>
+                                        <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
                                     </el-form-item>
                                     <el-radio-group class="redioSingle">
                                         <el-radio v-for="(text1,index1) in text.solutionModels" :key="index1" :label="index1">
                                             <span>{{text1.tag}}</span>
-                                            <el-input class="" v-model="text1.answerDescribe" placeholder="请输入问诊标题"></el-input>
+                                            <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容"></el-input>
                                             <span class="questItemDelete" @click="deleteQuestText(index,index1)">
                                                 <img src="../assets/img/questDelete.png" />
                                             </span>
@@ -138,12 +139,12 @@
                                 </div>
                                 <div v-show="text.questionType=='CHECKBOX'">
                                     <el-form-item :label="index+1">
-                                        <el-input class="" v-model="text.title" placeholder="请输入问诊标题"></el-input>
+                                        <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
                                     </el-form-item>
                                     <el-checkbox-group class="redioSingle">
                                         <el-checkbox v-for="(text1,index1) in text.solutionModels" :key="index1" :label="index1">
                                             <span>{{text1.tag}}</span>
-                                            <el-input class="" v-model="text1.answerDescribe" placeholder="请输入问诊标题"></el-input>
+                                            <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容"></el-input>
                                             <span class="questItemDelete" @click="deleteQuestText(index,index1)">
                                                 <img src="../assets/img/questDelete.png" />
                                             </span>
@@ -155,7 +156,7 @@
                                 </div>
                                 <div v-show="text.questionType=='TEXT'">
                                     <el-form-item :label="index+1">
-                                        <el-input class="" v-model="text.title" placeholder="请输入问诊标题"></el-input>
+                                        <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
                                     </el-form-item>
                                 </div>
                             </li>
@@ -252,7 +253,7 @@
             <el-dialog class="evaluateBox ArcticClass" title=" " :visible.sync="articleTableVisible" width="770px" hight="356px" center>
                 <el-form ref="form" :model="addArticleData" label-width="80px">
                     <el-form-item>
-                        <el-input class="addFollowTitle" v-model="addArticleData.title" placeholder="请输入随访标题"></el-input>
+                        <el-input class="addFollowTitle" v-model="addArticleData.title" placeholder="请输入文章标题"></el-input>
                     </el-form-item>
                     <el-form-item label="">
                         <el-select v-model="addArticleData.articleType" placeholder="请选择活动区域">
@@ -265,11 +266,9 @@
                     <div class="addArticleImg">
                         <el-upload class="avatar-uploader" :action="articleImg" :show-file-list="false" :on-success="articleImgSuccess">
                             <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                            <img v-else   src="../assets/img/addImg.png" class="addImgClass">
-                            <i style="display:none"  class="el-icon-plus avatar-uploader-icon"></i>
+                            <img v-else src="../assets/img/addImg.png" class="addImgClass">
+                            <i style="display:none" class="el-icon-plus avatar-uploader-icon"></i>
 
-
-                            
                         </el-upload>
                     </div>
                     <div>
@@ -507,6 +506,9 @@
                             <selftag :inData="oTab10" @reback="getOTab10" v-show="doctorSxVisiable"></selftag>
                             <selftag :inData="oTab11" @reback="getOTab11" v-show="doctorSxVisiable"></selftag>
                         </div>
+                        <div class="statistics-way" style='margin-top:4px;'>
+                            <publicTime @timeValue="getDocTime"></publicTime>
+                        </div>
                         <search @searchValue="docSearchChange"></search>
                         <el-button class="startConsul myStartConsul" v-show="docAddTemplate" type="text" @click="docAddTemplateFun()">新增模板</el-button>
                     </div>
@@ -659,7 +661,6 @@ import followDetail from "./followUpBox/followDetail.vue";
 import warnSet from "./followUpBox/warnSet.vue";
 import { quillEditor } from "vue-quill-editor";
 import chat from "../public/publicComponents/chat.vue";
-
 export default {
     components: {
         tableList,
@@ -731,7 +732,7 @@ export default {
             addFollowBtnVis: true,
             questVisible: false,
             addFollowData: {
-                department: [""],
+                department: [],
                 title: " ",
                 type: "INHOSPITAL",
                 remindMe: true,
@@ -1039,7 +1040,7 @@ export default {
                 type: "OUTPATIENT",
                 name: "",
                 context: " ",
-                deptId: [" "],
+                deptId: [],
                 associations: [
                     {
                         answer: " ",
@@ -1305,27 +1306,27 @@ export default {
             ],
             partDoctorType: "",
             addQuestData: {
-                departmentList: [""],
+                departmentList: [],
                 title: "",
                 bankModels: [
                     {
-                        title: "这是个文字问题",
+                        title: "",
                         questionType: "TEXT"
                     },
                     {
-                        title: "这是选项",
+                        title: "",
                         questionType: "CHECKBOX",
                         solutionModels: [
                             {
                                 sortId: 1,
                                 tag: "a",
-                                answerDescribe: "对"
-                            },
-                            {
-                                sortId: 2,
-                                tag: "b",
-                                answerDescribe: "不对"
+                                answerDescribe: ""
                             }
+                            // {
+                            //     sortId: 2,
+                            //     tag: "b",
+                            //     answerDescribe: "不对"
+                            // }
                         ]
                     }
                 ]
@@ -1336,7 +1337,7 @@ export default {
                 title: "",
                 articleType: " ",
                 subtitle: " ",
-                department: [" "],
+                department: [],
                 content: "",
                 summary: " ",
                 pictureId: " ",
@@ -1406,6 +1407,13 @@ export default {
         this.oGetResultGraph(); //满意度统计
     },
     mounted() {},
+     watch: {
+        "$store.state.user.viewRoot.now.name": {
+            handler(data) {
+                this.oUserType=data
+            }
+        }
+    },
     methods: {
         // 分页
         // 随访管理
@@ -2790,7 +2798,12 @@ export default {
                 });
             }
         },
-
+        getDocTime(data) {
+            console.log(data);
+            this.docStartTime = data[0];
+            this.docEndTime = data[1];
+            this.getUsFollow();
+        },
         //随访模板
         //随访模板列表
 
@@ -2948,11 +2961,30 @@ export default {
         },
         //新增随访表
         async addFollowTable() {
+            let addFollowData1 = JSON.parse(JSON.stringify(this.addFollowData.itemModels))
+
+            let olength = $(".addQuestBoxUlBox>li").length;
+            for (let i = 0; i < olength; i++) {
+                addFollowData1[i].contentModels.unshift({
+                    followUpType: "REMIND",
+                    title: $(".addQuestBoxUlBox>li:eq("+i+")").find('.remindText').val(),
+                    contentId: null
+                });
+            }
             let _this = this;
             let query = {
                 token: this.userState.token
             };
-            const options = this.addFollowData;
+            // const options = addFollowData1;
+            const options = {
+                department: this.addFollowData.department,
+                title: this.addFollowData.title,
+                type: "INHOSPITAL",
+                remindMe: this.addFollowData.remindMe,
+                remindHe: this.addFollowData.remindHe,
+                remindDays: this.addFollowData.remindDays,
+                itemModels: addFollowData1
+            };
             const res = await add(query, options);
             if (res.data && res.data.errCode === 0) {
                 this.$notify.success({
@@ -2962,6 +2994,22 @@ export default {
                 setTimeout(function() {
                     _this.followTableVisible = false;
                     _this.oGetTemplate();
+                    _this.addFollowData = {
+                        department: [],
+                        title: " ",
+                        type: "INHOSPITAL",
+                        remindMe: true,
+                        remindHe: true,
+                        remindDays: 1,
+                        itemModels: [
+                            {
+                                calcVal: 1,
+                                calcUnit: "天",
+                                state: true,
+                                contentModels: []
+                            }
+                        ]
+                    };
                 }, 1000);
             } else {
                 //失败
@@ -3037,6 +3085,36 @@ export default {
                     title: "成功",
                     message: "新增成功"
                 });
+                setTimeout(function() {
+                    _this.oQueryList();
+                    _this.QuestTableVisible = false;
+                    this.addQuestData = {
+                        departmentList: [],
+                        title: "",
+                        bankModels: [
+                            {
+                                title: "",
+                                questionType: "TEXT"
+                            },
+                            {
+                                title: "",
+                                questionType: "CHECKBOX",
+                                solutionModels: [
+                                    {
+                                        sortId: 1,
+                                        tag: "a",
+                                        answerDescribe: ""
+                                    }
+                                    // {
+                                    //     sortId: 2,
+                                    //     tag: "b",
+                                    //     answerDescribe: "不对"
+                                    // }
+                                ]
+                            }
+                        ]
+                    };
+                }, 1000);
             } else {
                 //失败
                 this.$notify.error({
@@ -3059,8 +3137,21 @@ export default {
                     message: "新增成功"
                 });
                 setTimeout(function() {
-                    this.oQueryArticleList();
+                    _this.oQueryArticleList();
                     _this.articleTableVisible = false;
+                    _this.addArticleData = {
+                        title: "",
+                        articleType: " ",
+                        subtitle: " ",
+                        department: [],
+                        content: "",
+                        summary: " ",
+                        pictureId: " ",
+                        pictureDownPath: " ",
+                        url: "",
+                        visible: true,
+                        openComment: true
+                    };
                 }, 1000);
             } else {
                 //失败
@@ -3131,6 +3222,18 @@ export default {
                 setTimeout(function() {
                     _this.mydAddTemplate = false;
                     _this.oGetModelList();
+                    this.mydAddData = {
+                        type: "OUTPATIENT",
+                        name: "",
+                        context: " ",
+                        deptId: [],
+                        associations: [
+                            {
+                                answer: " ",
+                                associationId: " "
+                            }
+                        ]
+                    };
                 }, 1000);
             } else {
                 //失败
@@ -3529,8 +3632,8 @@ export default {
     color: #ffffff;
     letter-spacing: -0.17px;
 }
-.addArticleImg input{
-    display:none !important
+.addArticleImg input {
+    display: none !important;
 }
 .ql-container {
     height: 144px;
@@ -3612,6 +3715,9 @@ export default {
 }
 .addQuestBox .el-form-item__content {
     margin-left: 20px !important;
+}
+.addQuestBox input{
+border:none
 }
 .redioSingle > label {
     display: block;
@@ -3700,45 +3806,45 @@ export default {
 .ArcticClass .el-dialog__body {
     background: #eff5fb;
 }
-.ArcticClass .el-dialog__body{
-        padding: 0px 6% 30px;
+.ArcticClass .el-dialog__body {
+    padding: 0px 6% 30px;
 }
-.ArcticClass .el-select .el-input__inner{
-    width:338px;
+.ArcticClass .el-select .el-input__inner {
+    width: 338px;
     height: 27px;
 }
-.ArcticClass .el-select{
+.ArcticClass .el-select {
     margin-bottom: 10px;
 }
-.articleContent{
+.articleContent {
     font-family: .PingFangSC-Regular;
-font-size: 12px;
-color: #646464;
-letter-spacing: -0.17px;
+    font-size: 12px;
+    color: #646464;
+    letter-spacing: -0.17px;
 }
-.addFollowMain>div:first-child{
+.addFollowMain > div:first-child {
     padding-left: 2.4%;
     padding-top: 3px;
-        margin-bottom: 4.1%;
-    width:509px;
+    margin-bottom: 4.1%;
+    width: 509px;
     height: 27px;
-    background: #FFFFFF;
-border: 1px solid #D4E1F0;
+    background: #ffffff;
+    /* border: 1px solid #d4e1f0; */
 }
-.addFollowMain .el-checkbox__label{
+.addFollowMain .el-checkbox__label {
     font-family: .PingFangSC-Regular;
-font-size: 14px;
-color: #030303 !important;
-letter-spacing: -0.17px;
+    font-size: 14px;
+    color: #030303 !important;
+    letter-spacing: -0.17px;
 }
-.addFollowMain>button{
-    width:169px;
+.addFollowMain > button {
+    width: 169px;
     height: 38px;
-    background: #6CA4FC;
+    background: #6ca4fc;
     font-family: .PingFangSC-Regular;
-font-size: 18px;
-color: #FFFFFF;
-letter-spacing: -0.25px;
+    font-size: 18px;
+    color: #ffffff;
+    letter-spacing: -0.25px;
 }
 .choiceItemBox > span {
     display: inline-block;
@@ -3867,9 +3973,9 @@ letter-spacing: -0.25px;
     line-height: 1px;
     color: #4d7cfe;
 }
-.addImgClass{
+.addImgClass {
     position: absolute;
     left: 0;
-    top:0
+    top: 0;
 }
 </style>

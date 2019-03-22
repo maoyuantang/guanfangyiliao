@@ -9,7 +9,8 @@
                
                 <template slot-scope="scope">
                     <span :class="scope.row.oclass">
-                        {{scope.row[column.prop]?scope.row[column.prop]:0}}
+                        <!-- {{scope.row[column.prop]?scope.row[column.prop]:0}} -->
+                        {{scope.row[column.prop]}}
                         {{column.width}}
                     </span>
                 </template>
