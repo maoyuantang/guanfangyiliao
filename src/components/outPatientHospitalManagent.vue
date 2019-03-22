@@ -31,7 +31,7 @@
 						<el-table-column prop="totalPeople" label="业务人次" :show-overflow-tooltip="true"></el-table-column>
 						<el-table-column prop="totalIncome" label="总收入" :show-overflow-tooltip="true"></el-table-column>
 						<el-table-column prop="queuePeople" label="当前排队" :show-overflow-tooltip="true"></el-table-column>
-						<el-table-column prop="updateTime" label="最近修改" :show-overflow-tooltip="true"></el-table-column>
+						<!-- <el-table-column prop="updateTime" label="最近修改" :show-overflow-tooltip="true"></el-table-column> -->
 
 						<el-table-column label="操作" width="300">
 							<template slot-scope="scope">
@@ -39,14 +39,6 @@
 								<button class="lvSe" @click="isShowEditFun(scope.row)">编辑</button>
 								<button class="fenSe" v-if="scope.row.state" @click="isShowForbidFun(scope.row)">禁用</button>
 								<button class="huangSe" v-else @click="isShowForbidFun(scope.row)">解除禁用</button>
-								<!-- <el-button @click="isShowViewDetailFun(scope.row)" type="success" plain size="mini"
-									style="margin:0.05rem 0 0.05rem 0;">查看详情</el-button>
-								<el-button @click="isShowEditFun(scope.row)" type="primary" plain size="mini"
-									style="margin:0.05rem 0 0.05rem 0;">编辑</el-button>
-								<el-button v-if="scope.row.state" @click="isShowForbidFun(scope.row)" type="danger" plain size="mini"
-									style="margin:0.05rem 0 0.05rem 0;">禁用</el-button>
-								<el-button v-else @click="isShowForbidFun(scope.row)" type="danger" plain size="mini"
-									style="margin:0.05rem 0 0.05rem 0;">解除禁用</el-button> -->
 							</template>
 						</el-table-column>
 					</el-table>
@@ -1748,8 +1740,10 @@
 			},
 			//表格样式
 			ceshi0(data) {
-				if (data.columnIndex == 4 || data.columnIndex == 5) {
+				if (data.columnIndex == 4) {
 					return 'ceshi'
+				} else if (data.columnIndex == 5) {
+					return 'ceshiLan'
 				}
 			}
 
@@ -1762,6 +1756,8 @@
 
 
 		async created() {
+			alert("userId:  " + this.userSelfInfo.userId)
+			alert("hospitalCode:  " + this.userInfo.hospitalCode)
 			this.getFilter0();//获取科室列表
 			this.getFilter1();//审核状态
 			this.getFilter2();//配送状态

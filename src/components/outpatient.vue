@@ -121,6 +121,7 @@
 
     .ceshiLan {
         color: #0064D9 !important;
+        font-weight: bold;
 
     }
 

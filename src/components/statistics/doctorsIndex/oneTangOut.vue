@@ -4,8 +4,7 @@
 
     <div v-if="centerDialogVisible">
       <el-dialog title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
-        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"
-          @reback="videoclick">
+        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick">
         </ovideo>
       </el-dialog>
     </div>
@@ -20,7 +19,7 @@
 
       <div v-for="(text,index1) in myHomes" :key="index1" class="fors" v-if="index1 < 2">
         <div class="title">
-          <div class="title1">{{text.orgName}}-{{text.clinicName}}</div>
+          <div class="title1">{{text.clinicName}}</div>
           <el-button type="primary" size="mini" @click="goShiPin(text)">点击进入</el-button>
         </div>
         <div class="i1"></div>
@@ -190,6 +189,8 @@
     box-shadow: 0 6px 36px 0 rgba(0, 62, 100, 0.04);
     border-radius: 4px;
     padding: 15px;
+    width: 5.2rem;
+    height: 3rem;
 
     .top {
       display: flex;
