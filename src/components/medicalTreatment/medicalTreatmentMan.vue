@@ -109,11 +109,11 @@
       </div>
       <div class="medical_body0_table">
         <el-table :data="medical_body0_Data" style="width: 100%" @cell-click="cellClick1" :max-height="400">
-          <el-table-column prop="deptName" label="科室"></el-table-column>
-          <el-table-column prop="typeName" label="类型"></el-table-column>
-          <el-table-column prop="id" label="编号"></el-table-column>
-          <el-table-column prop="medicalName" label="名称"></el-table-column>
-          <el-table-column prop="levelName" label="分级"></el-table-column>
+          <el-table-column prop="deptName" label="科室" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column prop="typeName" label="类型" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column prop="id" label="编号" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column prop="medicalName" label="名称" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column prop="levelName" label="分级" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="操作" width="300">
             <template slot-scope="scope">
               <button class="bianJi" @click="editList1(scope.row)">编 辑</button>
@@ -146,10 +146,10 @@
       <div class="medical_body1_table">
         <el-table :data="medical_body1_Data" :max-height="550" style="width: 100%" @cell-click="cellClick2"
           :cell-class-name="ceshi0" :key="Math.random()">
-          <el-table-column prop="deptName" label="科室"></el-table-column>
-          <el-table-column prop="direction" label="方向"></el-table-column>
-          <el-table-column prop="scope" label="范围"></el-table-column>
-          <el-table-column prop="levelDesc" label="疾病等级"></el-table-column>
+          <el-table-column prop="deptName" label="科室" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column prop="direction" label="方向" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column prop="scope" label="范围" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column prop="levelDesc" label="疾病等级" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="操作" width="300">
             <template slot-scope="scope">
               <button class="bianJi" @click="editList2(scope.row)">编 辑</button>
