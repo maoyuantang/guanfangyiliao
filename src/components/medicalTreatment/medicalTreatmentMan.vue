@@ -18,7 +18,7 @@
         <el-form :model="kuangData1.form">
           <el-form-item label="科室" :label-width="kuangData1.formLabelWidth">
             <el-select v-model="kuangData1.options1.value" placeholder="选择科室（单选）" style="width:80%">
-              <el-option v-for="item in kuangData1.options1.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="(item,index) in kuangData1.options1.list||[]" :key="index" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
 
@@ -40,7 +40,7 @@
 
           <el-form-item label="分级" :label-width="kuangData1.formLabelWidth">
             <el-select v-model="kuangData1.options4.value" placeholder="请选择1-4级" style="width:80%">
-              <el-option v-for="item in kuangData1.options4.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="(item,index) in kuangData1.options4.list||[]" :key="index" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -63,13 +63,13 @@
           <!-- :model="kuangData2.options" -->
           <el-form-item label="科         室:" :label-width="kuangData2.formLabelWidth">
             <el-select v-model="kuangData2.options1.value" placeholder="单选" style="width:80%" @change='isHaveDepartment21'>
-              <el-option v-for="item in kuangData2.options1.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="(item,index) in kuangData2.options1.list||[]" :key="index" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="接诊疾病等级:" :label-width="kuangData2.formLabelWidth">
             <el-select v-model="kuangData2.options2.value" multiple placeholder="多选" style="width:80%" @change="inputReturn21">
-              <el-option v-for="item in kuangData2.options2.list||[]" :key="item.value" :label="item.label" :value="item.value">
+              <el-option v-for="(item,index) in kuangData2.options2.list||[]" :key="index" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
@@ -952,13 +952,13 @@
       async fetchHospitalDepts() {
         const _this = this
         // 获取下拉   科室
-        let query1 = {
+        let query = {
           orgCode: this.userInfo.hospitalCode,
           token: this.userInfo.token,//用户登录标识
           deptId: "",//科室ID，无该参数则返回医院全部科室，有该参数则会过滤科室列表
           type: "MANAGE"//使用来源，DOCTOR医生端标签来源，MANAGE管理端标签页使用
         };
-        const res1 = await fetchHospitalDeptAuth(query1);                                 //1.2.1.获取医院科室列表（新）主要用于表单选择()
+        const res1 = await fetchHospitalDeptAuth(query);                                 //1.2.1.获取医院科室列表（新）主要用于表单选择()
         if (res1.data && res1.data.errCode === 0) {
           console.log('表1-新增2.2.获取医院科室列表 +成功')
           console.log(res1)
@@ -1139,8 +1139,18 @@
         if (res1.data && res1.data.errCode === 0) {
           console.log('权限控制-科室列表下拉框 +成功')
           console.log(res1)
-          const testJson = this.setJson(res1.data.body);
-          this.kuangData2.options1.list = testJson.data
+          // const testJson = this.setJson(res1.data.body);
+          // console.log(testJson)
+          // this.kuangData2.options1.list = testJson.data
+          this.kuangData2.options1.list.length = 0;
+          $.each(res1.data.body, function (index, text) {
+            _this.kuangData2.options1.list.push(
+              {
+                label: text.deptName,
+                value: text.deptId,
+              }
+            )
+          })
           console.log(this.kuangData2.options1.list)
         } else {
           //失败
@@ -1191,6 +1201,8 @@
       },
       //13.6.权限控制-接诊疾病等级下拉框
       async isHaveDepartment21() {
+        this.kuangData2.options2.value.length = 0;
+        this.kuangData2.options3.value.length = 0;
         if (this.kuangData2.options1.value != "") {
           let query = {
             token: this.userInfo.token,

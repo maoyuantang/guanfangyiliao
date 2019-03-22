@@ -25,7 +25,7 @@
           </div>
           <i></i>
           <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index' style="width: 90%;margin: auto;">
-            <el-table :data="text" :cell-class-name="ceshi0">
+            <el-table :data="text" :cell-class-name="ceshi0" :header-cell-style="rowClass">
               <el-table-column prop="unProcess" label="未处理"></el-table-column>
               <el-table-column prop="process" label="已处理"></el-table-column>
               <el-table-column prop="doctorCount" label="其他医生"></el-table-column>
@@ -280,7 +280,7 @@
               <button class="preview" @click='checkPrescription0'>不通过</button>
               <button class="preview" @click='checkPrescription'>生成电子处方</button>
             </div>
-            
+
             <!-- <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
             <el-button class="fail" type="info" @click='checkPrescription0'>不通过</el-button>
             <el-button class="success" type="success" @click='checkPrescription'>生成电子处方</el-button> -->
@@ -484,7 +484,7 @@
               <button class="preview" @click="dialogTableVisibleFun(text.pb.id)">预览</button>
               <button class="preview" @click="goMy">发货</button>
             </div>
-            
+
             <!-- <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
             <el-button class="ship" type="primary" plain @click="goMy">发货</el-button> -->
           </li>
@@ -1232,13 +1232,22 @@
 
       //表格样式
       ceshi0(data) {
+        console.log((data));
+        // if (data.rowIndex == 0) {
+        //   return 'ceshiLan'
+        // }
         if (data.columnIndex == 0) {
           return 'ceshiLan'
-        }
-        else if (data.columnIndex == 1 || data.columnIndex == 2) {
+        } else if (data.columnIndex == 1 || data.columnIndex == 2) {
           return 'ceshiHui'
         }
-      }
+      },
+      // rowClass({ row, rowIndex }) {
+      //   console.log({ row, rowIndex }) //表头行标号为0
+      //   if(row.label == "未处理"){
+      //     return 'background:red'
+      //   }
+      // }
     },
 
     async created() {
@@ -1863,7 +1872,7 @@
         border: 1px solid #e4e8eb;
         display: flex;
         padding: 10px;
-        justify-content:space-between;
+        justify-content: space-between;
 
         .preview {
           width: 90px;
@@ -1874,7 +1883,7 @@
           font-size: 12px;
           color: #4285F4;
           background: #ffffff;
-          margin:0 20px 0 0;
+          margin: 0 20px 0 0;
         }
 
         .fail {
@@ -2286,7 +2295,7 @@
           border: 1px solid #e4e8eb;
           display: flex;
           padding: 10px;
-          justify-content:space-between;
+          justify-content: space-between;
 
 
           .preview {}
@@ -2327,4 +2336,8 @@
     color: #5E6875;
     letter-spacing: 0;
   }
+
+  /* /deep/  th div{
+    color: red;
+  } */
 </style>
