@@ -25,6 +25,10 @@ export default {
 </script>
 
 <style>
+.publicTime>div{
+    display: flex;
+    display: -webkit-flex;
+}
 .publicTime input {
     width: 109px !important;
     height: 35px !important;
@@ -34,6 +38,11 @@ export default {
 }
 .publicTime .el-date-editor{
     border:none !important;
+}
+.demonstration{
+    display: inline-block;
+    width:37px;
+    line-height: 34px;
 }
 /* 备注
 

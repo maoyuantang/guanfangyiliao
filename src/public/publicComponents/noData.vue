@@ -1,9 +1,9 @@
 <template>
     <div style="text-align:center">
         <img src="../../../static/assets/img/nohave.png" />
-        <div>
+        <!-- <div>
             暂无数据
-        </div>
+        </div> -->
     </div>
 </template>
 <script>

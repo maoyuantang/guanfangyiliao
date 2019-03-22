@@ -104,6 +104,13 @@
                 </div>
             </div>
         </div>
+
+         <!-- 预览弹窗 -->
+    <div v-if="dialogTableVisible">
+      <el-dialog title="预览" :visible.sync="dialogTableVisible" center>
+        <img style="width:100%" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
+      </el-dialog>
+    </div>
     </div>
 </template>
 
@@ -127,6 +134,7 @@ export default {
             form: {
                 name: ""
             },
+            dialogTableVisible:false,
             familyMessage: {
                 name: "",
                 age: "",

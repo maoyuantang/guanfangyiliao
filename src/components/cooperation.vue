@@ -59,7 +59,7 @@
                         <template slot-scope="scope">
                             <span v-if="scope.row.synergyStatus==0">未开始</span>
                             <span v-if="scope.row.synergyStatus==1">进行中</span>
-                            <span v-if="scope.row.synergyStatus==1">结束</span>
+                            <span v-if="scope.row.synergyStatus==2">结束</span>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" width="300">
@@ -1046,6 +1046,13 @@ export default {
         this.dialogPurpose(); //可协作医生  列表
         this.DoctorList(); //医生协作列表
         console.log(this.$store.state.socket.messageTicket.msgId);
+    },
+     watch: {
+        "$store.state.user.viewRoot.now.name": {
+            handler(data) {
+                this.oUserType=data
+            }
+        }
     }
 };
 </script>
