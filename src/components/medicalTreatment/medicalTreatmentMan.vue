@@ -1288,7 +1288,7 @@
       //表格样式
       ceshi0(data) {
         if (data.columnIndex == 2) {
-          return 'ceshi'
+          return 'ceshiLan'
         }
       }
     },

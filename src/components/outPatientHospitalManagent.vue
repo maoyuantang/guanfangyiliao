@@ -1762,6 +1762,8 @@
 
 
 		async created() {
+			alert(this.userSelfInfo.userId)
+			alert(this.userInfo.hospitalCode)
 			this.getFilter0();//获取科室列表
 			this.getFilter1();//审核状态
 			this.getFilter2();//配送状态

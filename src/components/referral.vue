@@ -151,8 +151,6 @@
               <el-table-column label="操作" width="300">
                 <template slot-scope="scope">
                   <button class="lanSe" @click="dualReferralRecord1(scope.row)">查看记录</button>
-                  <!-- <el-button @click="viewFile2(scope.row)" type="warning" plain size="mini"
-                    style="margin:0.05rem 0 0.05rem 0;">查看反馈</el-button> -->
                 </template>
               </el-table-column>
             </el-table>
@@ -185,10 +183,12 @@
     <div v-else>
       <div class="doctorStyle">
         <selftag :inData="oTab4" @reback="getOTab4"></selftag>
-        <div class="manager_count_top_right">
-          <statisticsWay1 v-model="time" @reBack="getFilterTime"></statisticsWay1>
+        <div style="display: flex;">
+          <div class="manager_count_top_right">
+            <statisticsWay1 v-model="time" @reBack="getFilterTime"></statisticsWay1>
+          </div>
+          <el-button class="startConsul" type="text" @click="addMove">新增转诊</el-button>
         </div>
-        <el-button class="startConsul" type="text" @click="addMove">新增转诊</el-button>
       </div>
       <div class="doctorStyleBody">
         <div>
@@ -206,15 +206,8 @@
             <el-table-column label="操作" width="300">
               <template slot-scope="scope">
                 <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
-                <!-- <button class="jieChuJingYong" v-for="(text,index) in scope.row.buttons" :key="index"
-                  @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button> -->
                 <button :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
                   v-for="(text,index) in scope.row.buttons" :key="index" @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button>
-                <!-- <el-button @click="dualReferralRecord2(scope.row)" type="success" plain size="mini"
-                  style="margin:0.05rem 0 0.05rem 0;">转诊记录</el-button>
-                <el-button v-for="(text,index) in scope.row.buttons" :key="index" @click="list2Done(text.btnCommand,scope.row)"
-                  type="success" plain size="mini" style="margin:0 0.05rem;">
-                  {{text.btnName}}</el-button> -->
               </template>
             </el-table-column>
           </el-table>
@@ -1328,9 +1321,9 @@
   .doctorStyle {
     display: flex;
     display: -webkit-flex;
-    /* justify-content: space-evenly; */
+    margin: 50px 2.36rem 35px 0;
+    justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 52px;
   }
 
   .doctorStyleBody {

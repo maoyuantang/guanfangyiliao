@@ -99,7 +99,13 @@
       <button class="primary" @click="goMore">查看更多</button>
     </div>
     <div class="body">
+      <!-- {{docTableData}} -->
       <el-table :data="docTableData" style="width: 100%" :show-header="false">
+        <el-table-column label=" " width="70">
+          <template slot-scope="scope">
+            <img src="../../../assets/img/publicHeadImg.png" />
+          </template>
+        </el-table-column>
         <el-table-column prop="referralNo" label="编号" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="applyOrgName" label="申请医院" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="applyDeptName" label="申请科室" :show-overflow-tooltip="true"></el-table-column>
@@ -110,13 +116,13 @@
         <el-table-column prop="intention" label="目的" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="typeName" label="转诊类型" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column="right" label="" width="300">
+        <el-table-column label="" width="300">
           <template slot-scope="scope">
             <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
-            <!-- <button :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
-              v-for="(text,index) in scope.row.buttons" :key="index" @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button> -->
+            <button :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
+              v-for="(text,index) in scope.row.buttons" :key="index" @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button>
           </template>
-          </el-table-column>
+        </el-table-column>
       </el-table>
     </div>
   </div>

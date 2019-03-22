@@ -19,7 +19,7 @@
 
       <div v-for="(text,index1) in myHomes" :key="index1" class="fors" v-if="index1 < 2">
         <div class="title">
-          <div class="title1">{{text.orgName}}-{{text.clinicName}}</div>
+          <div class="title1">{{text.clinicName}}</div>
           <el-button type="primary" size="mini" @click="goShiPin(text)">点击进入</el-button>
         </div>
         <div class="i1"></div>
