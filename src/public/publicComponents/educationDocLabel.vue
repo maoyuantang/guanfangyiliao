@@ -18,7 +18,7 @@
                 </div>
                 <div>
                     <p class="name">报名人数</p>
-                    <p class="value">{{inData.num || '缺失'}}</p>
+                    <p class="value">{{inData.num || '0'}}</p>
                 </div>
                 <div>
                     <p class="name">状态</p>

@@ -1,10 +1,6 @@
 <template>
 	<div class="family-medicine-management" ref="familymedicinemanagement">
-		<div class="family-medicine-management-top">
-			<normalTab v-model="barInfo" @reBack="getBar"></normalTab>
-		</div>
-		<div class="family-medicine-management-body">
-			<div class="family-medicine-management-body-part-one" v-show="barInfo.i===0">
+        <div class="family-medicine-management-body-part-one" v-show="barInfo.i===0">
 				<div class="family-medicine-management-middle">
 					<div class="family-medicine-management-middle-left">
 						<selftag v-model="departmentList" @reback="getDepartmentSelect"></selftag>
@@ -40,31 +36,6 @@
 					</div>
 				</div>
 			</div>
-			<div class="family-medicine-management-body-part-two" v-show="barInfo.i===1">
-				<div class="part-two-head">
-					<div class="part-two-head-left">
-						<selftag v-model="statisticsInfo.departmentList" @reback="getStatisticsDepartmentSelect"></selftag>
-					</div>
-					<div class="part-two-head-right">
-						<publicTime @timeValue="timeValueFun"></publicTime>
-						<el-select v-model="statisticsInfo.countMethod.select.value" clearable placeholder="请选择">
-							<el-option
-							v-for="(item,index) in statisticsInfo.countMethod.list"
-							:key="index"
-							:label="item.name"
-							:value="item.value">
-							</el-option>
-						</el-select>
-					</div>
-				</div>
-				<div class="part-two-body">
-					<div class="part-two-body-layout">
-						<normalColumnChart v-model="statisticsInfo.push"></normalColumnChart>
-						<normalColumnChart v-model="statisticsInfo.query"></normalColumnChart>
-					</div>
-				</div>
-			</div>
-		</div>
 		<Modal
         :styles="{width: '850px'}"
         v-model="testData.show"
@@ -339,19 +310,19 @@
 <script>
 	import { mapState } from 'vuex'
 	import { Loading } from 'element-ui'
-	import normalTab from './../../public/publicComponents/normalTab.vue'
-	import selftag from './../../public/publicComponents/selftag.vue'
-	import search from './../../public/publicComponents/search.vue'
-	import publicInfoModule from './../../public/publicComponents/publicInfoModule.vue'
-	import publicTime from './../../public/publicComponents/publicTime.vue'
-	import normalColumnChart from './../../public/publicComponents/normalColumnChart.vue'
-	import check from './../../public/publicJs/check.js'
+	import normalTab from './../../../public/publicComponents/normalTab.vue'
+	import selftag from './../../../public/publicComponents/selftag.vue'
+	import search from './../../../public/publicComponents/search.vue'
+	import publicInfoModule from './../../../public/publicComponents/publicInfoModule.vue'
+	import publicTime from './../../../public/publicComponents/publicTime.vue'
+	import normalColumnChart from './../../../public/publicComponents/normalColumnChart.vue'
+	import check from './../../../public/publicJs/check.js'
 	import { 
 		stencilName, toolBusinessType, toolDept, doctorsByOrgCodeAndDeptId, fetchHospitalDepts, businessType, protocols, protocolById,
 		addBusiness, stencilModel, getChildrenByDepartmentId, businessCondition, disableClinic, updateBusiness, queryStatisticalData,
-		pushStatisticalData, toolBusinessModel
-	} from '../../api/apiAll.js'
-	import apiBaseURL from '../../enums/apiBaseURL.js'
+		pushStatisticalData, fetchHospitalDeptAuth
+	} from '../../../api/apiAll.js'
+	import apiBaseURL from '../../../enums/apiBaseURL.js'
 	export default {
 		watch:{
 			/**
@@ -433,17 +404,17 @@
 						total:'',//副标题
 					},
 				},
-				showInfo:{//显示的业务列表 
-					pageNum:1, //当前页
-					pageSize:9, //每页的数量
-					size:1,//当前页的数量
-					startRow:1,//当前页面第一个元素在数据库中的行号
-					endRow:1,//当前页面最后一个元素在数据库中的行号
-					total:4,//总记录数
-					pages:1,//总页数 
-					list:[],
-					logoName:''
-				},
+				// showInfo:{//显示的业务列表 
+				// 	pageNum:1, //当前页
+				// 	pageSize:9, //每页的数量
+				// 	size:1,//当前页的数量
+				// 	startRow:1,//当前页面第一个元素在数据库中的行号
+				// 	endRow:1,//当前页面最后一个元素在数据库中的行号
+				// 	total:4,//总记录数
+				// 	pages:1,//总页数 
+				// 	list:[],
+				// 	logoName:''
+				// },
 				testData:{ 
 					state:true,
 					show:false,//是否显示新增弹窗   
@@ -582,23 +553,23 @@
 							},
 						]
 					},
-					departmentList:{//科室列表   
-							show:false,
-							default:{
-								label:'',
-								value:''
-							},
-							list:[
-								// {
-								// 	label:'科室列表1',
-								// 	value:'1'
-								// },
-								// {
-								// 	label:'科室列表2',
-								// 	value:'2'
-								// }
-							]
-					}, 
+					// departmentList:{//科室列表   
+					// 		show:false,
+					// 		default:{
+					// 			label:'',
+					// 			value:''
+					// 		},
+					// 		list:[
+					// 			// {
+					// 			// 	label:'科室列表1',
+					// 			// 	value:'1'
+					// 			// },
+					// 			// {
+					// 			// 	label:'科室列表2',
+					// 			// 	value:'2'
+					// 			// }
+					// 		]
+					// }, 
 					doctorList:{//医生列表    
 							show:false,
 							default:[], 
@@ -656,53 +627,53 @@
 					]	
 				},
 
-				/**
-				 * 科室标签信息
-				 */
-				departmentList:{ 
-					more:false,
-                    title:'科室',
-                    list:[
-                        // {
-                        //     text:'全部'
-                        // },
-                        // {
-                        //     text:'今日'
-                        // }
-                    ]
-				},
+				// /**
+				//  * 科室标签信息
+				//  */
+				// departmentList:{ 
+				// 	more:false,
+                //     title:'科室',
+                //     list:[
+                //         // {
+                //         //     text:'全部'
+                //         // },
+                //         // {
+                //         //     text:'今日'
+                //         // }
+                //     ]
+				// },
 
-				/**
-				 * 业务模块信息
-				 */
-				bussModuleList:{
-					more:false,
-                    title:'业务模块',
-                    list:[
-                        {
-                            text:'全部'
-                        },
-                        {
-                            text:'今日'
-                        }
-                    ]
-				},
+				// /**
+				//  * 业务模块信息
+				//  */
+				// bussModuleList:{
+				// 	more:false,
+                //     title:'业务模块',
+                //     list:[
+                //         {
+                //             text:'全部'
+                //         },
+                //         {
+                //             text:'今日'
+                //         }
+                //     ]
+				// },
 
-				/**
-				 * 业务类型信息
-				 */
-				bussTypeList:{
-					more:false,
-                    title:'业务类型 ',
-                    list:[
-                        {
-                            text:'全部'
-                        },
-                        {
-                            text:'今日'
-                        }
-                    ]
-				},
+				// /**
+				//  * 业务类型信息
+				//  */
+				// bussTypeList:{
+				// 	more:false,
+                //     title:'业务类型 ',
+                //     list:[
+                //         {
+                //             text:'全部'
+                //         },
+                //         {
+                //             text:'今日'
+                //         }
+                //     ]
+				// },
 
 
 			}
@@ -792,38 +763,61 @@
 				console.log(item);
 			},
 
-			/**
-			 * 获取科室列表
-			 */
-			async getFetchHospitalDepts(){
-				const res = await fetchHospitalDepts({
-					orgCode:this.userSelfInfo.orgCode,
-					deptId:''
-				});
-				console.log(res)
-				if(res.data&&res.data.errCode===0){
-					const initArr = [{text:'全部'}];
-					res.data.body.forEach(element => {
-						element.text = element.deptName;
-						initArr.push(element);
-					});
-					this.departmentList.list = initArr.slice(0,initArr.length);
-					this.statisticsInfo.departmentList.list = initArr.slice(0,initArr.length);
-					this.testData.departmentList.list = res.data.body.map(item => {
-						return {
-							label:item.deptName,
-							value:item.deptId
-						}
-					});
-					// this.testData.departmentList.default = {
-					// 	label:this.testData.departmentList.list[0].label,
-					// 	value:this.testData.departmentList.list[0].value,
-					// };
-					this.getSelectDepartment(this.testData.departmentList.list[0].value);
-					this.getProtocols(this.testData.departmentList.list[0].value);
-				}
+			// /**
+			//  * 获取科室列表
+			//  */
+			// async getFetchHospitalDepts(){
+			// 	this.departmentList.list = this.global.manToolDept.map(item=>{
+			// 		item.text = item.name;
+			// 		// item.value = item.id;
+			// 		return item;
+			// 	});
 				
-			},
+			// 	this.statisticsInfo.departmentList.list = this.global.manToolDept.map(item=>{
+			// 		item.text = item.name;
+			// 		// item.value = item.id;
+			// 		return item;
+			// 	});
+			// 	// this.testData.departmentList.list = this.global.manToolDept.map(item=>{
+			// 	// 	return {
+			// 	// 		label:item.name,
+			// 	// 		value:item.id
+			// 	// 	}
+			// 	// });
+			// 	// this.getSelectDepartment(this.testData.departmentList.list[0].value);
+			// 	// this.getProtocols(this.testData.departmentList.list[0].value);
+			// 	// return;
+			// 	const res = await fetchHospitalDeptAuth({
+			// 		// orgCode:this.userSelfInfo.orgCode,
+			// 		// deptId:'',
+			// 		orgCode: this.userSelfInfo.orgCode,
+            //         token: this.userInfo.token,
+            //         type:'MANAGE'
+			// 	});
+			// 	console.log(res)
+			// 	if(res.data&&res.data.errCode===0){
+			// 		// const initArr = [{text:'全部'}];
+			// 		// res.data.body.forEach(element => {
+			// 		// 	element.text = element.deptName;
+			// 		// 	initArr.push(element);
+			// 		// });
+			// 		// this.departmentList.list = initArr.slice(0,initArr.length);
+			// 		// this.statisticsInfo.departmentList.list = initArr.slice(0,initArr.length);
+			// 		this.testData.departmentList.list = res.data.body.map(item => {
+			// 			return {
+			// 				label:item.deptName,
+			// 				value:item.deptId
+			// 			}
+			// 		});
+			// 		// this.testData.departmentList.default = {
+			// 		// 	label:this.testData.departmentList.list[0].label,
+			// 		// 	value:this.testData.departmentList.list[0].value,
+			// 		// };
+			// 		this.getSelectDepartment(this.testData.departmentList.list[0].value);
+			// 		this.getProtocols(this.testData.departmentList.list[0].value);
+			// 	}
+				
+			// },
 			/**
 			 * bar 切换数据
 			 */
@@ -844,17 +838,18 @@
 				this.getQueryStatisticalData();
 			},
 
-			/**
-			 * 科室标签 被点击(家医服务管理)
-			 */
-			getDepartmentSelect(item){
-				console.log(item)
-				this.searchCondition.department.id = item.index.deptId || '';
-				this.searchCondition.pageNum = 1;
-				this.getBussByCondition();
-				// this.getPushStatisticalData();
-				// this.getQueryStatisticalData();
-			},
+			// /**
+			//  * 科室标签 被点击(家医服务管理)
+			//  */
+			// getDepartmentSelect(item){
+			// 	console.log(item)
+			// 	// return;
+			// 	this.searchCondition.department.id = item.index.id || '';
+			// 	this.searchCondition.pageNum = 1;
+			// 	this.getBussByCondition();
+			// 	// this.getPushStatisticalData();
+			// 	// this.getQueryStatisticalData();
+			// },
 
 			/**
 			 * 业务模块 被点击
@@ -995,7 +990,7 @@
 					this.testData.doctorList.list = res.data.body.map(item => {
 						item.label = item.doctorName;
 						item.value = item.doctorId;
-						item.imgSrc = item.headId ? `${apiBaseURL.developmentEnvironment}/m/v1/api/hdfs/fs/download/${item.headId}` : item.headId;
+						item.imgSrc = item.headId ? `${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${item.headId}` : item.headId;
 						return item;
 					});
 					// this.testData.doctorList.default = [this.testData.doctorList.list[0].value,this.testData.doctorList.list[2].value]
@@ -1004,98 +999,82 @@
 				}
 			},
 
-			/**
-			 * 获取业务模块
-			 */
-			async getBussModuleList(){
-				const res = await toolBusinessModel({token:this.userInfo.token});
-				console.log(res)
-				if(res.data&&res.data.errCode===0){
-					this.bussModuleList.list = res.data.body.map(item=>{
-						item.text = item.name;
-						item.authorityId = item.id;
-						return item;
-					});
-				}else{
-					this.$notify({
-						title: '失败',
-						message: '设置失败',
-						type: 'error'
-					});
-				}
-				return;
-				let result = this.$store.state.user.userInfo.hasAuth.filter(item => item.type === '1');//筛选出管理权限
-				let mapList = [//全部列表
-					{
-						authorityId:'10000',
-						text:'远程门诊'
-					},
-					{
-						authorityId:'20000',
-						text:'远程会诊'
-					},
-					{
-						authorityId:'30000',
-						text:'远程协作'
-					},
-					{
-						authorityId:'40000',
-						text:'智能随访'
-					},
-					{
-						authorityId:'50000',
-						text:'健康档案'
-					},
-					{
-						authorityId:'60000',
-						text:'远程教育'
-					},
-					{
-						authorityId:'70000',
-						text:'分级诊疗'
-					},
-					{
-						authorityId:'80000',
-						text:'双向转诊'
-					},
-					{
-						authorityId:'90000',
-						text:'移动查房'
-					},
-					{
-						authorityId:'100000',
-						text:'终端管理'
-					},
-					{
-						authorityId:'110000',
-						text:'家医服务'
-					},
-				];
-				this.bussModuleList.list = [{text:'全部'},...result.map(item => {
-					for(const i of mapList){
-						if(i.authorityId === item.authorityId) return i;
-					}
-				})];
-			},
+			// /**
+			//  * 获取业务模块
+			//  */
+			// getBussModuleList(){
+			// 	let result = this.$store.state.user.userInfo.hasAuth.filter(item => item.type === '1');//筛选出管理权限
+			// 	let mapList = [//全部列表
+			// 		{
+			// 			authorityId:'10000',
+			// 			text:'远程门诊'
+			// 		},
+			// 		{
+			// 			authorityId:'20000',
+			// 			text:'远程会诊'
+			// 		},
+			// 		{
+			// 			authorityId:'30000',
+			// 			text:'远程协作'
+			// 		},
+			// 		{
+			// 			authorityId:'40000',
+			// 			text:'智能随访'
+			// 		},
+			// 		{
+			// 			authorityId:'50000',
+			// 			text:'健康档案'
+			// 		},
+			// 		{
+			// 			authorityId:'60000',
+			// 			text:'远程教育'
+			// 		},
+			// 		{
+			// 			authorityId:'70000',
+			// 			text:'分级诊疗'
+			// 		},
+			// 		{
+			// 			authorityId:'80000',
+			// 			text:'双向转诊'
+			// 		},
+			// 		{
+			// 			authorityId:'90000',
+			// 			text:'移动查房'
+			// 		},
+			// 		{
+			// 			authorityId:'100000',
+			// 			text:'终端管理'
+			// 		},
+			// 		{
+			// 			authorityId:'110000',
+			// 			text:'家医服务'
+			// 		},
+			// 	];
+			// 	this.bussModuleList.list = [{text:'全部'},...result.map(item => {
+			// 		for(const i of mapList){
+			// 			if(i.authorityId === item.authorityId) return i;
+			// 		}
+			// 	})];
+			// },
 
-			/**
-			 * 获取业务类型
-			 */
-			async getBussTypeList(){
-				const res = await businessType({
-					token:this.userInfo.token,
-					orgCode:this.userInfo.hospitalCode,
-					departmentId:''
-				});
-				console.log(res);
-				if(res.data&&res.data.errCode===0){
-					this.bussTypeList.list = [{text:'全部'},...res.data.body.map(item => {
-						return {text:item};
-					})]
-				}else{
+			// /**
+			//  * 获取业务类型
+			//  */
+			// async getBussTypeList(){
+			// 	const res = await businessType({
+			// 		token:this.userInfo.token,
+			// 		orgCode:this.userInfo.hospitalCode,
+			// 		departmentId:''
+			// 	});
+			// 	console.log(res);
+			// 	if(res.data&&res.data.errCode===0){
+			// 		this.bussTypeList.list = [{text:'全部'},...res.data.body.map(item => {
+			// 			return {text:item};
+			// 		})]
+			// 	}else{
 
-				}
-			},
+			// 	}
+			// },
 
 			/**
 			 * 根据科室获取协议

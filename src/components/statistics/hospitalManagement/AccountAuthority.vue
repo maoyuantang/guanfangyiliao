@@ -1,6 +1,6 @@
 <template>
   <div class="Account-authority">
-    {{ourStafAlert.data.manDepartment.select}}
+    <!-- {{ourStaff.ourStaffUser.page.pageNum}} -->
     <div class="select-div">
       <el-radio-group v-model="tabPosition" style="margin-bottom: 30px;">
         <el-radio-button label="left" :class="tabPosition==='left'?'left-btn-select':''">本院人员</el-radio-button>
@@ -41,7 +41,15 @@
                 <th>
                   <el-tooltip class="item" effect="light" placement="right">
                     <div slot="content" v-loading="item.pendding">
-                      <p v-for="(value,key) in item.addAttribute" :key="key">{{value.name}}</p>
+                      <div class="content-item">
+                        <p class="content-item-title">医生业务范围</p>
+                        <p v-for="(value,key) in item.addAttributeDoc?item.addAttributeDoc.authorizes:[]" :key="key">{{value.authorityName || ''}}</p>
+                      </div>
+                      <div class="content-item">
+                        <p class="content-item-title">科室管理权限范围</p>
+                        <p v-for="(value,key) in item.addAttributeMan?item.addAttributeMan.authorizes:[]" :key="key">{{value.authorityName || ''}}</p>  
+                      </div>
+                      
                     </div>
                     <div class="Account-authority-append-class" @mouseenter="getItemInfo(item,index)">{{item.busRange.length}}</div>
                   </el-tooltip>
@@ -111,7 +119,7 @@
               </tr>
             </tbody>
           </table>
-          <div class="pagination-div">
+          <!-- <div class="pagination-div">
             <el-pagination
               background
               layout="prev, pager, next"
@@ -119,9 +127,9 @@
               :current-page="ourStaff.ourStaffUser.page.pageNum"
               :total="ourStaff.ourStaffUser.page.total"
               v-if="ourStaff.ourStaffUser.page.total!=0"
-              @current-change="ourStaffChangePage"
+              @current-change="ourStaffChangePage2"
             ></el-pagination>
-          </div>
+          </div> -->
           <div class="pagination-div">
           <el-pagination
             background
@@ -567,8 +575,8 @@ export default {
      * 获取 具体业务范围
      */
     async getItemInfo(item,index){
-      console.log(item)
-      console.log(index)
+      // console.log(item)
+      // console.log(index)
       // return;
       if(this.ourStaff.ourStaffUser.list[index].addAttribute)return;
       if(this.ourStaff.ourStaffUser.list[index].pendding)return;
@@ -579,7 +587,8 @@ export default {
       });
       console.log(res);
       if (res.data && res.data.errCode === 0){
-        this.ourStaff.ourStaffUser.list[index].addAttribute = res.data.body;
+        this.ourStaff.ourStaffUser.list[index].addAttributeDoc = res.data.body[0];
+        this.ourStaff.ourStaffUser.list[index].addAttributeMan = res.data.body[1];
       }else{
 
       }
@@ -729,13 +738,14 @@ export default {
      * 本院人员 页码被选中
      */
     ourStaffChangePage(data) {
-      this.ourStaff.page.pageNum = data;
+      this.ourStaff.ourStaffUser.page.pageNum = data;
       this.getUserList();
     },
     /**
      * 修改用户信息
      */
     async modifyUserInfo(item) {
+      console.log(item)
       const res = await this.getUserInfo({
         token: this.userInfo.token,
         userId: item.id,
@@ -747,9 +757,15 @@ export default {
           (this.ourStafAlert.data.name = item.name);
         this.ourStafAlert.data.phone = item.phone;
         this.ourStafAlert.data.account = item.account;
+        // this.ourStafAlert.data.department.select = res.data.depts.map(
+        //   item => item.deptId
+        // );
         this.ourStafAlert.data.department.select = res.data.depts.map(
           item => item.deptId
-        );
+        )[0];
+        // console.log(res.data.depts.map(
+        //   item => item.deptId
+        // )[0])
         this.ourStafAlert.data.docBus.select = res.data.systemBusList.map(
           item => {
             item.id = item.subCode;
@@ -762,6 +778,7 @@ export default {
           item.label = item.subName;
           return item;
         });
+        this.ourStafAlert.data.manDepartment.select = res.data.managerDepts.map(item=>item.deptId)
         this.ourStafAlert.show = true;
       }
     },
@@ -1178,7 +1195,7 @@ export default {
           item.newTime = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;
           return item;
         });
-        this.ourStaff.ourStaffUser.page.total = res.data.body.data2.size;
+        this.ourStaff.ourStaffUser.page.total = res.data.body.data2.total;
       } else {
       }
     },
@@ -1527,5 +1544,11 @@ export default {
 }
 .account-authority-tbody th{
   font-weight: 100;
+}
+.content-item-title{
+  color: #D4D4D4;
+}
+.item{
+  width:.2rem;
 }
 </style>
