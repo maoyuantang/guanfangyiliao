@@ -205,7 +205,7 @@ export default {
             ).finish();
 
             //ws地址
-            let wsUrl = "wss://demo.chuntaoyisheng.com:10001/chat";//测试
+            let wsUrl = "wss://demo.chuntaoyisheng.com:10002/chat";//测试
             // let wsUrl = "wss://demo.chuntaoyisheng.com:10002/chat";//开发
             
             if (!window.webSocket) {
