@@ -14,14 +14,14 @@
             </div>
             <div class="login-input-div">
                 <span class="login-input-name">{{way?"密码":"验证码"}}</span>
-                <input type="password" name="" placeholder="请输入手机号/账号" class="login-input" v-model="passwd.text" @keyup="listenLogin($event)">
+                <input type="password" name="" placeholder="" class="login-input" v-model="passwd.text" @keyup="listenLogin($event)">
                 <span class="get-code" v-if="!way" @click="getCode">发送验证码</span>
             </div>
             <div class="login-btn-div">
                 <span class="login-btn" @click="loginMethod">登录</span>
             </div>
         </div>
-        <div class="login-welcome"><p>welcome</p></div>
+        <div class="login-welcome"><p>Welcome</p></div>
         <websocket1 ref="mychild"></websocket1>
     </div>
 </template>
@@ -441,20 +441,31 @@ export default {
 .login-input-div {
     display: flex;
     align-items: center;
+    padding-left: .1rem;
 }
 .login-input-name {
     display: flex;
     width: 0.5rem;
+    font-family: PingFangSC-Semibold;
+    font-size: 14px;
+    color: #5E6875;
+    letter-spacing: 0;
+    font-weight: bold;
 }
 .login-input {
     flex: 1;
 }
 .login-title {
-    font-size: 0.36rem;
-    color: var(--color4);
-    letter-spacing: 0;
+    /* font-size: 0.36rem; */
+    /* color: var(--color4); */
+    /* letter-spacing: 0; */
     padding: 0;
     margin-bottom: 0.72rem;
+    font-family: PingFangSC-Semibold;
+    font-size: 36px;
+    color: #195ADD;
+    letter-spacing: 0;
+    font-weight: 600;
 }
 .login-input-div {
     position: relative;
