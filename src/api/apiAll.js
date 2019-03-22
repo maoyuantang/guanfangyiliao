@@ -3203,3 +3203,14 @@ export const stateList = query => { //7.进行状态筛选条件列表
         }
     })
 }
+export const internalHospitalDoctor = query => { //3.10获取院内用户信息
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.internalHospitalDoctor,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

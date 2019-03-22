@@ -27,7 +27,7 @@
             <th></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="files-doc--tbody">
           <tr v-for="(item,index) in userList" :key="index">
             <th>
               <el-checkbox v-model="item.select">{{item.userName}}</el-checkbox>
@@ -840,5 +840,8 @@ line-height: 0.22rem;
 .doc-must-input{
   font-size: var(--fontSize1);
   color: red;
+}
+.files-doc--tbody th{
+  font-weight: 100;
 }
 </style>

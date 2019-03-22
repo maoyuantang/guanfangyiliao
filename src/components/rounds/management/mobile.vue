@@ -299,16 +299,17 @@
         color: #DF63AD;
         cursor: pointer;
     }
-    .mobile-thead th{
-        font-family: PingFangSC-Semibold;
-        font-size: 14px;
-        color: #5E6875;
-        letter-spacing: 0;
-    }
     .mobile-tbody th{
-        font-family: PingFangSC-Regular;
-        font-size: 12px;
-        color: #5E6875;
-        letter-spacing: 0;
+        font-weight: 100;
+    }
+    .mobile-body{
+        background: #FFFFFF;
+        border: 1px solid #E5EDF3;
+        box-shadow: 0 6px 36px 0 rgba(0,62,100,0.04);
+        border-radius: 4px;
+        padding-top: .32rem;
+        padding-left: .38rem;
+        padding-right: .68rem;
+        padding-bottom: .68rem;
     }
 </style>

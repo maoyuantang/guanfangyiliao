@@ -722,6 +722,9 @@
     .class-scheduling-tbody{
 
     }
+    .class-scheduling-tbody th{
+        font-weight: 100;
+    }
     .class-scheduling-table th{
         padding-top: 0.1rem;
         padding-bottom: 0.12rem;
@@ -805,6 +808,16 @@
     }
     .class-scheduling-alert-item-value-spe>.el-input{
         width: .64rem;
+    }
+    .class-scheduling-body{
+        background: #FFFFFF;
+        border: 1px solid #E5EDF3;
+        box-shadow: 0 6px 36px 0 rgba(0,62,100,0.04);
+        border-radius: 4px;
+        padding-top: .32rem;
+        padding-left: .38rem;
+        padding-right: .68rem;
+        padding-bottom: .68rem;	
     }
     .class-scheduling-body-paging{
         text-align: center;

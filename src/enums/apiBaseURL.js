@@ -4,5 +4,6 @@ module.exports =  {
     developmentEnvironment:"https://demo.chuntaoyisheng.com:10002",//测试环境
     onlineEnvironment:"https://api.chuntaoyisheng.com",//线上环境
     wsDevelopment:'wss://demo.chuntaoyisheng.com:10002',
-    wstestEnvironment:''
+    wstestEnvironment:'',
+    imgBaseUrl:'https://demo.chuntaoyisheng.com:10002',//图片基础路径  
 }

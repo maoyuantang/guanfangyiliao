@@ -222,7 +222,7 @@
                 console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.list = res.data.body.list.map(item=>{
-                        item.imgUrl = item.headId?`${urls.developmentEnvironment}/m/v1/api/hdfs/fs/download/${item.headId}`:item.headId;
+                        item.imgUrl = item.headId?`${urls.imgBaseUrl}/m/v1/api/hdfs/fs/download/${item.headId}`:item.headId;
                         item.loading = false;
                         return item;
                     });

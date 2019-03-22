@@ -189,7 +189,7 @@
             recording(item,index){
                 this.alertInfo.data = item;  
                 this.alertInfo.index = index;
-                this.alertInfo.data.imgSrc = this.alertInfo.data.patientHeadId?`${apiBaseURL.developmentEnvironment}/m/v1/api/hdfs/fs/download/${this.alertInfo.data.patientHeadId}`:this.alertInfo.data.patientHeadId;
+                this.alertInfo.data.imgSrc = this.alertInfo.data.patientHeadId?`${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${this.alertInfo.data.patientHeadId}`:this.alertInfo.data.patientHeadId;
                 this.alertInfo.show = true;
                 console.log(item)
             },
@@ -288,7 +288,7 @@
         flex: 1;
         text-align: center;
         display: flex;
-        justify-content: center;
+        justify-content: start;
     }
     .rounds-doctor-footer{
         text-align: center;
@@ -326,5 +326,8 @@
         color: #98A9BC;
         line-height: 31px;
         padding-left: .6rem;
+    }
+    .rounds-doctor-tbody th{
+        font-weight: 100;
     }
 </style>
