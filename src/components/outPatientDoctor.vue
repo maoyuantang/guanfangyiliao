@@ -274,9 +274,16 @@
           <!-- <div style="font-family: PingFangSC-Semibold;font-size: 14px;color: #5E6875;letter-spacing: 0;font-weight: bold;">备注：</div> -->
           <textarea class="doctorTalk" name="" id="" placeholder="备注：">{{text.remark}}</textarea>
           <li class="detailFooter">
-            <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
+            <div></div>
+            <div>
+              <button class="preview" @click="dialogTableVisibleFun(text.pb.id)">预览</button>
+              <button class="preview" @click='checkPrescription0'>不通过</button>
+              <button class="preview" @click='checkPrescription'>生成电子处方</button>
+            </div>
+            
+            <!-- <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
             <el-button class="fail" type="info" @click='checkPrescription0'>不通过</el-button>
-            <el-button class="success" type="success" @click='checkPrescription'>生成电子处方</el-button>
+            <el-button class="success" type="success" @click='checkPrescription'>生成电子处方</el-button> -->
           </li>
           <!-- <div>
             4555
@@ -472,8 +479,14 @@
           <!-- <div style="font-family: PingFangSC-Semibold;font-size: 14px;color: #5E6875;letter-spacing: 0;font-weight: bold;">备注：</div> -->
           <textarea class="doctorTalk" name="" id="" placeholder="备注：">{{text.remark}}</textarea>
           <li class="detailFooter">
-            <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
-            <el-button class="ship" type="primary" plain @click="goMy">发货</el-button>
+            <div></div>
+            <div>
+              <button class="preview" @click="dialogTableVisibleFun(text.pb.id)">预览</button>
+              <button class="preview" @click="goMy">发货</button>
+            </div>
+            
+            <!-- <el-button class="preview" type="primary" @click="dialogTableVisibleFun(text.pb.id)" plain>预览</el-button>
+            <el-button class="ship" type="primary" plain @click="goMy">发货</el-button> -->
           </li>
         </ul>
       </li>
@@ -551,9 +564,9 @@
 
     <!-- 视频聊天 -->
     <div v-if="centerDialogVisible">
-      <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()"  :showClose="VideoshowClose">
-        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"
-          @reback="videoclick">
+      <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen
+        @close="closeVideo()" :showClose="VideoshowClose">
+        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick">
         </ovideo>
       </el-dialog>
     </div>
@@ -610,7 +623,7 @@
     data() {
       return {
         //谭莹变量
-        VideoshowClose:false,
+        VideoshowClose: false,
         videoType: "门诊",
         chatVisible1: true,
         doctorVis: 1, //医生跟患者单聊
@@ -1847,14 +1860,38 @@
         width: 100%;
         margin: 2.5% 0 0 0;
         background: #ffffff;
-        /* border: 1px solid #e4e8eb; */
+        border: 1px solid #e4e8eb;
         display: flex;
+        padding: 10px;
+        justify-content:space-between;
 
-        .preview {}
+        .preview {
+          width: 90px;
+          height: 32px;
+          border: 1px solid #4285F4;
+          border-radius: 3px;
+          font-family: PingFangSC-Regular;
+          font-size: 12px;
+          color: #4285F4;
+          background: #ffffff;
+          margin:0 20px 0 0;
+        }
 
-        .fail {}
+        .fail {
+          border: 1px solid #4285F4;
+          border-radius: 3px;
+          font-family: PingFangSC-Regular;
+          font-size: 12px;
+          color: #4285F4;
+        }
 
-        .success {}
+        .success {
+          border: 1px solid #4285F4;
+          border-radius: 3px;
+          font-family: PingFangSC-Regular;
+          font-size: 12px;
+          color: #4285F4;
+        }
       }
     }
   }
@@ -2246,8 +2283,11 @@
           width: 100%;
           margin: 2.5% 0 0 0;
           background: #ffffff;
-          /* border: 1px solid #e4e8eb; */
+          border: 1px solid #e4e8eb;
           display: flex;
+          padding: 10px;
+          justify-content:space-between;
+
 
           .preview {}
 

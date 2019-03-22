@@ -1,52 +1,45 @@
 <template>
-  <div class="oneTangRef">
+  <div class="oneTangRef" v-show="docTableData.length != 0">
     <div v-if="isShowaddMove">
       <el-dialog title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
         <el-form :model="addForm">
           <div style="display:flex;margin:10px 0;">
             <el-form-item label="转诊类型:" :label-width="formLabelWidth">
               <el-select v-model="addForm.typeList.value" placeholder="上转/下转" clearable @change='upOrDown()'>
-                <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label"
-                  :value="item.value"></el-option>
+                <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label="疾病名称:" :label-width="formLabelWidth">
-              <el-select v-model="addForm.diseaseName.value" placeholder="请选择" clearable @change='diseaseNameId()'
-                ref="ceshi1">
-                <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label"
-                  :value="item.value"></el-option>
+              <el-select v-model="addForm.diseaseName.value" placeholder="请选择" clearable @change='diseaseNameId()' ref="ceshi1">
+                <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </div>
 
           <el-form-item label="病     人:" :label-width="formLabelWidth">
             <el-select v-model="addForm.patient.value" placeholder="请选择" clearable ref="ceshi2">
-              <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label"
-                :value="item.value">
+              <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
 
           <div class="block" style="margin-bottom: 22px;">
-            <span class="demonstration"
-              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
-            <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.value"
-              @change="handleChange" clearable ref="ceshi3">
+            <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
+            <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.value" @change="handleChange"
+              clearable ref="ceshi3">
             </el-cascader>
           </div>
 
           <el-form-item label="病历授权:" :label-width="formLabelWidth">
             <el-select v-model="addForm.giveRight.value" placeholder="单选" clearable>
-              <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label"
-                :value="item.value">
+              <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
 
           <div class="block" style="margin-bottom: 22px;">
-            <span class="demonstration"
-              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
+            <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
             <el-date-picker v-model="addForm.moveTime.value" type="datetime" placeholder="请选择" default-time="12:00:00">
             </el-date-picker>
           </div>
@@ -102,30 +95,28 @@
 
     <div class="top">
       <div class="top1">双向转诊</div>
-      <el-button type="primary" size="small" @click="goMore">查看更多</el-button>
+      <!-- <el-button type="primary" size="small" @click="goMore">查看更多</el-button> -->
+      <button class="primary" @click="goMore">查看更多</button>
     </div>
     <div class="body">
       <el-table :data="docTableData" style="width: 100%" :show-header="false">
-        <el-table-column fixed prop="referralNo" label="编号"></el-table-column>
-        <el-table-column fixed prop="applyOrgName" label="申请医院"></el-table-column>
-        <el-table-column fixed prop="applyDeptName" label="申请科室"></el-table-column>
-        <el-table-column fixed prop="" label="申请人"></el-table-column>
-        <el-table-column fixed prop="phone" label="手机号"></el-table-column>
-        <el-table-column fixed prop="applyTime" label="申请时间"></el-table-column>
-        <el-table-column fixed prop="patientName" label="病人"></el-table-column>
-        <el-table-column fixed prop="intention" label="目的"></el-table-column>
-        <el-table-column fixed prop="typeName" label="转诊类型"></el-table-column>
-        <el-table-column fixed prop="stateName" label="转诊状态"></el-table-column>
-        <el-table-column fixed="right" label="" width="300">
+        <el-table-column prop="referralNo" label="编号" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="applyOrgName" label="申请医院" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="applyDeptName" label="申请科室" :show-overflow-tooltip="true"></el-table-column>
+        <!-- <el-table-column prop="" label="申请人" :show-overflow-tooltip="true"></el-table-column> -->
+        <!-- <el-table-column prop="phone" label="手机号" :show-overflow-tooltip="true"></el-table-column> -->
+        <el-table-column prop="applyTime" label="申请时间" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="patientName" label="病人" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="intention" label="目的" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="typeName" label="转诊类型" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column="right" label="" width="300">
           <template slot-scope="scope">
-            <el-button @click="dualReferralRecord2(scope.row)" type="success" plain size="mini"
-              style="margin:0.05rem 0 0.05rem 0;">转诊记录</el-button>
-            <!-- style="margin:0.05rem 0 0.05rem 0;">查看记录（转诊记录）</el-button> -->
-            <el-button v-for="(text,index) in scope.row.buttons" :key="index"
-              @click="list2Done(text.btnCommand,scope.row)" type="success" plain size="mini" style="margin:0 0.05rem;">
-              {{text.btnName}}</el-button>
+            <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
+            <!-- <button :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
+              v-for="(text,index) in scope.row.buttons" :key="index" @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button> -->
           </template>
-        </el-table-column>
+          </el-table-column>
       </el-table>
     </div>
   </div>
@@ -804,6 +795,103 @@
     font-size: 14px;
     color: #646464;
     line-height: 21px;
+  }
+
+  .primary {
+    margin-top: 22px;
+    width: 113px;
+    height: 32px;
+    text-align: center;
+    line-height: 32px;
+    background: #ffffff;
+    border: 1px solid #e4e8eb;
+    border-radius: 5px;
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    color: #4285f4;
+    cursor: pointer;
+  }
+
+  .lanSe:focus {
+    outline: none;
+  }
+
+  .lvSe:focus {
+    outline: none;
+  }
+
+  .fenSe:focus {
+    outline: none;
+  }
+
+  .huangSe:focus {
+    outline: none;
+  }
+
+  .lanSe {
+    width: 57px;
+    height: 20px;
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid rgba(66, 133, 244, 0.6);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #4d7cfe;
+    line-height: 3px;
+    margin: 0 14px 0 14px;
+  }
+
+  .lvSe {
+    width: 57px;
+    height: 20px;
+    background: rgba(46, 189, 65, 0.10);
+    border: 1px solid rgba(46, 189, 65, 0.60);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #2EBD41;
+    line-height: 3px;
+    margin: 0 14px 0 14px;
+  }
+
+  .fenSe {
+    width: 57px;
+    height: 20px;
+    background: rgba(254, 77, 151, 0.10);
+    border: 1px solid rgba(254, 77, 151, 0.60);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #FE4D97;
+    line-height: 3px;
+    margin: 0 14px 0 14px;
+  }
+
+  .huangSe {
+    width: 57px;
+    height: 20px;
+    background: rgba(255, 171, 43, 0.10);
+    border: 1px solid rgba(255, 171, 43, 0.60);
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #FFAB2B;
+    line-height: 3px;
+    margin: 0 14px 0 14px;
+  }
+
+  /deep/ th {
+    font-family: PingFangSC-Semibold;
+    font-size: 14px;
+    color: #5E6875;
+    letter-spacing: 0;
+  }
+
+  /deep/ td {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #5E6875;
+    letter-spacing: 0;
   }
 </style>
 <!--

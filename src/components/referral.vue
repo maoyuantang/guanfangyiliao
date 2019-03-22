@@ -136,18 +136,18 @@
           </div>
           <div class="dataBody">
             <el-table :data="manageBodyData" :max-height="550" style="width: 100%">
-              <el-table-column prop="referralNo" label="编号"></el-table-column>
-              <el-table-column prop="deptName" label="科室"></el-table-column>
-              <el-table-column prop="applyOrgName" label="申请医院"></el-table-column>
-              <el-table-column prop="applyDeptName" label="申请科室"></el-table-column>
-              <el-table-column prop="" label="申请人"></el-table-column>
-              <el-table-column prop="applyTime" label="申请时间"></el-table-column>
-              <el-table-column prop="intention" label="目的"></el-table-column>
-              <el-table-column prop="patientName" label="病人"></el-table-column>
-              <el-table-column prop="" label="预约类型"></el-table-column>
-              <el-table-column prop="" label="方向"></el-table-column>
-              <el-table-column prop="receiveTime" label="接诊时间"></el-table-column>
-              <el-table-column prop="stateName" label="转诊状态"></el-table-column>
+              <el-table-column prop="referralNo" label="编号" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="deptName" label="科室" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="applyOrgName" label="申请医院" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="applyDeptName" label="申请科室" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="" label="申请人" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="applyTime" label="申请时间" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="intention" label="目的" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="patientName" label="病人" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="" label="预约类型" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="" label="方向" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="receiveTime" label="接诊时间" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="操作" width="300">
                 <template slot-scope="scope">
                   <button class="lanSe" @click="dualReferralRecord1(scope.row)">查看记录</button>
@@ -193,16 +193,16 @@
       <div class="doctorStyleBody">
         <div>
           <el-table :data="docTableData" style="width: 100%" :max-height="500">
-            <el-table-column prop="referralNo" label="编号"></el-table-column>
-            <el-table-column prop="applyOrgName" label="申请医院"></el-table-column>
-            <el-table-column prop="applyDeptName" label="申请科室"></el-table-column>
-            <el-table-column prop="" label="申请人"></el-table-column>
-            <el-table-column prop="phone" label="手机号"></el-table-column>
-            <el-table-column prop="applyTime" label="申请时间"></el-table-column>
-            <el-table-column prop="patientName" label="病人"></el-table-column>
-            <el-table-column prop="intention" label="目的"></el-table-column>
-            <el-table-column prop="typeName" label="转诊类型"></el-table-column>
-            <el-table-column prop="stateName" label="转诊状态"></el-table-column>
+            <el-table-column prop="referralNo" label="编号" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="applyOrgName" label="申请医院" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="applyDeptName" label="申请科室" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="" label="申请人" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="phone" label="手机号" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="applyTime" label="申请时间" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="patientName" label="病人" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="intention" label="目的" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="typeName" label="转诊类型" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column label="操作" width="300">
               <template slot-scope="scope">
                 <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
