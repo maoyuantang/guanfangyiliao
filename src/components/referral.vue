@@ -56,7 +56,10 @@
     <!-- 弹框2 新增转诊 -->
 
     <div v-if="isShowaddMove">
-      <el-dialog title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
+      <el-dialog class="eldialog" title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
+        <el-dialog class="eldialogs" :visible.sync="isShowaddMoveNei" append-to-body>
+          <el-tree :data="invitationData1" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
+        </el-dialog>
         <el-form :model="addForm">
           <div style="display:flex;margin:10px 0;">
             <el-form-item label="方向:" :label-width="formLabelWidth">
@@ -86,25 +89,24 @@
             </el-cascader>
           </div>
 
-          <el-form-item label="病历授权:" :label-width="formLabelWidth">
-            <el-select v-model="addForm.giveRight.value" placeholder="单选" clearable @click="medicalDone">
-              <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="病历授权:" :label-width="formLabelWidth">
-            <div @click="medicalDone">
-              <el-input placeholder="请选择"></el-input>
-              <!-- <el-input v-model="addForm.movePurpose" autocomplete="off" placeholder="请选择"></el-input> -->
-            </div>
-          </el-form-item>
-
           <div class="block" style="margin-bottom: 22px;">
             <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
             <el-date-picker v-model="addForm.moveTime.value" type="datetime" placeholder="请选择" default-time="12:00:00">
             </el-date-picker>
           </div>
+
+          <el-form-item label="病历授权:" :label-width="formLabelWidth">
+            <div @click="medicalDone">
+              <el-input v-model="addForm.giveRight.value" placeholder="请选择"></el-input>
+            </div>
+          </el-form-item>
+
+          <!-- <el-form-item label="病历授权:" :label-width="formLabelWidth">
+            <el-select v-model="addForm.giveRight.value" placeholder="单选" clearable @click="medicalDone">
+              <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item> -->
 
           <el-form-item label="转诊目的:" :label-width="formLabelWidth">
             <el-input v-model="addForm.movePurpose" autocomplete="off" placeholder="请填写"></el-input>
@@ -237,6 +239,13 @@
 <script>
   //引入接口
   import {
+
+    enableSynergyDoctor, //9.5获取可协作医生（本院、院外协作）
+
+
+
+
+
     // 已使用接口
     //筛选接口
     toolDept,//1.21.1.管理  科室列表
@@ -328,6 +337,13 @@
 
         // element
 
+        // 病历授权
+        invitationData1: [],
+        defaultProps: {
+          label: "name",
+          children: "children"
+        },
+
         // 必备参数
         time: null, // 时间筛选组件    statisticsWay
         //管理切换（复用组件 ）
@@ -383,6 +399,7 @@
         manageBodyData: [],
         //新增转诊（自定义组件 ）
         isShowaddMove: false,
+        isShowaddMoveNei: false,
         addForm: {
           typeList: {//转诊类型
             value: "",
@@ -919,8 +936,45 @@
           });
         }
       },
+      // 病历授权
       async medicalDone() {
-        alert(1)
+        this.isShowaddMoveNei = true
+        // this.consultationId = row.id;
+        this.invitationData1 = [];
+        // this.invitationVisible = true;
+        let _this = this;
+        let query = {
+          token: this.userInfo.token
+        };
+        const res = await enableSynergyDoctor(query);
+        if (res.data && res.data.errCode === 0) {
+          console.log(res.data.body);
+          this.invitationData1 = res.data.body;
+        } else {
+          //失败
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      handleCheckChange(data, checked, indeterminate) {
+        this.addForm.giveRight.value = "";
+        this.addForm.giveRight.list.length = 0;
+        console.log(checked);
+        let _this = this;
+        $.each(checked.checkedNodes, function (index, text) {
+          console.log(text);
+          // if (text.type == 3) {
+          //   console.log(_this.startXiezuo);
+          //   _this.startXiezuo.receiverId.push(text.id);
+          // }
+          if (text.type == 3) {
+            _this.addForm.giveRight.value = _this.addForm.giveRight.value + " " + text.name;
+            _this.addForm.giveRight.list.push(text.id)
+          }
+        });
+        console.log(this.addForm.giveRight.list)
       },
       //点击确定    新增门诊
       async dualReferralAdd1() {
@@ -1561,5 +1615,16 @@
     font-size: 12px;
     color: #5E6875;
     letter-spacing: 0;
+  }
+
+  .eldialog /deep/ .el-dialog {
+    width: 40%;
+    margin-left: 20%;
+  }
+
+  .eldialogs /deep/ .el-dialog {
+    border: 1px solid red;
+    width: 30%;
+    margin-left: 60%;
   }
 </style>
