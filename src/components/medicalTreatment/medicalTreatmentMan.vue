@@ -150,17 +150,10 @@
           <el-table-column prop="direction" label="方向" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="scope" label="范围" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="levelDesc" label="疾病等级" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column label="操作" width="300">
+          <el-table-column label="" width="300">
             <template slot-scope="scope">
-              <button class="bianJi" @click="editList2(scope.row)">编 辑</button>
-              <button class="jingYong" @click="delectList2(scope.row)">删 除</button>
-
-
-              <!-- <el-button @click="editList2(scope.row)" type="success" plain size="mini"
-                style="margin:0.05rem 0 0.05rem 0;">编辑
-              </el-button>
-              <el-button @click="delectList2(scope.row)" type="danger" plain size="mini"
-                style="margin:0.05rem 0 0.05rem 0;">删除 -->
+              <button v-if="scope.row.direction == '转入'" class="bianJi" @click="editList2(scope.row)">编 辑</button>
+              <button v-if="scope.row.direction == '转入'" class="jingYong" @click="delectList2(scope.row)">删 除</button>
               </el-button>
             </template>
           </el-table-column>
