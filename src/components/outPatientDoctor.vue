@@ -499,7 +499,10 @@
         <ul v-for="(text5,index) in huanzheList" :key="index" class="" style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px;">
           <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;margin:0 0 20px 0;">
             <div>
-              <h1 style="margin: 0 0 10px 0;">{{text5.userName}}</h1>
+              <div>
+                <img src="../assets/img/a-6.png" alt="">
+                <h1 style="margin: 0 0 10px 0;">{{text5.userName}}</h1>
+              </div>
               <div class="orderTime">
                 <span>下单时间:</span>
                 <span class="span">{{text5.clinicOrderTime}}</span>
@@ -508,11 +511,11 @@
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0;height: 40px;">
               <el-button type="success" plain @click="seeHistory(text5.userId)">查看档案</el-button>
               <el-button type="danger" @click="sendMessage(huanzheList3,text5)">发送</el-button>
-              <el-button type="info" plain>{{huanzheList[index].doctorStates?'未开始':'进行中'}}</el-button>
+              <!-- <el-button type="info" plain>{{huanzheList[index].doctorStates?'未开始':'进行中'}}</el-button> -->
             </div>
           </li>
 
-          <li class="drug" style="padding:0 0 20px 0;border-bottom:1px solid #d8d8d8">
+          <li v-if="text5.drugDetail.lenght != 0" class="drug" style="padding:0 0 20px 0;border-bottom:1px solid #d8d8d8">
             <div>
               <div class="drugTitle">Rx:</div>
               <div>
@@ -979,8 +982,8 @@
         const _this = this;
         let query = {
           token: this.userInfo.token,
-          pageNum: this.pageNum,
-          pageSize: this.pageSize
+          pageNum: 1,
+          pageSize: 5
         };
         const res = await onlineRoomsByDoctor(query);
         if (res.data && res.data.errCode === 0) {
