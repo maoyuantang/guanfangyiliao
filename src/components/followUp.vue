@@ -130,7 +130,7 @@
                                             <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容"></el-input>
                                             <span class="questItemDelete" @click="deleteQuestText(index,index1)">
                                                 <img src="../assets/img/questCha.png" />
-                                                
+
                                             </span>
                                         </el-radio>
                                     </el-radio-group>
@@ -501,14 +501,19 @@
                 <div v-show="odocVisable==0">
                     <div class="mainTab">
                         <div>
-                            <selftag :inData="oTab1" @reback="docDeperment"></selftag>
+                            <selftag :inData="oTab15" @reback="docDeperment"></selftag>
                             <selftag :inData="oTab2" @reback="getOTab2" v-show="doctorTemplateVisiable"></selftag>
                             <selftag :inData="oTab9" @reback="getOTab9" v-show="doctorSxVisiable"></selftag>
-                            <selftag :inData="oTab10" @reback="getOTab10" v-show="doctorSxVisiable"></selftag>
+                            <div style='display:flex'>
+                                <selftag :inData="oTab10" @reback="getOTab10" v-show="doctorSxVisiable"></selftag>
+                                <publicTime style='    margin-top: -1px;
+    margin-left: 55px;' @timeValue="getDocTime"></publicTime>
+                            </div>
+
                             <selftag :inData="oTab11" @reback="getOTab11" v-show="doctorSxVisiable"></selftag>
                         </div>
                         <div class="statistics-way" style='margin-top:4px;'>
-                            <publicTime @timeValue="getDocTime"></publicTime>
+
                         </div>
                         <search @searchValue="docSearchChange"></search>
                         <el-button class="startConsul myStartConsul" v-show="docAddTemplate" type="text" @click="docAddTemplateFun()">新增模板</el-button>
@@ -645,7 +650,8 @@ import {
     addfenzu,
     groupSelects,
     SETEQUIPMENT,
-    SETFOLLOWCHART
+    SETFOLLOWCHART,
+    toolMemberGroup
 } from "../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../plugs/echarts.js";
@@ -680,6 +686,7 @@ export default {
     },
     data() {
         return {
+            groupId: "",
             pieChart1: {
                 id: "myChart1",
                 data: {
@@ -935,6 +942,7 @@ export default {
             oTab11: { list: [] },
             oTab12: { list: [] }, //我的随访分组
             oTab14: { list: [] },
+            oTab15: { list: [] },
             odata: 1,
             columns: [
                 {
@@ -1370,7 +1378,7 @@ export default {
             adminTotal4: 0,
             adminTotal5: 0,
             adminTotal6: 0,
-            followMobanType:'',
+            followMobanType: ""
         };
     },
     computed: {
@@ -1400,6 +1408,7 @@ export default {
         // 医生
         this.screenPublic(this.oTab11, toolFollowupMode, "随访类型"); //随访类型
         this.screenPublic(this.oTab14, queryTypeList, "文章类型"); //随访类型
+        this.screenPublic(this.oTab15, toolMemberGroup, "分组"); //我的随访分组
         if (this.userState.rooter || this.userState.manager) {
             this.partDoctorType = "MANAGE";
         } else {
@@ -1409,10 +1418,10 @@ export default {
         this.oGetResultGraph(); //满意度统计
     },
     mounted() {},
-     watch: {
+    watch: {
         "$store.state.user.viewRoot.now.name": {
             handler(data) {
-                this.oUserType=data
+                this.oUserType = data;
             }
         }
     },
@@ -2763,18 +2772,20 @@ export default {
         addQueatOrArticle() {},
         //切换
         docDeperment(data) {
-            this.docDepartment = data.index.value;
-            if (this.oDocThis == 0) {
-                this.getUsFollow();
-            } else if (this.oDocThis == 1) {
-                this.oGetTemplate();
-            } else if (this.oDocThis == 2) {
-                this.oQueryList();
-            } else if (this.oDocThis == 3) {
-                this.oQueryArticleList();
-            } else if (this.oDocThis == 4) {
-                this.getQueryPageByDoctorWeb();
-            }
+            console.log(data.index.value);
+            this.groupId = data.index.value;
+            this.getUsFollow();
+            // if (this.oDocThis == 0) {
+            //     this.getUsFollow();
+            // } else if (this.oDocThis == 1) {
+            //     this.oGetTemplate();
+            // } else if (this.oDocThis == 2) {
+            //     this.oQueryList();
+            // } else if (this.oDocThis == 3) {
+            //     this.oQueryArticleList();
+            // } else if (this.oDocThis == 4) {
+            //     this.getQueryPageByDoctorWeb();
+            // }
         },
         //我的随访
         async getUsFollow() {
@@ -2783,7 +2794,7 @@ export default {
                 token: this.userState.token,
                 hadFollowup: this.hadFollowup,
                 search: this.docSearchData,
-                groupId: "",
+                groupId: this.groupId,
                 startTime: this.docStartTime,
                 endTime: this.docEndTime,
                 mode: ""
@@ -2814,7 +2825,7 @@ export default {
             const options = {
                 token: this.userState.token,
                 search: this.docSearchData,
-                type:this.followMobanType,
+                type: this.followMobanType,
                 department: this.docDepartment,
                 pageNum: this.adminPageNum4,
                 pageSize: 10
@@ -2964,13 +2975,17 @@ export default {
         },
         //新增随访表
         async addFollowTable() {
-            let addFollowData1 = JSON.parse(JSON.stringify(this.addFollowData.itemModels))
+            let addFollowData1 = JSON.parse(
+                JSON.stringify(this.addFollowData.itemModels)
+            );
 
             let olength = $(".addQuestBoxUlBox>li").length;
             for (let i = 0; i < olength; i++) {
                 addFollowData1[i].contentModels.unshift({
                     followUpType: "REMIND",
-                    title: $(".addQuestBoxUlBox>li:eq("+i+")").find('.remindText').val(),
+                    title: $(".addQuestBoxUlBox>li:eq(" + i + ")")
+                        .find(".remindText")
+                        .val(),
                     contentId: null
                 });
             }
@@ -3294,7 +3309,6 @@ export default {
 
         //我的随访查看详情
         async myFollowDetail(row) {
-            
             let _this = this;
             let query = {
                 token: this.userState.token,
@@ -3714,30 +3728,30 @@ export default {
 .addQuestBox .el-dialog__body {
     background: #eff5fb;
 }
-.addQuestBox .el-dialog__body{
-        padding: 18px 25px 30px;
+.addQuestBox .el-dialog__body {
+    padding: 18px 25px 30px;
 }
 .addQuestBox .el-form-item__label {
     width: 20px !important;
     line-height: 27px;
-    padding: 0
+    padding: 0;
 }
 .addQuestBox .el-form-item__content {
     margin-left: 20px !important;
 }
-.addQuestBox input{
-    width:500px;
-border:none
+.addQuestBox input {
+    width: 500px;
+    border: none;
 }
-.addQuestBox .el-form-item{
+.addQuestBox .el-form-item {
     width: 500px;
     height: 27px;
     background: white;
 }
-.addQuestBox .el-form-item__content{
-line-height: 27px
+.addQuestBox .el-form-item__content {
+    line-height: 27px;
 }
-.redioSingleInput .el-checkbox__input{
+.redioSingleInput .el-checkbox__input {
     left: -8px;
 }
 .redioSingle > label {
@@ -3766,11 +3780,11 @@ line-height: 27px
     width: 100%;
     height: 100%;
 }
-.redioSingleInput input{
-    width:338px;
+.redioSingleInput input {
+    width: 338px;
 }
-.redioSingleInput .el-input{
-    width:344px;
+.redioSingleInput .el-input {
+    width: 344px;
 }
 .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;

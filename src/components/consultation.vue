@@ -761,7 +761,7 @@ export default {
             let options = {
                 type: this.startHz.type,
                 deptId: this.startHz.deptId,
-                userId: '',
+                userId: this.startHz.userId,
                 medicalHistory: this.startHz.medicalHistory,
                 applicationTime: this.startHz.applicationTime,
                 consultationPurpose: this.startHz.consultationPurpose,
