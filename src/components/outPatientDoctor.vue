@@ -25,7 +25,8 @@
           </div>
           <i></i>
           <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index' style="width: 90%;margin: auto;">
-            <el-table :data="text" :cell-class-name="ceshi0" :header-cell-style="rowClass">
+            <!-- <el-table :data="text" :cell-class-name="ceshi0" :header-cell-style="rowClass"> -->
+            <el-table :data="text" :cell-class-name="ceshi0">
               <el-table-column prop="unProcess" label="未处理"></el-table-column>
               <el-table-column prop="process" label="已处理"></el-table-column>
               <el-table-column prop="doctorCount" label="其他医生"></el-table-column>
@@ -44,9 +45,12 @@
             <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
               <h1>{{text1.userName}}</h1>
               <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-                <el-button type="success" plain @click="seeHistory(text1.userId)">查看档案</el-button>
-                <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button>
-                <el-button type="info" plain>{{text.doctor.doctorStates?'未开始':'进行中'}}</el-button>
+                <button class="tanKuang1" @click="seeHistory(text1.userId)">查看档案</button>
+                <button class="tanKuang2" @click="sendMessage(text,text1)">发送</button>
+                <div class="tanKuang3">{{text.doctor.doctorStates?'未开始':'进行中'}}</div>
+                <!-- <el-button type="success" plain @click="seeHistory(text1.userId)">查看档案</el-button> -->
+                <!-- <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button> -->
+                <!-- <el-button type="info" plain>{{text.doctor.doctorStates?'未开始':'进行中'}}</el-button> -->
               </div>
             </li>
             <li class="medicalExpenses">
@@ -497,20 +501,22 @@
     <div v-if="isShowPatient">
       <el-dialog title="就诊列表" :visible.sync="isShowPatient" width="60%" center>
         <ul v-for="(text5,index) in huanzheList" :key="index" class="" style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px;">
-          <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;margin:0 0 20px 0;">
-            <div>
+          <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 100%;margin:0 0 20px 0;align-items: center;">
+            <div style="display: flex; align-items: center;">
+              <img style="width: 53px; margin: 0 30px 0 0;" src="../assets/img/a-6.png" alt="">
               <div>
-                <img src="../assets/img/a-6.png" alt="">
                 <h1 style="margin: 0 0 10px 0;">{{text5.userName}}</h1>
-              </div>
-              <div class="orderTime">
-                <span>下单时间:</span>
-                <span class="span">{{text5.clinicOrderTime}}</span>
+                <div class="orderTime">
+                  <span>下单时间:</span>
+                  <span class="span">{{text5.clinicOrderTime}}</span>
+                </div>
               </div>
             </div>
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0;height: 40px;">
-              <el-button type="success" plain @click="seeHistory(text5.userId)">查看档案</el-button>
-              <el-button type="danger" @click="sendMessage(huanzheList3,text5)">发送</el-button>
+              <button class="tanKuang1" @click="seeHistory(text5.userId)">查看档案</button>
+              <button class="tanKuang2" @click="sendMessage(huanzheList3,text5)">发送</button>
+              <!-- <el-button type="success" plain @click="seeHistory(text5.userId)">查看档案</el-button>
+              <el-button type="danger" @click="sendMessage(huanzheList3,text5)">发送</el-button> -->
               <!-- <el-button type="info" plain>{{huanzheList[index].doctorStates?'未开始':'进行中'}}</el-button> -->
             </div>
           </li>
