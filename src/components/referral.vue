@@ -328,6 +328,7 @@
         // 新增转诊
         referralType: '',//方向，UP上转，DOWN下转
         medicalId: '',//疾病ID(readMedicals  接口返回)
+        arrayMed: [],
         //管理操作区
         dualReferralRecordFile: {},
         //医生操作区
@@ -965,20 +966,25 @@
         let _this = this;
         $.each(checked.checkedNodes, function (index, text) {
           console.log(text);
-          // if (text.type == 3) {
-          //   console.log(_this.startXiezuo);
-          //   _this.startXiezuo.receiverId.push(text.id);
-          // }
           if (text.type == 3) {
             _this.addForm.giveRight.value = _this.addForm.giveRight.value + " " + text.name;
-            _this.addForm.giveRight.list.push(text.id)
+            _this.addForm.giveRight.list.push({
+              label: text.name,
+              value: text.id,
+            })
           }
         });
         console.log(this.addForm.giveRight.list)
       },
       //点击确定    新增门诊
       async dualReferralAdd1() {
+        const _this = this;
         console.log(this.addForm)
+        this.arrayMed.length = 0
+        $.each(this.addForm.giveRight.list, function (index, text) {
+          _this.arrayMed.push(text.value)
+        });
+        console.log(this.arrayMed)
         let query = {
           token: this.userInfo.token
         };
@@ -995,7 +1001,7 @@
           intention: this.addForm.movePurpose,
           diagnose: this.addForm.beginIdea,
           // archivesAuthority: this.addForm.giveRight.value,
-          medicalRecordIds: this.addForm.giveRight.value
+          medicalRecordIds: this.arrayMed
         };
         console.log(options)
         const res = await dualReferralAdd(query, options);                                   //  14.6.双向转诊-WEB医生端-申请转诊 
