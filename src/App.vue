@@ -36,6 +36,7 @@ export default {
         })
     },
     created() {
+        console.log(this.userState.token)
         if (this.userState.token) {
             this.lianjie();
         }

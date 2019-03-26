@@ -567,7 +567,7 @@
 
     <div v-if="chatVisible">
       <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-        <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage"></chat>
+        <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage" :chatType="videoType"></chat>
       </el-dialog>
     </div>
 
@@ -575,7 +575,7 @@
     <div v-if="centerDialogVisible">
       <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen
         @close="closeVideo()" :showClose="VideoshowClose">
-        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick">
+        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick" :doctorVis='doctorVis'>
         </ovideo>
       </el-dialog>
     </div>

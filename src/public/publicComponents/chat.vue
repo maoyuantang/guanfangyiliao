@@ -253,7 +253,7 @@
         <!-- 视频聊天 -->
         <div v-if="videoVisible">
             <el-dialog class='videoClassBox' title="" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo('cancle','us')" :showClose="VideoshowClose">
-                <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId"></ovideo>
+                <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId" :doctorVis="doctorVis"></ovideo>
             </el-dialog>
         </div>
         <!-- 孕妇档案 -->
@@ -297,7 +297,8 @@ import {
     addWomanMessage,
     addOrdinaryArchives,
     getFollowUpPlan,
-    setRemark
+    setRemark,
+    bindSession
 } from "../../api/apiAll.js";
 import ovideo from "../../video/oVideo.vue";
 import { setTimeout } from "timers";
@@ -440,6 +441,9 @@ export default {
     methods: {
         //发送
         sendMessageChat(childMessageType, messageBody, childMessageType1) {
+            if (this.checkList == "门诊") {
+                this.bindOrder();
+            }
             let odate = new Date();
             let oHour = odate.getHours();
             let oMinite = odate.getMinutes();
@@ -487,7 +491,26 @@ export default {
                 alert("消息不能为空");
             }
         },
-
+        //绑定订单
+        async bindOrder() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                orderId: this.userMessage.orderId,
+                orderNo: this.userMessage.orderNo
+            };
+            const res = await bindSession(query, options);
+            if (res.data && res.data.errCode === 0) {
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         // 添加消息到发送框
         addMessageK(
             ouserId,
@@ -621,7 +644,22 @@ export default {
             }
         },
         //创建视频
-        async setVideo(num) {
+        setVideo(num) {
+            if (num == 1) {
+                if (this.checkList.length > 3) {
+                    this.$notify.error({
+                        title: "警告",
+                        message: "最多只能邀请3个人"
+                    });
+                    return;
+                } else {
+                    this.setVideo2(num);
+                }
+            } else {
+                this.setVideo2(num);
+            }
+        },
+        async setVideo2(num) {
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -1091,7 +1129,7 @@ export default {
                         ) {
                             //视频
                             if (odata[i].body.indexOf("refuse") > -1) {
-                                this.messageList[i].content = "挂断了视频";
+                                this.messageList[i].content = "拒绝了视频";
                             } else if (odata[i].body.indexOf("videoing") > -1) {
                                 this.messageList[i].content = "对方正在视频中";
                             } else if (
@@ -1129,7 +1167,7 @@ export default {
                         ) {
                             //视频
                             if (odata[i].body.indexOf("refuse") > -1) {
-                                this.messageList[i].content = "挂断了视频";
+                                this.messageList[i].content = "拒绝了视频";
                             } else if (odata[i].body.indexOf("videoing") > -1) {
                                 this.messageList[i].content = "对方正在视频中";
                             } else if (
@@ -1458,10 +1496,11 @@ export default {
     props: {
         sessionId: String, //会话Id
         doctorVis: Number,
-        userMessage: Object
+        userMessage: Object,
+        chatType: String
     },
     model: {
-        prop: ["sessionId", "doctorVis", "userMessage"],
+        prop: ["sessionId", "doctorVis", "userMessage", "chatType"],
         event: "reBack"
     }
 };
@@ -1738,7 +1777,7 @@ export default {
 .sendVideo .userMember .el-checkbox {
     display: block;
     text-align: left;
-    margin-left: 17px
+    margin-left: 17px;
 }
 .sendVideo .userMember h4 {
     margin-bottom: 13px;
@@ -1790,15 +1829,15 @@ export default {
     margin-top: 0 !important;
     height: 100%;
 }
-.videoUserHeadClass{
+.videoUserHeadClass {
     display: inline-block;
     width: 30px;
     height: 30px;
-    border-radius: 50%
+    border-radius: 50%;
 }
-.videoUserHeadClass>img{
+.videoUserHeadClass > img {
     width: 100%;
     height: 100%;
-       border-radius: 50%
+    border-radius: 50%;
 }
 </style>

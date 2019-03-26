@@ -14,17 +14,17 @@
                         <div class="localVideos1" v-if="localVideoVisable">
                             <video class="localVideo1" id="video" width="640" height="480" autoplay></video>
                         </div>
-                        <div v-else id="localVideos" v-loading="loadingUs" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
+                        <div v-else id="localVideos" v-loading="loadingUs" element-loading-text="加载视频中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
 
                         </div>
-                        
+
                         <div>
                             <div class="videoTopBtnBox">
                                 <div>
                                     <img src="./../../static/assets/img/danganVideo.png" /> 查档案
                                 </div>
                                 <div>
-                                    <div @click="screenClick()">屏幕分享</div>
+                                    <div v-if="screenClickVisable" @click="screenClick()">屏幕分享</div>
                                     <div @click="openPatientNum()" v-show="listVisable">列表</div>
                                 </div>
                             </div>
@@ -141,6 +141,7 @@ export default {
     },
     data() {
         return {
+            screenClickVisable: false,
             screenVisible: false,
             installScreenVisible: false,
             closeVideoBtnVieable: false,
@@ -164,9 +165,8 @@ export default {
             videoChatVisable: false,
             doctorVis: 1,
             videoIng: 0,
-            loadingUs:true,
-            // loadingUs:true,
-            loadingOther:true,
+            loadingUs: true,
+            loadingOther: true
         };
     },
     methods: {
@@ -1181,12 +1181,11 @@ export default {
         },
         //初始化配置
         firstSet() {
-            
             let _this = this;
             // var server = $("#server").val();
             // var server=this.oSeaver
             var server = "meet.xiaoqiangio.com";
-            alert("初始化配置"+server);
+            alert("初始化配置" + server);
             if (!server) {
                 alert("请输入服务器地址");
                 return false;
@@ -1236,6 +1235,7 @@ export default {
                 },
                 function(error) {
                     console.error("sign error : ", error);
+                    _this.firstSet();
                 },
                 true
             );
@@ -1296,7 +1296,9 @@ export default {
          * 匿名加入到房间
          */
         anonymousJoinRoomBtn() {
-            alert("匿名加入到房间"+this.createVideoRoomData1.conferenceNumber);
+            alert(
+                "匿名加入到房间" + this.createVideoRoomData1.conferenceNumber
+            );
             let _this = this;
             // var conferenceName = $("#anonymousConferenceName").val();
             let conferenceName = this.createVideoRoomData1.conferenceNumber;
@@ -1532,6 +1534,11 @@ export default {
         }
     },
     created() {
+        if (this.doctorVis == 0) {
+            this.screenClickVisable = true;
+        } else {
+            this.screenClickVisable = false;
+        }
         this.createVideoRoomData1 = this.createVideoRoomData;
         let _this = this;
 
@@ -1823,10 +1830,17 @@ export default {
         createVideoRoomData: Object,
         videoType: String,
         oClinicId: String,
-        sessionId1: String
+        sessionId1: String,
+        doctorVis: Number
     },
     model: {
-        prop: ["createVideoRoomData", "videoType", "oClinicId", "sessionId1"],
+        prop: [
+            "createVideoRoomData",
+            "videoType",
+            "oClinicId",
+            "sessionId1",
+            "doctorVis"
+        ],
         event: "reBack"
     }
 };
@@ -1905,7 +1919,7 @@ video {
     width: 30%;
 }
 .other-media video {
-        height: 100%;
+    height: 100%;
     padding: 0;
 }
 .us-media {
@@ -1917,10 +1931,10 @@ video {
     padding: 10px;
     background: white;
 }
-#localVideos>div{
+#localVideos > div {
     height: 100%;
 }
-#localVideos>div>div{
+#localVideos > div > div {
     height: 100%;
 }
 #localVideos div,
@@ -2014,7 +2028,7 @@ video {
     position: absolute;
     top: 10px;
     z-index: 999;
-        padding: 35px 20px 0px 20px;
+    padding: 35px 20px 0px 20px;
     width: 100%;
     display: flex;
     display: -webkit-flex;
@@ -2034,7 +2048,7 @@ video {
 .videoTopBtnBox > div:nth-child(2) {
     display: flex;
     display: -webkit-flex;
-        margin-top: -13px;
+    margin-top: -13px;
 }
 .videoTopBtnBox > div:nth-child(2) > div {
     /* position: relative;
@@ -2099,18 +2113,18 @@ video {
     color: #333;
     background-color: #fff;
 }
-.videoClassBox .el-dialog__header{
-height: 3%;
-padding:0
+.videoClassBox .el-dialog__header {
+    height: 3%;
+    padding: 0;
 }
-.videoClassBox .el-dialog__body{
+.videoClassBox .el-dialog__body {
     height: 96%;
-    padding:0 !important
+    padding: 0 !important;
 }
-.videoClassBox .el-dialog__body>div,
-.videoClassBox .el-dialog__body>div>div,
-.videoClassBox .el-dialog__body>div>div>div{
-    height: 100%
+.videoClassBox .el-dialog__body > div,
+.videoClassBox .el-dialog__body > div > div,
+.videoClassBox .el-dialog__body > div > div > div {
+    height: 100%;
 }
 /* 
 门诊打开注意 
