@@ -19,7 +19,8 @@ export default {
             content: "", //消息内容
             serverTime: "", //服务器时间
             oMsgId: "",
-        }
+        },
+        imgUrl:'https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/',//图片下载地址前缀
     },
     mutations: {
         /**

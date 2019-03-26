@@ -15,12 +15,21 @@
     </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
     data() {
         return {
             imgUrl:
                 "https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"
         };
+    },
+            computed: {
+        ...mapState({
+            userState: state => state.user.userInfo,
+            userSelfInfo: state => state.user.userSelfInfo,
+            userSocketInfo: state => state.socket
+
+        })
     },
     created() {},
     props: {

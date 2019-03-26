@@ -38,7 +38,9 @@ export default {
     computed: {
         ...mapState({
             userState: state => state.user.userInfo,
-            userSelfInfo: state => state.user.userSelfInfo
+            userSelfInfo: state => state.user.userSelfInfo,
+            userSocketInfo: state => state.socket
+
         })
     },
     data() {
@@ -53,6 +55,7 @@ export default {
                 moreLoadVisable:false,
         };
     },
+    
     methods: {
         //获取历史记录
         async getStoryMessage(index) {
@@ -127,7 +130,7 @@ export default {
                         text.body = "接受了视频";
                     }
                 } else if (text.childMessageType == "IMAGE") {
-                    text.body = _this.imgUrl + text.body;
+                    text.body = _this.userSocketInfo.imgUrl + text.body;
                 } else {
                     text.body = text.body;
                 }

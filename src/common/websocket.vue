@@ -41,7 +41,7 @@ export default {
     computed: {},
     data() {
         return {
-            startVideoName:'',
+            startVideoName: "",
             receiveVideoVisable: false,
             VideoVisable: false,
             webSocket: null,
@@ -205,9 +205,9 @@ export default {
             ).finish();
 
             //ws地址
-            let wsUrl = "wss://demo.chuntaoyisheng.com:10002/chat";//测试
+            let wsUrl = "wss://demo.chuntaoyisheng.com:10002/chat"; //测试
             // let wsUrl = "wss://demo.chuntaoyisheng.com:10002/chat";//开发
-            
+
             if (!window.webSocket) {
                 let owebsocket = new WebSocket(wsUrl);
                 this.$store.commit("socket/SETSOCKET", owebsocket);
@@ -365,6 +365,13 @@ export default {
                 this.heartCheck.start();
             } else if (RequestType == 102) {
                 alert("您在其他设备上进行了登录");
+                this.$store.commit("user/CLEARUSERINFO");
+                this.$store.commit("user/CLAERUSERSELFINFO");
+                sessionStorage.clear();
+                this.$store.state.socket.socketObj.close();
+                this.$router.replace({
+                    path: "/login"
+                });
             } else if (RequestType == 103) {
                 let Iessage = {
                     RequestType: 105,
@@ -494,7 +501,7 @@ export default {
                                         "&"
                                     )[1]
                                 };
-                                _this.startVideoName= odata.info.fromNickName
+                                _this.startVideoName = odata.info.fromNickName;
                                 _this.receiveVideoVisable = true;
                                 // this.$notify({
                                 //     title: "请注意",
@@ -1180,7 +1187,7 @@ export default {
         //关闭
         webSocketonclose(e) {
             // console.log("connection closed (" + e.code + ")");
-            this.reconnect();
+            // this.reconnect();
         },
         webSocketonopen(buffer) {
             if (this.$store.state.socket.socketObj.readyState === 1) {

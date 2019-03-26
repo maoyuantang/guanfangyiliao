@@ -41,10 +41,10 @@ export default {
 			  	type:'MANAGE',
 				token:this.userState.token
 		  });
-		  console.log(res);
+		//   console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETMANTOOLDEPT", res.data.body);
-				console.log(this.global.manToolDept)
+				// console.log(this.global.manToolDept)
 			}else{
 				this.$notify({
 					title: '失败',
@@ -61,10 +61,10 @@ export default {
 			  	type:'DOCTOR',
 				token:this.userState.token
 		  });
-		  console.log(res);
+		//   console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETDOCTOOLDEPT", res.data.body);
-				console.log(this.global.docToolDept)
+				// console.log(this.global.docToolDept)
 			}else{
 				this.$notify({
 					title: '失败',
@@ -78,10 +78,10 @@ export default {
 	   */
 	  async getAllHospital(){
 		  const res = await getAllHospital({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETALLHOSPITAL", res.data.body);
-				console.log(this.global.allHospital)
+				// console.log(this.global.allHospital)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -95,10 +95,10 @@ export default {
 		 */
 		async getToolReferralType(){
 			const res = await toolReferralType({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETTWOREFERRALDIRECTION", res.data.body);
-				console.log(this.global.TwoReferralDirection)
+				// console.log(this.global.TwoReferralDirection)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -112,10 +112,10 @@ export default {
 		 */
 		async getToolMedicalGrading(){
 			const res = await toolMedicalGrading({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETCLASSIFICATIONDIAGNOSISTREATMENT", res.data.body);
-				console.log(this.global.classificationDiagnosisTreatment)
+				// console.log(this.global.classificationDiagnosisTreatment)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -129,10 +129,10 @@ export default {
 		 */
 		async getToolMedicalType(){
 			const res = await toolMedicalType({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETLASSIFEDTREATMNTDIAGNOSISTYPES", res.data.body);
-				console.log(this.global.classifiedTreatmentDiagnosisTypes)
+				// console.log(this.global.classifiedTreatmentDiagnosisTypes)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -147,10 +147,10 @@ export default {
 		 */
 		async getQueryTypeList(){
 			const res = await queryTypeList({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETARTCLELISTTYPES", res.data.body);
-				console.log(this.global.articleListTypes)
+				// console.log(this.global.articleListTypes)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -164,10 +164,10 @@ export default {
 		 */
 		async getToolFollowupHasPlan(){
 			const res = await toolFollowupHasPlan({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETFOLLOWUPPLAN", res.data.body);
-				console.log(this.global.followupPlan)
+				// console.log(this.global.followupPlan)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -181,10 +181,10 @@ export default {
 		 */
 		async getToolDeviceType(){
 			const res = await toolDeviceType({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETEQUIPMENTTYPE", res.data.body);
-				console.log(this.global.equipmentType)
+				// console.log(this.global.equipmentType)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -201,7 +201,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETINVESTIGATIONMETHOD", res.data.body);
-				console.log(this.global.investigationMethod)
+				// console.log(this.global.investigationMethod)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -219,7 +219,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETSURVEYTYPES", res.data.body);
-				console.log(this.global.surveyTypes)
+				// console.log(this.global.surveyTypes)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -237,7 +237,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETFOLLOWUPCONTENT", res.data.body);
-				console.log(this.global.followupContents)
+				// console.log(this.global.followupContents)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -254,7 +254,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETFOLLOWUPMODE", res.data.body);
-				console.log(this.global.followupMode)
+				// console.log(this.global.followupMode)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -272,7 +272,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETFOLLOWUPTYPE", res.data.body);
-				console.log(this.global.followupType)
+				// console.log(this.global.followupType)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -290,7 +290,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETBUSINESSTYPE", res.data.body);
-				console.log(this.global.businessType)
+				// console.log(this.global.businessType)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -308,7 +308,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETBUSINESSMODULE", res.data.body);
-				console.log(this.global.businessModule)
+				// console.log(this.global.businessModule)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -326,7 +326,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETFILESOURCE", res.data.body);
-				console.log(this.global.fileSource)
+				// console.log(this.global.fileSource)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -344,7 +344,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETCOLLABORATIONSTATE", res.data.body);
-				console.log(this.global.collaborationState)
+				// console.log(this.global.collaborationState)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -363,7 +363,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETCONSULTATIONSTATUS", res.data.body);
-				console.log(this.global.consultationStatus)
+				// console.log(this.global.consultationStatus)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -381,7 +381,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETCONSULTATONTYPE", res.data.body);
-				console.log(this.global.consultationType)
+				// console.log(this.global.consultationType)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -401,7 +401,7 @@ export default {
 				console.log(res)
 				if(res.data&&res.data.errCode===0){
 						this.$store.commit("global/SETDEPARTENTLIST", res.data.body)
-						console.log(this.global.departmentList)
+						// console.log(this.global.departmentList)
 				}else{
 						this.$notify({
 								title: '失败',
@@ -419,7 +419,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETGROUP", res.data.body);
-				console.log(this.global.group)
+				// console.log(this.global.group)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -437,7 +437,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETDOCUMENTSCLASSIFICATION", res.data.body);
-				console.log(this.global.documentsClassification)
+				// console.log(this.global.documentsClassification)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -455,7 +455,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETUSERSOURCE", res.data.body);
-				console.log(this.global.userSource)
+				// console.log(this.global.userSource)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -473,7 +473,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETHOSPITALARCHIVES", res.data.body);
-				console.log(this.global.hospitalArchives)
+				// console.log(this.global.hospitalArchives)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -491,7 +491,7 @@ export default {
 			console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETPRESCRIPTIONREVIEWSTATUS", res.data.body);
-				console.log(this.global.prescriptionReviewStatus)
+				// console.log(this.global.prescriptionReviewStatus)
 			}else{
 				this.$notify({
 						title: '失败',
@@ -509,7 +509,7 @@ export default {
 				console.log(res);
 				if(res.data&&res.data.errCode===0){
 					this.$store.commit("global/SETPRESCRIPTIONDISTRIBUTIONSTATUS", res.data.body);
-					console.log(this.global.prescriptionDistributionStatus)
+					// console.log(this.global.prescriptionDistributionStatus)
 				}else{
 					this.$notify({
 							title: '失败',
@@ -527,7 +527,7 @@ export default {
 				console.log(res);
 				if(res.data&&res.data.errCode===0){
 					this.$store.commit("global/SETPRESCRIPTIONAUDITDOCTOR", res.data.body);
-					console.log(this.global.prescriptionAuditDoctor)
+					// console.log(this.global.prescriptionAuditDoctor)
 				}else{
 					this.$notify({
 							title: '失败',
@@ -545,7 +545,7 @@ export default {
 				console.log(res);
 				if(res.data&&res.data.errCode===0){
 					this.$store.commit("global/SETPRESCRIPTIONDISPENSER", res.data.body);
-					console.log(this.global.PrescriptionDispenser)
+					// console.log(this.global.PrescriptionDispenser)
 				}else{
 					this.$notify({
 							title: '失败',

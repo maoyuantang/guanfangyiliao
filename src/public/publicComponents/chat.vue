@@ -107,6 +107,10 @@
                     <h4>视频窗口最多拉取3个人</h4>
                     <el-checkbox-group v-model="checkList">
                         <el-checkbox v-for="(text,index) in userMemberNum" :label="text.userId" :key="index">
+                            <span class='videoUserHeadClass'>
+                                <img src="../../assets/img/sendNew2.png" />
+                            </span>
+
                             {{text.userName}}
                         </el-checkbox>
                     </el-checkbox-group>
@@ -379,8 +383,8 @@ export default {
             followListVisible: false, //随访列表详情是否显示
             ourl: "",
             imgId: "", //上传图片后得到的id
-            imgUrl:
-                "https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/",
+            // imgUrl:
+            //     "https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/",
             videoVisible: false, //视频是否显示
             areadyReadNum: "", //已读
             chatUser: "", //参与聊天的成员
@@ -403,7 +407,7 @@ export default {
             oMsgId: "",
             ReadMessage: "", //已读未读
             loadMoreVisable: false, //加载更多是否显示
-            oImgVisable:false,
+            oImgVisable: false
         };
     },
     computed: {
@@ -414,6 +418,7 @@ export default {
         })
     },
     created() {
+        // $('.chatRecord').scrollTop($('.chatRecord')[0].scrollHeight);
         console.log(ovideo);
         console.log(this.$store.state.socket.socketObj);
         // this.addMessageK1();
@@ -523,10 +528,10 @@ export default {
                 this.messageList.push({
                     fromNickName: fromNickName,
                     from: ouserId,
-                    content: this.imgUrl + oMessage,
+                    content: this.userSocketInfo.imgUrl + oMessage,
                     serverTime: oMessageTime,
                     childMessageType: childMessageType,
-                    signImages: [this.imgUrl + oMessage]
+                    signImages: [this.userSocketInfo.imgUrl + oMessage]
                 });
             } else {
                 this.messageList.push({
@@ -772,9 +777,8 @@ export default {
             this.getFamily();
         },
         // 提交审核成功后关闭处方界面
-        drugsFunc(){
-            this.drugsVisible=false
-
+        drugsFunc() {
+            this.drugsVisible = false;
         },
         async addPublicFile(data) {
             console.log(data);
@@ -1014,7 +1018,7 @@ export default {
                 userId: this.userSelfInfo.userId,
                 sessionId: [this.sessionId],
                 msgId: this.oMsgId,
-                pageNums: 15
+                pageNums: 15000000
             };
             console.log(Object.prototype.toString.call([this.sessionId]));
             const res = await fetchHistoryMessage(query, options);
@@ -1052,7 +1056,7 @@ export default {
                         this.messageList[i].oRead = false;
                     }
                     var ImgObj = new Image(); //判断图片是否存在
-                    ImgObj.src = this.imgUrl + odata[i].from;
+                    ImgObj.src = this.userSocketInfo.imgUrl + odata[i].from;
                     //没有图片，则返回-1
                     if (
                         ImgObj.fileSize > 0 ||
@@ -1155,9 +1159,9 @@ export default {
                             //     odata[i].body;
                             // this.messageList[i].imgUrl="http://pic1.nipic.com/2008-12-30/200812308231244_2.jpg"
                             this.messageList[i].content =
-                                this.imgUrl + odata[i].body;
+                                this.userSocketInfo.imgUrl + odata[i].body;
                             this.messageList[i].signImages = [
-                                this.imgUrl + odata[i].body
+                                this.userSocketInfo.imgUrl + odata[i].body
                             ];
                         } else if (odata[i].childMessageType == "AUDIO") {
                             //音频
@@ -1464,8 +1468,7 @@ export default {
 </script>
 
 <style>
-.sendMessageChat{
-
+.sendMessageChat {
 }
 .chat {
     width: 636px;
@@ -1735,13 +1738,17 @@ export default {
 .sendVideo .userMember .el-checkbox {
     display: block;
     text-align: left;
+    margin-left: 17px
 }
 .sendVideo .userMember h4 {
+    margin-bottom: 13px;
+    padding-top: 10px;
     font-family: PingFangSC-Regular;
     font-size: 14px;
     color: #5c5c5c;
     letter-spacing: 0;
 }
+
 .setVideoBtn {
     width: 80px;
     height: 30px;
@@ -1773,15 +1780,25 @@ export default {
     line-height: 23px;
     font-size: 11px;
 }
-.remarkClass .el-form-item__content{
-    margin-left:0
+.remarkClass .el-form-item__content {
+    margin-left: 0;
 }
-.drugsDialogClass{
-    
+.drugsDialogClass {
     height: 100%;
 }
-.drugsDialogClass>div{
-margin-top: 0 !important;
-height: 100%;
+.drugsDialogClass > div {
+    margin-top: 0 !important;
+    height: 100%;
+}
+.videoUserHeadClass{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%
+}
+.videoUserHeadClass>img{
+    width: 100%;
+    height: 100%;
+       border-radius: 50%
 }
 </style>

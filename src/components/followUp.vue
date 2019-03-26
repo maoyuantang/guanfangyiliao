@@ -108,7 +108,7 @@
         </div>
         <!--新增问诊模板 -->
         <div v-if="QuestTableVisible">
-            <el-dialog class="evaluateBox addQuestBox " title=" " :visible.sync="QuestTableVisible" width="602px" hight="356px" center>
+            <el-dialog class="evaluateBox addQuestBox " title=" " :visible.sync="QuestTableVisible" width="717px" hight="356px" center>
                 <el-form ref="form" :model="addQuestData" label-width="80px">
 
                     <el-form-item>
@@ -118,18 +118,19 @@
                         <ul class="addQuestUl">
                             <li v-for="(text,index) in addQuestData.bankModels" :key="index">
                                 <span class="deleteQuestList" @click="deleteQuestList(index)">
-                                    <img src="../assets/img/questDelete.png" />
+                                    <img src="../assets/img/questCha.png" />
                                 </span>
                                 <div v-show="text.questionType=='RADIO'">
                                     <el-form-item :label="index+1">
                                         <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
                                     </el-form-item>
-                                    <el-radio-group class="redioSingle">
+                                    <el-radio-group class="redioSingle redioSingleInput">
                                         <el-radio v-for="(text1,index1) in text.solutionModels" :key="index1" :label="index1">
                                             <span>{{text1.tag}}</span>
                                             <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容"></el-input>
                                             <span class="questItemDelete" @click="deleteQuestText(index,index1)">
-                                                <img src="../assets/img/questDelete.png" />
+                                                <img src="../assets/img/questCha.png" />
+                                                
                                             </span>
                                         </el-radio>
                                     </el-radio-group>
@@ -141,12 +142,12 @@
                                     <el-form-item :label="index+1">
                                         <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
                                     </el-form-item>
-                                    <el-checkbox-group class="redioSingle">
+                                    <el-checkbox-group class="redioSingle redioSingleInput">
                                         <el-checkbox v-for="(text1,index1) in text.solutionModels" :key="index1" :label="index1">
                                             <span>{{text1.tag}}</span>
                                             <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容"></el-input>
                                             <span class="questItemDelete" @click="deleteQuestText(index,index1)">
-                                                <img src="../assets/img/questDelete.png" />
+                                                <img src="../assets/img/questCha.png" />
                                             </span>
                                         </el-checkbox>
                                     </el-checkbox-group>
@@ -1368,7 +1369,8 @@ export default {
             adminTotal3: 0,
             adminTotal4: 0,
             adminTotal5: 0,
-            adminTotal6: 0
+            adminTotal6: 0,
+            followMobanType:'',
         };
     },
     computed: {
@@ -1546,8 +1548,8 @@ export default {
         },
         // 管理端类型
         getOTab2(data) {
-            this.otype = data.index.value;
-            this.getFoList();
+            this.followMobanType = data.index.value;
+            this.oGetTemplate();
             // this.getUsFollow();
             // this.oQueryList();
         },
@@ -2456,7 +2458,7 @@ export default {
                         label: "使用量"
                     }
                 ]),
-                    (this.doctorTemplateVisiable = false);
+                    (this.doctorTemplateVisiable = true);
                 this.docTableChecked = false;
                 this.oGetTemplate();
                 this.doctorBtn = [
@@ -2502,7 +2504,7 @@ export default {
                         label: "使用量"
                     }
                 ]),
-                    (this.doctorTemplateVisiable = true);
+                    (this.doctorTemplateVisiable = false);
                 this.docTableChecked = false;
                 this.oQueryList();
                 this.doctorBtn = [
@@ -2812,6 +2814,7 @@ export default {
             const options = {
                 token: this.userState.token,
                 search: this.docSearchData,
+                type:this.followMobanType,
                 department: this.docDepartment,
                 pageNum: this.adminPageNum4,
                 pageSize: 10
@@ -3291,7 +3294,7 @@ export default {
 
         //我的随访查看详情
         async myFollowDetail(row) {
-            this.followDetailVisible = true;
+            
             let _this = this;
             let query = {
                 token: this.userState.token,
@@ -3300,6 +3303,7 @@ export default {
             const res = await myFollowDetailFun(query);
             if (res.data && res.data.errCode === 0) {
                 this.followDetailData = res.data.body;
+                this.followDetailVisible = true;
             } else {
                 //失败
                 this.$notify.error({
@@ -3710,19 +3714,36 @@ export default {
 .addQuestBox .el-dialog__body {
     background: #eff5fb;
 }
+.addQuestBox .el-dialog__body{
+        padding: 18px 25px 30px;
+}
 .addQuestBox .el-form-item__label {
     width: 20px !important;
+    line-height: 27px;
+    padding: 0
 }
 .addQuestBox .el-form-item__content {
     margin-left: 20px !important;
 }
 .addQuestBox input{
+    width:500px;
 border:none
+}
+.addQuestBox .el-form-item{
+    width: 500px;
+    height: 27px;
+    background: white;
+}
+.addQuestBox .el-form-item__content{
+line-height: 27px
+}
+.redioSingleInput .el-checkbox__input{
+    left: -8px;
 }
 .redioSingle > label {
     display: block;
 }
-.redioSingle > label:first-child {
+.redioSingle > .el-checkbox {
     margin-left: 30px;
 }
 .choiceItemBox > span {
@@ -3735,7 +3756,7 @@ border:none
 }
 .deleteQuestList {
     position: absolute;
-    right: -19px;
+    right: 122px;
     top: 20px;
     width: 13px;
     height: 13px;
@@ -3744,6 +3765,12 @@ border:none
 .deleteQuestList > img {
     width: 100%;
     height: 100%;
+}
+.redioSingleInput input{
+    width:338px;
+}
+.redioSingleInput .el-input{
+    width:344px;
 }
 .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
@@ -3895,7 +3922,7 @@ border:none
     background: #eff5fb;
 }
 .firstDoctorTime .el-form-item__label {
-    width: 110px;
+    width: 110px !important;
 }
 .groupClass {
     position: relative;

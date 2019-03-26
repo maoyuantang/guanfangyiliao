@@ -187,6 +187,7 @@ export default {
         },
         openPatientNum() {
             this.closePatientNumVisable = true;
+            this.getThePatient();
         },
         closePatientNum() {
             this.closePatientNumVisable = false;
@@ -1938,11 +1939,11 @@ video {
 .patientClass {
     position: fixed;
     right: 16px;
-    top: 28px;
+    top: 3%;
     z-index: 999;
     padding-top: 68px;
     width: 304px;
-    height: 90% !important;
+    height: 96% !important;
     background: rgba(0, 0, 0, 0.8);
     color: white;
 }

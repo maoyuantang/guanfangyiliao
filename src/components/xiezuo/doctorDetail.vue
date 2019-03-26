@@ -6,7 +6,7 @@
             <li v-for="(text,index) in doctorDetailData" :key="index">
 
                 <div class="headImg">
-                    <img v-if="text.userHeadId" :src="imgUrl+text.userHeadId" />
+                    <img v-if="text.userHeadId" :src="userSocketInfo.imgUrl+text.userHeadId" />
                     <img v-else src="../../assets/img/publicHeadImg.png" />
 
                 </div>
@@ -21,9 +21,18 @@
 </template>
 <script>
 import noData from "../../public/publicComponents/noData.vue";
+import { mapState } from "vuex";
 export default {
     components: {
         noData
+    },
+        computed: {
+        ...mapState({
+            userState: state => state.user.userInfo,
+            userSelfInfo: state => state.user.userSelfInfo,
+            userSocketInfo: state => state.socket
+
+        })
     },
     data() {
         return {

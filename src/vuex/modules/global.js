@@ -31,6 +31,8 @@ export default {
         allHospital:[],//所有医院
         manToolDept:[],//筛选 科室列表(管理端)
         docToolDept:[],//筛选 科室列表(医生端)
+        
+       
 	},
 	mutations:{
         /**

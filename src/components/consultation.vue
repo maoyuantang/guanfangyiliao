@@ -761,7 +761,7 @@ export default {
             let options = {
                 type: this.startHz.type,
                 deptId: this.startHz.deptId,
-                userId: this.startHz.userId,
+                userId: '',
                 medicalHistory: this.startHz.medicalHistory,
                 applicationTime: this.startHz.applicationTime,
                 consultationPurpose: this.startHz.consultationPurpose,
@@ -1126,7 +1126,7 @@ export default {
     },
     async created() {
         this.getAdminList();
-        this.getDocList();
+       
         this.getAdminTjList();
         this.getApplyTjList();
         this.getHospitalment();
@@ -1151,6 +1151,12 @@ export default {
         "$store.state.user.viewRoot.now.name": {
             handler(data) {
                 this.oUserType=data
+                // if(data=='doctor')
+                // {
+                //      this.getDocList();
+                // }else{
+                //    this.getAdminList(); 
+                // }
             }
         }
     }

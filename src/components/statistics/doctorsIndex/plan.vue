@@ -563,11 +563,10 @@ export default {
             }
         },
         //告警列表
-        async getWarnList(row) {
+        async getWarnList() {
             let _this = this;
             let query = {
                 token: this.userState.token,
-                userId: row.userId
             };
             const res = await todayAlert(query);
             if (res.data && res.data.errCode === 0) {
