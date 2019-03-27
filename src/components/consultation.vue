@@ -27,7 +27,7 @@
                                 </el-select>
                             </el-form-item>
                         </div>
-                        <span class="addHospital" @click="addHospital">
+                        <span class="addHospital" @click="addHospital()">
                             <img src="../assets/img/addFollowJa1.png" />
                         </span>
                     </div>
@@ -727,7 +727,8 @@ export default {
         addHospital() {
             this.startHz.consultationHospitalDept.push({
                 hospitalId: "",
-                departmentsId: ""
+                departmentsId: "",
+                departmentListOO:[]
             });
         },
         adminSearchChange(data) {
@@ -1151,12 +1152,13 @@ export default {
         "$store.state.user.viewRoot.now.name": {
             handler(data) {
                 this.oUserType=data
-                // if(data=='doctor')
-                // {
-                //      this.getDocList();
-                // }else{
-                //    this.getAdminList(); 
-                // }
+                alert(data)
+                if(data=='doctor')
+                {
+                     this.getDocList();
+                }else{
+                   this.getAdminList(); 
+                }
             }
         }
     }
