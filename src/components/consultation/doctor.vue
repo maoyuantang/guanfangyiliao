@@ -1090,6 +1090,7 @@ export default {
     },
     async created() {
         this.getDocList();
+        this.getHospitalment()
     },
     watch: {
         "$store.state.user.viewRoot.now.name": {

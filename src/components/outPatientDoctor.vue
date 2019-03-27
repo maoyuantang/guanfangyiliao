@@ -44,18 +44,12 @@
             <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
               <h1>{{text1.userName}}</h1>
               <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-<<<<<<< HEAD
-                <el-button type="success" plain @click="seeHistory(text1.userId)">查看档案</el-button>
-                <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button>
-                <el-button type="info" plain>{{text.doctor.doctorStates?'未开始':'进行中'}}</el-button>
-=======
                 <span class="tanKuang1" @click="seeHistory(text1.userId)">查看档案</span>
                 <span class="tanKuang2" @click="sendMessage(text,text1)">发送</span>
                 <div class="tanKuang3">{{text.doctor.doctorStates?'未开始':'进行中'}}</div>
                 <!-- <el-button type="success" plain @click="seeHistory(text1.userId)">查看档案</el-button> -->
                 <!-- <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button> -->
                 <!-- <el-button type="info" plain>{{text.doctor.doctorStates?'未开始':'进行中'}}</el-button> -->
->>>>>>> b5a7cb23633e77429f1b68632792848b2e881dcb
               </div>
             </li>
             <li class="medicalExpenses">
@@ -505,16 +499,10 @@
     <!-- //某诊室的所有病人列表 -->
     <div v-if="isShowPatient">
       <el-dialog title="就诊列表" :visible.sync="isShowPatient" width="60%" center>
-<<<<<<< HEAD
-        <ul v-for="(text5,index) in huanzheList" :key="index" class="" style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px;">
-          <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;margin:0 0 20px 0;">
-            <div>
-=======
         <ul v-for="(text5,index) in huanzheList" :key="index" class="" style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px 15px;">
           <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 100%;margin:0 0 20px 0;align-items: center;">
             <div style="display: flex; align-items: center;">
               <img style="width: 53px; margin: 0 30px 0 0;" src="../assets/img/a-6.png" alt="">
->>>>>>> b5a7cb23633e77429f1b68632792848b2e881dcb
               <div>
                 <img src="../assets/img/a-6.png" alt="">
                 <h1 style="margin: 0 0 10px 0;">{{text5.userName}}</h1>
@@ -525,15 +513,10 @@
               </div>
             </div>
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0;height: 40px;">
-<<<<<<< HEAD
-              <el-button type="success" plain @click="seeHistory(text5.userId)">查看档案</el-button>
-              <el-button type="danger" @click="sendMessage(huanzheList3,text5)">发送</el-button>
-=======
               <span class="tanKuang1" @click="seeHistory(text5.userId)">查看档案</span>
               <span class="tanKuang2" @click="sendMessage(huanzheList3,text5)">发送</span>
               <!-- <el-button type="success" plain @click="seeHistory(text5.userId)">查看档案</el-button>
               <el-button type="danger" @click="sendMessage(huanzheList3,text5)">发送</el-button> -->
->>>>>>> b5a7cb23633e77429f1b68632792848b2e881dcb
               <!-- <el-button type="info" plain>{{huanzheList[index].doctorStates?'未开始':'进行中'}}</el-button> -->
             </div>
           </li>
@@ -560,13 +543,8 @@
             </div>
           </li>
 
-<<<<<<< HEAD
-          <li>
-            <el-table :data="huanzheList4[index]">
-=======
           <li class="noBorder">
             <el-table :data="huanzheList4[index]" style="border:none;">
->>>>>>> b5a7cb23633e77429f1b68632792848b2e881dcb
               <el-table-column prop="askTime" label="接诊时间"></el-table-column>
               <el-table-column prop="" label="首诊医生"></el-table-column>
               <el-table-column prop="askPrice" label="问诊费用"></el-table-column>
