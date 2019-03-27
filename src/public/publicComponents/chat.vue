@@ -8,8 +8,8 @@
                 <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
-                        <!-- <img v-if="imgUrl+text.from" :src="imgUrl+text.from" /> -->
-                        <img src="../../assets/img/publicHeadImg.png" />
+                        <img class='headImgClass'  :src="userSocketInfo.headImg+text.from"  :onerror="defaultImg" />
+                        <!-- <img src="../../assets/img/publicHeadImg.png" /> -->
                     </div>
                     <div class="otherCon">
                         <h4>
@@ -408,7 +408,8 @@ export default {
             oMsgId: "",
             ReadMessage: "", //已读未读
             loadMoreVisable: false, //加载更多是否显示
-            oImgVisable: false
+            oImgVisable: false,
+            defaultImg: 'this.src="' + require('../../assets/img/publicHeadImg.png') + '"'
         };
     },
     computed: {
@@ -1056,7 +1057,7 @@ export default {
                 userId: this.userSelfInfo.userId,
                 sessionId: [this.sessionId],
                 msgId: this.oMsgId,
-                pageNums: 15000000
+                pageNums: 15
             };
             console.log(Object.prototype.toString.call([this.sessionId]));
             const res = await fetchHistoryMessage(query, options);
@@ -1497,10 +1498,10 @@ export default {
         sessionId: String, //会话Id
         doctorVis: Number,
         userMessage: Object,
-        chatType: String
+        chatType1: String
     },
     model: {
-        prop: ["sessionId", "doctorVis", "userMessage", "chatType"],
+        prop: ["sessionId", "doctorVis", "userMessage", "chatType1"],
         event: "reBack"
     }
 };

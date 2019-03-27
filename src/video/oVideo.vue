@@ -166,7 +166,8 @@ export default {
             doctorVis: 1,
             videoIng: 0,
             loadingUs: true,
-            loadingOther: true
+            loadingOther: true,
+            streamObject:{}
         };
     },
     methods: {
@@ -220,8 +221,7 @@ export default {
                     sequence: this.$store.state.socket.messageTicket.sequence, //消息发送序号。
                     chatType: 2, //医生端标识
                     clientTime: timestamp,
-                    serverTime: this.$store.state.socket.messageTicket
-                        .serverTime
+                    serverTime: this.$store.state.socket.messageTicket.serverTime
                 }
             };
             console.log(Iessage);
@@ -309,6 +309,7 @@ export default {
         },
         //调用本地摄像头
         getLocal() {
+           let _this=this
             var aVideo = document.getElementById("video");
             this.$nextTick(() => {
                 var aCanvas = document.getElementById("canvas");
@@ -334,9 +335,12 @@ export default {
                 video.onerror = function() {
                     stream.stop();
                 };
+                _this.streamObject=stream
+                // stream.getTracks()[0].stop();
                 stream.onended = noStream;
                 video.onloadedmetadata = function() {
                     // alert("摄像头成功打开！");
+                    
                 };
             }
 
@@ -566,6 +570,7 @@ export default {
         },
         //关闭视频退出诊室
         async closeVideo() {
+            this.streamObject.getTracks()[0].stop();
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -2082,6 +2087,10 @@ video {
     position: absolute;
     top: 0;
     width: 100%;
+}
+.localVideos1>div>div:nth-child(2),
+.localVideos1>div>div:nth-child(3){
+    display: none !important
 }
 .videoChatBox {
     position: absolute;
