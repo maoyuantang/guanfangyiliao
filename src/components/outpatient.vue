@@ -279,6 +279,38 @@
         margin: 0 14px 0 14px;
     }
 
+    .tanKuang1 {
+        width: 88px;
+        height: 30px;
+        background: rgba(66, 133, 244, 0.1);
+        border-radius: 4px;
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #4D7CFE;
+        text-align: center;
+    }
+
+    .tanKuang2 {
+        width: 88px;
+        height: 30px;
+        background: rgba(254, 77, 151, 0.10);
+        border-radius: 4px;
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #FE4D97;
+        text-align: center;
+    }
+
+    .tanKuang3 {
+        width: 88px;
+        height: 30px;
+        font-family: PingFangSC-Regular;
+        font-size: 13px;
+        color: #97A3B4;
+        line-height: 30px;
+        text-align: center;
+    }
+
 
     /deep/ .el-table__header-wrapper th {
         font-family: PingFangSC-Semibold;
