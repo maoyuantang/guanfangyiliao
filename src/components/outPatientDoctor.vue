@@ -544,7 +544,7 @@
           </li>
 
           <li>
-            <el-table :data="huanzheList4[index]">
+            <el-table :data="huanzheList4[index]" style="border:none;">
               <el-table-column prop="askTime" label="接诊时间"></el-table-column>
               <el-table-column prop="" label="首诊医生"></el-table-column>
               <el-table-column prop="askPrice" label="问诊费用"></el-table-column>
