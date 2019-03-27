@@ -80,22 +80,21 @@
         </div>
 
         <!-- 发起协作弹框 -->
-        <el-dialog class="evaluateBox evaluateBox2" title=" 发起协作" :visible.sync="centerDialogVisible" width="602px" hight="356px" center>
+        <el-dialog class="invitationClass" title=" 发起协作" :visible.sync="centerDialogVisible" width="240px" hight="356px" center>
             <el-tree :data="invitationData1" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
             <el-form ref="form" :model="startXiezuo" label-width="80px">
-                <el-form-item label="病历">
+                <el-form-item class='invitationClassInput' label="病历">
                     <el-select v-model="startXiezuo.recordId" placeholder="请选择活动区域">
                         <el-option label="区域一" value="shanghai"></el-option>
                         <el-option label="区域二" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="目的">
+                <el-form-item class='invitationClassInput' label="目的">
                     <el-input v-model="startXiezuo.intention"></el-input>
                 </el-form-item>
 
                 <el-form-item>
-                    <el-button type="primary" @click="launchXiezuo()">确认</el-button>
-                    <el-button>取消</el-button>
+                    <el-button class='btnClass' type="primary" @click="launchXiezuo()">确认</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -121,9 +120,9 @@
 
         <!-- 邀请弹框 -->
         <div v-if="invitationVisible">
-            <el-dialog class="evaluateBox evaluateBox2" title=" 邀请医生" :visible.sync="invitationVisible" width="602px" hight="356px" center>
+            <el-dialog class="invitationClass" title=" 邀请医生" :visible.sync="invitationVisible" width="240px" hight="356px" center>
                 <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChangeInvita" show-checkbox></el-tree>
-                <el-button type="primary" @click="sureInvitation()">确认邀请</el-button>
+                <el-button class="btnClass"  type="primary" @click="sureInvitation()">确认邀请</el-button>
             </el-dialog>
         </div>
 
@@ -1212,5 +1211,22 @@ export default {
     display: flex;
     display: -webkit-flex;
     justify-content: space-between;
+}
+
+.invitationClass .el-form-item__label{
+    font-family: PingFangSC-Regular;
+font-size: 14px;
+color: #939EAB;
+letter-spacing: 0;
+    width:46px !important
+}
+.invitationClassInput .el-form-item__content{
+    margin-left: 48px !important;
+}
+.invitationClass .el-input__inner{
+    width:162px;
+    height: 28px;
+    border: 1px solid #E6EAEE;
+border-radius: 4px;
 }
 </style>

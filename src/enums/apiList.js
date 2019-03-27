@@ -307,5 +307,6 @@ export default {
     fetchHospitalDeptAuth:'/m/v1/api/basics/hospital/fetchHospitalDeptAuth',//1.2.1.获取医院科室列表（新）主要用于表单选择
     stateList:'/m/v1/api/inquiry/eduCourse/stateList',//7.进行状态筛选条件列表
     internalHospitalDoctor:'/m/v1/api/user/user/internalHospitalDoctor',//3.10获取院内用户信息
+    bindSession:'/m/v1/api/order/bindSession'
 }
 

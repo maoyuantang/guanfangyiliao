@@ -1011,6 +1011,20 @@ export const storageUsers = (query, data) => {//1.4.进入/退出视频房间
         }
     })
 }
+export const bindSession = (query, data) => {//1.4.进入/退出视频房间
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.bindSession,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+
+
 export const queryStorageUsers = query => {//1.5.根据房间号获取用户列表
     const sign = postQueryHandle(query);
     return axios({
