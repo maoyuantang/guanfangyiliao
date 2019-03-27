@@ -237,7 +237,7 @@
         font-size: 12px;
         color: #4d7cfe;
         line-height: 3px;
-        margin: 0 14px 0 14px;
+        margin: 0 14px 0 0;
     }
 
     .lvSe {
@@ -288,6 +288,8 @@
         font-size: 14px;
         color: #4D7CFE;
         text-align: center;
+        line-height: 30px;
+        margin: 0 10px 0 0;
     }
 
     .tanKuang2 {
@@ -299,6 +301,7 @@
         font-size: 14px;
         color: #FE4D97;
         text-align: center;
+        line-height: 30px;
     }
 
     .tanKuang3 {
@@ -309,6 +312,7 @@
         color: #97A3B4;
         line-height: 30px;
         text-align: center;
+        line-height: 30px;
     }
 
 

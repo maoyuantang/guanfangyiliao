@@ -1987,15 +1987,16 @@
 	}
 
 	.online-clinic-middle /deep/ .el-table__header-wrapper .el-table__header .has-gutter tr th div {
-		text-align: center;
+		/* text-align: center; */
 		white-space: nowrap !important;
 		padding: 0;
 	}
 
 	.online-clinic-middle /deep/ .el-table__body-wrapper tr .cell {
-		text-align: center;
+		/* text-align: center; */
 		white-space: nowrap !important;
 		padding: 0;
+		/* width: 70px !important; */
 	}
 
 	.online-clinic-middle /deep/ .el-table__fixed-right .el-table__fixed-body-wrapper .cell {}
