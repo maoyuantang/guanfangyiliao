@@ -118,6 +118,7 @@
         <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="" width="300">
           <template slot-scope="scope">
+            <button class="huangSe" @click="seeHistory(scope.row.patientId)">查看档案</button>
             <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
             <button :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
               v-for="(text,index) in scope.row.buttons" :key="index" @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button>
@@ -686,6 +687,15 @@
         console.log(data)
         this.$router.push({
           path: "/referral",
+        })
+      },
+      async seeHistory(data) {
+        console.log(data)
+        this.$router.push({
+          path: "/docDetailed",
+          query: {
+            id: data
+          }
         })
       },
 
