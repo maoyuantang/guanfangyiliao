@@ -843,4 +843,7 @@ line-height: 0.22rem;
 .files-doc--tbody th{
   font-weight: 100;
 }
+.files-doc-body{
+  padding-top: .2rem;
+}
 </style>

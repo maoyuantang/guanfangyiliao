@@ -145,6 +145,8 @@
 						size="mini"
 						clearable>
 						</el-input>
+						<span class="family-new-alert-normal-item-new-span">{{unitMap.find(item=>item.en===testData.businessTemplate.default.value)?unitMap.find(item=>item.en===testData.businessTemplate.default.value).unit:''}}</span>
+						
 					</div>
 				</div>
 
@@ -193,7 +195,7 @@
 						<div v-for="(item,index) in testData.doctorList.default" :key="index">
 							<div class="family-new-alert-normal-userhead-">
 								<div class="family-new-alert-normal-userhead">
-									<img :src="testData.doctorList.list.find(i=>i.value===item).imgSrc || '../../static/assets/img/a-6.png'" alt="">
+									<img :src="testData.doctorList.list.find(i=>i.value===item)?(testData.doctorList.list.find(i=>i.value===item).imgSrc || '../../static/assets/img/a-6.png'):'../../static/assets/img/a-6.png'" alt="">
 									<i class="iconfont" >&#xe611;</i>
 								</div>
 							</div>
@@ -388,6 +390,38 @@
 		},
 		data () {
 			return {
+				unitMap:[
+					{
+						text:'上门服务',
+						en:'SMFW',
+						unit:'/小时'
+					},
+					{
+						text:'智能陪检',
+						en:'ZNPJ',
+						unit:'/次'
+					},
+					{
+						text:'远程监护',
+						en:'YCJH',
+						unit:'/小时'
+					},
+					{
+						text:'在线咨询',
+						en:'ZXZX',
+						unit:'/次'
+					},
+					{
+						text:'家用设备',
+						en:'JYSB',
+						unit:'/天'
+					},
+					{
+						text:'陪护服务',
+						en:'PHFW',
+						unit:'/天'
+					}
+				],
 				searchCondition:{//搜索条件  
 					department:{
 						id:''
@@ -853,7 +887,7 @@
 				this.searchCondition.pageNum = 1;
 				this.getBussByCondition();
 				// this.getPushStatisticalData();
-				// this.getQueryStatisticalData();
+				// this.getQueryStatisticalData();   
 			},
 
 			/**
@@ -1082,19 +1116,11 @@
 			 * 获取业务类型
 			 */
 			async getBussTypeList(){
-				const res = await businessType({
-					token:this.userInfo.token,
-					orgCode:this.userInfo.hospitalCode,
-					departmentId:''
+				this.bussTypeList.list =  this.global.businessType.map(item=>{
+					item.text = item.name;
+					item.value = item.id;
+					return item;
 				});
-				console.log(res);
-				if(res.data&&res.data.errCode===0){
-					this.bussTypeList.list = [{text:'全部'},...res.data.body.map(item => {
-						return {text:item};
-					})]
-				}else{
-
-				}
 			},
 
 			/**
@@ -1262,8 +1288,8 @@
 				postData[1].businessType = this.testData.businessTypeList.default.value==='customize' ?this.testData.businessTypeList.default.label:this.testData.businessTypeList.default.value;
 				console.log(this.testData.type)
 				// return
-				const res = this.testData.type==='1'? await addBusiness(...postData):await updateBusiness(...postData);
-
+				// const res = this.testData.type==='1'? await addBusiness(...postData):await updateBusiness(...postData);
+				const res = this.testData.businessId?await updateBusiness(...postData):await addBusiness(...postData);
 				console.log(res);
 				if(res.data&&res.data.errCode===0){
 					this.testData = {
@@ -1362,7 +1388,8 @@
 						message: '设置成功',
 						type: 'success'
 					});
-					console.log('success')
+					console.log('success');
+					this.getBussByCondition();
 				}else{
 					console.log('error')
 					this.$notify({
@@ -1719,16 +1746,7 @@
 								label:'',
 								value:''
 							},
-							list:[
-								// {
-								// 	label:'科室列表1',
-								// 	value:'1'
-								// },
-								// {
-								// 	label:'科室列表2',
-								// 	value:'2'
-								// }
-							]
+							list:this.testData.departmentList.list
 					}, 
 					doctorList:{//医生列表    
 							show:false,
@@ -2018,5 +2036,9 @@
 	}
 	.family-medicine-management-page{
 		text-align: center;
+	}
+	.family-new-alert-normal-item-new-span{
+		display: inline-flex;
+		align-items: center;
 	}
 </style>

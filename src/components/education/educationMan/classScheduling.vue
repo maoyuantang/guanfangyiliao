@@ -653,6 +653,7 @@
                     token: this.userState.token,
                     type:'MANAGE'
                 });
+                console.log(res)
                 if(res.data && res.data.errCode === 0){
                    this.alertData.data.departmentList = res.data.body.map(item=>{
                         item.label = item.deptName;

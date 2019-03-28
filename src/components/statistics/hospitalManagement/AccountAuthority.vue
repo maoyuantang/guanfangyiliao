@@ -85,7 +85,7 @@
             </div>
           </div>
           <div class="right-model-head-operating">
-            <search></search>
+            <search @searchValue="outSearch"></search>
             <el-button type="primary" @click="inviteCollaboration">邀请协作</el-button>
           </div>
         </div>
@@ -305,8 +305,8 @@
               v-for="(item,index) in outerCourt.department.list"
               :key="index"
               size="mini"
-              :label="item.deptName"
-              :value="item.deptId">
+              :label="item.label"
+              :value="item.value">
             </el-option>
           </el-select>
         </div>
@@ -681,6 +681,14 @@ export default {
      */
     outerCourtUserHospitalSelect(data) {
       this.outerCourt.hospitalSelect = data.index;
+      this.getSynergyManageList();
+    },
+    /**
+     * 院外 关键字搜索
+     */
+    outSearch(value){
+      console.log(value)
+      this.outerCourt.searchKey = value;
       this.getSynergyManageList();
     },
     /**

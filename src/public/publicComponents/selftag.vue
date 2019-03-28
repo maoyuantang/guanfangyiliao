@@ -76,12 +76,12 @@ export default {
   color: #646464 !important;
   font-weight: bold;
   text-align: justify;
-  width: 1rem;
+  /* width: 1rem; */
   /* width:.8rem;
   display: inline-block; */
 }
 .self-tag > .tag-title::after{
-  content: ""; 
+  /* content: "";  */
   display: inline-block; 
   padding-left: 100%;
 }
@@ -100,7 +100,7 @@ export default {
   font-size: 14px;
   font-family: PingFangSC-Regular;
   color: #0067ff;
-  /* width: .7rem; */
+  min-width: .7rem;
 }
 .self-tag .warning{
     color:red;/*!important*/
