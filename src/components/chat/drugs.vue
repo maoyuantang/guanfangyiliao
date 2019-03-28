@@ -4,7 +4,7 @@
             <div class="drugs_box_lf">
                 <div>
                     <div class="drugs_box_lf_headImg">
-                        <img :src="imgUrl+familyMessage.userId" />
+                        <img :src="userSocketInfo.imgUrl+familyMessage.userId" />
                     </div>
                     <div class="drugsMessage">
                         <h4>{{familyMessage.name}}</h4>
@@ -54,7 +54,7 @@
 
                 </div>
                 <div>
-                    <search></search>
+                    <search @searchValue="searchChange"></search>
                     <div class="public-list drugTable">
                         <el-table :data="chufangData.drugDetails" border style="width: 100%">
                             <el-table-column fixed prop="date" label="序号" width="150">
@@ -97,13 +97,20 @@
                             <!-- {{countAllPrice}} -->
                         </div>
                         <div class="drugsBtnClass">
-                            <el-button type="primary">预览</el-button>
+                            <!-- <el-button type="primary" @click="dialogTableVisibleFun()">预览</el-button> -->
                             <el-button type="primary" @click="submitAudit()">提交审核</el-button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+         <!-- 预览弹窗 -->
+    <div v-if="dialogTableVisible">
+      <el-dialog title="预览" :visible.sync="dialogTableVisible" center>
+        <img style="width:100%" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
+      </el-dialog>
+    </div>
     </div>
 </template>
 
@@ -127,6 +134,7 @@ export default {
             form: {
                 name: ""
             },
+            dialogTableVisible:false,
             familyMessage: {
                 name: "",
                 age: "",
@@ -164,14 +172,17 @@ export default {
                         doctorAsk: "一定要按时按量吃药" //医生嘱托
                     }
                 ],
-                countAllPrice:""
+                countAllPrice:"",
+                searchData:''
             }
         };
     },
     computed: {
         ...mapState({
             userState: state => state.user.userInfo,
-            userSelfInfo: state => state.user.userSelfInfo
+            userSelfInfo: state => state.user.userSelfInfo,
+            userSocketInfo: state => state.socket
+
         })
     },
     methods: {
@@ -206,7 +217,7 @@ export default {
         async getDrugsByCondition() {
             let query = {
                 token: this.userState.token,
-                drugName: ""
+                drugName: this.searchData
             };
             const res = await drugsByCondition(query);
             if (res.data && res.data.errCode === 0) {
@@ -219,6 +230,12 @@ export default {
                     message: res.data.errMsg
                 });
             }
+        },
+        // 搜索
+        searchChange(data){
+            this.searchData=data
+            this.getDrugsByCondition()
+
         },
         //提交审核
         async submitAudit() {
@@ -259,7 +276,14 @@ export default {
             this.chufangData.userId = this.userMessage.userId;
             this.chufangData.orgCode = this.userMessage.orgCode;
             this.chufangData.rxRelOrderId=this.userMessage.clinicOrderId;
-        }
+        },
+        // 预览
+      dialogTableVisibleFun(row) {
+        console.log(row)
+        this.dialogTableVisible = true;
+        this.srcs = row
+        this.preLook();
+      },
     },
     props: {
         sendToUserId: String,

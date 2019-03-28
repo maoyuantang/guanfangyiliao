@@ -237,7 +237,7 @@
         font-size: 12px;
         color: #4d7cfe;
         line-height: 3px;
-        margin: 0 14px 0 14px;
+        margin: 0 14px 0 0;
     }
 
     .lvSe {
@@ -277,6 +277,42 @@
         color: #FFAB2B;
         line-height: 3px;
         margin: 0 14px 0 14px;
+    }
+
+    .tanKuang1 {
+        width: 88px;
+        height: 30px;
+        background: rgba(66, 133, 244, 0.1);
+        border-radius: 4px;
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #4D7CFE;
+        text-align: center;
+        line-height: 30px;
+        margin: 0 10px 0 0;
+    }
+
+    .tanKuang2 {
+        width: 88px;
+        height: 30px;
+        background: rgba(254, 77, 151, 0.10);
+        border-radius: 4px;
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #FE4D97;
+        text-align: center;
+        line-height: 30px;
+    }
+
+    .tanKuang3 {
+        width: 88px;
+        height: 30px;
+        font-family: PingFangSC-Regular;
+        font-size: 13px;
+        color: #97A3B4;
+        line-height: 30px;
+        text-align: center;
+        line-height: 30px;
     }
 
 

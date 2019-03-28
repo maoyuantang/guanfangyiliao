@@ -1,56 +1,54 @@
 <template>
-	<div class="top">
+    <div class="top">
         <!-- {{viewRoot.now}}
         {{userInfo.hasAuth.filter(item=>item.type==='1')}} -->
-		<!-- <div class="change-root" v-if="!userInfo.rooter">
+        <!-- <div class="change-root" v-if="!userInfo.rooter">
 			<el-menu :default-active="viewRoot.now.type" class="el-menu-demo" mode="horizontal" @select="handleSelect" v-if="showTopNav">
 				<el-menu-item index="1">管理权限</el-menu-item>
 				<el-menu-item index="2" :disabled="!canGotoDoctor">医生端</el-menu-item>
 			</el-menu>
 		</div> -->
         <div class="change-root" v-if="!userInfo.rooter">
-			<el-menu :default-active="viewRoot.now.type" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-				<el-menu-item index="1">管理权限</el-menu-item>
-				<el-menu-item index="2" :disabled="!canGotoDoctor">医生端</el-menu-item>
-			</el-menu>
-		</div>
-		<div class="top-left">
-			<marquee class="title-marquee">{{marquee}}</marquee>
-			<div class="msg" @click="openNotice()">
-				<i id="noticeIconClass" v-show="noticeRedVisable" class="iconfont">&#xe8c0;</i>
-			</div>
-		</div>
-		<div class="top-right">
-			<div class="top-right-posi">
-				<img :src="imgSrc" alt="" class="user-head">
-				<span class="user-name">{{userSelfInfo.name}}</span>
-				<Dropdown>
-					<a href="javascript:void(0)">
-						<i class="iconfont user-select">&#xe65a;</i>
-					</a>
-					<DropdownMenu slot="list">
-						<DropdownItem @click.native="logout">退出</DropdownItem>
-						<!-- <DropdownItem>炸酱面</DropdownItem>
-					<DropdownItem>豆汁儿</DropdownItem>
-					<DropdownItem>冰糖葫芦</DropdownItem>
-					<DropdownItem divided>北京烤鸭</DropdownItem> -->
-					</DropdownMenu>
-				</Dropdown>
-			</div>
-		</div>
-		<div v-if="noticeVisible">
-			<el-dialog class="noticeClass" title="通知" :visible.sync="noticeVisible" width="60%">
-				<notice></notice>
-			</el-dialog>
-		</div>
+            <el-menu :default-active="viewRoot.now.type" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                <el-menu-item index="1">管理权限</el-menu-item>
+                <el-menu-item index="2" :disabled="!canGotoDoctor">医生端</el-menu-item>
+            </el-menu>
+        </div>
+        <div class="top-left" @click="openNotice()">
+            <marquee class="title-marquee">{{noticeList}}</marquee>
+            <div class="msg">
+                <i id="noticeIconClass" v-show="noticeRedVisable" class="iconfont">&#xe8c0;</i>
+            </div>
+        </div>
+        <div class="top-right">
+            <div class="top-right-posi">
+                <img :src="imgSrc" alt="" class="user-head">
+                <span class="user-name">{{userSelfInfo.name}}</span>
+                <Dropdown>
+                    <a href="javascript:void(0)">
+                        <i class="iconfont user-select">&#xe65a;</i>
+                    </a>
+                    <DropdownMenu slot="list">
+                        <DropdownItem @click.native="logout">退出</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
+            </div>
+        </div>
+        <div v-if="noticeVisible">
+            <el-dialog class="noticeClass" title="通知" :visible.sync="noticeVisible" width="60%">
+                <notice></notice>
+            </el-dialog>
+        </div>
 
-	</div>
+    </div>
 </template>
 
 <script>
-import { mapState } from "vuex"
-import notice from "../publicFrame/notice.vue"
-import apiBaseURL from '../../enums/apiBaseURL.js'
+import { mapState } from "vuex";
+import notice from "../publicFrame/notice.vue";
+import apiBaseURL from "../../enums/apiBaseURL.js";
+import { fetchNoticeInfo } from "../../api/apiAll.js";
+
 export default {
     name: "top",
     components: {
@@ -61,7 +59,8 @@ export default {
             userSelfInfo: state => state.user.userSelfInfo,
             viewRoot: state => state.user.viewRoot,
             userInfo: state => state.user.userInfo,
-            userSocketInfo: state => state.socket
+            userSocketInfo: state => state.socket,
+            userState: state => state.user.userInfo
         }),
         // ...mapState({
         //     viewRoot: state => state.user.viewRoot
@@ -72,27 +71,57 @@ export default {
         // ...mapState({
         //     userSocketInfo: state => state.socket
         // }),
-        imgSrc(){
-            return this.userSelfInfo.headId ? `${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${this.userSelfInfo.headId}` : "../../../static/assets/img/a-6.png"
-        },
-        
+        imgSrc() {
+            return this.userSelfInfo.headId
+                ? `${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${
+                      this.userSelfInfo.headId
+                  }`
+                : "../../../static/assets/img/a-6.png";
+        }
     },
     data() {
         return {
             noticeRedVisable: true,
             noticeVisible: false,
-			marquee:"tanying",
+            marquee: "tanying",
             canGotoManager: true,
             canGotoDoctor: true,
-            showTopNav:false
+            showTopNav: false,
+            noticeList: ""
         };
     },
     methods: {
+        async getNoticeList() {
+            this.msgId = this.$store.state.socket.messageTicket.oMsgId;
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                msgId: this.msgId,
+                pageNums: 10
+            };
+            _this.noticeList = "";
+            const res = await fetchNoticeInfo(query);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body, function(index, text) {
+                    if (res.data.body.length < 1) {
+                        _this.noticeList += text.noticeData.body;
+                    } else {
+                        _this.noticeList += text.noticeData.body + "--";
+                    }
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         switchStatus() {
             console.log("444");
         },
         handleSelect(index) {
-            console.log(index)
+            console.log(index);
             const obj = {
                 "1": "manager",
                 "2": "doctors"
@@ -114,8 +143,9 @@ export default {
             this.$store.commit("user/CLEARUSERINFO");
             this.$store.commit("user/CLAERUSERSELFINFO");
             sessionStorage.clear();
+            this.$store.state.socket.socketObj.close()
             this.$router.replace({
-                path: "/login",
+                path: "/login"
             });
             // location.reload();
         },
@@ -130,27 +160,33 @@ export default {
         /**
          * 新增功能 只有管理权限和医生权限才显示顶部视图切换
          */
-        countShowWhich(){
+        countShowWhich() {
             // const doc = this.userInfo.hasAuth.filter(item=>item.type==='2');
             // const man = this.userInfo.hasAuth.filter(item=>item.type==='1');
-            if(this.userInfo.rooter)return;//超级管理员不要判断,在以前的地方处理过
-            if(this.userInfo.hasAuth.filter(item=>item.type==='1').length<=0){
+            if (this.userInfo.rooter) return; //超级管理员不要判断,在以前的地方处理过
+            if (
+                this.userInfo.hasAuth.filter(item => item.type === "1")
+                    .length <= 0
+            ) {
                 this.showTopNav = false;
                 this.$store.commit("user/CHANGEVIEWAUTH", {
-                    name:'doctors',
-                    type:'2'
+                    name: "doctors",
+                    type: "2"
                 });
-            }else if(this.userInfo.hasAuth.filter(item=>item.type==='2').length<=0){
+            } else if (
+                this.userInfo.hasAuth.filter(item => item.type === "2")
+                    .length <= 0
+            ) {
                 this.showTopNav = false;
                 this.$store.commit("user/CHANGEVIEWAUTH", {
-                    name:'manager',
-                    type:'1'
+                    name: "manager",
+                    type: "1"
                 });
-            }else{
+            } else {
                 this.showTopNav = true;
                 this.$store.commit("user/CHANGEVIEWAUTH", {
-                    name:'manager',
-                    type:'1'
+                    name: "manager",
+                    type: "1"
                 });
             }
             sessionStorage.setItem("viewRoot", JSON.stringify(this.viewRoot));
@@ -158,6 +194,7 @@ export default {
     },
     async created() {
         this.countShowWhich();
+        this.getNoticeList();
     },
     // beforeRouteEnter(to,from,next){
     //     next(vm=>{
@@ -192,11 +229,11 @@ export default {
     watch: {
         "userSocketInfo.synchroMessage": {
             handler(n, o) {
-				$("#noticeIconClass").removeClass('msg-icon')
+                $("#noticeIconClass").removeClass("msg-icon");
                 let _this = this;
                 $.each(n.syncData, function(index, text) {
                     if (text.command == "NOTICE") {
-						$("#noticeIconClass").addClass('msg-icon')
+                        $("#noticeIconClass").addClass("msg-icon");
                     }
                 });
             }
@@ -223,6 +260,7 @@ export default {
     align-items: center;
     display: flex;
     justify-content: flex-end;
+    cursor: pointer;
 }
 .top-right {
     width: 1.8rem;

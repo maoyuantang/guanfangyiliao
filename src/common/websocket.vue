@@ -6,19 +6,22 @@
                 <button @click="refuseVideo()">拒绝</button>
             </div>
         </el-dialog> -->
-        <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose">
-            <div>
-                <h4>{{startVideoName}}邀请你视频</h4>
+        <div v-if='receiveVideoVisable'>
+            <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose" :showClose="VideoshowClose">
                 <div>
-                    <button @click="receiveVideo()">接收</button>
-                    <button @click="refuseVideo()">拒绝</button>
+                    <h4>{{startVideoName}}邀请你视频</h4>
+                    <div>
+                        <button @click="receiveVideo()">接收</button>
+                        <button @click="refuseVideo()">拒绝</button>
+                    </div>
                 </div>
-            </div>
-        </el-dialog>
+            </el-dialog>
+        </div>
+
         <!-- 视频聊天 -->
         <div v-if="VideoVisable">
-            <el-dialog title="视频" :visible.sync="VideoVisable" center append-to-body fullscreen @close="closeVideo()">
-                <ovideo :createVideoRoomData="createVideoRoomData"></ovideo>
+            <el-dialog class='videoClassBox' title="视频" :visible.sync="VideoVisable" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
+                <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId" :doctorVis="doctorVis"></ovideo>
             </el-dialog>
         </div>
 
@@ -30,7 +33,12 @@ import ovideo from "../video/oVideo.vue";
 import apiBaseURL from "../enums/apiBaseURL.js";
 import { mapState } from "vuex";
 import protobuf from "protobufjs";
-import { storageUsers, fetchSyncInfo, userInfo } from "../api/apiAll.js";
+import {
+    storageUsers,
+    fetchSyncInfo,
+    userInfo,
+    fetchChatSession
+} from "../api/apiAll.js";
 
 export default {
     components: {
@@ -41,7 +49,9 @@ export default {
     computed: {},
     data() {
         return {
-            startVideoName:'',
+            doctorVis: 0,
+            VideoshowClose: false,
+            startVideoName: "",
             receiveVideoVisable: false,
             VideoVisable: false,
             webSocket: null,
@@ -100,10 +110,14 @@ export default {
         // this.getMessageTicket();
     },
     methods: {
+        videoclick(data) {
+            this.VideoVisable = false;
+        },
         receiveVideo() {
             this.closeVideoOr("ON");
             this.sendMessageChat("6", "accept");
             this.$store.commit("socket/IFVIDEOIMG", 1);
+            this.receiveVideoVisable = false;
         },
         refuseVideo() {
             this.receiveVideoVisable = false;
@@ -161,6 +175,7 @@ export default {
         },
         // 进入或退出视频
         async closeVideoOr(oState) {
+            alert("dd");
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -172,7 +187,7 @@ export default {
             const res = await storageUsers(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
-                if ((oState = "ON")) {
+                if (oState == "ON") {
                     _this.VideoVisable = true;
                 } else {
                     this.$notify.success({
@@ -205,9 +220,9 @@ export default {
             ).finish();
 
             //ws地址
-            let wsUrl = "wss://demo.chuntaoyisheng.com:10002/chat";//测试
+            let wsUrl = "wss://demo.chuntaoyisheng.com:10002/chat"; //测试
             // let wsUrl = "wss://demo.chuntaoyisheng.com:10002/chat";//开发
-            
+
             if (!window.webSocket) {
                 let owebsocket = new WebSocket(wsUrl);
                 this.$store.commit("socket/SETSOCKET", owebsocket);
@@ -346,7 +361,7 @@ export default {
             console.log("下方收消息");
             console.log(odata);
             let RequestType = odata.RequestType;
-            if (RequestType == 101 || RequestType == 104) {
+            if (RequestType == 101) {
                 console.log("登录成功");
                 let oMessageTicket = {
                     ticket: odata.ticket, //票据，登录即可返回
@@ -356,15 +371,30 @@ export default {
                     oMsgId: odata.status.msgId
                 };
                 this.$store.commit("socket/MESSAGETICKET", oMessageTicket);
+                this.heartCheck.start();
+            } else if (RequestType == 104) {
+                console.log(odata.status.message);
+                if (odata.status.message == "发送成功") {
+                    let oMessageTicket = {
+                        ticket: odata.ticket, //票据，登录即可返回
+                        sequence: odata.status.sequence, //序列号
+                        content: "", //消息内容
+                        serverTime: odata.status.serverTime, //服务器时间
+                        oMsgId: odata.status.msgId
+                    };
+                    this.$store.commit("socket/MESSAGETICKET", oMessageTicket);
+                }
 
-                // this.ticket = odata.ticket; //票据
-                // this.sequence = odata.status.sequence; //序列号
-                // this.serverTime = odata.status.serverTime; //服务器时间
-                // this.oMsgId = odata.status.msgId;
-                // console.log(oMsgId)
                 this.heartCheck.start();
             } else if (RequestType == 102) {
                 alert("您在其他设备上进行了登录");
+                this.$store.commit("user/CLEARUSERINFO");
+                this.$store.commit("user/CLAERUSERSELFINFO");
+                sessionStorage.clear();
+                this.$store.state.socket.socketObj.close();
+                this.$router.replace({
+                    path: "/login"
+                });
             } else if (RequestType == 103) {
                 let Iessage = {
                     RequestType: 105,
@@ -484,18 +514,22 @@ export default {
                             bodyVideo.indexOf("sendroom") > -1 ||
                             bodyVideo.indexOf("MicroCinicSendRoom") > -1
                         ) {
+                            console.log("收到了邀请视频");
                             if (
                                 odata.info.body.split("&")[3] ==
                                 this.userSelfInfo.userId
                             ) {
-                                this.createVideoRoomData = {
+                                _this.receiveVideoVisable = true;
+                                console.log("是本人收到了邀请视频");
+                                _this.startVideoName = odata.info.fromNickName;
+
+                                _this.createVideoRoomData = {
                                     conferenceId: odata.info.body.split("&")[2],
                                     conferenceNumber: odata.info.body.split(
                                         "&"
                                     )[1]
                                 };
-                                _this.startVideoName= odata.info.fromNickName
-                                _this.receiveVideoVisable = true;
+
                                 // this.$notify({
                                 //     title: "请注意",
                                 //     message: "您有一条视频消息请点开查看！",
@@ -1180,7 +1214,7 @@ export default {
         //关闭
         webSocketonclose(e) {
             // console.log("connection closed (" + e.code + ")");
-            this.reconnect();
+            // this.reconnect();
         },
         webSocketonopen(buffer) {
             if (this.$store.state.socket.socketObj.readyState === 1) {

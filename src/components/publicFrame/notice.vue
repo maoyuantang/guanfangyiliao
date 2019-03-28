@@ -40,7 +40,6 @@ export default {
         })
     },
     methods: {
-        //问诊详情
         async getNoticeList() {
             this.msgId = this.$store.state.socket.messageTicket.oMsgId;
             let _this = this;

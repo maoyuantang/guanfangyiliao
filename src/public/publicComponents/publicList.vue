@@ -9,12 +9,13 @@
                
                 <template slot-scope="scope">
                     <span :class="scope.row.oclass">
-                        {{scope.row[column.prop]?scope.row[column.prop]:0}}
+                        <!-- {{scope.row[column.prop]?scope.row[column.prop]:0}} -->
+                        {{scope.row[column.prop]}}
                         {{column.width}}
                     </span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" v-if="handleVisiable">
+            <el-table-column label="操作" v-if="handleVisiable" width="300">
                 <template slot-scope="scope">
                     <el-button v-for="(text,index) in tableBtn" @click.native.prevent="text.method(index,scope.row)" :class="text.oclass" type="text" size="small" :key="index">
                         {{text.name}}
@@ -161,6 +162,9 @@ padding-left: 0;
     padding: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.el-table th>.cell, .el-table th div{
+    display: inline !important
 }
 
 /* 表格公共组件

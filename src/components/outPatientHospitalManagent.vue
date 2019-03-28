@@ -125,15 +125,15 @@
 		<div v-if="isShowRecord">
 			<el-dialog class="offerDetial" title="订单详情" :visible.sync="isShowRecord" center width=70%>
 				<el-table :data="tableDataChat" style="width: 100%;" @cell-click="relateDoctors2" :max-height="450">
-					<el-table-column prop="orderNo" label="订单号"></el-table-column>
-					<el-table-column prop="doctorName" label="接诊医生"></el-table-column>
-					<el-table-column prop="mode" label="接诊方式"></el-table-column>
-					<el-table-column prop="fee" label="门诊费"></el-table-column>
-					<el-table-column prop="rxOrderNo" label="处方订单号"></el-table-column>
-					<el-table-column prop="status" label="状态"></el-table-column>
-					<el-table-column prop="userName" label="病人"></el-table-column>
-					<el-table-column prop="orderTime" label="问诊时间"></el-table-column>
-					<el-table-column prop="rxFee" label="问诊费"></el-table-column>
+					<el-table-column prop="orderNo" label="订单号" :show-overflow-tooltip="true"></el-table-column>
+					<el-table-column prop="doctorName" label="接诊医生" :show-overflow-tooltip="true"></el-table-column>
+					<el-table-column prop="mode" label="接诊方式" :show-overflow-tooltip="true"></el-table-column>
+					<el-table-column prop="fee" label="门诊费" :show-overflow-tooltip="true"></el-table-column>
+					<el-table-column prop="rxOrderNo" label="处方订单号" :show-overflow-tooltip="true"></el-table-column>
+					<el-table-column prop="status" label="状态" :show-overflow-tooltip="true"></el-table-column>
+					<el-table-column prop="userName" label="病人" :show-overflow-tooltip="true"></el-table-column>
+					<el-table-column prop="orderTime" label="问诊时间" :show-overflow-tooltip="true"></el-table-column>
+					<el-table-column prop="rxFee" label="问诊费" :show-overflow-tooltip="true"></el-table-column>
 					<el-table-column label="操作" width="300">
 						<template slot-scope="scope">
 							<el-button @click="isShowRecordChatFun(scope.row)" type="text" size="small">聊天记录</el-button>
@@ -1756,8 +1756,8 @@
 
 
 		async created() {
-			alert("userId:  " + this.userSelfInfo.userId)
-			alert("hospitalCode:  " + this.userInfo.hospitalCode)
+			// alert("userId:  " + this.userSelfInfo.userId)
+			// alert("hospitalCode:  " + this.userInfo.hospitalCode)
 			this.getFilter0();//获取科室列表
 			this.getFilter1();//审核状态
 			this.getFilter2();//配送状态
@@ -1987,15 +1987,16 @@
 	}
 
 	.online-clinic-middle /deep/ .el-table__header-wrapper .el-table__header .has-gutter tr th div {
-		text-align: center;
+		/* text-align: center; */
 		white-space: nowrap !important;
 		padding: 0;
 	}
 
 	.online-clinic-middle /deep/ .el-table__body-wrapper tr .cell {
-		text-align: center;
+		/* text-align: center; */
 		white-space: nowrap !important;
 		padding: 0;
+		/* width: 70px !important; */
 	}
 
 	.online-clinic-middle /deep/ .el-table__fixed-right .el-table__fixed-body-wrapper .cell {}

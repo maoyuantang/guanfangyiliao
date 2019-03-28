@@ -6,6 +6,10 @@
 <!--双向转诊系统-->
 <template>
   <div class="referral">
+    <!-- 病例授权 -->
+
+
+
     <!--弹框1.1  管理查看记录 -->
     <div v-if="isShowmoveUser1">
       <el-dialog title="" :visible.sync="isShowmoveUser1" width="40%" center>
@@ -52,10 +56,13 @@
     <!-- 弹框2 新增转诊 -->
 
     <div v-if="isShowaddMove">
-      <el-dialog title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
+      <el-dialog class="eldialog" title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
+        <el-dialog class="eldialogs" :visible.sync="isShowaddMoveNei" append-to-body>
+          <el-tree :data="invitationData1" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
+        </el-dialog>
         <el-form :model="addForm">
           <div style="display:flex;margin:10px 0;">
-            <el-form-item label="转诊类型:" :label-width="formLabelWidth">
+            <el-form-item label="方向:" :label-width="formLabelWidth">
               <el-select v-model="addForm.typeList.value" placeholder="上转/下转" clearable @change='upOrDown()'>
                 <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -82,18 +89,24 @@
             </el-cascader>
           </div>
 
-          <el-form-item label="病历授权:" :label-width="formLabelWidth">
-            <el-select v-model="addForm.giveRight.value" placeholder="单选" clearable>
-              <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-
           <div class="block" style="margin-bottom: 22px;">
             <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
             <el-date-picker v-model="addForm.moveTime.value" type="datetime" placeholder="请选择" default-time="12:00:00">
             </el-date-picker>
           </div>
+
+          <el-form-item label="病历授权:" :label-width="formLabelWidth">
+            <div @click="medicalDone">
+              <el-input v-model="addForm.giveRight.value" placeholder="请选择"></el-input>
+            </div>
+          </el-form-item>
+
+          <!-- <el-form-item label="病历授权:" :label-width="formLabelWidth">
+            <el-select v-model="addForm.giveRight.value" placeholder="单选" clearable @click="medicalDone">
+              <el-option v-for="item in addForm.giveRight.list||[]" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item> -->
 
           <el-form-item label="转诊目的:" :label-width="formLabelWidth">
             <el-input v-model="addForm.movePurpose" autocomplete="off" placeholder="请填写"></el-input>
@@ -201,10 +214,11 @@
             <el-table-column prop="applyTime" label="申请时间" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="patientName" label="病人" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="intention" label="目的" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="typeName" label="转诊类型" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="typeName" label="方向" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column label="操作" width="300">
+            <el-table-column label="操作" min-width="400">
               <template slot-scope="scope">
+                <button class="huangSe" @click="seeHistory(scope.row.patientId)">查看档案</button>
                 <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
                 <button :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
                   v-for="(text,index) in scope.row.buttons" :key="index" @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button>
@@ -225,6 +239,13 @@
 <script>
   //引入接口
   import {
+
+    enableSynergyDoctor, //9.5获取可协作医生（本院、院外协作）
+
+
+
+
+
     // 已使用接口
     //筛选接口
     toolDept,//1.21.1.管理  科室列表
@@ -307,6 +328,7 @@
         // 新增转诊
         referralType: '',//方向，UP上转，DOWN下转
         medicalId: '',//疾病ID(readMedicals  接口返回)
+        arrayMed: [],
         //管理操作区
         dualReferralRecordFile: {},
         //医生操作区
@@ -315,6 +337,13 @@
 
 
         // element
+
+        // 病历授权
+        invitationData1: [],
+        defaultProps: {
+          label: "name",
+          children: "children"
+        },
 
         // 必备参数
         time: null, // 时间筛选组件    statisticsWay
@@ -371,6 +400,7 @@
         manageBodyData: [],
         //新增转诊（自定义组件 ）
         isShowaddMove: false,
+        isShowaddMoveNei: false,
         addForm: {
           typeList: {//转诊类型
             value: "",
@@ -542,6 +572,13 @@
         this.addForm.moveTime.value = "";
         this.addForm.movePurpose = "";
         this.addForm.beginIdea = "";
+
+        this.addForm.typeList.list.length = 0;
+        this.addForm.diseaseName.list.length = 0;
+        this.addForm.patient.list.length = 0;
+        this.addForm.intoHospital.list.length = 0;
+        this.addForm.giveRight.list.length = 0;
+        this.addForm.moveTime.list.length = 0;
         // done();
         this.isShowaddMove = false
       },
@@ -868,6 +905,7 @@
         if (res.data && res.data.errCode === 0) {
           console.log('医生端-医院与科室下拉框联动 +成功')
           console.log(res)
+          this.addForm.intoHospital.list.length = 0;
           $.each(res.data.body, function (index, text) {
             _this.addForm.intoHospital.list.push(
               {
@@ -899,9 +937,54 @@
           });
         }
       },
+      // 病历授权
+      async medicalDone() {
+        this.isShowaddMoveNei = true
+        // this.consultationId = row.id;
+        this.invitationData1 = [];
+        // this.invitationVisible = true;
+        let _this = this;
+        let query = {
+          token: this.userInfo.token
+        };
+        const res = await enableSynergyDoctor(query);
+        if (res.data && res.data.errCode === 0) {
+          console.log(res.data.body);
+          this.invitationData1 = res.data.body;
+        } else {
+          //失败
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+      handleCheckChange(data, checked, indeterminate) {
+        this.addForm.giveRight.value = "";
+        this.addForm.giveRight.list.length = 0;
+        console.log(checked);
+        let _this = this;
+        $.each(checked.checkedNodes, function (index, text) {
+          console.log(text);
+          if (text.type == 3) {
+            _this.addForm.giveRight.value = _this.addForm.giveRight.value + " " + text.name;
+            _this.addForm.giveRight.list.push({
+              label: text.name,
+              value: text.id,
+            })
+          }
+        });
+        console.log(this.addForm.giveRight.list)
+      },
       //点击确定    新增门诊
       async dualReferralAdd1() {
+        const _this = this;
         console.log(this.addForm)
+        this.arrayMed.length = 0
+        $.each(this.addForm.giveRight.list, function (index, text) {
+          _this.arrayMed.push(text.value)
+        });
+        console.log(this.arrayMed)
         let query = {
           token: this.userInfo.token
         };
@@ -917,7 +1000,8 @@
           receiveDeptName: this.$refs.ceshi3.currentLabels[1],
           intention: this.addForm.movePurpose,
           diagnose: this.addForm.beginIdea,
-          archivesAuthority: this.addForm.giveRight.value
+          // archivesAuthority: this.addForm.giveRight.value,
+          medicalRecordIds: this.arrayMed
         };
         console.log(options)
         const res = await dualReferralAdd(query, options);                                   //  14.6.双向转诊-WEB医生端-申请转诊 
@@ -1271,6 +1355,15 @@
         this.pageNum = data
         this.DoctorList()
       },
+      async seeHistory(data) {
+        console.log(data)
+        this.$router.push({
+          path: "/docDetailed",
+          query: {
+            id: data
+          }
+        })
+      },
     },
 
 
@@ -1528,5 +1621,16 @@
     font-size: 12px;
     color: #5E6875;
     letter-spacing: 0;
+  }
+
+  .eldialog /deep/ .el-dialog {
+    width: 40%;
+    margin-left: 20%;
+  }
+
+  .eldialogs /deep/ .el-dialog {
+    border: 1px solid red;
+    width: 30%;
+    margin-left: 60%;
   }
 </style>

@@ -44,9 +44,12 @@
             <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
               <h1>{{text1.userName}}</h1>
               <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-                <el-button type="success" plain @click="seeHistory(text1.userId)">查看档案</el-button>
-                <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button>
-                <el-button type="info" plain>{{text.doctor.doctorStates?'未开始':'进行中'}}</el-button>
+                <span class="tanKuang1" @click="seeHistory(text1.userId)">查看档案</span>
+                <span class="tanKuang2" @click="sendMessage(text,text1)">发送</span>
+                <div class="tanKuang3">{{text.doctor.doctorStates?'未开始':'进行中'}}</div>
+                <!-- <el-button type="success" plain @click="seeHistory(text1.userId)">查看档案</el-button> -->
+                <!-- <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button> -->
+                <!-- <el-button type="info" plain>{{text.doctor.doctorStates?'未开始':'进行中'}}</el-button> -->
               </div>
             </li>
             <li class="medicalExpenses">
@@ -56,7 +59,7 @@
                 {{text1.askPrice}}
               </span>
             </li>
-            <li class="drug">
+            <li class="drug" v-if="text.drugDetail">
               <div class="fee">处方费用 ¥
                 <span>{{text1.prescriptionPrice}}</span>
               </div>
@@ -496,23 +499,29 @@
     <!-- //某诊室的所有病人列表 -->
     <div v-if="isShowPatient">
       <el-dialog title="就诊列表" :visible.sync="isShowPatient" width="60%" center>
-        <ul v-for="(text5,index) in huanzheList" :key="index" class="" style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px;">
-          <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;margin:0 0 20px 0;">
-            <div>
-              <h1 style="margin: 0 0 10px 0;">{{text5.userName}}</h1>
+        <ul v-for="(text5,index) in huanzheList" :key="index" class="" style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px 15px;">
+          <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 100%;margin:0 0 20px 0;align-items: center;">
+            <div style="display: flex; align-items: center;">
+              <img style="width: 53px; margin: 0 30px 0 0;" src="../assets/img/a-6.png" alt="">
+              <div>
+                <img src="../assets/img/a-6.png" alt="">
+                <h1 style="margin: 0 0 10px 0;">{{text5.userName}}</h1>
+              </div>
               <div class="orderTime">
                 <span>下单时间:</span>
                 <span class="span">{{text5.clinicOrderTime}}</span>
               </div>
             </div>
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0;height: 40px;">
-              <el-button type="success" plain @click="seeHistory(text5.userId)">查看档案</el-button>
-              <el-button type="danger" @click="sendMessage(huanzheList3,text5)">发送</el-button>
-              <el-button type="info" plain>{{huanzheList[index].doctorStates?'未开始':'进行中'}}</el-button>
+              <span class="tanKuang1" @click="seeHistory(text5.userId)">查看档案</span>
+              <span class="tanKuang2" @click="sendMessage(huanzheList3,text5)">发送</span>
+              <!-- <el-button type="success" plain @click="seeHistory(text5.userId)">查看档案</el-button>
+              <el-button type="danger" @click="sendMessage(huanzheList3,text5)">发送</el-button> -->
+              <!-- <el-button type="info" plain>{{huanzheList[index].doctorStates?'未开始':'进行中'}}</el-button> -->
             </div>
           </li>
 
-          <li class="drug" style="padding:0 0 20px 0;border-bottom:1px solid #d8d8d8">
+          <li v-if="text5.drugDetail.length != 0" class="drug" style="padding:0 0 20px 0;border-bottom:1px solid #d8d8d8">
             <div>
               <div class="drugTitle">Rx:</div>
               <div>
@@ -534,8 +543,8 @@
             </div>
           </li>
 
-          <li>
-            <el-table :data="huanzheList4[index]">
+          <li class="noBorder">
+            <el-table :data="huanzheList4[index]" style="border:none;">
               <el-table-column prop="askTime" label="接诊时间"></el-table-column>
               <el-table-column prop="" label="首诊医生"></el-table-column>
               <el-table-column prop="askPrice" label="问诊费用"></el-table-column>
@@ -558,7 +567,7 @@
 
     <div v-if="chatVisible">
       <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-        <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage"></chat>
+        <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage" :chatType1="videoType"></chat>
       </el-dialog>
     </div>
 
@@ -566,7 +575,8 @@
     <div v-if="centerDialogVisible">
       <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen
         @close="closeVideo()" :showClose="VideoshowClose">
-        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick">
+        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick"
+          :doctorVis='doctorVis'>
         </ovideo>
       </el-dialog>
     </div>
@@ -883,7 +893,7 @@
           departmentId: text.departmentId,
           userId: text1.userId,
           orgCode: text.orgCode,
-          clinicOrderId: text1.clinicOrderId
+          clinicOrderId: text1.clinicOrderId,
         };
         console.log(this.userMessage);
         let _this = this;
@@ -979,8 +989,8 @@
         const _this = this;
         let query = {
           token: this.userInfo.token,
-          pageNum: this.pageNum,
-          pageSize: this.pageSize
+          pageNum: 1,
+          pageSize: 5
         };
         const res = await onlineRoomsByDoctor(query);
         if (res.data && res.data.errCode === 0) {
@@ -2328,6 +2338,7 @@
     font-size: 14px;
     color: #5E6875;
     letter-spacing: 0;
+    border: none;
   }
 
   /deep/ .el-table__body-wrapper td {
@@ -2335,9 +2346,11 @@
     font-size: 12px;
     color: #5E6875;
     letter-spacing: 0;
+    border: none;
   }
 
-  /* /deep/  th div{
-    color: red;
-  } */
+
+  .noBorder>div::before {
+    display: none;
+  }
 </style>

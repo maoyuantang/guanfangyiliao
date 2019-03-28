@@ -1,43 +1,1290 @@
 <template>
     <div class="followUp">
-              <admin v-if="$store.state.user.viewRoot.now.name==='manager'"></admin>
-       <doctor v-else></doctor>
+        <!-- 随访表模板 -->
+        <div v-if="followTableVisible">
+            <el-dialog class="evaluateBox addFollowBox addFollowBoxFollow" title=" " :visible.sync="followTableVisible" width="602px" hight="356px" center>
+                <el-form ref="form" :model="addFollowData" label-width="80px">
+
+                    <el-form-item>
+                        <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
+                    </el-form-item>
+                    <el-form-item label="">
+                        <el-radio-group v-model="addFollowData.type">
+                            <el-radio label="INHOSPITAL">住院随访</el-radio>
+                            <el-radio label="OUTPATIENT">门诊随访</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <div class="addFollowMain addFollowMain1">
+                        <ul class='addQuestBoxUlBox'>
+                            <li v-for="(text,index) in addFollowData.itemModels" :key="index">
+                                <div class="addFollowM-bot" style="display:flex">
+                                    <el-form-item class="addFollowM-bot firstDoctorTime" label="距离首次治疗">
+                                        <div class="DistanceFirst">
+                                            <el-form-item label=" ">
+                                                <el-select v-model="text.calcVal" placeholder=" ">
+                                                    <el-option v-for="(text,index) in 21" :label="text" :value="text" :key="index"></el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                            <el-form-item label=" ">
+                                                <el-select v-model="text.calcUnit" placeholder=" ">
+                                                    <el-option label="日" value="日"></el-option>
+                                                    <el-option label="周" value="周"></el-option>
+                                                    <el-option label="月" value="月"></el-option>
+                                                    <el-option label="年" value="年"></el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                        </div>
+                                    </el-form-item>
+
+                                </div>
+                                <ul class="questBox">
+                                    <li>
+                                        <div>
+                                            <span>复查提醒：</span>
+                                            <input class='remindText' style="border:none" type='text' />
+                                        </div>
+                                    </li>
+                                    <li v-for="(otext,oindex) in text.contentModels" :key="oindex">
+
+                                        <div>
+                                            <span v-show="otext.followUpType=='REMIND'">提醒：</span>
+                                            <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
+                                            <span v-show="otext.followUpType=='INQUIRY'">问诊：</span>
+                                            <span v-show="otext.followUpType=='MEDICAL'">疾病自评：</span>
+                                            <span v-show="otext.followUpType=='DEVICE'">设备监测：</span>
+                                            <span class="questTableName">{{otext.title}}</span>
+                                        </div>
+
+                                        <span @click="deleteQuest(index,oindex)" class="questDelete">
+                                            <img src="../../assets/img/addFollowDelete2.png" />
+                                        </span>
+                                    </li>
+                                </ul>
+                                <div class="addFollowBtn" v-show="addFollowBtnVis">
+                                    <div @click="addQuestOrAricle(index)">
+                                        <span class="questDelete"><img src="../../assets/img/addFollowJa2.png" /></span> 问诊表/健康知识
+                                    </div>
+                                    <div>
+                                        <span @click="addFollowTimeList()">
+                                            <span class="questDelete"><img src="../../assets/img/addFollowJa1.png" /> </span> 添加一项</span>
+                                        <span @click="deleteFollowTimeList(index)">
+                                            <span class="questDelete"> <img src="../../assets/img/addFollowDelete.png" /> </span>
+                                            此项</span>
+                                    </div>
+                                </div>
+
+                            </li>
+                        </ul>
+                        <div class="addFollowM-bot remindTime">
+                            提醒时间
+                            <el-select class="addFollowHou" v-model="addFollowData.remindDays" placeholder="请选择">
+                                <el-option v-for="(text,index) in 100" :key="index" :label="text" :value="text">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div>
+                            <el-checkbox v-model="addFollowData.remindMe">提醒我</el-checkbox>
+                            <el-checkbox v-model="addFollowData.remindHe">提醒他</el-checkbox>
+                        </div>
+                        <el-button @click="addFollowTable()" type="primary">保存</el-button>
+                    </div>
+
+                </el-form>
+            </el-dialog>
+        </div>
+        <!-- 添加问诊或文章 -->
+        <div v-if="questVisible">
+            <el-dialog title="添加问诊或文章" :visible.sync="questVisible" center append-to-body width="400px">
+                <addQuestOrAritle @reback="sureQuestArticle"></addQuestOrAritle>
+
+            </el-dialog>
+        </div>
+        <!-- 设备告警 -->
+        <div v-if="warnVisible">
+            <el-dialog title="添加问诊或文章" :visible.sync="warnVisible" center append-to-body>
+                <warnSet :warnList="warnList" @reback="sureSetWarn"></warnSet>
+
+            </el-dialog>
+        </div>
+        <!--新增问诊模板 -->
+        <div v-if="QuestTableVisible">
+            <el-dialog class="evaluateBox addQuestBox " title=" " :visible.sync="QuestTableVisible" width="717px" hight="356px" center>
+                <el-form ref="form" :model="addQuestData" label-width="80px">
+
+                    <el-form-item>
+                        <el-input class="addFollowTitle" v-model="addQuestData.title" placeholder="请输入问诊标题"></el-input>
+                    </el-form-item>
+                    <div class="addFollowMain">
+                        <ul class="addQuestUl">
+                            <li v-for="(text,index) in addQuestData.bankModels" :key="index">
+                                <span class="deleteQuestList" @click="deleteQuestList(index)">
+                                    <img src="../../assets/img/questCha.png" />
+                                </span>
+                                <div v-show="text.questionType=='RADIO'">
+                                    <el-form-item :label="index+1">
+                                        <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
+                                    </el-form-item>
+                                    <el-radio-group class="redioSingle redioSingleInput">
+                                        <el-radio v-for="(text1,index1) in text.solutionModels" :key="index1" :label="index1">
+                                            <span>{{text1.tag}}</span>
+                                            <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容"></el-input>
+                                            <span class="questItemDelete" @click="deleteQuestText(index,index1)">
+                                                <img src="../../assets/img/questCha.png" />
+
+                                            </span>
+                                        </el-radio>
+                                    </el-radio-group>
+                                    <div class="itemChoiceItemBox" @click="itemChoiceItemFun(index,text.questionType)">
+                                        添加一项
+                                    </div>
+                                </div>
+                                <div v-show="text.questionType=='CHECKBOX'">
+                                    <el-form-item :label="index+1">
+                                        <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
+                                    </el-form-item>
+                                    <el-checkbox-group class="redioSingle redioSingleInput">
+                                        <el-checkbox v-for="(text1,index1) in text.solutionModels" :key="index1" :label="index1">
+                                            <span>{{text1.tag}}</span>
+                                            <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容"></el-input>
+                                            <span class="questItemDelete" @click="deleteQuestText(index,index1)">
+                                                <img src="../../assets/img/questCha.png" />
+                                            </span>
+                                        </el-checkbox>
+                                    </el-checkbox-group>
+                                    <div class="itemChoiceItemBox" @click="itemChoiceItemFun(index,text.questionType)">
+                                        添加一项
+                                    </div>
+                                </div>
+                                <div v-show="text.questionType=='TEXT'">
+                                    <el-form-item :label="index+1">
+                                        <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
+                                    </el-form-item>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="choiceItemBox">
+                            <span v-for="(text2,index2) in choiceItem" :key="index2" @click="choiceItemFun(index2)">{{text2}}</span>
+                        </div>
+                        <el-button @click="addQuestTable()" type="primary">保存</el-button>
+                    </div>
+
+                </el-form>
+            </el-dialog>
+        </div>
+        <!-- 随访计划详情 -->
+        <div v-if="followPlanVisible">
+            <el-dialog class="evaluateBox addFollowBox" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
+
+                <el-form ref="form" :model="followPlanData" label-width="80px">
+
+                    <el-form-item>
+                        <el-input class="addFollowTitle" v-model="followPlanData.title" placeholder="请输入随访标题"></el-input>
+                    </el-form-item>
+                    <el-form-item label="">
+                        <el-radio-group v-model="followPlanData.type">
+                            <el-radio label="INHOSPITAL">住院随访</el-radio>
+                            <el-radio label="OUTPATIENT">门诊随访</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <div class="addFollowMain">
+                        <el-form-item class="addFollowM-bot" label="首次治疗">
+                            <el-date-picker class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
+                            </el-date-picker>
+                        </el-form-item>
+                        <ul>
+                            <li v-for="(text,index) in followPlanData.planItemResults" :key="index">
+                                <div class="addFollowM-bot" style="display:flex">
+                                    <el-form-item class="addFollowM-bot" label="距离首次治疗">
+                                        <div class="DistanceFirst">
+                                            <el-form-item label=" ">
+                                                <el-select v-model="text.calcVal" placeholder=" ">
+                                                    <el-option v-for="(text,index) in 21" :label="text" :value="text" :key="index"></el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                            <el-form-item label=" ">
+                                                <el-select v-model="text.calcUnit" placeholder=" ">
+                                                    <el-option label="日" value="日"></el-option>
+                                                    <el-option label="周" value="周"></el-option>
+                                                    <el-option label="月" value="月"></el-option>
+                                                    <el-option label="年" value="年"></el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                        </div>
+                                    </el-form-item>
+
+                                </div>
+                                <ul class="questBox">
+                                    <li v-for="(otext,oindex) in text.itemContentResults" :key="oindex">
+                                        <div>
+                                            <span v-show="otext.followUpType=='REMIND'">提醒：</span>
+                                            <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
+                                            <span v-show="otext.followUpType=='INQUIRY'">问诊：</span>
+                                            <span v-show="otext.followUpType=='MEDICAL'">疾病自评：</span>
+                                            <span v-show="otext.followUpType=='DEVICE'">设备监测：</span>
+                                            <span class="questTableName">{{otext.title}}</span>
+                                        </div>
+
+                                        <!-- <span @click="deleteQuest(index,oindex)" class="questDelete">
+                                        <img src="../assets/img/addFollowDelete2.png" />
+                                    </span> -->
+                                    </li>
+                                </ul>
+                                <div class="addFollowBtn" v-show="addFollowBtnVis">
+                                    <!-- <div @click="addQuest(index)">
+                                    <span class="questDelete"><img src="../assets/img/addFollowJa2.png" /></span> 问诊表/健康知识
+                                </div> -->
+                                    <!-- <div>
+                                    <span @click="addFollowTimeList()">
+                                        <span class="questDelete"><img src="../assets/img/addFollowJa1.png" /> </span> 添加一项</span>
+                                    <span @click="deleteFollowTimeList(index)">
+                                        <span class="questDelete"> <img src="../assets/img/addFollowDelete.png" /> </span>
+                                        此项</span>
+                                </div> -->
+                                </div>
+
+                            </li>
+                        </ul>
+                    </div>
+
+                </el-form>
+            </el-dialog>
+        </div>
+        <!-- 新增文章 -->
+        <div v-if="articleTableVisible">
+            <el-dialog class="evaluateBox ArcticClass" title=" " :visible.sync="articleTableVisible" width="770px" hight="356px" center>
+                <el-form ref="form" :model="addArticleData" label-width="80px">
+                    <el-form-item>
+                        <el-input class="addFollowTitle" v-model="addArticleData.title" placeholder="请输入文章标题"></el-input>
+                    </el-form-item>
+                    <el-form-item label="">
+                        <el-select v-model="addArticleData.articleType" placeholder="请选择活动区域">
+
+                            <el-option v-for="(text1,index) in oTab14.list " :label="text1.text" :value="text1.value" :key="index">
+
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <div class="addArticleImg">
+                        <el-upload class="avatar-uploader" :action="articleImg" :show-file-list="false" :on-success="articleImgSuccess">
+                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                            <img v-else src="../../assets/img/addImg.png" class="addImgClass">
+                            <i style="display:none" class="el-icon-plus avatar-uploader-icon"></i>
+
+                        </el-upload>
+                    </div>
+                    <div>
+                        <div class='articleContent'>
+                            您可以通过自编原创、URL转载、从Word导入完成文章编辑
+                        </div>
+                        <div class="addArticleEditor">
+                            <quill-editor v-model="addArticleData.content" ref="myQuillEditor" class="editer" :options="infoForm.editorOption" @ready="onEditorReady($event)">
+                            </quill-editor>
+                        </div>
+                        <!-- <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="请输入随访标题"></el-input> -->
+                    </div>
+                    <div class="addFollowMain">
+                        <div>
+                            <el-checkbox v-model="addArticleData.visible">所有人可见</el-checkbox>
+                            <el-checkbox v-model="addArticleData.openComment">开放讨论</el-checkbox>
+                        </div>
+                        <el-button @click="addArticleTable()" type="primary">保存</el-button>
+                    </div>
+                </el-form>
+            </el-dialog>
+        </div>
+        <!-- 满意度新增模板 -->
+        <div v-if="mydAddTemplate">
+            <el-dialog class="evaluateBox" title=" " :visible.sync="mydAddTemplate" width="770px" hight="356px" center>
+                <div class="mydAddTemplate-title">
+                    <img src="../../assets/img/Bitmap.png" />
+                </div>
+                <el-form ref="form" :model="mydAddData" label-width="80px">
+                    <el-form-item label="所属分类">
+                        <el-select v-model="mydAddData.type" placeholder="请选择活动区域">
+                            <el-option v-for="(text,index) in oTab6.list" :label="text.text" :value="text.value" :key="index"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="活动名称">
+                        <el-input v-model="mydAddData.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="模板内容">
+                        <el-input type="textarea" v-model="mydAddData.context"></el-input>
+                    </el-form-item>
+                    <div>
+                        <div>回复选项关联(系统根据回复自动发送后续的关联问卷)</div>
+                        <div>
+                            <ul>
+                                <li class="mydQuestList" v-for="(text,index) in mydAddData.associations" :key="index">
+                                    <div>
+                                        <el-form-item label="活动名称">
+                                            <el-input v-model="text.answer"></el-input>
+                                        </el-form-item>
+
+                                        <el-form-item label="所属分类" class="classification">
+                                            <div class="ificationBox">
+                                                <el-input v-model="mydTemlateName.title">dfdfdfd</el-input>
+                                                <div @click="ificationBoxClick()">
+                                                    <img src="../../../static/assets/img/downXia.png" />
+                                                </div>
+                                            </div>
+                                            <div class="mydAddSuosuClass" v-show="mydAddSuosuClassVis">
+                                                <ul>
+                                                    <li v-for="(text1,index1) in oTab66.list" :key="index1" :value="text1.value" @click="sendTemplateList1(text1.value)">
+                                                        {{text1.text}}>
+                                                    </li>
+
+                                                </ul>
+                                                <ul>
+                                                    <li v-for="(text2,index2) in mydTemlateName.nameList" :key="index2" :value="text2.associationId" @click="sendTemplateContext(text2.title,index2,text2.associationId)">
+                                                        {{text2.title}}
+                                                    </li>
+
+                                                </ul>
+                                                <div>
+                                                    {{mydTemlateName.context}}
+                                                </div>
+                                            </div>
+                                        </el-form-item>
+                                    </div>
+                                    <span>
+                                        删除
+                                    </span>
+                                </li>
+                            </ul>
+                            <span @click="addMydList()">
+                                添加
+                            </span>
+                        </div>
+                    </div>
+                    <el-form-item>
+                        <!-- 新增完成按钮 -->
+                        <el-button type="primary" @click="addMydTemplate()" v-if="addMydTemplateVis">完成</el-button>
+                        <!-- 编辑完成按钮 -->
+                        <el-button type="primary" @click="editMydTemplate()" v-else>完成</el-button>
+                    </el-form-item>
+                </el-form>
+
+            </el-dialog>
+        </div>
+        <!-- 满意度发送的模板列表 -->
+        <div v-if="templateVisible">
+            <el-dialog class="evaluateBox" title=" " :visible.sync="templateVisible" width="240px" hight="356px" center>
+                <ul>
+                    <li v-for="(text,index) in mydTemplateTitle" :key="index" @click="selectTemplate(index,text)">
+                        {{text.title}}
+                    </li>
+                </ul>
+            </el-dialog>
+        </div>
+       
+        <!-- 医生端 -->
+        <div  class=" followDoc">
+            <div>
+                <ul class="titleTop">
+                    <li v-for="(text,index) in followDocTab" :class="{'title-this':index==oDocThis}" @click="docTab(index)" :key="index">{{text.name}}</li>
+                </ul>
+            </div>
+            <div class="admin-oMain">
+                <!-- 我的随访 -->
+                <div v-show="odocVisable==0">
+                    <div class="mainTab">
+                        <div>
+                            
+                            <selftag :inData="oTab15" @reback="docDeperment" v-show="doctorSxVisiable"></selftag>
+                            <selftag :inData="oTab2" @reback="getOTab2" v-show="doctorTemplateVisiable"></selftag>
+                            <selftag :inData="oTab9" @reback="getOTab9" v-show="doctorSxVisiable"></selftag>
+                            <selftag :inData="oTab14" @reback="getOTab14" v-show="doctorArticleVisiable"></selftag>
+                            <div style='display:flex'>
+                                <selftag :inData="oTab10" @reback="getOTab10" v-show="doctorSxVisiable"></selftag>
+                                <publicTime v-show="doctorSxVisiable" style='    margin-top: -1px;
+    margin-left: 55px;' @timeValue="getDocTime"></publicTime>
+                            </div>
+
+                            <selftag :inData="oTab11" @reback="getOTab11" v-show="doctorSxVisiable"></selftag>
+                        </div>
+                        <div class="statistics-way" style='margin-top:4px;'>
+
+                        </div>
+                        <search @searchValue="docSearchChange"></search>
+                        <el-button class="startConsul myStartConsul" v-show="docAddTemplate" type="text" @click="docAddTemplateFun()">新增模板</el-button>
+                    </div>
+                    <div>
+                        <div v-if="myFollowVisable" class="public-list">
+                            <el-table :data="myFollowList" border style="width: 100%" @selection-change="followCheckChange">
+                                <el-table-column type="selection" width="55">
+                                </el-table-column>
+                                <el-table-column prop="userName" label="姓名">
+                                </el-table-column>
+                                <el-table-column prop="origin" label="来源">
+                                </el-table-column>
+                                <el-table-column prop="phone" label="手机号">
+                                </el-table-column>
+                                <el-table-column prop="group" label="分组">
+                                </el-table-column>
+                                <el-table-column prop="nearlyFollowup" label="近期随访">
+                                </el-table-column>
+                                <el-table-column prop="phoneFollowup" label="电话随访">
+                                    <template slot-scope="scope">
+                                        <el-switch v-model="scope.row.phoneFollowup" active-color="#13ce66" inactive-color="#ff4949" @change="phoneFollow(scope.row)">
+                                        </el-switch>
+                                    </template>
+
+                                </el-table-column>
+                                <el-table-column prop="deviceAlert" label="设备告警">
+                                    <template slot-scope="scope">
+                                        <div class="warnNumBox">
+                                            <el-switch v-model="scope.row.deviceAlert" active-color="#13ce66" inactive-color="#ff4949" @change="warnFollow(scope.row)">
+                                            </el-switch>
+                                            <div class="warnNum" @click="setWarn(scope.row)">
+                                                设置：180
+                                            </div>
+                                        </div>
+
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="操作" width="250">
+                                    <template slot-scope="scope">
+                                        <el-button class='seeDanganClass' @click="seeDanganClick(scope.row)" type="text" size="small">查看档案</el-button>
+                                        <el-button class='sendMessage' @click="sendMessage(scope.row)" type="text" size="small">发送</el-button>
+                                        <el-button class='seeDetail' @click="myFollowDetail(scope.row)" type="text" size="small">查看详情</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <el-pagination background layout="prev, pager, next" :total="adminTotal5" :current-change="changeCurrent5">
+                            </el-pagination>
+                            <div class="groupClass">
+                                <div>移动到</div>
+                                <ul>
+                                    <li :class="oGroupClick==-1?'groupClick':''" @click="addGroup()">新增组</li>
+                                    <li :class="oGroupClick==index?'groupClick':''" v-for="(item,index) in groupList" :key="index" @click="changeGroup(item.groupId,index)">
+                                        {{item.groupName}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <tableList v-else :tableData="doctorList" :columns="doctorColumns" :checkVisable="docTableChecked" :tableBtn="doctorBtn" :total="adminTotal4" @rebackFenye="changeCurrent4"></tableList>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div v-if="followDetailVisible">
+                <el-dialog class="evaluateBox addFollowBox" title=" " :visible.sync="followDetailVisible" width="602px" hight="356px" center>
+                    <followDetail :addFollowData="followDetailData"></followDetail>
+                </el-dialog>
+            </div>
+        </div>
+        <div v-if="chatVisible">
+            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+                <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
+            </el-dialog>
+        </div>
+        <div v-if="groupVisible">
+            <el-dialog title="创建分组" :visible.sync="groupVisible" width="680px">
+                <el-input v-model="groupName" placeholder="请输入内容"></el-input>
+                <el-button type="primary" @click="sureAddGroup()">确认</el-button>
+            </el-dialog>
+        </div>
     </div>
 </template>
 
 <script>
-import doctor from "./follow/doctor.vue";
-import admin from "./follow/admin.vue";
-
-
-
+import {
+    managerGetPlanList,
+    managerGetDeviceList,
+    fetchHospitalDepts,
+    OUTPATIENT,
+    INHOSPITAL,
+    getResultList,
+    getModelInsert,
+    getMissileList,
+    deleteModel,
+    getTemplate,
+    queryList,
+    queryArticleList,
+    deleteTemplate, //删除随访模板
+    update, //编辑随访模板
+    get, //获取随访模板详情
+    add, //新增随访模板
+    deleteArticle, //删除文章
+    deleteInquiry, //删除问诊模板
+    getFollowDetail, //查看随访模板详情
+    getFollowUpPlan, //查看随访计划详情
+    getTitleList, //选择模板发送
+    publishNotice, //发送模板
+    toolDept,
+    toolFollowupType,
+    toolFollowupMode,
+    toolFollowupContent,
+    myFollowup,
+    toolSurveyType,
+    toolSurveyMode,
+    toolDeviceType,
+    toolFollowupHasPlan,
+    getModelTitleList,
+    queryPageByDoctorWeb,
+    createInquiry,
+    publishArticle,
+    queryTypeList,
+    getResultGraph,
+    modelInsert,
+    getTemplateInfo,
+    editModel,
+    phoneFollowupSwitch,
+    myFollowDetailFun,
+    alertGet,
+    alertSet,
+    fetchChatSession,
+    groupList,
+    addGroupMember,
+    addfenzu,
+    groupSelects,
+    SETEQUIPMENT,
+    SETFOLLOWCHART,
+    toolMemberGroup
+} from "../../api/apiAll.js";
+import { mapState } from "vuex";
+import echarts from "../../plugs/echarts.js";
+import normalTab from "../../public/publicComponents/normalTab.vue";
+import tableList from "../../public/publicComponents/publicList.vue";
+import search from "../../public/publicComponents/search.vue";
+import selftag from "../../public/publicComponents/selftag.vue";
+import statisticsWay from "../../public/publicComponents/statisticsWay.vue";
+import publicTime from "../../public/publicComponents/publicTime.vue";
+import normalColumnChart from "../../public/publicComponents/normalColumnChart.vue";
+import pieChart from "./../followUpBox/pieChart.vue";
+import addQuestOrAritle from "./../followUpBox/addQuestOrAritle.vue";
+import followDetail from "./../followUpBox/followDetail.vue";
+import warnSet from "./../followUpBox/warnSet.vue";
+import { quillEditor } from "vue-quill-editor";
+import chat from "../../public/publicComponents/chat.vue";
 export default {
     components: {
-       doctor,
-       admin
+        tableList,
+        search,
+        normalTab,
+        selftag,
+        statisticsWay,
+        publicTime,
+        normalColumnChart,
+        quillEditor,
+        pieChart,
+        addQuestOrAritle,
+        followDetail,
+        warnSet,
+        chat
     },
     data() {
         return {
+            doctorArticleVisiable:false,
+            groupId: "",
+            pieChart1: {
+                id: "myChart1",
+                data: {
+                    total: 95,
+                    data: [
+                        {
+                            x: "没问题？？",
+                            y: 1
+                        },
+                        {
+                            x: "1",
+                            y: 31
+                        },
+                        {
+                            x: "2",
+                            y: 31
+                        },
+                        {
+                            x: "3",
+                            y: 31
+                        },
+                        {
+                            x: "好的满意",
+                            y: 1
+                        }
+                    ]
+                }
+            },
+            pieChart2: { id: "myChart2", data: {} },
+            pieChart3: { id: "myChart3", data: {} },
+            groupValue: "",
+            groupName: "",
+            groupVisible: false,
+            doctorVis: 0,
+            chatVisible: false,
+            sessionId: "",
+            switchNum: 0,
+            //随访计划
+            warnVisible: false,
+            warnList: [],
+            followPlanVisible: false,
+            followPlanData: [],
+            infoForm: {
+                a_title: "",
+                a_source: "",
+                a_content: "",
+                editorOption: {}
+            },
+            questList: [],
+            articleTableVisible: false,
+            addFollowBtnVis: true,
+            questVisible: false,
+            addFollowData: {
+                department: [],
+                title: " ",
+                type: "INHOSPITAL",
+                remindMe: true,
+                remindHe: true,
+                remindDays: 1,
+                itemModels: [
+                    {
+                        calcVal: 1,
+                        calcUnit: "天",
+                        state: true,
+                        contentModels: []
+                    }
+                ]
+            },
+            followSelectTime: "",
+            addFollowRadio: "INHOSPITAL",
+            addFollowTime: [
+                {
+                    value: "选项1",
+                    label: "3月后"
+                },
+                {
+                    value: "选项2",
+                    label: "6月后"
+                },
+                {
+                    value: "选项3",
+                    label: "9月后"
+                },
+                {
+                    value: "选项4",
+                    label: "一年后"
+                }
+            ],
+            addFollowTimeTx: [
+                {
+                    value: "1",
+                    label: "1"
+                },
+                {
+                    value: "2",
+                    label: "2"
+                },
+                {
+                    value: "3",
+                    label: "3"
+                },
+                {
+                    value: "4",
+                    label: "4"
+                }
+            ],
+            odata1: [
+                {
+                    prop: "name",
+                    label: "姓名"
+                }
+            ],
+            odata2: [
+                {
+                    name: "谭莹"
+                }
+            ],
+            wayVisible1: true,
+            odepartment: "",
+            odepartment1: "",
+            odepartment2: "",
+            odepartment3: "",
+            odepartment4: "",
+            otype: "",
+            oTheWay: "",
+            equiType: "", //设备类型 血压计 血糖计
+            oContent: "", //随访筛选
+            odocVisable: 0, //医生端切换内容
+            oMainShow: 0,
+            indexTab2: 0,
+            oDocThis: 0, //医生端tab切换
+            oVisable: true,
+            oconsulVisable: true,
+            followDocTab: [
+                {
+                    name: "我的随访",
+                    value: ""
+                },
+                {
+                    name: "随访模板",
+                    value: ""
+                },
+                {
+                    name: "门诊模板",
+                    value: ""
+                },
+                {
+                    name: "宣教文章",
+                    value: ""
+                },
+                {
+                    name: "疾病风险评估模板",
+                    value: ""
+                }
+            ],
+            followUpTab: [
+                {
+                    name: "调查管理",
+                    value: ""
+                },
+                {
+                    name: "调查模板",
+                    value: ""
+                },
+                {
+                    name: "调查发送",
+                    value: ""
+                }
+            ],
+            oAdminTab: {
+                i: 0, //选中的是第几项，类型为int(注意：从0开始计数)
+                list: [
+                    //选项列表，类型Array
+                    {
+                        en: "MEDICAL FOLLOW-UP", //选项英文，类型 string
+                        zh: "随访管理" //选项中文，类型string
+                    },
+                    {
+                        en: "DEGREE OF SATISFACTION",
+                        zh: "满意度调查"
+                    },
+                    {
+                        en: "MONITOR",
+                        zh: "家用设备监测"
+                    },
+                    {
+                        en: "STATISTICS",
+                        zh: "统计"
+                    }
+                ]
+            },
+            oTab1: {
+                more: true,
+                title: "科室",
+                list: []
+            }, //管理端tab
+            oTab2: {
+                list: []
+            }, //管理端tab
+            oTab3: {
+                list: []
+            }, //管理端tab
+            oTab4: {
+                list: []
+            }, //管理端tab
+            oTab5: {
+                list: []
+            }, //管理端tab
+            oTab6: {
+                list: []
+            },
+            oTab66: {
+                list: []
+            },
+            oTab7: {
+                more: false,
+                title: "类型",
+                list: [
+                    {
+                        text: "全部",
+                        value: ""
+                    },
+                    {
+                        text: "病人",
+                        value: "USER"
+                    },
+                    {
+                        text: "医生",
+                        value: "DOCTOR"
+                    }
+                ]
+            },
+            oTab8: { list: [] },
+            oTab9: { list: [] }, //有无随访计划
+            oTab10: {
+                more: false,
+                title: "随访时间",
+                list: [
+                    {
+                        text: "全部",
+                        value: ""
+                    },
+                    {
+                        text: "今天",
+                        value: "USER"
+                    },
+                    {
+                        text: "未来3天",
+                        value: "DOCTOR"
+                    }
+                ]
+            },
+            oTab11: { list: [] },
+            oTab12: { list: [] }, //我的随访分组
+            oTab14: { list: [] },
+            oTab15: { list: [] },
+            odata: 1,
+            columns: [
+                {
+                    prop: "department",
+                    label: "科室"
+                },
+                {
+                    prop: "type",
+                    label: " 类型 "
+                },
+                {
+                    prop: "title",
+                    label: "随访模板名 "
+                },
+                {
+                    prop: "doctor",
+                    label: "医生 "
+                },
+                {
+                    prop: "useNumber ",
+                    label: " 病人"
+                },
+                {
+                    prop: "appNum",
+                    label: "App "
+                },
+                {
+                    prop: "phoneNum",
+                    label: "电话"
+                },
+                {
+                    prop: "remind",
+                    label: "提醒 "
+                },
+                {
+                    prop: "inquiry",
+                    label: "问卷 "
+                },
+                {
+                    prop: "knowledge",
+                    label: "知识 "
+                },
+                {
+                    prop: "selfAssessment ",
+                    label: " 自评"
+                },
+                {
+                    prop: "deviceTest",
+                    label: "自测 "
+                },
+                {
+                    prop: "state",
+                    label: "状态 "
+                }
+            ],
+            columnsFa: [
+                {
+                    prop: "department",
+                    label: "科室"
+                },
+                {
+                    prop: "deviceType",
+                    label: "设备类型 "
+                },
+                {
+                    prop: "serialNumber",
+                    label: "设备编号 "
+                },
+                {
+                    prop: "userName",
+                    label: "用户 "
+                },
+                {
+                    prop: "useNumber ",
+                    label: " 使用量"
+                },
+                {
+                    prop: "alertInfo",
+                    label: "告警情况 "
+                }
+            ],
+            tableDataList: [],
+            tableDataListFa: [],
+            tableBtn: [
+                {
+                    name: "查看随访",
+                    oclass: "viewFollow",
+                    method: (index, row) => {
+                        this.seeFollow(index, row);
+                    }
+                }
+            ],
+            //满意度数据
+            mydChoice: "",
+            addMydTemplateVis: true,
+            mydTemlateName: {
+                title: "",
+                context: "",
+                nameList: []
+            },
+            associationId: [],
+            sendTemplate1: [],
+            mydAddData: {
+                type: "OUTPATIENT",
+                name: "",
+                context: " ",
+                deptId: [],
+                associations: [
+                    {
+                        answer: " ",
+                        associationId: " "
+                    }
+                ]
+            },
+            selectedOptions: [],
+            mydAddoptions: [
+                {
+                    value: "OUTPATIENT",
+                    label: "门诊调查",
+                    cities: []
+                },
+                {
+                    value: "MEDICALTECHNOLOGY",
+                    label: "医技调查",
+                    cities: []
+                },
+                {
+                    value: "INHOSPITAL",
+                    label: "住院调查",
+                    cities: []
+                },
+                {
+                    value: "ADMINISTRATION",
+                    label: "行政调查",
+                    cities: []
+                },
+                {
+                    value: "URL",
+                    label: "推送链接",
+                    cities: []
+                }
+            ],
+            props: {
+                value: "value",
+                children: "cities"
+            },
+            mydTableChecked: false,
+            mydTemplateTitle: [],
+            sendTemplateId: [], //要发送的模板id
+            userList: [], //要发送的用户id
+            templateVisible: false, //发送满意度模板
+            sendTemplateListVis: false,
+            followTableVisible: false,
+            addFollowVis: false,
+            mydAddTemplate: false,
+            satisfiedList: [],
+            defaultProps: {
+                children: "children",
+                label: "label"
+            },
+            satisfiedColumns: [
+                {
+                    prop: "department",
+                    label: "科室"
+                },
+                {
+                    prop: "type",
+                    label: "类型"
+                },
+                {
+                    prop: "mode",
+                    label: "方式"
+                },
+                {
+                    prop: "title",
+                    label: "模板"
+                },
+                {
+                    prop: "sender",
+                    label: "调查人"
+                },
+                {
+                    prop: "sendNum",
+                    label: "调查数"
+                },
+                {
+                    prop: "receiveNum",
+                    label: "接受数"
+                },
+                {
+                    prop: "feedbackNum",
+                    label: "反馈数"
+                },
+                {
+                    prop: "feedbackPercent",
+                    label: "反馈率"
+                }
+            ],
+            SatisfiedBtn: [],
+
+            userType: "",
+            mydType: "",
+            mydStartTime: "",
+            mydEndTime: "",
+            mydMode: "",
+            mydSearchData: "",
+            wayVisible2: true,
+            wayVisible3: false,
+            //统计数据
+            //申请科室统计图
+            drawData: {
+                dataAxis: [], //每个柱子代表的类名
+                data: [], //具体数值
+                title: "住院随访统计 ", //图表标题
+                total: 0
+            },
+            //发起科室统计图
+            drawDataStart: {
+                dataAxis: [], //每个柱子代表的类名
+                data: [], //具体数值
+                title: " 门诊随访统计", //图表标题
+                total: 0
+            },
+            drawDataEquipment: {
+                dataAxis: [], //每个柱子代表的类名
+                data: [], //具体数值
+                title: " 设备监测人次", //图表标题
+                total: 0
+            },
+            drawDataFollow: {
+                dataAxis: [], //每个柱子代表的类名
+                data: [], //具体数值
+                title: "智能随访人次 ", //图表标题
+                total: 0
+            },
+            tjType: "DEPT",
+            tjStartTime: "",
+            tjEndTime: "",
+            //医生数据
+            activeName: "first",
+            questOindex: "",
+            articleCheckList: [],
+            questCheckList: [],
+            articleList: [],
+            questList: [],
+            docAddTemplate: false,
+            doctorTemplateVisiable: false,
+            docTableChecked: false,
+            hadFollowup: "", //有无随访计划
+            docStartTime: "",
+            docEndTime: "",
+            groupId: "",
+            doctorSxVisiable: true,
+            doctorList: [],
+            doctorBtn: [
+                {
+                    name: "查看档案",
+                    oclass: "viewFollow",
+                    method: (index, row) => {
+                        this.docFollowDelete0(index, row);
+                    }
+                },
+                {
+                    name: "发送",
+                    oclass: "viewFollow",
+                    method: (index, row) => {
+                        this.docFollowDelete0(index, row);
+                    }
+                },
+                {
+                    name: "查看详情",
+                    oclass: "viewFollow",
+                    method: (index, row) => {
+                        this.docFollowDelete0(index, row);
+                    }
+                }
+            ],
+            doctorColumns: [
+                {
+                    prop: "userName",
+                    label: "姓名"
+                },
+                {
+                    prop: "origin",
+                    label: "来源"
+                },
+                {
+                    prop: "phone",
+                    label: "手机号"
+                },
+                {
+                    prop: "group",
+                    label: "分组"
+                },
+                {
+                    prop: "nearlyFollowup",
+                    label: "近期随访"
+                },
+                {
+                    prop: "phoneFollowup",
+                    label: "电话随访"
+                },
+                {
+                    prop: "deviceAlert",
+                    label: "设备告警"
+                }
+            ],
+
+            docSearchData: "",
+            docDepartment: "",
+            followPlan: [
+                {
+                    more: false,
+                    title: "类型",
+                    list: [
+                        {
+                            text: "全部",
+                            value: ""
+                        },
+                        {
+                            text: "病人",
+                            value: "USER"
+                        },
+                        {
+                            text: "医生",
+                            value: "DOCTOR"
+                        }
+                    ]
+                }
+            ],
+            followPlan: [
+                {
+                    more: false,
+                    title: "类型",
+                    list: [
+                        {
+                            text: "全部",
+                            value: ""
+                        },
+                        {
+                            text: "病人",
+                            value: "USER"
+                        },
+                        {
+                            text: "医生",
+                            value: "DOCTOR"
+                        }
+                    ]
+                }
+            ],
+            followPlan: [
+                {
+                    more: false,
+                    title: "类型",
+                    list: [
+                        {
+                            text: "全部",
+                            value: ""
+                        },
+                        {
+                            text: "病人",
+                            value: "USER"
+                        },
+                        {
+                            text: "医生",
+                            value: "DOCTOR"
+                        }
+                    ]
+                }
+            ],
+            partDoctorType: "",
+            addQuestData: {
+                departmentList: [],
+                title: "",
+                bankModels: [
+                    {
+                        title: "",
+                        questionType: "TEXT"
+                    },
+                    {
+                        title: "",
+                        questionType: "CHECKBOX",
+                        solutionModels: [
+                            {
+                                sortId: 1,
+                                tag: "a",
+                                answerDescribe: ""
+                            }
+                            // {
+                            //     sortId: 2,
+                            //     tag: "b",
+                            //     answerDescribe: "不对"
+                            // }
+                        ]
+                    }
+                ]
+            },
+            QuestTableVisible: false,
+            choiceItem: ["单选", "多选", "问答"],
+            addArticleData: {
+                title: "",
+                articleType: " ",
+                subtitle: " ",
+                department: [],
+                content: "",
+                summary: " ",
+                pictureId: " ",
+                pictureDownPath: " ",
+                url: "",
+                visible: true,
+                openComment: true
+            },
+            imageUrl: "",
+            articleImg: "",
+            myFollowList: [],
+            myFollowVisable: true,
+            followDetailData: {},
+            followDetailVisible: false,
+            mydAddSuosuClassVis: false,
+            groupList: [],
+            oGroupClick: -1,
+            groupUserId: [],
+            // 分页变量
+            adminPageNum1: 0,
+            adminPageNum2: 0,
+            adminPageNum3: 0,
+            adminPageNum4: 0,
+            adminPageNum5: 0,
+            adminTotal1: 0,
+            adminTotal2: 0,
+
+            adminTotal3: 0,
+            adminTotal4: 0,
+            adminTotal5: 0,
+            adminTotal6: 0,
+            followMobanType: "",
+            articleType:''
         };
     },
+    computed: {
+        ...mapState({
+            userState: state => state.user.userInfo,
+            userSelfInfo: state => state.user.userSelfInfo,
+            viewRoot: state => state.user.viewRoot
+        })
+    },
     async created() {
-        this.articleImg =
-            "/m/v1/api/hdfs/fs/upload?token=" + this.userState.token;
-        this.circularData(this.odata["header"]);
-        this.getFoList(); //随访列表
-        this.getUsFollow(); //我的随访
-        this.getGroupList();
-        this.screenPublic(this.oTab2, toolFollowupType, "类型"); //随访类型
-        this.screenPublic(this.oTab3, toolFollowupMode, "方式"); //随访方式
-        this.screenPublic(this.oTab4, toolFollowupContent, "内容"); //随访内容
-
-        this.screenPublic(this.oTab6, toolSurveyType, "类型"); //调查类型
-        this.screenPublic(this.oTab66, toolSurveyType, "类型"); //调查类型
-        this.oTab66Remove();
-        this.screenPublic(this.oTab8, toolSurveyMode, "方式"); //调查方式
-        this.screenPublic(this.oTab5, toolDeviceType, "设备类型"); //设备类型
-        this.screenPublic(this.oTab9, toolFollowupHasPlan, "随访计划"); //有无计划
+        
         // 医生
+        this.screenPublic(this.oTab9, toolFollowupHasPlan, "随访计划"); //有无计划
+         this.screenPublic(this.oTab2, toolFollowupType, "类型"); //随访类型
         this.screenPublic(this.oTab11, toolFollowupMode, "随访类型"); //随访类型
         this.screenPublic(this.oTab14, queryTypeList, "文章类型"); //随访类型
         this.screenPublic(this.oTab15, toolMemberGroup, "分组"); //我的随访分组
@@ -47,7 +1294,6 @@ export default {
             this.partDoctorType = "DOCTOR";
         }
         this.getDepartment(); //科室列表
-        this.oGetResultGraph(); //满意度统计
     },
     mounted() {},
     watch: {
@@ -264,6 +1510,11 @@ export default {
             }
 
             this.getUsFollow();
+        },
+        //文章筛选条件
+        getOTab14(data){
+            this.articleType=data.index.value
+this.oQueryArticleList()
         },
         //有无随访类型
         getOTab11(data) {
@@ -1007,6 +2258,7 @@ export default {
                 //我的随访
                 this.myFollowVisable = true;
                 this.docAddTemplate = false;
+                this.doctorArticleVisiable=false;
                 (this.doctorColumns = [
                     {
                         prop: "userName",
@@ -1068,6 +2320,7 @@ export default {
                 //随访模板
 
                 this.myFollowVisable = false;
+                this.doctorArticleVisiable=false;
                 this.docAddTemplate = true;
                 (this.doctorColumns = [
                     {
@@ -1113,6 +2366,7 @@ export default {
                 ];
             } else if (oindex == 2) {
                 //门诊模板
+                this.doctorArticleVisiable=false;
                 this.myFollowVisable = false;
                 this.docAddTemplate = true;
                 (this.doctorColumns = [
@@ -1159,6 +2413,7 @@ export default {
                 ];
             } else if (oindex == 3) {
                 //宣教文章
+                this.doctorArticleVisiable=true;
                 this.myFollowVisable = false;
                 this.docAddTemplate = true;
                 (this.doctorColumns = [
@@ -1205,6 +2460,7 @@ export default {
                 ];
             } else if (oindex == 4) {
                 //疾病风险
+                this.doctorArticleVisiable=false;
                 this.myFollowVisable = false;
                 this.docAddTemplate = false;
                 (this.doctorColumns = [
@@ -1504,7 +2760,8 @@ export default {
             const options = {
                 token: this.userState.token,
                 search: this.docSearchData,
-                department: this.docDepartment,
+                // department: this.docDepartment,
+                type:this.articleType,
                 pageNum: this.adminPageNum4,
                 pageSize: 10
             };
@@ -2169,7 +3426,7 @@ export default {
     top: 11px;
     width: 20px;
     height: 16px;
-    background: url(../assets/img/Shape-Copy.png);
+    background: url(../../assets/img/Shape-Copy.png);
 }
 .addFollowMain1 .el-form-item__label {
     text-align: left;
@@ -2186,7 +3443,7 @@ export default {
     top: 30px;
     width: 20px;
     height: 16px;
-    background: url(../assets/img/Shape-Copy.png);
+    background: url(../../assets/img/Shape-Copy.png);
 }
 .addFollowMain .oTime input {
     width: 158px;
@@ -2204,7 +3461,7 @@ export default {
     top: 11px;
     width: 20px;
     height: 16px;
-    background: url(../assets/img/Shape-Copy.png);
+    background: url(../../assets/img/Shape-Copy.png);
 }
 .questBox > li {
     display: flex;
@@ -2221,7 +3478,7 @@ export default {
     left: 11px;
     width: 20px;
     height: 16px;
-    background: url(../assets/img/Shape.png);
+    background: url(../../assets/img/Shape.png);
 }
 .addFollowBtn {
     display: flex;
