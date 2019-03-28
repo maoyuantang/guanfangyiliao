@@ -184,7 +184,7 @@
           </div>
           <div class="ourStaf-alert-item-text-ch">
             <span>密码:</span>
-            <el-input placeholder="***************" v-model="ourStafAlert.data.psd" size="mini" clearable type="password"></el-input>
+            <el-input :placeholder="ourStafAlert.type===0?'':'***************'" v-model="ourStafAlert.data.psd" size="mini" clearable type="password"></el-input>
             <i class="iconfont ourStaf-alert-icon">&#xe7b0;</i>
           </div>
         </div>
@@ -558,6 +558,8 @@ export default {
      */
     async deleteItem(item,index){
       // console.log('enter')
+      console.log(item)
+      return
       const res = await deleteUserItem({
         token: this.userInfo.token,
         userId: item.id,
@@ -1186,7 +1188,8 @@ export default {
         token: this.userInfo.token,
         pageNum: this.ourStaff.ourStaffUser.page.pageNum,
         pageSize: this.ourStaff.ourStaffUser.page.pageSize,
-        departmentId: this.ourStaff.departmentSelect.value || ''
+        departmentId: this.ourStaff.departmentSelect.value || '',
+        query:this.ourStaff.searchKey
       });
       if (res.data && res.data.errCode === 0) {
         console.log(res);
@@ -1204,6 +1207,8 @@ export default {
      */
     async ourStaffSearchChange(data) {
       console.log(data);
+      this.ourStaff.searchKey = data;
+      this.getUserList();
     },
     ourStaffDepartmentSelect(data) {
       this.ourStaff.departmentSelect = data.index;

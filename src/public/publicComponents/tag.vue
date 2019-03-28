@@ -1,7 +1,7 @@
 <template>
   <div class="self-tag">
     <span class="el-tag tag-title">{{inData.title}}:</span>
-    <el-tag v-for="(item,index) in inData.more?inData.list.slice(0,5):inData.list" :key="index" :class="inData.select===index?'all':null" @click.native="selectItem(item,index)">
+    <el-tag v-for="(item,index) in inData.more?inData.list.slice(0,4):inData.list" :key="index" :class="inData.select===index?'all':null" @click.native="selectItem(item,index)">
         {{item.label}}
     </el-tag>
     <el-tag @click.native="showMore" v-if="inData.more">更多…</el-tag>

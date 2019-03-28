@@ -5,13 +5,13 @@
       <!-- <span v-for="(item,index) in inData.list" :key="index" @click="reBackFn(index)" style="margin-left:20px">{{item.text}}</span>  -->
     <el-tag :type="index===0?'warning':''" 
         :class="[{'warning':item.warning},{'all':selectIndex===index}]"
-        v-for="(item,index) in inData.more?inData.list.slice(0,5):inData.list" 
+        v-for="(item,index) in more?inData.list.slice(0,4):inData.list" 
         :key="index" 
         @click.native.prevent="reBackFn(item,index)">
             {{item.text||''}}
     </el-tag>
     <!-- <el-tag @click.native="reBackFn(-1)" v-if="inData.more">更多…</el-tag> -->
-    <el-tag @click.native="showMore" v-if="inData.more">更多…</el-tag>
+    <el-tag @click.native="showMore" v-if="more">更多…</el-tag>
   </div>
 </template>
 
@@ -20,13 +20,14 @@ export default {
   data() {
     return {
         selectIndex:0,
+        more:false
     };
   },
   watch:{
     'inData.list':{
       handler(n){
         if(n.length>5){
-          this.inData.more = true;
+          this.more = true;
         }
       }
     }
@@ -41,11 +42,12 @@ export default {
         // :class="item.warning?'warning':''"
     },
     showMore(){
-      this.inData.more = false;
+      console.log('enter')
+      this.more = false;
     },
     isMore(){
       if(this.inData.list.length>5){
-          this.inData.more = true;
+          this.more = true;
         }
     }
   },

@@ -1,6 +1,5 @@
 <template>
   <div class="files-doc">
-	  {{userSelfInfo.userId}}
     <div class="files-doc-top">
       <div class="files-doc-top-left">
         <selftag v-model="findCondition.grouping.data" @reback="groupingSelect"></selftag>
