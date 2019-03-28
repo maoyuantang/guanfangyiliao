@@ -6,7 +6,7 @@
                 <ul>
                     <li class="ohisListMain" v-for="(text1,index1) in text.otimeList" :key="index1">
                         <div>
-                            <img src="../../assets/img/a-6.png" />
+                            <img :src="userSocketInfo.headImg+text1.from" :onerror="defaultImg" />
                         </div>
                         <div class="ohisListRg">
                             <div>{{text1.fromNickName}}
@@ -40,7 +40,6 @@ export default {
             userState: state => state.user.userInfo,
             userSelfInfo: state => state.user.userSelfInfo,
             userSocketInfo: state => state.socket
-
         })
     },
     data() {
@@ -52,10 +51,14 @@ export default {
             msgId: "",
             imgUrl:
                 "https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/",
-                moreLoadVisable:false,
+            moreLoadVisable: false,
+            defaultImg:
+                'this.src="' +
+                require("../../assets/img/publicHeadImg.png") +
+                '"'
         };
     },
-    
+
     methods: {
         //获取历史记录
         async getStoryMessage(index) {
@@ -74,10 +77,10 @@ export default {
                 let oLength = res.data.body.length;
                 if (res.data.body.length < 1) {
                     _this.nodataVisable = true;
-                    _this.moreLoadVisable=false
+                    _this.moreLoadVisable = false;
                 } else {
                     _this.nodataVisable = false;
-                    _this.moreLoadVisable=true
+                    _this.moreLoadVisable = true;
                     _this.msgId = res.data.body[oLength - 1].msgId;
                 }
                 _this.storyMessage = res.data.body;
@@ -258,12 +261,12 @@ export default {
     overflow: auto;
     height: 520px;
 }
-.imgClass{
-    width:50px;
+.imgClass {
+    width: 50px;
     height: 40px;
 }
-.imgClass>img{
-    width:100%;
+.imgClass > img {
+    width: 100%;
     height: 100%;
 }
 /* 

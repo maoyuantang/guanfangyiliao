@@ -44,7 +44,16 @@
                                     <el-button>{{inData.price[0].priceDesc}}</el-button>
                                 </el-tooltip> 
                             </th>
-                            <th class="public-info-item-num">{{inData.businessDoctors[0].doctorName}}</th>
+                            <th class="public-info-item-num">
+                                <!-- 都测试了再来个新增功能新增功能 -->
+                                <el-tooltip class="item" effect="light" placement="top">
+                                    <div slot="content">
+                                        <p v-for="(item,index) in inData.businessDoctors" :key="index">{{item.doctorName}}</p>
+                                    </div>
+                                    <div class="Account-authority-append-class">{{inData.businessDoctors.length}}</div>
+                                </el-tooltip>
+                                <!-- {{inData.businessDoctors[0].doctorName}} -->
+                                </th>
                             <th class="public-info-item-count"> 总 {{inData.totalNumber}} | <span class="public-info-item-count-spe">今 {{inData.todayNumber}}</span></th>
                             <th class="public-info-item-total">{{inData.totalPrice}}</th>
                             <th class="public-info-item-disable" @click="changeStatus">{{inData.state?'禁用':'解除禁用'}}</th> 

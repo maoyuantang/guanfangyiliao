@@ -85,7 +85,7 @@
             </div>
           </div>
           <div class="right-model-head-operating">
-            <search></search>
+            <search @searchValue="outSearch"></search>
             <el-button type="primary" @click="inviteCollaboration">邀请协作</el-button>
           </div>
         </div>
@@ -184,7 +184,7 @@
           </div>
           <div class="ourStaf-alert-item-text-ch">
             <span>密码:</span>
-            <el-input placeholder="***************" v-model="ourStafAlert.data.psd" size="mini" clearable type="password"></el-input>
+            <el-input :placeholder="ourStafAlert.type===0?'':'***************'" v-model="ourStafAlert.data.psd" size="mini" clearable type="password"></el-input>
             <i class="iconfont ourStaf-alert-icon">&#xe7b0;</i>
           </div>
         </div>
@@ -305,8 +305,8 @@
               v-for="(item,index) in outerCourt.department.list"
               :key="index"
               size="mini"
-              :label="item.deptName"
-              :value="item.deptId">
+              :label="item.label"
+              :value="item.value">
             </el-option>
           </el-select>
         </div>
@@ -558,6 +558,8 @@ export default {
      */
     async deleteItem(item,index){
       // console.log('enter')
+      console.log(item)
+      return
       const res = await deleteUserItem({
         token: this.userInfo.token,
         userId: item.id,
@@ -679,6 +681,14 @@ export default {
      */
     outerCourtUserHospitalSelect(data) {
       this.outerCourt.hospitalSelect = data.index;
+      this.getSynergyManageList();
+    },
+    /**
+     * 院外 关键字搜索
+     */
+    outSearch(value){
+      console.log(value)
+      this.outerCourt.searchKey = value;
       this.getSynergyManageList();
     },
     /**
@@ -1186,7 +1196,8 @@ export default {
         token: this.userInfo.token,
         pageNum: this.ourStaff.ourStaffUser.page.pageNum,
         pageSize: this.ourStaff.ourStaffUser.page.pageSize,
-        departmentId: this.ourStaff.departmentSelect.value || ''
+        departmentId: this.ourStaff.departmentSelect.value || '',
+        query:this.ourStaff.searchKey
       });
       if (res.data && res.data.errCode === 0) {
         console.log(res);
@@ -1204,6 +1215,8 @@ export default {
      */
     async ourStaffSearchChange(data) {
       console.log(data);
+      this.ourStaff.searchKey = data;
+      this.getUserList();
     },
     ourStaffDepartmentSelect(data) {
       this.ourStaff.departmentSelect = data.index;

@@ -65,6 +65,48 @@
                             clearable>
                         </el-input>
                     </div>
+                    <!-- -->
+                    <div class="data-item">
+                        <span>ws远程地址:</span>
+                        <el-input
+                            placeholder="请输入内容"
+                            v-model="addHospitalInfo.wsAddress"
+                            clearable>
+                        </el-input>
+                    </div>
+                    <div class="data-item">
+                        <span>ws内网地址:</span>
+                        <el-input
+                            placeholder="请输入内容"
+                            v-model="addHospitalInfo.wsLocalAddress"
+                            clearable>
+                        </el-input>
+                    </div>
+                    <div class="data-item">
+                        <span>ws访问代码:</span>
+                        <el-input
+                            placeholder="请输入内容"
+                            v-model="addHospitalInfo.wsCode"
+                            clearable>
+                        </el-input>
+                    </div>
+                    <div class="data-item">
+                        <span>ws访问账号:</span>
+                        <el-input
+                            placeholder="请输入内容"
+                            v-model="addHospitalInfo.wsUser"
+                            clearable>
+                        </el-input>
+                    </div>
+                    <div class="data-item">
+                        <span>ws访问凭证:</span>
+                        <el-input
+                            placeholder="请输入内容"
+                            v-model="addHospitalInfo.wsCertificate"
+                            clearable>
+                        </el-input>
+                    </div>
+                    <!--  -->
                     <div class="data-item">
                         <span>账号:</span>
                         <el-input
@@ -145,6 +187,33 @@
                     <el-input v-model="editHospital.name" autocomplete="off"></el-input>
                 </el-form-item>
             </el-form>
+            <!--  -->
+            <el-form>
+                <el-form-item label="ws远程地址">
+                    <el-input v-model="editHospital.wsAddress" autocomplete="off" @keydown="changeValue"></el-input>
+                </el-form-item>
+            </el-form>
+            <el-form>
+                <el-form-item label="ws内网地址">
+                    <el-input v-model="editHospital.wsLocalAddress" autocomplete="off" @keydown="changeValue"></el-input>
+                </el-form-item>
+            </el-form>
+            <el-form>
+                <el-form-item label="ws访问代码">
+                    <el-input v-model="editHospital.wsCode" autocomplete="off" @keydown="changeValue"></el-input>
+                </el-form-item>
+            </el-form>
+            <el-form>
+                <el-form-item label="ws访问账号">
+                    <el-input v-model="editHospital.wsUser" autocomplete="off" @keydown="changeValue"></el-input>
+                </el-form-item>
+            </el-form>
+            <el-form>
+                <el-form-item label="ws访问凭证">
+                    <el-input v-model="editHospital.wsCertificate" autocomplete="off" @keydown="changeValue"></el-input>
+                </el-form-item>
+            </el-form>
+            <!--  -->
             <el-form>
                 <el-form-item label="密码">
                     <el-input v-model="editHospital.pwd" autocomplete="off" type="password"></el-input>
@@ -198,11 +267,16 @@ export default {
             spinShow:false,//是否显示loading
             showAlertTree:false,
             showAdd:false,//是否显示添加医院
-            addHospitalInfo:{//手机添加医院的信息
-                name:'',
-                hospitalCode:'',
-                account:'',
-                passwd:''
+            addHospitalInfo:{//收集添加医院的信息
+                name:'',//医院名
+                hospitalCode:'',//医院吗
+                account:'',//账号
+                passwd:'',//密码
+                wsAddress:'',//远程地址(新增)
+                wsLocalAddress:'',//内网地址(新增)
+                wsCode:'',//访问代码(新增)
+                wsUser:'',//访问账号(新增)
+                wsCertificate:'',//访问凭证(新增)
             },
             nowItem:null,
             department:{//科室状态管理   
@@ -215,7 +289,13 @@ export default {
                 dialogFormVisible:false,//是否显示编辑医院弹窗
                 name:'',//医院名
                 pwd:'',//密码
-                obj:null
+                wsAddress:'',//ws远程地址(新增)
+                wsLocalAddress:'',//ws内网地址(新增)
+                wsCode:'',//ws访问代码(新增)
+                wsUser:'',//ws访问账号(新增)
+                wsCertificate:'',//ws访问凭证(新增)
+                obj:null,
+                change:false,//是否修改(新增)  
             },
             testData:{
                 title:'test title',
@@ -279,6 +359,12 @@ export default {
         })
     },
     methods: {
+        /**
+         * 新增的几个属性，键盘按下直接默认修改了数据
+         */
+        changeValue(){
+            this.editHospital.change = true;
+        },
         /**
          * 搜索框数据
          */
@@ -829,7 +915,12 @@ export default {
             console.log(item)
             this.editHospital.obj = item;
             this.editHospital.name = item.name;
-            this.editHospital.dialogFormVisible = true
+            this.editHospital.wsAddress = item.wsAddress;
+            this.editHospital.wsLocalAddress = item.wsLocalAddress;
+            this.editHospital.wsCode = item.wsCode;
+            this.editHospital.wsUser = item.wsUser;
+            this.editHospital.wsCertificate = item.wsCertificate;
+            this.editHospital.dialogFormVisible = true;
         },
 
         /**
@@ -853,9 +944,17 @@ export default {
                 {
                     name:this.editHospital.name,
                     passwd:this.editHospital.pwd,
-                    hospitalId:this.editHospital.obj.id
+                    hospitalId:this.editHospital.obj.id,
+                    changeWs:this.editHospital.change,
+                    wsAddress:this.editHospital.wsAddress,
+                    wsLocalAddress:this.editHospital.wsLocalAddress,
+                    wsCode:this.editHospital.wsCode,
+                    wsUser:this.editHospital.wsUser,
+                    wsCertificate:this.editHospital.wsCertificate,
                 }
-            ];
+            ];  
+            // console.log(options)
+            // return 
             const res = await updateHospital(...options);
             console.log(res);
             if(res.data&&res.data.errCode===0){

@@ -14,7 +14,10 @@
                 <el-table :data="planData" border style="width: 100%" :show-header="showHeadViable">
                     <el-table-column label=" " width="70">
                         <template slot-scope="scope">
-                            <img src="../../../assets/img/publicHeadImg.png" />
+                            <div class='indexHeadImgClass'>
+                                <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
+                            </div>
+
                         </template>
                     </el-table-column>
                     <el-table-column prop="userName" label=" " width="120">
@@ -65,7 +68,9 @@
                 <el-table :data="warnData" border style="width: 100%" :show-header="showHeadViable">
                     <el-table-column label=" " width="70">
                         <template slot-scope="scope">
-                            <img src="../../../assets/img/publicHeadImg.png" />
+                             <div class='indexHeadImgClass'>
+                                <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
+                            </div>
                         </template>
                     </el-table-column>
                     <el-table-column prop="userName" label=" " width="120">
@@ -118,7 +123,9 @@
                 <el-table :data="followData" border style="width: 100%" :show-header="showHeadViable">
                     <el-table-column label=" " width="70">
                         <template slot-scope="scope">
-                            <img src="../../../assets/img/publicHeadImg.png" />
+                            <div class='indexHeadImgClass'>
+                                <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
+                            </div>
                         </template>
                     </el-table-column>
                     <el-table-column prop="userName" label=" " width="120">
@@ -187,7 +194,9 @@
                 <el-table :data="consultationData" border style="width: 100%" :show-header="showHeadViable">
                     <el-table-column label=" " width="70">
                         <template slot-scope="scope">
-                            <img src="../../../assets/img/publicHeadImg.png" />
+                           <div class='indexHeadImgClass'>
+                                <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
+                            </div>
                         </template>
                     </el-table-column>
                     <el-table-column prop="userName" label=" " width="120">
@@ -234,7 +243,9 @@
                 <el-table :data="cooperationData" border style="width: 100%" :show-header="showHeadViable">
                     <el-table-column label=" " width="70">
                         <template slot-scope="scope">
-                            <img src="../../../assets/img/publicHeadImg.png" />
+                           <div class='indexHeadImgClass'>
+                                <img :src="userSocketInfo.headImg+scope.row.applyUserId" :onerror="defaultImg" />
+                            </div>
                         </template>
                     </el-table-column>
                     <el-table-column label=" " width="160">
@@ -434,13 +445,14 @@ export default {
     computed: {
         ...mapState({
             userState: state => state.user.userInfo,
-            userSelfInfo: state => state.user.userSelfInfo
+            userSelfInfo: state => state.user.userSelfInfo,
+            userSocketInfo: state => state.socket
         })
     },
     data() {
         return {
-            addFollowData:{},
-            followPlanVisible:false,
+            addFollowData: {},
+            followPlanVisible: false,
             planTableVisable: false,
             warnTableVisable: false,
             followTableVisable: false,
@@ -503,7 +515,11 @@ export default {
             planTotal: 0,
             warnTotal: 0,
             warnNum: 0,
-            planNum: 0
+            planNum: 0,
+            defaultImg:
+                'this.src="' +
+                require("../../../assets/img/publicHeadImg.png") +
+                '"'
         };
     },
 
@@ -566,7 +582,7 @@ export default {
         async getWarnList() {
             let _this = this;
             let query = {
-                token: this.userState.token,
+                token: this.userState.token
             };
             const res = await todayAlert(query);
             if (res.data && res.data.errCode === 0) {
@@ -708,7 +724,7 @@ export default {
             const res = await getFollowUpPlan(query);
             if (res.data && res.data.errCode === 0) {
                 _this.addFollowData = res.data.body;
-                _this.followPlanVisible=true;
+                _this.followPlanVisible = true;
             } else {
                 //失败
                 this.$notify.error({
@@ -1250,7 +1266,7 @@ export default {
     position: absolute;
     left: 0;
     top: 20px;
-    display: none;
+    /* display: none; */
 }
 .indexClassBox .el-table .cell,
 .indexClassBox .el-table th div {
@@ -1322,5 +1338,15 @@ export default {
     color: #939eab;
     letter-spacing: 0;
     line-height: 27px;
+}
+.indexHeadImgClass{
+    width:42px;
+    height: 42px;
+    border-radius: 50%;
+}
+.indexHeadImgClass>img{
+    width:100%;
+    height: 100%;
+      border-radius: 50%;
 }
 </style>

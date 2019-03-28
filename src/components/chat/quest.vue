@@ -40,7 +40,7 @@
                         </div>
                     </li>
                 </ul>
-                <el-button @click="addQuestTable()" type="primary">发送</el-button>
+                <!-- <el-button @click="addQuestTable()" type="primary">发送</el-button> -->
             </div>
 
         </el-form>

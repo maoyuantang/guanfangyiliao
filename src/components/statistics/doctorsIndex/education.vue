@@ -209,6 +209,7 @@
         height: 100%;
         border: 1px solid #E5EDF3;
         border-radius: 4px;
+        background-color: white;
 	}
     .doctors-index-rounds-head{
         display: flex;

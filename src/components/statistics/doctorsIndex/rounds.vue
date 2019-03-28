@@ -2,7 +2,7 @@
     移动查房
 -->
 <template>
-	<div class="doctors-index-rounds" v-if="info.todayMan || info.waitMan">
+	<div class="doctors-index-rounds" v-if="info.todayMan >0 || info.waitMan > 0">
 		<div class="doctors-index-rounds-head">
             <span class="doctors-index-rounds-name">移动查房</span>
             <span></span>
@@ -83,6 +83,7 @@
 		height: 3rem;
         border: 1px solid #E5EDF3;
         border-radius: 4px;
+        background-color: white;
         /* display: flex;
         flex-direction: column; */
 	}

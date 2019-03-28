@@ -1,6 +1,5 @@
 <template>
   <div class="files-doc">
-	  {{userSelfInfo.userId}}
     <div class="files-doc-top">
       <div class="files-doc-top-left">
         <selftag v-model="findCondition.grouping.data" @reback="groupingSelect"></selftag>
@@ -843,5 +842,8 @@ line-height: 0.22rem;
 }
 .files-doc--tbody th{
   font-weight: 100;
+}
+.files-doc-body{
+  padding-top: .2rem;
 }
 </style>

@@ -6,19 +6,22 @@
                 <button @click="refuseVideo()">拒绝</button>
             </div>
         </el-dialog> -->
-        <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose" :showClose="VideoshowClose">
-            <div>
-                <h4>{{startVideoName}}邀请你视频</h4>
+        <div v-if='receiveVideoVisable'>
+            <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose" :showClose="VideoshowClose">
                 <div>
-                    <button @click="receiveVideo()">接收</button>
-                    <button @click="refuseVideo()">拒绝</button>
+                    <h4>{{startVideoName}}邀请你视频</h4>
+                    <div>
+                        <button @click="receiveVideo()">接收</button>
+                        <button @click="refuseVideo()">拒绝</button>
+                    </div>
                 </div>
-            </div>
-        </el-dialog>
+            </el-dialog>
+        </div>
+
         <!-- 视频聊天 -->
         <div v-if="VideoVisable">
             <el-dialog class='videoClassBox' title="视频" :visible.sync="VideoVisable" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
-                <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId"  :doctorVis="doctorVis"></ovideo>
+                <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId" :doctorVis="doctorVis"></ovideo>
             </el-dialog>
         </div>
 
@@ -30,7 +33,12 @@ import ovideo from "../video/oVideo.vue";
 import apiBaseURL from "../enums/apiBaseURL.js";
 import { mapState } from "vuex";
 import protobuf from "protobufjs";
-import { storageUsers, fetchSyncInfo, userInfo,fetchChatSession } from "../api/apiAll.js";
+import {
+    storageUsers,
+    fetchSyncInfo,
+    userInfo,
+    fetchChatSession
+} from "../api/apiAll.js";
 
 export default {
     components: {
@@ -41,7 +49,7 @@ export default {
     computed: {},
     data() {
         return {
-            doctorVis:0,
+            doctorVis: 0,
             VideoshowClose: false,
             startVideoName: "",
             receiveVideoVisable: false,
@@ -365,9 +373,8 @@ export default {
                 this.$store.commit("socket/MESSAGETICKET", oMessageTicket);
                 this.heartCheck.start();
             } else if (RequestType == 104) {
-                console.log(odata.status.message)
+                console.log(odata.status.message);
                 if (odata.status.message == "发送成功") {
-                    
                     let oMessageTicket = {
                         ticket: odata.ticket, //票据，登录即可返回
                         sequence: odata.status.sequence, //序列号
@@ -512,15 +519,17 @@ export default {
                                 odata.info.body.split("&")[3] ==
                                 this.userSelfInfo.userId
                             ) {
+                                _this.receiveVideoVisable = true;
                                 console.log("是本人收到了邀请视频");
-                                this.createVideoRoomData = {
+                                _this.startVideoName = odata.info.fromNickName;
+
+                                _this.createVideoRoomData = {
                                     conferenceId: odata.info.body.split("&")[2],
                                     conferenceNumber: odata.info.body.split(
                                         "&"
                                     )[1]
                                 };
-                                _this.startVideoName = odata.info.fromNickName;
-                                _this.receiveVideoVisable = true;
+
                                 // this.$notify({
                                 //     title: "请注意",
                                 //     message: "您有一条视频消息请点开查看！",

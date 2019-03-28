@@ -25,8 +25,7 @@
           </div>
           <i></i>
           <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index' style="width: 90%;margin: auto;">
-            <!-- <el-table :data="text" :cell-class-name="ceshi0" :header-cell-style="rowClass"> -->
-            <el-table :data="text" :cell-class-name="ceshi0">
+            <el-table :data="text" :cell-class-name="ceshi0" :header-cell-style="rowClass">
               <el-table-column prop="unProcess" label="未处理"></el-table-column>
               <el-table-column prop="process" label="已处理"></el-table-column>
               <el-table-column prop="doctorCount" label="其他医生"></el-table-column>
@@ -505,11 +504,12 @@
             <div style="display: flex; align-items: center;">
               <img style="width: 53px; margin: 0 30px 0 0;" src="../assets/img/a-6.png" alt="">
               <div>
+                <img src="../assets/img/a-6.png" alt="">
                 <h1 style="margin: 0 0 10px 0;">{{text5.userName}}</h1>
-                <div class="orderTime">
-                  <span>下单时间:</span>
-                  <span class="span">{{text5.clinicOrderTime}}</span>
-                </div>
+              </div>
+              <div class="orderTime">
+                <span>下单时间:</span>
+                <span class="span">{{text5.clinicOrderTime}}</span>
               </div>
             </div>
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0;height: 40px;">
@@ -567,7 +567,7 @@
 
     <div v-if="chatVisible">
       <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-        <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage" :chatType="videoType"></chat>
+        <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage" :chatType1="videoType"></chat>
       </el-dialog>
     </div>
 
@@ -894,7 +894,7 @@
           departmentId: text.departmentId,
           userId: text1.userId,
           orgCode: text.orgCode,
-          clinicOrderId: text1.clinicOrderId
+          clinicOrderId: text1.clinicOrderId,
         };
         console.log(this.userMessage);
         let _this = this;
