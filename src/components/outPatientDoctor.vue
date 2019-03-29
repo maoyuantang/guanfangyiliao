@@ -504,12 +504,12 @@
             <div style="display: flex; align-items: center;">
               <img style="width: 53px; margin: 0 30px 0 0;" src="../assets/img/a-6.png" alt="">
               <div>
-                <img src="../assets/img/a-6.png" alt="">
+                <!-- <img src="../assets/img/a-6.png" alt=""> -->
                 <h1 style="margin: 0 0 10px 0;">{{text5.userName}}</h1>
-              </div>
-              <div class="orderTime">
-                <span>下单时间:</span>
-                <span class="span">{{text5.clinicOrderTime}}</span>
+                <div class="orderTime">
+                  <span>下单时间:</span>
+                  <span class="span">{{text5.clinicOrderTime}}</span>
+                </div>
               </div>
             </div>
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0;height: 40px;">
@@ -678,7 +678,7 @@
         pageSize: 5, //条数
         searchValue: "", //搜索框接收参数
         businessType: "", //业务类型接收参数
-        remark:"",
+        remark: "",
 
         orgCode: "", // 医院机构码
         departmentId: "", //科室id
@@ -1199,7 +1199,7 @@
           secondDoctorId: this.secondDoctorId,
           // secondDoctorId: "",
           reviewEnum: "REVIEWED", //等待
-          remark:this.remark
+          remark: this.remark
         };
         const res = await updatePrescription(query, options);
         if (res.data && res.data.errCode === 0) {
@@ -1254,12 +1254,12 @@
           return 'ceshiHui'
         }
       },
-      // rowClass({ row, rowIndex }) {
-      //   console.log({ row, rowIndex }) //表头行标号为0
-      //   if(row.label == "未处理"){
-      //     return 'background:red'
-      //   }
-      // }
+      rowClass({ row, rowIndex }) {
+        // console.log({ row, rowIndex }) //表头行标号为0
+        // if(row.label == "未处理"){
+        //   return 'background:red'
+        // }
+      }
     },
 
     async created() {
