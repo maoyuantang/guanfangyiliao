@@ -1,6 +1,6 @@
 <template>
     <div class="search">
-            <el-input v-model="input" placeholder="Search by keywords…"></el-input>
+            <el-input v-model="input" placeholder="Search by keywords…" @input="inputChange()"></el-input>
             <span @click="searchBtn">
                 <img src="../../assets/img/search.png" alt="">
             </span>
@@ -18,6 +18,9 @@ export default {
     methods: {
         searchBtn(){
             this.$emit('searchValue',this.input)
+        },
+        inputChange(){
+             this.$emit('inputChange',this.input)
         }
     },
     async created() {}

@@ -93,7 +93,7 @@
                     <el-input v-model="startXiezuo.intention"></el-input>
                 </el-form-item>
 
-                <el-form-item>
+                <el-form-item class='invitationClassInputBtn'>
                     <el-button class='btnClass' type="primary" @click="launchXiezuo()">确认</el-button>
                 </el-form-item>
             </el-form>

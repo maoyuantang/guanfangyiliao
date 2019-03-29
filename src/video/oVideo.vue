@@ -11,12 +11,13 @@
                         </div>
                     </div>
                     <div class="col-xs-12 media-box us-media">
-                        <div class="localVideos1" v-if="localVideoVisable">
-                            <video class="localVideo1" id="video" width="640" height="480" autoplay></video>
-                        </div>
-                        <div v-else id="localVideos" v-loading="loadingUs" element-loading-text="加载视频中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
+                        <div v-if="localVideoVisable" id="localVideos" v-loading="loadingUs" element-loading-text="加载视频中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
 
                         </div>
+                        <div class="localVideos1"  v-else>
+                            <video class="localVideo1" id="video"  autoplay></video>
+                        </div>
+                        
 
                         <div>
                             <div class="videoTopBtnBox">
@@ -49,7 +50,8 @@
                             </div>
                         </div>
                         <div class="videoChatBox" v-if="videoChatVisable">
-                            <videoChat :sessionId="sessionId" :doctorVis="doctorVis"></videoChat>
+                            <videoChat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage1" :chatType1="videoType"></videoChat>
+                            <!-- <videoChat :sessionId="sessionId" :doctorVis="doctorVis"></videoChat> -->
                         </div>
 
                     </div>
@@ -64,7 +66,7 @@
             <div class="patientClass0" v-show="patientVisable">
                 <h3>正在排队</h3>
                 <ul>
-                    <li @click="createChat(thePatientMessage.userId,1)">
+                    <li @click="createChat(thePatientMessage,1)">
                         <div>
                             <img src="../assets/img/sendNew1.png" />
                         </div>
@@ -78,7 +80,7 @@
             <div class="patientClass0">
                 <h3>未处理业务(未排队)</h3>
                 <ul v-show="noLineVisable">
-                    <li v-for="(text,index) in noLineNum" :key="index" @click="createChat(text.userId,0)">
+                    <li v-for="(text,index) in noLineNum" :key="index" @click="createChat(text,0)">
                         <div>
                             <img src="../assets/img/sendNew1.png" />
                         </div>
@@ -156,7 +158,7 @@ export default {
             noLineVisable: false,
             patientVisable: false,
             createVideoRoomData1: {},
-            localVideoVisable: true,
+            localVideoVisable: false,
             sessionId: "",
             oUserId: "", //当前就诊人id
             guaVisable: false,
@@ -418,21 +420,29 @@ export default {
             }
         },
         //创建会话
-        async createChat(ouserId, num) {
-            this.oUserId = ouserId;
+        async createChat(text, num) {
+console.log(text)
+             this.userMessage1= {
+          clinicId: this.userMessage.clinicId,
+          departmentId: this.userMessage.departmentId,
+          userId: text.userId,
+          orgCode: this.userSelfInfo.orgCode,
+          clinicOrderId: text.orderId,//订单id
+        };
+            this.oUserId = text.userId;
             let _this = this;
             let query = {
                 token: this.userState.token
             };
             let options = {
-                to: ouserId
+                to: text.userId
             };
             const res = await fetchChatSession(query, options);
             if (res.data && res.data.errCode === 0) {
                 _this.sessionId = res.data.body;
                 //正在排队
                 if (num == 1) {
-                    _this.createVideo(ouserId);
+                    _this.createVideo(text.userId);
                 } else {
                     //未完成排队
                 }
@@ -466,7 +476,7 @@ export default {
                     _this.$store.commit("socket/IFENTERVIDEO", 1); //当前登录用户在视频中
                     _this.videoIng = 1;
                     _this.closePatientNumVisable = false;
-                    _this.localVideoVisable = false;
+                    _this.localVideoVisable = true;
                     this.firstSet();
                     _this.guaVisable = true;
                     _this.questVisable = true;
@@ -529,7 +539,7 @@ export default {
                 _this.guaVisable = false;
                 _this.questVisable = false;
                 console.log("关闭视频成功");
-                _this.localVideoVisable = true;
+                _this.localVideoVisable = false;
                 _this.videoIng = 0;
             } else {
                 //失败
@@ -541,7 +551,7 @@ export default {
         },
         //挂断当前视频
         async closeTheVideo() {
-            this.streamObject.getTracks()[0].stop();
+            // this.streamObject.getTracks()[0].stop();
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -558,7 +568,7 @@ export default {
                 _this.guaVisable = false;
                 _this.questVisable = false;
                 console.log("关闭视频成功");
-                _this.localVideoVisable = true;
+                _this.localVideoVisable = false;
                 _this.videoIng = 0;
                 _this.$store.commit("socket/IFENTERVIDEO", 0); //当前登录用户没有在视频
             } else {
@@ -1191,7 +1201,7 @@ export default {
             // var server = $("#server").val();
             // var server=this.oSeaver
             var server = "meet.xiaoqiangio.com";
-            alert("初始化配置" + server);
+            // alert("初始化配置" + server);
             if (!server) {
                 alert("请输入服务器地址");
                 return false;
@@ -1215,7 +1225,7 @@ export default {
         },
         //登录
         videoLogin() {
-            alert("登陆");
+            // alert("登陆");
             let _this = this;
             // var username = $("#username").val();
             // var username=this.oUser
@@ -1302,9 +1312,9 @@ export default {
          * 匿名加入到房间
          */
         anonymousJoinRoomBtn() {
-            alert(
-                "匿名加入到房间" + this.createVideoRoomData1.conferenceNumber
-            );
+            // alert(
+            //     "匿名加入到房间" + this.createVideoRoomData1.conferenceNumber
+            // );
             let _this = this;
             // var conferenceName = $("#anonymousConferenceName").val();
             let conferenceName = this.createVideoRoomData1.conferenceNumber;
@@ -1540,6 +1550,8 @@ export default {
         }
     },
     created() {
+        console.log(this.userMessage)
+        
         if (this.doctorVis == 0) {
             this.screenClickVisable = true;
         } else {
@@ -1558,7 +1570,7 @@ export default {
             this.getThePatient();
         } else {
             this.publicVideoVisable = true;
-            this.localVideoVisable = false;
+            this.localVideoVisable = true;
             this.listVisable = false;
             this.questVisable = true;
             this.sessionId = this.sessionId1;
@@ -1837,7 +1849,8 @@ export default {
         videoType: String,
         oClinicId: String,
         sessionId1: String,
-        doctorVis: Number
+        doctorVis: Number,
+        userMessage:Object
     },
     model: {
         prop: [
@@ -1845,7 +1858,8 @@ export default {
             "videoType",
             "oClinicId",
             "sessionId1",
-            "doctorVis"
+            "doctorVis",
+            "userMessage"
         ],
         event: "reBack"
     }

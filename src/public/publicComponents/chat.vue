@@ -105,10 +105,10 @@
                 <img src="../../assets/img/sendNew2.png" />
                 <div class="userMember" v-show="showVideoBtnVisable">
                     <h4>视频窗口最多拉取3个人</h4>
-                    <el-checkbox-group v-model="checkList">
+                    <el-checkbox-group style='margin-bottom:18px' v-model="checkList">
                         <el-checkbox v-for="(text,index) in userMemberNum" :label="text.userId" :key="index">
                             <span class='videoUserHeadClass'>
-                                <img src="../../assets/img/sendNew2.png" />
+                                <img class='headImgClass'  :src="userSocketInfo.headImg+text.userId"  :onerror="defaultImg" />
                             </span>
 
                             {{text.userName}}
@@ -215,7 +215,7 @@
                 <ul>
                     <li class="followBox" v-for="(text,index) in questList" :key="index">
                         <span>{{text.title}}</span>
-                        <span @click="QuestDetail(text.id)"> > </span>
+                        <span @click="QuestDetail(text.id,0)"> > </span>
                     </li>
                 </ul>
             </el-dialog>
@@ -223,7 +223,7 @@
         <!-- 问诊详情 -->
         <div v-if="questDetailVisible">
             <el-dialog title="问诊详情" :visible.sync="questDetailVisible" center append-to-body>
-                <quest :addQuestId="addQuestId" @osendmessagechat="getSendMessageChat1" :sendToUserId="sendToUserId"></quest>
+                <quest :addQuestId="addQuestId" @osendmessagechat="getSendMessageChat1" :sendToUserId="sendToUserId" :num='questNum'></quest>
             </el-dialog>
         </div>
         <!-- 文章 -->
@@ -318,6 +318,7 @@ export default {
     },
     data() {
         return {
+            questNum:0,
             puBlicFileData: {
                 //新增 普通档案  弹窗数据
                 // id:'1231321',
@@ -409,7 +410,8 @@ export default {
             ReadMessage: "", //已读未读
             loadMoreVisable: false, //加载更多是否显示
             oImgVisable: false,
-            defaultImg: 'this.src="' + require('../../assets/img/publicHeadImg.png') + '"'
+            defaultImg: 'this.src="' + require('../../assets/img/publicHeadImg.png') + '"',
+            ifSendMessageNum:0,
         };
     },
     computed: {
@@ -420,10 +422,6 @@ export default {
         })
     },
     created() {
-        // $('.chatRecord').scrollTop($('.chatRecord')[0].scrollHeight);
-        console.log(ovideo);
-        console.log(this.$store.state.socket.socketObj);
-        // this.addMessageK1();
         this.getDoctorVis();
         this.getHisRecord();
         this.getMemberMess();
@@ -442,8 +440,10 @@ export default {
     methods: {
         //发送
         sendMessageChat(childMessageType, messageBody, childMessageType1) {
-            if (this.checkList == "门诊") {
+            if (this.chatType1 == "门诊" && this.ifSendMessageNum==0) {
                 this.bindOrder();
+                this.ifSendMessageNum=1
+                
             }
             let odate = new Date();
             let oHour = odate.getHours();
@@ -499,8 +499,8 @@ export default {
                 token: this.userState.token
             };
             let options = {
-                orderId: this.userMessage.orderId,
-                orderNo: this.userMessage.orderNo
+                orderId: this.userMessage.clinicOrderId,
+                orderNo:''
             };
             const res = await bindSession(query, options);
             if (res.data && res.data.errCode === 0) {
@@ -943,10 +943,12 @@ export default {
         //随访消息点击详情
         followDetailClick(oid, otype) {
             if (otype == "FOLLOWUP") {
-                this.followDetailVisible = true;
+                
                 this.getFollowDetail(oid);
             } else if (otype == "INTERROGATION") {
-                this.questDetailVisible = true;
+                this.questNum=1;
+                this.QuestDetail(oid,1)
+                // this.questDetailVisible = true;
             } else if (otype == "ARTICLE") {
                 this.articleDetailVisible = true;
                 this.articleClickId = oid;
@@ -983,6 +985,7 @@ export default {
             const res = await getFollowUpPlan(query);
             if (res.data && res.data.errCode === 0) {
                 this.followDetailData = res.data.body;
+                this.followDetailVisible = true;
             } else {
                 //失败
                 this.$notify.error({
@@ -1264,9 +1267,11 @@ export default {
                 });
             }
         },
-        QuestDetail(oid) {
-            this.questDetailVisible = true;
+        QuestDetail(oid,num) {
+            this.questNum=num
             this.addQuestId = oid;
+            this.questDetailVisible = true;
+            
         },
         //发送文章
         async addArticle() {
@@ -1774,6 +1779,8 @@ export default {
     background: white;
     box-shadow: 4px 4px 4px #cccccc;
     overflow-y: scroll;
+        top: -78px;
+    left: 36px;
 }
 .sendVideo .userMember .el-checkbox {
     display: block;
@@ -1790,8 +1797,9 @@ export default {
 }
 
 .setVideoBtn {
-    width: 80px;
+       width: 82%;
     height: 30px;
+    line-height: 12px;
 }
 .otherNumClass {
     width: 100%;

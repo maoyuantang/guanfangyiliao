@@ -31,7 +31,7 @@
               <el-table-column prop="doctorCount" label="其他医生"></el-table-column>
             </el-table>
           </div>
-          <el-button class="startConsul" type="text" @click="enterRoomBtn(text.id)">进入诊室</el-button>
+          <el-button class="startConsul" type="text" @click="enterRoomBtn(text)">进入诊室</el-button>
 
         </li>
 
@@ -576,7 +576,7 @@
       <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen
         @close="closeVideo()" :showClose="VideoshowClose">
         <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick"
-          :doctorVis='doctorVis'>
+          :doctorVis='doctorVis' :userMessage="userMessage">
         </ovideo>
       </el-dialog>
     </div>
@@ -808,15 +808,19 @@
         this.centerDialogVisible = false;
       },
       //进入门诊
-      async enterRoomBtn(oid) {
+      async enterRoomBtn(text) {
+        this.userMessage = {
+          clinicId: text.id,
+          departmentId: text.departmentId,
+        }
 
-        this.oClinicId = oid;
+        this.oClinicId = text.id;
         let _this = this;
         let query = {
           token: this.userInfo.token
         };
         const options = {
-          clinicId: oid
+          clinicId: text.id
         };
         const res = await doctorInto(query, options);
         console.log(res);
@@ -893,7 +897,7 @@
           departmentId: text.departmentId,
           userId: text1.userId,
           orgCode: text.orgCode,
-          clinicOrderId: text1.clinicOrderId,
+          clinicOrderId: text1.clinicOrderId,//订单id
         };
         console.log(this.userMessage);
         let _this = this;

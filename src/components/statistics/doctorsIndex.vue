@@ -16,21 +16,12 @@
 			
 		</div>
 		<!-- 随访相关三个模块 今日计划 告警 近期随访 -->
-		<div class="doctors-index-suifang" v-if="authMap.find(item=>item.authorityId==='40000')">
+		<div class="doctors-index-suifang" >
 			<!-- 今日计划 -->
 			<div class="doctors-index-suifang-module">
 				<plan></plan>
 			</div>
 
-			<!-- 告警 -->
-			<div class="doctors-index-suifang-module">
-				<alarm></alarm>
-			</div>
-
-			<!-- 近期随访 -->
-			<div class="doctors-index-suifang-module">
-				<followUp></followUp>
-			</div>
 		</div>
 		<!-- 通用三个模块 双向转诊  远程会诊 远程协作 -->
 		<div class="doctors-index-normal">
@@ -39,15 +30,7 @@
 				<oneTangRef></oneTangRef>
 			</div>
 
-			<!-- 远程会诊 -->
-			<div class="doctors-index-normal-module" v-if="authMap.find(item=>item.authorityId==='20000')">
-				<consultation></consultation>
-			</div>
-
-			<!-- 远程协作 -->
-			<div class="doctors-index-normal-module" v-if="authMap.find(item=>item.authorityId==='30000')">
-				<cooperation></cooperation>
-			</div>
+		
 		</div>
 	</div>
 </template>
