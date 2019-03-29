@@ -153,12 +153,12 @@
               <el-table-column prop="deptName" label="科室" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="applyOrgName" label="申请医院" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="applyDeptName" label="申请科室" :show-overflow-tooltip="true"></el-table-column>
-              <el-table-column prop="" label="申请人" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="applyDoctorName" label="申请人" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="applyTime" label="申请时间" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="intention" label="目的" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="patientName" label="病人" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="" label="预约类型" :show-overflow-tooltip="true"></el-table-column>
-              <el-table-column prop="" label="方向" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="typeName" label="方向" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="receiveTime" label="接诊时间" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="操作" width="300">

@@ -275,7 +275,7 @@
             </div>
           </li>
           <!-- <div style="font-family: PingFangSC-Semibold;font-size: 14px;color: #5E6875;letter-spacing: 0;font-weight: bold;">备注：</div> -->
-          <textarea class="doctorTalk" name="" id="" placeholder="备注：">{{text.remark}}</textarea>
+          <textarea v-model="remark" class="doctorTalk" name="" id="" placeholder="备注："></textarea>
           <li class="detailFooter">
             <div></div>
             <div>
@@ -480,7 +480,7 @@
             </div>
           </li>
           <!-- <div style="font-family: PingFangSC-Semibold;font-size: 14px;color: #5E6875;letter-spacing: 0;font-weight: bold;">备注：</div> -->
-          <textarea class="doctorTalk" name="" id="" placeholder="备注：">{{text.remark}}</textarea>
+          <textarea v-model="remark" class="doctorTalk" name="" id="" placeholder="备注："></textarea>
           <li class="detailFooter">
             <div></div>
             <div>
@@ -678,6 +678,7 @@
         pageSize: 5, //条数
         searchValue: "", //搜索框接收参数
         businessType: "", //业务类型接收参数
+        remark:"",
 
         orgCode: "", // 医院机构码
         departmentId: "", //科室id
@@ -1199,9 +1200,10 @@
         };
         let options = {
           prescriptionId: this.prescriptionId,
-          // secondDoctorId: this.secondDoctorId,
-          secondDoctorId: "",
-          reviewEnum: "REVIEWED" //等待
+          secondDoctorId: this.secondDoctorId,
+          // secondDoctorId: "",
+          reviewEnum: "REVIEWED", //等待
+          remark:this.remark
         };
         const res = await updatePrescription(query, options);
         if (res.data && res.data.errCode === 0) {

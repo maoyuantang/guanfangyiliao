@@ -763,61 +763,64 @@
 				console.log(item);
 			},
 
-			// /**
-			//  * 获取科室列表
-			//  */
-			// async getFetchHospitalDepts(){
-			// 	this.departmentList.list = this.global.manToolDept.map(item=>{
-			// 		item.text = item.name;
-			// 		// item.value = item.id;
-			// 		return item;
-			// 	});
+			/**
+			 * 获取科室列表
+			 */
+			async getFetchHospitalDepts(){
+				this.departmentList.list = this.global.manToolDept.map(item=>{
+					item.text = item.name;
+					// item.value = item.id;
+					return item;
+				});
 				
-			// 	this.statisticsInfo.departmentList.list = this.global.manToolDept.map(item=>{
-			// 		item.text = item.name;
-			// 		// item.value = item.id;
-			// 		return item;
-			// 	});
-			// 	// this.testData.departmentList.list = this.global.manToolDept.map(item=>{
-			// 	// 	return {
-			// 	// 		label:item.name,
-			// 	// 		value:item.id
-			// 	// 	}
-			// 	// });
-			// 	// this.getSelectDepartment(this.testData.departmentList.list[0].value);
-			// 	// this.getProtocols(this.testData.departmentList.list[0].value);
-			// 	// return;
-			// 	const res = await fetchHospitalDeptAuth({
-			// 		// orgCode:this.userSelfInfo.orgCode,
-			// 		// deptId:'',
-			// 		orgCode: this.userSelfInfo.orgCode,
-            //         token: this.userInfo.token,
-            //         type:'MANAGE'
-			// 	});
-			// 	console.log(res)
-			// 	if(res.data&&res.data.errCode===0){
-			// 		// const initArr = [{text:'全部'}];
-			// 		// res.data.body.forEach(element => {
-			// 		// 	element.text = element.deptName;
-			// 		// 	initArr.push(element);
-			// 		// });
-			// 		// this.departmentList.list = initArr.slice(0,initArr.length);
-			// 		// this.statisticsInfo.departmentList.list = initArr.slice(0,initArr.length);
-			// 		this.testData.departmentList.list = res.data.body.map(item => {
-			// 			return {
-			// 				label:item.deptName,
-			// 				value:item.deptId
-			// 			}
-			// 		});
-			// 		// this.testData.departmentList.default = {
-			// 		// 	label:this.testData.departmentList.list[0].label,
-			// 		// 	value:this.testData.departmentList.list[0].value,
-			// 		// };
-			// 		this.getSelectDepartment(this.testData.departmentList.list[0].value);
-			// 		this.getProtocols(this.testData.departmentList.list[0].value);
-			// 	}
+				this.statisticsInfo.departmentList.list = this.global.manToolDept.map(item=>{
+					item.text = item.name;
+					// item.value = item.id;
+					return item;
+				});
+				this.getSelectDepartment(this.testData.departmentList.list[0].value);
+				this.getProtocols(this.testData.departmentList.list[0].value);
+				return;
+				// this.testData.departmentList.list = this.global.manToolDept.map(item=>{
+				// 	return {
+				// 		label:item.name,
+				// 		value:item.id
+				// 	}
+				// });
+				// this.getSelectDepartment(this.testData.departmentList.list[0].value);
+				// this.getProtocols(this.testData.departmentList.list[0].value);
+				// return;
+				const res = await fetchHospitalDeptAuth({
+					// orgCode:this.userSelfInfo.orgCode,
+					// deptId:'',
+					orgCode: this.userSelfInfo.orgCode,
+                    token: this.userInfo.token,
+                    type:'MANAGE'
+				});
+				console.log(res)
+				if(res.data&&res.data.errCode===0){
+					// const initArr = [{text:'全部'}];
+					// res.data.body.forEach(element => {
+					// 	element.text = element.deptName;
+					// 	initArr.push(element);
+					// });
+					// this.departmentList.list = initArr.slice(0,initArr.length);
+					// this.statisticsInfo.departmentList.list = initArr.slice(0,initArr.length);
+					this.testData.departmentList.list = res.data.body.map(item => {
+						return {
+							label:item.deptName,
+							value:item.deptId
+						}
+					});
+					// this.testData.departmentList.default = {
+					// 	label:this.testData.departmentList.list[0].label,
+					// 	value:this.testData.departmentList.list[0].value,
+					// };
+					this.getSelectDepartment(this.testData.departmentList.list[0].value);
+					this.getProtocols(this.testData.departmentList.list[0].value);
+				}
 				
-			// },
+			},
 			/**
 			 * bar 切换数据
 			 */
@@ -1698,16 +1701,7 @@
 								label:'',
 								value:''
 							},
-							list:[
-								// {
-								// 	label:'科室列表1',
-								// 	value:'1'
-								// },
-								// {
-								// 	label:'科室列表2',
-								// 	value:'2'
-								// }
-							]
+							list:this.testData.departmentList.list
 					}, 
 					doctorList:{//医生列表    
 							show:false,
@@ -1749,6 +1743,7 @@
 						showContent:''
 					}
 				}
+				
 			},
 
 			/**
