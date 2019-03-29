@@ -21,33 +21,33 @@ export default {
         };
     },
     async created() {
-        this.articleImg =
-            "/m/v1/api/hdfs/fs/upload?token=" + this.userState.token;
-        this.circularData(this.odata["header"]);
-        this.getFoList(); //随访列表
-        this.getUsFollow(); //我的随访
-        this.getGroupList();
-        this.screenPublic(this.oTab2, toolFollowupType, "类型"); //随访类型
-        this.screenPublic(this.oTab3, toolFollowupMode, "方式"); //随访方式
-        this.screenPublic(this.oTab4, toolFollowupContent, "内容"); //随访内容
+        // this.articleImg =
+        //     "/m/v1/api/hdfs/fs/upload?token=" + this.userState.token;
+        // this.circularData(this.odata["header"]);
+        // this.getFoList(); //随访列表
+        // this.getUsFollow(); //我的随访
+        // this.getGroupList();
+        // this.screenPublic(this.oTab2, toolFollowupType, "类型"); //随访类型
+        // this.screenPublic(this.oTab3, toolFollowupMode, "方式"); //随访方式
+        // this.screenPublic(this.oTab4, toolFollowupContent, "内容"); //随访内容
 
-        this.screenPublic(this.oTab6, toolSurveyType, "类型"); //调查类型
-        this.screenPublic(this.oTab66, toolSurveyType, "类型"); //调查类型
-        this.oTab66Remove();
-        this.screenPublic(this.oTab8, toolSurveyMode, "方式"); //调查方式
-        this.screenPublic(this.oTab5, toolDeviceType, "设备类型"); //设备类型
-        this.screenPublic(this.oTab9, toolFollowupHasPlan, "随访计划"); //有无计划
-        // 医生
-        this.screenPublic(this.oTab11, toolFollowupMode, "随访类型"); //随访类型
-        this.screenPublic(this.oTab14, queryTypeList, "文章类型"); //随访类型
-        this.screenPublic(this.oTab15, toolMemberGroup, "分组"); //我的随访分组
-        if (this.userState.rooter || this.userState.manager) {
-            this.partDoctorType = "MANAGE";
-        } else {
-            this.partDoctorType = "DOCTOR";
-        }
-        this.getDepartment(); //科室列表
-        this.oGetResultGraph(); //满意度统计
+        // this.screenPublic(this.oTab6, toolSurveyType, "类型"); //调查类型
+        // this.screenPublic(this.oTab66, toolSurveyType, "类型"); //调查类型
+        // this.oTab66Remove();
+        // this.screenPublic(this.oTab8, toolSurveyMode, "方式"); //调查方式
+        // this.screenPublic(this.oTab5, toolDeviceType, "设备类型"); //设备类型
+        // this.screenPublic(this.oTab9, toolFollowupHasPlan, "随访计划"); //有无计划
+        // // 医生
+        // this.screenPublic(this.oTab11, toolFollowupMode, "随访类型"); //随访类型
+        // this.screenPublic(this.oTab14, queryTypeList, "文章类型"); //随访类型
+        // this.screenPublic(this.oTab15, toolMemberGroup, "分组"); //我的随访分组
+        // if (this.userState.rooter || this.userState.manager) {
+        //     this.partDoctorType = "MANAGE";
+        // } else {
+        //     this.partDoctorType = "DOCTOR";
+        // }
+        // this.getDepartment(); //科室列表
+        // this.oGetResultGraph(); //满意度统计
     },
     mounted() {},
     watch: {
@@ -1125,7 +1125,7 @@ export default {
                         label: "科室"
                     },
                     {
-                        prop: "title",
+                        prop: "modelTitle",
                         label: "问诊模板名"
                     },
                     {
@@ -2650,5 +2650,19 @@ export default {
     position: absolute;
     left: 0;
     top: 0;
+}
+.el-switch__core{
+    width: 28px !important;
+    height: 16px;
+    /* /* border-color: #4D7CFE !important; */
+    border-color: #F2F4F6 !important; 
+    background: #F2F4F6 !important;
+box-shadow: inset 0 0 1px 0 rgba(0,0,0,0.50);
+}
+.el-switch__core:after{
+    width: 8px;
+    height: 8px;
+    background:#98A9BC;
+    top: 3px
 }
 </style>

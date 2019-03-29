@@ -1213,8 +1213,10 @@ export default {
         // },
         //关闭
         webSocketonclose(e) {
-            // console.log("connection closed (" + e.code + ")");
-            // this.reconnect();
+            if (this.userState.token) {
+                console.log("connection closed (" + e.code + ")");
+                this.reconnect();
+            }
         },
         webSocketonopen(buffer) {
             if (this.$store.state.socket.socketObj.readyState === 1) {

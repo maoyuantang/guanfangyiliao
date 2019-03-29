@@ -2,7 +2,6 @@
     <!-- 远程协作系统 -->
     <div class="">
         <!-- 管理端 -->
-        
 
         <!-- 医生端 -->
         <div class="cooperation">
@@ -12,11 +11,11 @@
                 <el-button class="startConsul" type="text" @click="initiateCollaboration() ">发起协作</el-button>
             </div>
             <div class="public-list">
-                <el-table   :data="docTableData" border style="width: 100%">
+                <el-table :data="docTableData" border style="width: 100%">
                     <el-table-column fixed prop="synergyNo" label="协作编号"></el-table-column>
                     <el-table-column fixed prop="applyDeptName" label="发起科室"></el-table-column>
                     <el-table-column fixed prop="applyUserName" label="发起医生"></el-table-column>
-                    <el-table-column fixed prop="createTime" label="发起时间"></el-table-column>
+                    <el-table-column fixed prop="createTime" label="申请时间"></el-table-column>
                     <el-table-column fixed prop="synergyIntention" label="目的"></el-table-column>
                     <el-table-column fixed prop="synergyDeptName" label="协作科室"></el-table-column>
                     <el-table-column fixed prop="synergyUserName" label="协作医生"></el-table-column>
@@ -29,11 +28,11 @@
                     </el-table-column>
                     <el-table-column label="操作" width="300">
                         <template slot-scope="scope">
-                            <el-button class="seeDanganClass"  @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
-                            <el-button class="inviteUserClass"  @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
-                            <el-button class="seeHistoryMessage"  v-show="scope.row.synergyStatus==2" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
-                            <el-button class="goTohuizhen"  v-show="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="toConsultation(scope.row)" type="text" size="small">进入协作</el-button>
-                            <el-button class="overClass"  v-show="scope.row.synergyStatus==1" @click="xiezOver(scope.row)" type="text" size="small">结束</el-button>
+                            <el-button class="seeDanganClass" @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
+                            <el-button class="inviteUserClass" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
+                            <el-button class="seeHistoryMessage" v-show="scope.row.synergyStatus==2" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
+                            <el-button class="goTohuizhen" v-show="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="toConsultation(scope.row)" type="text" size="small">进入协作</el-button>
+                            <el-button class="overClass" v-show="scope.row.synergyStatus==1" @click="xiezOver(scope.row)" type="text" size="small">结束</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -58,8 +57,8 @@
                     <el-input v-model="startXiezuo.intention"></el-input>
                 </el-form-item>
 
-                <el-form-item>
-                    <el-button class='btnClass' type="primary" @click="launchXiezuo()">确认</el-button>
+                <el-form-item class='invitationClassInputBtn'>
+                    <el-button class='btnClass' type="primary" @click="launchXiezuo()" :disabled="disabledXie">确认</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -87,7 +86,7 @@
         <div v-if="invitationVisible">
             <el-dialog class="invitationClass" title=" 邀请医生" :visible.sync="invitationVisible" width="240px" hight="356px" center>
                 <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChangeInvita" show-checkbox></el-tree>
-                <el-button class="btnClass"  type="primary" @click="sureInvitation()">确认邀请</el-button>
+                <el-button class="btnClass" type="primary" @click="sureInvitation()">确认邀请</el-button>
             </el-dialog>
         </div>
 
@@ -113,7 +112,7 @@ import {
     sendSynergy, //9.6 提交  发起协作  表单数据
     receiveDept, //9.9本院参与科室
     // synergyChangeStatus, //9.7开始/结束协作
-    // synergyInto,//9.8进入协作
+    synergyInto, //9.8进入协作
     receiveDoctor, //9.10本院参与医生
     sponsorConsultationInform,
     queryConsultationInformList,
@@ -151,7 +150,8 @@ export default {
     },
     data() {
         return {
-            pageSizeNum:10,
+            disabledXie:false,
+            pageSizeNum: 10,
             docTotal: 0,
             storyMessage: [],
             doctorVis: 0,
@@ -380,14 +380,24 @@ export default {
 
     methods: {
         //进入协作
-        async toConsultation(oObject) {
-            console.log(oObject);
-            this.chatVisible = true;
-            this.sessionId = oObject.sessionId;
-            // if (oObject.state == "NEW") {
-            //     oObject.state="UNDERWAY"
-            //     this.overclick(oObject, "on");
-            // }
+        async toConsultation(row) {
+            this.sessionId = row.sessionId;
+
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                id: row.id
+            };
+            const res = await synergyInto(query);
+            if (res.data && res.data.errCode === 0) {
+                _this.chatVisible = true;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
         },
         //协作
         async xiezOver(row) {
@@ -512,6 +522,7 @@ export default {
         },
         //获取邀请列表
         async Invitation(row) {
+            this.disabledXie=false
             this.xiezuoId = row.id;
             this.invitationData = [];
             this.invitationVisible = true;
@@ -561,6 +572,7 @@ export default {
         },
         // 发起协作
         async launchXiezuo() {
+            this.disabledXie=true
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -572,12 +584,14 @@ export default {
                     title: "成功",
                     message: "发起成功"
                 });
+                 
                 setTimeout(function() {
                     _this.centerDialogVisible = false;
                     _this.DoctorList();
                 }, 1000);
             } else {
                 //失败
+                _this.disabledXie=false
                 this.$notify.error({
                     title: "警告",
                     message: res.data.errMsg
@@ -1002,10 +1016,10 @@ export default {
     async created() {
         this.DoctorList(); //医生协作列表
     },
-     watch: {
+    watch: {
         "$store.state.user.viewRoot.now.name": {
             handler(data) {
-                this.oUserType=data
+                this.oUserType = data;
             }
         }
     }

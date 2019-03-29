@@ -280,8 +280,10 @@
                             <quill-editor v-model="addArticleData.content" ref="myQuillEditor" class="editer" :options="infoForm.editorOption" @ready="onEditorReady($event)">
                             </quill-editor>
                         </div>
-                        <!-- <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="请输入随访标题"></el-input> -->
                     </div>
+                    <el-form-item  label="">
+                        <el-input class=" addArticleUrlClass" v-model="addArticleData.url" placeholder="URL"></el-input>
+                    </el-form-item>
                     <div class="addFollowMain">
                         <div>
                             <el-checkbox v-model="addArticleData.visible">所有人可见</el-checkbox>
@@ -292,82 +294,8 @@
                 </el-form>
             </el-dialog>
         </div>
-        <!-- 满意度新增模板 -->
-        <div v-if="mydAddTemplate">
-            <el-dialog class="evaluateBox" title=" " :visible.sync="mydAddTemplate" width="770px" hight="356px" center>
-                <div class="mydAddTemplate-title">
-                    <img src="../../assets/img/Bitmap.png" />
-                </div>
-                <el-form ref="form" :model="mydAddData" label-width="80px">
-                    <el-form-item label="所属分类">
-                        <el-select v-model="mydAddData.type" placeholder="请选择活动区域">
-                            <el-option v-for="(text,index) in oTab6.list" :label="text.text" :value="text.value" :key="index"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="活动名称">
-                        <el-input v-model="mydAddData.name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="模板内容">
-                        <el-input type="textarea" v-model="mydAddData.context"></el-input>
-                    </el-form-item>
-                    <div>
-                        <div>回复选项关联(系统根据回复自动发送后续的关联问卷)</div>
-                        <div>
-                            <ul>
-                                <li class="mydQuestList" v-for="(text,index) in mydAddData.associations" :key="index">
-                                    <div>
-                                        <el-form-item label="活动名称">
-                                            <el-input v-model="text.answer"></el-input>
-                                        </el-form-item>
-
-                                        <el-form-item label="所属分类" class="classification">
-                                            <div class="ificationBox">
-                                                <el-input v-model="mydTemlateName.title">dfdfdfd</el-input>
-                                                <div @click="ificationBoxClick()">
-                                                    <img src="../../../static/assets/img/downXia.png" />
-                                                </div>
-                                            </div>
-                                            <div class="mydAddSuosuClass" v-show="mydAddSuosuClassVis">
-                                                <ul>
-                                                    <li v-for="(text1,index1) in oTab66.list" :key="index1" :value="text1.value" @click="sendTemplateList1(text1.value)">
-                                                        {{text1.text}}>
-                                                    </li>
-
-                                                </ul>
-                                                <ul>
-                                                    <li v-for="(text2,index2) in mydTemlateName.nameList" :key="index2" :value="text2.associationId" @click="sendTemplateContext(text2.title,index2,text2.associationId)">
-                                                        {{text2.title}}
-                                                    </li>
-
-                                                </ul>
-                                                <div>
-                                                    {{mydTemlateName.context}}
-                                                </div>
-                                            </div>
-                                        </el-form-item>
-                                    </div>
-                                    <span>
-                                        删除
-                                    </span>
-                                </li>
-                            </ul>
-                            <span @click="addMydList()">
-                                添加
-                            </span>
-                        </div>
-                    </div>
-                    <el-form-item>
-                        <!-- 新增完成按钮 -->
-                        <el-button type="primary" @click="addMydTemplate()" v-if="addMydTemplateVis">完成</el-button>
-                        <!-- 编辑完成按钮 -->
-                        <el-button type="primary" @click="editMydTemplate()" v-else>完成</el-button>
-                    </el-form-item>
-                </el-form>
-
-            </el-dialog>
-        </div>
         <!-- 满意度发送的模板列表 -->
-        <div v-if="templateVisible">
+        <!-- <div v-if="templateVisible">
             <el-dialog class="evaluateBox" title=" " :visible.sync="templateVisible" width="240px" hight="356px" center>
                 <ul>
                     <li v-for="(text,index) in mydTemplateTitle" :key="index" @click="selectTemplate(index,text)">
@@ -375,10 +303,10 @@
                     </li>
                 </ul>
             </el-dialog>
-        </div>
-       
+        </div> -->
+
         <!-- 医生端 -->
-        <div  class=" followDoc">
+        <div class=" followDoc">
             <div>
                 <ul class="titleTop">
                     <li v-for="(text,index) in followDocTab" :class="{'title-this':index==oDocThis}" @click="docTab(index)" :key="index">{{text.name}}</li>
@@ -389,7 +317,7 @@
                 <div v-show="odocVisable==0">
                     <div class="mainTab">
                         <div>
-                            
+
                             <selftag :inData="oTab15" @reback="docDeperment" v-show="doctorSxVisiable"></selftag>
                             <selftag :inData="oTab2" @reback="getOTab2" v-show="doctorTemplateVisiable"></selftag>
                             <selftag :inData="oTab9" @reback="getOTab9" v-show="doctorSxVisiable"></selftag>
@@ -576,7 +504,7 @@ export default {
     },
     data() {
         return {
-            doctorArticleVisiable:false,
+            doctorArticleVisiable: false,
             groupId: "",
             pieChart1: {
                 id: "myChart1",
@@ -1270,7 +1198,7 @@ export default {
             adminTotal5: 0,
             adminTotal6: 0,
             followMobanType: "",
-            articleType:''
+            articleType: ""
         };
     },
     computed: {
@@ -1281,10 +1209,12 @@ export default {
         })
     },
     async created() {
-        
+        this.getUsFollow()
+        this.articleImg =
+            "/m/v1/api/hdfs/fs/upload?token=" + this.userState.token;
         // 医生
         this.screenPublic(this.oTab9, toolFollowupHasPlan, "随访计划"); //有无计划
-         this.screenPublic(this.oTab2, toolFollowupType, "类型"); //随访类型
+        this.screenPublic(this.oTab2, toolFollowupType, "类型"); //随访类型
         this.screenPublic(this.oTab11, toolFollowupMode, "随访类型"); //随访类型
         this.screenPublic(this.oTab14, queryTypeList, "文章类型"); //随访类型
         this.screenPublic(this.oTab15, toolMemberGroup, "分组"); //我的随访分组
@@ -1512,9 +1442,9 @@ export default {
             this.getUsFollow();
         },
         //文章筛选条件
-        getOTab14(data){
-            this.articleType=data.index.value
-this.oQueryArticleList()
+        getOTab14(data) {
+            this.articleType = data.index.value;
+            this.oQueryArticleList();
         },
         //有无随访类型
         getOTab11(data) {
@@ -2255,10 +2185,11 @@ this.oQueryArticleList()
                 this.doctorSxVisiable = false;
             }
             if (oindex == 0) {
+                this.screenPublic(this.oTab15, toolMemberGroup, "分组"); //我的随访分组
                 //我的随访
                 this.myFollowVisable = true;
                 this.docAddTemplate = false;
-                this.doctorArticleVisiable=false;
+                this.doctorArticleVisiable = false;
                 (this.doctorColumns = [
                     {
                         prop: "userName",
@@ -2320,7 +2251,7 @@ this.oQueryArticleList()
                 //随访模板
 
                 this.myFollowVisable = false;
-                this.doctorArticleVisiable=false;
+                this.doctorArticleVisiable = false;
                 this.docAddTemplate = true;
                 (this.doctorColumns = [
                     {
@@ -2366,7 +2297,7 @@ this.oQueryArticleList()
                 ];
             } else if (oindex == 2) {
                 //门诊模板
-                this.doctorArticleVisiable=false;
+                this.doctorArticleVisiable = false;
                 this.myFollowVisable = false;
                 this.docAddTemplate = true;
                 (this.doctorColumns = [
@@ -2379,7 +2310,7 @@ this.oQueryArticleList()
                         label: "科室"
                     },
                     {
-                        prop: "title",
+                        prop: "modelTitle",
                         label: "问诊模板名"
                     },
                     {
@@ -2413,7 +2344,7 @@ this.oQueryArticleList()
                 ];
             } else if (oindex == 3) {
                 //宣教文章
-                this.doctorArticleVisiable=true;
+                this.doctorArticleVisiable = true;
                 this.myFollowVisable = false;
                 this.docAddTemplate = true;
                 (this.doctorColumns = [
@@ -2460,7 +2391,7 @@ this.oQueryArticleList()
                 ];
             } else if (oindex == 4) {
                 //疾病风险
-                this.doctorArticleVisiable=false;
+                this.doctorArticleVisiable = false;
                 this.myFollowVisable = false;
                 this.docAddTemplate = false;
                 (this.doctorColumns = [
@@ -2594,6 +2525,7 @@ this.oQueryArticleList()
                     title: "成功",
                     message: "新增成功！"
                 });
+                _this.screenPublic(this.oTab15, toolMemberGroup, "分组"); //我的随访分组
                 setTimeout(function() {
                     _this.groupVisible = false;
                     _this.getGroupList();
@@ -2761,7 +2693,7 @@ this.oQueryArticleList()
                 token: this.userState.token,
                 search: this.docSearchData,
                 // department: this.docDepartment,
-                type:this.articleType,
+                type: this.articleType,
                 pageNum: this.adminPageNum4,
                 pageSize: 10
             };
@@ -2995,7 +2927,7 @@ this.oQueryArticleList()
                 setTimeout(function() {
                     _this.oQueryList();
                     _this.QuestTableVisible = false;
-                    this.addQuestData = {
+                    _this.addQuestData = {
                         departmentList: [],
                         title: "",
                         bankModels: [
@@ -3046,6 +2978,7 @@ this.oQueryArticleList()
                 setTimeout(function() {
                     _this.oQueryArticleList();
                     _this.articleTableVisible = false;
+                    _this.imageUrl = "";
                     _this.addArticleData = {
                         title: "",
                         articleType: " ",
@@ -3328,584 +3261,10 @@ this.oQueryArticleList()
 </script>
 
 <style>
-.followUp2-tab {
-    margin: 0 auto;
-    display: flex;
-    display: -webkit-flex;
-    width: 314px;
-    height: 35px;
-    text-align: center;
-    line-height: 35px;
-    border: 1px solid #e5edf3;
-    border-radius: 4px;
-}
-.followUp2-tab > li {
-    flex-grow: 1;
-    cursor: pointer;
-}
-.followUp2This {
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #ffffff;
-    letter-spacing: 0.3px;
-    background: #195bdd;
-    border-radius: 4px 0 0 4px;
-}
-.startConsul {
-    margin-top: 21px;
-    width: 196px;
-    height: 40px;
-    background: #4da1ff;
-    border-radius: 4px;
-    font-family: PingFangSC-Semibold;
-    font-size: 22px;
-    color: #ffffff;
-    letter-spacing: 0.92px;
-    text-align: center;
-    line-height: 0px;
-}
-.myStartConsul {
-    margin-top: 0px;
-}
-/* 医生样式 */
-.followDoc .titleTop {
-    display: flex;
-    display: -webkit-flex;
-    margin-bottom: 45px;
-}
-.followDoc .titleTop > li {
-    width: 176px;
-    height: 40px;
-    text-align: center;
-    line-height: 40px;
-    color: #0064d9;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-}
-.followDoc .titleTop .title-this {
-    background: #0064d9;
-    color: #ffffff;
-}
-.viewFollow {
-    width: 57px;
-    height: 20px;
-    background: rgba(66, 133, 244, 0.1);
-    border: 1px solid rgba(66, 133, 244, 0.6);
-    border-radius: 3px;
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #4d7cfe;
-    line-height: 0;
-}
-
-/* 新增随访表 */
-.addFollowTitle > input {
-    width: 338px;
+.addArticleUrlClass>input{
+    width:509px;
     height: 27px;
-}
-.el-dialog--center .el-dialog__body {
-    padding: 0px 25px 30px;
-}
-.questTableName {
-    color: red;
-}
-.addFollowMain input {
-    height: 27px;
-}
-.addFollowMain li {
-    margin-bottom: 10px;
-    position: relative;
-}
-.addFollowMain1 > ul > li::before {
-    content: "";
-    display: block;
-
-    position: absolute;
-    left: -30px;
-    top: 11px;
-    width: 20px;
-    height: 16px;
-    background: url(../../assets/img/Shape-Copy.png);
-}
-.addFollowMain1 .el-form-item__label {
-    text-align: left;
-}
-.remindTime {
-    position: relative;
-}
-.remindTime::before {
-    content: "";
-    display: block;
-
-    position: absolute;
-    left: -32px;
-    top: 30px;
-    width: 20px;
-    height: 16px;
-    background: url(../../assets/img/Shape-Copy.png);
-}
-.addFollowMain .oTime input {
-    width: 158px;
-    height: 27px;
-}
-.addFollowMain .firstZhiliao {
-    position: relative;
-}
-.addFollowMain .firstZhiliao::before {
-    content: "";
-    display: block;
-
-    position: absolute;
-    left: -30px;
-    top: 11px;
-    width: 20px;
-    height: 16px;
-    background: url(../../assets/img/Shape-Copy.png);
-}
-.questBox > li {
-    display: flex;
-    display: -webkit-flex;
-    justify-content: space-between;
-    padding-left: 40px;
-}
-.questBox > li::before {
-    content: "";
-    display: block;
-
-    position: absolute;
-    top: 2px;
-    left: 11px;
-    width: 20px;
-    height: 16px;
-    background: url(../../assets/img/Shape.png);
-}
-.addFollowBtn {
-    display: flex;
-    display: -webkit-flex;
-    justify-content: space-between;
-    height: 27px;
-    background: white;
-}
-.questDelete {
-    display: inline-block;
-    cursor: pointer;
-    width: 14px;
-    height: 14px;
-}
-.questDelete > img {
-    width: 100%;
-    height: 100%;
-}
-.addFollowHou {
-    width: 100px;
-}
-.el-input__icon {
-    line-height: 27px;
-}
-.addFollowBox .el-form-item__content {
-    margin-left: 0 !important;
-}
-.el-form-item {
-    margin-bottom: 0;
-}
-.addArticleImg {
-    position: relative;
-    margin-bottom: 33px;
-    width: 100px;
-    height: 82px;
-}
-.addArticleImg .avatar-uploader .el-upload {
-    width: 100%;
-    height: 100%;
-}
-.addArticleImg > div:first-child {
-    width: 100% !important;
-    height: 100% !important;
-}
-.addArticleImg img {
-    width: 100%;
-    height: 100%;
-}
-.addArticleImg > div:last-child {
-    position: absolute;
-    width: 100%;
-    height: 24px;
-    bottom: 0;
-    text-align: center;
-    line-height: 24px;
-    font-family: .PingFangSC-Regular;
-    font-size: 12px;
-    color: #ffffff;
-    letter-spacing: -0.17px;
-}
-.addArticleImg input {
-    display: none !important;
-}
-.ql-container {
-    height: 144px;
-}
-.addArticleEditor {
-    margin-bottom: 10px;
-}
-.sendTemplateBox {
-    position: relative;
-    margin: 20px 0;
-    padding: 10px;
-    width: 100%;
-    height: 100px;
-    background: rgba(250, 251, 252, 0);
-    border: 1px solid #d8dfe5;
-    border-radius: 5px;
-}
-.sendTemplateBox > ul {
-    display: flex;
-    display: -webkit-flex;
-}
-.sendTemplateBox > ul > li {
-    padding: 2px 2px;
-}
-.addTemplate {
-}
-.mydAddTemplate-title {
-    width: 100%;
-    height: 117px;
-}
-.mydAddTemplate-title > img {
-    width: 100%;
-    height: 100%;
-}
-.mydQuestList {
-    display: flex;
-    display: -webkit-flex;
-}
-.mydQuestList > div {
-    display: flex;
-    display: -webkit-flex;
-}
-.addTemplate {
-    width: 109px;
-    text-align: center;
-    position: absolute;
-    top: 18px;
-    left: 50%;
-    margin-left: -55px;
-}
-.addTemplate > div:first-child {
-    display: inline-block;
-    width: 43px;
-    height: 43px;
-}
-.addTemplate > div:first-child > img {
-    width: 100%;
-    height: 100%;
-}
-.DistanceFirst {
-    display: flex;
-    display: -webkit-flex;
-    margin-top: -6px;
-}
-.DistanceFirst > div {
-    width: 70px;
-}
-.addFollowBox .el-dialog__body {
-    padding: 25px 50px;
-}
-
-/* 新增问诊模板 */
-.addQuestBox .el-dialog__header,
-.addQuestBox .el-dialog__body {
-    background: #eff5fb;
-}
-.addQuestBox .el-dialog__body {
-    padding: 18px 25px 30px;
-}
-.addQuestBox .el-form-item__label {
-    width: 20px !important;
-    line-height: 27px;
-    padding: 0;
-}
-.addQuestBox .el-form-item__content {
-    margin-left: 20px !important;
-}
-.addQuestBox input {
-    width: 500px;
-    border: none;
-}
-.addQuestBox .el-form-item {
-    width: 500px;
-    height: 27px;
-    background: white;
-}
-.addQuestBox .el-form-item__content {
-    line-height: 27px;
-}
-.redioSingleInput .el-checkbox__input {
-    left: -8px;
-}
-.redioSingle > label {
-    display: block;
-}
-.redioSingle > .el-checkbox {
-    margin-left: 30px;
-}
-.choiceItemBox > span {
-    padding: 0 5px;
-    cursor: pointer;
-}
-.addQuestUl > li {
-    position: relative;
-    padding-top: 10px;
-}
-.deleteQuestList {
-    position: absolute;
-    right: 122px;
-    top: 20px;
-    width: 13px;
-    height: 13px;
-    cursor: pointer;
-}
-.deleteQuestList > img {
-    width: 100%;
-    height: 100%;
-}
-.redioSingleInput input {
-    width: 338px;
-}
-.redioSingleInput .el-input {
-    width: 344px;
-}
-.avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-    border-color: #409eff;
-}
-.avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-}
-.avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-}
-.questItemDelete {
-    display: inline-block;
-    width: 13px;
-    height: 13px;
-}
-.questItemDelete > img {
-    width: 100%;
-    height: 100%;
-}
-.mydAddSuosuClass {
-    display: flex;
-    display: -webkit-flex;
-    box-shadow: 3px 3px 3px #666;
-}
-.mydAddSuosuClass > ul:first-child {
-    width: 100px;
-}
-.mydAddSuosuClass > ul:nth-child(2) {
-    width: 100px;
-}
-.mydAddSuosuClass > div:last-child {
-    width: 100px;
-}
-
-.classification {
-    position: relative;
-}
-.mydAddSuosuClass {
-    position: absolute;
-    background: white;
-}
-.ArcticClass .el-form-item__content {
-    margin-left: 0px !important;
-}
-.ArcticClass .el-dialog__header,
-.ArcticClass .el-dialog__body {
-    background: #eff5fb;
-}
-.ArcticClass .el-dialog__body {
-    padding: 0px 6% 30px;
-}
-.ArcticClass .el-select .el-input__inner {
-    width: 338px;
-    height: 27px;
-}
-.ArcticClass .el-select {
-    margin-bottom: 10px;
-}
-.articleContent {
-    font-family: .PingFangSC-Regular;
-    font-size: 12px;
-    color: #646464;
-    letter-spacing: -0.17px;
-}
-.addFollowMain > div:first-child {
-    padding-left: 2.4%;
-    padding-top: 3px;
-    margin-bottom: 4.1%;
-    width: 509px;
-    height: 27px;
-    background: #ffffff;
-    /* border: 1px solid #d4e1f0; */
-}
-.addFollowMain .el-checkbox__label {
-    font-family: .PingFangSC-Regular;
-    font-size: 14px;
-    color: #030303 !important;
-    letter-spacing: -0.17px;
-}
-.addFollowMain > button {
-    width: 169px;
-    height: 38px;
-    background: #6ca4fc;
-    font-family: .PingFangSC-Regular;
-    font-size: 18px;
-    color: #ffffff;
-    letter-spacing: -0.25px;
-}
-.choiceItemBox > span {
-    display: inline-block;
-    margin: 0 5px;
-    width: 65px;
-    height: 38px;
-    background: #6ca4fc;
-    text-align: center;
-    line-height: 38px;
-    font-family: .PingFangSC-Regular;
-    font-size: 18px;
-    color: #ffffff;
-    letter-spacing: -0.25px;
-}
-.warnNumBox {
-    display: flex;
-    display: -webkit-flex;
-    cursor: pointer;
-}
-.warnNum {
-    width: 60px;
-    height: 17px;
-    background: #ffffff;
-    border: 1px solid #e4e8eb;
-    border-radius: 3px;
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #909191;
-    text-align: center;
-    line-height: 17px;
-}
-.ificationBox {
-    position: relative;
-}
-.ificationBox > div:last-child {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    right: 8px;
-    top: 0px;
-}
-.ificationBox > div:last-child > img {
-    width: 100%;
-    height: 100%;
-}
-.addFollowBoxFollow .el-dialog__header,
-.addFollowBoxFollow .el-dialog__body {
-    background: #eff5fb;
-}
-.firstDoctorTime .el-form-item__label {
-    width: 110px !important;
-}
-.groupClass {
-    position: relative;
-    cursor: pointer;
-}
-.groupClass:hover ul {
-    display: block;
-}
-.groupClass > div:first-child {
-    width: 50px;
-    height: 20px;
-    text-align: center;
-    line-height: 20px;
-    background: #c1d9f3;
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #5e696e;
-    letter-spacing: 0;
-}
-.groupClass > ul {
-    position: absolute;
-    display: none;
-    padding-top: 10px;
-    padding-left: 10px;
-    width: 125px;
-
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #5e696e;
-    letter-spacing: 0;
-}
-.groupClass > ul > li {
-    padding-left: 5px;
-    width: 100%;
-    height: 22px;
-    background: #f4f8fa;
-}
-.groupClick {
-    background: #dbe1e5;
-}
-.pieChartClass {
-    display: flex;
-    display: -webkit-flex;
-}
-.seeDanganClass {
-    width: 57px;
-    height: 20px;
-    background: rgba(255, 171, 43, 0.1);
-    border: 1px solid rgba(255, 171, 43, 0.6);
-    border-radius: 3px;
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #ffab2b;
-    line-height: 1px;
-}
-.sendMessage {
-    width: 57px;
-    height: 20px;
-    background: rgba(255, 0, 0, 0.1);
-    border: 1px solid #ea2929;
-    border-radius: 3px;
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #ff0000;
-    line-height: 1px;
-}
-.seeDetail {
-    width: 57px;
-    height: 20px;
-    background: rgba(66, 133, 244, 0.1);
-    border: 1px solid rgba(66, 133, 244, 0.6);
-    border-radius: 3px;
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    line-height: 1px;
-    color: #4d7cfe;
-}
-.addImgClass {
-    position: absolute;
-    left: 0;
-    top: 0;
+    background: #E7E7E7;
+border: 1px solid #DEDEDE;
 }
 </style>
