@@ -376,14 +376,14 @@ export default {
                     prop: "type",
                     label: "会诊类型"
                 },
-                {
-                    prop: "无",
-                    label: "接收医院"
-                },
                 // {
-                //     prop: "receiveDeptNumber",
-                //     label: "接收科室"
+                //     prop: "无",
+                //     label: "接收医院"
                 // },
+                {
+                    prop: "receiveDeptNumber",
+                    label: "接收科室"
+                },
                 {
                     prop: "doctorNumber",
                     label: "参与专家"

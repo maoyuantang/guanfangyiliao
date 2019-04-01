@@ -99,7 +99,7 @@
                     </el-table-column>
                     <el-table-column prop="doctor" label="发起医生" width="120">
                     </el-table-column>
-                    <el-table-column prop="applicationTime" label="发起时间" width="150">
+                    <el-table-column prop="applicationTime" label="申请时间" width="150">
                     </el-table-column>
                     <el-table-column prop="type" label="会诊类型" width="120">
                         <template slot-scope="scope">
@@ -301,7 +301,7 @@ export default {
             consultationId: "",
             invitationSelectList: [],
             doctorTime: "",
-            oDocTime: "",
+            oDocTime: "ALL",
             startDate: "",
             endDate: "",
             startHz: {
