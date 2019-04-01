@@ -7,18 +7,15 @@
             </el-form-item>
             <div class="addFollowMain">
                 <ul class="addQuestUl">
-                    <li v-for="(text,index) in addQuestData.bankModels" :key="index">
-                        <!-- <span class="deleteQuestList" @click="deleteQuestList(index)">
-                            <img src="../../assets/img/questDelete.png" />
-                        </span> -->
+                    <li v-for="(text,index) in addQuestData.solutionDtos" :key="index">
                         <div v-show="text.questionType=='RADIO'">
                             <el-form-item :label="index+1">
                                 <el-input class="" v-model="text.title" placeholder="请输入问诊标题"></el-input>
                             </el-form-item>
                             <el-radio-group class="redioSingle">
-                                <el-radio v-for="(text1,index1) in text.solutionModels" :key="index1" :label="index1">
+                                <el-radio v-for="(text1,index1) in text.solutionAsDtos" :key="index1" :label="index1">
                                     <span>{{text1.tag}}</span>
-                                    <el-input class="" v-model="text1.answerDescribe" placeholder="请输入问诊标题"></el-input>
+                                    <el-input class="" v-model="text1.desc" placeholder="请输入问诊标题"></el-input>
                                 </el-radio>
                             </el-radio-group>
                         </div>
@@ -27,9 +24,9 @@
                                 <el-input class="" v-model="text.title" placeholder="请输入问诊标题"></el-input>
                             </el-form-item>
                             <el-checkbox-group class="redioSingle">
-                                <el-checkbox v-for="(text1,index1) in text.solutionModels" :key="index1" :label="index1">
+                                <el-checkbox v-for="(text1,index1) in text.solutionAsDtos" :key="index1" :label="index1">
                                     <span>{{text1.tag}}</span>
-                                    <el-input class="" v-model="text1.answerDescribe" placeholder="请输入问诊标题"></el-input>
+                                    <el-input class="" v-model="text1.desc" placeholder="请输入问诊标题"></el-input>
                                 </el-checkbox>
                             </el-checkbox-group>
                         </div>
@@ -40,7 +37,7 @@
                         </div>
                     </li>
                 </ul>
-                <el-button @click="addQuestTable()" type="primary">发送</el-button>
+                <!-- <el-button @click="addQuestTable()" type="primary">发送</el-button> -->
             </div>
 
         </el-form>
@@ -49,7 +46,7 @@
 <script>
 import apiBaseURL from "../../enums/apiBaseURL.js";
 import { mapState } from "vuex";
-import { generateInquiryPlan, queryInquiry } from "../../api/apiAll.js";
+import { queryInquiryPlan } from "../../api/apiAll.js";
 export default {
     data() {
         return {
@@ -65,42 +62,42 @@ export default {
         })
     },
     methods: {
-        async addQuestTable() {
-            let _this = this;
-            let query = {
-                token: this.userState.token
-            };
-            const options = {
-                id: this.addQuestId,
-                userId: this.sendToUserId
-            };
-            const res = await generateInquiryPlan(query, options);
-            if (res.data && res.data.errCode === 0) {
-                let oMessage = {
-                    url: res.data.body,
-                    title: this.addQuestData.title,
-                    firstTreatmentTime: this.addQuestData.createTime,
-                    content: "",
-                    status: ""
-                };
-                console.log(oMessage);
-                this.$emit("osendmessagechat", oMessage);
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
-        },
+        // async addQuestTable() {
+        //     let _this = this;
+        //     let query = {
+        //         token: this.userState.token
+        //     };
+        //     const options = {
+        //         id: this.addQuestId,
+        //         userId: this.sendToUserId
+        //     };
+        //     const res = await queryInquiryPlan(query, options);
+        //     if (res.data && res.data.errCode === 0) {
+        //         let oMessage = {
+        //             url: res.data.body,
+        //             title: this.addQuestData.title,
+        //             firstTreatmentTime: this.addQuestData.createTime,
+        //             content: "",
+        //             status: ""
+        //         };
+        //         console.log(oMessage);
+        //         this.$emit("osendmessagechat", oMessage);
+        //     } else {
+        //         //失败
+        //         this.$notify.error({
+        //             title: "警告",
+        //             message: res.data.errMsg
+        //         });
+        //     }
+        // },
         //问诊详情
         async QuestDetail(oid) {
             let _this = this;
             let query = {
                 token: this.userState.token,
-                id: this.addQuestId
+                planId: this.addQuestId
             };
-            const res = await queryInquiry(query);
+            const res = await queryInquiryPlan(query);
             if (res.data && res.data.errCode === 0) {
                 // _this.questDetailData = res.data.body;
                 this.addQuestData = res.data.body;
@@ -115,10 +112,9 @@ export default {
     },
     props: {
         addQuestId: String,
-        sendToUserId: String
     },
     model: {
-        prop: ["addQuestId", "sendToUserId"],
+        prop: ["addQuestId"],
         event: "reBack"
     },
     created() {
@@ -136,6 +132,7 @@ export default {
 .addFollowTitle > input {
     width: 338px;
     height: 27px;
+    
 }
 .addFollowMain input {
     height: 27px;

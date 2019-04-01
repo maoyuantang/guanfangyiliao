@@ -15,7 +15,7 @@
                     <el-table-column fixed prop="synergyNo" label="协作编号"></el-table-column>
                     <el-table-column fixed prop="applyDeptName" label="发起科室"></el-table-column>
                     <el-table-column fixed prop="applyUserName" label="发起医生"></el-table-column>
-                    <el-table-column fixed prop="createTime" label="申请时间"></el-table-column>
+                    <el-table-column fixed prop="createTime" label="发起时间"></el-table-column>
                     <el-table-column fixed prop="synergyIntention" label="目的"></el-table-column>
                     <el-table-column fixed prop="synergyDeptName" label="协作科室"></el-table-column>
                     <el-table-column fixed prop="synergyUserName" label="协作医生"></el-table-column>

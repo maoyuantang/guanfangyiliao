@@ -277,12 +277,12 @@
                             您可以通过自编原创、URL转载、从Word导入完成文章编辑
                         </div>
                         <div class="addArticleEditor">
-                            <quill-editor v-model="addArticleData.content" ref="myQuillEditor" class="editer" :options="infoForm.editorOption" @ready="onEditorReady($event)">
+                            <quill-editor :disabled='quillDiabled' v-model="addArticleData.content" ref="myQuillEditor" class="editer" :options="infoForm.editorOption" @ready="onEditorReady($event)" @change="quillChange(addArticleData.content)">
                             </quill-editor>
                         </div>
                     </div>
-                    <el-form-item  label="">
-                        <el-input class=" addArticleUrlClass" v-model="addArticleData.url" placeholder="URL"></el-input>
+                    <el-form-item label="">
+                        <el-input class=" addArticleUrlClass" :disabled='urlDiabled' v-model="addArticleData.url" placeholder="URL链接" @change="urlChange(addArticleData.url)"></el-input>
                     </el-form-item>
                     <div class="addFollowMain">
                         <div>
@@ -504,6 +504,8 @@ export default {
     },
     data() {
         return {
+            quillDiabled: false,
+            urlDiabled: false,
             doctorArticleVisiable: false,
             groupId: "",
             pieChart1: {
@@ -1209,7 +1211,7 @@ export default {
         })
     },
     async created() {
-        this.getUsFollow()
+        this.getUsFollow();
         this.articleImg =
             "/m/v1/api/hdfs/fs/upload?token=" + this.userState.token;
         // 医生
@@ -1332,8 +1334,22 @@ export default {
                 });
             }
         },
-        onEditorReady(editor) {},
-
+        onEditorReady(editor) {
+        },
+        quillChange(data) {
+            if (data) {
+                this.urlDiabled = true;
+            } else {
+                this.urlDiabled = false;
+            }
+        },
+        urlChange(data) {
+            if (data) {
+                this.quillDiabled = true;
+            } else {
+                this.quillDiabled = false;
+            }
+        },
         //筛选
         // 管理端科室
         getOTab1(data) {
@@ -3261,10 +3277,10 @@ export default {
 </script>
 
 <style>
-.addArticleUrlClass>input{
-    width:509px;
+.addArticleUrlClass > input {
+    width: 509px;
     height: 27px;
-    background: #E7E7E7;
-border: 1px solid #DEDEDE;
+    /* background: #E7E7E7; */
+    border: 1px solid #dedede;
 }
 </style>

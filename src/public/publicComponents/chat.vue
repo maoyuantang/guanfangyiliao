@@ -8,7 +8,7 @@
                 <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
-                        <img class='headImgClass'  :src="userSocketInfo.headImg+text.from"  :onerror="defaultImg" />
+                        <img class='headImgClass' :src="userSocketInfo.headImg+text.from" :onerror="defaultImg" />
                         <!-- <img src="../../assets/img/publicHeadImg.png" /> -->
                     </div>
                     <div class="otherCon">
@@ -48,7 +48,7 @@
                                 <!-- 显示随访表 -->
                                 <!-- 自己发的随访表 -->
                                 <div v-if="text.childMessageType=='FOLLOWUP' || text.childMessageType=='INTERROGATION' || text.childMessageType=='ARTICLE'">
-                                    <div v-show="text.from==userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.id,text.childMessageType)">
+                                    <div v-show="text.from==userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.url,text.childMessageType)">
 
                                         <div>
                                             <img src="../../assets/img/followQuest1.png" />
@@ -65,7 +65,7 @@
 
                                     </div>
                                     <!-- 对方发的随访表 -->
-                                    <div v-show="text.from!=userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.id,text.childMessageType)">
+                                    <div v-show="text.from!=userSelfInfo.userId" class="followOrQuest" @click="followDetailClick(text.content.url,text.childMessageType)">
                                         <div>
                                             <img src="../../assets/img/followQuest2.png" />
                                         </div>
@@ -108,7 +108,7 @@
                     <el-checkbox-group style='margin-bottom:18px' v-model="checkList">
                         <el-checkbox v-for="(text,index) in userMemberNum" :label="text.userId" :key="index">
                             <span class='videoUserHeadClass'>
-                                <img class='headImgClass'  :src="userSocketInfo.headImg+text.userId"  :onerror="defaultImg" />
+                                <img class='headImgClass' :src="userSocketInfo.headImg+text.userId" :onerror="defaultImg" />
                             </span>
 
                             {{text.userName}}
@@ -215,7 +215,7 @@
                 <ul>
                     <li class="followBox" v-for="(text,index) in questList" :key="index">
                         <span>{{text.title}}</span>
-                        <span @click="QuestDetail(text.id,0)"> > </span>
+                        <span @click="QuestDetail(text.id)"> > </span>
                     </li>
                 </ul>
             </el-dialog>
@@ -223,7 +223,13 @@
         <!-- 问诊详情 -->
         <div v-if="questDetailVisible">
             <el-dialog title="问诊详情" :visible.sync="questDetailVisible" center append-to-body>
-                <quest :addQuestId="addQuestId" @osendmessagechat="getSendMessageChat1" :sendToUserId="sendToUserId" :num='questNum'></quest>
+                <quest :addQuestId="addQuestId" @osendmessagechat="getSendMessageChat1" :sendToUserId="sendToUserId"></quest>
+            </el-dialog>
+        </div>
+        <!-- 问诊详情 -->
+        <div v-if="questPlanVisible">
+            <el-dialog title="问诊计划详情" :visible.sync="questPlanVisible" center append-to-body>
+                <questPlan :addQuestId="addQuestPlanId"></questPlan>
             </el-dialog>
         </div>
         <!-- 文章 -->
@@ -272,6 +278,7 @@ import websocket1 from "../../common/websocket.vue";
 import drugs from "../../components/chat/drugs.vue";
 import follow from "../../components/chat/follow.vue";
 import quest from "../../components/chat/quest.vue";
+import questPlan from "../../components/chat/questPlan.vue";
 import followDetailChat from "../../components/chat/followDetailChat.vue";
 import articleDetail from "../../components/chat/articleDetail.vue";
 import WomanDoc from "./WomanDoc.vue";
@@ -311,6 +318,7 @@ export default {
         follow,
         followDetailChat,
         quest,
+        questPlan,
         articleDetail,
         nohave,
         WomanDoc,
@@ -318,7 +326,6 @@ export default {
     },
     data() {
         return {
-            questNum:0,
             puBlicFileData: {
                 //新增 普通档案  弹窗数据
                 // id:'1231321',
@@ -365,6 +372,8 @@ export default {
             checkList: [],
             questDetailData: {},
             questDetailVisible: false,
+            questPlanVisible: false,
+            addQuestPlanId: "",
             questVisible: false,
             articleVisible: false,
             articleList: [],
@@ -410,8 +419,11 @@ export default {
             ReadMessage: "", //已读未读
             loadMoreVisable: false, //加载更多是否显示
             oImgVisable: false,
-            defaultImg: 'this.src="' + require('../../assets/img/publicHeadImg.png') + '"',
-            ifSendMessageNum:0,
+            defaultImg:
+                'this.src="' +
+                require("../../assets/img/publicHeadImg.png") +
+                '"',
+            ifSendMessageNum: 0
         };
     },
     computed: {
@@ -440,10 +452,9 @@ export default {
     methods: {
         //发送
         sendMessageChat(childMessageType, messageBody, childMessageType1) {
-            if (this.chatType1 == "门诊" && this.ifSendMessageNum==0) {
+            if (this.chatType1 == "门诊" && this.ifSendMessageNum == 0) {
                 this.bindOrder();
-                this.ifSendMessageNum=1
-                
+                this.ifSendMessageNum = 1;
             }
             let odate = new Date();
             let oHour = odate.getHours();
@@ -500,7 +511,7 @@ export default {
             };
             let options = {
                 orderId: this.userMessage.clinicOrderId,
-                orderNo:''
+                orderNo: ""
             };
             const res = await bindSession(query, options);
             if (res.data && res.data.errCode === 0) {
@@ -678,22 +689,43 @@ export default {
                 let childMessageType = 6;
                 if (num == 1) {
                     //群聊
+                    let body =
+                        "sendroom&" +
+                        res.data.body.conferenceNumber +
+                        "&" +
+                        res.data.body.conferenceId +
+                        "$";
+                    let oLength = this.checkList.length - 1;
                     $.each(this.checkList, function(index, text) {
-                        let body =
-                            "sendroom&" +
-                            res.data.body.conferenceNumber +
-                            "&" +
-                            res.data.body.conferenceId +
-                            "&" +
-                            text;
-                        _this.sendVideoMessage(
-                            childMessageType,
-                            body,
-                            res.data.body.conferenceNumber,
-                            "",
-                            "VIDEO"
-                        );
+                        if (index == oLength) {
+                            body += text;
+                        } else {
+                            body += text + "&";
+                        }
                     });
+                    _this.sendVideoMessage(
+                        childMessageType,
+                        body,
+                        res.data.body.conferenceNumber,
+                        "",
+                        "VIDEO"
+                    );
+                    // $.each(this.checkList, function(index, text) {
+                    //     let body =
+                    //         "sendroom&" +
+                    //         res.data.body.conferenceNumber +
+                    //         "&" +
+                    //         res.data.body.conferenceId +
+                    //         "&" +
+                    //         text;
+                    //     _this.sendVideoMessage(
+                    //         childMessageType,
+                    //         body,
+                    //         res.data.body.conferenceNumber,
+                    //         "",
+                    //         "VIDEO"
+                    //     );
+                    // });
                 } else if (num == 0) {
                     //单聊
                     let body =
@@ -943,12 +975,9 @@ export default {
         //随访消息点击详情
         followDetailClick(oid, otype) {
             if (otype == "FOLLOWUP") {
-                
                 this.getFollowDetail(oid);
             } else if (otype == "INTERROGATION") {
-                this.questNum=1;
-                this.QuestDetail(oid,1)
-                // this.questDetailVisible = true;
+                this.QuestPlan(oid);
             } else if (otype == "ARTICLE") {
                 this.articleDetailVisible = true;
                 this.articleClickId = oid;
@@ -1267,11 +1296,13 @@ export default {
                 });
             }
         },
-        QuestDetail(oid,num) {
-            this.questNum=num
+        QuestDetail(oid) {
             this.addQuestId = oid;
             this.questDetailVisible = true;
-            
+        },
+        QuestPlan(oid) {
+            this.addQuestPlanId = oid;
+            this.questPlanVisible = true;
         },
         //发送文章
         async addArticle() {
@@ -1779,7 +1810,7 @@ export default {
     background: white;
     box-shadow: 4px 4px 4px #cccccc;
     overflow-y: scroll;
-        top: -78px;
+    top: -78px;
     left: 36px;
 }
 .sendVideo .userMember .el-checkbox {
@@ -1797,7 +1828,7 @@ export default {
 }
 
 .setVideoBtn {
-       width: 82%;
+    width: 82%;
     height: 30px;
     line-height: 12px;
 }

@@ -999,6 +999,19 @@ export const createVideoRoom = (query, data) => {//1.3.创建视频
         }
     })
 }
+export const inviteReply = (query, data) => {//1.3.创建视频
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.inviteReply,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+
 export const storageUsers = (query, data) => {//1.4.进入/退出视频房间
     const sign = postQueryHandle(Object.assign({}, data, query));
     return axios({
@@ -1612,6 +1625,17 @@ export const clinicOrders = query => {//7.18(WEB医生)获取所有该诊室的�
     return axios({
         method: 'get',
         url: apiList.clinicOrders,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const clinicOrder = query => {//7.4.2(WEB医生)获取所有该诊室的订单信息 
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.clinicOrder,
         params: query,
         headers: {
             sign

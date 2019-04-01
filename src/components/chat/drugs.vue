@@ -92,7 +92,7 @@
                             </el-table-column>
                             <el-table-column fixed="right" label="操作" width="100">
                                 <template slot-scope="scope">
-                                    <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
+                                    <el-button @click="deleteDrugs(scope.row)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -170,13 +170,13 @@ export default {
                 remark: "",
                 rxRelOrderId: "",
                 drugDetails: [
-                    {
-                        id: "H33020485", //药品id
-                        drugPrice: 30.0, //药品价格
-                        drugQuantity: 2, //药品数量
-                        subtotal: 60.0, //药品🐤小计
-                        doctorAsk: "一定要按时按量吃药" //医生嘱托
-                    }
+                    // {
+                    //     id: "H33020485", //药品id
+                    //     drugPrice: 30.0, //药品价格
+                    //     drugQuantity: 2, //药品数量
+                    //     subtotal: 60.0, //药品🐤小计
+                    //     doctorAsk: "一定要按时按量吃药" //医生嘱托
+                    // }
                 ],
                 countAllPrice: "",
                 searchData: "",
@@ -304,6 +304,16 @@ export default {
             this.dialogTableVisible = true;
             this.srcs = row;
             this.preLook();
+        },
+        //删除药品
+        deleteDrugs(row){
+            console.log(row)
+            let _this=this
+            $.each(this.chufangData.drugDetails,function(index,text){
+                if(row.id==text.id){
+                    _this.chufangData.drugDetails.splice(index,1)
+                }
+            })
         }
     },
     props: {
