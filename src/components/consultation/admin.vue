@@ -316,7 +316,6 @@ export default {
                 {
                     prop: "consultationId",
                     label: "会诊编号",
-                    width: "300"
                 },
                 {
                     prop: "hospital",

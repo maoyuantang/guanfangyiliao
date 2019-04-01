@@ -3,13 +3,12 @@
         <div :title="chatUser" class="otherNumClass">
             {{chatUser}}
         </div>
-        <div class="chatMessage">
-            <ul class="chatRecord">
+        <div class="chatMessage"> 
+            <ul class="chatRecord" id="scrolldIV">
                 <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
                         <img class='headImgClass' :src="userSocketInfo.headImg+text.from" :onerror="defaultImg" />
-                        <!-- <img src="../../assets/img/publicHeadImg.png" /> -->
                     </div>
                     <div class="otherCon">
                         <h4>
@@ -438,7 +437,7 @@ export default {
         this.getHisRecord();
         this.getMemberMess();
         this.alreadyRead();
-
+this.updated()
         this.ourl =
             "/m/v1/api/hdfs/fs/upload?token=" +
             this.userState.token +
@@ -450,6 +449,13 @@ export default {
         this.oMsgId = this.$store.state.socket.messageTicket.oMsgId;
     },
     methods: {
+        updated(){
+             this.$nextTick(function(){
+      var div = document.getElementById('scrolldIV');
+      console.log(div)
+      div.scrollTop = div.scrollHeight;
+    })
+        },
         //发送
         sendMessageChat(childMessageType, messageBody, childMessageType1) {
             if (this.chatType1 == "门诊" && this.ifSendMessageNum == 0) {
@@ -918,10 +924,12 @@ export default {
         },
         //获取家庭成员
         async getFamily() {
+            this.puBlicFileData.nameList=[]
+            this.puBlicManData.nameList=[]
             let _this = this;
             let query = {
                 token: this.userState.token,
-                userId: this.userSelfInfo.userId
+                userId: this.userMessage.userId
             };
             const res = await queryListByUserId(query);
             console.log(res);
@@ -1061,6 +1069,14 @@ export default {
             if (res.data && res.data.errCode === 0) {
                 console.log(res.data.body);
                 _this.userMemberNum = res.data.body;
+                $.each(_this.userMemberNum,function(index,text){
+                    if(text.userId==_this.userSelfInfo.userId){
+                        _this.userMemberNum.splice(index,1)
+                    }
+                })
+                // let oLength=_this.userMemberNum.indexOf(_this.userSelfInfo.userId); 
+                // alert(oLength)
+                // _this.userMemberNum.splice(oLength,1)
                 _this.sendToUserId = res.data.body[0].userId;
                 $.each(res.data.body, function(index, text) {
                     if (_this.chatUser == "") {

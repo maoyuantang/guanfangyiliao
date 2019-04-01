@@ -816,24 +816,25 @@
         }
 
         this.oClinicId = text.id;
-        let _this = this;
-        let query = {
-          token: this.userInfo.token
-        };
-        const options = {
-          clinicId: text.id
-        };
-        const res = await doctorInto(query, options);
-        console.log(res);
-        if (res.data && res.data.errCode === 0) {
-          _this.centerDialogVisible = true;
-        } else {
-          //失败
-          this.$notify.error({
-            title: "警告",
-            message: res.data.errMsg
-          });
-        }
+         this.centerDialogVisible = true;
+        // let _this = this;
+        // let query = {
+        //   token: this.userInfo.token
+        // };
+        // const options = {
+        //   clinicId: text.id
+        // };
+        // const res = await doctorInto(query, options);
+        // console.log(res);
+        // if (res.data && res.data.errCode === 0) {
+        //   _this.centerDialogVisible = true;
+        // } else {
+        //   //失败
+        //   this.$notify.error({
+        //     title: "警告",
+        //     message: res.data.errMsg
+        //   });
+        // }
       },
       //退出视频
       // async closeVideo() {

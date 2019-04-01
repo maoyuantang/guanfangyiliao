@@ -407,7 +407,7 @@ export default {
                 let query = {
                     token: this.userState.token,
                     id: row.id,
-                    status: row.synergyStatus
+                    status: 2
                 };
                 const res = await synergyChangeStatus(query);
                 if (res.data && res.data.errCode === 0) {
