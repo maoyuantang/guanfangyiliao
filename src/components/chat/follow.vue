@@ -184,9 +184,11 @@ export default {
             const res = await createFollowUpPlan(query, options);
             if (res.data && res.data.errCode === 0) {
                 let oMessage = {
-                    id: res.data.body.planId,
+                    url: res.data.body.planId,
                     title: this.addFollowData.title,
-                    firstTreatmentTime: this.addFollowData.firstTreatmentTime
+                    firstTreatmentTime: this.addFollowData.firstTreatmentTime,
+                    content:'',
+                    status:''
                 };
                 this.$emit("osendmessagechat", oMessage);
             } else {

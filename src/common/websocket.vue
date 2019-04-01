@@ -514,34 +514,34 @@ export default {
                             bodyVideo.indexOf("sendroom") > -1 ||
                             bodyVideo.indexOf("MicroCinicSendRoom") > -1
                         ) {
+                            let oindex = odata.info.body.lastIndexOf("$");
+                            let reciveUserList = odata.info.body.substring(
+                                oindex + 1,
+                                odata.info.body.length
+                            );
+                            reciveUserList = reciveUserList.split("&");
                             console.log("收到了邀请视频");
-                            if (
-                                odata.info.body.split("&")[3] ==
-                                this.userSelfInfo.userId
-                            ) {
-                                _this.receiveVideoVisable = true;
-                                console.log("是本人收到了邀请视频");
-                                _this.startVideoName = odata.info.fromNickName;
-
-                                _this.createVideoRoomData = {
-                                    conferenceId: odata.info.body.split("&")[2],
-                                    conferenceNumber: odata.info.body.split(
-                                        "&"
-                                    )[1]
-                                };
-
-                                // this.$notify({
-                                //     title: "请注意",
-                                //     message: "您有一条视频消息请点开查看！",
-                                //     position: "bottom-right",
-                                //     duration: 0,
-                                //     showClose: oshowClose,
-                                //     onClick() {
-                                //         _this.receiveVideoVisable = true;
-                                //     },
-                                //     onClose() {}
-                                // });
-                            }
+                            console.log(reciveUserList);
+                            $.each(reciveUserList, function(index, text) {
+                                if (_this.userSelfInfo.userId == text) {
+                                    _this.receiveVideoVisable = true;
+                                    console.log(_this.receiveVideoVisable)
+                                    console.log("是本人收到了邀请视频");
+                                    _this.startVideoName =
+                                        odata.info.fromNickName;
+console.log(odata.info.body)
+                                    _this.createVideoRoomData = {
+                                        conferenceId: odata.info.body.split(
+                                            "&"
+                                        )[2],
+                                        conferenceNumber: odata.info.body.split(
+                                            "&"
+                                        )[1]
+                                    };
+                                }else{
+                                   console.log("不是本人收到了邀请视频"); 
+                                }
+                            });
 
                             // var videoing = layui.data("videoing").videoing;
                             // if (videoing == "true") {
@@ -1213,7 +1213,8 @@ export default {
         // },
         //关闭
         webSocketonclose(e) {
-            if (this.userState.token) {
+            console.log(this.userState.token)
+            if (this.userState.userState) {
                 console.log("connection closed (" + e.code + ")");
                 this.reconnect();
             }

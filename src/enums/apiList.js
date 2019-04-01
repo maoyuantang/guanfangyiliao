@@ -90,6 +90,7 @@ export default {
     sendSynergy:'/m/v1/api/synergy/sendSynergy',//9.6发起协作
     synergyChangeStatus:'/m/v1/api/synergy/changeStatus',//9.7开始/结束协作
     synergyInto:'/m/v1/api/synergy/into',//9.8进入协作
+    inviteReply:'/m/v1/api/synergy/synergyManage/inviteReply',//同意
     receiveDept:"/m/v1/api/synergy/receiveDept",//9.9本院参与科室
     receiveDoctor:'/m/v1/api/synergy/receiveDoctor',//9.10本院参与科室
     createVideoRoom:'/m/v1/api/basics/videoMeeting/createVideoRoom',//1.3.创建视频

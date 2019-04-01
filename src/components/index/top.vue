@@ -35,7 +35,7 @@
             </div>
         </div>
         <div v-if="noticeVisible">
-            <el-dialog class="noticeClass" title="通知" :visible.sync="noticeVisible" width="60%">
+            <el-dialog class="noticeClass" title="通知" :visible.sync="noticeVisible" width="602px" center>
                 <notice></notice>
             </el-dialog>
         </div>
@@ -342,7 +342,5 @@ export default {
     left: 50%;
     transform: translateX(-50%);
 }
-.noticeClass {
-    height: 700px;
-}
+
 </style>
