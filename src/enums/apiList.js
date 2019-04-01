@@ -145,7 +145,8 @@ export default {
     drugHaulStatus: '/m/v1/api/prescription/prescription/drugHaulStatus',////7.2.5根据处方id获取处方的物流状态             //唐茂原
 
     drugsByCondition:'/m/v1/api/prescription/prescription/drugsByCondition',//7.16药品名称搜索药品信息
-    clinicOrders:'/m/v1/api/clinic/clinic/clinicOrder',//7.18(WEB医生)获取所有该诊室的订单信息
+    clinicOrders: '/m/v1/api/clinic/clinic/clinicOrder',//7.18(WEB医生)获取所有该诊室的订单信息
+    clinicOrder: '/m/v1/api/clinic/clinic/clinicOrders',//7.4.2(WEB医生)获取所有该诊室的订单信息 
     settingsUpdate:'/m/v1/api/basics/synergySystem/settingsUpdate',//8.10超级管理员更新协作人员
     getConsultationTree:'/m/v1/api/basics/hospital/getConsultationTree',//8.13获取会诊范围树
     updateConsultationTree:'/m/v1/api/basics/hospital/updateConsultationTree',//8.14更新会诊范围
