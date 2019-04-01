@@ -1,6 +1,5 @@
 <template>
 	<div class="family-medicine-doctor">
-		家医系统 医生端
         <div class="family-medicine-doctor-head">
             <div class="family-medicine-doctor-head-left">
                 <tag :inData="queryConditions.date" @reback="getDateSelect"></tag>

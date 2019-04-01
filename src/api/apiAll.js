@@ -3228,3 +3228,25 @@ export const internalHospitalDoctor = query => { //3.10获取院内用户信息
         }
     })
 }
+export const webDocGetFollowupPlan = query => { //2.医生查看成员随访计划列表【医生web】
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.webDocGetFollowupPlan,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const webDocGetDeviceList = query => { //2.医生查看成员设备数据列表【医生web】
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.webDocGetDeviceList,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

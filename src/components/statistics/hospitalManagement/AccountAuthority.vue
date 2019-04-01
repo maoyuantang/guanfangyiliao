@@ -1,6 +1,5 @@
 <template>
   <div class="Account-authority">
-    <!-- {{ourStaff.ourStaffUser.page.pageNum}} -->
     <div class="select-div">
       <el-radio-group v-model="tabPosition" style="margin-bottom: 30px;">
         <el-radio-button label="left" :class="tabPosition==='left'?'left-btn-select':''">本院人员</el-radio-button>
@@ -401,7 +400,7 @@ export default {
           list: []
         },
         departmentSelect: {}, //选中科室
-        searchKey: {}, //搜索关键字
+        searchKey: '', //搜索关键字
         ourStaffUser: {
           //账号列表
           page: {
@@ -545,7 +544,8 @@ export default {
      */
     querySearch(queryString,cb){
         // 调用 callback 返回建议列表的数据
-        cb(queryString ? this.newAppend.filter(item=>item.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1) : this.newAppend);
+        cb(queryString ? this.newAppend.filter(item=>item.value.indexOf(queryString) !== -1) : this.newAppend);
+        // cb(queryString ? this.newAppend.filter(item=>item.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1) : this.newAppend);
     },
     /**
      * 新增需求  选中
@@ -557,9 +557,14 @@ export default {
      * 删除 用户
      */
     async deleteItem(item,index){
-      // console.log('enter')
       console.log(item)
-      return
+      if(this.userSelfInfo.userId === item.id){
+        this.$notify.error({
+          title: "删除失败",
+          message: '不能删除自己'
+        });
+        return
+      }
       const res = await deleteUserItem({
         token: this.userInfo.token,
         userId: item.id,
@@ -1009,7 +1014,7 @@ export default {
           name: this.ourStafAlert.data.name,
           passwd: this.ourStafAlert.data.psd,
           phone: this.ourStafAlert.data.phone,
-          deptIds: [this.ourStafAlert.data.department.select],
+          deptIds: this.ourStafAlert.data.department.select?[this.ourStafAlert.data.department.select]:[],
           manageDeptId: this.ourStafAlert.data.manDepartment.select,
           authorizes: [
             ...this.ourStafAlert.data.docBus.select.map(item => {
@@ -1027,7 +1032,7 @@ export default {
           ]
         }
       ];
-
+      
       console.log(postData)
       const res = await updateUser(...postData);
       console.log(res);
@@ -1057,7 +1062,7 @@ export default {
         passwd: this.ourStafAlert.data.psd,
         phone: this.ourStafAlert.data.phone,
         userType: "0",
-        deptIds: [this.ourStafAlert.data.department.select],
+        deptIds: this.ourStafAlert.data.department.select?[this.ourStafAlert.data.department.select]:[],
         manageDeptId: this.ourStafAlert.data.manDepartment.select,
         authorizes: [],
         authorizes: [
@@ -1075,6 +1080,7 @@ export default {
           })
         ]
       };
+      console.log(postData);
       const postQuery = { token: this.userInfo.token };
       const res = await createUser(postQuery, postData);
       console.log(res);

@@ -6,61 +6,144 @@
                 <div class="new-content-headimg">
                     <img src="../../../static/assets/img/a-6.png" alt="">
                 </div>
-                <p class="new-content-username">kition</p>
+                <p class="new-content-username">{{patientInfo.name}}</p>
                 <div class="new-content-msg">
-                    <p class="new-content--msg-item">性别：男</p>
-                    <p class="new-content--msg-item">年龄：20</p>
-                    <p class="new-content--msg-item">省份证：500222111111111111</p>
+                    <p class="new-content--msg-item">性别：{{patientInfo.sex}}</p>
+                    <p class="new-content--msg-item">年龄：{{patientInfo.age}}</p>
+                    <p class="new-content--msg-item">省份证：{{patientInfo.idNo}}</p>
                 </div>
             </div>
             <div class="new-content-content">
-                <div class="new-content-content-item" v-for="(item,index) in 9" :key="index">
+                <!-- <div class="new-content-content-item" v-for="(item,index) in 9" :key="index">
                     <p class="new-content-content-item-title">门诊记录</p>
                     <p class="new-content-content-item-info">就诊医院：xxx医院</p>
                     <p class="new-content-content-item-info">就诊时间：2018-12-12</p>
                     <p class="new-content-content-item-info">就诊医院：xxx科室</p>
                     <p class="new-content-content-item-info">接诊医生：xxx</p>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="new-content-body">
             <div class="new-content-body-nav">
-                <div class="new-content-body-nav-item">
-                    <div class="new-content-body-nav-item-name">首次入院记录</div>
-                    <div class="new-content-body-nav-item-time">2018-12-12</div>
+                <div class="new-content-body-nav-item" 
+                :class="showInfo.index===index?'new-content-body-nav-item-select':''"
+                @click="changeNav(index)"
+                v-for="(item,index) in showInfo.navList"
+                :key="index">
+                    <div class="new-content-body-nav-item-name">{{item.name}}</div>
+                    <div class="new-content-body-nav-item-time">{{item.time}}</div>
                 </div>
             </div>
             <div class="new-content-body-content">
-                outside
+               <div :is="showInfo.navList[showInfo.index].component" :inData="inData"></div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import { mapState } from 'vuex'
+    import {patientInfo} from '../../api/apiAll.js'
+    import plan from './outSide/plan.vue'
+    import assessment from './outSide/assessment.vue'
+    import equipment from './outSide/equipment.vue'
+    import doc from './outSide/doc.vue'
+    
 	export default {
         props: ['inData'],
 		components:{
-			
+            plan,
+            assessment,
+            equipment,
+            doc
 		},
 		watch:{
 			
 		},
 		computed:{
-			
-		},
-		
+			...mapState({
+				userInfo:state => state.user.userInfo,
+                userSelfInfo:state => state.user.userSelfInfo,   
+                global: state => state.global 
+			})
+        },
 		data () {
 			return {	
+                showInfo:{ 
+                    index:0,
+                    navList:[  
+                        {
+                            name:'随访计划',   
+                            time:'2018-12-12',
+                            component:'plan',
+                            msg:''
+                        },
+                        {
+                            name:'风险评估',
+                            time:'2018-12-12',
+                            component:'assessment',   
+                            msg:''
+                        },
+                        {
+                            name:'设备自测',
+                            time:'2018-12-12',
+                            component:'equipment',
+                            msg:''
+                        },
+                        {
+                            name:'上传档案',
+                            time:'2018-12-12',
+                            component:'doc',
+                            msg:''
+                        },
+                    ]
+                },
+                /**
+                 * 患者信息
+                 */
+                patientInfo:{
+                    name:'',//姓名
+                    sex:'',//性别
+                    age:'',//年龄
+                    idNo:''//身份证
+                },
 			}
 		},
 		
 		methods:{
-			
+			/**
+             * 切换 菜单
+             */
+            changeNav(index){
+                this.showInfo.index = index;
+            },
+            /**
+             * 获取 患者信息
+             */
+            async getPatientInfo(){
+                console.log('enter')
+                const res = await patientInfo({
+                    token:this.userInfo.token,
+                    orgCode:this.userSelfInfo.orgCode,
+                    familyMemberId:this.inData.id
+                });
+                console.log(res);
+                if(res.data && res.data.errCode === 0){
+					this.patientInfo = res.data.body;
+				}else{
+					this.$notify({
+						title: '患者信息获取失败',
+						message: res.data.errMsg,  
+						type: 'error'
+					});
+				}
+            },
 			
 		},
 		async created(){
-			console.log(this.inData)
+            // debugger
+            console.log(this.inData);
+            this.getPatientInfo();
 		}
 	}
 </script>
@@ -174,5 +257,8 @@
         font-size: 13px;
         color: #97A3B4;
         line-height: 22px;
+    }
+    .new-content-body-nav-item-select{
+        border-left: #00A3FF 2px solid !important;
     }
 </style>

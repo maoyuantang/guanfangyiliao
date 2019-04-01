@@ -932,7 +932,7 @@
 					this.testData.show = true;
 				})
 				.catch(err=>{
-
+					console.log(err)
 				})
 				
 			},
@@ -990,13 +990,18 @@
 			 * 获取 1.21.14.业务类型
 			 */
 			async getToolBusinessType(){
-				const res = await toolBusinessType({token:this.userInfo.token});
+				const res = await businessType({
+					token:this.userInfo.token,
+					orgCode:this.userSelfInfo.orgCode,
+					departmentId:''
+				});
 				console.log(res);
 				if(res.data&&res.data.errCode===0){
 					const middle = res.data.body.map(item=>{
-						item.label = item.name;
-						item.value = item.id;
-						return item;
+						return {
+							label:item,
+							value:item
+						}
 					});
 					middle.push({label:'自定义',value:'customize'})
 					this.testData.businessTypeList.list = middle;
