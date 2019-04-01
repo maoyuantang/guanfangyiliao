@@ -1,5 +1,6 @@
 <template>
 	<div class="family-medicine-management" ref="familymedicinemanagement">
+		{{bussTypeList}}
         <div class="family-medicine-management-body-part-one" v-show="barInfo.i===0">
 				<div class="family-medicine-management-middle">
 					<div class="family-medicine-management-middle-left">
@@ -9,7 +10,7 @@
 					</div>
 					<div class="family-medicine-management-middle-right">
 						<div class="family-medicine-search"><search @searchValue="searchChange"></search></div>
-						<div><el-button type="primary" @click="addBuss">新增业务</el-button></div>
+						<div><el-button type="primary" @click="addBuss">新增业务456</el-button></div>
 					</div>
 				</div>
 				<div class="family-medicine-management-content">
@@ -356,6 +357,13 @@
 				userSelfInfo:state => state.user.userSelfInfo,
 				global: state => state.global 
 			}),
+			bussTypeList(){
+				return this.global.businessType.map(item=>{
+					item.text = item.name;
+					item.value = item.id;
+					return item;
+				});
+			}
 		},
 		data () {
 			return {
@@ -1060,23 +1068,28 @@
 			// 	})];
 			// },
 
-			// /**
-			//  * 获取业务类型
-			//  */
+			/**
+			 * 获取业务类型
+			 */
 			// async getBussTypeList(){
-			// 	const res = await businessType({
-			// 		token:this.userInfo.token,
-			// 		orgCode:this.userInfo.hospitalCode,
-			// 		departmentId:''
+			// 	this.bussTypeList.list = this.global.businessType.map(item=>{
+			// 		item.text = item.name;
+			// 		item.value = item.id;
+			// 		return item;
 			// 	});
-			// 	console.log(res);
-			// 	if(res.data&&res.data.errCode===0){
-			// 		this.bussTypeList.list = [{text:'全部'},...res.data.body.map(item => {
-			// 			return {text:item};
-			// 		})]
-			// 	}else{
+			// 	// const res = await businessType({
+			// 	// 	token:this.userInfo.token,
+			// 	// 	orgCode:this.userInfo.hospitalCode,
+			// 	// 	departmentId:''
+			// 	// });
+			// 	// console.log(res);
+			// 	// if(res.data&&res.data.errCode===0){
+			// 	// 	this.bussTypeList.list = [{text:'全部'},...res.data.body.map(item => {
+			// 	// 		return {text:item};
+			// 	// 	})]
+			// 	// }else{
 
-			// 	}
+			// 	// }
 			// },
 
 			/**

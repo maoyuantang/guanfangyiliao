@@ -12,10 +12,10 @@
                     </tr>
                 </thead>
                 <tbody class="plan-tbody">
-                    <tr v-for="(item,index) in list" :key="index">
-                        <th>{{item.title}}</th>
-                        <th>{{item.docName}}</th>
-                        <th>{{item.sendTime}}</th>
+                    <tr v-for="(item,index) in 9" :key="index">
+                        <th>{{item}}</th>
+                        <th>{{item}}</th>
+                        <th>{{item}}</th>
                         <th class="see">查看</th>
                     </tr>
                 </tbody>
@@ -73,5 +73,43 @@
 <style scoped>
     .assessment{
 
+    }
+    .plan-table{
+        width: 80%;
+        margin: 0 auto;
+        margin-top: .24rem;
+    }
+    .plan-table th{
+        padding-left: .2rem;
+    }
+    .plan-thead{
+        background-color: #E9C457;
+    }
+    .plan-tbody{
+       
+    }
+    .plan-thead>tr{
+        height: .48rem;
+        font-family: MicrosoftYaHei;
+        font-size: 12px;
+        color: rgba(0,0,0,0.87);
+    }
+    .plan-tbody>tr{
+        height: .6rem;;
+        padding-left: .1rem;
+        padding-right: .1rem;
+        font-family: MicrosoftYaHei;
+        font-size: 12px;
+        color: #646464;
+        text-align: left;
+    }
+    .plan-tbody>tr:nth-child(odd){
+        background-color: #F1F5F8;
+    }
+    .see{
+        font-family: MicrosoftYaHei;
+        font-size: 12px;
+        color: #108E26;
+        cursor: pointer;
     }
 </style>
