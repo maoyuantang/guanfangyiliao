@@ -298,16 +298,18 @@ export default {
     seeRemark:'/m/v1/api/clinic/remark/fetch',//查看备注
     patientInfo:'/m/v1/api/record/nosocomialRecord/patientInfo',//1.获取患者信息
     SETEQUIPMENT  :'/m/v1/api/followup/followupRemind/countAlert',
-   SETFOLLOWCHART   :'/m/v1/api/followup/followupRemind/countFollowup',
-   CONSULTATIONHOSPITAL:'/m/v1/api/consultation/queryConsultationHospitalScope',
-   CONSULTATIONDER:'/m/v1/api/consultation/queryConsultationDeptScope',
+    SETFOLLOWCHART   :'/m/v1/api/followup/followupRemind/countFollowup',
+    CONSULTATIONHOSPITAL:'/m/v1/api/consultation/queryConsultationHospitalScope',
+    CONSULTATIONDER:'/m/v1/api/consultation/queryConsultationDeptScope',
     SETFOLLOWCHART   :'/m/v1/api/followup/followupRemind/countFollowup',
     getUserItemInfo:'/m/v1/api/user/user/userInfo',//3.8获取用户信息
-    deleteUserItem:'/m/v1/api/user/deleteUser',//3.5首页-账号及权限-删除用户
+    deleteUserItem:'/m/v1/api/user/user/deleteUser',//3.5首页-账号及权限-删除用户
     listBusRange:'/m/v1/api/user/user/listBusRange',//3.9获取医生业务范围
     fetchHospitalDeptAuth:'/m/v1/api/basics/hospital/fetchHospitalDeptAuth',//1.2.1.获取医院科室列表（新）主要用于表单选择
     stateList:'/m/v1/api/inquiry/eduCourse/stateList',//7.进行状态筛选条件列表
     internalHospitalDoctor:'/m/v1/api/user/user/internalHospitalDoctor',//3.10获取院内用户信息
-    bindSession:'/m/v1/api/order/bindSession'
+    bindSession:'/m/v1/api/order/bindSession',
+    webDocGetFollowupPlan:'/m/v1/api/followup/followupPlan/webDocGetFollowupPlan',//2.医生查看成员随访计划列表【医生web】
+    webDocGetDeviceList:'/m/v1/api/device/house/webDocGetDeviceList',//2.医生查看成员设备数据列表【医生web】
 }
 
