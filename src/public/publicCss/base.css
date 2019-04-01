@@ -122,5 +122,5 @@ body{
 	padding: 0;
 }
 
-
+.el-menu-item.is-active {color: white;}
 

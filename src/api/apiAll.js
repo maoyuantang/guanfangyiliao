@@ -1631,6 +1631,17 @@ export const clinicOrders = query => {//7.18(WEB医生)获取所有该诊室的�
         }
     })
 }
+export const clinicOrder = query => {//7.4.2(WEB医生)获取所有该诊室的订单信息 
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.clinicOrder,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
 export const settingsUpdate = (query, data) => {//8.10超级管理员更新协作人员
     const sign = postQueryHandle(Object.assign({}, data, query));
     return axios({

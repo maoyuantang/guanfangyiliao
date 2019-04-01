@@ -604,7 +604,8 @@
     prescriptionDetailById, //7.12根据处方id获取处方电子版
     drugSendRecord, //7.13根据处方id获取处方发货记录
     drugsByCondition, //7.16药品名称搜索药品信息
-    clinicOrders, //7.18(WEB医生)获取所有该诊室的订单信息
+    // clinicOrders, //7.18(WEB医生)获取所有该诊室的订单信息
+    clinicOrder, //7.4.2(WEB医生)获取所有该诊室的订单信息 
 
     // 谭莹
     fetchChatSession, //创建单聊会话
@@ -693,7 +694,7 @@
         isShowPatientList: [],//就诊列表数据
         text5Array: [],//就诊列表弹框底部table数据
         huanzheList: [],
-        huanzheList2: [],
+        // huanzheList2: [],
         huanzheList3: {},
         huanzheList4: [],
         srcs: "",//处方id   用于拼接图片src
@@ -1027,18 +1028,40 @@
         }
       },
       async lookList(data) {
+        console.log(data)
         const _this = this
         this.isShowPatient = true
-        this.huanzheList = data.clinicOrders
-        this.huanzheList2 = data.doctor
+        // this.huanzheList = data.clinicOrders
+        // // this.huanzheList2 = data.doctor
         this.huanzheList3 = data
-        this.huanzheList4.length = 0
-        if (this.huanzheList4.length == 0) {
-          $.each(data.clinicOrders, function (index, text) {
-            _this.huanzheList4.push([text]);
+        let query = {
+          token: this.userInfo.token,
+          clinicId: data.id
+        };
+        const res = await clinicOrder(query);//7.4.2(WEB医生)获取所有该诊室的订单信息 
+        if (res.data && res.data.errCode === 0) {
+          console.log("7.4.2(WEB医生)获取所有该诊室的订单信息 +成功");
+          console.log(res)
+          console.log(res.data.body)
+          this.huanzheList = res.data.body
+
+
+          this.huanzheList4.length = 0
+          if (this.huanzheList4.length == 0) {
+            $.each(res.data.body, function (index, text) {
+              _this.huanzheList4.push([text]);
+            });
+          }
+          console.log(this.huanzheList4)
+        } else {
+          //失败
+          console.log("7.4.2(WEB医生)获取所有该诊室的订单信息 +失败");
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
           });
         }
-        console.log(this.huanzheList4)
+
       },
       async seeHistory(data) {
         console.log(data)
