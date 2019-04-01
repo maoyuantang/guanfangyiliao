@@ -1,288 +1,302 @@
 <!-- 今日计划 -->
 <template>
     <div>
-        <!-- 今日计划 -->
-        <div class="indexClassBox" v-if="planTableVisable">
-            <div>
-                <h4>今日计划</h4>
-                <div @click='seeMore(1)'>
-                    查看历史计划
+        <div v-if="authMap.find(item=>item.authorityId==='40000')">
+            <!-- 今日计划 -->
+            <div class="indexClassBox" v-if="planTableVisable">
+                <div>
+                    <h4>今日计划</h4>
+                    <div @click='seeMore(1)'>
+                        查看历史计划
+                    </div>
+                </div>
+
+                <div class="indexClassTable">
+                    <el-table :data="planData" border style="width: 100%" :show-header="showHeadViable">
+                        <el-table-column label=" " width="">
+                            <template slot-scope="scope">
+                                <div class='indexHeadImgClass'>
+                                    <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
+                                </div>
+
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="userName" label=" " width="">
+                        </el-table-column>
+                        <el-table-column prop="phone" label=" " width="">
+                            <template slot-scope="scope">
+                                <img src="../../../assets/img/ic_phone.png" /> {{scope.row.phone}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="planCreateTime" label=" " width="">
+                        </el-table-column>
+                        <el-table-column prop="content" label=" " width="">
+                        </el-table-column>
+                        <el-table-column label=" " width="300">
+                            <template slot-scope="scope">
+                                <el-button class="btnClass" @click="sendMessage(scope.row)" type="text" size="small">发消息</el-button>
+                                <div class=" remarkListClass" @mouseenter="seeRemarks(scope.row,1)">
+                                    <el-button class="btnClass" type="text" size="small">看备注</el-button>
+                                    <ul>
+                                        <li v-for="(text,index) in remarks" :key="index">
+                                            <div>{{text.createTime}}</div>
+                                            <div>{{text.content}}</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <el-button class="btnClass" @click="sendArchives(scope.row)" type="text" size="small">看档案</el-button>
+                                <div class="entryFile">
+                                    <el-button class="btnClass" type="text" size="small">录入档案</el-button>
+                                    <ul>
+                                        <li @click="addPublicDangan()">普通档案</li>
+                                        <li @click="addWomanDangan()">孕妇档案</li>
+                                    </ul>
+                                </div>
+
+                            </template>
+                        </el-table-column>
+                        <el-table-column label=" " width="100">
+                            <template slot-scope="scope">
+                                <el-button class="solveOver" @click="solveOver(scope.row,0)" type="text" size="small">处理完成</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
                 </div>
             </div>
+            <!-- 今日告警 -->
+            <div class="indexClassBox" v-if="warnTableVisable">
+                <div>
+                    <h4>今日告警</h4>
+                    <div @click='seeMore(2)'>
+                        查看历史告警
+                    </div>
+                </div>
 
-            <div class="indexClassTable">
-                <el-table :data="planData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column label=" " width="70">
-                        <template slot-scope="scope">
-                            <div class='indexHeadImgClass'>
-                                <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
-                            </div>
+                <div class="indexClassTable">
+                    <el-table :data="warnData" border style="width: 100%" :show-header="showHeadViable">
+                        <el-table-column label=" " width="">
+                            <template slot-scope="scope">
+                                <div class='indexHeadImgClass'>
+                                    <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="userName" label=" " width="">
+                        </el-table-column>
+                        <el-table-column prop="phone" label=" " width="">
+                            <template slot-scope="scope">
+                                <img src="../../../assets/img/ic_phone.png" /> {{scope.row.phone}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="value" label=" " width="320">
+                            <template slot-scope="scope">
+                                血压项
+                                <span class="redWord">&nbsp;&nbsp;&nbsp;{{scope.row.value}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label=" " width="300">
+                            <template slot-scope="scope">
+                                <el-button class="btnClass" @click="sendMessage(scope.row)" type="text" size="small">发消息</el-button>
+                                <el-button class="btnClass" @click="seeRemarks(scope.row)" type="text" size="small">看备注</el-button>
+                                <el-button class="btnClass" @click="sendArchives(scope.row)" type="text" size="small">看档案</el-button>
+                                <div class="entryFile">
+                                    <el-button class="btnClass" type="text" size="small">录入档案</el-button>
+                                    <ul>
+                                        <li @click="addPublicDangan()">普通档案</li>
+                                        <li @click="addWomanDangan()">孕妇档案</li>
+                                    </ul>
+                                </div>
 
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="userName" label=" " width="120">
-                    </el-table-column>
-                    <el-table-column prop="phone" label=" " width="120">
-                        <template slot-scope="scope">
-                            <img src="../../../assets/img/ic_phone.png" /> {{scope.row.phone}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="planCreateTime" label=" " width="120">
-                    </el-table-column>
-                    <el-table-column prop="content" label=" " width="300">
-                    </el-table-column>
-                    <el-table-column label=" " width="300">
-                        <template slot-scope="scope">
-                            <el-button class="btnClass" @click="sendMessage(scope.row)" type="text" size="small">发消息</el-button>
-                            <el-button class="btnClass" @click="seeRemarks(scope.row)" type="text" size="small">看备注</el-button>
-                            <el-button class="btnClass" @click="sendArchives(scope.row)" type="text" size="small">看档案</el-button>
-                            <div class="entryFile">
-                                <el-button class="btnClass" type="text" size="small">录入档案</el-button>
-                                <ul>
-                                    <li @click="addPublicDangan()">普通档案</li>
-                                    <li @click="addWomanDangan()">孕妇档案</li>
-                                </ul>
-                            </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label=" " width="100">
+                            <template slot-scope="scope">
+                                <el-button class="solveOver" @click="solveOver(scope.row,1)" type="text" size="small">处理完成</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
 
-                        </template>
-                    </el-table-column>
-                    <el-table-column label=" " width="100">
-                        <template slot-scope="scope">
-                            <el-button class="solveOver" @click="solveOver(scope.row,0)" type="text" size="small">处理完成</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-
-            </div>
-        </div>
-        <!-- 今日告警 -->
-        <div class="indexClassBox" v-if="warnTableVisable">
-            <div>
-                <h4>今日告警</h4>
-                <div @click='seeMore(2)'>
-                    查看历史告警
                 </div>
             </div>
-
-            <div class="indexClassTable">
-                <el-table :data="warnData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column label=" " width="70">
-                        <template slot-scope="scope">
-                             <div class='indexHeadImgClass'>
-                                <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="userName" label=" " width="120">
-                    </el-table-column>
-                    <el-table-column prop="phone" label=" " width="150">
-                        <template slot-scope="scope">
-                            <img src="../../../assets/img/ic_phone.png" /> {{scope.row.phone}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="value" label=" " width="320">
-                        <template slot-scope="scope">
-                            血压项
-                            <span class="redWord">&nbsp;&nbsp;&nbsp;{{scope.row.value}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label=" " width="300">
-                        <template slot-scope="scope">
-                            <el-button class="btnClass" @click="sendMessage(scope.row)" type="text" size="small">发消息</el-button>
-                            <el-button class="btnClass" @click="seeRemarks(scope.row)" type="text" size="small">看备注</el-button>
-                            <el-button class="btnClass" @click="sendArchives(scope.row)" type="text" size="small">看档案</el-button>
-                            <div class="entryFile">
-                                <el-button class="btnClass" type="text" size="small">录入档案</el-button>
-                                <ul>
-                                    <li @click="addPublicDangan()">普通档案</li>
-                                    <li @click="addWomanDangan()">孕妇档案</li>
-                                </ul>
-                            </div>
-
-                        </template>
-                    </el-table-column>
-                    <el-table-column label=" " width="100">
-                        <template slot-scope="scope">
-                            <el-button class="solveOver" @click="solveOver(scope.row,1)" type="text" size="small">处理完成</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-
-            </div>
-        </div>
-        <!-- 随访计划 -->
-        <div class="indexClassBox" v-if="followTableVisable">
-            <div>
-                <h4>近期随访</h4>
-                <div @click='seeMore(3)'>
-                    查看历史随访
+            <!-- 随访计划 -->
+            <div class="indexClassBox" v-if="followTableVisable">
+                <div>
+                    <h4>近期随访</h4>
+                    <div @click='seeMore(3)'>
+                        查看历史随访
+                    </div>
                 </div>
-            </div>
 
-            <div class="indexClassTable">
-                <el-table :data="followData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column label=" " width="70">
-                        <template slot-scope="scope">
-                            <div class='indexHeadImgClass'>
-                                <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="userName" label=" " width="120">
-                    </el-table-column>
-                    <el-table-column prop="phone" label=" " width="160">
-                        <template slot-scope="scope">
-                            <img src="../../../assets/img/ic_phone.png" /> {{scope.row.phone}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label=" " width="220">
-                        <template slot-scope="scope">
-                            <div>
-                                <div>随访制定时间{{scope.row.createTime}}</div>
-                                <div>近期随访时间{{scope.row.followupTime}}</div>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label=" " width="300">
-                        <template slot-scope="scope">
-                            <div>
-                                <div> {{scope.row.complete}}</div>
-                                <div class="redWord"> {{scope.row.ongoing}}</div>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label=" " width="100">
-                        <template slot-scope="scope">
-                            <el-button class="btnClass" @click="seeFollowPlan(scope.row)" type="text" size="small">查看</el-button>
+                <div class="indexClassTable">
+                    <el-table :data="followData" border style="width: 100%" :show-header="showHeadViable">
+                        <el-table-column label=" " width="">
+                            <template slot-scope="scope">
+                                <div class='indexHeadImgClass'>
+                                    <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="userName" label=" " width="">
+                        </el-table-column>
+                        <el-table-column prop="phone" label=" " width="">
+                            <template slot-scope="scope">
+                                <img src="../../../assets/img/ic_phone.png" /> {{scope.row.phone}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label=" " width="220">
+                            <template slot-scope="scope">
+                                <div>
+                                    <div>随访制定时间{{scope.row.createTime}}</div>
+                                    <div>近期随访时间{{scope.row.followupTime}}</div>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label=" " width="300">
+                            <template slot-scope="scope">
+                                <div>
+                                    <div> {{scope.row.complete}}</div>
+                                    <div class="redWord"> {{scope.row.ongoing}}</div>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label=" " width="">
+                            <template slot-scope="scope">
+                                <el-button class="btnClass" @click="seeFollowPlan(scope.row)" type="text" size="small">查看</el-button>
 
-                        </template>
-                    </el-table-column>
-                    <el-table-column label=" " width="300">
-                        <template slot-scope="scope">
-                            <el-button class="btnClass" @click="sendMessage(scope.row)" type="text" size="small">发消息</el-button>
-                            <el-button class="btnClass" @click="seeRemarks(scope.row)" type="text" size="small">看备注</el-button>
-                            <el-button class="btnClass" @click="sendArchives(scope.row)" type="text" size="small">看档案</el-button>
-                            <div class="entryFile">
-                                <el-button class="btnClass" type="text" size="small">录入档案</el-button>
-                                <ul>
-                                    <li @click="addPublicDangan()">普通档案</li>
-                                    <li @click="addWomanDangan()">孕妇档案</li>
-                                </ul>
-                            </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label=" " width="300">
+                            <template slot-scope="scope">
+                                <el-button class="btnClass" @click="sendMessage(scope.row)" type="text" size="small">发消息</el-button>
+                                <el-button class="btnClass" @click="seeRemarks(scope.row)" type="text" size="small">看备注</el-button>
+                                <el-button class="btnClass" @click="sendArchives(scope.row)" type="text" size="small">看档案</el-button>
+                                <div class="entryFile">
+                                    <el-button class="btnClass" type="text" size="small">录入档案</el-button>
+                                    <ul>
+                                        <li @click="addPublicDangan()">普通档案</li>
+                                        <li @click="addWomanDangan()">孕妇档案</li>
+                                    </ul>
+                                </div>
 
-                        </template>
-                    </el-table-column>
-                    <el-table-column label=" " width="100">
-                        <template slot-scope="scope">
-                            <el-button class="solveOver" @click="solveOver(scope.row,2)" type="text" size="small">处理完成</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label=" " width="100">
+                            <template slot-scope="scope">
+                                <el-button class="solveOver" @click="solveOver(scope.row,2)" type="text" size="small">处理完成</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
 
+                </div>
             </div>
         </div>
         <!-- 会诊 -->
-        <div class="indexClassBox" v-if="huizTableVisable">
-            <div>
-                <h4>远程会诊</h4>
-                <div @click='seeMore(4)'>
-                    查看更多
+        <div v-if="authMap.find(item=>item.authorityId==='20000')">
+            <div class="indexClassBox" v-if="huizTableVisable">
+                <div>
+                    <h4>远程会诊</h4>
+                    <div @click='seeMore(4)'>
+                        查看更多
+                    </div>
                 </div>
-            </div>
 
-            <div class="indexClassTable">
-                <el-table :data="consultationData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column label=" " width="70">
-                        <template slot-scope="scope">
-                           <div class='indexHeadImgClass'>
-                                <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="userName" label=" " width="120">
-                    </el-table-column>
-                    <el-table-column label=" " width="180">
-                        <template slot-scope="scope">
-                            {{scope.row.hospital}}|{{scope.row.department}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="consultationId" label=" " width="260">
-                    </el-table-column>
-                    <el-table-column prop="applicationTime" label=" " width="120">
-                    </el-table-column>
-                    <el-table-column prop="status" label=" " width="100">
-                        <template slot-scope="scope">
-                            <span class="noStart" v-show="scope.row.status=='NEW'">未开始</span>
-                            <span class="startIng" v-show="scope.row.status=='UNDERWAY'">进行中</span>
-                            <span class="noStart" v-show="scope.row.status=='OVER'">结束</span>
+                <div class="indexClassTable">
+                    <el-table :data="consultationData" border style="width: 100%" :show-header="showHeadViable">
+                        <el-table-column label=" " width="">
+                            <template slot-scope="scope">
+                                <div class='indexHeadImgClass'>
+                                    <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="userName" label=" " width="">
+                        </el-table-column>
+                        <el-table-column label=" " width="">
+                            <template slot-scope="scope">
+                                {{scope.row.hospital}}|{{scope.row.department}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="consultationId" label=" " width="">
+                        </el-table-column>
+                        <el-table-column prop="applicationTime" label=" " width="">
+                        </el-table-column>
+                        <el-table-column prop="status" label=" " width="">
+                            <template slot-scope="scope">
+                                <span class="noStart" v-show="scope.row.status=='NEW'">未开始</span>
+                                <span class="startIng" v-show="scope.row.status=='UNDERWAY'">进行中</span>
+                                <span class="noStart" v-show="scope.row.status=='OVER'">结束</span>
 
-                        </template>
-                    </el-table-column>
-                    <el-table-column label=" " width="220">
-                        <template slot-scope="scope">
-                            <el-button class="seeDanganClass" @click="sendArchives(scope.row)" type="text" size="small">查看档案</el-button>
-                            <el-button class="enterHuizClass" @click="enterHuiz(scope.row)" type="text" size="small">进入会诊</el-button>
-                            <el-button class="invitedClass" @click="invitedUser(scope.row)" type="text" size="small">邀请</el-button>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label=" " width="220">
+                            <template slot-scope="scope">
+                                <el-button class="seeDanganClass" @click="sendArchives(scope.row)" type="text" size="small">查看档案</el-button>
+                                <el-button class="enterHuizClass" @click="enterHuiz(scope.row)" type="text" size="small">进入会诊</el-button>
+                                <el-button class="invitedClass" @click="invitedUser(scope.row)" type="text" size="small">邀请</el-button>
 
-                        </template>
-                    </el-table-column>
-                </el-table>
+                            </template>
+                        </el-table-column>
+                    </el-table>
 
+                </div>
             </div>
         </div>
         <!-- 协作 -->
-        <div class="indexClassBox" v-if="xiezTableVisable">
-            <div>
-                <h4>远程协作</h4>
-                <div @click='seeMore(5)'>
-                    查看更多
+        <div v-if="authMap.find(item=>item.authorityId==='30000')">
+            <div class="indexClassBox" v-if="xiezTableVisable">
+                <div>
+                    <h4>远程协作</h4>
+                    <div @click='seeMore(5)'>
+                        查看更多
+                    </div>
                 </div>
-            </div>
 
-            <div class="indexClassTable">
-                <el-table :data="cooperationData" border style="width: 100%" :show-header="showHeadViable">
-                    <el-table-column label=" " width="70">
-                        <template slot-scope="scope">
-                           <div class='indexHeadImgClass'>
-                                <img :src="userSocketInfo.headImg+scope.row.applyUserId" :onerror="defaultImg" />
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label=" " width="160">
-                        <template slot-scope="scope">
-                            {{scope.row.applyUserName}}|{{scope.row.applyDeptName}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label=" " width="160">
-                        <template slot-scope="scope">
-                            {{scope.row.synergyUserName[0]}}|{{scope.row.synergyDeptName[0]}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="synergyNo" label=" " width="200">
-                        <template slot-scope="scope">
-                            {{scope.row.synergyNo}}(协作编号)
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="createTime" label=" " width="160">
-                    </el-table-column>
-                    <el-table-column prop="synergyStatus" label=" " width="100">
-                        <template slot-scope="scope">
-                            <span class="noStart" v-show="scope.row.synergyStatus==0">未开始</span>
-                            <span class="startIng" v-show="scope.row.synergyStatus==1">进行中</span>
-                            <span class="noStart" v-show="scope.row.synergyStatus==2">结束</span>
+                <div class="indexClassTable">
+                    <el-table :data="cooperationData" border style="width: 100%" :show-header="showHeadViable">
+                        <el-table-column label=" " width="70">
+                            <template slot-scope="scope">
+                                <div class='indexHeadImgClass'>
+                                    <img :src="userSocketInfo.headImg+scope.row.applyUserId" :onerror="defaultImg" />
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label=" " width="160">
+                            <template slot-scope="scope">
+                                {{scope.row.applyUserName}}|{{scope.row.applyDeptName}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label=" " width="160">
+                            <template slot-scope="scope">
+                                {{scope.row.synergyUserName[0]}}|{{scope.row.synergyDeptName[0]}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="synergyNo" label=" " width="200">
+                            <template slot-scope="scope">
+                                {{scope.row.synergyNo}}(协作编号)
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="createTime" label=" " width="160">
+                        </el-table-column>
+                        <el-table-column prop="synergyStatus" label=" " width="100">
+                            <template slot-scope="scope">
+                                <span class="noStart" v-show="scope.row.synergyStatus==0">未开始</span>
+                                <span class="startIng" v-show="scope.row.synergyStatus==1">进行中</span>
+                                <span class="noStart" v-show="scope.row.synergyStatus==2">结束</span>
 
-                        </template>
-                    </el-table-column>
-                    <el-table-column label=" " width="220">
-                        <template slot-scope="scope">
-                            <el-button class="seeDanganClass" @click="sendArchives(scope.row)" type="text" size="small">查看档案</el-button>
-                            <el-button class="enterHuizClass" @click="enterHuiz(scope.row)" type="text" size="small">进入协作</el-button>
-                            <el-button class="invitedClass" @click="invitedUserXie(scope.row)" type="text" size="small">邀请</el-button>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label=" " width="220">
+                            <template slot-scope="scope">
+                                <el-button class="seeDanganClass" @click="sendArchives(scope.row)" type="text" size="small">查看档案</el-button>
+                                <el-button class="enterHuizClass" @click="enterHuiz(scope.row)" type="text" size="small">进入协作</el-button>
+                                <el-button class="invitedClass" @click="invitedUserXie(scope.row)" type="text" size="small">邀请</el-button>
 
-                        </template>
-                    </el-table-column>
-                </el-table>
+                            </template>
+                        </el-table-column>
+                    </el-table>
 
+                </div>
             </div>
         </div>
         <!-- 谭莹聊天弹窗 -->
@@ -333,7 +347,7 @@
                         <template slot-scope="scope">
                             <div>
                                 <h4>{{scope.row.userName}}</h4>
-                                <div class='planWarnPhone'>18912345689</div>
+                                <div class='planWarnPhone'>{{scope.row.phone}}</div>
                             </div>
                         </template>
                     </el-table-column>
@@ -395,7 +409,7 @@
         </div>
         <!-- 查看随访计划详情 -->
         <div v-if="followPlanVisible">
-            <el-dialog class="planWarnClass" title="历史告警" :visible.sync="followPlanVisible" width="782px" hight="356px" center>
+            <el-dialog class="planWarnClass evaluateBox addFollowBoxFollow" title="随访计划详情" :visible.sync="followPlanVisible" width="602px" hight="356px" center>
                 <followDetail :addFollowData="addFollowData"></followDetail>
             </el-dialog>
         </div>
@@ -447,10 +461,16 @@ export default {
             userState: state => state.user.userInfo,
             userSelfInfo: state => state.user.userSelfInfo,
             userSocketInfo: state => state.socket
-        })
+        }),
+        authMap() {
+            return this.userState.hasAuth.filter(item => item.type === "2");
+        }
     },
     data() {
         return {
+            // seeRemarksListVisable1: false,
+            // seeRemarksListVisable2: false,
+            // seeRemarksListVisable3: false,
             addFollowData: {},
             followPlanVisible: false,
             planTableVisable: false,
@@ -517,9 +537,7 @@ export default {
             warnNum: 0,
             planNum: 0,
             defaultImg:
-                'this.src="' +
-                require("../../../assets/img/publicHeadImg.png") +
-                '"'
+                'this.src="' + require("../../../assets/img/a-6.png") + '"'
         };
     },
 
@@ -734,7 +752,26 @@ export default {
             }
         },
         //看备注remarks
-        async seeRemarks(row) {
+        async seeRemarks(row, num) {
+            // if (num == 1) {
+            //     if (this.seeRemarksListVisable1) {
+            //         this.seeRemarksListVisable1 = false;
+            //     } else {
+            //         this.seeRemarksListVisable1 = true;
+            //     }
+            // } else if (num == 2) {
+            //     if (this.seeRemarksListVisable2) {
+            //         this.seeRemarksListVisable2 = false;
+            //     } else {
+            //         this.seeRemarksListVisable2 = true;
+            //     }
+            // } else if (num == 3) {
+            //     if (this.seeRemarksListVisable3) {
+            //         this.seeRemarksListVisable3 = false;
+            //     } else {
+            //         this.seeRemarksListVisable3 = true;
+            //     }
+            // }
             console.log(row);
             let _this = this;
             let query = {
@@ -744,7 +781,6 @@ export default {
             const res = await seeRemark(query);
             if (res.data && res.data.errCode === 0) {
                 this.remarks = res.data.body;
-                this.remarksVisible = true;
             } else {
                 //失败
                 this.$notify.error({
@@ -860,17 +896,48 @@ export default {
                 this.warnVisible = true;
                 this.getMoreWarnList();
             } else if (num == 3) {
+                sessionStorage.setItem(
+                    "page",
+                    JSON.stringify({
+                        //存缓存
+                        name: "智能随访系统",
+                        select: false,
+                        path: "/followUp",
+                        code: "40000"
+                    })
+                );
                 this.$router.push({
                     path: "/followUp"
                 });
             } else if (num == 4) {
+                sessionStorage.setItem(
+                    "page",
+                    JSON.stringify({
+                        //存缓存
+                        name: "远程会诊系统",
+                        select: false,
+                        path: "/consultation",
+                        code: "20000"
+                    })
+                );
                 this.$router.push({
                     path: "/consultation"
                 });
             } else if (num == 5) {
+                sessionStorage.setItem(
+                    "page",
+                    JSON.stringify({
+                        //存缓存
+                        name: "远程会诊系统",
+                        select: false,
+                        path: "/cooperation",
+                        code: "30000"
+                    })
+                );
                 this.$router.push({
                     path: "/cooperation"
                 });
+
             }
         },
 
@@ -1266,7 +1333,8 @@ export default {
     position: absolute;
     left: 0;
     top: 20px;
-    /* display: none; */
+    display: none;
+    cursor: pointer;
 }
 .indexClassBox .el-table .cell,
 .indexClassBox .el-table th div {
@@ -1339,14 +1407,36 @@ export default {
     letter-spacing: 0;
     line-height: 27px;
 }
-.indexHeadImgClass{
-    width:42px;
+.indexHeadImgClass {
+    width: 42px;
     height: 42px;
     border-radius: 50%;
 }
-.indexHeadImgClass>img{
-    width:100%;
+.indexHeadImgClass > img {
+    width: 100%;
     height: 100%;
-      border-radius: 50%;
+    border-radius: 50%;
+}
+.indexClassTable .el-table__body-wrapper {
+    overflow: auto;
+}
+.remarkListClass {
+    position: relative;
+    display: inline-block;
+}
+.remarkListClass > ul {
+    position: absolute;
+    left: 0;
+    display: none;
+    cursor: pointer;
+    width: 130px;
+    background: white;
+    top: 20px;
+}
+.remarkListClass > ul > li {
+    margin-bottom: 5px;
+}
+.remarkListClass:hover ul {
+    display: block;
 }
 </style>

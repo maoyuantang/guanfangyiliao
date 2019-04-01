@@ -54,7 +54,13 @@
 
                 </div>
                 <div>
-                    <search @searchValue="searchChange"></search>
+                    <div class='drugsSearchClass'>
+                        <search @searchValue="searchChange" @inputChange="inputChange"></search>
+                        <ul>
+                            <li @click="sureYao(text1.drugName)" v-for="(text1,index) in searchList" :key="index">{{text1.drugName}}</li>
+                        </ul>
+                    </div>
+
                     <div class="public-list drugTable">
                         <el-table :data="chufangData.drugDetails" border style="width: 100%">
                             <el-table-column fixed prop="date" label="序号" width="150">
@@ -71,7 +77,7 @@
                             </el-table-column>
                             <el-table-column prop="drugQuantity" label="数量" width="120">
                                 <template slot-scope="scope">
-                                    <input class="drugsListInput" v-model="scope.row.drugQuantity" type="number" @change="countAll()"/>
+                                    <input class="drugsListInput" v-model="scope.row.drugQuantity" type="number" @change="countAll()" />
                                 </template>
                             </el-table-column>
                             <el-table-column prop="drugPriceAll" label="合计" width="120">
@@ -105,12 +111,12 @@
             </div>
         </div>
 
-         <!-- 预览弹窗 -->
-    <div v-if="dialogTableVisible">
-      <el-dialog title="预览" :visible.sync="dialogTableVisible" center>
-        <img style="width:100%" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
-      </el-dialog>
-    </div>
+        <!-- 预览弹窗 -->
+        <div v-if="dialogTableVisible">
+            <el-dialog title="预览" :visible.sync="dialogTableVisible" center>
+                <img style="width:100%" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
+            </el-dialog>
+        </div>
     </div>
 </template>
 
@@ -134,7 +140,7 @@ export default {
             form: {
                 name: ""
             },
-            dialogTableVisible:false,
+            dialogTableVisible: false,
             familyMessage: {
                 name: "",
                 age: "",
@@ -162,7 +168,7 @@ export default {
                 occurTime: "",
                 reviewTime: "",
                 remark: "",
-                rxRelOrderId:"",
+                rxRelOrderId: "",
                 drugDetails: [
                     {
                         id: "H33020485", //药品id
@@ -172,8 +178,9 @@ export default {
                         doctorAsk: "一定要按时按量吃药" //医生嘱托
                     }
                 ],
-                countAllPrice:"",
-                searchData:''
+                countAllPrice: "",
+                searchData: "",
+                searchList: []
             }
         };
     },
@@ -182,10 +189,17 @@ export default {
             userState: state => state.user.userInfo,
             userSelfInfo: state => state.user.userSelfInfo,
             userSocketInfo: state => state.socket
-
         })
     },
     methods: {
+        inputChange(data) {
+            this.searchData = data;
+            this.getDrugsByCondition(0);
+        },
+        sureYao(data) {
+            this.searchData = data;
+            this.getDrugsByCondition(1);
+        },
         //获取处方信息
         async getDrugsMessage() {
             let _this = this;
@@ -214,15 +228,24 @@ export default {
             }
         },
         //获取处方表格信息
-        async getDrugsByCondition() {
+        async getDrugsByCondition(num) {
+       
             let query = {
                 token: this.userState.token,
                 drugName: this.searchData
             };
             const res = await drugsByCondition(query);
             if (res.data && res.data.errCode === 0) {
+                     this.chufangData.drugDetails=[]
+                 this.searchList=[]
+                if (num == 0) {
+                    this.searchList = res.data.body;
+                } else if (num == 1) {
+                    this.chufangData.drugDetails = res.data.body;
+                }
+
                 // console.log()
-                this.chufangData.drugDetails = res.data.body;
+                // this.chufangData.drugDetails = res.data.body;
             } else {
                 //失败
                 this.$notify.error({
@@ -232,16 +255,15 @@ export default {
             }
         },
         // 搜索
-        searchChange(data){
-            this.searchData=data
-            this.getDrugsByCondition()
-
+        searchChange(data) {
+            this.searchData = data;
+            this.getDrugsByCondition(1);
         },
         //提交审核
         async submitAudit() {
-            $.each(this.chufangData.drugDetails,function(index,text){
-                text.drugPriceAll=text.drugPrice * text.drugQuantity
-            })
+            $.each(this.chufangData.drugDetails, function(index, text) {
+                text.drugPriceAll = text.drugPrice * text.drugQuantity;
+            });
             let query = {
                 token: this.userState.token
             };
@@ -252,8 +274,7 @@ export default {
                     title: "成功",
                     message: "审核成功"
                 });
-                  this.$emit('reback')
-
+                this.$emit("reback");
             } else {
                 //失败
                 this.$notify.error({
@@ -264,26 +285,26 @@ export default {
         },
         //计算总价格
         countAll() {
-             $.each(this.chufangData.drugDetails,function(index,text){
-                this.countAllPrice+=text.drugPrice * text.drugQuantity
-            })
+            $.each(this.chufangData.drugDetails, function(index, text) {
+                this.countAllPrice += text.drugPrice * text.drugQuantity;
+            });
         },
         setMessage() {
-            console.log(this.userMessage.clinicOrderId)
+            console.log(this.userMessage);
             this.chufangData.firstDoctorId = this.userSelfInfo.userId;
             this.chufangData.clinicId = this.userMessage.clinicId;
             this.chufangData.departmentId = this.userMessage.departmentId;
             this.chufangData.userId = this.userMessage.userId;
             this.chufangData.orgCode = this.userMessage.orgCode;
-            this.chufangData.rxRelOrderId=this.userMessage.clinicOrderId;
+            this.chufangData.rxRelOrderId = this.userMessage.clinicOrderId;
         },
         // 预览
-      dialogTableVisibleFun(row) {
-        console.log(row)
-        this.dialogTableVisible = true;
-        this.srcs = row
-        this.preLook();
-      },
+        dialogTableVisibleFun(row) {
+            console.log(row);
+            this.dialogTableVisible = true;
+            this.srcs = row;
+            this.preLook();
+        }
     },
     props: {
         sendToUserId: String,
@@ -295,9 +316,9 @@ export default {
     },
     created() {
         this.getDrugsMessage();
-        this.getDrugsByCondition();
+        // this.getDrugsByCondition();
         this.setMessage();
-        this.countAll()
+        this.countAll();
     },
     beforeDestroy() {}
 };
@@ -382,77 +403,85 @@ export default {
     padding-left: 45px;
     line-height: 27px;
 }
-.drugsCheckBox{
+.drugsCheckBox {
     display: flex;
     display: -webkit-flex;
     font-family: PingFangSC-Light;
-font-size: 14px;
-color: #212223;
-line-height: 20px;
+    font-size: 14px;
+    color: #212223;
+    line-height: 20px;
 }
-.drugsCheckBox>div:first-child>div{
+.drugsCheckBox > div:first-child > div {
     display: flex;
     display: -webkit-flex;
 }
-.drugsCheckBox>div:first-child>div>div{
-    margin:0 5px;
+.drugsCheckBox > div:first-child > div > div {
+    margin: 0 5px;
 }
 .drugsCheckBox .el-checkbox__label,
-.drugsCheckBox .el-form-item__label{
-  color: #212223 !important;  
+.drugsCheckBox .el-form-item__label {
+    color: #212223 !important;
 }
-.drugsListInput{
-        width: 77px;
+.drugsListInput {
+    width: 77px;
     height: 20px;
     font-size: 12px;
 }
-.nextTimeClass label{
+.nextTimeClass label {
     width: 104px !important;
 }
-.nextTimeClass .el-form-item__content{
-        margin-left: 104px !important;
+.nextTimeClass .el-form-item__content {
+    margin-left: 104px !important;
 }
 .drugTable .el-table--border th,
-.drugTable .el-table--border td{
-    border-right:none
+.drugTable .el-table--border td {
+    border-right: none;
 }
-.drugsBtnClass{
-     display: -webkit-flex; /* Safari */
-  display: flex;
-  justify-content:flex-end;
+.drugsBtnClass {
+    display: -webkit-flex; /* Safari */
+    display: flex;
+    justify-content: flex-end;
     padding-top: 12px;
     height: 60px;
-    background: #FFFFFF;
-border: 1px solid #E4E8EB;
+    background: #ffffff;
+    border: 1px solid #e4e8eb;
 }
-.drugsBtnClass>button:first-child{
-width:80px;
-height: 32px;
-border: 1px solid #4285F4;
-border-radius: 3px;
-font-family: PingFangSC-Regular;
-font-size: 12px;
-color: #4285F4;
-background: white;
+.drugsBtnClass > button:first-child {
+    width: 80px;
+    height: 32px;
+    border: 1px solid #4285f4;
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #4285f4;
+    background: white;
     line-height: 0px;
 }
-.drugsBtnClass>button:last-child{
-    width:80px;
-height: 32px;
-border: 1px solid #4285F4;
-background: #4285F4;
-border-radius: 3px;
-font-family: PingFangSC-Regular;
-font-size: 12px;
-color: #FFFFFF;
+.drugsBtnClass > button:last-child {
+    width: 80px;
+    height: 32px;
+    border: 1px solid #4285f4;
+    background: #4285f4;
+    border-radius: 3px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #ffffff;
     line-height: 0px;
 }
-.allPrice{
+.allPrice {
     text-align: right;
     line-height: 70px;
     font-family: PingFangSC-Semibold;
-font-size: 14px;
-color: #5E6875;
-letter-spacing: 0;
+    font-size: 14px;
+    color: #5e6875;
+    letter-spacing: 0;
+}
+.drugsSearchClass {
+    position: relative;
+}
+.drugsSearchClass > ul {
+    position: relative;
+    left: 9px;
+    cursor: pointer;
 }
 </style>

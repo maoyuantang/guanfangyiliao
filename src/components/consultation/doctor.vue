@@ -80,7 +80,7 @@
         </div>
 
         <!-- 医生端 -->
-        <div class="consultation" >
+        <div class="consultation">
             <div class="doc-title">
                 <selftag :inData="oTab4" @reback="getOTab4"></selftag>
                 <div class="statistics-way">
@@ -691,7 +691,7 @@ export default {
             this.startHz.consultationHospitalDept.push({
                 hospitalId: "",
                 departmentsId: "",
-                departmentListOO:[]
+                departmentListOO: []
             });
         },
         adminSearchChange(data) {
@@ -751,67 +751,95 @@ export default {
         },
         //进入会诊
         async toConsultation(oObject) {
-            this.chatVisible = true;
             this.sessionId = oObject.sessionId;
-            if (oObject.state == "NEW") {
-                oObject.state = "UNDERWAY";
-                this.overclick(oObject, "on");
-            }
+            // if (oObject.state == "NEW") {
+            //     oObject.state = "UNDERWAY";
+            //     this.overclick(oObject, "on");
+            // }
+            this.overclick(oObject, "on");
         },
         //结束
+        // async overclick(row, state) {
+        //     console.log(row);
+        //     if (state == "on") {
+        //         let _this = this;
+        //         let query = {
+        //             token: this.userState.token
+        //         };
+        //         let options = {
+        //             consultationId: row.id,
+        //             status: row.status
+        //         };
+        //         const res = await updateConsultationStatus(query, options);
+        //         if (res.data && res.data.errCode === 0) {
+        //             this.$notify.success({
+        //                 title: "警告",
+        //                 message: "结束成功"
+        //             });
+        //         } else {
+        //             //失败
+        //             this.$notify.error({
+        //                 title: "警告",
+        //                 message: res.data.errMsg
+        //             });
+        //         }
+        //     } else {
+        //         if (row.doctorId == this.userSelfInfo.userId) {
+        //             let _this = this;
+        //             let query = {
+        //                 token: this.userState.token
+        //             };
+        //             let options = {
+        //                 consultationId: row.id,
+        //                 status: row.status
+        //             };
+        //             const res = await updateConsultationStatus(query, options);
+        //             if (res.data && res.data.errCode === 0) {
+        //                 this.$notify.success({
+        //                     title: "警告",
+        //                     message: "结束成功"
+        //                 });
+        //             } else {
+        //                 //失败
+        //                 this.$notify.error({
+        //                     title: "警告",
+        //                     message: res.data.errMsg
+        //                 });
+        //             }
+        //         } else {
+        //             this.$notify.error({
+        //                 title: "警告",
+        //                 message: "发起医生才能结束会诊"
+        //             });
+        //         }
+        //     }
+        // },
+        //更新会诊状态
         async overclick(row, state) {
-            console.log(row);
-            if (state == "on") {
-                let _this = this;
-                let query = {
-                    token: this.userState.token
-                };
-                let options = {
-                    consultationId: row.id,
-                    status: row.status
-                };
-                const res = await updateConsultationStatus(query, options);
-                if (res.data && res.data.errCode === 0) {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            let options = {
+                consultationId: row.id,
+                status: row.status
+            };
+            const res = await updateConsultationStatus(query, options);
+            if (res.data && res.data.errCode === 0) {
+                if (state == "on") {
+                    _this.chatVisible = true;
+                } else {
                     this.$notify.success({
                         title: "警告",
                         message: "结束成功"
                     });
-                } else {
-                    //失败
-                    this.$notify.error({
-                        title: "警告",
-                        message: res.data.errMsg
-                    });
                 }
             } else {
-                if (row.doctorId == this.userSelfInfo.userId) {
-                    let _this = this;
-                    let query = {
-                        token: this.userState.token
-                    };
-                    let options = {
-                        consultationId: row.id,
-                        status: row.status
-                    };
-                    const res = await updateConsultationStatus(query, options);
-                    if (res.data && res.data.errCode === 0) {
-                        this.$notify.success({
-                            title: "警告",
-                            message: "结束成功"
-                        });
-                    } else {
-                        //失败
-                        this.$notify.error({
-                            title: "警告",
-                            message: res.data.errMsg
-                        });
-                    }
-                } else {
-                    this.$notify.error({
-                        title: "警告",
-                        message: "发起医生才能结束会诊"
-                    });
-                }
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
             }
         },
         //管理端事件
@@ -1090,18 +1118,17 @@ export default {
     },
     async created() {
         this.getDocList();
-        this.getHospitalment()
+        this.getHospitalment();
     },
     watch: {
         "$store.state.user.viewRoot.now.name": {
             handler(data) {
-                this.oUserType=data
-                alert(data)
-                if(data=='doctor')
-                {
-                     this.getDocList();
-                }else{
-                   this.getAdminList(); 
+                this.oUserType = data;
+                alert(data);
+                if (data == "doctor") {
+                    this.getDocList();
+                } else {
+                    this.getAdminList();
                 }
             }
         }

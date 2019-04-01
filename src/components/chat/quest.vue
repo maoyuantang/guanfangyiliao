@@ -40,7 +40,7 @@
                         </div>
                     </li>
                 </ul>
-                <!-- <el-button @click="addQuestTable()" type="primary">发送</el-button> -->
+                <el-button v-if="sendVisable" @click="addQuestTable()" type="primary">发送</el-button>
             </div>
 
         </el-form>
@@ -55,7 +55,8 @@ export default {
         return {
             addFollowBtnVis: true,
             questVisible: false,
-            addQuestData:{}
+            addQuestData:{},
+            sendVisable:false,
         };
     },
     computed: {
@@ -77,10 +78,11 @@ export default {
             const res = await generateInquiryPlan(query, options);
             if (res.data && res.data.errCode === 0) {
                 let oMessage = {
-                    id: res.data.body.id,
+                    id: res.data.body,
                     title: this.addQuestData.title,
                     firstTreatmentTime: this.addQuestData.createTime
                 };
+                console.log(oMessage)
                 this.$emit("osendmessagechat", oMessage);
             } else {
                 //失败
@@ -113,13 +115,21 @@ export default {
     },
     props: {
         addQuestId: String,
-        sendToUserId:String
+        sendToUserId:String,
+        num:Number
     },
     model: {
-        prop: ["addQuestId","sendToUserId"],
+        prop: ["addQuestId","sendToUserId","num"],
         event: "reBack"
     },
     created() {
+        if(this.num==0){
+            //发送时显示
+            this.sendVisable=true
+        }else{
+            //查看详情不要发送
+this.sendVisable=false
+        }
         this.QuestDetail()
     }
 };

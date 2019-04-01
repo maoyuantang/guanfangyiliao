@@ -31,7 +31,7 @@
               <el-table-column prop="doctorCount" label="其他医生"></el-table-column>
             </el-table>
           </div>
-          <el-button class="startConsul" type="text" @click="enterRoomBtn(text.id)">进入诊室</el-button>
+          <el-button class="startConsul" type="text" @click="enterRoomBtn(text)">进入诊室</el-button>
 
         </li>
 
@@ -275,7 +275,7 @@
             </div>
           </li>
           <!-- <div style="font-family: PingFangSC-Semibold;font-size: 14px;color: #5E6875;letter-spacing: 0;font-weight: bold;">备注：</div> -->
-          <textarea class="doctorTalk" name="" id="" placeholder="备注：">{{text.remark}}</textarea>
+          <textarea v-model="remark" class="doctorTalk" name="" id="" placeholder="备注："></textarea>
           <li class="detailFooter">
             <div></div>
             <div>
@@ -480,7 +480,7 @@
             </div>
           </li>
           <!-- <div style="font-family: PingFangSC-Semibold;font-size: 14px;color: #5E6875;letter-spacing: 0;font-weight: bold;">备注：</div> -->
-          <textarea class="doctorTalk" name="" id="" placeholder="备注：">{{text.remark}}</textarea>
+          <textarea v-model="remark" class="doctorTalk" name="" id="" placeholder="备注："></textarea>
           <li class="detailFooter">
             <div></div>
             <div>
@@ -504,12 +504,12 @@
             <div style="display: flex; align-items: center;">
               <img style="width: 53px; margin: 0 30px 0 0;" src="../assets/img/a-6.png" alt="">
               <div>
-                <img src="../assets/img/a-6.png" alt="">
+                <!-- <img src="../assets/img/a-6.png" alt=""> -->
                 <h1 style="margin: 0 0 10px 0;">{{text5.userName}}</h1>
-              </div>
-              <div class="orderTime">
-                <span>下单时间:</span>
-                <span class="span">{{text5.clinicOrderTime}}</span>
+                <div class="orderTime">
+                  <span>下单时间:</span>
+                  <span class="span">{{text5.clinicOrderTime}}</span>
+                </div>
               </div>
             </div>
             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0;height: 40px;">
@@ -576,7 +576,7 @@
       <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen
         @close="closeVideo()" :showClose="VideoshowClose">
         <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick"
-          :doctorVis='doctorVis'>
+          :doctorVis='doctorVis' :userMessage="userMessage">
         </ovideo>
       </el-dialog>
     </div>
@@ -678,6 +678,7 @@
         pageSize: 5, //条数
         searchValue: "", //搜索框接收参数
         businessType: "", //业务类型接收参数
+        remark: "",
 
         orgCode: "", // 医院机构码
         departmentId: "", //科室id
@@ -808,15 +809,19 @@
         this.centerDialogVisible = false;
       },
       //进入门诊
-      async enterRoomBtn(oid) {
+      async enterRoomBtn(text) {
+        this.userMessage = {
+          clinicId: text.id,
+          departmentId: text.departmentId,
+        }
 
-        this.oClinicId = oid;
+        this.oClinicId = text.id;
         let _this = this;
         let query = {
           token: this.userInfo.token
         };
         const options = {
-          clinicId: oid
+          clinicId: text.id
         };
         const res = await doctorInto(query, options);
         console.log(res);
@@ -893,7 +898,7 @@
           departmentId: text.departmentId,
           userId: text1.userId,
           orgCode: text.orgCode,
-          clinicOrderId: text1.clinicOrderId,
+          clinicOrderId: text1.clinicOrderId,//订单id
         };
         console.log(this.userMessage);
         let _this = this;
@@ -1195,9 +1200,10 @@
         };
         let options = {
           prescriptionId: this.prescriptionId,
-          // secondDoctorId: this.secondDoctorId,
-          secondDoctorId: "",
-          reviewEnum: "REVIEWED" //等待
+          secondDoctorId: this.secondDoctorId,
+          // secondDoctorId: "",
+          reviewEnum: "REVIEWED", //等待
+          remark: this.remark
         };
         const res = await updatePrescription(query, options);
         if (res.data && res.data.errCode === 0) {
@@ -1252,12 +1258,12 @@
           return 'ceshiHui'
         }
       },
-      // rowClass({ row, rowIndex }) {
-      //   console.log({ row, rowIndex }) //表头行标号为0
-      //   if(row.label == "未处理"){
-      //     return 'background:red'
-      //   }
-      // }
+      rowClass({ row, rowIndex }) {
+        // console.log({ row, rowIndex }) //表头行标号为0
+        // if(row.label == "未处理"){
+        //   return 'background:red'
+        // }
+      }
     },
 
     async created() {

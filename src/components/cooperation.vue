@@ -219,4 +219,7 @@ letter-spacing: 0;
     border: 1px solid #E6EAEE;
 border-radius: 4px;
 }
+.invitationClassInputBtn .el-form-item__content{
+    margin-left: 0px !important;
+}
 </style>
