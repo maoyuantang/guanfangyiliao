@@ -2157,7 +2157,7 @@ export default {
     height: 27px;
 }
 .addFollowMain li {
-    margin-bottom: 10px;
+    margin-bottom: 24px;
     position: relative;
 }
 .addFollowMain1 > ul > li::before {
@@ -2388,13 +2388,16 @@ export default {
 }
 .redioSingle > label {
     display: block;
+        margin: 10px 0;
+    
+    position: relative;
+    width: 377px
+}
+.redioSingle > label:hover .questItemDelete{
+    display: block
 }
 .redioSingle > .el-checkbox {
-    margin-left: 30px;
-}
-.choiceItemBox > span {
-    padding: 0 5px;
-    cursor: pointer;
+margin-left: 21px;
 }
 .addQuestUl > li {
     position: relative;
@@ -2402,8 +2405,8 @@ export default {
 }
 .deleteQuestList {
     position: absolute;
-    right: 122px;
-    top: 20px;
+    right: 107px;
+    top: 11px;
     width: 13px;
     height: 13px;
     cursor: pointer;
@@ -2442,11 +2445,27 @@ export default {
     display: block;
 }
 .questItemDelete {
-    display: inline-block;
+    display: none;
     width: 13px;
     height: 13px;
+        position: absolute;
+    right: 14px;
+    top: 5px;
 }
 .questItemDelete > img {
+    width: 100%;
+    height: 100%;
+}
+.itemChoiceItemBox{
+        width: 15px;
+    height: 15px;
+    position: absolute;
+    right: 229px;
+    top: 50px;
+    cursor: pointer;
+}
+
+.itemChoiceItemBox>img{
     width: 100%;
     height: 100%;
 }
@@ -2513,24 +2532,42 @@ export default {
 .addFollowMain > button {
     width: 169px;
     height: 38px;
-    background: #6ca4fc;
-    font-family: .PingFangSC-Regular;
-    font-size: 18px;
-    color: #ffffff;
-    letter-spacing: -0.25px;
+   font-family: .PingFangSC-Regular;
+font-size: 18px;
+color: #6CA4FC;
+letter-spacing: -0.25px;
+    line-height: 10px;
+    border: 2px solid #6CA4FC;
+    background: transparent
+}
+.choiceItemBox{
+    margin-bottom: 17px;
+    display: flex;
+    display: -webkit-flex;
+    width:81px;
+    height: 27px;
+
+    background: #F5F6FB;
+border: 1px solid #D4D4D4;
 }
 .choiceItemBox > span {
-    display: inline-block;
-    margin: 0 5px;
-    width: 65px;
-    height: 38px;
-    background: #6ca4fc;
+    display: block;
     text-align: center;
+    cursor: pointer;
+    width: 333%;
     line-height: 38px;
-    font-family: .PingFangSC-Regular;
-    font-size: 18px;
-    color: #ffffff;
-    letter-spacing: -0.25px;
+   font-family: .PingFangSC-Regular;
+font-size: 10px;
+color: #8C8C8C;
+letter-spacing: -0.12px;
+border-right: 1px solid #D4D4D4;
+line-height: 27px;
+}
+.choiceItemBox > span:nth-child(3) {
+border-right:none
+}
+.choiceItemBoxAtc{
+    background: white
 }
 .warnNumBox {
     display: flex;
@@ -2665,4 +2702,5 @@ box-shadow: inset 0 0 1px 0 rgba(0,0,0,0.50);
     background:#98A9BC;
     top: 3px
 }
+
 </style>

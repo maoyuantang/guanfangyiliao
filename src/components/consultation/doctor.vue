@@ -817,12 +817,18 @@ export default {
         //更新会诊状态
         async overclick(row, state) {
             let _this = this;
+            let oState=''
+            if(state=="on"){
+oState='UNDERWAY'
+            }else if(state=="OFF"){
+oState='OVER'
+            }
             let query = {
                 token: this.userState.token
             };
             let options = {
                 consultationId: row.id,
-                status: row.status
+                status: oState
             };
             const res = await updateConsultationStatus(query, options);
             if (res.data && res.data.errCode === 0) {

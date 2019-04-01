@@ -109,9 +109,10 @@
         <!--新增问诊模板 -->
         <div v-if="QuestTableVisible">
             <el-dialog class="evaluateBox addQuestBox " title=" " :visible.sync="QuestTableVisible" width="717px" hight="356px" center>
-                <el-form ref="form" :model="addQuestData" label-width="80px">
+                <el-form ref="form" :model="addQuestData" label-width="80px" style="    height: 600px;
+    overflow: auto;">
 
-                    <el-form-item>
+                    <el-form-item style="margin-bottom:30px">
                         <el-input class="addFollowTitle" v-model="addQuestData.title" placeholder="请输入问诊标题"></el-input>
                     </el-form-item>
                     <div class="addFollowMain">
@@ -129,13 +130,14 @@
                                             <span>{{text1.tag}}</span>
                                             <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容"></el-input>
                                             <span class="questItemDelete" @click="deleteQuestText(index,index1)">
-                                                <img src="../../assets/img/questCha.png" />
+                                                <img src="../../assets/img/questDelete1.png" />
 
                                             </span>
                                         </el-radio>
                                     </el-radio-group>
                                     <div class="itemChoiceItemBox" @click="itemChoiceItemFun(index,text.questionType)">
-                                        添加一项
+                                        <!-- 添加一项 -->
+                                            <img src="../../assets/img/addFollowJa1.png" />
                                     </div>
                                 </div>
                                 <div v-show="text.questionType=='CHECKBOX'">
@@ -147,12 +149,13 @@
                                             <span>{{text1.tag}}</span>
                                             <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容"></el-input>
                                             <span class="questItemDelete" @click="deleteQuestText(index,index1)">
-                                                <img src="../../assets/img/questCha.png" />
+                                                <img src="../../assets/img/questDelete1.png" />
                                             </span>
                                         </el-checkbox>
                                     </el-checkbox-group>
                                     <div class="itemChoiceItemBox" @click="itemChoiceItemFun(index,text.questionType)">
-                                        添加一项
+                                        <!-- 添加一项 -->
+                                         <img src="../../assets/img/addFollowJa1.png" />
                                     </div>
                                 </div>
                                 <div v-show="text.questionType=='TEXT'">
@@ -163,9 +166,9 @@
                             </li>
                         </ul>
                         <div class="choiceItemBox">
-                            <span v-for="(text2,index2) in choiceItem" :key="index2" @click="choiceItemFun(index2)">{{text2}}</span>
+                            <span :class="{'choiceItemBoxAtc':index2==questChoiceIndex}" v-for="(text2,index2) in choiceItem" :key="index2" @click="choiceItemFun(index2)">{{text2}}</span>
                         </div>
-                        <el-button @click="addQuestTable()" type="primary">保存</el-button>
+                        <el-button class='addQuestTable' @click="addQuestTable()" type="primary">保存</el-button>
                     </div>
 
                 </el-form>
@@ -1200,7 +1203,8 @@ export default {
             adminTotal5: 0,
             adminTotal6: 0,
             followMobanType: "",
-            articleType: ""
+            articleType: "",
+            questChoiceIndex:0
         };
     },
     computed: {
@@ -2877,6 +2881,7 @@ export default {
 
         // 单选or多选or问答
         choiceItemFun(index2) {
+            this.questChoiceIndex=index2
             if (index2 == 0) {
                 this.addQuestData.bankModels.push({
                     title: "",

@@ -2,10 +2,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 
 import 'babel-polyfill'
-import Vue from 'vue'
-import App from './App'
-import router from './router'
-import store from './vuex/index.js'
 import 'jquery'
 import './plugs/elementUi.js'
 import './plugs/iview'
@@ -13,6 +9,10 @@ import './plugs/VueQuillEditor.js'
 import './plugs/Viewer.js'
 import './plugs/VideoPlayer.js'
 import './icons/baseIcon.css'
+import Vue from 'vue'
+import App from './App'
+import router from './router'
+import store from './vuex/index.js'
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({

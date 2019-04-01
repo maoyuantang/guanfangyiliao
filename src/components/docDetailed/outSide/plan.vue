@@ -126,6 +126,9 @@
         font-size: 12px;
         color: rgba(0,0,0,0.87);
     }
+    .plan-table th{
+        padding-left: .2rem;
+    }
     .plan-tbody>tr{
         height: .6rem;;
         padding-left: .1rem;

@@ -2,18 +2,18 @@
     <div class="top">
         <!-- {{viewRoot.now}}
         {{userInfo.hasAuth.filter(item=>item.type==='1')}} -->
-        <!-- <div class="change-root" v-if="!userInfo.rooter">
+        <div class="change-root" v-if="!userInfo.rooter">
 			<el-menu :default-active="viewRoot.now.type" class="el-menu-demo" mode="horizontal" @select="handleSelect" v-if="showTopNav">
 				<el-menu-item index="1">管理权限</el-menu-item>
 				<el-menu-item index="2" :disabled="!canGotoDoctor">医生端</el-menu-item>
 			</el-menu>
-		</div> -->
-        <div class="change-root" v-if="!userInfo.rooter">
+		</div>
+        <!-- <div class="change-root" v-if="!userInfo.rooter">
             <el-menu :default-active="viewRoot.now.type" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                 <el-menu-item index="1">管理权限</el-menu-item>
                 <el-menu-item index="2" :disabled="!canGotoDoctor">医生端</el-menu-item>
             </el-menu>
-        </div>
+        </div> -->
         <div class="top-left" @click="openNotice()">
             <marquee class="title-marquee">{{noticeList}}</marquee>
             <div class="msg">
@@ -164,32 +164,34 @@ export default {
             // const doc = this.userInfo.hasAuth.filter(item=>item.type==='2');
             // const man = this.userInfo.hasAuth.filter(item=>item.type==='1');
             if (this.userInfo.rooter) return; //超级管理员不要判断,在以前的地方处理过
-            if (
-                this.userInfo.hasAuth.filter(item => item.type === "1")
-                    .length <= 0
-            ) {
-                this.showTopNav = false;
-                this.$store.commit("user/CHANGEVIEWAUTH", {
-                    name: "doctors",
-                    type: "2"
-                });
-            } else if (
-                this.userInfo.hasAuth.filter(item => item.type === "2")
-                    .length <= 0
-            ) {
-                this.showTopNav = false;
+            if(this.userInfo.manager){//医院管理员身份
                 this.$store.commit("user/CHANGEVIEWAUTH", {
                     name: "manager",
                     type: "1"
                 });
-            } else {
-                this.showTopNav = true;
-                this.$store.commit("user/CHANGEVIEWAUTH", {
-                    name: "manager",
-                    type: "1"
-                });
+                this.showTopNav = this.userInfo.hasAuth.filter(item => item.type === "2").length > 0;
+            }else{//医生身份
+                if (this.userInfo.hasAuth.filter(item => item.type === "1").length <= 0) {
+                    this.showTopNav = false;
+                    this.$store.commit("user/CHANGEVIEWAUTH", {
+                        name: "doctors",
+                        type: "2"
+                    });
+                } else if (this.userInfo.hasAuth.filter(item => item.type === "2").length <= 0) {
+                    this.showTopNav = false;
+                    this.$store.commit("user/CHANGEVIEWAUTH", {
+                        name: "manager",
+                        type: "1"
+                    });
+                } else {
+                    this.showTopNav = true;
+                    this.$store.commit("user/CHANGEVIEWAUTH", {
+                        name: "manager",
+                        type: "1"
+                    });
+                }
+                sessionStorage.setItem("viewRoot", JSON.stringify(this.viewRoot));
             }
-            sessionStorage.setItem("viewRoot", JSON.stringify(this.viewRoot));
         }
     },
     async created() {

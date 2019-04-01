@@ -781,18 +781,30 @@ export default {
         // console.log(res.data.depts.map(
         //   item => item.deptId
         // )[0])
-        this.ourStafAlert.data.docBus.select = res.data.systemBusList.map(
-          item => {
-            item.id = item.subCode;
-            item.label = item.subName;
-            return item;
-          }
-        );
-        this.ourStafAlert.data.manbus.select = res.data.systemList.map(item => {
+        const mid = res.data.systemBusList.filter(item=>item.checkbox);
+        this.ourStafAlert.data.docBus.select = mid.map(item=>{
           item.id = item.subCode;
           item.label = item.subName;
           return item;
         });
+        // this.ourStafAlert.data.docBus.select = res.data.systemBusList.map(
+        //   item => {
+        //     item.id = item.subCode;
+        //     item.label = item.subName;
+        //     return item;
+        //   }
+        // );
+        const mid2 = res.data.systemList.filter(item=>item.checkbox);
+        this.ourStafAlert.data.manbus.select = mid2.map(item=>{
+          item.id = item.subCode;
+          item.label = item.subName;
+          return item;
+        });
+        // this.ourStafAlert.data.manbus.select = res.data.systemList.map(item => {
+        //   item.id = item.subCode;
+        //   item.label = item.subName;
+        //   return item;
+        // });
         this.ourStafAlert.data.manDepartment.select = res.data.managerDepts.map(item=>item.deptId)
         this.ourStafAlert.show = true;
       }

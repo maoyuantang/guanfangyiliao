@@ -7,15 +7,20 @@
                 </h4>
                 <div>
                     {{text.noticeData.body}}
-                    <button v-if="text.noticeData.notice=='COOPERATION_I'" type="button" class="noticeBtnClass" @click="inviteReplyClick()">
+                    <button v-if="text.noticeData.notice=='COOPERATION'" type="button" class="noticeBtnClass" @click="inviteReplyClick()">
                         <span>同意</span>
                     </button>
-                    <button v-if="text.noticeData.notice=='COOPERATION'" type="button" @click="toConsultation(text.noticeData)" class="noticeBtnClass">
+                    <button v-if="text.noticeData.notice=='COOPERATION_I'" type="button" @click="toConsultation(text.noticeData)" class="noticeBtnClass">
                         <span>进入协作</span>
                     </button>
                     <button v-if="text.noticeData.notice=='CLINIC'" type="button" class="noticeBtnClass" @click="enterRoomBtn(text.noticeData)">
                         <span>进入诊室</span>
                     </button>
+
+                    <button v-if="text.noticeData.notice=='CONSULTATION'" type="button" class="noticeBtnClass" @click="enterHuiz(text.noticeData)">
+                        <span>进入会诊</span>
+                    </button>
+
                 </div>
             </li>
         </ul>
@@ -27,7 +32,7 @@
         </div>
         <!-- 聊天 -->
         <div v-if="chatVisible">
-            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px" append-to-body>
                 <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
             </el-dialog>
         </div>
@@ -51,9 +56,14 @@ import {
     doctorInto
 } from "../../api/apiAll.js";
 import nodata from "../../public/publicComponents/noData.vue";
+import chat from "../../public/publicComponents/chat.vue";
+
+import ovideo from "../../video/oVideo.vue";
 export default {
     components: {
-        nodata
+        nodata,
+        ovideo,
+        chat
     },
     data() {
         return {
@@ -63,7 +73,7 @@ export default {
             chatVisible: false,
             sessionId: "",
             doctorVis: 0,
-            doctorVis1:1,
+            doctorVis1: 1,
             userMessage: {},
             centerDialogVisible: false,
             VideoshowClose: false,
@@ -71,8 +81,8 @@ export default {
                 conferenceId: "",
                 conferenceNumber: ""
             },
-             videoType: "门诊",
-             oClinicId:''
+            videoType: "门诊",
+            oClinicId: ""
         };
     },
     computed: {
@@ -83,8 +93,8 @@ export default {
     },
     methods: {
         videoclick(data) {
-        this.centerDialogVisible = false;
-      },
+            this.centerDialogVisible = false;
+        },
         async getNoticeList() {
             this.msgId = this.$store.state.socket.messageTicket.oMsgId;
             let _this = this;
@@ -119,7 +129,7 @@ export default {
                 token: this.userState.token
             };
             let options = {
-                id: "协作id",
+                id: row.senderUserId,
                 accept: true
             };
             const res = await inviteReply(query, options);
@@ -143,7 +153,7 @@ export default {
             let _this = this;
             let query = {
                 token: this.userState.token,
-                id: "协作idrow.id"
+                id: row.senderUserId
             };
             const res = await synergyInto(query);
             if (res.data && res.data.errCode === 0) {
@@ -156,25 +166,22 @@ export default {
                 });
             }
         },
-        //进入门诊
-        async enterRoomBtn(text) {
-            this.userMessage = {
-                clinicId: text.id,
-                departmentId: text.departmentId
-            };
+        //进入会诊
+        async enterHuiz() {
+            this.sessionId = row.sessionId;
 
-            // this.oClinicId = text.id;
             let _this = this;
             let query = {
-                token: this.userInfo.token
+                token: this.userState.token,
+                
             };
-            const options = {
-                clinicId: text.id
-            };
-            const res = await doctorInto(query, options);
-            console.log(res);
+            let options={
+                consultationId:row.senderUserId,
+                status: 'UNDERWAY'
+            }
+            const res = await updateConsultationStatus(query);
             if (res.data && res.data.errCode === 0) {
-                _this.centerDialogVisible = true;
+                _this.chatVisible = true;
             } else {
                 //失败
                 this.$notify.error({
@@ -182,6 +189,35 @@ export default {
                     message: res.data.errMsg
                 });
             }
+        },
+        //进入门诊
+        async enterRoomBtn(text) {
+            console.log(text);
+            this.userMessage = {
+                clinicId: text.clinicId,
+                departmentId: this.userSelfInfo.depts[0].deptId
+            };
+
+            this.oClinicId = text.clinicId;
+            this.centerDialogVisible = true;
+            // let _this = this;
+            // let query = {
+            //     token: this.userState.token
+            // };
+            // const options = {
+            //     clinicId: text.clinicId
+            // };
+            // const res = await doctorInto(query, options);
+            // console.log(res);
+            // if (res.data && res.data.errCode === 0) {
+            //     _this.centerDialogVisible = true;
+            // } else {
+            //     //失败
+            //     this.$notify.error({
+            //         title: "警告",
+            //         message: res.data.errMsg
+            //     });
+            // }
         }
     },
     props: {

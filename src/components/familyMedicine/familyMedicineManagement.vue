@@ -351,7 +351,7 @@
 	import { 
 		stencilName, toolBusinessType, toolDept, doctorsByOrgCodeAndDeptId, fetchHospitalDepts, businessType, protocols, protocolById,
 		addBusiness, stencilModel, getChildrenByDepartmentId, businessCondition, disableClinic, updateBusiness, queryStatisticalData,
-		pushStatisticalData, toolBusinessModel
+		pushStatisticalData, toolBusinessModel, 
 	} from '../../api/apiAll.js'
 	import apiBaseURL from '../../enums/apiBaseURL.js'
 	export default {
@@ -372,6 +372,11 @@
 					console.log('i is fish')
 				}
 			},
+			'global.businessType':{
+				handler(){
+					this.getBussTypeList();
+				}
+			}
 		},
 		components:{
 			normalTab,
@@ -742,6 +747,23 @@
 			}
 		},
 		methods:{
+			/**
+			 * 重新获取 业务类型(新增)
+			 */
+			async newGetToolBusinessType(){
+				const res = await toolBusinessType({token:this.userInfo.token});
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+					this.$store.commit("global/SETBUSINESSTYPE", res.data.body);
+					// console.log(this.global.businessType)
+				}else{
+					this.$notify({
+							title: '失败',
+							message: '业务类型获取失败',
+							type: 'error'
+					});
+				}
+			},
 			/**
 			 * 用户使用搜索框 搜索
 			 */
@@ -1395,6 +1417,9 @@
 					});
 					console.log('success');
 					this.getBussByCondition();
+					if(!this.testData.businessId){
+						this.newGetToolBusinessType();
+					}
 				}else{
 					console.log('error')
 					this.$notify({
