@@ -5,7 +5,7 @@
 		</div>
 		<el-menu>
 		    <el-menu-item index="2" v-for="(item,index) in navList" :key="index" :class="item.select?'select-item':'not-select-item'" @click="gotoPage(item,index)">
-		        <!-- <i class="el-icon-menu"></i> -->
+		       
 		        <span slot="title">{{item.name}}</span>
 		    </el-menu-item>
 		</el-menu>

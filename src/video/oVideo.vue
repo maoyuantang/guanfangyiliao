@@ -5,19 +5,21 @@
             <div class="row">
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
-                        <div id="remoteVideos" v-loading="loadingOther" element-loading-text="正在等待对方接受邀请" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)"></div>
+                        <div id="remoteVideos"></div>
                         <div class="videoChatBtn" v-show="questVisable" @click="videoChatBtn()">
                             问诊工具
                         </div>
                     </div>
                     <div class="col-xs-12 media-box us-media">
+                        <!-- 网络视频 -->
                         <div v-if="localVideoVisable" id="localVideos" v-loading="loadingUs" element-loading-text="加载视频中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
 
                         </div>
-                        <div class="localVideos1"  v-else>
-                            <video class="localVideo1" id="video"  autoplay></video>
+                        <!-- 本地视频 -->
+                        <div class="localVideos1"  >
+                            <video class="localVideo1" id="video" v-show="closeVideoBtnVieable"  autoplay></video>
                         </div>
-                        
+                        <!-- <video v-else class="localVideo1" id="video"  autoplay></video> -->
 
                         <div>
                             <div class="videoTopBtnBox">
@@ -2148,6 +2150,13 @@ video {
 .videoClassBox .el-dialog__body > div,
 .videoClassBox .el-dialog__body > div > div,
 .videoClassBox .el-dialog__body > div > div > div {
+    height: 100%;
+}
+.participant{
+    height: 30%;
+    margin-bottom: 2%
+}
+.stream-box{
     height: 100%;
 }
 /* 

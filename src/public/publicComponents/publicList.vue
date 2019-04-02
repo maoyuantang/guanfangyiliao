@@ -158,7 +158,7 @@ padding-left: 0;
 }
 .public-list /deep/ .el-table__body-wrapper tbody tr td .cell span {
     text-align: center;
-    white-space: nowrap !important;
+    /* white-space: nowrap !important; */
     padding: 0;
     overflow: hidden;
     text-overflow: ellipsis;

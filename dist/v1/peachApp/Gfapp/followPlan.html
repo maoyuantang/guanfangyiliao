@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name='apple-itunes-app' content='app-id=477927812'>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="pragma" content="no-cache"  />
+    <meta http-equiv="content-type" content="no-cache, must-revalidate" />
+    <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT"/>
+    <link rel="stylesheet" href="../css/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <title></title>
+    <style>
+        body{
+
+            position: static;
+
+            background: #f0f0f0;
+        }
+        .weui-navbar{
+            border: 1px solid #2EA0DE;
+            border-radius: 4px;
+            position: static;
+        }
+        .weui-navbar__item{
+            height: 30px;
+            padding: 0;
+            line-height: 30px;
+            font-family: PingFangSC-Light;
+            font-size: 14px;
+            color: #1474A9;
+            letter-spacing: -0.08px;
+            text-align: center;
+
+        }
+        .weui-navbar__item.weui-bar__item--on{
+            background: #2EA0DE;
+            font-family: PingFangSC-Light;
+            font-size: 14px;
+            color: #FFFFFF;
+            letter-spacing: -0.08px;
+            text-align: center;
+        }
+        .diseaseTable>li{
+            font-size:15px;
+            line-height: 38px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        .diseaseTable>li>span:last-child{
+            float: right;
+            color:#C7C7CC;
+        }
+        .weui-tab{
+            padding:19px 16px;
+            background: white;
+            box-sizing: border-box;
+        }
+        .diseaseDoctor>div{
+            float: left;
+        }
+        .diseaseDoctor>div:first-child{
+            width:76px;
+            height: 76px;
+        }
+        .diseaseDoctor>div:first-child img{
+            width:100%;
+            height: 100%;
+        }
+        .diseaseDoctor>div:nth-child(2){
+            margin-left: 10px;
+            padding-top: 5px;
+        }
+        .diseaseDoctor>div:nth-child(2) h2{
+            margin-bottom: 10px;
+            font-size:18px
+        }
+        .diseaseDoctor>div:nth-child(2) div{
+            font-size:14px
+        }
+        .diseaseDoctor>div:last-child{
+            float: right;
+
+        }
+        .diseaseTable2>li>div{
+            float: right;
+
+        }
+        .diseaseTable2>li>div>span:first-child{
+            color: #FF7700;
+            font-size: 14px;
+        }
+        .diseaseTable2>li>div>span:last-child{
+            color: #C7C7CC;
+        }
+        .nohave{
+            text-align: center;
+            display: none;
+        }
+        .cloud_Space{
+            display: none;
+            padding-left: 20px;
+            box-sizing: border-box;
+            font-family: PingFangSC-Regular;
+            font-size: 14px;
+            line-height: 36px;
+            color: #285EA1;
+            letter-spacing: -0.27px;
+            text-align: left;
+            height: 36px;
+            background: rgba(0,163,255,0.27);
+        }
+        .weui-navbar + .weui-tab__bd{
+            padding-top:25px;
+        }
+    </style>
+</head>
+<body>
+<div class="cloud_Space">
+    点击开通云空间 便于医生查看您的档案
+</div>
+<div class="weui-tab">
+    <div class="weui-navbar">
+        <a class="weui-navbar__item weui-bar__item--on" href="#tab1">
+            进行中
+        </a>
+        <a class="weui-navbar__item" href="#tab2">
+            已完成
+        </a>
+    </div>
+    <div class="weui-tab__bd">
+        <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active ">
+            <ul class="diseaseTable diseaseTable1">
+                <div id="nohave1" style="" class="nohave">
+                    <img src="../images/nohave.png" alt="">
+                    <p>暂无数据</p>
+                </div>
+            </ul>
+        </div>
+        <div id="tab2" class="weui-tab__bd-item">
+            <ul class="diseaseTable diseaseTable2">
+                <div id="nohave2" style="" class="nohave">
+                    <img src="../images/nohave.png" alt="">
+                    <p>暂无数据</p>
+                </div>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../js/jquery-2.1.4.js"></script>
+<script src="../js/jquery-weui.js"></script>
+<script>
+    $(".weui-navbar>a").click(function () {
+        var oindex=$(this).index();
+        if(oindex==0){
+            $(".cloud_Space.cloud_Space").hide()
+        }else{
+            $(".cloud_Space").show()
+        }
+    })
+    var getParam = function(name){
+        var search = document.location.search;
+        var pattern = new RegExp("[?&]"+name+"\=([^&]+)", "g");
+        var matcher = pattern.exec(search);
+        var items = null;
+        if(null != matcher){
+            try{
+                items = decodeURIComponent(decodeURIComponent(matcher[1]));
+            }catch(e){
+                try{
+                    items = decodeURIComponent(matcher[1]);
+                }catch(e){
+                    items = matcher[1];
+                }
+            }
+        }
+        return items;
+    };
+    var id=getParam('id');
+    var token=getParam('token');
+    var familyMemberId=getParam('familyMemberId');
+    var startDate=getParam('startDate');
+    var endDate=getParam('endDate');
+    var pageTime=getParam('pageTime');
+    $.ajax({
+        url: "/health/api/v2/followup/user/listFollowUpPlan",
+        type: "get",
+        dataType: "json",
+        // beforeSend:index,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("token", token);
+            xhr.setRequestHeader("Content-Type", 'application/json');
+        },
+        headers:{
+            "Content-Type"  :"application/json",
+            "Token"         :token
+        },
+        data:{
+            "count":0,                                  //已查询的数量值
+            "pageSize":15                               //需要再查询多少条
+        },
+        success: function (data) {
+            if(data.code=="OK"){
+                if(data.body.length <= 0){
+                    $("#nohave1").show();
+                }else{
+                    $("#nohave1").hide();
+                    $(".diseaseTable1").empty();
+                    $.each(data.body,function (index,text) {
+                        $(".diseaseTable1").append('<li data-id='+text.id+'><span>'+text.title+'</span><span> &gt;</span> </li>')
+                    })
+                }
+
+
+            }
+        },
+        error: function (data) {
+
+        }
+    });
+
+    //查询评估记录
+    $.ajax({
+        url: "/health/api/v2/followup/user/listFinFollowUpPlan",
+        type: "get",
+        dataType: "json",
+        // beforeSend:index,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("token", token);
+            xhr.setRequestHeader("Content-Type", 'application/json');
+        },
+        headers:{
+            "Content-Type"  :"application/json",
+            "Token"         :token
+        },
+        data:{
+            "count":0,                                                  //已查询的数量值
+            "pageSize":15,                                              //需要再查询多少条
+            "type":"",                                                   //模板类型，不传为全类型
+            "familyMemberId":"",        //家庭成员ID，不传为全部成员
+            "startDate":"",                                   //计划创建时间，开始时间，格式：yyyy-MM-dd
+            "endDate":"",                                     //计划创建时间，结束时间，格式：yyyy-MM-dd
+            "pageTime":""                                  //第一次查询为null,后面每一次传第一次查询的第一条记录的计划创建时间
+        },
+        success: function (data) {
+            if(data.code=="OK"){
+                if(data.body.length <= 0){
+                    $("#nohave1").show();
+                }else {
+                    $(".diseaseTable2").empty();
+                     $.each(data.body, function (index, text) {
+                    //     var overdue = ""
+                    //     if (text.overdueTime > 0) {
+                    //         overdue = "有效期" + text.overdueTime + "天"
+                    //     } else {
+                    //         overdue = "已过期 请开通云空间查看"
+                    //     }
+                        $(".diseaseTable2").append('<li  data-id='+text.id+'><span>' + text.title + '</span><div><span> ' + text.message + '</span><span>&gt;</span></div></li>')
+                    })
+                }
+
+            }
+        },
+        error: function (data) {
+
+        }
+    });
+
+    //查看评估表详情
+    $("body").on('click',".diseaseTable1>li",function () {
+        var oid=$(this).data('id');
+        window.location.href="../FollowupPlanUser.html?id="+oid+"&token="+token
+    })
+
+    $("body").on('click',".diseaseTable2>li",function () {
+        var oid=$(this).data('id');
+        window.location.href="../FollowupPlanUser.html?id="+oid+"&token="+token
+    })
+</script>
+</body>
+</html>

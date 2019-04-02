@@ -4,7 +4,8 @@
             <div class="drugs_box_lf">
                 <div>
                     <div class="drugs_box_lf_headImg">
-                        <img :src="userSocketInfo.imgUrl+familyMessage.userId" />
+                        <!-- <img :src="userSocketInfo.imgUrl+familyMessage.userId" /> -->
+                        <img class='headImgClass' :src="userSocketInfo.headImg+familyMessage.userId" :onerror="defaultImg" />
                     </div>
                     <div class="drugsMessage">
                         <h4>{{familyMessage.name}}</h4>
@@ -63,7 +64,10 @@
 
                     <div class="public-list drugTable">
                         <el-table :data="chufangData.drugDetails" border style="width: 100%">
-                            <el-table-column fixed prop="date" label="序号" width="150">
+                            <el-table-column prop="date" label="序号" width="150">
+                                <template slot-scope="scope">
+                                    <!-- {{scope.row}} -->
+                                </template>
                             </el-table-column>
                             <el-table-column prop="drugName" label="药品名称" width="120">
                             </el-table-column>
@@ -90,7 +94,7 @@
                                     <input class="drugsListInput" v-model="scope.row.doctorAsk" type="text" />
                                 </template>
                             </el-table-column>
-                            <el-table-column fixed="right" label="操作" width="100">
+                            <el-table-column label="操作" width="100">
                                 <template slot-scope="scope">
                                     <el-button @click="deleteDrugs(scope.row)" type="text" size="small">删除</el-button>
                                 </template>
@@ -135,6 +139,10 @@ export default {
     },
     data() {
         return {
+            defaultImg:
+                'this.src="' +
+                require("../../assets/img/publicHeadImg.png") +
+                '"',
             imgUrl:
                 "https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/",
             form: {
@@ -179,9 +187,9 @@ export default {
                     // }
                 ],
                 countAllPrice: "",
-                searchData: "",
-                searchList: []
-            }
+                searchData: ""
+            },
+            searchList: []
         };
     },
     computed: {
@@ -229,23 +237,20 @@ export default {
         },
         //获取处方表格信息
         async getDrugsByCondition(num) {
-       
+            let _this = this;
             let query = {
                 token: this.userState.token,
                 drugName: this.searchData
             };
             const res = await drugsByCondition(query);
             if (res.data && res.data.errCode === 0) {
-                     this.chufangData.drugDetails=[]
-                 this.searchList=[]
                 if (num == 0) {
-                    this.searchList = res.data.body;
+                     _this.searchList = [];
+                    _this.searchList = res.data.body;
                 } else if (num == 1) {
-                    this.chufangData.drugDetails = res.data.body;
+                     _this.chufangData.drugDetails = [];
+                    _this.chufangData.drugDetails = res.data.body;
                 }
-
-                // console.log()
-                // this.chufangData.drugDetails = res.data.body;
             } else {
                 //失败
                 this.$notify.error({
@@ -254,6 +259,25 @@ export default {
                 });
             }
         },
+        // async getDrugsByCondition() {
+        //     let _this=this
+        //     let query = {
+        //          token: this.userState.token,
+        //         drugName: this.searchData
+        //     };
+        //     const res = await drugsByCondition(query);
+        //     if (res.data && res.data.errCode === 0) {
+        //         _this.chufangData.drugDetails = res.data.body;
+        //         console.log(_this.chufangData.drugDetails);
+        //         _this.searchList = res.data.body;
+        //     } else {
+        //         //失败
+        //         this.$notify.error({
+        //             title: "警告",
+        //             message: res.data.errMsg
+        //         });
+        //     }
+        // },
         // 搜索
         searchChange(data) {
             this.searchData = data;
@@ -306,14 +330,14 @@ export default {
             this.preLook();
         },
         //删除药品
-        deleteDrugs(row){
-            console.log(row)
-            let _this=this
-            $.each(this.chufangData.drugDetails,function(index,text){
-                if(row.id==text.id){
-                    _this.chufangData.drugDetails.splice(index,1)
+        deleteDrugs(row) {
+            console.log(row);
+            let _this = this;
+            $.each(this.chufangData.drugDetails, function(index, text) {
+                if (row.id == text.id) {
+                    _this.chufangData.drugDetails.splice(index, 1);
                 }
-            })
+            });
         }
     },
     props: {

@@ -1,12 +1,12 @@
 <template>
     <div id="app">
-
+        <websocket1 v-if="userState.isLogin" ref="mychild"></websocket1>
         <!-- <img src="./assets/logo.png">-->
         <transition>
             <router-view class="router-view-class" />
         </transition>
 
-        <websocket1 ref="mychild"></websocket1>
+        
     </div>
 </template>
 
@@ -36,6 +36,7 @@ export default {
         })
     },
     created() {
+        console.log('登录成功后执行app.vue文件')
         console.log(this.userState.token)
         if (this.userState.token) {
             this.lianjie();

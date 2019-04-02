@@ -58,7 +58,7 @@
                 </el-form-item>
 
                 <el-form-item class='invitationClassInputBtn'>
-                    <el-button class='btnClass' type="primary" @click="launchXiezuo()" :disabled="disabledXie">确认</el-button>
+                    <el-button class='btnClass' type="primary" @click="launchXiezuo()" >确认</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -407,7 +407,7 @@ export default {
                 let query = {
                     token: this.userState.token,
                     id: row.id,
-                    status: row.synergyStatus
+                    status: 2
                 };
                 const res = await synergyChangeStatus(query);
                 if (res.data && res.data.errCode === 0) {

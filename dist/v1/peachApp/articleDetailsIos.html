@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name='apple-itunes-app' content='app-id=477927812'>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="pragma" content="no-cache"  />
+    <meta http-equiv="content-type" content="no-cache, must-revalidate" />
+    <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT"/>
+    <title>春桃医生-医生端文章详情</title>
+    <link rel="stylesheet" href="css/weui.min.css">
+    <link rel="stylesheet" href="css/jquery-weui.css">
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<style>
+    .weui-loadmore {
+        margin-bottom: 4em;
+    }
+    /*.main{position:fixed;top:0px;bottom:52px;width:100%;overflow:scroll;}*/
+</style>
+<body>
+<article class="main" style="display: none;">
+    <div>
+        <div class="page__bd weui-back-fff">
+            <article class="weui-article">
+                <section>
+                    <h1 id="title" class="titlelist"></h1>
+                    <div class="titleimg" style="display: none;">
+                        <img src="images/b-1.png" alt="" class="">
+                    </div>
+                    <section id="content">
+                    </section>
+                </section>
+            </article>
+        </div>
+        <div class="weui-cells weui-cells_form" id="adminFg" style="display: none">
+            <div class="weui-cell weui-cell_switch">
+                <div class="weui-cell__bd">所有人可见</div>
+                <div class="weui-cell__ft">
+                    <input class="weui-switch weui-sw-bac" type="checkbox" id="discussion" >
+                </div>
+            </div>
+            <div class="weui-cell weui-cell_switch">
+                <div class="weui-cell__bd">开放讨论</div>
+                <div class="weui-cell__ft">
+                    <input class="weui-switch weui-sw-bac" type="checkbox" id="discussionone" >
+                </div>
+            </div>
+        </div>
+        <div class="weui-cells__title">全部讨论</div>
+        <div class="wuie-art-list" id="appQueryCommentList">
+
+        </div>
+        <div id="nodetails" class="nodetails" style="display: none">
+            <img src="images/b-2.png" alt="">
+        </div>
+        <div class="weui-loadmore" style="display: none;">
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">正在加载</span>
+        </div>
+
+    </div>
+
+</article>
+<!--<div id="visible" style="display: none">-->
+    <!--<div class="weui-cells weui-cells_form weui-art-position">-->
+        <!--<div class="weui-cell">-->
+            <!--<div class="weui-cell__hd">-->
+                <!--<label class="weui-label weui-arti-t"><img src="images/a-1.png" alt="" class=""></label>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__bd">-->
+                <!--<textarea class="weui-textarea chackTextarea-area" id="article" placeholder="参加讨论" rows="1"></textarea>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__hd weui-sh-btn" style="">-->
+                <!--<a href="javascript:;" class="weui-btn weui-btn_plain-primary weui-ar-btn weuibtn" >发送</a>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+</body>
+<script src="js/jquery-2.1.4.js"></script>
+<script src="js/jquery-weui.js"></script>
+<script src="js/base64.js"></script>
+<script src="js/articleDetailsIos.js"></script>
+
+<script type="text/javascript">
+    (function($){
+        $.fn.autoTextarea = function(options) {
+            var defaults={
+                maxHeight:null,//文本框是否自动撑高，默认：null，不自动撑高；如果自动撑高必须输入数值，该值作为文本框自动撑高的最大高度
+                minHeight:$(this).height() //默认最小高度，也就是文本框最初的高度，当内容高度小于这个高度的时候，文本以这个高度显示
+            };
+            var opts = $.extend({},defaults,options);
+            return $(this).each(function() {
+                $(this).bind("paste cut keydown keyup focus blur",function(){
+                    var height,style=this.style;
+                    this.style.height =  opts.minHeight + 'px';
+                    if (this.scrollHeight > opts.minHeight) {
+                        if (opts.maxHeight && this.scrollHeight > opts.maxHeight) {
+                            height = opts.maxHeight;
+                            style.overflowY = 'scroll';
+                        } else {
+                            height = this.scrollHeight;
+                            style.overflowY = 'hidden';
+                        }
+                        style.height = height  + 'px';
+                    }
+                });
+            });
+        };
+    })(jQuery);
+
+</script>
+
+<script>
+    $(".chackTextarea-area").autoTextarea({
+        maxHeight:80,//文本框是否自动撑高，默认：null，不自动撑高；如果自动撑高必须输入数值，该值作为文本框自动撑高的最大高度
+    });
+
+    function article() {
+        $.alert("Hello World");
+    }
+    $(function () {
+        $("#article").focus(function () {
+            $(".weui-sh-btn").show();
+            $(".weuibtn").addClass("btnfn");
+            $(".chackTextarea-area").removeClass("textT");
+        })
+        $("#article").blur(function () {
+//            $(".weui-sh-btn").hide();
+            $(".weuibtn").removeClass("btnfn")
+        })
+
+
+    })
+
+</script>
+
+</html>

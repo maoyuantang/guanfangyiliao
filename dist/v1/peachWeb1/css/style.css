@@ -1,0 +1,193 @@
+body{background-color: #fafafa;}
+.weui_margin_none{margin-top: 0; background-color: #fafafa;}
+.user_img{width: 100px; height: 100px;}
+.content_text:nth-child(1){margin-top: 36px; text-align: center;}
+.weui_btn_back{background-color: #ff7700; border-radius: 10px;}
+.weui_btn_back:hover,.weui_btn_back:link,.weui_btn_back:visited,.weui_btn_back:active{background-color: #ff7700 !important;}
+.patient{color: #ff6600; padding: 0 5px;}
+.weui_wecliam{color: #281012; font-size: 17px; line-height: 30px; margin-top: 5px;}
+.weui_d_fa{color: #646464; font-size: 11px; line-height: 30px;}
+.content_text:nth-child(2){margin: 10px 15px; border: 1px solid #979797; border-radius: 10px; overflow: hidden;}
+.content_text:nth-child(3){margin-top:30px; margin-right: 25px; margin-left: 25px; }
+.weui-label_width{width: 55px; font-size: 16px;}
+.weui_gen{width: 55px; text-align: left;}
+.weui_cell_pad{padding: 15px;}
+.weui_cell_padd{padding: 15px 15px;}
+.weui_cell_padd:before{left: 0; border-top:1px solid #979797;}
+.weui_margin_none:nth-child(2):before{border-top: 1px solid #979797;}
+.weui_success{text-align: center; margin-top: 40px; font-size: 14px; color: #030303;padding: 0 20px;}
+.weui_down{text-align: center; margin-top: 33px; margin-bottom: 43px;}
+.weui_fl_margin{margin:10px 30px;; margin-top: 20px;}
+.weui_btn_back_dow{    background-color: #ff7700;    border-radius: 10px;    padding-left: 0;    padding-right: 0;
+    text-align: center; font-size: 16px;}
+.weui_down h3{color: #281012}
+
+.weui_cell_pad5{padding: 5px 15px;}
+.weui-dialog__bd{min-height: 10px;}
+.weui-vcode-btn{padding: 0 0 0 5px;}
+.footer{position: fixed; height: 60px; width: 100%; background: #5c5c5c; bottom: 0; left: 0;}
+.openapp{    background-color: #ff7700;
+    width: 80px;
+    height: 30px;
+    border-radius: 10px;
+    float: right;
+    margin:15px 10px;
+    font-size: 14px;
+    text-align: center;
+    line-height: 30px;
+    color: #fff;}
+.footh{height: 70px;}
+.opdio{    color: #fff;    line-height: 60px;    padding-left: 10px; font-size: 14px;}
+.doaim{    width: 40px;    vertical-align: middle;    margin-left: 10px;}
+.agreemenht{text-align: center;}
+.agreemenhtdiv{padding: 10px 15px; line-height: 30px; tab-index: 30px;}
+.agreemenhttitle{text-indent: 30px;}
+.firshe{font-weight: 700;}
+.listtexet{text-indent: 40px;}
+.bage{
+    width: 100%;
+    z-index: 1;
+}
+.bage img{background-size: 100%;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    z-index: 1;
+    opacity: 0.5;}
+
+.weui-agree__text{
+    color: #FF0000;
+}
+.weui-agree a{
+    color: #FF0000;
+}
+.weui-agree__checkbox{
+    background-color: #FF7700;
+    width: 15px;
+    height: 15px;
+    border:none;
+}
+.weui-agree__checkbox:checked:before{
+    color: #fff;
+}
+.weui_btn_back_dow img{
+    vertical-align: initial;
+}
+.imgopen{max-width: 100%; height: auto;}
+.weixin-tip{display: none; position: fixed; left:0; top:0; bottom:0; background: rgba(0,0,0,0.8); filter:alpha(opacity=80);  height: 100%; width: 100%; z-index: 100;}
+.weixin-tip p{text-align: center; margin-top: 10%; padding:0 5%;}
+.namecolor{color: #f60;}
+.weui-foot-se{font-size: 16px; color: #fe2739 !important;}
+.weui-foot-se img{padding-left: 5px;padding-bottom: 4px;}
+.mari{margin-top: 30px;}
+@keyframes fadeInDown {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+        transform: translate3d(0, 40%, 0);
+    }
+}
+@-webkit-keyframes  fadeInDown {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 40%, 0);
+    }
+}
+@-ms-keyframes  fadeInDown {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+        -ms-transform: translate3d(0, 40%, 0);
+    }
+}
+@-moz-keyframes  fadeInDown {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0.4;
+        -moz-transform: translate3d(0, 40%, 0);
+    }
+}
+
+.fadeInDown {
+    animation:fadeInDown 2s infinite;
+    animation-name: fadeInDown;
+}
+.duan{    font-size: 12px;    padding-left: 2px;}
+@media screen and (max-width: 320px) { /*当屏幕尺寸小于600px时，应用下面的CSS样式*/
+    body{
+        background: #fafafa;
+    }
+
+}
+/*修正jquery-weui对话框在IOS上的弹出起始位置的问题*/
+.weui-dialog,
+.weui-toast {
+    -webkit-transition-duration: .2s;
+    transition-duration: .2s;
+    opacity: 0;
+    -webkit-transform: scale(1) translate(-50%, -50%);
+    transform: scale(1) translate(-50%, -50%);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    visibility: hidden;
+    margin: 0;
+    top: 45%;
+    z-index: 2000;
+}
+.weui-label{
+    width: 125px;
+    color: #030303;
+    font-weight: 200;
+}
+.lodingtext{
+    font-size: 12px;
+    color: #646464;
+    padding: 10px 15px;
+}
+.downlode{
+    margin-top: 0px;
+}
+.weui-agree{
+    padding: 1px 15px;
+}
+.weui-agree__checkbox{
+    top: 3px;
+}
+
+#ball {
+    position: absolute;
+    width: 80px;
+    height: 30px;
+    border-radius: 20px;
+    background-color: #ccc;
+    text-align: center;
+    font-size: 14px;
+    line-height: 30px;
+}
+.actions{
+    color: #fff;
+}
+.imgpen{
+    width: 25px;
+    position: relative;
+    top: 7px;
+    left: -10px;
+}
+
+.urlload{
+    display: none;
+}
+

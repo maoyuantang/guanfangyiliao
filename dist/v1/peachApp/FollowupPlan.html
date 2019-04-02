@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name='apple-itunes-app' content='app-id=477927812'>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="pragma" content="no-cache"  />
+    <meta http-equiv="content-type" content="no-cache, must-revalidate" />
+    <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT"/>
+    <title>春桃医生-查看模板</title>
+    <link rel="stylesheet" href="css/weui.min.css">
+    <link rel="stylesheet" href="css/jquery-weui.css">
+    <link rel="stylesheet" href="css/style.css">
+<style>
+    .weui-input{
+        color: #00A3FF;
+    }
+    .weui-plam-month{
+        width: 40px;
+    }
+    input {
+    }
+</style>
+</head>
+<body>
+<div class="title" id="titletwo" style="display: none"></div>
+<input type="hidden" id="change" value="false">
+<input type="hidden" class="titletwo">
+<div class="weui-row weui-de-one weui-one-plan">
+    <div class="weui-col-100">
+        <h3 id="titleName"></h3>
+    </div>
+</div>
+<div class="weui-cells weui-cells_form">
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label for="date" class="weui-label">首次治疗</label></div>
+        <div class="weui-cell__bd weui-san">
+            <input class="weui-input weui-data-right planweui" id="date" type="text" value="">
+        </div>
+    </div>
+</div>
+<div class="weui-loadmore weui-loadmore_line">
+    <span class="weui-loadmore__tips weui-tip-bacg">可编辑</span>
+</div>
+<div class="weui-row weui-no-gutter" id="followtext">
+
+</div>
+<div class="weui-row weui-no-gutter">
+    <div class="weui-col-100 weui-back-fff">
+        <div class="weui-cells weui-cells_form weui-margin-0">
+            <div class="weui-cell weui-cell_switch ">
+                <div class="weui-cell__bd weui-tex-des weui-tone-desk">
+                    提醒我
+                </div>
+                <div class="weui-cell__ft">
+                    <input class="weui-switch weui-sw-bac remindMe" type="checkbox" id="discussion">
+                </div>
+            </div>
+        </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p class="aaaa">提醒他</p>
+                </div>
+                <input type="hidden" id="remindHeOne">
+                <div class="weui-cell__ft" id="remindHe">开</div>
+            </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label  class="weui-label">提醒时间</label></div>
+            <div class="weui-cell__bd weui-cellft">
+                <input type="hidden" id="remindDays" value="1">
+                <input class="weui-input weui-text-algin-right planweui" id="titime"  readonly type="text" value="提前一周" unselectable="on" onfocus="this.blur()" >
+            </div>
+        </div>
+    </div>
+</div>
+<div class="weui-btns">
+    <!--<a href="javascript:;" class="weui-btn weui-btn_primary submited" >提交</a>-->
+</div>
+</body>
+<script src="js/jquery-2.1.4.js"></script>
+<script src="js/jquery-weui.js"></script>
+<script src="js/FollowupPlan.js"></script>
+<script src="js/ios.js"></script>
+<script>
+    $("#job").select({
+        title: "选择职业",
+        items: ["法官", "医生", "猎人", "学生", "记者", "其他", "医生", "猎人", "学生", "记者", "其他"],
+        onChange: function(d) {
+            console.log(this, d);
+        },
+        onClose: function() {
+            console.log("close");
+        },
+        onOpen: function() {
+            console.log("open");
+        },
+    });
+</script>
+<script>
+    $("#upton").change(function () {
+        console.log($(this).parent());
+        $(this).parent().find(".one").val("aaaa");
+    })
+    $(".picker").picker({
+        title: "请选择时间周期",
+        cols: [
+            {
+                textAlign: 'center',
+                values: ['1', '2', '3', '4', '5','6', '7', '8', '9']
+                //如果你希望显示文案和实际值不同，可以在这里加一个displayValues: [.....]
+            },
+            {
+                textAlign: 'center',
+                values: ['天', '周', '月', '年']
+            }
+        ],
+        onChange: function(d) {
+            console.log(this, d);
+            console.log(d.displayValue[0]);
+            console.log(d.displayValue[1]);
+        },
+    });
+    $("#titime").select({
+        title: "选择时间",
+        items:[
+            {
+                title:'提前1天',
+                value:'1'
+            },
+            {
+                title:'提前2天',
+                value:'2'
+            },
+            {
+                title:'提前3天',
+                value:'3'
+            },
+            {
+                title:'提前4天',
+                value:'4'
+            },
+            {
+                title:'提前5天',
+                value:'5'
+            },
+            {
+                title:'提前6天',
+                value:'6'
+            },
+            {
+                title:'提前一周',
+                value:'7'
+            },
+            {
+                title:'提前二周',
+                value:'14'
+            },
+            {
+                title:'提前五周',
+                value:'35'
+            },
+            ],
+        onChange: function(d) {
+            console.log(this, d);
+            console.log(d.values);
+            $("#remindDays").val(d.values);
+            $("#change").val("true");
+        },
+        onClose: function() {
+            console.log("close");
+        },
+        onOpen: function() {
+            console.log("open");
+        },
+    });
+
+    $("#date").calendar({
+//        value: ['2016-12-12'],
+        dateFormat: 'yyyy-mm-dd',  // 自定义格式的时候，不能通过 input 的value属性赋值 '2016年12月12日' 来定义初始值，这样会导致无法解析初始值而报错。只能通过js中设置 value 的形式来赋值，并且需要按标准形式赋值（yyyy-mm-dd 或者时间戳)
+        onChange: function (p, values, displayValues) {
+            console.log(values, displayValues);
+            $("#change").val("true");
+        }
+    });
+</script>
+</html>
