@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name='apple-itunes-app' content='app-id=477927812'>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="pragma" content="no-cache"  />
+    <meta http-equiv="content-type" content="no-cache, must-revalidate" />
+    <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT"/>
+    <title>病历</title>
+    <link rel="stylesheet" href="../css/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<style>
+    .weui-grid{
+        width: 25%;
+    }
+    .weui-grid:before{
+        border-right: none;
+    }
+    .weui-grid:after{
+        border-bottom: none;
+    }
+    .weui-toast{
+        font-size:13px;
+    }
+</style>
+<body style="background: #f9f9f9;">
+<div class="header">
+        <div>
+            <a href="javascript:history.back(-1)"><img src="../images/back.png" alt="" class="backimg"></a>
+            <span>病历</span>
+        </div>
+    </div>
+<div class="medical">
+    <div class="me_header">
+        <img src="../images/gf_logo_app.png" alt="" class="me_headerImg" >
+        <div class="me_sexage">
+            <p class="me_sexagep">
+                <span class="me_sex"></span><span class="me_age"></span>
+            </p>
+            <p class="me_namge">
+            </p>
+            <p class="me_zhuytime"><span class="me_rudate"></span>入院</p>
+            <div class="weme-flex">
+                <span class="me_flexs"><i class="me_iconColo"></i><span class="me_bed"></span></span>
+                <span class="me_flexs"><i class="me_iconColo"></i><span class="me_dep"></span></span>
+                <span class="me_flexs"><i class="me_iconColo"></i><span class="me_inNum"></span></span>
+              </div>
+        </div>
+    </div>
+</div>
+<div class="weui-grids me_content">
+    <a href="javascript:" class="weui-grid js_grid me_nohave">
+        <div class="weui-grid__icon">
+        <img src="../images/d-1.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+                电子病历
+        </p>
+    </a>
+    <a href="" class="weui-grid js_grid">
+        <div class="weui-grid__icon">
+                <img src="../images/d-2.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+                病情摘要
+        </p>
+    </a>
+    <a href="" class="weui-grid js_grid">
+        <div class="weui-grid__icon">
+                <img src="../images/d-3.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+                医嘱
+        </p>
+    </a>
+    <a href="" class="weui-grid js_grid">
+        <div class="weui-grid__icon">
+                <img src="../images/d-4.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+                检验
+        </p>
+    </a>
+    <a href="medicalImaging.html" class="weui-grid js_grid" id="Imaging">
+        <div class="weui-grid__icon">
+                <img src="../images/d-5.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+                医学影像
+        </p>
+    </a>
+    <a href="" class="weui-grid js_grid">
+        <div class="weui-grid__icon">
+                <img src="../images/d-6.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+                个人信息
+        </p>
+    </a>
+    <a href="" class="weui-grid js_grid">
+        <div class="weui-grid__icon">
+                <img src="../images/d-7.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+                会诊/转诊
+        </p>
+    </a>
+    <a href="medicalReport.html" class="weui-grid js_grid" id="Report">
+        <div class="weui-grid__icon">
+                <img src="../images/d-8.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+                体检报告
+        </p>
+    </a>
+    <a href="" class="weui-grid js_grid">
+        <input type="text" id='picker' class="pickke"/>
+        <div class="updatle">
+                <div class="weui-grid__icon">
+                        <img src="../images/d-9.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                        上传
+                </p>
+        </div>
+       
+    </a>
+ </div>
+</body>
+<script src="../js/jquery-2.1.4.js"></script>
+<script src="../js/jquery-weui.js"></script>
+<script>
+    var getParam = function(name){
+        var search = document.location.search;
+        var pattern = new RegExp("[?&]"+name+"\=([^&]+)", "g");
+        var matcher = pattern.exec(search);
+        var items = null;
+        if(null != matcher){
+            try{
+                items = decodeURIComponent(decodeURIComponent(matcher[1]));
+            }catch(e){
+                try{
+                    items = decodeURIComponent(matcher[1]);
+                }catch(e){
+                    items = matcher[1];
+                }
+            }
+        }
+        return items;
+    };
+    var id=getParam('id');
+    var token=getParam('token');
+    console.log(id);
+    $("#Imaging").attr("href","medicalImaging.html?token="+token);//医学影像
+    $("#Report").attr("href","medicalReport.html?token="+token);//医学影像
+    $(".me_nohave").click(function(){
+        $.toast("功能暂未开通，尽请期待", "text",500000);
+    })
+    $.ajax({
+        url: "/health/api/v2/checkReport/getPatientMe",
+        type: "get",
+        dataType: "json",
+        // beforeSend:index,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("token", token);
+            xhr.setRequestHeader("Content-Type", 'application/json');
+        },
+        success: function (data) {
+            if(data.code=="OK"){
+                $(".me_sex").text(data.body.sex);
+                $(".me_age").text(data.body.age);
+                $(".me_namge").text(data.body.name);
+                $(".me_rudate").text(data.body.date);
+                $(".me_bed").text(data.body.bed);
+                $(".me_dep").text(data.body.dep);
+                $(".me_inNum").text(data.body.inNum);
+            }
+        },
+        error: function (data) {
+
+        }
+    });
+
+    $("#picker").picker({
+        title: "请选择您的手机",
+        cols: [
+            {
+            textAlign: 'center',
+            values: ['iPhone 4', 'iPhone 4S', 'iPhone 5', 'iPhone 5S', 'iPhone 6', 'iPhone 6 Plus', 'iPad 2', 'iPad Retina', 'iPad Air', 'iPad mini', 'iPad mini 2', 'iPad mini 3']
+            }
+        ],
+        onChange: function(p, v, dv) {
+          console.log(p, v, dv);
+        },
+        onClose: function(p, v, d) {
+            console.log(p);
+            console.log(p.value.join(''));
+            console.log(v);
+            console.log(d);
+          console.log("close");
+        }
+        });
+</script>
+</html>

@@ -1,7 +1,6 @@
 <template>
     <div>
         <div class="drugs_box">
-            {{searchList}}
             <div class="drugs_box_lf">
                 <div>
                     <div class="drugs_box_lf_headImg">
@@ -67,7 +66,7 @@
                         <el-table :data="chufangData.drugDetails" border style="width: 100%">
                             <el-table-column prop="date" label="序号" width="150">
                                 <template slot-scope="scope">
-                                    {{scope}}
+                                    <!-- {{scope.row}} -->
                                 </template>
                             </el-table-column>
                             <el-table-column prop="drugName" label="药品名称" width="120">
@@ -188,9 +187,9 @@ export default {
                     // }
                 ],
                 countAllPrice: "",
-                searchData: "",
-                searchList: []
-            }
+                searchData: ""
+            },
+            searchList: []
         };
     },
     computed: {
@@ -245,16 +244,13 @@ export default {
             };
             const res = await drugsByCondition(query);
             if (res.data && res.data.errCode === 0) {
-                _this.chufangData.drugDetails = [];
-                _this.searchList = [];
                 if (num == 0) {
+                     _this.searchList = [];
                     _this.searchList = res.data.body;
                 } else if (num == 1) {
+                     _this.chufangData.drugDetails = [];
                     _this.chufangData.drugDetails = res.data.body;
                 }
-
-                // console.log()
-                // this.chufangData.drugDetails = res.data.body;
             } else {
                 //失败
                 this.$notify.error({
@@ -263,6 +259,25 @@ export default {
                 });
             }
         },
+        // async getDrugsByCondition() {
+        //     let _this=this
+        //     let query = {
+        //          token: this.userState.token,
+        //         drugName: this.searchData
+        //     };
+        //     const res = await drugsByCondition(query);
+        //     if (res.data && res.data.errCode === 0) {
+        //         _this.chufangData.drugDetails = res.data.body;
+        //         console.log(_this.chufangData.drugDetails);
+        //         _this.searchList = res.data.body;
+        //     } else {
+        //         //失败
+        //         this.$notify.error({
+        //             title: "警告",
+        //             message: res.data.errMsg
+        //         });
+        //     }
+        // },
         // 搜索
         searchChange(data) {
             this.searchData = data;

@@ -937,7 +937,6 @@ export default {
                 this.$router.push({
                     path: "/cooperation"
                 });
-
             }
         },
 
@@ -1248,11 +1247,17 @@ export default {
         }
     },
     async created() {
-        this.getPlanList();
-        this.getWarnList();
-        this.getFollowList();
-        this.getConsultationList();
-        this.getCooperationList();
+        if (this.authMap.find(item => item.authorityId === "40000")) {
+            this.getPlanList();
+            this.getWarnList();
+            this.getFollowList();
+        }
+        if (this.authMap.find(item => item.authorityId === "20000")) {
+            this.getConsultationList();
+        }
+        if (this.authMap.find(item => item.authorityId === "30000")) {
+            this.getCooperationList();
+        }
     }
 };
 </script>
