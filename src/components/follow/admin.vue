@@ -246,8 +246,9 @@
 
                     </div>
                     <div class="pieChartClass">
-                        {{pieChart1}}
-                        <pieChart :inData="pieChart1"></pieChart>
+                         <pieChart :inData="drawData"> </pieChart>
+                        <!-- <pieChart></pieChart> -->
+                        <!-- <pieChart :inData="pieChart1"></pieChart> -->
                         <!-- <pieChart :inData="pieChart2"></pieChart>
                         <pieChart :inData="pieChart3"></pieChart> -->
                     </div>
@@ -374,7 +375,7 @@ import selftag from "../../public/publicComponents/selftag.vue";
 import statisticsWay from "../../public/publicComponents/statisticsWay.vue";
 import publicTime from "../../public/publicComponents/publicTime.vue";
 import normalColumnChart from "../../public/publicComponents/normalColumnChart.vue";
-import pieChart from "./../followUpBox/pieChart.vue";
+import pieChart from "../../public/publicComponents/pieChart.vue";
 import addQuestOrAritle from "./../followUpBox/addQuestOrAritle.vue";
 import followDetail from "./../followUpBox/followDetail.vue";
 import warnSet from "./../followUpBox/warnSet.vue";
