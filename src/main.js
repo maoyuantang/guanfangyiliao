@@ -11,8 +11,8 @@ import './plugs/VideoPlayer.js'
 import './icons/baseIcon.css'
 import Vue from 'vue'
 import App from './App'
-import router from './router'
 import store from './vuex/index.js'
+import router from './router'
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
