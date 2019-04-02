@@ -250,24 +250,16 @@
             list: []
           },
           options2: {
-            default: {
-              label: "",
-              value: ""
-            },
             value: "",
             list: []
           },
           options3: {
-            default: {
-              label: "",
-              value: ""
-            },
-            value: "",
-            list: [],
+            value: "test",
+            list: []
           },
           options4: {
-            value: "",
-            list: [{ value: '1', label: '一级' }, { value: '2', label: '二级' }, { value: '3', label: '三级' }, { value: '4', label: '四级' },]
+            value: null,
+            list: [{ value: 1, label: '一级' }, { value: 2, label: '二级' }, { value: 3, label: '三级' }, { value: 4, label: '四级' },]
           },
           formLabelWidth: '120px',
         },
@@ -450,7 +442,7 @@
         this.kuangData1.options1.value = "";
         this.kuangData1.options2.value = "";
         this.kuangData1.options3.value = "";
-        this.kuangData1.options4.value = "";
+        this.kuangData1.options4.value = null;
         done();
       },
       handleClose2(done) {
@@ -478,13 +470,6 @@
       //筛选工具栏  请求  管理端
       //1.21.1.科室筛选  工具栏 (管理) (管理)
       async getSelect1(oindex) {
-        // console.log(this.userInfo.rooter)
-        // console.log(this.userInfo.manager)
-        // if (this.userInfo.manager) {
-        //   this.types = 'MANAGE'
-        // } else {
-        //   this.types = 'DOCTOR'
-        // }
         let _this = this;
         let query = {
           token: this.userInfo.token,
@@ -750,11 +735,7 @@
         this.kuangData1.options1.value = data.deptId
         this.kuangData1.options2.value = data.diseaseTypeId
         this.kuangData1.options3.value = data.diseaseId//疾病ID
-        // this.kuangData1.options3.value = data.medicalName//疾病名称
-
-        // console.log(this.kuangData1.options3.list)
-        // console.log(data.medicalName)
-        // console.log(this.kuangData1.options3.value)
+        this.kuangData1 = Object.assign({}, this.kuangData1)
         $.each(this.kuangData1.options4.list, function (index, text) {
           if (_this.kuangData1.options4.list[index].label == data.levelName) {
             _this.kuangData1.options4.value = _this.kuangData1.options4.list[index].value
@@ -853,8 +834,9 @@
         this.kuangData2.options2.value.length = 0
         this.kuangData2.options3.value.length = 0
         $.each(data.levels, function (index, text) {
-          _this.kuangData2.options2.value.push(JSON.stringify(text.level))
+          _this.kuangData2.options2.value.push(text.level)
         })
+        console.log(this.kuangData2.options2.value)
         this.kuangData2.options3.value.push(data.deptRels[0].hospitalId, data.deptRels[0].deptId)
       },
       // 表2编辑   提交
@@ -999,7 +981,7 @@
       async isHaveDepartment11() {
         const _this = this
         if (this.kuangData2.options2.value) {//等待  询问
-          this.kuangData1.options3.value = ""
+          // this.kuangData1.options3.value = ""
           this.kuangData1.options3.list.length = 0
           let query3 = {
             token: this.userInfo.token,
@@ -1194,7 +1176,7 @@
       },
       //13.6.权限控制-接诊疾病等级下拉框
       async isHaveDepartment21() {
-        this.kuangData2.options2.value.length = 0;
+        // this.kuangData2.options2.value.length = 0;
         this.kuangData2.options3.value.length = 0;
         if (this.kuangData2.options1.value != "") {
           let query = {
@@ -1207,6 +1189,7 @@
             console.log(res)
             const testJson = this.setJson(res.data.body);
             this.kuangData2.options2.list = testJson.data
+            console.log(this.kuangData2.options2.list)
           } else {
             //失败
             console.log('权限控制-接诊疾病等级下拉框 +失败')
@@ -1265,7 +1248,7 @@
           for (const j in i) {
             reJson.push({
               label: i[j],
-              value: j
+              value: parseInt(j)
             })
           }
         };
