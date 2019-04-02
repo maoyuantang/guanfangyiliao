@@ -2702,5 +2702,8 @@ box-shadow: inset 0 0 1px 0 rgba(0,0,0,0.50);
     background:#98A9BC;
     top: 3px
 }
+ .pieChartClass>div{
+        width:333%
+    }
 
 </style>

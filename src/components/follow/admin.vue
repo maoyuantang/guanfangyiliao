@@ -1,6 +1,6 @@
 <template>
     <div class="followUp">
-      
+
         <!-- 添加问诊或文章 -->
         <!-- <div v-if="questVisible">
             <el-dialog title="添加问诊或文章" :visible.sync="questVisible" center append-to-body width="400px">
@@ -15,7 +15,7 @@
 
             </el-dialog>
         </div>
-        
+
         <!-- 随访计划详情 -->
         <div v-if="followPlanVisible">
             <el-dialog class="evaluateBox addFollowBox" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
@@ -91,7 +91,7 @@
             </el-dialog>
         </div>
         <!-- 新增文章 -->
-        
+
         <!-- 满意度新增模板 -->
         <div v-if="mydAddTemplate">
             <el-dialog class="evaluateBox" title=" " :visible.sync="mydAddTemplate" width="770px" hight="356px" center>
@@ -177,7 +177,7 @@
             </el-dialog>
         </div>
         <!-- 管理端 -->
-        <div >
+        <div>
             <div class="Admin-title">
                 <normalTab :inData="oAdminTab" @reBack="getConsulTabData"></normalTab>
             </div>
@@ -246,7 +246,16 @@
 
                     </div>
                     <div class="pieChartClass">
-                         <pieChart :inData="drawData"> </pieChart>
+                        <div>
+                            <pieChart :inData="pieData1" v-if="pieData1Visable"> </pieChart>
+                        </div>
+                        <div>
+                            <pieChart :inData="pieData2" v-if="pieData2Visable"> </pieChart>
+                        </div>
+                        <div>
+                            <pieChart :inData="pieData3" v-if="pieData3Visable"> </pieChart>
+                        </div>
+
                         <!-- <pieChart></pieChart> -->
                         <!-- <pieChart :inData="pieChart1"></pieChart> -->
                         <!-- <pieChart :inData="pieChart2"></pieChart>
@@ -400,36 +409,6 @@ export default {
     data() {
         return {
             groupId: "",
-            pieChart1: {
-                id: "myChart1",
-                data: {
-                    total: 95,
-                    data: [
-                        {
-                            x: "没问题？？",
-                            y: 1
-                        },
-                        {
-                            x: "1",
-                            y: 31
-                        },
-                        {
-                            x: "2",
-                            y: 31
-                        },
-                        {
-                            x: "3",
-                            y: 31
-                        },
-                        {
-                            x: "好的满意",
-                            y: 1
-                        }
-                    ]
-                }
-            },
-            pieChart2: { id: "myChart2", data: {} },
-            pieChart3: { id: "myChart3", data: {} },
             groupValue: "",
             groupName: "",
             groupVisible: false,
@@ -891,6 +870,24 @@ export default {
                 title: "智能随访人次 ", //图表标题
                 total: 0
             },
+            pieData1: {
+                dataAxis: ["1", "1", "1"], //每个柱子代表的类名
+                data: ["23", "23", "23"], //具体数值
+                title: "结果分布-总览 " //图表标题
+            },
+            pieData2: {
+                dataAxis: [], //每个柱子代表的类名
+                data: [], //具体数值
+                title: "结果分布-年龄 " //图表标题
+            },
+            pieData3: {
+                dataAxis: [], //每个柱子代表的类名
+                data: [], //具体数值
+                title: "结果分布-科室 " //图表标题
+            },
+            pieData1Visable:true,
+             pieData2Visable:false,
+              pieData3Visable:false,
             tjType: "DEPT",
             tjStartTime: "",
             tjEndTime: "",
@@ -1102,7 +1099,6 @@ export default {
         })
     },
     async created() {
-        
         this.circularData(this.odata["header"]);
         this.getFoList(); //随访列表
         // this.getUsFollow(); //我的随访
@@ -1117,7 +1113,7 @@ export default {
         this.screenPublic(this.oTab8, toolSurveyMode, "方式"); //调查方式
         this.screenPublic(this.oTab5, toolDeviceType, "设备类型"); //设备类型
         this.screenPublic(this.oTab9, toolFollowupHasPlan, "随访计划"); //有无计划
-        
+
         if (this.userState.rooter || this.userState.manager) {
             this.partDoctorType = "MANAGE";
         } else {
@@ -2896,6 +2892,38 @@ export default {
             const res = await getResultGraph(query);
             if (res.data && res.data.errCode === 0) {
                 console.log(res.data.body);
+                // $.each(red.data.body.reply, function(index, text) {
+                //     _this.pieData1.dataAxis.push(text.x);
+                //     _this.pieData1.data.push(text.y);
+                // });
+                // if (red.data.body.reply.length > 0) {
+                //     _this.pieData1Visable = true;
+                // } else {
+                //     _this.pieData1Visable = false;
+                // }
+
+                 $.each(red.data.body.age, function(index, text) {
+                    _this.pieData2.dataAxis.push(text.x);
+                    _this.pieData2.data.push(text.y);
+                });
+                if (red.data.body.age.length > 0) {
+                    _this.pieData2Visable = true;
+                } else {
+                    _this.pieData2Visable = false;
+                }
+
+                 $.each(red.data.body.department, function(index, text) {
+                    _this.pieData3.dataAxis.push(text.x);
+                    _this.pieData3.data.push(text.y);
+                });
+                if (red.data.body.department.length > 0) {
+                    _this.pieData3Visable = true;
+                } else {
+                    _this.pieData3Visable = false;
+                }
+
+
+             
                 // _this.pieChart1.data = red.data.body.reply;
                 // _this.pieChart2.data = red.data.body.age;
                 // _this.pieChart3.data = red.data.body.department;

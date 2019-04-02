@@ -122,12 +122,16 @@ export default {
     font-size: var(--fontSize2);
     color: #5e6875;
     letter-spacing: 0;
+    border-right:none
 }
-
+.public-list td{
+    border-right:none
+}
 .public-list td .cell {
     display: flex;
     justify-content: start;
     align-items: center;
+    
 }
 .public-list > div {
     border: none;
