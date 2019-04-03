@@ -936,11 +936,9 @@
 			 * 新增业务
 			 */
 			addBuss(){
-				console.log('enter')
 				Promise.all([
 					this.getToolBusinessType(),
 					this.getStencilName(),
-					// this.toolDept()
 				])
 				.then(res=>{
 					console.log(res)
@@ -997,6 +995,7 @@
                         }
 					];
 					this.testData.businessTemplate.list = res.data.body.map(item=>{
+						if(!item)return false;//后端有时返回null，加个判断
 						for(const i of modulesMap){
 							if(i.en === item)return {label:i.text,value:item};
 						}

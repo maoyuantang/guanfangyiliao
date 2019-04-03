@@ -55,7 +55,7 @@ export default {
   font-size: 14px;
   color: #646464 !important;
   font-weight: bold;
-  width: .8rem;
+  /* width: .8rem; */
   text-align: justify;
 }
 .tag-title::after{
@@ -73,7 +73,7 @@ export default {
   font-size: 14px;
   font-family: PingFangSC-Regular;
   color: #0067ff;
-  width: .7rem;
+  min-width: .9rem;
 }
 .self-tag .warning{
     color:red;/*!important*/
