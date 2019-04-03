@@ -126,7 +126,9 @@
                     <div class="input-item-value-div agreement-div">
                         <div class="make-agreement">
                             <div class="agreement-list">
-                                <span class="select-agreement-name">{{inData.agreement.default.label||''}}</span>
+                                <!-- <span class="select-agreement-name">{{inData.agreement.default.label||''}}</span> -->
+                                <input type="text" class="select-agreement-name1" v-model="inData.agreement.default.label"
+                                    :readonly="sureVisiable===1?'readonly':false"></input>
                                 <Dropdown>
                                     <p>
                                         <Icon type="ios-arrow-down" class="agreement-arrow-down"></Icon>
@@ -137,9 +139,10 @@
                                     </DropdownMenu>
                                 </Dropdown>
                             </div>
-                            <div class="show-agreement">
+                            <!-- <div class="show-agreement">
                                 {{inData.agreement.showContent||''}}
-                            </div>
+                            </div> -->
+                            <textarea class="show-agreement1" v-model="inData.agreement.showContent" :readonly="sureVisiable===1?'readonly':false"></textarea>
                         </div>
                     </div>
 
@@ -382,6 +385,24 @@
         letter-spacing: -0.17px;
     }
 
+    .select-agreement-name1 {
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #4c4c4c;
+        letter-spacing: -0.17px;
+
+        border: none;
+        word-wrap: break-word;
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: 18px;
+        min-height: 18px;
+        width: 100%;
+        outline: none;
+    }
+
+
+
     .agreement-arrow-down {
         color: #4c4c4c;
     }
@@ -393,6 +414,26 @@
         letter-spacing: -0.17px;
         line-height: 16px;
     }
+
+    .show-agreement1 {
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #646464;
+        letter-spacing: -0.17px;
+        /* line-height: 16px; */
+
+        border: none;
+        word-wrap: break-word;
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: 100px;
+        max-height: 100px;
+        width: 100% !important;
+        outline: none;
+        margin: 5px 0 0 0;
+        resize: none;
+    }
+
 
     .required-icon {
         font-size: 12px;
