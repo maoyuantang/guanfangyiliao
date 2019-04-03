@@ -47,6 +47,37 @@ export default {
 </script>
 
 <style>
+.invitationClass .btnClass {
+    width: 100%;
+    height: 39px;
+    background: #4da1ff;
+    border-radius: 4px;
+    font-family: PingFangSC-Semibold;
+    font-size: 12px;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+.invitationClass .el-dialog__body {
+    padding: 18px 12px 30px;
+    overflow: hidden;
+}
+.invitationClass .el-tree {
+    margin-left: -23px;
+    background: none;
+    margin-bottom: 14px;
+}
+.invitationClass .el-checkbox__inner {
+    width: 20px;
+    height: 20px;
+}
+.invitationClass .el-tree-node__label {
+    margin-top: -6px;
+}
+.invitationClass .el-checkbox__inner::after {
+    left: 7px;
+    top: 3px;
+}
 /* 公共样式 */
 .Admin-title {
     margin-bottom: 42px;

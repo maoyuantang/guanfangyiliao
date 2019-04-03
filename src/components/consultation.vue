@@ -91,18 +91,7 @@ export default {
     color: #778ca2;
     line-height: 3px;
 }
-.startConsul {
-    width: 196px;
-    height: 40px;
-    background: #4da1ff;
-    border-radius: 4px;
-    font-family: PingFangSC-Semibold;
-    font-size: 22px;
-    color: #ffffff;
-    letter-spacing: 0.92px;
-    text-align: center;
-    line-height: 0px;
-}
+
 /* 管理端端样式 */
 
 .mainTab {
@@ -244,61 +233,8 @@ export default {
     color: #5e6875;
     letter-spacing: 0;
 }
-.seeDanganClass {
-    width: 57px;
-    height: 20px;
-    background: rgba(255, 171, 43, 0.1);
-    border: 1px solid rgba(255, 171, 43, 0.6);
-    border-radius: 3px;
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #ffab2b;
-    line-height: 1px;
-}
-.inviteUserClass {
-    width: 57px;
-    height: 20px;
-    line-height: 1px;
-    background: rgba(254, 77, 151, 0.1);
-    border: 1px solid rgba(254, 77, 151, 0.6);
-    border-radius: 3px;
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #fe4d97;
-}
-.seeHistoryMessage {
-    width: 57px;
-    height: 20px;
-    background: rgba(66, 133, 244, 0.1);
-    border: 1px solid rgba(66, 133, 244, 0.6);
-    border-radius: 3px;
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #4d7cfe;
-    line-height: 1px;
-}
-.goTohuizhen {
-    width: 57px;
-    height: 20px;
-    background: rgba(66, 133, 244, 0.1);
-    border: 1px solid rgba(66, 133, 244, 0.6);
-    border-radius: 3px;
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #4d7cfe;
-    line-height: 1px;
-}
-.overClass {
-    width: 57px;
-    height: 20px;
-    background: rgba(119, 140, 162, 0.1);
-    border: 1px solid rgba(119, 140, 162, 0.6);
-    border-radius: 3px;
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #778ca2;
-    line-height: 1px;
-}
+
+
 .el-table--border td,
 .el-table--border th,
 .el-table__body-wrapper .el-table--border.is-scrolling-left ~ .el-table__fixed {

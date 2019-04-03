@@ -86,6 +86,8 @@ $.ajax({
     },
     success: function (data) {
         if(data.errCode==0) {
+            // title=data.body.title
+            oType=data.body.type
             $("#titleName").text(data.body.title);
             $("#date").val(data.body.firstTreatmentTime);
             var pathml="";
@@ -497,12 +499,12 @@ $("#discussion").click(function () {
         console.log("b");
     }
 })
-$('.aaaa').click(function(){
-    submit()
-})
-submit()
+// $('.aaaa').click(function(){
+//     submit()
+// })
+var oType=""
+// submit()
 function  submit() {
-    alert($("#remindDays").val())
     var title=$("#titleName").text();
     var firstTreatmentTime=$("#date").val();
     var remindDays=$("#remindDays").val();
@@ -512,12 +514,14 @@ function  submit() {
         "change":change,             //是否生成计划时创建随访模板 true是，false否
         "id": id,       //模板ID
         'userId':oUserId,
+        'type':oType,
         "title": title,               //标题
         "firstTreatmentTime": firstTreatmentTime,     //首次治疗时间
         "remindMe": remindMe,               //提醒我
         "remindHe": remindHe,               //提醒TA
         "remindDays": remindDays,                //提醒时间
-        "itemModels": []
+        "itemModels": [
+        ]
     };
     var questionbox=$(".planList");
     $.each(questionbox, function() {

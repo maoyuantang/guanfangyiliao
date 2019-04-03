@@ -62,7 +62,7 @@
         </el-dialog>
         <el-form :model="addForm">
           <div style="display:flex;margin:10px 0;">
-            <el-form-item label="方向:" :label-width="formLabelWidth">
+            <el-form-item label="转诊类型:" :label-width="formLabelWidth">
               <el-select v-model="addForm.typeList.value" placeholder="上转/下转" clearable @change='upOrDown()'>
                 <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -141,7 +141,7 @@
           <div class="manager_moveManage_top mainTab">
             <div class="manager_moveManage_top_left">
               <selftag :inData="onLineList.topFlag[0]" @reback="getFilter0"></selftag>
-              <selftag v-model="onLineList.topFlag[2]" @reback="getFilter2"></selftag>
+              <selftag :inData="onLineList.topFlag[2]" @reback="getFilter2"></selftag>
             </div>
             <div class="manager_moveManage_top_right">
               <search @searchValue="adminSearchOne"></search>
@@ -377,7 +377,20 @@
             {
               more: true,
               title: '方向',
-              list: []
+              list: [
+                {
+                  text: "全部",
+                  value: ""
+                },
+                {
+                  text: "转入",
+                  value: "into"
+                },
+                {
+                  text: "转出",
+                  value: "out"
+                }
+              ]
             }
           ],
         },
@@ -635,34 +648,34 @@
       },
       //1.21.28.方向筛选  工具栏 (管理)
       async getSelect3(oindex) {
-        let _this = this;
-        let query = {
-          token: this.userInfo.token,
-        };
-        const res = await toolReferralType(query);                     //1.21.28.方向筛选  工具栏 (管理)
-        if (res.data && res.data.errCode === 0) {
-          console.log('1.21.28.方向筛选  工具栏 +成功')
-          // console.log(res.data.body);
-          if (res.data.body.length > 6) {
-            this.onLineList.topFlag[2].more = true;
-          } else {
-            this.onLineList.topFlag[2].more = false;
-          }
-          $.each(res.data.body, function (index, text) {
-            //双向转诊   类型   筛选列表   管理1
-            _this.onLineList.topFlag[2].list.push({
-              text: text.name,
-              value: text.id
-            });
-          });
-        } else {
-          console.log('1.21.28.方向筛选  工具栏 +失败')
-          //失败
-          this.$notify.error({
-            title: "警告",
-            message: res.data.errMsg
-          });
-        }
+        // let _this = this;
+        // let query = {
+        //   token: this.userInfo.token,
+        // };
+        // const res = await toolReferralType(query);                     //1.21.28.方向筛选  工具栏 (管理)
+        // if (res.data && res.data.errCode === 0) {
+        //   console.log('1.21.28.方向筛选  工具栏 +成功')
+        //   console.log(res.data.body);
+        //   if (res.data.body.length > 6) {
+        //     this.onLineList.topFlag[2].more = true;
+        //   } else {
+        //     this.onLineList.topFlag[2].more = false;
+        //   }
+        //   $.each(res.data.body, function (index, text) {
+        //     //双向转诊   类型   筛选列表   管理1
+        //     _this.onLineList.topFlag[2].list.push({
+        //       text: text.name,
+        //       value: text.id
+        //     });
+        //   });
+        // } else {
+        //   console.log('1.21.28.方向筛选  工具栏 +失败')
+        //   //失败
+        //   this.$notify.error({
+        //     title: "警告",
+        //     message: res.data.errMsg
+        //   });
+        // }
       },
 
       // 管理1表
@@ -1365,17 +1378,34 @@
         })
       },
     },
+    watch: {
+      '$store.state.user.viewRoot.now.name': {
+        handler(n) {
+          if (n === 'manager') {
+            this.getSelect1()
+            this.getList1()
+          } else {
+            this.getSelect1()
+            this.DoctorList()
+          }
+        }
+      }
+    },
 
 
 
 
 
     async created() {
-      this.getSelect1()
-      // this.getSelect2()
-      this.getSelect3()
-      this.getList1()
-      this.DoctorList()
+      if (this.$store.state.user.viewRoot.now.name === 'manager') {
+        this.getSelect1()
+        this.getList1()
+        // this.getSelect2()
+        // this.getSelect3()
+      } else {
+        this.getSelect1()
+        this.DoctorList()
+      }
     }
   }
 </script>

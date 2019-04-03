@@ -128,12 +128,12 @@
 					<el-table-column prop="orderNo" label="订单号" :show-overflow-tooltip="true"></el-table-column>
 					<el-table-column prop="doctorName" label="接诊医生" :show-overflow-tooltip="true"></el-table-column>
 					<el-table-column prop="mode" label="接诊方式" :show-overflow-tooltip="true"></el-table-column>
-					<el-table-column prop="fee" label="门诊费" :show-overflow-tooltip="true"></el-table-column>
-					<el-table-column prop="rxOrderNo" label="处方订单号" :show-overflow-tooltip="true"></el-table-column>
+					<el-table-column prop="fee" label="问诊费" :show-overflow-tooltip="true"></el-table-column>
+					<el-table-column prop="orderTime" label="问诊时间" :show-overflow-tooltip="true"></el-table-column>
 					<el-table-column prop="status" label="状态" :show-overflow-tooltip="true"></el-table-column>
 					<el-table-column prop="userName" label="病人" :show-overflow-tooltip="true"></el-table-column>
-					<el-table-column prop="orderTime" label="问诊时间" :show-overflow-tooltip="true"></el-table-column>
-					<el-table-column prop="rxFee" label="问诊费" :show-overflow-tooltip="true"></el-table-column>
+					<el-table-column prop="rxOrderNo" label="处方订单号" :show-overflow-tooltip="true"></el-table-column>
+					<el-table-column prop="rxFee" label="处方费" :show-overflow-tooltip="true"></el-table-column>
 					<el-table-column label="操作" width="300">
 						<template slot-scope="scope">
 							<el-button @click="isShowRecordChatFun(scope.row)" type="text" size="small">聊天记录</el-button>
@@ -673,7 +673,7 @@
 				console.log(this.departmentId)
 				this.getList1();
 				// this.getList2();
-				// this.getList3();
+				this.getList3();
 			},
 			getSelect1(data) {//审核状态
 				console.log(data)
@@ -1025,7 +1025,7 @@
 					const lists = res.data.body.data2.list
 					if (res.data && res.data.errCode === 0) {
 						console.log('总，今日，获取订单详情+成功')
-						// console.log(res)
+						console.log(res)
 						this.tableDataChat = lists;//订单详情没有数据
 					} else {
 						//失败
@@ -1233,8 +1233,8 @@
 				const _this = this
 				let query = {
 					token: this.userInfo.token,
-					deptId: this.departmentId, //String false 科室ID 
-					starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
+					departmentId: this.departmentId, //String false 科室ID 
+					startTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
 					endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
 					type: this.type //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
 				};
@@ -1508,11 +1508,9 @@
 					this.addData.departmentList.default = departmentLista;//科室
 					$.each(lists.doctors, function (index, text) {
 						_this.addData.doctorList.default.push(text.doctorId)//关联医生
-						// _this.addData.doctorList.list.push({ label: text.doctorName, value: text.doctorId })
 						console.log(text.doctorId)
 					})
 					this.addData.agreement.default = { label: lists.protocolName, value: lists.protocolId }//协议id
-					// this.addData.agreement.list.push({ label: lists.protocolName, value: lists.protocolId })
 				} else {
 					//失败
 					console.log('编辑表格渲染+失败')
@@ -1526,6 +1524,8 @@
 			//禁用接口的调用
 			async isShowForbidFun(row) {
 				console.log(row)
+
+				this.status1 = !row.state
 				let query = {
 					token: this.userInfo.token
 				};
@@ -1535,12 +1535,6 @@
 				};
 				const res = await disableClinic(query, options);
 				if (res.data && res.data.errCode === 0) {
-					if (this.status1 == true) {
-						this.status1 = false;
-					} else {
-						this.status1 = true;
-					}
-					console.log(this.status1)
 					this.getList1()
 				} else {
 					console.log('禁用失败')
@@ -1779,6 +1773,10 @@
 	.offerDetial {
 		/deep/ .el-dialog {
 			margin-top: 22vh !important;
+
+			.cell {
+				white-space: nowrap;
+			}
 		}
 	}
 

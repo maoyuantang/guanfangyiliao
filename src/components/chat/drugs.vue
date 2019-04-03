@@ -58,7 +58,7 @@
                     <div class='drugsSearchClass'>
                         <search @searchValue="searchChange" @inputChange="inputChange"></search>
                         <ul>
-                            <li @click="sureYao(text1.drugName)" v-for="(text1,index) in searchList" :key="index">{{text1.drugName}}</li>
+                            <li @click="sureYao(text1)" v-for="(text1,index) in searchList" :key="index">{{text1.drugName}}</li>
                         </ul>
                     </div>
 
@@ -205,8 +205,9 @@ export default {
             this.getDrugsByCondition(0);
         },
         sureYao(data) {
-            this.searchData = data;
-            this.getDrugsByCondition(1);
+            // this.searchData = data;
+            this.chufangData.drugDetails.push(data)
+            // this.getDrugsByCondition(1);
         },
         //获取处方信息
         async getDrugsMessage() {
@@ -244,13 +245,14 @@ export default {
             };
             const res = await drugsByCondition(query);
             if (res.data && res.data.errCode === 0) {
-                if (num == 0) {
-                     _this.searchList = [];
+                 _this.searchList = [];
                     _this.searchList = res.data.body;
-                } else if (num == 1) {
-                     _this.chufangData.drugDetails = [];
-                    _this.chufangData.drugDetails = res.data.body;
-                }
+                // if (num == 0) {
+                    
+                // } else if (num == 1) {
+                //      _this.chufangData.drugDetails = [];
+                //     _this.chufangData.drugDetails = res.data.body;
+                // }
             } else {
                 //失败
                 this.$notify.error({
@@ -259,29 +261,10 @@ export default {
                 });
             }
         },
-        // async getDrugsByCondition() {
-        //     let _this=this
-        //     let query = {
-        //          token: this.userState.token,
-        //         drugName: this.searchData
-        //     };
-        //     const res = await drugsByCondition(query);
-        //     if (res.data && res.data.errCode === 0) {
-        //         _this.chufangData.drugDetails = res.data.body;
-        //         console.log(_this.chufangData.drugDetails);
-        //         _this.searchList = res.data.body;
-        //     } else {
-        //         //失败
-        //         this.$notify.error({
-        //             title: "警告",
-        //             message: res.data.errMsg
-        //         });
-        //     }
-        // },
         // 搜索
         searchChange(data) {
             this.searchData = data;
-            this.getDrugsByCondition(1);
+            this.getDrugsByCondition(0);
         },
         //提交审核
         async submitAudit() {

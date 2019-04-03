@@ -392,7 +392,7 @@ export default {
                 this.$store.commit("user/CLEARUSERINFO");
                 this.$store.commit("user/CLAERUSERSELFINFO");
                 sessionStorage.clear();
-                this.$store.state.socket.socketObj.close();
+                this.$store.state.socket.socketObj.close(1);
                 this.$router.replace({
                     path: "/login"
                 });
@@ -1214,6 +1214,7 @@ export default {
         // },
         //关闭
         webSocketonclose(e) {
+            console.log(e)
             console.log(this.userState.token);
             if (this.userState.userState) {
                 console.log("connection closed (" + e.code + ")");
