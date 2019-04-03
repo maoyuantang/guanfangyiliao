@@ -53,7 +53,14 @@ import { parse } from 'protobufjs';
 					}
 				}
 			},
-			$route(){
+			$route(n){
+				console.log(n)
+				sessionStorage.setItem('page',JSON.stringify({
+					name:n.meta.title,
+					select:true,
+					path: n.path,
+					code:this.navMapList.find(item=>item.path === n.path)?this.navMapList.find(item=>item.path === n.path).code:''
+				}))
 				this.restorePage();
 			}
 		},
