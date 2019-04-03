@@ -74,8 +74,14 @@
                             <el-table-column prop="drugUse" label="用法" width="120">
                             </el-table-column>
                             <el-table-column prop="drugTimes" label="频率" width="120">
+                                <template slot-scope="scope">
+                                    <input class="drugsListInput" v-model="scope.row.drugTimes" type="text" @change="countAll()" />
+                                </template>
                             </el-table-column>
                             <el-table-column prop="drugDosage" label="用量" width="300">
+                                <template slot-scope="scope">
+                                    <input class="drugsListInput" v-model="scope.row.drugDosage" type="text" @change="countAll()" />
+                                </template>
                             </el-table-column>
                             <el-table-column prop="drugPrice" label="单价" width="120">
                             </el-table-column>
@@ -104,7 +110,7 @@
                     <div>
                         <div class="allPrice">
                             总金额：
-                            <!-- {{countAllPrice}} -->
+                            {{countAllPrice}}
                         </div>
                         <div class="drugsBtnClass">
                             <!-- <el-button type="primary" @click="dialogTableVisibleFun()">预览</el-button> -->
@@ -186,10 +192,11 @@ export default {
                     //     doctorAsk: "一定要按时按量吃药" //医生嘱托
                     // }
                 ],
-                countAllPrice: "",
-                searchData: ""
+                
             },
-            searchList: []
+            searchList: [],
+            countAllPrice: 0,
+                searchData: ""
         };
     },
     computed: {
@@ -205,9 +212,21 @@ export default {
             this.getDrugsByCondition(0);
         },
         sureYao(data) {
-            // this.searchData = data;
-            this.chufangData.drugDetails.push(data)
-            // this.getDrugsByCondition(1);
+            let _this=this
+            if(_this.chufangData.drugDetails.length>0){
+$.each(_this.chufangData.drugDetails,function(index,text){
+                if(data.id==text.id){
+                    text.drugQuantity+=1
+                }else{
+                    _this.chufangData.drugDetails.push(data)
+                }
+            })
+            }else{
+                 _this.chufangData.drugDetails.push(data)
+            }
+            
+            
+            this.countAll();
         },
         //获取处方信息
         async getDrugsMessage() {
@@ -292,8 +311,10 @@ export default {
         },
         //计算总价格
         countAll() {
+            this.countAllPrice=0
+            let _this=this
             $.each(this.chufangData.drugDetails, function(index, text) {
-                this.countAllPrice += text.drugPrice * text.drugQuantity;
+                _this.countAllPrice += text.drugPrice * text.drugQuantity;
             });
         },
         setMessage() {
@@ -320,7 +341,9 @@ export default {
                 if (row.id == text.id) {
                     _this.chufangData.drugDetails.splice(index, 1);
                 }
+                _this.countAll()
             });
+            
         }
     },
     props: {
@@ -335,7 +358,7 @@ export default {
         this.getDrugsMessage();
         // this.getDrugsByCondition();
         this.setMessage();
-        this.countAll();
+        
     },
     beforeDestroy() {}
 };

@@ -339,7 +339,7 @@ export default {
                     label: "发起医生"
                 },
                 {
-                    prop: "initiateTime",
+                    prop: "createTime",
                     label: "发起时间"
                 },
                 {
@@ -851,6 +851,13 @@ export default {
                         text.synergyUserNameLength =
                             text.synergyUserName.length;
                     }
+                    if (text.synergyStatus==0) {
+                        text.synergyStatus='未开始'
+                    }else if (text.synergyStatus==1) {
+                        text.synergyStatus='进行中'
+                    }else if (text.synergyStatus==2) {
+                        text.synergyStatus='结束'
+                    }
                 });
             } else {
                 //失败
@@ -1040,7 +1047,9 @@ export default {
 
         this.getList1(); //管理列表
 
-        this.otherDoctor(); //可协作医生  列表
+        // this.otherDoctor(); 
+        
+        //可协作医生  列表
         this.dialogCase(); //可协作医生  列表
         this.dialogPurpose(); //可协作医生  列表
     },

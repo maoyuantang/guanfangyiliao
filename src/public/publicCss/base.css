@@ -194,4 +194,66 @@ body{
 }
 
 
+
+/* 表格 */
+.public-list td {
+    padding: 8px 0;
+    font-family: PingFangSC-Regular;
+    font-size: var(--fontSize1);
+    color: #5e6875;
+    letter-spacing: 0;
+}
+
+.public-list th .cell {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.public-list th {
+    font-family: PingFangSC-Semibold;
+    font-size: var(--fontSize2);
+    color: #5e6875;
+    letter-spacing: 0;
+    border-right: none;
+}
+.public-list td {
+    border-right: none;
+}
+.public-list td .cell {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.public-list > div {
+    border: none;
+}
+.public-list .el-table .cell {
+    padding-left: 0;
+}
+
+.public-list
+    /deep/
+    .el-table__header-wrapper
+    .el-table__header
+    .has-gutter
+    tr
+    th
+    div {
+    text-align: center;
+    white-space: nowrap !important;
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.public-list /deep/ .el-table__body-wrapper tbody tr td .cell span {
+    text-align: center;
+    /* white-space: nowrap !important; */
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.el-table th > .cell,
+.el-table th div {
+    display: inline !important;
+}
 /* 随访 */

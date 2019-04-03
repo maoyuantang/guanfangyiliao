@@ -1086,7 +1086,7 @@ export default {
        
         this.getAdminTjList();
         this.getApplyTjList();
-        this.getHospitalment();
+        // this.getHospitalment();
 
         this.screenPublic(this.oTab2, toolConsultationType, "会诊类型");
         this.screenPublic(this.oTab3, toolConsultationStatus, "会诊状态");

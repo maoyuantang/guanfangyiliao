@@ -29,7 +29,7 @@
                     <el-table-column label="操作" width="300">
                         <template slot-scope="scope">
                             <el-button class="seeDanganClass" @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
-                            <el-button class="inviteUserClass" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
+                            <el-button class="inviteUserClass" v-show="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
                             <el-button class="seeHistoryMessage" v-show="scope.row.synergyStatus==2" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
                             <el-button class="goTohuizhen" v-show="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="toConsultation(scope.row)" type="text" size="small">进入协作</el-button>
                             <el-button class="overClass" v-show="scope.row.synergyStatus==1" @click="xiezOver(scope.row)" type="text" size="small">结束</el-button>
@@ -92,8 +92,8 @@
 
         <!-- 聊天 -->
         <div v-if="chatVisible">
-            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-                <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
+            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px" @close='closeChat()'>
+                <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox"></chat>
             </el-dialog>
         </div>
     </div>
@@ -367,7 +367,11 @@ export default {
             xiezuoId: "",
             invitationSelectList: [],
             docTime0: "",
-            docTime1: ""
+            docTime1: "",
+             chatTypeBox:{
+                startDoctorName:'',
+                startDoctorTYpe:'协作'
+            },
         };
     },
 
@@ -382,7 +386,7 @@ export default {
         //进入协作
         async toConsultation(row) {
             this.sessionId = row.sessionId;
-
+this.chatTypeBox.startDoctorName=row.applyUserName
             let _this = this;
             let query = {
                 token: this.userState.token,
@@ -398,6 +402,10 @@ export default {
                     message: res.data.errMsg
                 });
             }
+        },
+        //关闭协作会话
+        closeChat(){
+            this.DoctorList()
         },
         //协作
         async xiezOver(row) {
@@ -415,6 +423,7 @@ export default {
                         title: "成功",
                         message: "请求成功"
                     });
+                    _this.DoctorList()
                 } else {
                     //失败
                     this.$notify.error({
@@ -1015,6 +1024,7 @@ export default {
 
     async created() {
         this.DoctorList(); //医生协作列表
+        this.otherDoctor(); 
     },
     watch: {
         "$store.state.user.viewRoot.now.name": {
