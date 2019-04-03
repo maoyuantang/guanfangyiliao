@@ -58,7 +58,7 @@
                 </el-form-item>
 
                 <el-form-item class='invitationClassInputBtn'>
-                    <el-button class='btnClass' type="primary" @click="launchXiezuo()" :disabled="disabledXie">确认</el-button>
+                    <el-button class='btnClass' type="primary" @click="launchXiezuo()" >确认</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>

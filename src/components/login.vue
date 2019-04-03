@@ -309,6 +309,7 @@ export default {
                 this.setViewRoot(res.data.body); //计算用户权限
                 // websocket.initWebSocket(this.userState.token)
                 this.$refs.mychild.initWebSocket(this.userState.token);
+                window.reload()
             } else {
                 //失败
                 this.$notify.error({

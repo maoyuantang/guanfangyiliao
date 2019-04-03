@@ -104,6 +104,7 @@
                 <img src="../../assets/img/sendNew2.png" />
                 <div class="userMember" v-show="showVideoBtnVisable">
                     <h4>视频窗口最多拉取3个人</h4>
+                    {{checkList}}
                     <el-checkbox-group style='margin-bottom:18px' v-model="checkList">
                         <el-checkbox v-for="(text,index) in userMemberNum" :label="text.userId" :key="index">
                             <span class='videoUserHeadClass'>
@@ -1068,8 +1069,16 @@ this.updated()
             console.log(res);
             if (res.data && res.data.errCode === 0) {
                 console.log(res.data.body);
+                 $.each(res.data.body, function(index, text) {
+                    if (_this.chatUser == "") {
+                        _this.chatUser = text.userName;
+                    } else {
+                        _this.chatUser = _this.chatUser + "," + text.userName;
+                    }
+                });
                 _this.userMemberNum = res.data.body;
-                $.each(_this.userMemberNum,function(index,text){
+                $.each(res.data.body,function(index,text){
+                    console.log(text)
                     if(text.userId==_this.userSelfInfo.userId){
                         _this.userMemberNum.splice(index,1)
                     }
@@ -1078,13 +1087,7 @@ this.updated()
                 // alert(oLength)
                 // _this.userMemberNum.splice(oLength,1)
                 _this.sendToUserId = res.data.body[0].userId;
-                $.each(res.data.body, function(index, text) {
-                    if (_this.chatUser == "") {
-                        _this.chatUser = text.userName;
-                    } else {
-                        _this.chatUser = _this.chatUser + "," + text.userName;
-                    }
-                });
+               
             } else {
                 //失败
                 this.$notify.error({

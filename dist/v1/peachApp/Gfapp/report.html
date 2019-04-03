@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name='apple-itunes-app' content='app-id=477927812'>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="pragma" content="no-cache"  />
+    <meta http-equiv="content-type" content="no-cache, must-revalidate" />
+    <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT"/>
+    <title>体检报告</title>
+    <link rel="stylesheet" href="../css/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<style>
+  
+</style>
+<body style="background: #f9f9f9;">
+    <div class="header">
+        <div>
+            <a href="javascript:history.back(-1)"><img src="../images/back.png" alt="" class="backimg"></a>
+            <span>病历</span>
+        </div>
+    </div>
+    <div class="re_headers">
+        <h2 class="re_username patientName"></h2>
+        <p class="re_segs"><span class="sex"></span><span class="age"></span></p>
+        <p class="re_segs dateFinalExamed"></p>
+    </div>
+    <div class="weui-cells" style="margin-top:0;">
+        <a class="weui-cell weui-cell_access" id="patientCode" href="" style="background: #EAFBFC;">
+            <div class="weui-cell__bd">
+            <p>所有项</p>
+            </div>
+            <div class="weui-cell__ft">
+            </div>
+        </a>
+    </div>
+    <div class="re_contens">
+        <div class="re_content_list">
+            <div class="re_cont_h">
+                    异常
+            </div>
+            <div class="re_cont_t conclusionSummary">
+                    
+            </div>
+        </div>
+        <div class="re_content_list">
+                <div class="re_cont_h">
+                        结论
+                </div>
+                <div class="re_cont_t positiveSummary">
+                       
+                </div>
+            </div>
+            <div class="re_content_list">
+                    <div class="re_cont_h">
+                            建议
+                    </div>
+                    <div class="re_cont_t suggestion">
+                           
+                    </div>
+                </div>
+    </div>
+    
+</body>
+<script src="../js/jquery-2.1.4.js"></script>
+<script src="../js/jquery-weui.js"></script>
+<script>
+    var getParam = function(name){
+        var search = document.location.search;
+        var pattern = new RegExp("[?&]"+name+"\=([^&]+)", "g");
+        var matcher = pattern.exec(search);
+        var items = null;
+        if(null != matcher){
+            try{
+                items = decodeURIComponent(decodeURIComponent(matcher[1]));
+            }catch(e){
+                try{
+                    items = decodeURIComponent(matcher[1]);
+                }catch(e){
+                    items = matcher[1];
+                }
+            }
+        }
+        return items;
+    };
+    var idPatient=getParam('idPatient');
+    var token=getParam('token');
+    $.showLoading();
+    $.ajax({
+        url: "/health/api/v2/checkReport/getDetail",
+        type: "get",
+        dataType: "json",
+        // beforeSend:index,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("token", token);
+            xhr.setRequestHeader("Content-Type", 'application/json');
+        },
+        data:{
+            "pId":idPatient
+        },
+        success: function (data) {
+            $.hideLoading();
+            if(data.code=="OK"){
+                $("#patientCode").attr("href","reportlist.html?patientCode="+data.body.patientCode+'&pid='+idPatient+'&token='+token)
+                $(".patientName").text(data.body.patientName);
+                $(".sex").text(data.body.sex?"性别:女":"性别:男");
+                $(".age").text("年龄:"+data.body.age);
+                $(".conclusionSummary").text(data.body.conclusionSummary);
+                $(".positiveSummary").text(data.body.positiveSummary);
+                $(".suggestion").text(data.body.suggestion);
+                $(".dateFinalExamed").text("报告时间:"+data.body.dateFinalExamed);
+                
+            }
+        },
+        error: function (data) {
+
+        }
+    });
+</script>
+</html>

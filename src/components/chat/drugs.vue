@@ -1,7 +1,6 @@
 <template>
     <div>
         <div class="drugs_box">
-            {{searchList}}
             <div class="drugs_box_lf">
                 <div>
                     <div class="drugs_box_lf_headImg">
@@ -59,7 +58,7 @@
                     <div class='drugsSearchClass'>
                         <search @searchValue="searchChange" @inputChange="inputChange"></search>
                         <ul>
-                            <li @click="sureYao(text1.drugName)" v-for="(text1,index) in searchList" :key="index">{{text1.drugName}}</li>
+                            <li @click="sureYao(text1)" v-for="(text1,index) in searchList" :key="index">{{text1.drugName}}</li>
                         </ul>
                     </div>
 
@@ -67,7 +66,7 @@
                         <el-table :data="chufangData.drugDetails" border style="width: 100%">
                             <el-table-column prop="date" label="序号" width="150">
                                 <template slot-scope="scope">
-                                    {{scope}}
+                                    <!-- {{scope.row}} -->
                                 </template>
                             </el-table-column>
                             <el-table-column prop="drugName" label="药品名称" width="120">
@@ -188,9 +187,9 @@ export default {
                     // }
                 ],
                 countAllPrice: "",
-                searchData: "",
-                searchList: []
-            }
+                searchData: ""
+            },
+            searchList: []
         };
     },
     computed: {
@@ -206,8 +205,9 @@ export default {
             this.getDrugsByCondition(0);
         },
         sureYao(data) {
-            this.searchData = data;
-            this.getDrugsByCondition(1);
+            // this.searchData = data;
+            this.chufangData.drugDetails.push(data)
+            // this.getDrugsByCondition(1);
         },
         //获取处方信息
         async getDrugsMessage() {
@@ -245,16 +245,14 @@ export default {
             };
             const res = await drugsByCondition(query);
             if (res.data && res.data.errCode === 0) {
-                _this.chufangData.drugDetails = [];
-                _this.searchList = [];
-                if (num == 0) {
+                 _this.searchList = [];
                     _this.searchList = res.data.body;
-                } else if (num == 1) {
-                    _this.chufangData.drugDetails = res.data.body;
-                }
-
-                // console.log()
-                // this.chufangData.drugDetails = res.data.body;
+                // if (num == 0) {
+                    
+                // } else if (num == 1) {
+                //      _this.chufangData.drugDetails = [];
+                //     _this.chufangData.drugDetails = res.data.body;
+                // }
             } else {
                 //失败
                 this.$notify.error({
@@ -266,7 +264,7 @@ export default {
         // 搜索
         searchChange(data) {
             this.searchData = data;
-            this.getDrugsByCondition(1);
+            this.getDrugsByCondition(0);
         },
         //提交审核
         async submitAudit() {

@@ -41,7 +41,7 @@ export default {
 }
 .demonstration{
     display: inline-block;
-    width:37px;
+    width:43px;
     line-height: 34px;
 }
 /* 备注

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--<meta charset="UTF-8">-->
+    <!--<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">-->
+    <!--<meta charset="UTF-8">-->
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name='apple-itunes-app' content='app-id=477927812'>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="pragma" content="no-cache"  />
+    <meta http-equiv="content-type" content="no-cache, must-revalidate" />
+    <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT"/>
+    <link rel="stylesheet" href="css/weui.min.css">
+    <link rel="stylesheet" href="css/jquery-weui.css">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
+            width: 100px;
+            height: 100px;
+            background: red;
+        }
+
+        .blood-box>div {
+            position: relative;
+            padding:0 14px;
+            padding-top: 25px;
+            margin-bottom: 58px;
+            width: 100%;
+            height: auto;
+            box-sizing: border-box;
+        }
+
+        .blood-list {
+            margin: 0 auto;
+            margin-bottom: 45px;
+            height: 207px;
+        }
+        .blood-list>div,
+        .blood-list canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .blood-box>div>p {
+            font-size: 14px;
+            color: #8C8C8C;
+            letter-spacing: -0.27px;
+            text-align: center;
+        }
+        .bd{
+            position: absolute;
+            right:10px;
+            top:30px;
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        .bd>img{
+            width:100%;
+            height: 100%;
+        }
+        .nohave{
+            display: none;
+        }
+        .nohave, .nohave p {
+            text-align: center;
+            color: #f00;
+            font-size: 25px;
+        }
+        .nohave, .nohave p {
+            text-align: center;
+            color: #f00;
+            /* font-size: 25px; */
+        }
+        .mask{
+            display: none;
+            position: fixed;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /*background: rgba(0,0,0,0.5);*/
+            transition: all 110ms ease-out;
+        }
+        .mask>div{
+            position: absolute;
+            left: 50%;
+            top:50%;
+            transform: translate(-50%,-50%);
+            width:400px;
+            height: 160px;
+            background: white;
+            box-shadow: 1px 1px 50px rgba(0,0,0,.3);
+        }
+        .layui-layer-title {
+            padding: 0 80px 0 20px;
+            height: 62px;
+            line-height: 62px;
+            border-bottom: 1px solid #eee;
+            font-size: 30px;
+            color: #333;
+            overflow: hidden;
+            background-color: #F8F8F8;
+            border-radius: 2px 2px 0 0;
+        }
+        .layui-layer-setwin {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 0;
+            line-height: initial;
+        }
+        .layui-layer-btn {
+            text-align: center;
+            padding: 3px 15px 12px;
+            pointer-events: auto;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .layui-layer-btn a {
+            display: inline-block;
+            height: 28px;
+            line-height: 28px;
+            margin: 5px 5px 0;
+            padding: 0 25px;
+            border: 1px solid #dedede;
+            color: #333;
+            border-radius: 2px;
+            font-weight: 400;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .layui-layer-btn .layui-layer-btn0 {
+            border-color: #1E9FFF;
+            background-color: #1E9FFF;
+            color: #fff;
+        }
+        .quxiao{
+            background: #cccccc !important;
+            border: #cccccc !important;
+        }
+    </style>
+</head>
+
+<body>
+<div class="blood-box">
+    <div id="nohave" style="" class="nohave">
+        <img src="images/nohave.png" alt="">
+        <p>暂无数据</p>
+    </div>
+
+</div>
+<div class="mask">
+    <div class="maskbox">
+        <div class="layui-layer-title" style="cursor: move;">确认删除？</div>
+        <span class="layui-layer-setwin"><a class="layui-layer-ico layui-layer-close layui-layer-close1" href="javascript:;"></a></span>
+        <div class="layui-layer-btn layui-layer-btn-c"><a class="layui-layer-btn0 delete">确认</a> <a class="layui-layer-btn0 quxiao">取消</a></div>
+
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-2.1.4.js"></script>
+<script src="js/jquery-weui.js"></script>
+<script src="js/echarts.min.js"></script>
+<script>
+    var getParam = function(name){
+        var search = document.location.search;
+        var pattern = new RegExp("[?&]"+name+"\=([^&]+)", "g");
+        var matcher = pattern.exec(search);
+        var items = null;
+        if(null != matcher){
+            try{
+                items = decodeURIComponent(decodeURIComponent(matcher[1]));
+            }catch(e){
+                try{
+                    items = decodeURIComponent(matcher[1]);
+                }catch(e){
+                    items = matcher[1];
+                }
+            }
+        }
+        return items;
+    };
+    // var id=getParam('id');
+    var token=getParam('token');
+    console.log(token)
+    //第一个echart图
+    $.ajax({
+        type:"get",
+        url:"/m/v1/api/device/house/queryDevicesList?token="+token,
+        dataType:"json",
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("Content-Type", 'application/json;charset=UTF-8');
+            xhr.setRequestHeader("def", 'union');
+        },
+        headers:{
+            "Content-Type"  :"application/json",
+        },
+        data:{
+            "count":0,
+            "pageSize":20
+        },
+        success:function (data) {
+            if(data.errCode==0) {
+                if(data.body.length>0){
+
+
+                    for(var i=0;i<data.body.length;i++){
+
+                            if(data.body[i].deviceType=="TONOMETER" || data.body[i].deviceType=="GLUCOSE"){
+                                $("#nohave").hide();
+                                var oid="blood"+i;
+                                $(".blood-box").append('<div>\n' +
+                                    '<div id='+oid+' class="blood-list">\n' +
+                                    '</div>\n' +
+                                    '<p>仅可查看7天内数据，开通空间查看全部</p>\n' +
+                                    '<span class="bd" data-id='+data.body[i].id+'><img src="images/bd.png" /> </span>'+
+                                    '</div>');
+                                var olist=data.body[i].dataList;
+                                var oName=data.body[i].deviceName;
+                                getEchart(oid,olist,oName,data.body[i].deviceType)
+                            }
+
+
+
+
+
+                    }
+
+                }else{
+                    $("#nohave").show();
+                }
+
+            }else{
+                layer.msg(data.msg)
+            }
+
+        },
+        error:function (error) {
+            layer.msg('操作失败！');
+        }
+    });
+
+    function getEchart(oid,list,oname,otype){
+        console.log(list)
+        var xList1=[];
+        var xList2=[];
+        var xList3=[];
+        var series=[];
+        var xzList=[];
+        if(otype=="TONOMETER"){
+            series=[{
+                name: '收缩压',
+                type: 'line',
+                data: xList1
+            },
+                {
+                    name: '舒张压',
+                    type: 'line',
+                    data:xList2
+                },
+                {
+                    name: '脉搏',
+                    type: 'line',
+                    data:xList3
+                }
+            ]
+        }else if(otype=="GLUCOSE"){
+            series=[
+                {
+                    name: '血糖值',
+                    type: 'line',
+                    // stack: '总量',
+                    data:xList3
+                }
+            ]
+        }
+        for(var i=0;i<list.length;i++){
+            xList1.push(list[i].firstValue);
+            xList2.push(list[i].secondValue);
+            xList3.push(list[i].thirdValue);
+            // xzList.push(list[i].dataTime.substring(0,10).replace(/-/g,'/'));
+            xzList.push(list[i].dataTime.substring(0,10).replace(/-/g,'/') +"\n"+list[i].dataTime.substring(11,20));
+
+            // xzList.push(list[i].dataTime)
+        }
+        xzList.push('  ')
+        if(list.length>3){
+            oZoom=true
+        }else{
+            oZoom=false
+        }
+
+
+        // var osize=20/window.devicePixelRatio;
+        // var osize1=12/window.devicePixelRatio;
+        // var osize2=50/window.devicePixelRatio;
+        // var osize3=40/window.devicePixelRatio;
+        var myChart1 = echarts.init(document.getElementById(oid));
+        option = {
+            title: {
+                text: oname,
+                y:"",
+                textStyle:{
+                    fontSize:16
+                }
+
+            },
+            legend: {
+                data: ['收缩压', '舒张压','脉搏','血糖值'],
+                x:50,
+                y:40,
+                textStyle:{
+                    fontSize:10
+                }
+            },
+            grid: {
+                top:'45%',
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+
+            xAxis: {
+                type: 'category',
+                data:xzList,
+                boundaryGap: false,
+                axisLabel : {
+                    show:true,
+                    interval: 0,
+                    // rotate: 45,
+                    // margin: 8
+                },
+                textStyle:{
+                    fontSize:12
+                }
+            },
+            yAxis: {
+                type: 'value',
+                min: 0,
+                max: 200
+            },
+            series: series,
+            dataZoom: {
+                show: oZoom,
+                realtime: true,
+                y: 200,
+                height: 15,
+                startValue:0,
+                endValue:2,
+                textStyle:false,
+            }
+        };
+        myChart1.setOption(option);
+    }
+//
+
+
+        //解绑
+    $("body").on('click','.bd',function () {
+        var  oid=$(this).data('id');
+        $.confirm("确认解除绑定吗？", function() {
+            $.ajax({
+                type:"get",
+                url:"/m/v1/api/device/house/cancelBinding?id="+oid+'&token='+token,
+                dataType:"json",
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Content-Type", 'application/json;charset=UTF-8');
+                    xhr.setRequestHeader("def", 'union');
+                },
+                headers:{
+                    "Content-Type"  :"application/json",
+                },
+                success:function (data) {
+                    if(data.errCode==0) {
+
+
+                        window.location.reload()
+                    }else{
+                        console.log()
+                    }
+
+                },
+                error:function (error) {
+                    console.log('操作失败！');
+                }
+            });
+        }, function() {
+            //点击取消后的回调函数
+        });
+
+        // $(" .mask").show();
+
+        // $("body").on('click','.delete',function () {
+        //     $(" .mask").hide();
+
+        // })
+        // $("body").on('click','.quxiao',function () {
+        //     $(" .mask").hide();
+        // })
+
+
+
+    })
+</script>
+<!--<script type="text/javascript">-->
+    <!--! function(n) {-->
+        <!--var e = n.document,-->
+            <!--t = e.documentElement,-->
+            <!--i = 720,-->
+            <!--d = i / 10,-->
+            <!--o = "orientationchange" in n ? "orientationchange" : "resize",-->
+            <!--a = function() {-->
+                <!--var n = t.clientWidth || 320;-->
+                <!--n > 720 && (n = 720);-->
+                <!--t.style.fontSize = n / d + "px"-->
+            <!--};-->
+        <!--e.addEventListener && (n.addEventListener(o, a, !1), e.addEventListener("DOMContentLoaded", a, !1))-->
+    <!--}(window);-->
+<!--</script>-->
+</body>
+
+</html>

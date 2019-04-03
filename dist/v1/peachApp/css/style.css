@@ -1,0 +1,843 @@
+.weui-input {
+    border: 1px solid #e5e5e5;
+    width: 80%;
+    border-radius: 2px;
+}
+
+.planweui {
+    border: none;
+    width: 100%;
+}
+
+.weui-ze {
+    font-size: 12px;
+    color: #999;
+    line-height: 25px;
+}
+
+.submited {
+    background-color: #00A3FF;
+}
+
+.submited:focus {
+    background-color: #00A3FF !important;
+}
+
+/* 未访问的链接 */
+.submited:visited {
+    background-color: #00A3FF !important;
+}
+
+/* 已访问的链接 */
+.submited:hover {
+    background-color: #00A3FF !important;
+    ;
+}
+
+/* 当有鼠标悬停在链接上 */
+.submited:active {
+    background-color: #00A3FF !important;
+    ;
+}
+
+/* 被选择的链接 */
+.height {
+    width: 38px !important;
+    margin-right: 5px;
+}
+
+.testxm {
+    padding-right: 10px;
+}å
+
+.agreement {
+    padding: 10px;
+}
+
+.agreement p {
+    line-height: 30px;
+    text-indent: 30px;
+}
+
+.agreement h2 {
+    margin-bottom: 15px;
+}
+
+.weui-shur {
+    font-size: 12px;
+    padding-left: 25px;
+}
+
+.aninptw {
+    width: 50px !important;
+    padding: 2px 10px;
+    color: #000;
+}
+
+.aninptwww {
+    padding: 2px 10px;
+}
+
+.auther {
+    color: #646464;
+}
+
+.ageNum {
+    width: 50%;
+}
+
+body {
+    background-color: #fafafa;
+    -webkit-tap-highlight-color: transparent
+}
+
+.weui-img-wi {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+
+.weui-back-fff {
+    background-color: #fff;
+    padding: 10px 0;
+    margin: 10px 0;
+}
+
+.weui-sw-bac:checked {
+    border-color: #00A3FF;
+    background-color: #00A3FF;
+}
+
+.weui-arti-t {
+    width: 50px;
+}
+
+.weui-arti-t img {
+    width: 30px;
+}
+
+.weui-art-position {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.dataAll {
+    display: inline-block;
+}
+
+.weuitext {
+    font-size: 15px;
+    line-height: 25px;
+    text-indent: 20px;
+}
+
+.weio-fiex {
+    width: 100%;
+    height: 55px;
+}
+
+.weui-ar-btn {
+    line-height: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #000;
+    border: 1px solid #ccc;
+    background: #f0f0f0;
+}
+
+.weui-col-30 {
+    width: 30%;
+    float: left;
+    text-align: center;
+}
+
+.weui-col-70 {
+    width: 70%;
+    float: left;
+    padding-right: 10px;
+}
+
+.weui-de-one {
+    background-color: #fff;
+    padding: 10px;
+}
+
+.weiu-one-text {
+    text-align: center;
+    color: #646464;
+    padding-top: 20px;
+}
+
+.weiu-one-text-two {
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 15px;
+}
+
+.weui-tex-des {
+    color: #646464;
+}
+
+.weui-detail-icon {
+    width: auto;
+    height: 20px;
+    color: #999;
+    display: inline-block;
+    text-align: center;
+    border-radius: 5px;
+    margin-right: 10px;
+    line-height: 20px;
+    padding: 0px 7px;
+}
+
+.assweuione {
+    width: 10%;
+    float: left;
+    font-size: 14px;
+    line-height: 25px;
+}
+
+.assweuitwo {
+    width: 90%;
+    float: left;
+}
+
+.desc {
+    font-size: 14px;
+}
+
+.an-weu-text {
+    margin-left: 35px;
+    margin-right: 20px;
+}
+
+.weui-plugin {
+    margin: 10px 0px;
+    padding-left: 5px;
+}
+
+.weui-tion-lef {
+    padding-left: 40px;
+}
+
+.weui-t-desk {
+    font-size: 15px;
+    text-align: center;
+}
+
+.weui-cells_radio .weui-check:checked+.weui-icon-checked:before {
+    color: #00A3FF;
+}
+
+.weui-in-check {
+    border-radius: 50%;
+    width: 13px;
+    height: 13px;
+    border: 1px solid #ccc;
+}
+
+[class*=" weui-icon-"]:before,
+[class^=weui-icon-]:before {
+    /*content: "";*/
+    /*background-image: url("../images/Radio.png");*/
+    display: inline-block;
+    margin-left: 0em;
+    margin-right: 0em;
+    position: relative;
+    top: -3px;
+    left: -1px;
+}
+
+.weuibtncss {
+    width: 70%;
+}
+
+.weiu-two-text {
+    color: #646464;
+    padding-top: 10px;
+}
+
+.weui-one-plan {
+    position: relative;
+}
+
+.weui-one-plan:after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 10px solid #fff;
+}
+
+.weui-data-right {
+    text-align: right;
+    color: #FF0000;
+    position: relative;
+}
+
+.planList {
+    width: 100%;
+}
+
+.weuifucha,
+.addAll,
+.weui-wenzje {
+    cursor: pointer;
+    background-color: #fff;
+
+}
+
+.weui-san {
+    position: relative;
+}
+
+.weui-picker-modal-visible {
+    z-index: 999999;
+}
+
+/*修正jquery-weui对话框在IOS上的弹出起始位置的问题*/
+.weui-dialog,
+.weui-toast {
+    -webkit-transition-duration: .2s;
+    transition-duration: .2s;
+    opacity: 0;
+    -webkit-transform: scale(1) translate(-50%, -50%);
+    transform: scale(1) translate(-50%, -50%);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    visibility: hidden;
+    margin: 0;
+    top: 45%;
+    z-index: 2000;
+}
+
+.weui-san:after {
+    content: "";
+    position: absolute;
+    bottom: 0px;
+    right: -7px;
+    width: 0;
+    height: 0;
+    border-bottom: 10px solid #00A3FF;
+    border-left: 10px solid transparent;
+}
+
+.weui-tone-desk {
+    font-size: 15px;
+}
+
+.weui-plam-month {
+    display: inline-block;
+    width: 35px;
+    position: relative;
+    color: #FF0000;
+    font-weight: 800;
+}
+
+.weui-floow-first {
+    color: #281012;
+}
+
+.weui-plam-month:after {
+    content: "";
+    position: absolute;
+    bottom: 0px;
+    right: 3px;
+    width: 0;
+    height: 0;
+    border-bottom: 10px solid #00A3FF;
+    border-left: 10px solid transparent;
+}
+
+.weui-margin-0 {
+    margin-top: 0;
+}
+
+.weui-loadmore {
+    margin: 0.1em auto;
+    margin-top: 2em;
+}
+
+.weui-ba-E3E3E3 {
+    background: #E3E3E3;
+}
+
+.weui-list-text {
+    font-size: 13px;
+    color: #646464;
+}
+
+.weui-icon-backcole {
+    color: #BABABA;
+    vertical-align: bottom;
+}
+
+.weui-back-f60 {
+    color: #00A3FF;
+}
+
+.weui-icon-backcole:before {
+    background: #ccc;
+    border-radius: 50%;
+    color: #fff;
+}
+
+.weui-wenzje {
+    text-align: center;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    padding: 0 10px;
+}
+
+.weui-lpak-te {
+    border-bottom: 1px dashed #d9d9d9;
+    padding-bottom: 10px;
+
+}
+
+.weui-list-add {
+    width: 15px;
+    padding-right: 8px;
+    vertical-align: text-top;
+}
+
+.weui-lis-bttom {
+    float: right;
+    padding-bottom: 10px;
+    padding-right: 20px;
+    font-size: 15px;
+    color: #646464;
+}
+
+.weui-lis-bttom span {
+    padding-right: 10px;
+}
+
+.weui-col-marg {
+    margin-bottom: 10px;
+}
+
+.weui-text-algin-right {
+    text-align: right;
+}
+
+.weui-cellft:after {
+    content: " ";
+    display: inline-block;
+    height: 6px;
+    width: 6px;
+    border-width: 2px 2px 0 0;
+    border-color: #c8c8cd;
+    border-style: solid;
+    -webkit-transform: matrix(.71, .71, -.71, .71, 0, 0);
+    transform: matrix(.71, .71, -.71, .71, 0, 0);
+    position: relative;
+    top: -2px;
+    position: absolute;
+    top: 50%;
+    margin-top: -4px;
+    right: 5px;
+}
+
+.weui-add-plan {
+    color: #00A3FF;
+    padding: 0 5px;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.weui-tip-bacg {
+    background-color: #fafafa !important;
+}
+
+.weui-tab-height {
+    height: auto;
+}
+
+.weui-btn-margin {
+    margin: 20px 40px;
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.weui-icon-font-size:before {
+    font-size: 18px !important;
+}
+
+.weui-padd-right {
+    padding-right: 0 !important;
+}
+
+.weui-cell:before {
+    border-top: none;
+}
+
+.weui-li-list-ser {
+    padding: 10px;
+    font-size: 13px;
+}
+
+.weui-user-list {
+    border-left: 1px solid #00A3FF;
+    padding-left: 20px;
+    padding-top: 10px;
+    line-height: 25px;
+}
+
+.weui-user-list:nth-child(1) {
+    padding-top: 0;
+}
+
+.weui-suer-icon {
+    position: relative;
+    padding-top: 5px;
+}
+
+.weui-suer-icon:before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #00A3FF;
+    border-radius: 50%;
+    position: absolute;
+    top: 17px;
+    left: -25px;
+}
+
+.wuei-user-h3 {
+    position: relative;
+    padding-top: 4px;
+}
+
+.wuei-user-h3:before {
+    content: "";
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url("../images/Shape.png");
+    background-size: contain;
+    position: absolute;
+    top: 7px;
+    left: -30px;
+}
+
+.weui-pad-10 {
+    padding: 5px 10px;
+}
+
+.weui-list-top {
+    position: relative;
+    top: -7px;
+    border-bottom: 1px dashed #979797;
+}
+
+.weui-li-list-ser>.weui-user-list :not(:first-child) {
+    padding-top: 10px;
+}
+
+.weio-plan-weui {
+    color: #f60;
+
+}
+
+.weui-back-646464 {
+    color: #646464;
+    padding-left: 10px;
+    font-weight: 400;
+}
+
+.weui-kaif {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.weui-btns {
+    margin: 15px 30px;
+}
+
+.titlelist {
+    font-size: 18px;
+    font-weight: 800 !important;
+    text-indent: 45px !important;
+}
+
+section .titleimg {
+    text-align: center;
+}
+
+.weui-time {
+    padding-top: 10px;
+    font-size: 13px;
+    color: #999;
+}
+
+.weui-media-boxee {
+    color: #999;
+    font-size: 15px;
+    line-height: 20px;
+    word-wrap: break-word
+}
+
+.btnfn {
+    color: #fff;
+    border: 1px solid #1aad19;
+    background: #1aad19;
+}
+
+.nodetails {
+    width: 100%;
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    color: #999;
+}
+
+.weui-loadmore_line .weui-loadmore__tips {
+    background-color: #fafafa;
+}
+
+.chackTextarea-area {
+    background-color: #fafafa;
+    width: 91%;
+    padding: 2px 5px;
+}
+
+.textT {
+    height: 24px !important;
+}
+.me_headerImg{width: 80px; border-radius: 50%;}
+.me_header{text-align: center;}
+.me_sexagep{    background: #E5A42F;
+    display: inline-block;
+    font-family: PingFangSC-Regular;
+    font-size: 13px;
+    color: #533545;
+    letter-spacing: -0.54px;
+    border-radius: 10px;
+    padding: 0 11px;
+}
+.me_sex{
+    padding-right: 10px;
+}
+.me_sexage{
+    position: relative;
+    top: -20px;
+}
+.medical{
+    padding-top: 30px;
+    background: #fff;
+}
+.me_zhuytime{
+    font-family: PingFangSC-Regular;
+font-size: 12px;
+color: #646464;
+letter-spacing: -0.54px;
+}
+.me_flexs{
+    font-family: PingFangSC-Regular;
+    font-size: 13px;
+    color: #646464;
+    letter-spacing: -0.37px;
+    margin-right: 15px;
+}
+.me_iconColo{
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #EEB237;
+    margin-right: 3px;
+}
+.me_flexs:nth-of-type(2) .me_iconColo{
+    background: #418EEC;
+}
+.me_flexs:nth-of-type(3) .me_iconColo{
+    background: #21A97F;
+}
+.me_content{
+    background: #fff;
+    margin-top: 20px;
+}
+.meImg{
+    background: #fff;
+    padding: 10px;
+}
+.meI_namges{
+    font-family: PingFangSC-Regular;
+font-size: 15px;
+color: #030303;
+letter-spacing: -0.48px;
+text-align: left;
+}
+.meI_time{
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #646464;
+    letter-spacing: -0.31px;
+    text-align: left;
+    float: right;
+    padding-top: 4px;
+}
+.mei_tjian{
+    font-size: 13px;
+}
+.meI_namge{
+}
+.mei_yun{
+    color: #FF7700;
+}
+.meImgslist{
+    border-bottom: 1px solid #C9C9C9;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+.meImgslist:nth-last-of-type(1){
+    border-bottom:none;
+}
+.weui_latbel_w{
+    width:70px;
+}
+.mei_im_bottom{
+    text-align:center;
+    padding-top: 4px;
+}
+.mei_bottom{
+    position: fixed;
+    bottom: -127px;
+    background: #fff;
+    text-align: center;
+    width: 100%;
+    left: 0;
+}
+.weui_cel_pa{
+    margin-top:8px;
+}
+.weui_cel_pa:before{
+    border-top:none;
+}
+.mei_bottomAgg{
+    bottom:0;
+    -webkit-transition: all .5s ease-in;
+    -moz-transition: all .5s ease-in;
+    transition: all .5s ease-in;
+}
+.mei_bntying{
+    background: #D8D8D8;
+}
+.imgRote{
+    -webkit-transition: all .5s ease-in;
+    -moz-transition: all .5s ease-in;
+    transition: all .5s ease-in;
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+}
+.re_headers{
+    background-image: linear-gradient(-180deg, #00A3FF 0%, #54BFFB 100%);
+    color: #fff;
+    padding:10px;
+    line-height: 30px;
+}
+.re_username{
+    padding-bottom: 10px;
+}
+.re_segs{
+    font-size:14px;
+}
+.re_segs span:nth-child(1){
+    padding-right:10px;
+}
+.re_cont_t{
+    font-family: PingFangSC-Light;
+font-size: 12px;
+color: #646464;
+letter-spacing: -0.24px;
+padding: 10px;
+background: #fff;
+}
+.re_cont_h{
+    background: #EAFBFC;
+    padding-left: 10px;
+    
+}
+.re_content_list{
+    margin-top:15px;
+}
+.img_content{
+    padding:10px;
+    background: #fff;
+}
+.meImgslisted{
+    background: #fff;
+}
+.img_texs{
+    display: flex;
+}
+.img_texs span{
+    flex:1;
+}
+.img_texs span:nth-child(2){
+    text-align: center;
+}
+.img_texs span:nth-child(3){
+    text-align: right;
+}
+.yxcontent{
+    padding: 10px;
+    background: #fff;
+    margin-top: 15px;
+}
+.yxcontent p{
+    font-size:13px;
+    padding-top: 10px;
+}
+.zhenreslou{
+    padding-top:10px;
+}
+.yxcontent:nth-child(3){
+    margin-top: 2px;
+}
+.zibgnt{
+    background-image: url("../images/p-1.png");
+}
+.yiocnd{
+    text-align:right;
+    padding-right: 10px;
+    margin-top:10px;
+}
+.header{
+    background: #00A3FF;
+    color: #fff;
+    text-align: center;
+    height: 40px;
+    line-height:40px;
+    font-size: 17px;
+}
+.backimg{
+    float: left;
+    width: 15px;
+    padding-left: 15px;
+    padding-top: 8px;
+}
+.pickke{
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    opacity: 0;
+    opacity: 0;
+}

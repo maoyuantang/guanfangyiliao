@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <!-- <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose">
             <div>
                 <button @click="receiveVideo()">接收</button>
@@ -7,7 +8,7 @@
             </div>
         </el-dialog> -->
         <div v-if='receiveVideoVisable'>
-            <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose" :showClose="VideoshowClose">
+            <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose" :showClose="VideoshowClose" append-to-body>
                 <div>
                     <h4>{{startVideoName}}邀请你视频</h4>
                     <div>
@@ -391,7 +392,7 @@ export default {
                 this.$store.commit("user/CLEARUSERINFO");
                 this.$store.commit("user/CLAERUSERSELFINFO");
                 sessionStorage.clear();
-                this.$store.state.socket.socketObj.close();
+                this.$store.state.socket.socketObj.close(1);
                 this.$router.replace({
                     path: "/login"
                 });
@@ -524,12 +525,12 @@ export default {
                             console.log(reciveUserList);
                             $.each(reciveUserList, function(index, text) {
                                 if (_this.userSelfInfo.userId == text) {
-                                    _this.receiveVideoVisable = true;
-                                    console.log(_this.receiveVideoVisable)
+                                   _this.receiveVideoVisable = true;
+                                    console.log(_this.receiveVideoVisable);
                                     console.log("是本人收到了邀请视频");
                                     _this.startVideoName =
                                         odata.info.fromNickName;
-console.log(odata.info.body)
+                                    console.log(odata.info.body);
                                     _this.createVideoRoomData = {
                                         conferenceId: odata.info.body.split(
                                             "&"
@@ -538,8 +539,8 @@ console.log(odata.info.body)
                                             "&"
                                         )[1]
                                     };
-                                }else{
-                                   console.log("不是本人收到了邀请视频"); 
+                                } else {
+                                    console.log("不是本人收到了邀请视频");
                                 }
                             });
 
@@ -1213,7 +1214,8 @@ console.log(odata.info.body)
         // },
         //关闭
         webSocketonclose(e) {
-            console.log(this.userState.token)
+            console.log(e)
+            console.log(this.userState.token);
             if (this.userState.userState) {
                 console.log("connection closed (" + e.code + ")");
                 this.reconnect();

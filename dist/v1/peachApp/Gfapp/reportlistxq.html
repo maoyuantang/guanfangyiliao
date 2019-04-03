@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name='apple-itunes-app' content='app-id=477927812'>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="pragma" content="no-cache"  />
+    <meta http-equiv="content-type" content="no-cache, must-revalidate" />
+    <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT"/>
+    <title>体检报告</title>
+    <link rel="stylesheet" href="../css/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<style>
+  
+</style>
+<body style="background: #f9f9f9;">
+        <div class="header">
+                <div>
+                    <a href="javascript:history.back(-1)"><img src="../images/back.png" alt="" class="backimg"></a>
+                    <span>病历</span>
+                </div>
+            </div>
+        <div class="re_contens">
+            <div class="re_content_list">
+            </div>
+            <div class="re_cont_h">图片项目</div>
+            <div class="imglist">
+
+            </div>    
+        </div>
+</body>
+<script src="../js/jquery-2.1.4.js"></script>
+<script src="../js/jquery-weui.js"></script>
+<script src="../js/swiper.js"></script>
+<script>
+    var getParam = function(name){
+        var search = document.location.search;
+        var pattern = new RegExp("[?&]"+name+"\=([^&]+)", "g");
+        var matcher = pattern.exec(search);
+        var items = null;
+        if(null != matcher){
+            try{
+                items = decodeURIComponent(decodeURIComponent(matcher[1]));
+            }catch(e){
+                try{
+                    items = decodeURIComponent(matcher[1]);
+                }catch(e){
+                    items = matcher[1];
+                }
+            }
+        }
+        return items;
+    };
+    var pcode=getParam('pcode');
+    var pid=getParam('pid');
+    var token=getParam('token');
+    var list=getParam('list');
+    function click_scroll(list) { 
+        var scroll_offset = $("#"+list).offset(); //得到pos这个div层的offset，包含两个值，top和left 
+        $("body,html").animate({ 
+            scrollTop:scroll_offset.top //让body的scrollTop等于pos的top，就实现了滚动 
+            },0); 
+    } 
+    var listp=[];//创建数组，存储图片链接
+    $.showLoading();
+    $.ajax({
+            url: "/health/api/v2/checkReport/getDetailAll",
+            type: "get",
+            dataType: "json",
+            // beforeSend:index,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("token", token);
+                xhr.setRequestHeader("Content-Type", 'application/json');
+            },
+            data:{
+                "pId":pid,
+                "pCode":pcode 
+            },
+            success: function (data) {
+                $.hideLoading();
+                if(data.code=="OK"){
+                    var html="";
+                    var imglist="";
+                    for(var i=0;i<data.body.pList.length;i++){
+                        html+='<a href="#list'+i+'" id="list'+i+'"><div class="re_content_list" id="list'+i+'" style="color:#000;">'
+                                +'<div class="re_cont_h">'
+                                +data.body.pList[i].titleName
+                                +'</div>'
+                                +'<div class="re_cont_t">'
+                                +data.body.pList[i].desc
+                                +'</div>'
+                                +'</div></a>'
+                    }
+                    $(".re_content_list").html(html);
+                    for(var i=0;i<data.body.picList.length;i++){
+                        listp.push("/health/api/v2/checkReport/downloadPhyPic?uId="+data.body.picList[i]+"");//push到数组中
+                        imglist+='<img   class="imgborw" data-index="'+i+'"  src="/health/api/v2/checkReport/downloadPhyPic?uId='+data.body.picList[i]+'" width="80px">'
+                    }
+                    console.log(listp);
+                    $(".imglist").html(imglist);
+                    click_scroll(list)
+                    
+                   
+                }
+            },
+            error: function (data) {
+
+            }
+        });
+        function showBigImg(list,index) {
+            imgList = list.split(',');
+            $.photoBrowser({items: imgList}).open(index);
+        }
+        $("body").on("click",".imgborw",function(){
+                var href=listp.join(",");//将数组转换成字符串，我在这纠结了好半天各种问题
+                var index=$(this).attr("data-index");//打开对应大图
+                showBigImg(href,index)
+            })
+</script>
+</html>

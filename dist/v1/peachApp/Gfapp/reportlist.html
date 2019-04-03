@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name='apple-itunes-app' content='app-id=477927812'>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="pragma" content="no-cache"  />
+    <meta http-equiv="content-type" content="no-cache, must-revalidate" />
+    <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT"/>
+    <title>体检报告</title>
+    <link rel="stylesheet" href="../css/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<style>
+  
+</style>
+<body style="background: #f9f9f9;">
+        <div class="header">
+                <div>
+                    <a href="javascript:history.back(-1)"><img src="../images/back.png" alt="" class="backimg"></a>
+                    <span>病历</span>
+                </div>
+            </div>
+    <div class="weui-cells pList" style="margin-top:0;">
+        
+    </div>
+</body>
+<script src="../js/jquery-2.1.4.js"></script>
+<script src="../js/jquery-weui.js"></script>
+<script>
+    var getParam = function(name){
+        var search = document.location.search;
+        var pattern = new RegExp("[?&]"+name+"\=([^&]+)", "g");
+        var matcher = pattern.exec(search);
+        var items = null;
+        if(null != matcher){
+            try{
+                items = decodeURIComponent(decodeURIComponent(matcher[1]));
+            }catch(e){
+                try{
+                    items = decodeURIComponent(matcher[1]);
+                }catch(e){
+                    items = matcher[1];
+                }
+            }
+        }
+        return items;
+    };
+    var patientCode=getParam('patientCode');
+    var pid=getParam('pid');
+    var token=getParam('token');
+    $.showLoading();
+    $.ajax({
+            url: "/health/api/v2/checkReport/getDetailAll",
+            type: "get",
+            dataType: "json",
+            // beforeSend:index,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("token", token);
+                xhr.setRequestHeader("Content-Type", 'application/json');
+            },
+            data:{
+                "pId":pid,
+                "pCode":patientCode  
+            },
+            success: function (data) {
+                $.hideLoading();
+                if(data.code=="OK"){
+                    var html="";
+                    for(var i=0;i<data.body.pList.length;i++){
+                        html+='<a class="weui-cell weui-cell_access" href="reportlistxq.html?pid='+pid+'&pcode='+patientCode+'&token='+token+'&list=list'+i+'">'
+                                +'<div class="weui-cell__bd">'
+                                +'<p>'+data.body.pList[i].titleName+'</p>'
+                                +'</div>'
+                                +'<div class="weui-cell__ft">'
+                                +'</div>'
+                                +'</a>';
+                    }
+                    $(".pList").html(html);
+                }
+            },
+            error: function (data) {
+
+            }
+        });
+    
+</script>
+</html>
