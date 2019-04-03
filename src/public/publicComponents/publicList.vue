@@ -159,10 +159,11 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.el-table th > .cell,
-.el-table th div {
+.el-table th>.cell, .el-table th div{
     display: inline !important;
+    white-space: nowrap !important;
 }
+
 
 /* 表格公共组件
  <tableList :tableData="adminTableData" :columns="columns" :tableBtn="tableBtn" :cellColor="cellColor" @cellClickData="cellClickData"> </tableList>
