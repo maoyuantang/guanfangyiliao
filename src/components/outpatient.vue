@@ -302,6 +302,8 @@
         color: #FE4D97;
         text-align: center;
         line-height: 30px;
+            outline: none;
+    border: none;
     }
 
     .tanKuang3 {

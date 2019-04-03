@@ -6,8 +6,11 @@
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
                         <div id="remoteVideos"></div>
-                        <div class="videoChatBtn" v-show="questVisable" @click="videoChatBtn()">
-                            问诊工具
+                        <div class="videoChatBtn"  @click="videoChatBtn()">
+                            <button :disabled='questVisable'>
+                                问诊工具
+                            </button>
+
                         </div>
                     </div>
                     <div class="col-xs-12 media-box us-media">
@@ -16,8 +19,8 @@
 
                         </div>
                         <!-- 本地视频 -->
-                        <div class="localVideos1"  >
-                            <video class="localVideo1" id="video" v-show="closeVideoBtnVieable"  autoplay></video>
+                        <div class="localVideos1">
+                            <video class="localVideo1" id="video" v-show="closeVideoBtnVieable" autoplay></video>
                         </div>
                         <!-- <video v-else class="localVideo1" id="video"  autoplay></video> -->
 
@@ -125,11 +128,11 @@ import {
     doctorGetList,
     doctorClickList,
     createVideoRoom,
-    fetchChatSession,
     doctorQuit,
     doctorHangupNext,
     storageUsers,
-    closeVideoRoom
+    closeVideoRoom,
+    bindSession
 } from "../api/apiAll.js";
 export default {
     name: "video",
@@ -164,14 +167,14 @@ export default {
             sessionId: "",
             oUserId: "", //当前就诊人id
             guaVisable: false,
-            questVisable: false,
+            questVisable: true,
             closePatientNumVisable: false,
             videoChatVisable: false,
             doctorVis: 1,
             videoIng: 0,
             loadingUs: true,
             loadingOther: true,
-            streamObject:{}
+            streamObject: {}
         };
     },
     methods: {
@@ -225,7 +228,8 @@ export default {
                     sequence: this.$store.state.socket.messageTicket.sequence, //消息发送序号。
                     chatType: 2, //医生端标识
                     clientTime: timestamp,
-                    serverTime: this.$store.state.socket.messageTicket.serverTime
+                    serverTime: this.$store.state.socket.messageTicket
+                        .serverTime
                 }
             };
             console.log(Iessage);
@@ -313,7 +317,7 @@ export default {
         },
         //调用本地摄像头
         getLocal() {
-           let _this=this
+            let _this = this;
             var aVideo = document.getElementById("video");
             this.$nextTick(() => {
                 var aCanvas = document.getElementById("canvas");
@@ -339,12 +343,11 @@ export default {
                 video.onerror = function() {
                     stream.stop();
                 };
-                _this.streamObject=stream
+                _this.streamObject = stream;
                 // stream.getTracks()[0].stop();
                 stream.onended = noStream;
                 video.onloadedmetadata = function() {
                     // alert("摄像头成功打开！");
-                    
                 };
             }
 
@@ -423,25 +426,26 @@ export default {
         },
         //创建会话
         async createChat(text, num) {
-console.log(text)
-             this.userMessage1= {
-          clinicId: this.userMessage.clinicId,
-          departmentId: this.userMessage.departmentId,
-          userId: text.userId,
-          orgCode: this.userSelfInfo.orgCode,
-          clinicOrderId: text.orderId,//订单id
-        };
+            console.log(text);
+            this.userMessage1 = {
+                clinicId: this.userMessage.clinicId,
+                departmentId: this.userMessage.departmentId,
+                userId: text.userId,
+                orgCode: this.userSelfInfo.orgCode,
+                clinicOrderId: text.orderId //订单id
+            };
             this.oUserId = text.userId;
             let _this = this;
             let query = {
                 token: this.userState.token
             };
             let options = {
-                to: text.userId
+                orderId: text.orderId
             };
-            const res = await fetchChatSession(query, options);
+            const res = await bindSession(query, options);
             if (res.data && res.data.errCode === 0) {
                 _this.sessionId = res.data.body;
+                _this.questVisable=false
                 //正在排队
                 if (num == 1) {
                     _this.createVideo(text.userId);
@@ -1552,8 +1556,8 @@ console.log(text)
         }
     },
     created() {
-        console.log(this.userMessage)
-        
+        console.log(this.userMessage);
+
         if (this.doctorVis == 0) {
             this.screenClickVisable = true;
         } else {
@@ -1852,7 +1856,7 @@ console.log(text)
         oClinicId: String,
         sessionId1: String,
         doctorVis: Number,
-        userMessage:Object
+        userMessage: Object
     },
     model: {
         prop: [
@@ -2105,9 +2109,9 @@ video {
     top: 0;
     width: 100%;
 }
-.localVideos1>div>div:nth-child(2),
-.localVideos1>div>div:nth-child(3){
-    display: none !important
+.localVideos1 > div > div:nth-child(2),
+.localVideos1 > div > div:nth-child(3) {
+    display: none !important;
 }
 .videoChatBox {
     position: absolute;
@@ -2152,11 +2156,11 @@ video {
 .videoClassBox .el-dialog__body > div > div > div {
     height: 100%;
 }
-.participant{
+.participant {
     height: 30%;
-    margin-bottom: 2%
+    margin-bottom: 2%;
 }
-.stream-box{
+.stream-box {
     height: 100%;
 }
 /* 

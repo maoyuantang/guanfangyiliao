@@ -137,7 +137,7 @@
                                     </el-radio-group>
                                     <div class="itemChoiceItemBox" @click="itemChoiceItemFun(index,text.questionType)">
                                         <!-- 添加一项 -->
-                                            <img src="../../assets/img/addFollowJa1.png" />
+                                        <img src="../../assets/img/addFollowJa1.png" />
                                     </div>
                                 </div>
                                 <div v-show="text.questionType=='CHECKBOX'">
@@ -155,7 +155,7 @@
                                     </el-checkbox-group>
                                     <div class="itemChoiceItemBox" @click="itemChoiceItemFun(index,text.questionType)">
                                         <!-- 添加一项 -->
-                                         <img src="../../assets/img/addFollowJa1.png" />
+                                        <img src="../../assets/img/addFollowJa1.png" />
                                     </div>
                                 </div>
                                 <div v-show="text.questionType=='TEXT'">
@@ -407,7 +407,7 @@
         </div>
         <div v-if="chatVisible">
             <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-                <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
+                <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox"></chat>
             </el-dialog>
         </div>
         <div v-if="groupVisible">
@@ -507,6 +507,10 @@ export default {
     },
     data() {
         return {
+             chatTypeBox: {
+                startDoctorName: "",
+                startDoctorTYpe: "随访"
+            },
             quillDiabled: false,
             urlDiabled: false,
             doctorArticleVisiable: false,
@@ -1204,7 +1208,7 @@ export default {
             adminTotal6: 0,
             followMobanType: "",
             articleType: "",
-            questChoiceIndex:0
+            questChoiceIndex: 0
         };
     },
     computed: {
@@ -1338,8 +1342,7 @@ export default {
                 });
             }
         },
-        onEditorReady(editor) {
-        },
+        onEditorReady(editor) {},
         quillChange(data) {
             if (data) {
                 this.urlDiabled = true;
@@ -2881,7 +2884,7 @@ export default {
 
         // 单选or多选or问答
         choiceItemFun(index2) {
-            this.questChoiceIndex=index2
+            this.questChoiceIndex = index2;
             if (index2 == 0) {
                 this.addQuestData.bankModels.push({
                     title: "",

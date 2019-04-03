@@ -7,7 +7,7 @@
                 </h4>
                 <div>
                     {{text.noticeData.body}}
-                    <button v-if="text.noticeData.notice=='COOPERATION'" type="button" class="noticeBtnClass" @click="inviteReplyClick()">
+                    <button v-if="text.noticeData.notice=='COOPERATION'" type="button" class="noticeBtnClass" @click="inviteReplyClick(text.noticeData)">
                         <span>同意</span>
                     </button>
                     <button v-if="text.noticeData.notice=='COOPERATION_I'" type="button" @click="toConsultation(text.noticeData)" class="noticeBtnClass">
