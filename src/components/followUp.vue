@@ -2176,6 +2176,7 @@ export default {
 }
 .remindTime {
     position: relative;
+    margin-bottom: 30px
 }
 .remindTime::before {
     content: "";
@@ -2183,7 +2184,7 @@ export default {
 
     position: absolute;
     left: -32px;
-    top: 30px;
+    top: 5px;
     width: 20px;
     height: 16px;
     background: url(../assets/img/Shape-Copy.png);
@@ -2700,7 +2701,8 @@ box-shadow: inset 0 0 1px 0 rgba(0,0,0,0.50);
     width: 8px;
     height: 8px;
     background:#98A9BC;
-    top: 3px
+    top: 3px;
+    left: 2;
 }
  .pieChartClass>div{
         width:333%

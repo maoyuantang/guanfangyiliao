@@ -97,6 +97,7 @@
 </script>
 
 <style>
+
     .outpatient {}
 
     .outPatientDoctor {}
