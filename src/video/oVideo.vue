@@ -585,6 +585,9 @@ export default {
                 });
             }
         },
+        closeTheVideo1(){
+
+        },
         //关闭视频退出诊室
         async closeVideo() {
             this.streamObject.getTracks()[0].stop();
@@ -1578,7 +1581,7 @@ export default {
             this.publicVideoVisable = true;
             this.localVideoVisable = true;
             this.listVisable = false;
-            this.questVisable = true;
+            this.questVisable = false;
             this.sessionId = this.sessionId1;
             this.firstSet();
 
@@ -1803,13 +1806,16 @@ export default {
                             childMessageType = "VIDEO";
                             if (messageBody == "refuse") {
                                 //对方拒绝了视频
+                                this.closeTheVideo()
                             } else if (messageBody == "complete") {
                                 //对方挂断了视频
+                                this.closeTheVideo()
                             } else if (messageBody == "accept") {
                                 console.log(messageBody);
                                 this.$store.commit("socket/IFVIDEOIMG", 1);
                             } else if (messageBody == "videoing") {
                                 //对方正在通话中
+                                this.closeTheVideo()
                             } else if (
                                 messageBody.indexOf("sendroom") > -1 ||
                                 messageBody.indexOf("MicroCinicSendRoom") > -1

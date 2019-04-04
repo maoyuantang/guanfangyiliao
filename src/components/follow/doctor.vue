@@ -69,7 +69,7 @@
                                             <span class="questDelete"><img src="../../assets/img/addFollowJa1.png" /> </span> 添加一项</span>
                                         <span @click="deleteFollowTimeList(index)">
                                             <span class="questDelete"> <img src="../../assets/img/addFollowDelete.png" /> </span>
-                                            此项</span>
+                                            删除此项</span>
                                     </div>
                                 </div>
 
@@ -82,11 +82,11 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <div>
+                        <div class='addFollowWarnClass'>
                             <el-checkbox v-model="addFollowData.remindMe">提醒我</el-checkbox>
                             <el-checkbox v-model="addFollowData.remindHe">提醒他</el-checkbox>
                         </div>
-                        <el-button @click="addFollowTable()" type="primary">保存</el-button>
+                        <el-button class='addFollowTableClass' @click="addFollowTable()" type="primary">保存</el-button>
                     </div>
 
                 </el-form>
@@ -381,7 +381,7 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
-                            <el-pagination background layout="prev, pager, next" :total="adminTotal5" :current-change="changeCurrent5">
+                            <el-pagination style='text-align:center' background layout="prev, pager, next" :total="adminTotal5" :current-change="changeCurrent5">
                             </el-pagination>
                             <div class="groupClass">
                                 <div>移动到</div>
@@ -3290,5 +3290,23 @@ export default {
     height: 27px;
     /* background: #E7E7E7; */
     border: 1px solid #dedede;
+}
+.addFollowWarnClass{
+    background: white;
+    padding-top: 2px;
+    padding-left: 20px;
+    margin-bottom: 22px
+}
+.addFollowTableClass{
+    background: #6CA4FC !important;
+    color:white !important;
+    border-radius: 0;
+    
+}
+.el-switch.is-checked .el-switch__core::after{
+    margin-left: -12px !important;
+}
+.el-switch.is-checked .el-switch__core{
+    background: #4D7CFE !important
 }
 </style>

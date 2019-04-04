@@ -909,18 +909,20 @@ export default {
                 _this.sessionId = res.data.body.bindSession;
                 if (res.data.body.bindSession && res.data.body.bindDoctor) {
                     text1.disabledStatus = false;
+                     _this.chatVisible = true;
                 } else if (
                     !res.data.body.bindSession &&
                     !res.data.body.bindDoctor
                 ) {
                     text1.disabledStatus = false;
+                     _this.chatVisible = true;
                 } else if (
                     res.data.body.bindSession ||
                     res.data.body.bindDoctor
                 ) {
                     text1.disabledStatus = true;
                 }
-                _this.chatVisible = true;
+               
             } else {
                 this.$notify.error({
                     title: "警告",
