@@ -103,9 +103,9 @@
       <el-table :data="docTableData" style="width: 100%" :show-header="false">
         <el-table-column label=" " width="70">
           <template slot-scope="scope">
-            <img src="../../../assets/img/publicHeadImg.png" />
-            <!-- <img v-if="headId == null" src="../assets/img/a-6.png" alt="医生头像">
-            <img v-if="headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+headId' alt="医生头像"> -->
+            <!-- <img src="../../../assets/img/a-6.png" style="width:42px;" /> -->
+            <img v-if="docTableData.applyDoctorHead == null" src="../../../assets/img/a-6.png" alt="医生头像" style="width:42px;">
+            <img v-if="docTableData.applyDoctorHead" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+docTableData.applyDoctorHead' alt="医生头像" style="width:42px;">
           </template>
         </el-table-column>
         <el-table-column prop="patientName" label="病人" :show-overflow-tooltip="true"></el-table-column>
