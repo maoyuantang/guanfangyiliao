@@ -62,21 +62,8 @@ export default {
             userSocketInfo: state => state.socket,
             userState: state => state.user.userInfo
         }),
-        // ...mapState({
-        //     viewRoot: state => state.user.viewRoot
-        // }),
-        // ...mapState({
-        //     userInfo: state => state.user.userInfo
-        // }),
-        // ...mapState({
-        //     userSocketInfo: state => state.socket
-        // }),
         imgSrc() {
-            return this.userSelfInfo.headId
-                ? `${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${
-                      this.userSelfInfo.headId
-                  }`
-                : "../../../static/assets/img/a-6.png";
+            return this.userSelfInfo.headId? `${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${this.userSelfInfo.headId}`: "../../../static/assets/img/a-6.png";
         }
     },
     data() {
@@ -169,7 +156,8 @@ export default {
                     name: "manager",
                     type: "1"
                 });
-                this.showTopNav = this.userInfo.hasAuth.filter(item => item.type === "2").length > 0;
+                this.showTopNav = false;
+                // this.showTopNav = this.userInfo.hasAuth.filter(item => item.type === "2").length > 0;
             }else{//医生身份
                 if (this.userInfo.hasAuth.filter(item => item.type === "1").length <= 0) {
                     this.showTopNav = false;

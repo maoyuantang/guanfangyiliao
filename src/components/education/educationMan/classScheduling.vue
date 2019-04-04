@@ -352,7 +352,7 @@
                 this.alertData.id = resData.data.id;
                 this.alertData.data.name = resData.data.name;
                 this.alertData.data.waySelect = resData.data.type;
-                this.alertData.data.lecturerSelect = resData.data.teacherName;
+                this.alertData.data.lecturerSelect = resData.data.teacherId;
                 this.alertData.data.count = {
                     max:resData.data.maxNum,
                     min:resData.data.minNum
