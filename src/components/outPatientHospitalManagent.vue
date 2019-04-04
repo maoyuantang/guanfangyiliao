@@ -375,70 +375,27 @@
 					show: false,//是否显示
 					type: '1',//1是表示新增家医，2是表示新增在线诊室业务
 					businessTypeList: {//新增在线诊室业务类型 
-						default: {
-							// label: '在线诊室',
-							// value: '1'
-						},
-						list: [
-							// {
-							// 	label: '在线诊室',
-							// 	value: '1'
-							// }
-						]
+						default: {},
+						list: []
 					},
-					businessName: {//业务名称
-						// label: 'kkkk'
-					},
-					businessPrice: {//业务定价
-						// label: '6666'
-					},
+					businessName: {},//业务名称
+					businessPrice: {},//业务定价
 					departmentList: {//科室列表 
-						default: {
-							// label: '',
-							// value: '1'
-						},
-						list: [
-							// {
-							// 	label: '科室列表1',
-							// 	value: '1'
-							// },
-							// {
-							// 	label: '科室列表2',
-							// 	value: '2'
-							// }
-						]
+						default: {},
+						list: []
 					},
 					doctorList: {//医生列表 
-						default: [
-							// '1'
-						],
-						list: [
-							// {
-							// 	label: '医生1',
-							// 	value: '1'
-							// },
-							// {
-							// 	label: '医生2',
-							// 	value: '2'
-							// },
-							// {
-							// 	label: '医生3',
-							// 	value: '3'
-							// }
-						]
+						default: [],
+						list: []
 					},
 					businessDescription: '',//业务描述
 					servicePhone: '',//服务电话
-					agreement: {
+					agreement: {//协议
 						default: {
-							// label: '协议1',
-							// value: '1'
+							label: "",
+							value: ""
 						},
-
-						list: [
-							// { label: '协议1', value: '1' },
-							// { label: '协议2', value: '2' },
-						],
+						list: [],
 						showContent: ''
 					},
 				},
@@ -1295,7 +1252,7 @@
 				this.addData.departmentList.list.length = 0
 				this.addData.doctorList.default.length = 0
 				this.addData.doctorList.list.length = 0
-				this.addData.agreement.default = {}
+				this.addData.agreement.default = { label: "", value: "" }
 				this.addData.agreement.list.length = 0
 				this.addData.agreement.showContent = ''
 				this.addData.servicePhone = ''
@@ -1381,7 +1338,7 @@
 				const res = await protocols(query);
 				if (res.data && res.data.errCode === 0) {
 					console.log('新增弹框渲染+协议+成功')
-					// console.log(res)
+					console.log(res)
 					$.each(res.data.body, function (index, text) {
 						_this.addData.agreement.list.push({
 							label: text.protocolName,
@@ -1416,8 +1373,8 @@
 					this.clinicProtocolName = res.data.body.protocolName
 					//渲染协议到弹框内
 					// this.addData.agreement.defaultItem = data.index;//此处传的是索引 ，不能直接传接收到的数据
-					this.addData.agreement.list.label = res.data.body.protocolName
-					this.addData.agreement.list.value = res.data.body.protocolId
+					this.addData.agreement.default.label = res.data.body.protocolName
+					this.addData.agreement.default.value = res.data.body.protocolId
 					this.addData.agreement.showContent = res.data.body.protocolContent
 				} else {
 					//失败
@@ -1427,6 +1384,7 @@
 						message: res.data.errMsg
 					});
 				}
+				console.log(this.addData.agreement)
 			},
 
 
@@ -1466,11 +1424,8 @@
 					this.addData.departmentList.default = departmentLista;//科室
 					$.each(lists.doctors, function (index, text) {
 						_this.addData.doctorList.default.push(text.doctorId)//关联医生	
-						// _this.addData.doctorList.list.push({ label: text.doctorName, value: JSON.stringify(text.doctorId) })
 					})
 					this.addData.agreement.default = { label: lists.protocolName, value: lists.protocolId }//协议id
-					// this.addData.agreement.list.push({ label: lists.protocolName, value: JSON.stringify(lists.protocolId) })
-
 					console.log(this.addData)
 					// this.addData = Object.assign({},this.addData);
 					//选择科室
@@ -1513,6 +1468,7 @@
 						console.log(text.doctorId)
 					})
 					this.addData.agreement.default = { label: lists.protocolName, value: lists.protocolId }//协议id
+					console.log(this.addData)
 				} else {
 					//失败
 					console.log('编辑表格渲染+失败')
@@ -1662,10 +1618,9 @@
 						orgCode: this.userInfo.hospitalCode,//String true 远程门诊医院id 
 						clinicDoctors: data.doctorList.default,//List true 远程门诊医生 
 						clinicDesc: data.businessDescription,//String true 远程门诊描述 
-
-						clinicProtocolId: this.clinicProtocolId,//String false 远程门诊协议id（选择协议时必传，非选择的协议可不传） 
-						clinicProtocolName: this.clinicProtocolName,//String true 远程门诊协议名 
-						clinicProtocolContent: this.addData.agreement.showContent,//String true 远程门诊协议内容 
+						clinicProtocolId: data.agreement.default.value,//String false 远程门诊协议id（选择协议时必传，非选择的协议可不传） 
+						clinicProtocolName: data.agreement.default.label,//String true 远程门诊协议名 
+						clinicProtocolContent: data.agreement.showContent,//String true 远程门诊协议内容 
 						clinicPhone: data.servicePhone,//String true 远程门诊电话 
 						status: this.state//boolean false 远程门诊状态（禁用操作时值必传） 
 					};
@@ -1675,6 +1630,7 @@
 						console.log('7.1新增业务+成功')
 						this.getList1()
 						this.addData.show = false
+						this.addData.agreement.default = { label: "", value: "" }
 					} else {
 						console.log('7.1新增业务+失败')
 						//失败
@@ -1685,6 +1641,27 @@
 					}
 				}
 				else if (this.sureVisiable == 2) {
+
+					console.log(this.addData.agreement)
+					let a = 0;
+					for (let index = 0; index < this.addData.agreement.list.length; index++) {
+						//协议第二步才有内容，所以在只改动协议内容时，做不了匹配判断，除非第一步就把showcontent返回来，才可以判断
+						// if (this.addData.agreement.list[index].label == data.agreement.default.label & this.addData.agreement.showContent == data.agreement.showContent) {
+						if (this.addData.agreement.list[index].label == data.agreement.default.label & this.addData.agreement.showContent == data.agreement.showContent) {
+							// alert(1)
+							data.agreement.default.value = this.addData.agreement.list[index].value
+							a = 1
+							break;
+						} else {
+							// alert(0)
+						}
+					}
+					if (a == 0) {
+						data.agreement.default.value = ""
+					}
+
+
+
 					let query = {
 						token: this.userInfo.token
 					};
@@ -1696,11 +1673,11 @@
 						clinicDepartmentId: data.departmentList.default.value,//待请求的  String true 远程门诊科室id 
 						clinicDoctors: data.doctorList.default,//List true 远程门诊医生 
 						clinicDesc: data.businessDescription,//String true 远程门诊描述 
-						clinicProtocolContent: this.addData.agreement.showContent,//String true 远程门诊协议内容 
+						clinicProtocolContent: data.agreement.showContent,//String true 远程门诊协议内容 
 						clinicPhone: data.servicePhone,//String true 远程门诊电话 
 						orgCode: this.userInfo.hospitalCode,//医院代码
-						clinicProtocolId: this.addData.agreement.default.value,//String false 远程门诊协议id（选择协议时必传，非选择的协议可不传） 
-						clinicProtocolName: this.addData.agreement.default.label,//String true 远程门诊协议名 
+						clinicProtocolId: data.agreement.default.value,//String false 远程门诊协议id（选择协议时必传，非选择的协议可不传） 
+						clinicProtocolName: data.agreement.default.label,//String true 远程门诊协议名 
 						status: this.state//boolean false 远程门诊状态（禁用操作时值必传） 
 					};
 					const res = await updateClinic(query, options);
@@ -1708,6 +1685,7 @@
 						console.log('7.2编辑业务+成功')
 						this.getList1()
 						this.addData.show = false
+						this.addData.agreement.default = { label: "", value: "" }
 					} else {
 						console.log('7.2编辑业务+失败')
 						//失败
@@ -1797,8 +1775,6 @@
 		/* min-height: 76vh; */
 		margin-right: 0.36rem;
 		margin-top: 0.42rem;
-
-
 	}
 
 	.online-clinic {}
