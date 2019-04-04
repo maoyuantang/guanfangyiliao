@@ -304,7 +304,7 @@
               v-for="(item,index) in outerCourt.department.list"
               :key="index"
               size="mini"
-              :label="item.label"
+              :label="item.text"
               :value="item.value">
             </el-option>
           </el-select>
@@ -781,12 +781,30 @@ export default {
         // console.log(res.data.depts.map(
         //   item => item.deptId
         // )[0])
-        const mid = res.data.systemBusList.filter(item=>item.checkbox);
-        this.ourStafAlert.data.docBus.select = mid.map(item=>{
+        console.log(res.data.systemBusList)
+        const resultList = [];
+        const getValue = data =>{
+          for(const i of data){
+            if(i.checkbox){
+              resultList.push(i)
+            }
+            if(i.biz.length>0){
+              getValue(i.biz);
+            }
+          }
+        };
+        getValue(res.data.systemBusList);
+        this.ourStafAlert.data.docBus.select = resultList.map(item=>{
           item.id = item.subCode;
           item.label = item.subName;
           return item;
         });
+        // const mid = res.data.systemBusList.filter(item=>item.checkbox);
+        // this.ourStafAlert.data.docBus.select = mid.map(item=>{
+        //   item.id = item.subCode;
+        //   item.label = item.subName;
+        //   return item;
+        // });
         // this.ourStafAlert.data.docBus.select = res.data.systemBusList.map(
         //   item => {
         //     item.id = item.subCode;
@@ -1045,7 +1063,8 @@ export default {
         }
       ];
       
-      console.log(postData)
+      // console.log(postData[1]);
+      // return;
       const res = await updateUser(...postData);
       console.log(res);
       if (res.data.errCode === 0) {
@@ -1059,7 +1078,7 @@ export default {
       } else {
         this.$notify({
           title: "失败",
-          message: "修改失败",
+          message: res.data.errMsg,
           type: "error"
         });
       }
@@ -1097,17 +1116,27 @@ export default {
       const res = await createUser(postQuery, postData);
       console.log(res);
       if (res.data.errCode === 0) {
-        this.$message({
-          type: "info",
-          message: `添加成功`
-        });
+        	this.$notify({
+						title: '成功',
+						message: '添加成功',
+						type: 'success'
+					});
+        // this.$message({
+        //   type: "info",
+        //   message: `添加成功`
+        // });
         this.initOurStafAlertData();
         this.getUserList();
       } else {
-        this.$message({
-          type: "info",
-          message: `添加失败`
-        });
+        this.$notify({
+						title: '添加失败',
+						message: res.data.errMsg,
+						type: 'error'
+					});
+        // this.$message({
+        //   type: "info",
+        //   message: `添加失败`
+        // });
       }
     },
 

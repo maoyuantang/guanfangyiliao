@@ -100,7 +100,7 @@ export default {
   font-size: 14px;
   font-family: PingFangSC-Regular;
   color: #0067ff;
-  min-width: .7rem;
+  min-width: .9rem;
 }
 .self-tag .warning{
     color:red;/*!important*/

@@ -1049,6 +1049,8 @@ export const queryStorageUsers = query => {//1.5.根据房间号获取用户列�
         }
     })
 }
+
+
 export const closeVideoRoom = query => {//1.6.删除视频会议房间   注意：除了需要传入query 还需要parse
     const sign = postQueryHandle(query);
     return axios({
@@ -1104,6 +1106,18 @@ export const fetchHospitalRel = query => {//8.11.获取医院上下级是否已�
         }
     })
 }
+export const sendBtnVisable = query => {//8.11.获取医院上下级是否已选中列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.sendBtnVisable,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
 export const modelInsert = (query, data) => {//10.3.1 创建满意度模板
     const sign = postQueryHandle(Object.assign({}, data, query));
     return axios({

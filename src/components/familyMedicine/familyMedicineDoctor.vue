@@ -40,7 +40,7 @@
                         <th>{{item.orderTime || 'null'}}</th>
                         <th>{{item.userName || 'null'}}</th>
                         <th>{{item.userPhone || 'null'}}</th>
-                        <th>{{item.doctorName || 'null'}}</th>
+                        <th>{{item.doctorName || ''}}</th>
                         <th>{{item.status || 'null'}}</th>
                         <th><el-button type="danger" plain size="mini" @click="changeStatus(item,index)">服务变更</el-button></th>
                         <th class="family-medicine-doctor-body-spe">

@@ -1,9 +1,15 @@
 <template>
     <div class="chat">
         <div :title="chatUser" class="otherNumClass">
-            {{chatUser}}
+            <div v-if="doctorVis==1">
+                {{chatUser}}
+            </div>
+            <div v-else>
+                {{chatTypeBox.startDoctorName}}申请的{{chatTypeBox.startDoctorTYpe}}
+            </div>
+
         </div>
-        <div class="chatMessage"> 
+        <div class="chatMessage">
             <ul class="chatRecord" id="scrolldIV">
                 <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
@@ -102,9 +108,8 @@
             </span>
             <span title="发送视频" class="sendVideo" @click="showVideoBtn()">
                 <img src="../../assets/img/sendNew2.png" />
-                <div class="userMember" v-show="showVideoBtnVisable">
+                <!-- <div class="userMember" v-show="showVideoBtnVisable">
                     <h4>视频窗口最多拉取3个人</h4>
-                    {{checkList}}
                     <el-checkbox-group style='margin-bottom:18px' v-model="checkList">
                         <el-checkbox v-for="(text,index) in userMemberNum" :label="text.userId" :key="index">
                             <span class='videoUserHeadClass'>
@@ -115,7 +120,7 @@
                         </el-checkbox>
                     </el-checkbox-group>
                     <el-button class="setVideoBtn" @click="setVideo(1)" type="primary">确认</el-button>
-                </div>
+                </div> -->
             </span>
             <span v-show="oDoctorVis" @click="addFollow()" title="发送随访">
                 <img src="../../assets/img/sendNew4.png" />
@@ -423,7 +428,8 @@ export default {
                 'this.src="' +
                 require("../../assets/img/publicHeadImg.png") +
                 '"',
-            ifSendMessageNum: 0
+            ifSendMessageNum: 0,
+            sendMessageBoxType: ""
         };
     },
     computed: {
@@ -434,11 +440,19 @@ export default {
         })
     },
     created() {
+        if (this.chatTypeBox.startDoctorTYpe) {
+            if (this.chatTypeBox.startDoctorTYpe == "协作") {
+                this.sendMessageBoxType = "cooperation";
+            } else if (this.chatTypeBox.startDoctorTYpe == "会诊") {
+                this.sendMessageBoxType = "consultation";
+            }
+        }
+
         this.getDoctorVis();
         this.getHisRecord();
-        this.getMemberMess();
+        // this.getMemberMess();
         this.alreadyRead();
-this.updated()
+        this.updated();
         this.ourl =
             "/m/v1/api/hdfs/fs/upload?token=" +
             this.userState.token +
@@ -450,12 +464,12 @@ this.updated()
         this.oMsgId = this.$store.state.socket.messageTicket.oMsgId;
     },
     methods: {
-        updated(){
-             this.$nextTick(function(){
-      var div = document.getElementById('scrolldIV');
-      console.log(div)
-      div.scrollTop = div.scrollHeight;
-    })
+        updated() {
+            this.$nextTick(function() {
+                var div = document.getElementById("scrolldIV");
+                console.log(div);
+                div.scrollTop = div.scrollHeight;
+            });
         },
         //发送
         sendMessageChat(childMessageType, messageBody, childMessageType1) {
@@ -489,7 +503,8 @@ this.updated()
                     sequence: this.messageTicket.sequence, //消息发送序号。
                     chatType: 2, //医生端标识
                     clientTime: timestamp,
-                    serverTime: this.messageTicket.serverTime
+                    serverTime: this.messageTicket.serverTime,
+                    location: this.sendMessageBoxType
                 }
             };
             console.log(Iessage);
@@ -577,6 +592,7 @@ this.updated()
                 });
             } else {
                 this.messageList.push({
+                    fromNickName: fromNickName,
                     from: ouserId,
                     content: oMessage,
                     serverTime: oMessageTime,
@@ -664,19 +680,20 @@ this.updated()
         },
         //创建视频
         setVideo(num) {
-            if (num == 1) {
-                if (this.checkList.length > 3) {
-                    this.$notify.error({
-                        title: "警告",
-                        message: "最多只能邀请3个人"
-                    });
-                    return;
-                } else {
-                    this.setVideo2(num);
-                }
-            } else {
-                this.setVideo2(num);
-            }
+            // if (num == 1) {
+            //     if (this.checkList.length > 3) {
+            //         this.$notify.error({
+            //             title: "警告",
+            //             message: "最多只能邀请3个人"
+            //         });
+            //         return;
+            //     } else {
+            //         this.setVideo2(num);
+            //     }
+            // } else {
+            //     this.setVideo2(num);
+            // }
+            this.setVideo2(num);
         },
         async setVideo2(num) {
             let _this = this;
@@ -694,62 +711,59 @@ this.updated()
                     conferenceNumber: res.data.body.conferenceNumber
                 };
                 let childMessageType = 6;
-                if (num == 1) {
-                    //群聊
-                    let body =
-                        "sendroom&" +
-                        res.data.body.conferenceNumber +
-                        "&" +
-                        res.data.body.conferenceId +
-                        "$";
-                    let oLength = this.checkList.length - 1;
-                    $.each(this.checkList, function(index, text) {
-                        if (index == oLength) {
-                            body += text;
-                        } else {
-                            body += text + "&";
-                        }
-                    });
-                    _this.sendVideoMessage(
-                        childMessageType,
-                        body,
-                        res.data.body.conferenceNumber,
-                        "",
-                        "VIDEO"
-                    );
-                    // $.each(this.checkList, function(index, text) {
-                    //     let body =
-                    //         "sendroom&" +
-                    //         res.data.body.conferenceNumber +
-                    //         "&" +
-                    //         res.data.body.conferenceId +
-                    //         "&" +
-                    //         text;
-                    //     _this.sendVideoMessage(
-                    //         childMessageType,
-                    //         body,
-                    //         res.data.body.conferenceNumber,
-                    //         "",
-                    //         "VIDEO"
-                    //     );
-                    // });
-                } else if (num == 0) {
-                    //单聊
-                    let body =
-                        "sendroom&" +
-                        res.data.body.conferenceNumber +
-                        "&" +
-                        res.data.body.conferenceId +
-                        "&" +
-                        _this.userMemberNum[0].userId;
-                    _this.sendVideoMessage(
-                        childMessageType,
-                        body,
-                        res.data.body.conferenceNumber,
-                        "",
-                        "VIDEO"
-                    );
-                }
+                // if (num == 1) {
+                //     //群聊
+                //     let body =
+                //         "sendroom&" +
+                //         res.data.body.conferenceNumber +
+                //         "&" +
+                //         res.data.body.conferenceId +
+                //         "$";
+                //     let oLength = this.checkList.length - 1;
+                //     $.each(this.checkList, function(index, text) {
+                //         if (index == oLength) {
+                //             body += text;
+                //         } else {
+                //             body += text + "&";
+                //         }
+                //     });
+                //     _this.sendVideoMessage(
+                //         childMessageType,
+                //         body,
+                //         res.data.body.conferenceNumber,
+                //         "",
+                //         "VIDEO"
+                //     );
+                // } else if (num == 0) {
+                //     //单聊
+                //     let body =
+                //         "sendroom&" +
+                //         res.data.body.conferenceNumber +
+                //         "&" +
+                //         res.data.body.conferenceId +
+                //         "&" +
+                //         _this.userMemberNum[0].userId;
+                //     _this.sendVideoMessage(
+                //         childMessageType,
+                //         body,
+                //         res.data.body.conferenceNumber,
+                //         "",
+                //         "VIDEO"
+                //     );
+                // }
+                let body =
+                    "sendroom&" +
+                    res.data.body.conferenceNumber +
+                    "&" +
+                    res.data.body.conferenceId +
+                    "&";
+                _this.sendVideoMessage(
+                    childMessageType,
+                    body,
+                    res.data.body.conferenceNumber,
+                    "",
+                    "VIDEO"
+                );
                 this.videoVisible = true;
             } else {
                 //失败
@@ -925,8 +939,8 @@ this.updated()
         },
         //获取家庭成员
         async getFamily() {
-            this.puBlicFileData.nameList=[]
-            this.puBlicManData.nameList=[]
+            this.puBlicFileData.nameList = [];
+            this.puBlicManData.nameList = [];
             let _this = this;
             let query = {
                 token: this.userState.token,
@@ -1054,48 +1068,44 @@ this.updated()
             }
         },
         //拉取会话好友列表
-        async getMemberMess() {
-            let _this = this;
-            console.log(this.sessionId);
-            let query = {
-                token: this.userState.token
-            };
-            const options = {
-                sessionId: this.sessionId,
-                pageIndex: 1,
-                pageNums: 50
-            };
-            const res = await fetchSessionMembers(query, options);
-            console.log(res);
-            if (res.data && res.data.errCode === 0) {
-                console.log(res.data.body);
-                 $.each(res.data.body, function(index, text) {
-                    if (_this.chatUser == "") {
-                        _this.chatUser = text.userName;
-                    } else {
-                        _this.chatUser = _this.chatUser + "," + text.userName;
-                    }
-                });
-                _this.userMemberNum = res.data.body;
-                $.each(res.data.body,function(index,text){
-                    console.log(text)
-                    if(text.userId==_this.userSelfInfo.userId){
-                        _this.userMemberNum.splice(index,1)
-                    }
-                })
-                // let oLength=_this.userMemberNum.indexOf(_this.userSelfInfo.userId); 
-                // alert(oLength)
-                // _this.userMemberNum.splice(oLength,1)
-                _this.sendToUserId = res.data.body[0].userId;
-               
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
-        },
+        // async getMemberMess() {
+        //     let _this = this;
+        //     console.log(this.sessionId);
+        //     let query = {
+        //         token: this.userState.token
+        //     };
+        //     const options = {
+        //         sessionId: this.sessionId,
+        //         pageIndex: 1,
+        //         pageNums: 50
+        //     };
+        //     const res = await fetchSessionMembers(query, options);
+        //     console.log(res);
+        //     if (res.data && res.data.errCode === 0) {
+        //         console.log(res.data.body);
+        //         $.each(res.data.body, function(index, text) {
+        //             if (_this.chatUser == "") {
+        //                 _this.chatUser = text.userName;
+        //             } else {
+        //                 _this.chatUser = _this.chatUser + "," + text.userName;
+        //             }
+        //         });
+        //         _this.userMemberNum = res.data.body;
+        //         $.each(res.data.body, function(index, text) {
+        //             console.log(text);
+        //             if (text.userId == _this.userSelfInfo.userId) {
+        //                 _this.userMemberNum.splice(index, 1);
+        //             }
+        //         });
+        //         _this.sendToUserId = res.data.body[0].userId;
+        //     } else {
+        //         //失败
+        //         this.$notify.error({
+        //             title: "警告",
+        //             message: res.data.errMsg
+        //         });
+        //     }
+        // },
         //获取历史记录
         async getHisRecord(oMsgId) {
             console.log("历史消息");
@@ -1553,10 +1563,17 @@ this.updated()
         sessionId: String, //会话Id
         doctorVis: Number,
         userMessage: Object,
-        chatType1: String
+        chatType1: String,
+        chatTypeBox: Object
     },
     model: {
-        prop: ["sessionId", "doctorVis", "userMessage", "chatType1"],
+        prop: [
+            "sessionId",
+            "doctorVis",
+            "userMessage",
+            "chatType1",
+            "chatTypeBox"
+        ],
         event: "reBack"
     }
 };

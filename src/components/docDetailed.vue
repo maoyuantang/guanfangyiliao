@@ -1,6 +1,6 @@
 <template>
     <div class="doc-detailed">
-        {{topTag.list[topTag.index]}}
+        <!-- {{topTag.list[topTag.index]}} -->
         <div class="doc-detailed-alert">
           <div class="doc-detailed-alert-content">
                 <div class="doc-detailed-tag">
@@ -144,6 +144,7 @@ export default {
      * 将前一个页面的code当做这个页面的code
      */
     beforeRouteEnter(to,from,next){
+        console.log('enter')
         let getSession = sessionStorage.getItem('page');
         try{
             getSession = JSON.parse(getSession)

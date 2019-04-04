@@ -123,7 +123,7 @@
                     <el-table-column label="操作" width="300">
                         <template slot-scope="scope">
                             <el-button class="seeDanganClass" @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
-                            <el-button class="inviteUserClass" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
+                            <el-button class="inviteUserClass" v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
                             <el-button class="seeHistoryMessage" v-show="scope.row.status=='OVER'" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
                             <el-button class="goTohuizhen" v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="toConsultation(scope.row)" type="text" size="small">进入会诊</el-button>
                             <el-button class="overClass" v-show="scope.row.status=='UNDERWAY'" @click="overclick(scope.row,'OFF')" type="text" size="small">结束</el-button>
@@ -138,8 +138,8 @@
 
         </div>
         <div v-if="chatVisible">
-            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-                <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
+            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px" @close="closeChat()">
+                <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox"></chat>
             </el-dialog>
         </div>
 
@@ -199,6 +199,10 @@ export default {
     },
     data() {
         return {
+            chatTypeBox: {
+                startDoctorName: "",
+                startDoctorTYpe: "会诊"
+            }, //发起医生
             docTotal: 0,
             adminTotal: 0,
             // storyMessage: [],
@@ -503,6 +507,10 @@ export default {
         })
     },
     methods: {
+        //关闭协作会话
+        closeChat() {
+            this.getDocList();
+        },
         // 管理端事件
         getOTab1(data) {
             this.applicationDeptId = data.index.value;
@@ -752,6 +760,9 @@ export default {
         //进入会诊
         async toConsultation(oObject) {
             this.sessionId = oObject.sessionId;
+            this.chatTypeBox.startDoctorName = oObject.doctor;
+
+            this.startDoctor = oObject.doctor;
             // if (oObject.state == "NEW") {
             //     oObject.state = "UNDERWAY";
             //     this.overclick(oObject, "on");
@@ -817,11 +828,11 @@ export default {
         //更新会诊状态
         async overclick(row, state) {
             let _this = this;
-            let oState=''
-            if(state=="on"){
-oState='UNDERWAY'
-            }else if(state=="OFF"){
-oState='OVER'
+            let oState = "";
+            if (state == "on") {
+                oState = "UNDERWAY";
+            } else if (state == "OFF") {
+                oState = "OVER";
             }
             let query = {
                 token: this.userState.token
@@ -835,10 +846,11 @@ oState='OVER'
                 if (state == "on") {
                     _this.chatVisible = true;
                 } else {
-                    this.$notify.success({
+                    _this.$notify.success({
                         title: "警告",
                         message: "结束成功"
                     });
+                      _this.getDocList()
                 }
             } else {
                 //失败

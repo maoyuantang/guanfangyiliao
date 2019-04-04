@@ -6,12 +6,11 @@
             <el-table-column v-if="checkVisable" type="selection" width="55">
             </el-table-column>
             <el-table-column v-for="(column, index) in columns" :prop="column.prop" :key="index" :label="column.label" :width="column.width" label-class-name="tableHeadColor" :show-overflow-tooltip="true">
-               
+
                 <template slot-scope="scope">
                     <span :class="scope.row.oclass">
                         <!-- {{scope.row[column.prop]?scope.row[column.prop]:0}} -->
-                        {{scope.row[column.prop]}}
-                        {{column.width}}
+                        {{scope.row[column.prop]}} {{column.width}}
                     </span>
                 </template>
             </el-table-column>
@@ -122,29 +121,22 @@ export default {
     font-size: var(--fontSize2);
     color: #5e6875;
     letter-spacing: 0;
-    border-right:none
+    border-right: none;
 }
-.public-list td{
-    border-right:none
+.public-list td {
+    border-right: none;
 }
 .public-list td .cell {
     display: flex;
     justify-content: start;
     align-items: center;
-    
 }
 .public-list > div {
     border: none;
 }
-.public-list .el-table .cell{
-padding-left: 0;
+.public-list .el-table .cell {
+    padding-left: 0;
 }
-/* .tableHeadColor {
-        font-family: PingFangSC-Semibold;
-        font-size: var(--fontSize2);
-        color: #5e6875;
-        letter-spacing: 0;
-    } */
 
 .public-list
     /deep/
