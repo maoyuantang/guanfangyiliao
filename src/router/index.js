@@ -275,6 +275,7 @@ router.beforeEach((to, from, next) => {
 		},
 	];
 	console.log(to);
+	console.log('change');
 	if(to.path === './docDetailed'){//这是新增功能 真是让人头大
 		sessionStorage.setItem('page',JSON.stringify({
 			name:to.meta.title,

@@ -31,7 +31,7 @@
             <th>
               <el-checkbox v-model="item.select">{{item.userName}}</el-checkbox>
             </th>
-            <th>{{item.relSource}}</th>
+            <th>{{item.relSource===1?'线下扫码':'在线业务'}}</th>
             <th>{{item.phone}}</th>
             <th>{{item.groupName}}</th>
             <th>{{item.queryNumber}}</th>
