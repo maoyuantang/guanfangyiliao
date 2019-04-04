@@ -102,22 +102,24 @@
 		<div v-if="isShowrelationalDoctor">
 			<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="500px" max-hight="450px"
 			 center>
-				<ul>
-					<li v-for="(text,index) in relationalDoctor" :key="index">
-						<div class="evaluateCont1">
-							<!-- 待头像 -->
-							<img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-							<img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'
-							 alt="医生头像">
-							<h5>{{text.doctorName}}</h5>
-						</div>
-						<div class="evaluateCont2">
-							<!-- <div>{{text.doctorId}}</div> -->
-							<!-- 医生接诊状态 -->
-							<div>{{text.doctorStates}}</div>
-						</div>
-					</li>
-				</ul>
+				<el-scrollbar style="height:100%;">
+					<ul style="max-height: 450px;">
+						<li v-for="(text,index) in relationalDoctor" :key="index">
+							<div class="evaluateCont1">
+								<!-- 待头像 -->
+								<img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
+								<img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'
+								 alt="医生头像">
+								<h5>{{text.doctorName}}</h5>
+							</div>
+							<div class="evaluateCont2">
+								<!-- <div>{{text.doctorId}}</div> -->
+								<!-- 医生接诊状态 -->
+								<div>{{text.doctorStates}}</div>
+							</div>
+						</li>
+					</ul>
+				</el-scrollbar>
 			</el-dialog>
 		</div>
 
@@ -1766,6 +1768,10 @@
 </script>
 
 <style lang="scss" scoped>
+	/deep/ .evaluateBox1 .el-scrollbar__wrap {
+		overflow-x: hidden !important;
+	}
+
 	.hospital-management-outpatient {}
 
 	.hospital-management-outpatient-nav {}
@@ -1867,6 +1873,12 @@
 
 	.evaluateBox1 {
 		overflow: auto;
+
+		/deep/ .el-dialog--center .el-dialog__body {
+			/* overflow: auto; */
+			/* height: 450px; */
+
+		}
 
 		/deep/ .el-dialog {
 			margin-top: 32vh !important;
