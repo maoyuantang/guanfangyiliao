@@ -87,6 +87,7 @@
           <el-button v-if="YesList2 == 2" type="primary" @click="kuangData1Fun22" style="width:80%">编 辑</el-button>
         </div>
       </el-dialog>
+      {{kuangData2.options3.value}}
     </div>
 
 
@@ -255,7 +256,7 @@
             list: []
           },
           options3: {
-            value: "test",
+            value: "",
             list: []
           },
           options4: {

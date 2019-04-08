@@ -148,7 +148,8 @@
 		<!-- 查看详情弹框中的聊天弹框 -->
 		<div v-if="isShowRecordChat">
 			<el-dialog class="" title="聊天记录" :visible.sync="isShowRecordChat" center>
-				<viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord>
+				<!-- <viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord> -->
+				<viewRecord :sessionId="sessionIds" v-if="sessionIds"></viewRecord>
 				<noData v-if="!messageRecord"></noData>
 			</el-dialog>
 		</div>
@@ -187,7 +188,8 @@
 		<!-- 查看处方配送记录 -->
 		<div v-if="viewRecordList2">
 			<el-dialog class="  " title="处方配送聊天记录" :visible.sync="viewRecordList2" width="602px" hight="356px" center>
-				<viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord>
+				<!-- <viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord> -->
+				<viewRecord :sessionId="sessionIds" v-if="sessionIds"></viewRecord>
 				<noData v-if="!messageRecord"></noData>
 			</el-dialog>
 		</div>
@@ -314,6 +316,7 @@
 				status: [],//业务人次表里的状态
 				tableData: [],//表1  传入数据参数
 				state: false,//boolean false 远程门诊状态（禁用操作时值必传） 
+				sessionIds:"",
 				//管理2端   筛选返回值  
 				string: "",//门诊订单号			number
 				reviewEnum: "",//审核状态（REVIEWED, //已审核；UNREVIEWED, //未审核；FAILREVIEWED, 
@@ -1010,7 +1013,8 @@
 			async isShowRecordChatFun(data) {
 				this.isShowRecordChat = true;
 				console.log(data)
-				this.messageRecord = data.bindSessionId
+				// this.messageRecord = data.bindSessionId  sessionId
+				this.sessionIds = data.bindSessionId
 				// let query = {
 				// 	token: this.userInfo.token
 				// };
