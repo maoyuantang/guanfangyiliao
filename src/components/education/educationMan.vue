@@ -1,7 +1,7 @@
 <template>
 	<div class="education">
 		<normalTab v-model="barInfo" @reBack="getBar"></normalTab>
-		<div :is="viewCurrent"></div>
+		<div :is="viewCurrent" class="education-content"></div>
 	</div>
 </template>
 
@@ -66,5 +66,11 @@
 <style scoped>
 	.education{
 
-    }
+	}
+	.education-content{
+		background: #FFFFFF;
+		border: 1px solid #E5EDF3;
+		margin-top: .44rem;
+		padding-top: .18rem;
+	}
 </style>

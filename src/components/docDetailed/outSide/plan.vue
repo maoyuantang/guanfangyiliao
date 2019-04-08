@@ -1,6 +1,6 @@
 <!-- 随访计划 -->
 <template>
-	<div class="plan">
+	<div class="plan" @click="see">
         <div class="plan-content">
             <table class="plan-table" cellpadding="10">
                 <thead class="plan-thead">
@@ -18,7 +18,7 @@
                         <th>{{item.docName}}</th>
                         <th>{{item.sendTime}}</th>
                         <th>{{item.nextDate}}</th>
-                        <th class="see">查看</th>
+                        <th class="see" @click="see(item,index)">查看</th>
                     </tr>
                 </tbody>
             </table>
@@ -67,6 +67,12 @@
 		},
 		
 		methods:{
+            /**
+             * 查看被点击
+             */
+            see(item,index){
+                this.$router.push({path:'/followUp'});
+            },
             /**
              * 获取表格信息
              */
