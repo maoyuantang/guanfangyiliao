@@ -39,15 +39,14 @@
                     <!-- 病人个数循环 -->
                     <noData v-if="text.clinicOrders.length == 0"></noData>
                     <span class="dian" @click="lookList(text)" v-if="text.clinicOrders.length != 0">...</span>
-                    <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-show="index <2"
-                        v-if="text.clinicOrders.length != 0">
+                    <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-show="index <2" v-if="text.clinicOrders.length != 0">
 
                         <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
                             <h1>{{text1.userName}}</h1>
                             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
                                 <span class="tanKuang1" @click="seeHistory(text1.userId)">查看档案</span>
                                 <button class="tanKuang2" @click="sendMessage(text,text1)" :disabled="text1.disabledStatus">发送</button>
-                                <div class="tanKuang3">{{text.doctor.doctorStates?'未开始':'进行中'}}</div>
+                                <div class="tanKuang3">{{text1.orderState}}</div>
                                 <!-- <el-button type="success" plain @click="seeHistory(text1.userId)">查看档案</el-button> -->
                                 <!-- <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button> -->
                                 <!-- <el-button type="info" plain>{{text.doctor.doctorStates?'未开始':'进行中'}}</el-button> -->
@@ -1340,8 +1339,8 @@
         padding: 0rem 0.2rem;
         margin: 0.3rem 0.3rem 0.3rem 0;
 
-        overflow: auto;
-        max-height: 750px;
+        /* overflow: auto;
+        max-height: 750px; */
     }
 
     .outpatient_s {
