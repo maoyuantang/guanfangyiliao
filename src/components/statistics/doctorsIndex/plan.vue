@@ -48,8 +48,8 @@
                                 <div class="entryFile">
                                     <el-button class="btnClass" type="text" size="small">录入档案</el-button>
                                     <ul>
-                                        <li @click="addPublicDangan()">普通档案</li>
-                                        <li @click="addWomanDangan()">孕妇档案</li>
+                                        <li @click="addPublicDangan(scope.row)">普通档案</li>
+                                        <li @click="addWomanDangan(scope.row)">孕妇档案</li>
                                     </ul>
                                 </div>
 
@@ -303,7 +303,7 @@
 
         <div v-if="chatVisible">
             <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-                <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
+                <chat :sessionId="sessionId" :doctorVis="doctorVis"  :chatTypeBox="chatTypeBox"></chat>
             </el-dialog>
         </div>
         <!-- 谭莹备注 -->
@@ -468,6 +468,10 @@ export default {
     },
     data() {
         return {
+            chatTypeBox: {
+                startDoctorName: "",
+                startDoctorTYpe: "随访"
+            },
             // seeRemarksListVisable1: false,
             // seeRemarksListVisable2: false,
             // seeRemarksListVisable3: false,
@@ -494,7 +498,7 @@ export default {
             cooperationData: [],
             sessionId: "",
             chatVisible: false,
-            doctorVis: 0,
+            doctorVis: 1,
             remarks: [],
             remarksVisible: false,
             invitationVisible: false,
@@ -676,7 +680,7 @@ export default {
             const res = await queryByDoctorPage(query);
             if (res.data && res.data.errCode === 0) {
                 _this.consultationData = res.data.body.data2.list;
-                if (res.data.body.length > 0) {
+                if (res.data.body.data2.list.length > 0) {
                     _this.huizTableVisable = true;
                 } else {
                     _this.huizTableVisable = false;
@@ -706,7 +710,7 @@ export default {
             const res = await synergyPage(query);
             if (res.data && res.data.errCode === 0) {
                 _this.cooperationData = res.data.body.data2.list;
-                if (res.data.body.length > 0) {
+                if (res.data.body.data2.list.length > 0) {
                     _this.xiezTableVisable = true;
                 } else {
                     _this.xiezTableVisable = false;
@@ -790,15 +794,15 @@ export default {
             }
         },
         //新增普通档案
-        addPublicDangan() {
+        addPublicDangan(row) {
             this.puBlicFileData.show = true;
             console.log(this.puBlicFileData);
-            this.getFamily();
+            this.getFamily(row);
         },
         //新增孕妇档案
-        addWomanDangan() {
+        addWomanDangan(row) {
             this.puBlicManData.show = true;
-            this.getFamily();
+            this.getFamily(row);
         },
         //处理完成
         async solveOver(row, num) {
@@ -830,7 +834,7 @@ export default {
                     token: this.userState.token
                 };
                 let options = {
-                    id: oId
+                    id: row.infoId
                 };
                 const res = await warnStatus(query, options);
                 if (res.data && res.data.errCode === 0) {
@@ -852,7 +856,7 @@ export default {
                     token: this.userState.token
                 };
                 let options = {
-                    id: oId
+                    id: row.infoId
                 };
                 const res = await changeStatus(query, options);
                 if (res.data && res.data.errCode === 0) {
@@ -965,11 +969,13 @@ export default {
             }
         },
         //获取家庭成员
-        async getFamily() {
+        async getFamily(row) {
+             this.puBlicFileData.nameList = [];
+            this.puBlicManData.nameList = [];
             let _this = this;
             let query = {
                 token: this.userState.token,
-                userId: this.userSelfInfo.userId
+                userId: row.userId
             };
             const res = await queryListByUserId(query);
             console.log(res);

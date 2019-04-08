@@ -87,6 +87,7 @@
           <el-button v-if="YesList2 == 2" type="primary" @click="kuangData1Fun22" style="width:80%">编 辑</el-button>
         </div>
       </el-dialog>
+      {{kuangData2.options3.value}}
     </div>
 
 
@@ -108,7 +109,8 @@
         </div>
       </div>
       <div class="medical_body0_table">
-        <el-table :data="medical_body0_Data" style="width: 100%" @cell-click="cellClick1" :max-height="400">
+        <!-- <el-table :data="medical_body0_Data" style="width: 100%" @cell-click="cellClick1" :max-height="400"> -->
+        <el-table :data="medical_body0_Data" style="width: 100%" @cell-click="cellClick1">
           <el-table-column prop="deptName" label="科室" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="typeName" label="类型" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="id" label="编号" :show-overflow-tooltip="true"></el-table-column>
@@ -144,7 +146,7 @@
         </div>
       </div>
       <div class="medical_body1_table">
-        <el-table :data="medical_body1_Data" :max-height="550" style="width: 100%" @cell-click="cellClick2"
+        <el-table :data="medical_body1_Data" style="width: 100%" @cell-click="cellClick2"
           :cell-class-name="ceshi0" :key="Math.random()">
           <el-table-column prop="deptName" label="科室" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="direction" label="方向" :show-overflow-tooltip="true"></el-table-column>
@@ -254,7 +256,7 @@
             list: []
           },
           options3: {
-            value: "test",
+            value: "",
             list: []
           },
           options4: {
@@ -296,7 +298,7 @@
         gradeId: "",//分级id   selftag
         searchValue: "",//返回搜索框输入   search
         pageNum: 1,
-        pageSize: 5,
+        pageSize: 10,
         // 管理1.2表  表体点击  范围  传入参数
         doctorVisible: false,
         doctorDetailData: [

@@ -26,7 +26,11 @@
                                     <el-option v-for="(otext,index) in text.departmentListOO" :label="otext.name" :value="otext.value" :key="index"></el-option>
                                 </el-select>
                             </el-form-item>
+                            <span v-show='index!=0' class="addHospital" @click="hospOrDer(text,index)">
+                                <img src="../../assets/img/addFollowDelete.png" />
+                            </span>
                         </div>
+
                         <span class="addHospital" @click="addHospital()">
                             <img src="../../assets/img/addFollowJa1.png" />
                         </span>
@@ -612,6 +616,11 @@ export default {
             this.centerDialogVisible = true;
             this.getDepartment1(this.userSelfInfo.orgCode);
         },
+        //发起会诊时删除医生和科室
+        hospOrDer(text,index){
+this.startHz.consultationHospitalDept.splice(index,1)
+
+        },
         //查看记录
         recordFun() {
             this.recordVisible = true;
@@ -850,7 +859,7 @@ export default {
                         title: "警告",
                         message: "结束成功"
                     });
-                      _this.getDocList()
+                    _this.getDocList();
                 }
             } else {
                 //失败
@@ -920,7 +929,7 @@ export default {
         async getToolDept(oindex) {
             let _this = this;
             let query = {
-                type: this.oUserType,
+                type: "DOCTOR",
                 token: this.userState.token
             };
             const res = await toolDept(query);

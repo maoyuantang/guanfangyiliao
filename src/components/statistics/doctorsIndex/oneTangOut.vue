@@ -147,7 +147,7 @@
           path: "/outpatient",
         })
       },
-      async goShiPin(data) {
+      async goShiPin(data) {//首页点击进入视屏
         this.oClinicId = data.id;
         let _this = this;
         let query = {

@@ -22,7 +22,7 @@
 
 
 				<div class="online-clinic-middle">
-					<el-table :data="tableData" style="width: 100%;" :max-height="550" :cell-class-name="ceshi0" @cell-click="relateDoctors1">
+					<el-table :data="tableData" style="width: 100%;" :cell-class-name="ceshi0" @cell-click="relateDoctors1">
 						<el-table-column prop="id" label="业务编号" :show-overflow-tooltip="true"></el-table-column>
 						<el-table-column prop="departmentName" label="科室" :show-overflow-tooltip="true"></el-table-column>
 						<el-table-column prop="fullName" label="业务名" :show-overflow-tooltip="true"></el-table-column>
@@ -126,7 +126,7 @@
 		<!-- 总+今日+订单详情+弹框 -->
 		<div v-if="isShowRecord">
 			<el-dialog class="offerDetial" title="订单详情" :visible.sync="isShowRecord" center width=70%>
-				<el-table :data="tableDataChat" style="width: 100%;" @cell-click="relateDoctors2" :max-height="450">
+				<el-table :data="tableDataChat" style="width: 100%;" @cell-click="relateDoctors2">
 					<el-table-column prop="orderNo" label="订单号" :show-overflow-tooltip="true"></el-table-column>
 					<el-table-column prop="doctorName" label="接诊医生" :show-overflow-tooltip="true"></el-table-column>
 					<el-table-column prop="mode" label="接诊方式" :show-overflow-tooltip="true"></el-table-column>
@@ -148,7 +148,8 @@
 		<!-- 查看详情弹框中的聊天弹框 -->
 		<div v-if="isShowRecordChat">
 			<el-dialog class="" title="聊天记录" :visible.sync="isShowRecordChat" center>
-				<viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord>
+				<!-- <viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord> -->
+				<viewRecord :sessionId="sessionIds" v-if="sessionIds"></viewRecord>
 				<noData v-if="!messageRecord"></noData>
 			</el-dialog>
 		</div>
@@ -187,7 +188,8 @@
 		<!-- 查看处方配送记录 -->
 		<div v-if="viewRecordList2">
 			<el-dialog class="  " title="处方配送聊天记录" :visible.sync="viewRecordList2" width="602px" hight="356px" center>
-				<viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord>
+				<!-- <viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord> -->
+				<viewRecord :sessionId="sessionIds" v-if="sessionIds"></viewRecord>
 				<noData v-if="!messageRecord"></noData>
 			</el-dialog>
 		</div>
@@ -277,7 +279,7 @@
 
 				// 常用参数
 				pageNum: 1,//页数
-				pageSize: 5,//条数
+				pageSize: 10,//条数
 				totals: 0,
 				srcs: "",//处方id   用于拼接图片src
 
@@ -314,6 +316,7 @@
 				status: [],//业务人次表里的状态
 				tableData: [],//表1  传入数据参数
 				state: false,//boolean false 远程门诊状态（禁用操作时值必传） 
+				sessionIds:"",
 				//管理2端   筛选返回值  
 				string: "",//门诊订单号			number
 				reviewEnum: "",//审核状态（REVIEWED, //已审核；UNREVIEWED, //未审核；FAILREVIEWED, 
@@ -1010,7 +1013,8 @@
 			async isShowRecordChatFun(data) {
 				this.isShowRecordChat = true;
 				console.log(data)
-				this.messageRecord = data.bindSessionId
+				// this.messageRecord = data.bindSessionId  sessionId
+				this.sessionIds = data.bindSessionId
 				// let query = {
 				// 	token: this.userInfo.token
 				// };
@@ -1114,8 +1118,10 @@
 				let query = {
 					token: this.userInfo.token,
 					deptId: this.departmentId, //String false 科室ID 
-					starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
-					endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
+					// starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
+					// endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
+					starTime: "", //String false 开始日期，示例：2019-01 - 01 
+					endTime: "", //String false 结束日期，示例：2019-01 - 25 
 					type: this.type //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
 				};
 				// console.log(query)
@@ -1153,8 +1159,10 @@
 				let query = {
 					token: this.userInfo.token,
 					deptId: this.departmentId, //String false 科室ID 
-					starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
-					endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
+					// starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
+					// endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
+					starTime: "", //String false 开始日期，示例：2019-01 - 01 
+					endTime: "", //String false 结束日期，示例：2019-01 - 25 
 					type: this.type //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
 				};
 				// console.log(query)
@@ -1193,8 +1201,10 @@
 				let query = {
 					token: this.userInfo.token,
 					departmentId: this.departmentId, //String false 科室ID 
-					startTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
-					endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
+					// startTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
+					// endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
+					starTime: "", //String false 开始日期，示例：2019-01 - 01 
+					endTime: "", //String false 结束日期，示例：2019-01 - 25 
 					type: this.type //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
 				};
 				// console.log(query)

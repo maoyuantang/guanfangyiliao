@@ -853,7 +853,7 @@ export default {
         async getToolDept(oindex) {
             let _this = this;
             let query = {
-                type: this.oUserType,
+                type: 'MANAGE',
                 token: this.userState.token
             };
             const res = await toolDept(query);

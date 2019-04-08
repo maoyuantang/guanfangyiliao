@@ -43,7 +43,7 @@
 
     <div v-if="isShowmoveUser2">
       <el-dialog title="查看反馈" :visible.sync="isShowmoveUser2" width="40%" center>
-        <el-table :data="rebackInformation" :max-height="550">
+        <el-table :data="rebackInformation">
           <el-table-column property="1" label="医院"></el-table-column>
           <el-table-column property="2" label="科室"></el-table-column>
           <el-table-column property="3" label="姓名"></el-table-column>
@@ -148,7 +148,7 @@
             </div>
           </div>
           <div class="dataBody">
-            <el-table :data="manageBodyData" :max-height="550" style="width: 100%">
+            <el-table :data="manageBodyData" style="width: 100%">
               <el-table-column prop="referralNo" label="编号" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="deptName" label="科室" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="applyOrgName" label="申请医院" :show-overflow-tooltip="true"></el-table-column>
@@ -196,16 +196,16 @@
     <div v-else>
       <div class="doctorStyle">
         <selftag :inData="oTab4" @reback="getOTab4"></selftag>
-        <div style="display: flex;">
+        <div style="display: flex;align-items: center;">
           <div class="manager_count_top_right">
             <statisticsWay1 v-model="time" @reBack="getFilterTime"></statisticsWay1>
           </div>
-          <el-button class="startConsul" type="text" @click="addMove">新增转诊</el-button>
+          <el-button class="startConsul" type="text" @click="addMove" style="margin:0;">新增转诊</el-button>
         </div>
       </div>
       <div class="doctorStyleBody">
         <div>
-          <el-table :data="docTableData" style="width: 100%" :max-height="500">
+          <el-table :data="docTableData" style="width: 100%">
             <el-table-column prop="referralNo" label="编号" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="applyOrgName" label="申请医院" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="applyDeptName" label="申请科室" :show-overflow-tooltip="true"></el-table-column>
@@ -314,7 +314,7 @@
         direction: "",//方向：into转入，转出out    selftag   筛选工具栏
         searchValue: "",//返回搜索框输入   search
         pageNum: 1,
-        pageSize: 5,
+        pageSize: 10,
         totals: 0,
         //管理统计端  筛选工具栏  统计筛选返回值  接收参数
         time0: "",///统计筛选开始时间     DatePicker 日期选择器
@@ -1446,7 +1446,7 @@
     display: -webkit-flex;
     margin: 50px 2.36rem 35px 0;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
   }
 
   .doctorStyleBody {
