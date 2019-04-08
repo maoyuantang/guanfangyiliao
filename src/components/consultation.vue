@@ -204,6 +204,9 @@ export default {
 .addHospitalBox {
     position: relative;
 }
+.addHospitalBox>div {
+    position: relative;
+}
 .addHospital {
     position: absolute;
     display: inline-block;
@@ -211,6 +214,7 @@ export default {
     height: 20px;
     right: -3px;
     top: 8px;
+    cursor: pointer;
 }
 .addHospital > img {
     width: 100%;

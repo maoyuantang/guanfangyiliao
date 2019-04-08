@@ -12,15 +12,15 @@
                         <el-radio label="OUTPATIENT" disabled>门诊随访</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <div class="addFollowMain">
-                    <el-form-item class="addFollowM-bot" label="首次治疗">
-                        <el-date-picker  v-model="addFollowData.firstTreatmentTime" class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
+                <div class="addFollowMain addFollowMain1">
+                    <el-form-item class="addFollowM-bot firstDoctorTimeBox" label="首次治疗">
+                        <el-date-picker v-model="addFollowData.firstTreatmentTime" class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
                         </el-date-picker>
                     </el-form-item>
                     <ul>
                         <li v-for="(text,index) in addFollowData.itemModels" :key="index">
                             <div class="addFollowM-bot" style="display:flex">
-                                <el-form-item class="addFollowM-bot" label="距离首次治疗">
+                                <el-form-item class="addFollowM-bot firstDoctorTime" label="距离首次治疗">
                                     <div class="DistanceFirst">
                                         <el-form-item label=" ">
                                             <el-select v-model="text.calcVal" placeholder=" ">
@@ -40,44 +40,56 @@
 
                             </div>
                             <ul class="questBox">
+                                <!-- <li>
+                                        <div>
+                                            <span>复查提醒：</span>
+                                            <input class='remindText' style="border:none" type='text' />
+                                        </div>
+                                    </li> -->
                                 <li v-for="(otext,oindex) in text.contentModels" :key="oindex">
-                                    <div>
-                                        <span v-show="otext.followUpType=='REMIND'">提醒：</span>
-                                        <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
-                                        <span v-show="otext.followUpType=='INQUIRY'">问诊：</span>
-                                        <span v-show="otext.followUpType=='MEDICAL'">疾病自评：</span>
-                                        <span v-show="otext.followUpType=='DEVICE'">设备监测：</span>
-                                        <span class="questTableName">{{otext.title}}</span>
+                                    <div v-if="otext.followUpType=='REMIND'">
+                                        <span>复查提醒：</span>
+                                        <input class='remindText' style="border:none" type='text' v-model="otext.title" />
+                                    </div>
+                                    <div v-else>
+                                        <div>
+                                            <span v-show="otext.followUpType=='REMIND'">提醒：</span>
+                                            <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
+                                            <span v-show="otext.followUpType=='INQUIRY'">问诊：</span>
+                                            <span v-show="otext.followUpType=='MEDICAL'">疾病自评：</span>
+                                            <span v-show="otext.followUpType=='DEVICE'">设备监测：</span>
+                                            <span class="questTableName">{{otext.title}}</span>
+                                        </div>
+                                        <span @click="deleteQuest(index,oindex)" class="questDelete questDeleteSend">
+                                            <img src="../../assets/img/addFollowDelete2.png" />
+                                        </span>
                                     </div>
 
-                                    <span @click="deleteQuest(index,oindex)" class="questDelete">
-                                        <img src="../../assets/img/addFollowDelete2.png" />
-                                    </span>
                                 </li>
                             </ul>
                             <div class="addFollowBtn" v-show="addFollowBtnVis">
-                                <div @click="addQuest(index)">
-                                    <span class="questDelete"><img src="../../assets/img/addFollowJa2.png" /></span> 问诊表/健康知识
+                                <div @click="addQuest(index,text.contentModels)">
+                                    <span class="questDelete "><img src="../../assets/img/addFollowJa2.png" /></span> 问诊表/健康知识
                                 </div>
                                 <div>
                                     <span @click="addFollowTimeList()">
                                         <span class="questDelete"><img src="../../assets/img/addFollowJa1.png" /> </span> 添加一项</span>
                                     <span @click="deleteFollowTimeList(index)">
                                         <span class="questDelete"> <img src="../../assets/img/addFollowDelete.png" /> </span>
-                                        此项</span>
+                                        删除此项</span>
                                 </div>
                             </div>
 
                         </li>
                     </ul>
-                    <div class="addFollowM-bot">
+                    <div class="addFollowM-bot remindTime">
                         提醒时间
                         <el-select class="addFollowHou" v-model="addFollowData.remindDays" placeholder="请选择">
                             <el-option v-for="(text,index) in 100" :key="index" :label="text" :value="text">
                             </el-option>
                         </el-select>
                     </div>
-                    <div>
+                    <div class="addFollowWarnClass">
                         <el-checkbox v-model="addFollowData.remindMe">提醒我</el-checkbox>
                         <el-checkbox v-model="addFollowData.remindHe">提醒他</el-checkbox>
                     </div>
@@ -117,7 +129,8 @@ export default {
             questCheckList: "",
             articleCheckList: "",
             questList: "",
-            articleList: ""
+            articleList: "",
+            selectData: {}
         };
     },
     computed: {
@@ -127,9 +140,9 @@ export default {
         })
     },
     methods: {
-        
         //添加问诊表
-        async addQuest(index) {
+        async addQuest(index, object) {
+            this.selectData = object[0];
             this.questOindex = index;
             this.questVisible = true;
             let _this = this;
@@ -151,7 +164,10 @@ export default {
         },
         //删除当前项
         deleteFollowTimeList(index) {
-            this.addFollowData.itemModels.splice(index, 1);
+            if (this.addFollowData.itemModels.length == 1) {
+            } else {
+                this.addFollowData.itemModels.splice(index, 1);
+            }
         },
         //删除问诊表
         deleteQuest(index, oindex) {
@@ -166,7 +182,13 @@ export default {
                 calcVal: 1,
                 calcUnit: "天",
                 state: true,
-                contentModels: []
+                contentModels: [
+                    {
+                        followUpType: "REMIND",
+                        title: "",
+                        contentId: null
+                    }
+                ]
             });
         },
         //删除当前项
@@ -187,8 +209,8 @@ export default {
                     url: res.data.body.planId,
                     title: this.addFollowData.title,
                     firstTreatmentTime: this.addFollowData.firstTreatmentTime,
-                    content:'',
-                    status:''
+                    content: "",
+                    status: ""
                 };
                 this.$emit("osendmessagechat", oMessage);
             } else {
@@ -209,8 +231,11 @@ export default {
             console.log(this.articleCheckList);
             let _this = this;
             _this.addFollowData.itemModels[
-                            _this.questOindex
-                        ].contentModels=[]
+                _this.questOindex
+            ].contentModels = [];
+            _this.addFollowData.itemModels[
+                _this.questOindex
+            ].contentModels.unshift(this.selectData);
             $.each(this.questList, function(index, text) {
                 $.each(_this.questCheckList, function(index1, text1) {
                     if (text.id == text1) {
@@ -248,8 +273,7 @@ export default {
         prop: ["addFollowData", "sendToUserId"],
         event: "reBack"
     },
-    created() {
-    },
+    created() {},
     beforeDestroy() {}
 };
 </script>

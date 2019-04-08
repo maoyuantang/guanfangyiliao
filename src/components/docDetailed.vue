@@ -1,6 +1,8 @@
 <template>
     <div class="doc-detailed">
-        <!-- {{topTag.list[topTag.index]}} -->
+        <div class="doc-detailed-">
+            <el-button type="primary" @click="reBack">返回</el-button>
+        </div>
         <div class="doc-detailed-alert">
           <div class="doc-detailed-alert-content">
                 <div class="doc-detailed-tag">
@@ -97,7 +99,12 @@ export default {
     },
     
     methods: {
-
+        /**
+         * 返回
+         */
+        reBack(){
+            this.$router.go(-1)
+        },
         /**
          * 获取成员列表
          */

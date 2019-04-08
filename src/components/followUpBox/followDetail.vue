@@ -7,11 +7,11 @@
                 <el-form-item>
                     <el-input class="addFollowTitle"  v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
                 </el-form-item>
-                <div class="addFollowMain">
+                <div class="addFollowMain addFollowMain1">
                     <ul>
                         <li v-for="(text,index) in addFollowData.planItemResults" :key="index">
                             <div class="addFollowM-bot" style="display:flex">
-                                <el-form-item class="addFollowM-bot" label="距离首次治疗">
+                                <el-form-item class="addFollowM-bot firstDoctorTime" label="距离首次治疗">
                                     <div class="DistanceFirst">
                                         <el-form-item label=" ">
                                             <el-select v-model="text.calcVal" placeholder=" ">
@@ -178,7 +178,7 @@ export default {
 </script>
 
 <style>
-.addFollowBox .el-form-item__content {
+/* .addFollowBox .el-form-item__content {
     margin-left: 0 !important;
 }
 .addFollowBox .el-dialog__body {
@@ -229,5 +229,5 @@ export default {
 }
 .addFollowHou {
     width: 100px;
-}
+} */
 </style>

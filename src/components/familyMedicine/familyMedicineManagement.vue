@@ -1419,6 +1419,7 @@
 					if(!this.testData.businessId){
 						this.newGetToolBusinessType();
 					}
+					this.getBussModuleList();
 				}else{
 					console.log('error')
 					this.$notify({

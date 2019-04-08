@@ -9,7 +9,6 @@
 
                 <template slot-scope="scope">
                     <span :class="scope.row.oclass">
-                        <!-- {{scope.row[column.prop]?scope.row[column.prop]:0}} -->
                         {{scope.row[column.prop]}} {{column.width}}
                     </span>
                 </template>
@@ -147,7 +146,7 @@ export default {
     th
     div {
     text-align: center;
-    white-space: nowrap !important;
+    /* white-space: nowrap !important; */
     padding: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -160,8 +159,8 @@ export default {
     text-overflow: ellipsis;
 }
 .el-table th>.cell, .el-table th div{
-    display: inline !important;
-    white-space: nowrap !important;
+    /* display: inline !important;
+    white-space: nowrap !important; */
 }
 
 

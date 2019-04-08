@@ -241,25 +241,20 @@
                     <div>
 
                     </div>
-                    <div>
+                    <div style='margin-bottom:30px;'>
                         <tableList :tableData="satisfiedList" :columns="satisfiedColumns" :tableBtn="SatisfiedBtn" :checkVisable="mydTableChecked" @reBack="getUserId" :total="adminTotal2" @rebackFenye="changeCurrent2"></tableList>
 
                     </div>
-                    <div class="pieChartClass">
-                        <div>
-                            <pieChart :inData="pieData1" v-if="pieData1Visable"> </pieChart>
+                    <div class="pieChartClass" v-show='pieChartVisable'>
+                        <div v-if="pieData1Visable">
+                            <pieChart :inData="pieData1"> </pieChart>
                         </div>
-                        <div>
-                            <pieChart :inData="pieData2" v-if="pieData2Visable"> </pieChart>
+                        <div v-if="pieData2Visable">
+                            <pieChart :inData="pieData2"> </pieChart>
                         </div>
-                        <div>
-                            <pieChart :inData="pieData3" v-if="pieData3Visable"> </pieChart>
+                        <div v-if="pieData3Visable">
+                            <pieChart :inData="pieData3"> </pieChart>
                         </div>
-
-                        <!-- <pieChart></pieChart> -->
-                        <!-- <pieChart :inData="pieChart1"></pieChart> -->
-                        <!-- <pieChart :inData="pieChart2"></pieChart>
-                        <pieChart :inData="pieChart3"></pieChart> -->
                     </div>
 
                 </div>
@@ -408,6 +403,7 @@ export default {
     },
     data() {
         return {
+            pieChartVisable:true,
             groupId: "",
             groupValue: "",
             groupName: "",
@@ -871,21 +867,21 @@ export default {
                 total: 0
             },
             pieData1: {
-                dataAxis: ["1", "1", "1"], //每个柱子代表的类名
-                data: ["23", "23", "23"], //具体数值
+                dataAxis: [], //每个柱子代表的类名
+                data: [], //具体数值
                 title: "结果分布-总览 " //图表标题
             },
             pieData2: {
-                dataAxis: [], //每个柱子代表的类名
+              dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
                 title: "结果分布-年龄 " //图表标题
             },
             pieData3: {
-                dataAxis: [], //每个柱子代表的类名
+               dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
                 title: "结果分布-科室 " //图表标题
             },
-            pieData1Visable:true,
+            pieData1Visable:false,
              pieData2Visable:false,
               pieData3Visable:false,
             tjType: "DEPT",
@@ -1391,6 +1387,7 @@ export default {
             if (index == 0) {
                 this.oGetResultList();
                 this.oGetResultGraph();
+                this.pieChartVisable=true;
                 this.addFollowVis = false;
                 (this.mydTableChecked = false),
                     (this.sendTemplateListVis = false),
@@ -1438,6 +1435,7 @@ export default {
                 this.SatisfiedBtn = [];
             } else if (index == 1) {
                 this.oGetModelList();
+                this.pieChartVisable=false;
                 (this.mydTableChecked = false),
                     (this.sendTemplateListVis = false),
                     (this.wayVisible1 = true);
@@ -1504,6 +1502,7 @@ export default {
                     }
                 ];
             } else {
+                this.pieChartVisable=false;
                 (this.mydTableChecked = true),
                     (this.sendTemplateListVis = true);
                 this.wayVisible1 = false;
@@ -2036,6 +2035,7 @@ export default {
                 this.getFoList();
             } else if (res.i == 1) {
                 this.oGetResultList();
+                this.oGetResultGraph()
             } else if (res.i == 2) {
                 this.oManagerGetDeviceList(); //家用设备列表
             } else if (res.i == 3) {
@@ -2892,41 +2892,36 @@ export default {
             const res = await getResultGraph(query);
             if (res.data && res.data.errCode === 0) {
                 console.log(res.data.body);
-                // $.each(red.data.body.reply, function(index, text) {
-                //     _this.pieData1.dataAxis.push(text.x);
-                //     _this.pieData1.data.push(text.y);
-                // });
-                // if (red.data.body.reply.length > 0) {
-                //     _this.pieData1Visable = true;
-                // } else {
-                //     _this.pieData1Visable = false;
-                // }
+                $.each(res.data.body.reply, function(index, text) {
+                    _this.pieData1.dataAxis.push(text.x);
+                    _this.pieData1.data.push(text.y);
+                });
+                if (res.data.body.reply.length > 0) {
+                    _this.pieData1Visable = true;
+                } else {
+                    _this.pieData1Visable = false;
+                }
 
-                 $.each(red.data.body.age, function(index, text) {
+                 $.each(res.data.body.age, function(index, text) {
                     _this.pieData2.dataAxis.push(text.x);
                     _this.pieData2.data.push(text.y);
                 });
-                if (red.data.body.age.length > 0) {
+                if (res.data.body.age.length > 0) {
                     _this.pieData2Visable = true;
                 } else {
                     _this.pieData2Visable = false;
                 }
 
-                 $.each(red.data.body.department, function(index, text) {
+                 $.each(res.data.body.department, function(index, text) {
                     _this.pieData3.dataAxis.push(text.x);
                     _this.pieData3.data.push(text.y);
                 });
-                if (red.data.body.department.length > 0) {
+                if (res.data.body.department.length > 0) {
                     _this.pieData3Visable = true;
                 } else {
                     _this.pieData3Visable = false;
                 }
 
-
-             
-                // _this.pieChart1.data = red.data.body.reply;
-                // _this.pieChart2.data = red.data.body.age;
-                // _this.pieChart3.data = red.data.body.department;
             } else {
                 //失败
                 this.$notify.error({

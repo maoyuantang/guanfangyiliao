@@ -38,30 +38,31 @@
 
                                 </div>
                                 <ul class="questBox">
-                                    <li>
-                                        <div>
-                                            <span>复查提醒：</span>
-                                            <input class='remindText' style="border:none" type='text' />
-                                        </div>
-                                    </li>
+
                                     <li v-for="(otext,oindex) in text.contentModels" :key="oindex">
-
-                                        <div>
-                                            <span v-show="otext.followUpType=='REMIND'">提醒：</span>
-                                            <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
-                                            <span v-show="otext.followUpType=='INQUIRY'">问诊：</span>
-                                            <span v-show="otext.followUpType=='MEDICAL'">疾病自评：</span>
-                                            <span v-show="otext.followUpType=='DEVICE'">设备监测：</span>
-                                            <span class="questTableName">{{otext.title}}</span>
+                                        <div v-if="otext.followUpType=='REMIND'">
+                                            <span>复查提醒：</span>
+                                            <input class='remindText' style="border:none" type='text' v-model="otext.title" />
                                         </div>
-
-                                        <span @click="deleteQuest(index,oindex)" class="questDelete">
+                                        <div v-else>
+                                            <div>
+                                                <span v-show="otext.followUpType=='REMIND'">提醒：</span>
+                                                <span v-show="otext.followUpType=='ESSAY'">健康知识：</span>
+                                                <span v-show="otext.followUpType=='INQUIRY'">问诊：</span>
+                                                <span v-show="otext.followUpType=='MEDICAL'">疾病自评：</span>
+                                                <span v-show="otext.followUpType=='DEVICE'">设备监测：</span>
+                                                <span class="questTableName">{{otext.title}}</span>
+                                            </div>
+                                            <span @click="deleteQuest(index,oindex)" class="questDelete questDeleteSend">
                                             <img src="../../assets/img/addFollowDelete2.png" />
                                         </span>
+                                        </div>
+
+                                        
                                     </li>
                                 </ul>
                                 <div class="addFollowBtn" v-show="addFollowBtnVis">
-                                    <div @click="addQuestOrAricle(index)">
+                                    <div @click="addQuestOrAricle(index,text.contentModels)">
                                         <span class="questDelete"><img src="../../assets/img/addFollowJa2.png" /></span> 问诊表/健康知识
                                     </div>
                                     <div>
@@ -176,7 +177,7 @@
         </div>
         <!-- 随访计划详情 -->
         <div v-if="followPlanVisible">
-            <el-dialog class="evaluateBox addFollowBox" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
+            <el-dialog class="evaluateBox addFollowBox addFollowBoxFollow" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
 
                 <el-form ref="form" :model="followPlanData" label-width="80px">
 
@@ -189,7 +190,7 @@
                             <el-radio label="OUTPATIENT">门诊随访</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <div class="addFollowMain">
+                    <div class="addFollowMain addFollowMain1">
                         <el-form-item class="addFollowM-bot" label="首次治疗">
                             <el-date-picker class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
                             </el-date-picker>
@@ -400,7 +401,7 @@
         </div>
         <div>
             <div v-if="followDetailVisible">
-                <el-dialog class="evaluateBox addFollowBox" title=" " :visible.sync="followDetailVisible" width="602px" hight="356px" center>
+                <el-dialog class="evaluateBox addFollowBox  addFollowBoxFollow" title=" " :visible.sync="followDetailVisible" width="602px" hight="356px" center>
                     <followDetail :addFollowData="followDetailData"></followDetail>
                 </el-dialog>
             </div>
@@ -472,7 +473,8 @@ import {
     groupSelects,
     SETEQUIPMENT,
     SETFOLLOWCHART,
-    toolMemberGroup
+    toolMemberGroup,
+    alertSwitch
 } from "../../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../../plugs/echarts.js";
@@ -507,7 +509,7 @@ export default {
     },
     data() {
         return {
-             chatTypeBox: {
+            chatTypeBox: {
                 startDoctorName: "",
                 startDoctorTYpe: "随访"
             },
@@ -548,7 +550,7 @@ export default {
             groupValue: "",
             groupName: "",
             groupVisible: false,
-            doctorVis: 0,
+            doctorVis: 1,
             chatVisible: false,
             sessionId: "",
             switchNum: 0,
@@ -579,10 +581,17 @@ export default {
                         calcVal: 1,
                         calcUnit: "天",
                         state: true,
-                        contentModels: []
+                        contentModels: [
+                            {
+                                followUpType: "REMIND",
+                                title: "",
+                                contentId: null
+                            }
+                        ]
                     }
                 ]
             },
+            selectData: {},
             followSelectTime: "",
             addFollowRadio: "INHOSPITAL",
             addFollowTime: [
@@ -2764,6 +2773,9 @@ export default {
             _this.addFollowData.itemModels[
                 _this.questOindex
             ].contentModels = [];
+            _this.addFollowData.itemModels[
+                _this.questOindex
+            ].contentModels.unshift(this.selectData);
             $.each(this.questList, function(index, text) {
                 $.each(_this.questCheckList, function(index1, text1) {
                     if (text.id == text1) {
@@ -2793,7 +2805,8 @@ export default {
             this.questVisible = false;
         },
         // 新增随访表接口
-        addQuestOrAricle(index) {
+        addQuestOrAricle(index, object) {
+            this.selectData = object[0];
             this.questOindex = index;
             this.questVisible = true;
         },
@@ -2810,12 +2823,25 @@ export default {
                 calcVal: 1,
                 calcUnit: "天",
                 state: true,
-                contentModels: []
+                contentModels: [
+                    {
+                        followUpType: "REMIND",
+                        title: "",
+                        contentId: null
+                    }
+                ]
             });
         },
         //删除当前项
         deleteFollowTimeList(index) {
-            this.addFollowData.itemModels.splice(index, 1);
+            if (this.addFollowData.itemModels.length == 1) {
+                // this.$notify.warn({
+                //     title: "警告",
+                //     message: "随访事件"
+                // });
+            } else {
+                this.addFollowData.itemModels.splice(index, 1);
+            }
         },
         //新增随访表
         async addFollowTable() {
@@ -2824,15 +2850,15 @@ export default {
             );
 
             let olength = $(".addQuestBoxUlBox>li").length;
-            for (let i = 0; i < olength; i++) {
-                addFollowData1[i].contentModels.unshift({
-                    followUpType: "REMIND",
-                    title: $(".addQuestBoxUlBox>li:eq(" + i + ")")
-                        .find(".remindText")
-                        .val(),
-                    contentId: null
-                });
-            }
+            // for (let i = 0; i < olength; i++) {
+            //     addFollowData1[i].contentModels.unshift({
+            //         followUpType: "REMIND",
+            //         title: $(".addQuestBoxUlBox>li:eq(" + i + ")")
+            //             .find(".remindText")
+            //             .val(),
+            //         contentId: null
+            //     });
+            // }
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -2868,7 +2894,13 @@ export default {
                                 calcVal: 1,
                                 calcUnit: "天",
                                 state: true,
-                                contentModels: []
+                                contentModels: [
+                                    {
+                                        followUpType: "REMIND",
+                                        title: "",
+                                        contentId: null
+                                    }
+                                ]
                             }
                         ]
                     };
@@ -3285,28 +3317,10 @@ export default {
 </script>
 
 <style>
-.addArticleUrlClass > input {
-    width: 509px;
-    height: 27px;
-    /* background: #E7E7E7; */
-    border: 1px solid #dedede;
-}
-.addFollowWarnClass{
-    background: white;
-    padding-top: 2px;
-    padding-left: 20px;
-    margin-bottom: 22px
-}
-.addFollowTableClass{
-    background: #6CA4FC !important;
-    color:white !important;
-    border-radius: 0;
-    
-}
-.el-switch.is-checked .el-switch__core::after{
+.el-switch.is-checked .el-switch__core::after {
     margin-left: -12px !important;
 }
-.el-switch.is-checked .el-switch__core{
-    background: #4D7CFE !important
+.el-switch.is-checked .el-switch__core {
+    background: #4d7cfe !important;
 }
 </style>
