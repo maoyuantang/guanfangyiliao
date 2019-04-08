@@ -682,7 +682,7 @@
                 //函数传参
                 // 公共
                 pageNum: 1, //页数
-                pageSize: 5, //条数
+                pageSize: 10, //条数
                 searchValue: "", //搜索框接收参数
                 businessType: "", //业务类型接收参数
                 remark: "",
@@ -1016,8 +1016,8 @@
                 const _this = this;
                 let query = {
                     token: this.userInfo.token,
-                    pageNum: 1,
-                    pageSize: 5
+                    pageNum: this.pageNum,
+                    pageSize: this.pageSize
                 };
                 const res = await onlineRoomsByDoctor(query);
                 if (res.data && res.data.errCode === 0) {
