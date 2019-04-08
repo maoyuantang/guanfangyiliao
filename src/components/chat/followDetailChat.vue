@@ -12,15 +12,15 @@
                         <el-radio label="OUTPATIENT" disabled>门诊随访</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <div class="addFollowMain">
-                    <el-form-item class="addFollowM-bot" label="首次治疗">
+                <div class="addFollowMain addFollowMain1">
+                    <el-form-item class="addFollowM-bot firstDoctorTimeBox" label="首次治疗">
                         <el-date-picker class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
                         </el-date-picker>
                     </el-form-item>
                     <ul>
                         <li v-for="(text,index) in addFollowData.planItemResults" :key="index">
                             <div class="addFollowM-bot" style="display:flex">
-                                <el-form-item class="addFollowM-bot" label="距离首次治疗">
+                                <el-form-item class="addFollowM-bot firstDoctorTime" label="距离首次治疗">
                                     <div class="DistanceFirst">
                                         <el-form-item label=" ">
                                             <el-select v-model="text.calcVal" placeholder=" ">
@@ -40,6 +40,7 @@
 
                             </div>
                             <ul class="questBox">
+                                
                                 <li v-for="(otext,oindex) in text.itemContentResults" :key="oindex">
                                     <div>
                                         <span v-show="otext.followUpType=='REMIND'">提醒：</span>
@@ -55,7 +56,7 @@
 
                         </li>
                     </ul>
-                    <div class="addFollowM-bot">
+                    <div class="addFollowM-bot remindTime">
                         提醒时间
                         <el-select class="addFollowHou" v-model="addFollowData.remindDays" placeholder="请选择">
                             <el-option v-for="(text,index) in 100" :key="index" :label="text" :value="text">
@@ -66,23 +67,6 @@
 
             </el-form>
         </div>
-        <!-- 添加问诊或文章 -->
-        <!-- <el-dialog title="添加问诊或文章" :visible.sync="questVisible" center append-to-body>
-            <el-tabs v-model="activeName" @tab-click="addQueatOrArticle">
-                <el-tab-pane label="问诊" name="first">
-                    <el-checkbox-group v-model="questCheckList">
-                        <el-checkbox v-for="(text,index) in questList" :key="index" :label="text.id">{{text.title}}</el-checkbox><br />
-                    </el-checkbox-group>
-
-                </el-tab-pane>
-                <el-tab-pane label="文章" name="second">
-                    <el-checkbox-group v-model="articleCheckList">
-                        <el-checkbox v-for="(text,index) in articleList" :key="index" :label="text.id">{{text.title}}</el-checkbox>
-                    </el-checkbox-group>
-                </el-tab-pane>
-            </el-tabs>
-            <button @click="sureAddQuest()">确认</button>
-        </el-dialog> -->
     </div>
 </template>
 
@@ -196,7 +180,7 @@ export default {
 </script>
 
 <style>
-.addFollowBox .el-form-item__content {
+/* .addFollowBox .el-form-item__content {
     margin-left: 0 !important;
 }
 .addFollowBox .el-dialog__body {
@@ -247,5 +231,5 @@ export default {
 }
 .addFollowHou {
     width: 100px;
-}
+} */
 </style>

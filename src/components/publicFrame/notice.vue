@@ -91,12 +91,23 @@ export default {
             userSelfInfo: state => state.user.userSelfInfo
         })
     },
+    watch: {
+        "userSocketInfo.synchroMessage": {
+            handler(n, o) {
+                let _this = this;
+                $.each(n.syncData, function(index, text) {
+                    if (text.command == "NOTICE") {
+                        _this.getNoticeList();
+                    }
+                });
+            }
+        }
+    },
     methods: {
         videoclick(data) {
             this.centerDialogVisible = false;
         },
         async getNoticeList() {
-            this.msgId = this.$store.state.socket.messageTicket.oMsgId;
             let _this = this;
             let query = {
                 token: this.userState.token,
@@ -108,7 +119,7 @@ export default {
                 $.each(res.data.body, function(index, text) {
                     _this.noticeList.push(text);
                 });
-                this.msgId = res.data.body.msgId;
+                _this.msgId = res.data.body[0].msgId;
                 if (res.data.body.length > 0) {
                     this.nodataVisable = false;
                 } else {
@@ -172,13 +183,12 @@ export default {
 
             let _this = this;
             let query = {
-                token: this.userState.token,
-                
+                token: this.userState.token
             };
-            let options={
-                consultationId:row.senderUserId,
-                status: 'UNDERWAY'
-            }
+            let options = {
+                consultationId: row.senderUserId,
+                status: "UNDERWAY"
+            };
             const res = await updateConsultationStatus(query);
             if (res.data && res.data.errCode === 0) {
                 _this.chatVisible = true;
@@ -229,6 +239,8 @@ export default {
         event: "reBack"
     },
     created() {
+        this.msgId = this.$store.state.socket.messageTicket.oMsgId;
+        alert(this.$store.state.socket.messageTicket.oMsgId);
         this.getNoticeList();
     }
 };

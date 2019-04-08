@@ -1,6 +1,5 @@
 <template>
     <div>
-        {{inData}}
         <div class="normal-column-chart" ref="testEcharts">
 
         </div>
@@ -18,7 +17,9 @@ require("echarts/lib/component/dataZoom");
 
 export default {
     data() {
-        return {};
+        return {
+            oData: []
+        };
     },
     props: {
         inData: Object
@@ -92,6 +93,7 @@ export default {
             };
         },
         draw(setData) {
+            let _this = this;
             this.$nextTick(arg => {
                 if (!this.$refs.testEcharts) return;
                 const myChart = echarts.init(this.$refs.testEcharts);
@@ -104,7 +106,20 @@ export default {
                 yMax = yMax.data;
                 var dataShadow = [];
                 for (const i of setData.data) {
-                    dataShadow.push(yMax);
+                    _this.oData.push({
+                        value: i,
+                        name: ""
+                    });
+                }
+                // $.each(this.inData.data,function(index,text){
+                //     _this.oData.push({
+                //          value:text.x,
+                //         name:text.y
+                //     })
+                // })
+                console.log(setData.dataAxis)
+                for (let i = 0; i < setData.dataAxis.length; i++) {
+                    _this.oData[i].name =setData.dataAxis[i] ;
                 }
                 console.log(dataShadow);
                 const option = {
@@ -123,12 +138,17 @@ export default {
                             }
                         }
                     ],
-                    color: ["#1CD1A1", "#6C5CE7", "#FECA57"],
-                    legend: {
-                        data: ["销量"]
+                    tooltip: {
+                        trigger: "item",
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
                     },
+                    color: ["#1CD1A1", "#6C5CE7", "#FECA57"],
+                    // legend: {
+                    //     orient: "vertical",
+                    //     right: "10px",
+                    //     data: ["数量"]
+                    // },
                     xAxis: {
-                        data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
                         show: false
                     },
                     yAxis: {
@@ -151,50 +171,21 @@ export default {
                     ],
                     series: [
                         {
-                            name: "销量",
+                            name: "数量",
                             type: "pie",
-                            data: [5, 20, 36, 10, 10, 20]
-                        },
-                        //  {
-                        //     name: "销量",
-                        //     type: "pie",
-                        //     data: [5, 20, 36, 10, 10, 20]
-                        // }
-                        // {
-                        //     // For shadow
-                        //     type: "pie",
-                        //     itemStyle: {
-                        //         normal: {
-                        //             color: 'rgba(172,195,226,0.1)',
-                        //         },
-                        //     },
-                        //     barGap: "-100%",
-                        //     barCategoryGap: "40%",
-                        //     data: dataShadow,
-                        //     animation: false,
-                        //     barMaxWidth: 14
-                        // },
-                        // {
-                        //     type: "pie",
-                        //     barMaxWidth: 14,
-                        //     itemStyle: {
-                        //         normal: {
-                        //             barBorderRadius:[5, 5, 5, 5],
-                        //             color: ['#59BCFB','red']
-                        //         },
-                        //         emphasis: {
-                        //             color: new echarts.graphic.LinearGradient(
-                        //                 0, 0, 0, 1,
-                        //                 [
-                        //                     {offset: 0, color: 'yellow'},
-                        //                     {offset: 0.7, color: '#2378f7'},
-                        //                     {offset: 1, color: '#83bff6'}
-                        //                 ]
-                        //             )
-                        //         }
-                        //     },
-                        //     data: setData.data
-                        // }
+                            label: {
+                                normal: {
+                                    show: false,
+                                    position: "center"
+                                }
+                            },
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                }
+                            },
+                            data: _this.oData
+                        }
                     ]
                 };
                 myChart.setOption(option);
@@ -215,6 +206,7 @@ export default {
             data: this.inData.data,
             title: this.inData.title
         });
+        //  this.draw()
     },
     async beforeMount() {}
 };
@@ -222,8 +214,7 @@ export default {
 
 <style scoped>
 .normal-column-chart {
-    width: 200px;
+    width: 300px;
     height: 300px;
-    /* border: 1px solid red; */
 }
 </style>

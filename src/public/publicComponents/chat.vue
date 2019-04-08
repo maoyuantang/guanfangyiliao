@@ -193,34 +193,34 @@
         </div>
         <!-- 随访 -->
         <div v-if="followVisible">
-            <el-dialog title="发送随访" :visible.sync="followVisible" center append-to-body>
+            <el-dialog title="发送随访" :visible.sync="followVisible" center append-to-body width='500px'>
                 <ul>
-                    <li class="followBox" v-for="(text,index) in followList" :key="index">
+                    <li class="followBox" v-for="(text,index) in followList" :key="index"  @click="followDetail(text.id)">
                         <span>{{text.title}}</span>
-                        <span @click="followDetail(text.id)"> > </span>
+                        <span> > </span>
                     </li>
                 </ul>
             </el-dialog>
         </div>
         <!-- 随访计划详情 -->
         <div v-if="followListVisible">
-            <el-dialog title="随访" :visible.sync="followListVisible" center append-to-body>
+            <el-dialog title="随访" class='evaluateBox addFollowBox addFollowBoxFollow' :visible.sync="followListVisible" center append-to-body>
                 <follow :addFollowData="followDetailData" @osendmessagechat="getSendMessageChat" :sendToUserId="sendToUserId"></follow>
             </el-dialog>
         </div>
         <!-- 随访消息点击详情 -->
         <div v-if="followDetailVisible">
-            <el-dialog title="随访" :visible.sync="followDetailVisible" center append-to-body>
+            <el-dialog title="随访" class='evaluateBox addFollowBox addFollowBoxFollow' :visible.sync="followDetailVisible" center append-to-body>
                 <followDetailChat :addFollowData="followDetailData"></followDetailChat>
             </el-dialog>
         </div>
         <!-- 问诊 -->
         <div v-if="questVisible">
-            <el-dialog title="发送问诊" :visible.sync="questVisible" center append-to-body>
+            <el-dialog title="发送问诊" :visible.sync="questVisible" center append-to-body width='500px'>
                 <ul>
-                    <li class="followBox" v-for="(text,index) in questList" :key="index">
+                    <li class="followBox" v-for="(text,index) in questList" :key="index"  @click="QuestDetail(text.id)">
                         <span>{{text.title}}</span>
-                        <span @click="QuestDetail(text.id)"> > </span>
+                        <span> > </span>
                     </li>
                 </ul>
             </el-dialog>
@@ -450,7 +450,7 @@ export default {
 
         this.getDoctorVis();
         this.getHisRecord();
-        // this.getMemberMess();
+        this.getMemberMess();
         this.alreadyRead();
         this.updated();
         this.ourl =
@@ -1068,44 +1068,49 @@ export default {
             }
         },
         //拉取会话好友列表
-        // async getMemberMess() {
-        //     let _this = this;
-        //     console.log(this.sessionId);
-        //     let query = {
-        //         token: this.userState.token
-        //     };
-        //     const options = {
-        //         sessionId: this.sessionId,
-        //         pageIndex: 1,
-        //         pageNums: 50
-        //     };
-        //     const res = await fetchSessionMembers(query, options);
-        //     console.log(res);
-        //     if (res.data && res.data.errCode === 0) {
-        //         console.log(res.data.body);
-        //         $.each(res.data.body, function(index, text) {
-        //             if (_this.chatUser == "") {
-        //                 _this.chatUser = text.userName;
-        //             } else {
-        //                 _this.chatUser = _this.chatUser + "," + text.userName;
-        //             }
-        //         });
-        //         _this.userMemberNum = res.data.body;
-        //         $.each(res.data.body, function(index, text) {
-        //             console.log(text);
-        //             if (text.userId == _this.userSelfInfo.userId) {
-        //                 _this.userMemberNum.splice(index, 1);
-        //             }
-        //         });
-        //         _this.sendToUserId = res.data.body[0].userId;
-        //     } else {
-        //         //失败
-        //         this.$notify.error({
-        //             title: "警告",
-        //             message: res.data.errMsg
-        //         });
-        //     }
-        // },
+        async getMemberMess() {
+            let _this = this;
+            console.log(this.sessionId);
+            let query = {
+                token: this.userState.token
+            };
+            const options = {
+                sessionId: this.sessionId,
+                pageIndex: 1,
+                pageNums: 50
+            };
+            const res = await fetchSessionMembers(query, options);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body, function(index, text) {
+                    console.log(text);
+                    if (text.userId == _this.userSelfInfo.userId) {
+                        res.data.body.splice(index, 1);
+                    }
+                });
+                $.each(res.data.body, function(index, text) {
+                    if (_this.chatUser == "") {
+                        _this.chatUser = text.userName;
+                    } else {
+                        _this.chatUser = _this.chatUser + "," + text.userName;
+                    }
+                });
+                _this.userMemberNum = res.data.body;
+                // $.each(res.data.body, function(index, text) {
+                //     console.log(text);
+                //     if (text.userId == _this.userSelfInfo.userId) {
+                //         _this.userMemberNum.splice(index, 1);
+                //     }
+                // });
+                _this.sendToUserId = res.data.body[0].userId;
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         //获取历史记录
         async getHisRecord(oMsgId) {
             console.log("历史消息");
@@ -1561,7 +1566,7 @@ export default {
     },
     props: {
         sessionId: String, //会话Id
-        doctorVis: Number,
+        doctorVis: Number,//0是医生，1是患者
         userMessage: Object,
         chatType1: String,
         chatTypeBox: Object
@@ -1776,6 +1781,7 @@ export default {
 }
 .followBox {
     padding: 4px 0;
+    cursor: pointer;
 }
 .upload-demo-chat {
     position: absolute;
