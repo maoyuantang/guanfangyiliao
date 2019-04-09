@@ -913,7 +913,7 @@ export default {
             pieData1Visable: false,
             pieData2Visable: false,
             pieData3Visable: false,
-            tjType: "DAy",
+            tjType: "DAY",
             tjStartTime: "",
             tjEndTime: "",
             //医生数据
@@ -1198,7 +1198,7 @@ export default {
         async getDepartment() {
             let _this = this;
             let query = {
-                type: this.partDoctorType,
+                type: 'MANAGE',
                 token: this.userState.token
             };
             const res = await toolDept(query);

@@ -1329,7 +1329,7 @@
             async getDepartment() {
                 let _this = this;
                 let query = {
-                    type: this.partDoctorType,
+                    type: 'DOCTOR',
                     token: this.userState.token
                 };
                 const res = await toolDept(query);

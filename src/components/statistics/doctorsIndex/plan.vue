@@ -354,7 +354,7 @@
 
         <div v-if="chatVisible">
             <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-                <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox"></chat>
+                <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox" :userMessage="userMessage"></chat>
             </el-dialog>
         </div>
         <!-- 谭莹备注 -->
@@ -519,6 +519,7 @@ export default {
     },
     data() {
         return {
+            userMessage:{},
             oclick: "click",
             chatTypeBox: {
                 startDoctorName: "",
@@ -777,6 +778,9 @@ export default {
         },
         //发送消息
         sendMessage(row) {
+            this.userMessage={
+                 userId: row.userId,
+            }
             this.createChat(row);
         },
         //查看档案

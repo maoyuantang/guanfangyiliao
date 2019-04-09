@@ -145,7 +145,7 @@
                     <li @click="openManFile()">孕妇答案</li>
                 </ul>
             </span>
-            <span v-show="oDoctorVis" title="健康处方">
+            <span v-show="oDoctorVis"  title="健康处方">
                 <img src="../../assets/img/sendNew11.png" />
             </span>
             <span v-show="oDoctorVis" title="转诊">
@@ -187,7 +187,6 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="setPlan()">确认</el-button>
-                        <el-button>取消</el-button>
                     </el-form-item>
                 </el-form>
             </el-dialog>
