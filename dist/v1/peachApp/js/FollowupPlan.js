@@ -560,13 +560,13 @@ function  submit() {
             data:JSON.stringify(data),
             success:function (data) {
                 if(data.errCode==0) {
-                    console.log(data.body.planId)
+                    alert(data.body.planId)
                     if (navigator.userAgent.match(/(iPhone|iPod|iPad)/i)) {
-                        console.log(data.body.planId)
+                        alert(data.body.planId+'ios')
                         window.webkit.messageHandlers.submit.postMessage(data.body);
                     } else if (navigator.userAgent.match(/android/i)) {
-                        console.log(data)
-                        console.log(data.body.planId)
+                        // alert(data)
+                        alert(data.body.planId+'安卓')
                         window.android.jsMethodFollowSubmit(true,data.body.planId);
                         window.androidShare.jsMethodFollow(data.body.planId);
                     }
