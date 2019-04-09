@@ -120,7 +120,7 @@
 				searchValue: "",//返回搜索框输入   search
 				types: '', //String MANAGE账号是什么权限
 				pageNum: 1,//页数
-				pageSize: 5,//条数
+				pageSize: 10,//条数
 				yTotal1: 0,//统计y轴相加
 				//管理统计端  筛选工具栏  统计筛选返回值  接收参数
 				time0: "",///统计筛选开始时间

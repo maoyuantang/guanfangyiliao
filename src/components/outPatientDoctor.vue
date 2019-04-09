@@ -45,7 +45,7 @@
                             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
                                 <span class="tanKuang1" @click="seeHistory(text1.userId)">查看档案</span>
                                 <button class="tanKuang2" @click="sendMessage(text,text1)" :disabled="text1.disabledStatus">发送</button>
-                                <div class="tanKuang3">{{text.doctor.doctorStates?'未开始':'进行中'}}</div>
+                                <div class="tanKuang3">{{text1.orderState}}</div>
                                 <!-- <el-button type="success" plain @click="seeHistory(text1.userId)">查看档案</el-button> -->
                                 <!-- <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button> -->
                                 <!-- <el-button type="info" plain>{{text.doctor.doctorStates?'未开始':'进行中'}}</el-button> -->
@@ -654,6 +654,7 @@ export default {
             //   ]
             // },
 
+<<<<<<< HEAD
             // new
             myHomes: [],
             tableDataList1: [
@@ -721,6 +722,90 @@ export default {
                 i: 0, //选中的是第几项，类型为int(注意：从0开始计数)
                 list: [
                     //选项列表，类型Array
+=======
+                // new
+                myHomes: [],
+                tableDataList1: [
+                    // [
+                    //   {
+                    //     unProcess: '1',
+                    //     process: '2',
+                    //     otherDocter: '3'
+                    //   }
+                    // ],
+                ],
+                whichUser: 0,
+                myHomesBiao: [],
+                imgChuFangDan: "",
+
+                //函数传参
+                // 公共
+                pageNum: 1, //页数
+                pageSize: 10, //条数
+                searchValue: "", //搜索框接收参数
+                businessType: "", //业务类型接收参数
+                remark: "",
+
+                orgCode: "", // 医院机构码
+                departmentId: "", //科室id
+                clinicId: "", //诊室id
+                secondDoctorId: "", // 审方医生id（为空）
+                prescriptionId: "0", //处方id     // 7.12根据处方id获取处方电子版  (预览)
+                reviewEnum0: "REVIEWED", // 7.9审核处方  审核状态（REVIEWED, //已审核；UNREVIEWED, //未审核；FAILREVIEWED, //不通过）
+                reviewEnum1: null, // 7.8开处方    审方状态（为空）
+                userId: "", //7.8用户id（患者id）
+                lookType: 0, //7.10查看类型(lookType ==0 待审核列表； lookType ==1 审核通过列表)
+                isShowPatient: false, //就诊列表是否出现
+                isShowPatientList: [], //就诊列表数据
+                text5Array: [], //就诊列表弹框底部table数据
+                huanzheList: [],
+                // huanzheList2: [],
+                huanzheList3: {},
+                huanzheList4: [],
+                srcs: "", //处方id   用于拼接图片src
+
+                // 7.8开处方 医生端列表2
+                // firstDoctorId: '',//开方医生id
+                // complained: '',// 主诉
+                // medicalHistory: '',//现病史
+                // allergyHistory: '',//过敏史
+                // diagnosis: '',//门诊诊断
+                // report: true,// 疫情报告（true：勾选；false：不勾选）
+                // review: false,// 复诊（true：勾选；false：不勾选）
+                // occurTime: '',//发病日期
+                // reviewTime: '',//下次复查日期
+                // //药品详情（详情看返回值说明）
+                // drugId: '',                   //药品id
+                // drugPrice: '',                  //药品价格
+                // drugQuantity: '',                   //药品数量
+                // subtotal: '',                   //药品🐤小计
+                // doctorAsk: '', //医生嘱托
+
+                // checked1: true,
+                // checked2: false,
+                // value1: '',
+                // value2: '',
+                // searchValue: "",
+                oAdminTab: {
+                    i: 0, //选中的是第几项，类型为int(注意：从0开始计数)
+                    list: [
+                        //选项列表，类型Array
+                        {
+                            // en: "", //选项英文，类型 string
+                            zh: "我的诊室" //选项中文，类型string
+                        },
+                        {
+                            // en: "",
+                            zh: "处方审核"
+                        },
+                        {
+                            // en: "",
+                            zh: "药品配送"
+                        }
+                    ]
+                },
+                columns: [
+>>>>>>> a391e8f4a80c54f368d8d26fa00750d2d5aeadcd
                     {
                         // en: "", //选项英文，类型 string
                         zh: "我的诊室" //选项中文，类型string
@@ -1477,6 +1562,7 @@ export default {
                     color: #0064ff;
                     text-align: right;
                 }
+<<<<<<< HEAD
 
                 ul {
                     display: flex;
@@ -1508,6 +1594,38 @@ export default {
                                         margin-right: 0.08rem;
                                     }
                                 }
+=======
+                var nowDate = year + "-" + month + "-" + day;
+                this.time0 = nowDate;
+                this.time1 = nowDate;
+
+                const _this = this;
+                let query = {
+                    token: this.userInfo.token,
+                    pageNum: this.pageNum,
+                    pageSize: this.pageSize
+                };
+                const res = await onlineRoomsByDoctor(query);
+                if (res.data && res.data.errCode === 0) {
+                    console.log("医生端列表1+成功");
+                    console.log(this.time0);
+                    console.log(this.time1);
+                    this.myHomes = res.data.body.data2.list;
+                    $.each(this.myHomes, function (index, text) {
+                        $.each(text.clinicOrders, function (index1, text1) {
+                            text1.disabledStatus = false;
+                        });
+                    });
+                    console.log(this.myHomes);
+                    this.myHomesBiao.length = 0;
+                    $.each(res.data.body.data2.list, function (index, text) {
+                        _this.myHomesBiao.push(index);
+                        _this.tableDataList1.push([
+                            {
+                                process: text.process,
+                                unProcess: text.unProcess,
+                                doctorCount: text.doctorCount
+>>>>>>> a391e8f4a80c54f368d8d26fa00750d2d5aeadcd
                             }
                         }
                     }
@@ -1545,9 +1663,14 @@ export default {
         }
     }
 
+<<<<<<< HEAD
     .startGroup input {
         width: 162px;
         height: 28px;
+=======
+        /* overflow: auto;
+        max-height: 750px; */
+>>>>>>> a391e8f4a80c54f368d8d26fa00750d2d5aeadcd
     }
 }
 

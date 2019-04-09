@@ -104,7 +104,7 @@
             </thead>
             <tbody class="account-authority-tbody">
               <tr v-for="(item,index) in outerCourt.list" :key="index">
-                <th>item.departmentName</th>
+                <th>item.</th>
                 <th>item.name</th>
                 <th>item.account</th>
                 <th>item.phone</th>
@@ -340,7 +340,7 @@ import {
   deleteUserItem,
   listBusRange,
   fetchHospitalDeptAuth,
-  internalHospitalDoctor
+  internalHospitalDoctor,
 } from "../../../api/apiAll.js";
 
 export default {
@@ -1153,11 +1153,11 @@ export default {
         item.value = item.id;
         return item;
       });
-      this.outerCourt.department.list = this.global.manToolDept.map(item=>{
-        item.text = item.name;
-        item.value = item.id;
-        return item;
-      });
+      // this.outerCourt.department.list = this.global.manToolDept.map(item=>{
+      //   item.text = item.name;
+      //   item.value = item.id;
+      //   return item;
+      // });
        const res = await fetchHospitalDeptAuth({
         orgCode: this.userSelfInfo.orgCode,
         token: this.userInfo.token,
@@ -1166,6 +1166,11 @@ export default {
       console.log(res)
       if (res.data.errCode === 0) {
         this.departmentlist = JSON.parse(JSON.stringify(res.data.body));
+        this.outerCourt.department.list = JSON.parse(JSON.stringify(res.data.body.map(item=>{
+          item.text = item.deptName;
+          item.value = item.deptId;
+          return item;
+        })))
         // this.ourStaff.department.list = JSON.parse(
         //   JSON.stringify([
         //     { text: "全部", deptId: "" },

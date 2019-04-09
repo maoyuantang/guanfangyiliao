@@ -1,6 +1,6 @@
 <template>
 	<div class="resources">
-        <div class="resources-top">
+        <!-- <div class="resources-top">
             <div class="resources-top-left">
                 <tag :inData="queryConditions.department" @reback="getDepartmentSelect"></tag>
                 <tag :inData="queryConditions.department" @reback="getDepartmentSelect"></tag>
@@ -9,7 +9,7 @@
             <div class="resources-top-right">
                 {{global.documentsClassification}}
             </div>
-        </div>
+        </div> -->
 		
 	</div>
 </template>
