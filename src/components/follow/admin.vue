@@ -176,6 +176,14 @@
                 </ul>
             </el-dialog>
         </div>
+        <!-- 使用量 -->
+        <div v-if="userNumVisible">
+            <el-dialog class="evaluateBox evaluateBox2" title="历史计划" :visible.sync="userNumVisible" width="782px" hight="356px" center :show-header="showHeadViable">
+
+                <tableList :tableData="userNumTable" :columns="userNumColum" :total="userNumTotal" @rebackFenye="changeCurrent3"></tableList>
+
+            </el-dialog>
+        </div>
         <!-- 管理端 -->
         <div>
             <div class="Admin-title">
@@ -269,7 +277,7 @@
                         <search @searchValue="searchChange"></search>
                     </div>
                     <div>
-                        <tableList :tableData="tableDataListFa" :columns="columnsFa" :total="adminTotal3" @rebackFenye="changeCurrent3"></tableList>
+                        <tableList :tableData="tableDataListFa" :columns="columnsFa" :total="adminTotal3" @rebackFenye="changeCurrent3" :cellColor='cellColor' @cellClickData="cellClickData"></tableList>
                     </div>
                 </div>
                 <!-- 统计 -->
@@ -368,7 +376,9 @@ import {
     groupSelects,
     SETEQUIPMENT,
     SETFOLLOWCHART,
-    toolMemberGroup
+    toolMemberGroup,
+    getAlertDetail,
+    getUseDetail
 } from "../../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../../plugs/echarts.js";
@@ -403,7 +413,12 @@ export default {
     },
     data() {
         return {
-            pieChartVisable:true,
+            userNumTable: [],
+            userNumColum: [],
+            userNumTotal: 0,
+            userNumPage: 0,
+            userNumVisible: false,
+            pieChartVisable: true,
             groupId: "",
             groupValue: "",
             groupName: "",
@@ -704,12 +719,24 @@ export default {
                     label: "用户 "
                 },
                 {
-                    prop: "useNumber ",
-                    label: " 使用量"
+                    prop: "useNumber",
+                    label: "使用量"
                 },
                 {
                     prop: "alertInfo",
                     label: "告警情况 "
+                }
+            ],
+            cellColor: [
+                {
+                    cell: 4,
+                    value: "使用量",
+                    oclass: "ooRed"
+                },
+                {
+                    cell: 5,
+                    value: "告警情况",
+                    oclass: "ooRed"
                 }
             ],
             tableDataList: [],
@@ -872,19 +899,19 @@ export default {
                 title: "结果分布-总览 " //图表标题
             },
             pieData2: {
-              dataAxis: [], //每个柱子代表的类名
+                dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
                 title: "结果分布-年龄 " //图表标题
             },
             pieData3: {
-               dataAxis: [], //每个柱子代表的类名
+                dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
                 title: "结果分布-科室 " //图表标题
             },
-            pieData1Visable:false,
-             pieData2Visable:false,
-              pieData3Visable:false,
-            tjType: "DEPT",
+            pieData1Visable: false,
+            pieData2Visable: false,
+            pieData3Visable: false,
+            tjType: "DAy",
             tjStartTime: "",
             tjEndTime: "",
             //医生数据
@@ -1156,8 +1183,8 @@ export default {
             }
         },
         changeCurrent5(data) {
-            this.adminPageNum5 = data;
-            this.getAdminList();
+            this.userNumPage = data;
+            this.cellClickData();
         },
         oTab66Remove() {
             console.log(this.oTab66.list);
@@ -1259,7 +1286,7 @@ export default {
         // 管理端类型
         getOTab2(data) {
             this.followMobanType = data.index.value;
-            this.oGetTemplate();
+            this.getFoList();
         },
         // 管理端方式
         getOTab3(data) {
@@ -1271,9 +1298,10 @@ export default {
             this.oContent = data.index.value;
             this.getFoList();
         },
+        //家用设备类型筛选
         getOTab5(data) {
             this.equiType = data.index.value;
-            this.getFoList();
+            this.oManagerGetDeviceList();
         },
         getOTab6(data) {
             this.mydType = data.index.value;
@@ -1387,7 +1415,7 @@ export default {
             if (index == 0) {
                 this.oGetResultList();
                 this.oGetResultGraph();
-                this.pieChartVisable=true;
+                this.pieChartVisable = true;
                 this.addFollowVis = false;
                 (this.mydTableChecked = false),
                     (this.sendTemplateListVis = false),
@@ -1435,7 +1463,7 @@ export default {
                 this.SatisfiedBtn = [];
             } else if (index == 1) {
                 this.oGetModelList();
-                this.pieChartVisable=false;
+                this.pieChartVisable = false;
                 (this.mydTableChecked = false),
                     (this.sendTemplateListVis = false),
                     (this.wayVisible1 = true);
@@ -1502,7 +1530,7 @@ export default {
                     }
                 ];
             } else {
-                this.pieChartVisable=false;
+                this.pieChartVisable = false;
                 (this.mydTableChecked = true),
                     (this.sendTemplateListVis = true);
                 this.wayVisible1 = false;
@@ -2035,7 +2063,7 @@ export default {
                 this.getFoList();
             } else if (res.i == 1) {
                 this.oGetResultList();
-                this.oGetResultGraph()
+                this.oGetResultGraph();
             } else if (res.i == 2) {
                 this.oManagerGetDeviceList(); //家用设备列表
             } else if (res.i == 3) {
@@ -2902,7 +2930,7 @@ export default {
                     _this.pieData1Visable = false;
                 }
 
-                 $.each(res.data.body.age, function(index, text) {
+                $.each(res.data.body.age, function(index, text) {
                     _this.pieData2.dataAxis.push(text.x);
                     _this.pieData2.data.push(text.y);
                 });
@@ -2912,7 +2940,7 @@ export default {
                     _this.pieData2Visable = false;
                 }
 
-                 $.each(res.data.body.department, function(index, text) {
+                $.each(res.data.body.department, function(index, text) {
                     _this.pieData3.dataAxis.push(text.x);
                     _this.pieData3.data.push(text.y);
                 });
@@ -2921,7 +2949,6 @@ export default {
                 } else {
                     _this.pieData3Visable = false;
                 }
-
             } else {
                 //失败
                 this.$notify.error({
@@ -3146,6 +3173,114 @@ export default {
                     id: row.userId
                 }
             });
+        },
+        //家医使用量和告警
+        async cellClickData(data) {
+            this.userNumVisible = true;
+            console.log(data);
+            if (data[1].label == "使用量") {
+                this.departVisible = true;
+                let _this = this;
+                let query = {
+                    token: this.userState.token,
+                    serialNumber: data[0].serialNumber,
+                    startTime: "",
+                    endTime: "",
+                    pageNum: this.userNumPage,
+                    pageSize: 10
+                };
+                let res = await getUseDetail(query);
+                if (res.data && res.data.errCode === 0) {
+                    _this.userNumTable = res.data.body.data2.list;
+                    _this.userNumTotal = res.data.body.data2.total;
+                    _this.userNumColum = [
+                        {
+                            prop: "dataTime",
+                            label: "时间"
+                        },
+                        {
+                            prop: "firstType",
+                            label: "测量项"
+                        },
+                        {
+                            prop: "firstValue",
+                            label: "测量值"
+                        },
+                        {
+                            prop: "secondType",
+                            label: "测量项"
+                        },
+                        {
+                            prop: "secondValue",
+                            label: "测量值"
+                        },
+                        {
+                            prop: "thirdType",
+                            label: "测量项"
+                        },
+                        {
+                            prop: "thirdValue",
+                            label: "测量值"
+                        }
+                    ];
+                } else {
+                    //失败
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
+            } else if (data[1].label == "告警情况") {
+                this.doctorVisible = true;
+                let _this = this;
+                let query = {
+                    token: this.userState.token,
+                    serialNumber: data[0].serialNumber,
+                    pageNum: this.userNumPage,
+                    pageSize: 10
+                };
+                let res = await getAlertDetail(query);
+                if (res.data && res.data.errCode === 0) {
+                    _this.userNumTable = res.data.body.data2.list;
+                    _this.userNumTotal = res.data.body.data2.total;
+                    _this.userNumColum = [
+                        {
+                            prop: "dataTime",
+                            label: "时间"
+                        },
+                        {
+                            prop: "firstType",
+                            label: "测量项"
+                        },
+                        {
+                            prop: "firstValue",
+                            label: "测量值"
+                        },
+                        {
+                            prop: "secondType",
+                            label: "测量项"
+                        },
+                        {
+                            prop: "secondValue",
+                            label: "测量值"
+                        },
+                        {
+                            prop: "thirdType",
+                            label: "测量项"
+                        },
+                        {
+                            prop: "thirdValue",
+                            label: "测量值"
+                        }
+                    ];
+                } else {
+                    //失败
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
+            }
         }
     }
 };

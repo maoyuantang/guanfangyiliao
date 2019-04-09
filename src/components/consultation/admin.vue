@@ -54,14 +54,14 @@
 
         <!-- 接收科室 -->
         <div v-if="departVisible">
-            <el-dialog class="evaluateBox" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
-                <receiveDepartent :receptionDepartment="receptionDepartment"></receiveDepartent>
+            <el-dialog class="consultationDetailClass" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
+                <receiveDepartent :receptionDepartment="receptionDepartment"  v-if="receptionDepartment.length>0"></receiveDepartent>
             </el-dialog>
         </div>
         <!-- 医生详情 -->
         <div v-if="doctorVisible">
-            <el-dialog class="evaluateBox evaluateBox2" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
-                <doctorDetail :doctorDetailData="doctorDetailData"></doctorDetail>
+            <el-dialog class="consultationDetailClass" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
+                <doctorDetail :doctorDetailData="doctorDetailData"   v-if="doctorDetailData.length>0"></doctorDetail>
 
             </el-dialog>
         </div>
@@ -74,7 +74,7 @@
         </div>
         <!-- 查看记录 -->
         <div v-if="recordVisible">
-            <el-dialog class="  " title="  " :visible.sync="recordVisible" width="602px" hight="356px" center>
+            <el-dialog class=" consultationDetailClass " title="  " :visible.sync="recordVisible" width="602px" hight="356px" center>
                 <viewRecord :sessionId="sessionId"></viewRecord>
             </el-dialog>
         </div>
@@ -186,12 +186,12 @@ export default {
             doctorVis: 0, //0是医生跟医生聊天
             cellColor: [
                 {
-                    cell: 7,
+                    cell: 6,
                     value: "接收科室",
                     oclass: "ooRed"
                 },
                 {
-                    cell: 8,
+                    cell: 7,
                     value: "参与专家",
                     oclass: "ooRed"
                 }

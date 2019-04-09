@@ -1015,7 +1015,7 @@ export default {
                 title: "智能随访人次 ", //图表标题
                 total: 0
             },
-            tjType: "DEPT",
+            tjType: "DAY",
             tjStartTime: "",
             tjEndTime: "",
             //医生数据

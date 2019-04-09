@@ -1,7 +1,6 @@
 <template>
-    <div style="  overflow: auto;
-    height: 520px;">
-        <ul class="departmentDetail">
+    <div >
+        <ul class="departmentDetail doctorDetailBox">
             <li v-for="(text,index) in receptionDepartment" :key="index">
                 <!-- <div>
                     <img :src="imgUrl+text.hospitalId" />
@@ -42,11 +41,11 @@ export default {
 };
 </script>
 <style>
-.departmentDetail {
+/* .departmentDetail {
 }
 .departmentDetail > li {
     display: flex;
     display: -webkit-flex;
     margin-bottom: 10px;
-}
+} */
 </style>

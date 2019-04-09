@@ -119,7 +119,8 @@ export default {
                 $.each(res.data.body, function(index, text) {
                     _this.noticeList.push(text);
                 });
-                _this.msgId = res.data.body[0].msgId;
+                let oLength= res.data.body.length
+                _this.msgId = res.data.body[oLength-1].msgId;
                 if (res.data.body.length > 0) {
                     this.nodataVisable = false;
                 } else {
@@ -240,7 +241,7 @@ export default {
     },
     created() {
         this.msgId = this.$store.state.socket.messageTicket.oMsgId;
-        alert(this.$store.state.socket.messageTicket.oMsgId);
+        // alert(this.$store.state.socket.messageTicket.oMsgId);
         this.getNoticeList();
     }
 };

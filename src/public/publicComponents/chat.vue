@@ -32,7 +32,7 @@
 
                             <div>
                                 <!-- 显示文本 -->
-                                <div v-show="text.childMessageType=='DEFAULT' || text.childMessageType=='CRVIDEO'">
+                                <div :class="{'contentClass':text.from==userSelfInfo.userId}" v-show="text.childMessageType=='DEFAULT' || text.childMessageType=='CRVIDEO'">
                                     {{text.content}}
                                 </div>
                                 <!-- 显示图片 -->
@@ -46,7 +46,7 @@
                                     </viewer>
                                 </div>
                                 <!-- 显示视频 -->
-                                <div v-show="text.childMessageType=='VIDEO'">
+                                <div :class="{'contentClass':text.from==userSelfInfo.userId}" v-show="text.childMessageType=='VIDEO'">
                                     {{text.content}}
                                 </div>
 
@@ -85,12 +85,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div v-show="oDoctorVis" class="noReadro">
+                            <!-- <div v-show="oDoctorVis" class="noReadro">
                                 <div v-if="text.from!=userSelfInfo.userId">
                                     <span class="allReadColor" v-if="text.oRead">已读 </span>
                                     <span class="noReadColor" v-else>未读</span>
                                 </div>
-                            </div>
+                            </div> -->
 
                         </div>
                     </div>
@@ -195,7 +195,7 @@
         <div v-if="followVisible">
             <el-dialog title="发送随访" :visible.sync="followVisible" center append-to-body width='500px'>
                 <ul>
-                    <li class="followBox" v-for="(text,index) in followList" :key="index"  @click="followDetail(text.id)">
+                    <li class="followBox" v-for="(text,index) in followList" :key="index" @click="followDetail(text.id)">
                         <span>{{text.title}}</span>
                         <span> > </span>
                     </li>
@@ -218,7 +218,7 @@
         <div v-if="questVisible">
             <el-dialog title="发送问诊" :visible.sync="questVisible" center append-to-body width='500px'>
                 <ul>
-                    <li class="followBox" v-for="(text,index) in questList" :key="index"  @click="QuestDetail(text.id)">
+                    <li class="followBox" v-for="(text,index) in questList" :key="index" @click="QuestDetail(text.id)">
                         <span>{{text.title}}</span>
                         <span> > </span>
                     </li>
@@ -1112,7 +1112,7 @@ export default {
             }
         },
         //获取历史记录
-        async getHisRecord(oMsgId) {
+        async getHisRecord() {
             console.log("历史消息");
             console.log(this.sessionId);
             let _this = this;
@@ -1155,7 +1155,7 @@ export default {
                 });
 
                 for (let i = 0; i < odata.length; i++) {
-                    if (this.areadyReadNum < odata[i].msgId) {
+                    if (this.areadyReadNum > odata[i].msgId) {
                         this.messageList[i].oRead = true;
                     } else {
                         this.messageList[i].oRead = false;
@@ -1465,6 +1465,8 @@ export default {
         //视频组件传过来的事件
         videoclick(data) {
             this.videoVisible = false;
+            this.alreadyRead();
+            this.getHisRecord();
         },
         //删除视频房间
         async deleteVideoRoom() {
@@ -1562,11 +1564,22 @@ export default {
                     }
                 }
             }
+        },
+        "userSocketInfo.synchroMessage": {
+            handler(n, o) {
+                let _this = this;
+                $.each(n.syncData, function(index, text) {
+                    if (text.command == "SYNC_SESSION") {
+                        _this.alreadyRead();
+                        _this.getHisRecord();
+                    }
+                });
+            }
         }
     },
     props: {
         sessionId: String, //会话Id
-        doctorVis: Number,//0是医生，1是患者
+        doctorVis: Number, //0是医生，1是患者
         userMessage: Object,
         chatType1: String,
         chatTypeBox: Object
@@ -1645,14 +1658,16 @@ export default {
     color: #323c47;
     letter-spacing: 0;
     line-height: 27px;
+    margin-bottom: 2px;
 }
-.recordLf .otherCon h4 span,
-.recordRg .otherCon h4 span {
+.recordLf .otherCon h4 > span:nth-child(2),
+.recordRg .otherCon h4 > span:nth-child(2) {
     font-family: Lato-Regular;
     font-size: 12px;
     color: #939eab;
     letter-spacing: 0;
-    line-height: 22px;
+    line-height: 28px;
+    margin-right: 6px;
 }
 .recordLf .otherCon div {
     font-family: Lato-Regular;
@@ -1696,6 +1711,11 @@ export default {
 }
 .recordRg .peopleName {
     float: right;
+    font-family: Lato-Bold;
+    font-size: 14px;
+    color: #323c47;
+    letter-spacing: 0;
+    line-height: 27px;
 }
 .recordRg .otime {
     float: right;
@@ -1764,12 +1784,14 @@ export default {
     height: 138px;
 }
 .allReadColor {
-    color: #cccccc;
+    color: #939eab;
+    margin-right: 10px;
 }
 .noReadColor {
-    color: green;
+    color: #ff0000;
+    margin-right: 10px;
 }
-.sendImgCss {
+d .sendImgCss {
     position: absolute;
     opacity: 0;
     width: 100%;
@@ -1875,10 +1897,31 @@ export default {
     line-height: 12px;
 }
 .otherNumClass {
+    position: relative;
     width: 100%;
     padding: 0 10px;
     overflow: hidden;
     height: 23px;
+    padding-left: 17px;
+}
+.otherNumClass::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: #2ebd41;
+    border-radius: 50%;
+    left: 0px;
+    top: 8px;
+}
+.contentClass {
+    font-family: Lato-Regular;
+    font-size: 14px;
+    color: #4da1ff;
+    letter-spacing: 0;
+    text-align: right;
+    line-height: 27px;
 }
 .noReadro > span {
     display: block;
