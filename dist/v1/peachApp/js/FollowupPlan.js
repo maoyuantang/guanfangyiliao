@@ -559,11 +559,14 @@ function  submit() {
             },
             data:JSON.stringify(data),
             success:function (data) {
-                alert(data.body.planId)
                 if(data.errCode==0) {
+                    console.log(data.body.planId)
                     if (navigator.userAgent.match(/(iPhone|iPod|iPad)/i)) {
+                        console.log(data.body.planId)
                         window.webkit.messageHandlers.submit.postMessage(data.body);
                     } else if (navigator.userAgent.match(/android/i)) {
+                        console.log(data)
+                        console.log(data.body.planId)
                         window.android.jsMethodFollowSubmit(true,data.body.planId);
                         window.androidShare.jsMethodFollow(data.body.planId);
                     }
