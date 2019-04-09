@@ -124,11 +124,12 @@ $.ajax({
                         +'</div>'
                         +'<div class="weui-cell">'
                         +'<div class="weui-cell__bd"><input type="hidden" id="textarea" value="'+data[i].id+'">';
-                    if(data[i].text==""){
+                    if(data[i].text=="" || data[i].text==null){
                         pathml+='<textarea class="weui-textarea " placeholder="请输入你所知道的答案" rows="3" id="text'+[i+1]+'" form="usrform">'
-                        +data[i].text
+                        +(data[i].text?data[i].text:'')
                         +'</textarea>';
-                    }else if(data[i].text!=""){
+                    }
+                    else if(data[i].text!=""){
                         pathml+='<p class="weui-textarea weuitext" placeholder="请输入你所知道的答案" rows="3" id="text'+[i+1]+'" form="usrform">'
                             +data[i].text
                             +'</p>';
@@ -196,7 +197,7 @@ $.ajax({
             }
             $("#questionbox").html(pathml);
         }else{
-            $.alert(data.message);
+            $.alert(data.errMsg);
         }
     },
     error: function (data) {

@@ -499,9 +499,9 @@ $("#discussion").click(function () {
         console.log("b");
     }
 })
-// $('.aaaa').click(function(){
-//     submit()
-// })
+$('.aaaa').click(function(){
+    submit()
+})
 var oType=""
 // submit()
 function  submit() {
@@ -559,15 +559,17 @@ function  submit() {
             },
             data:JSON.stringify(data),
             success:function (data) {
+                alert(data.body.planId)
                 if(data.errCode==0) {
                     if (navigator.userAgent.match(/(iPhone|iPod|iPad)/i)) {
                         window.webkit.messageHandlers.submit.postMessage(data.body);
                     } else if (navigator.userAgent.match(/android/i)) {
-                        window.android.jsMethodFollowSubmit(true,data.body.id);
-                        window.androidShare.jsMethodFollow(data.body.id);
+                        window.android.jsMethodFollowSubmit(true,data.body.planId);
+                        window.androidShare.jsMethodFollow(data.body.planId);
                     }
                 }else{
-                    $.alert(data.errMsg);
+                    // $.alert(data.errMsg);
+                    alert(data.errMsg);
                     if (navigator.userAgent.match(/(iPhone|iPod|iPad)/i)) {
 
                     } else if (navigator.userAgent.match(/android/i)) {

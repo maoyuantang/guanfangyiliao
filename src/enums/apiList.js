@@ -314,5 +314,6 @@ export default {
     webDocGetDeviceList:'/m/v1/api/device/house/webDocGetDeviceList',//2.医生查看成员设备数据列表【医生web】
     sendBtnVisable:'/m/v1/api/clinic/clinic/sendMe',
     orderFmsCharts:'/m/v1/api/order/orderFmsCharts',//17.16.家医系统业务人次统计图
+    queryPageByassessPlan:'/m/v1/api/medical/queryPageByassessPlan',//12.WEB端获取评估计划列表
 }
 

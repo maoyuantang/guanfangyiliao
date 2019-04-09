@@ -1,8 +1,7 @@
 <template>
 
-    <div style="    overflow: auto;
-    height: 520px;">
-        <ul>
+    <div style="   ">
+        <ul class='doctorDetailBox'>
             <li v-for="(text,index) in doctorDetailData" :key="index">
 
                 <div class="headImg">
@@ -16,7 +15,7 @@
                 </div>
             </li>
         </ul>
-        <noData v-show="nodataVisable"></noData>
+        <noData v-if="nodataVisable"></noData>
     </div>
 </template>
 <script>
@@ -26,12 +25,14 @@ export default {
     components: {
         noData
     },
-        computed: {
+    watch:{
+       doctorDetailData(n){console.log(n)} 
+    },
+    computed: {
         ...mapState({
             userState: state => state.user.userInfo,
             userSelfInfo: state => state.user.userSelfInfo,
             userSocketInfo: state => state.socket
-
         })
     },
     data() {
@@ -42,10 +43,17 @@ export default {
         };
     },
     created() {
-        if (this.doctorDetailData.length > 0) {
-            this.nodataVisable = false;
-        } else {
-            this.nodataVisable = true;
+        this.nodataIf();
+    },
+    methods: {
+        nodataIf() {
+            console.log(this.doctorDetailData)
+            if (this.doctorDetailData.length > 0) {
+
+                this.nodataVisable = false;
+            } else {
+                this.nodataVisable = true;
+            }
         }
     },
     props: {
@@ -58,10 +66,24 @@ export default {
 };
 </script>
 <style>
+.consultationDetailClass .el-dialog__body {
+    height: 470px;
+    overflow: auto;
+    padding: 25px 40px;
+}
+.doctorDetailBox li {
+    display: flex;
+    display: -webkit-flex;
+    margin-bottom: 35px;
+}
+.doctorDetailBox li h5 {
+    margin-bottom: 10px;
+}
 .headImg {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    margin-right: 22px;
 }
 .headImg > img {
     width: 100%;

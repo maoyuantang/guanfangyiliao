@@ -52,7 +52,7 @@ import record from './docDetailed/record.vue'
 import inSide from './docDetailed/inSide.vue'
 import outSide from './docDetailed/outSide.vue'
 import { mapState } from "vuex";
-import { queryListByUserId} from '../api/apiAll.js'//api
+import { queryListByUserId, lastAssessPlan} from '../api/apiAll.js'//api
 export default {
     name: "docDetailed",
     components: {
@@ -101,6 +101,27 @@ export default {
     
     methods: {
         /**
+         * 11.获取成员最后一次评估相关
+         */
+        async getLastAssessPlan(){
+            const res = await lastAssessPlan({
+                token:this.userState.token,
+                userId:this.$route.query.id,
+                familyMemberId:this.topTag.list[this.topTag.index]?this.topTag.list[this.topTag.index].id:'', 
+            });
+            console.log(res);
+            if(res.data&&res.data.errCode===0){
+                
+            }else{
+                this.$notify({
+                    title: '获取成员最后一次评估相关失败',
+                    message: res.data.errMsg, 
+                    type: 'error'
+				});
+            }
+            
+        },
+        /**
          * 返回
          */
         reBack(){
@@ -119,8 +140,8 @@ export default {
                 this.topTag.list = res.data.body
             }else{
                 this.$notify({
-                    title: '失败',
-                    message: '成员列表获取失败', 
+                    title: '成员列表获取失败',
+                    message: res.data.errMsg, 
                     type: 'error'
 				});
             }
@@ -141,6 +162,7 @@ export default {
     },
     created() {
         this.getUsersList();
+        // this.getLastAssessPlan();
     },
     watch: {},
     /**

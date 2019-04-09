@@ -12,10 +12,10 @@
                     </tr>
                 </thead>
                 <tbody class="plan-tbody">
-                    <tr v-for="(item,index) in 9" :key="index">
-                        <th>{{item}}</th>
-                        <th>{{item}}</th>
-                        <th>{{item}}</th>
+                    <tr v-for="(item,index) in list" :key="index">
+                        <th>{{item.title}}</th>
+                        <th>{{item.familyMemberName}}</th>
+                        <th>{{item.createTime}}</th>
                         <th class="see">查看</th>
                     </tr>
                 </tbody>
@@ -36,7 +36,8 @@
 </template>
 
 <script>
-    // import { mapState } from 'vuex'
+    import { mapState } from 'vuex'
+    import {queryPageByassessPlan} from '../../../api/apiAll.js'
 	export default {
         props: ['inData'],
 		components:{
@@ -46,11 +47,11 @@
 			
 		},
 		computed:{
-			// ...mapState({
-			// 	userInfo:state => state.user.userInfo,
-            //     userSelfInfo:state => state.user.userSelfInfo,   
-            //     global: state => state.global 
-			// })
+			...mapState({
+				userInfo:state => state.user.userInfo,
+                userSelfInfo:state => state.user.userSelfInfo,   
+                global: state => state.global 
+			})
         },
 		data () {
 			return {
@@ -64,8 +65,45 @@
 		},
 		
 		methods:{
+            /**
+             *  12.WEB端获取评估计划列表
+             */
+            async getQueryPageByassessPlan(){
+                const res = await queryPageByassessPlan({
+                    token:this.userInfo.token,
+                    pageNum:this.page.current,                                              
+                    pageSize:this.page.size,                                         
+                    familyMemberId:this.inData.id,
+                });
+                console.log({
+                    token:this.userInfo.token,
+                    pageNum:this.page.current,                                              
+                    pageSize:this.page.size,                                         
+                    familyMemberId:this.inData.id,
+                })
+                console.log(res);
+                if(res.data && res.data.errCode === 0){
+                    this.list = res.data.body.data2.list;
+                    this.page.total = res.data.body.data2.total;
+                    console.log(this.list)
+				}else{
+					this.$notify({
+						title: '评估计划列表获取失败',
+						message: res.data.errMsg,  
+						type: 'error'
+					});
+				}
+            },
+            /**
+             * 分页
+             */
+            ChangePage(num){
+                this.page.current = num;
+                this.getQueryPageByassessPlan();
+            }
 		},
 		async created(){
+            this.getQueryPageByassessPlan();
 		}
 	}
 </script>
@@ -111,5 +149,8 @@
         font-size: 12px;
         color: #108E26;
         cursor: pointer;
+    }
+    .page{
+        text-align: center;
     }
 </style>

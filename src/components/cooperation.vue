@@ -253,4 +253,7 @@ border-radius: 4px;
 .invitationClassInputBtn .el-form-item__content{
     margin-left: 0px !important;
 }
+.chatDialog .el-dialog__body{
+    padding-top:0 !important
+}
 </style>

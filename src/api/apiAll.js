@@ -3299,3 +3299,14 @@ export const orderFmsCharts = query => { //17.16.家医系统业务人次统计�
         }
     })
 }
+export const queryPageByassessPlan = query => { //12.WEB端获取评估计划列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.queryPageByassessPlan,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

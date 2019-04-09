@@ -74,8 +74,13 @@ export default {
             };
             const res = await fetchHistoryMessage(query, options);
             if (res.data && res.data.errCode === 0) {
+                // _this.storyMessage = [];
+                $.each(res.data.body, function(index, text) {
+                    _this.storyMessage.push(text);
+                });
+                // _this.storyMessage = res.data.body;
                 let oLength = res.data.body.length;
-                if (res.data.body.length < 1) {
+                if (_this.storyMessage.length < 1) {
                     _this.nodataVisable = true;
                     _this.moreLoadVisable = false;
                 } else {
@@ -83,7 +88,7 @@ export default {
                     _this.moreLoadVisable = true;
                     _this.msgId = res.data.body[oLength - 1].msgId;
                 }
-                _this.storyMessage = res.data.body;
+
                 _this.resolveMessage();
             } else {
                 //失败
@@ -96,7 +101,7 @@ export default {
         resolveMessage() {
             let _this = this;
             this.timeList = [];
-            // this.messageList = [];
+            this.messageList = [];
             $.each(this.storyMessage, function(index, text) {
                 if (text.childMessageType == "INTERROGATION") {
                     //问诊
@@ -259,7 +264,7 @@ export default {
 }
 .viewClass {
     overflow: auto;
-    height: 520px;
+    /* height: 520px; */
 }
 .imgClass {
     width: 50px;

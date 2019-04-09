@@ -18,29 +18,33 @@
         <el-form :model="kuangData1.form">
           <el-form-item label="科室" :label-width="kuangData1.formLabelWidth">
             <el-select v-model="kuangData1.options1.value" placeholder="选择科室（单选）" style="width:80%">
-              <el-option v-for="(item,index) in kuangData1.options1.list||[]" :key="index" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="(item,index) in kuangData1.options1.list||[]" :key="index" :label="item.label"
+                :value="item.value"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="类型" :label-width="kuangData1.formLabelWidth">
-            <el-select v-model="kuangData1.options2.value" filterable allow-create default-first-option placeholder="填写或选择"
-              style="width: 80%;" @change='isHaveDepartment11' ref="ceshi1">
-              <el-option v-for="(item,index) in kuangData1.options2.list||[]" :key="index" :label="item.label" :value="item.value">
+            <el-select v-model="kuangData1.options2.value" filterable allow-create default-first-option
+              placeholder="填写或选择" style="width: 80%;" @change='isHaveDepartment11' ref="ceshi1">
+              <el-option v-for="(item,index) in kuangData1.options2.list||[]" :key="index" :label="item.label"
+                :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="名称" :label-width="kuangData1.formLabelWidth">
-            <el-select v-model="kuangData1.options3.value" filterable allow-create default-first-option placeholder="填写或选择"
-              style="width: 80%;" @change="inputReturn12" ref="ceshi2">
-              <el-option v-for="(item,index) in kuangData1.options3.list||[]" :key="index" :label="item.label" :value="item.value">
+            <el-select v-model="kuangData1.options3.value" filterable allow-create default-first-option
+              placeholder="填写或选择" style="width: 80%;" @change="inputReturn12" ref="ceshi2">
+              <el-option v-for="(item,index) in kuangData1.options3.list||[]" :key="index" :label="item.label"
+                :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="分级" :label-width="kuangData1.formLabelWidth">
             <el-select v-model="kuangData1.options4.value" placeholder="请选择1-4级" style="width:80%">
-              <el-option v-for="(item,index) in kuangData1.options4.list||[]" :key="index" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="(item,index) in kuangData1.options4.list||[]" :key="index" :label="item.label"
+                :value="item.value"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -62,20 +66,25 @@
         <el-form>
           <!-- :model="kuangData2.options" -->
           <el-form-item label="科         室:" :label-width="kuangData2.formLabelWidth">
-            <el-select v-model="kuangData2.options1.value" placeholder="单选" style="width:80%" @change='isHaveDepartment21'>
-              <el-option v-for="(item,index) in kuangData2.options1.list||[]" :key="index" :label="item.label" :value="item.value"></el-option>
+            <el-select v-model="kuangData2.options1.value" placeholder="单选" style="width:80%"
+              @change='isHaveDepartment21'>
+              <el-option v-for="(item,index) in kuangData2.options1.list||[]" :key="index" :label="item.label"
+                :value="item.value"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="接诊疾病等级:" :label-width="kuangData2.formLabelWidth">
-            <el-select v-model="kuangData2.options2.value" multiple placeholder="多选" style="width:80%" @change="inputReturn21">
-              <el-option v-for="(item,index) in kuangData2.options2.list||[]" :key="index" :label="item.label" :value="item.value">
+            <el-select v-model="kuangData2.options2.value" multiple placeholder="多选" style="width:80%"
+              @change="inputReturn21">
+              <el-option v-for="(item,index) in kuangData2.options2.list||[]" :key="index" :label="item.label"
+                :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
 
           <div class="block" style="margin-bottom: 22px;">
-            <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室:</span>
+            <span class="demonstration"
+              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室:</span>
             <el-cascader :options="kuangData2.options3.list" v-model="kuangData2.options3.value" @change="inputReturn22"
               placeholder="多选" clearable style="width:65%;">
             </el-cascader>
@@ -129,10 +138,10 @@
         </el-table>
       </div>
       <div style="text-align: center;padding: 10px 0;">
-        <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
+        <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+          @current-change="currentChange1">
         </el-pagination>
       </div>
-
     </div>
     <!-- 管理   流程和权限控制 -->
     <div v-if="barInfo.i == 1" class="medical_body1">
@@ -146,8 +155,8 @@
         </div>
       </div>
       <div class="medical_body1_table">
-        <el-table :data="medical_body1_Data" style="width: 100%" @cell-click="cellClick2"
-          :cell-class-name="ceshi0" :key="Math.random()">
+        <el-table :data="medical_body1_Data" style="width: 100%" @cell-click="cellClick2" :cell-class-name="ceshi0"
+          :key="Math.random()">
           <el-table-column prop="deptName" label="科室" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="direction" label="方向" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="scope" label="范围" :show-overflow-tooltip="true"></el-table-column>
@@ -162,7 +171,8 @@
         </el-table>
       </div>
       <div style="text-align: center;padding: 10px 0;">
-        <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange2">
+        <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+          @current-change="currentChange2">
         </el-pagination>
       </div>
     </div>
@@ -176,12 +186,13 @@
           <selftag v-model="onLineList.topFlag[0]" @reback="getFilter0"></selftag>
         </div>
         <div class="manager_count_top_right">
-          <statisticsWay v-model="time" @reBack="getFilterTime"></statisticsWay>
+          <!-- <statisticsWay v-model="time" @reBack="getFilterTime"></statisticsWay> -->
         </div>
       </div>
       <div class="manager_count_midle">
         <div>
           <normalColumnChart :inData="testdata1"> </normalColumnChart>
+
         </div>
       </div>
     </div>

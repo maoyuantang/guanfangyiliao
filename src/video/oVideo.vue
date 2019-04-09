@@ -6,8 +6,10 @@
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
                         <div id="remoteVideos"></div>
-                        <div class="videoChatBtn"  @click="videoChatBtn()">
-                            <button :disabled='questVisable'>
+                        <div class="videoChatBtn" @click="videoChatBtn()">
+                            <img style='width: 23px;
+    height: 25px;' src='../assets/img/jianpan.png' />
+                            <button class='questToolClass' :disabled='questVisable'>
                                 问诊工具
                             </button>
 
@@ -445,7 +447,7 @@ export default {
             const res = await bindSession(query, options);
             if (res.data && res.data.errCode === 0) {
                 _this.sessionId = res.data.body;
-                _this.questVisable=false
+                _this.questVisable = false;
                 //正在排队
                 if (num == 1) {
                     _this.createVideo(text.userId);
@@ -512,7 +514,7 @@ export default {
         videoChatBtn() {
             if (this.videoChatVisable) {
                 this.videoChatVisable = false;
-
+                $(".videoChatBtn").css("bottom", "0px");
                 if (this.videoType == "门诊") {
                     this.guaVisable = true;
                 } else {
@@ -520,6 +522,7 @@ export default {
                 }
             } else {
                 this.videoChatVisable = true;
+                $(".videoChatBtn").css("bottom", "-248px");
                 if (this.videoType == "门诊") {
                     this.guaVisable = false;
                 } else {
@@ -528,32 +531,33 @@ export default {
             }
         },
         //挂断普通视频
-        async closePublicVideo() {
-            let _this = this;
-            let query = {
-                token: this.userState.token
-            };
-            let options = {
-                clinicId: this.oClinicId,
-                userId: this.oUserId
-            };
-            const res = await doctorHangupNext(query, options);
-            if (res.data && res.data.errCode === 0) {
-                _this.getThePatient();
-                _this.noLineUpNum();
-                _this.closeVideoRoom(0);
-                _this.guaVisable = false;
-                _this.questVisable = false;
-                console.log("关闭视频成功");
-                _this.localVideoVisable = false;
-                _this.videoIng = 0;
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
+        closePublicVideo() {
+            this.closeVideoRoom(0);
+            // let _this = this;
+            // let query = {
+            //     token: this.userState.token
+            // };
+            // let options = {
+            //     clinicId: this.oClinicId,
+            //     userId: this.oUserId
+            // };
+            // const res = await doctorHangupNext(query, options);
+            // if (res.data && res.data.errCode === 0) {
+            //     // _this.getThePatient();
+            //     // _this.noLineUpNum();
+            //     _this.closeVideoRoom(0);
+            //     _this.guaVisable = false;
+            //     _this.questVisable = false;
+            //     console.log("关闭视频成功");
+            //     _this.localVideoVisable = false;
+            //     _this.videoIng = 0;
+            // } else {
+            //     //失败
+            //     this.$notify.error({
+            //         title: "警告",
+            //         message: res.data.errMsg
+            //     });
+            // }
         },
         //挂断当前视频
         async closeTheVideo() {
@@ -585,9 +589,7 @@ export default {
                 });
             }
         },
-        closeTheVideo1(){
-
-        },
+        closeTheVideo1() {},
         //关闭视频退出诊室
         async closeVideo() {
             this.streamObject.getTracks()[0].stop();
@@ -1804,18 +1806,33 @@ export default {
 
                         if (oData.info.childMessageType == 6) {
                             childMessageType = "VIDEO";
-                            if (messageBody == "refuse") {
+                            if (messageBody.indexOf("refuse") - 1) {
                                 //对方拒绝了视频
-                                this.closeTheVideo()
-                            } else if (messageBody == "complete") {
+                                if (this.videoType == "门诊") {
+                                    this.closeTheVideo();
+                                } else {
+                                    this.closePublicVideo();
+                                    this.$emit("reback");
+                                }
+                            } else if (messageBody.indexOf("complete") - 1) {
                                 //对方挂断了视频
-                                this.closeTheVideo()
-                            } else if (messageBody == "accept") {
+                                if (this.videoType == "门诊") {
+                                    this.closeTheVideo();
+                                } else {
+                                    this.closePublicVideo();
+                                    this.$emit("reback");
+                                }
+                            } else if (messageBody.indexOf("accept") - 1) {
                                 console.log(messageBody);
                                 this.$store.commit("socket/IFVIDEOIMG", 1);
-                            } else if (messageBody == "videoing") {
+                            } else if (messageBody.indexOf("videoing") - 1) {
                                 //对方正在通话中
-                                this.closeTheVideo()
+                                if (this.videoType == "门诊") {
+                                    this.closeTheVideo();
+                                } else {
+                                    this.closePublicVideo();
+                                    this.$emit("reback");
+                                }
                             } else if (
                                 messageBody.indexOf("sendroom") > -1 ||
                                 messageBody.indexOf("MicroCinicSendRoom") > -1
@@ -1975,12 +1992,13 @@ video {
 }
 .videoChatBtn {
     position: absolute;
-    bottom: 10px;
-    padding: 10px 0;
+    bottom: 0px;
     text-align: center;
     cursor: pointer;
     width: 100%;
-    border-top: 1px solid #6666;
+    background: #f4f4f4;
+    height: 50px;
+    padding-top: 12px;
 }
 .patientClass {
     position: fixed;
@@ -2168,6 +2186,15 @@ video {
 }
 .stream-box {
     height: 100%;
+}
+.questToolClass {
+    border: none;
+    outline: none;
+    background: none;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #646464;
+    text-align: left;
 }
 /* 
 门诊打开注意 

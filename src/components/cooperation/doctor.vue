@@ -64,23 +64,23 @@
         </el-dialog>
         <!-- 查看记录 -->
         <div v-if="recordVisible">
-            <el-dialog class="evaluateBox evaluateBox2" title=" 查看记录" :visible.sync="recordVisible" width="602px" hight="356px" center>
+            <el-dialog class="evaluateBox evaluateBox2 consultationDetailClass" title=" 查看记录" :visible.sync="recordVisible" width="602px" hight="356px" center>
                 <viewRecord :sessionId="sessionId"></viewRecord>
             </el-dialog>
         </div>
         <!-- 接收科室 -->
-        <div v-if="departVisible">
-            <el-dialog class="evaluateBox" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
+        <!-- <div v-if="departVisible">
+            <el-dialog class="evaluateBox consultationDetailClass" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
                 <receiveDepartent :receptionDepartment="receptionDepartment"></receiveDepartent>
             </el-dialog>
-        </div>
+        </div> -->
         <!-- 医生详情 -->
-        <div v-if="doctorVisible">
-            <el-dialog class="evaluateBox evaluateBox2" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
+        <!-- <div v-if="doctorVisible">
+            <el-dialog class="evaluateBox evaluateBox2 consultationDetailClass" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
                 <doctorDetail :doctorDetailData="doctorDetailData"></doctorDetail>
 
             </el-dialog>
-        </div>
+        </div> -->
 
         <!-- 邀请弹框 -->
         <div v-if="invitationVisible">
