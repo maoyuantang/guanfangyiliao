@@ -812,7 +812,7 @@
     }
     .class-scheduling-body{
         background: #FFFFFF;
-        border: 1px solid #E5EDF3;
+        /* border: 1px solid #E5EDF3; */
         box-shadow: 0 6px 36px 0 rgba(0,62,100,0.04);
         border-radius: 4px;
         padding-top: .32rem;

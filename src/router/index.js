@@ -43,7 +43,7 @@ const router = new Router({
 		      name: 'statistics',
 		      component: statistics,
 		      meta: {
-		        title: '首页统计'
+		        title: '冠方医疗-首页统计'
 		      }
         },
 				/**************************** */
@@ -52,7 +52,7 @@ const router = new Router({
 		      name: 'cloudManagement',
 		      component: cloudManagement,
 		      meta: {
-		        title: '云存储管理'
+		        title: '冠方医疗-云存储管理'
 		      }
         },
         {
@@ -60,7 +60,7 @@ const router = new Router({
 		      name: 'rounds',
 		      component: rounds,
 		      meta: {
-		        title: '移动查房系统'
+		        title: '冠方医疗-移动查房系统'
 		      }
         },
         {
@@ -68,7 +68,7 @@ const router = new Router({
 		      name: 'referral',
 		      component: referral,
 		      meta: {
-		        title: '双向转诊系统'
+		        title: '冠方医疗-双向转诊系统'
 		      }
         },
         {
@@ -76,7 +76,7 @@ const router = new Router({
 		      name: 'outpatient',
 		      component: outpatient,
 		      meta: {
-		        title: '远程门诊系统'
+		        title: '冠方医疗-远程门诊系统'
 		      }
         },
         {
@@ -84,7 +84,7 @@ const router = new Router({
 		      name: 'medicalTreatment',
 		      component: medicalTreatment,
 		      meta: {
-		        title: '分级诊疗系统'
+		        title: '冠方医疗-分级诊疗系统'
 		      }
         },
         {
@@ -92,7 +92,7 @@ const router = new Router({
 		      name: 'management',
 		      component: management,
 		      meta: {
-		        title: '终端管理系统'
+		        title: '冠方医疗-终端管理系统'
 		      }
         },
         {
@@ -100,7 +100,7 @@ const router = new Router({
 		      name: 'followUp',
 		      component: followUp,
 		      meta: {
-		        title: '智能随访系统'
+		        title: '冠方医疗-智能随访系统'
 		      }
         },
         {
@@ -108,7 +108,7 @@ const router = new Router({
 		      name: 'files',
 		      component: files,
 		      meta: {
-		        title: '健康档案系统'
+		        title: '冠方医疗-健康档案系统'
 		      }
         },
         {
@@ -116,7 +116,7 @@ const router = new Router({
 		      name: 'education',
 		      component: education,
 		      meta: {
-		        title: '远程教育系统'
+		        title: '冠方医疗-远程教育系统'
 		      }
         },
         {
@@ -124,7 +124,7 @@ const router = new Router({
 		      name: 'cooperation',
 		      component: cooperation,
 		      meta: {
-		        title: '远程协作系统'
+		        title: '冠方医疗-远程协作系统'
 		      }
         },
         {
@@ -132,7 +132,7 @@ const router = new Router({
 		      name: 'consultation',
 		      component: consultation,
 		      meta: {
-		        title: '远程会诊系统'
+		        title: '冠方医疗-远程会诊系统'
 		      }
 				},
 				{
@@ -140,7 +140,7 @@ const router = new Router({
 		      name: 'familyMedicine',
 		      component: familyMedicine,
 		      meta: {
-		        title: '家医生系统'
+		        title: '冠方医疗-家医生系统'
 		      }
 				},
 				{
@@ -148,7 +148,7 @@ const router = new Router({
 		      name: 'docDetailed',
 		      component: docDetailed,
 		      meta: {
-		        title: '健康档案系统-患者详情'
+		        title: '冠方医疗-健康档案系统-患者详情'
 		      }
 				},
       ]
@@ -158,7 +158,7 @@ const router = new Router({
       name: 'index',
       component: index,
       meta: {
-        title: '首页'
+        title: '冠方医疗-首页'
       },
     },
 //  {
@@ -182,7 +182,7 @@ const router = new Router({
 			name: 'login',
 			component: login,
 			meta: {
-				title: 'login'
+				title: '冠方医疗-login'
 			}
 		},
 		{
@@ -190,7 +190,7 @@ const router = new Router({
       name: 'notFound',
       component: notFound,
       meta: {
-        title: '404-not-found'
+        title: '冠方医疗-404-not-found'
       }
     },
   ]
@@ -202,73 +202,73 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
 	const routerMap = [
 		{
-			name:'首页',
+			name:'冠方医疗-首页',
 			select:true,
 			path:'/',
 			code:0
 		},
 		{
-			name:'远程门诊系统',
+			name:'冠方医疗-远程门诊系统',
 			select:false,
 			path:'/outpatient',
 			code:'10000'
 		},
 		{
-			name:'远程会诊系统',
+			name:'冠方医疗-远程会诊系统',
 			select:false,
 			path:'/consultation',
 			code:'20000'
 		},
 		{
-			name:'远程协作系统',
+			name:'冠方医疗-远程协作系统',
 			select:false,
 			path:'/cooperation',
 			code:'30000'
 		},
 		{
-			name:'智能随访系统',
+			name:'冠方医疗-智能随访系统',
 			select:false,
 			path:'/followUp',
 			code:'40000'
 		},
 		{
-			name:'健康档案系统',
+			name:'冠方医疗-健康档案系统',
 			select:false,
 			path:'/files',
 			code:'50000'
 		},
 		{
-			name:'远程教育系统',
+			name:'冠方医疗-远程教育系统',
 			select:false,
 			path:'/education',
 			code:'60000'
 		},
 			{
-			name:'分级诊疗系统',
+			name:'冠方医疗-分级诊疗系统',
 			select:false,
 			path:'/medicalTreatment',
 			code:'70000'
 		},
 			{
-			name:'双向转诊系统',
+			name:'冠方医疗-双向转诊系统',
 			select:false,
 			path:'/referral',
 			code:'80000'
 		},
 			{
-			name:'移动查房系统',
+			name:'冠方医疗-移动查房系统',
 			select:false,
 			path:'/rounds',
 			code:'90000'
 		},
 			{
-			name:'终端管理系统',
+			name:'冠方医疗-终端管理系统',
 			select:false,
 			path:'/management',
 			code:'100000'
 		},
 		{
-			name:'家医服务',
+			name:'冠方医疗-家医服务',
 			select:false,
 			path:'/familyMedicine',   
 			code:'110000'

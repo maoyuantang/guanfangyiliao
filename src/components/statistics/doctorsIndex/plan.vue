@@ -36,21 +36,38 @@
                             <template slot-scope="scope">
                                 <el-button class="btnClass" @click="sendMessage(scope.row)" type="text" size="small">发消息</el-button>
                                 <div class=" remarkListClass" @mouseenter="seeRemarks(scope.row,1)">
-                                    <el-button class="btnClass" type="text" size="small">看备注</el-button>
+                                    <!-- <el-button class="btnClass" type="text" size="small">看备注</el-button>
                                     <ul>
                                         <li v-for="(text,index) in remarks" :key="index">
                                             <div>{{text.createTime}}</div>
                                             <div>{{text.content}}</div>
                                         </li>
-                                    </ul>
+                                    </ul> -->
+                                    <el-dropdown trigger="click">
+                                        <el-button @click="seeRemarks(scope.row)" class="btnClass" type="danger" size="mini" plain>看备注</el-button>
+                                        <el-dropdown-menu slot="dropdown">
+
+                                            <el-dropdown-item v-for="(text,index) in remarks" :key="index">
+                                                <div>{{text.createTime}}</div>
+                                                <div>{{text.content}}</div>
+                                            </el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
                                 </div>
                                 <el-button class="btnClass" @click="sendArchives(scope.row)" type="text" size="small">看档案</el-button>
                                 <div class="entryFile">
-                                    <el-button class="btnClass" type="text" size="small">录入档案</el-button>
+                                    <!-- <el-button class="btnClass" type="text" size="small">录入档案</el-button>
                                     <ul>
                                         <li @click="addPublicDangan(scope.row)">普通档案</li>
                                         <li @click="addWomanDangan(scope.row)">孕妇档案</li>
-                                    </ul>
+                                    </ul> -->
+                                    <el-dropdown>
+                                        <el-button class="btnClass" type="danger" size="mini" plain>录入档案</el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item @click.native="addWomanDangan(scope.row)">孕妇信息</el-dropdown-item>
+                                            <el-dropdown-item @click.native="addPublicDangan(scope.row)">普通档案</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
                                 </div>
 
                             </template>
@@ -98,14 +115,31 @@
                         <el-table-column label=" " width="300">
                             <template slot-scope="scope">
                                 <el-button class="btnClass" @click="sendMessage(scope.row)" type="text" size="small">发消息</el-button>
-                                <el-button class="btnClass" @click="seeRemarks(scope.row)" type="text" size="small">看备注</el-button>
+                                <!-- <el-button class="btnClass" @click="seeRemarks(scope.row)" type="text" size="small">看备注</el-button> -->
+                                <el-dropdown trigger="click">
+                                    <el-button @click="seeRemarks(scope.row)" class="btnClass" type="danger" size="mini" plain>看备注</el-button>
+                                    <el-dropdown-menu slot="dropdown">
+
+                                        <el-dropdown-item v-for="(text,index) in remarks" :key="index">
+                                            <div>{{text.createTime}}</div>
+                                            <div>{{text.content}}</div>
+                                        </el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
                                 <el-button class="btnClass" @click="sendArchives(scope.row)" type="text" size="small">看档案</el-button>
                                 <div class="entryFile">
-                                    <el-button class="btnClass" type="text" size="small">录入档案</el-button>
+                                    <!-- <el-button class="btnClass" type="text" size="small">录入档案</el-button>
                                     <ul>
                                         <li @click="addPublicDangan()">普通档案</li>
                                         <li @click="addWomanDangan()">孕妇档案</li>
-                                    </ul>
+                                    </ul> -->
+                                    <el-dropdown>
+                                        <el-button class="btnClass" type="danger" size="mini" plain>录入档案</el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item @click.native="addWomanDangan(scope.row)">孕妇信息</el-dropdown-item>
+                                            <el-dropdown-item @click.native="addPublicDangan(scope.row)">普通档案</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
                                 </div>
 
                             </template>
@@ -169,14 +203,31 @@
                         <el-table-column label=" " width="300">
                             <template slot-scope="scope">
                                 <el-button class="btnClass" @click="sendMessage(scope.row)" type="text" size="small">发消息</el-button>
-                                <el-button class="btnClass" @click="seeRemarks(scope.row)" type="text" size="small">看备注</el-button>
+                                <!-- <el-button class="btnClass" @click="seeRemarks(scope.row)" type="text" size="small">看备注</el-button> -->
+                                <el-dropdown trigger="click">
+                                    <el-button @click="seeRemarks(scope.row)" class="btnClass" type="danger" size="mini" plain>看备注</el-button>
+                                    <el-dropdown-menu slot="dropdown">
+
+                                        <el-dropdown-item v-for="(text,index) in remarks" :key="index">
+                                            <div>{{text.createTime}}</div>
+                                            <div>{{text.content}}</div>
+                                        </el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
                                 <el-button class="btnClass" @click="sendArchives(scope.row)" type="text" size="small">看档案</el-button>
                                 <div class="entryFile">
-                                    <el-button class="btnClass" type="text" size="small">录入档案</el-button>
+                                    <!-- <el-button class="btnClass" type="text" size="small">录入档案</el-button>
                                     <ul>
                                         <li @click="addPublicDangan()">普通档案</li>
                                         <li @click="addWomanDangan()">孕妇档案</li>
-                                    </ul>
+                                    </ul> -->
+                                    <el-dropdown>
+                                        <el-button class="btnClass" type="danger" size="mini" plain>录入档案</el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item @click.native="addWomanDangan(scope.row)">孕妇信息</el-dropdown-item>
+                                            <el-dropdown-item @click.native="addPublicDangan(scope.row)">普通档案</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
                                 </div>
 
                             </template>
@@ -303,7 +354,7 @@
 
         <div v-if="chatVisible">
             <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-                <chat :sessionId="sessionId" :doctorVis="doctorVis"  :chatTypeBox="chatTypeBox"></chat>
+                <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox"></chat>
             </el-dialog>
         </div>
         <!-- 谭莹备注 -->
@@ -468,6 +519,7 @@ export default {
     },
     data() {
         return {
+            oclick: "click",
             chatTypeBox: {
                 startDoctorName: "",
                 startDoctorTYpe: "随访"
@@ -970,7 +1022,7 @@ export default {
         },
         //获取家庭成员
         async getFamily(row) {
-             this.puBlicFileData.nameList = [];
+            this.puBlicFileData.nameList = [];
             this.puBlicManData.nameList = [];
             let _this = this;
             let query = {
@@ -1332,6 +1384,16 @@ export default {
     font-size: 12px;
     color: #4285f4;
     line-height: 1px;
+}
+.indexClassBox .btnClass:hover {
+    border: 1px solid rgba(66, 133, 244, 0.6);
+    background: rgba(66, 133, 244, 0.1);
+    color: #4285f4;
+}
+.indexClassBox .btnClass:focus {
+    border: 1px solid rgba(66, 133, 244, 0.6);
+    background: rgba(66, 133, 244, 0.1);
+    color: #4285f4;
 }
 .entryFile {
     position: relative;

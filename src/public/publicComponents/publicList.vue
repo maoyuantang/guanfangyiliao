@@ -53,6 +53,7 @@ export default {
         },
         cellClick(row, column, cell, event) {
             if (this.cellColor) {
+                // console.log(column)
                 for (let i = 0; i < this.cellColor.length; i++) {
                     if (column.label == this.cellColor[i].value) {
                         console.log(column);

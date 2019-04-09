@@ -10,7 +10,7 @@
                 <div class="new-content-msg">
                     <p class="new-content--msg-item">性别：{{patientInfo.sex}}</p>
                     <p class="new-content--msg-item">年龄：{{patientInfo.age}}</p>
-                    <p class="new-content--msg-item">省份证：{{patientInfo.idNo}}</p>
+                    <p class="new-content--msg-item">身份证：{{patientInfo.idNo}}</p>
                 </div>
             </div>
             <div class="new-content-content">
