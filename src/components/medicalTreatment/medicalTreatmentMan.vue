@@ -176,7 +176,7 @@
           <selftag v-model="onLineList.topFlag[0]" @reback="getFilter0"></selftag>
         </div>
         <div class="manager_count_top_right">
-          <statisticsWay v-model="time" @reBack="getFilterTime"></statisticsWay>
+          <!-- <statisticsWay v-model="time" @reBack="getFilterTime"></statisticsWay> -->
         </div>
       </div>
       <div class="manager_count_midle">
