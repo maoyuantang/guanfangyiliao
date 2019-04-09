@@ -653,8 +653,6 @@ export default {
             //     { name: 3 },
             //   ]
             // },
-
-<<<<<<< HEAD
             // new
             myHomes: [],
             tableDataList1: [
@@ -722,7 +720,7 @@ export default {
                 i: 0, //选中的是第几项，类型为int(注意：从0开始计数)
                 list: [
                     //选项列表，类型Array
-=======
+
                 // new
                 myHomes: [],
                 tableDataList1: [

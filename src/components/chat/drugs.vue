@@ -109,8 +109,7 @@
                     </div>
                     <div>
                         <div class="allPrice">
-                            总金额：
-                            {{countAllPrice}}
+                            总金额： {{countAllPrice}}
                         </div>
                         <div class="drugsBtnClass">
                             <!-- <el-button type="primary" @click="dialogTableVisibleFun()">预览</el-button> -->
@@ -191,12 +190,11 @@ export default {
                     //     subtotal: 60.0, //药品🐤小计
                     //     doctorAsk: "一定要按时按量吃药" //医生嘱托
                     // }
-                ],
-                
+                ]
             },
             searchList: [],
             countAllPrice: 0,
-                searchData: ""
+            searchData: ""
         };
     },
     computed: {
@@ -212,20 +210,19 @@ export default {
             this.getDrugsByCondition(0);
         },
         sureYao(data) {
-            let _this=this
-            if(_this.chufangData.drugDetails.length>0){
-$.each(_this.chufangData.drugDetails,function(index,text){
-                if(data.id==text.id){
-                    text.drugQuantity+=1
-                }else{
-                    _this.chufangData.drugDetails.push(data)
-                }
-            })
-            }else{
-                 _this.chufangData.drugDetails.push(data)
+            let _this = this;
+            if (_this.chufangData.drugDetails.length > 0) {
+                $.each(_this.chufangData.drugDetails, function(index, text) {
+                    if (data.id == text.id) {
+                        text.drugQuantity += 1;
+                    } else {
+                        _this.chufangData.drugDetails.push(data);
+                    }
+                });
+            } else {
+                _this.chufangData.drugDetails.push(data);
             }
-            
-            
+
             this.countAll();
         },
         //获取处方信息
@@ -264,10 +261,10 @@ $.each(_this.chufangData.drugDetails,function(index,text){
             };
             const res = await drugsByCondition(query);
             if (res.data && res.data.errCode === 0) {
-                 _this.searchList = [];
-                    _this.searchList = res.data.body;
+                _this.searchList = [];
+                _this.searchList = res.data.body;
                 // if (num == 0) {
-                    
+
                 // } else if (num == 1) {
                 //      _this.chufangData.drugDetails = [];
                 //     _this.chufangData.drugDetails = res.data.body;
@@ -311,8 +308,8 @@ $.each(_this.chufangData.drugDetails,function(index,text){
         },
         //计算总价格
         countAll() {
-            this.countAllPrice=0
-            let _this=this
+            this.countAllPrice = 0;
+            let _this = this;
             $.each(this.chufangData.drugDetails, function(index, text) {
                 _this.countAllPrice += text.drugPrice * text.drugQuantity;
             });
@@ -341,9 +338,8 @@ $.each(_this.chufangData.drugDetails,function(index,text){
                 if (row.id == text.id) {
                     _this.chufangData.drugDetails.splice(index, 1);
                 }
-                _this.countAll()
+                _this.countAll();
             });
-            
         }
     },
     props: {
@@ -358,7 +354,6 @@ $.each(_this.chufangData.drugDetails,function(index,text){
         this.getDrugsMessage();
         // this.getDrugsByCondition();
         this.setMessage();
-        
     },
     beforeDestroy() {}
 };
