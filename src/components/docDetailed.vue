@@ -1,7 +1,8 @@
 <template>
     <div class="doc-detailed">
         <div class="doc-detailed-">
-            <el-button type="primary" @click="reBack">返回</el-button>
+            <!-- <el-button  @click="reBack" icon="el-icon-arrow-left"></el-button> -->
+            <el-button type="text" icon="el-icon-arrow-left" @click="reBack" class="doc-detailed-back"></el-button>
         </div>
         <div class="doc-detailed-alert">
           <div class="doc-detailed-alert-content">
@@ -26,7 +27,7 @@
                     {{item.laber}}
                     </span>
                     <div class="doc-detailed-nav-select">
-                        <el-select v-model="testData.select" clearable placeholder="请选择">
+                        <el-select v-model="testData.select" clearable placeholder="请选择" v-if="nav.list[nav.index].page === 'inSide'">
                             <el-option
                             v-for="(item,index) in testData.list"
                             :key="index"
@@ -70,7 +71,7 @@ export default {
                 list:[]//列表
             },
             nav:{//顶部nav数据
-                index:0,//选中
+                index:0,//选中  
                 list:[
                     {laber:'电子病历',page:'record'},
                     {laber:'院内档案',page:'inSide'},
@@ -323,5 +324,8 @@ export default {
     font-size: 13px;
     color: #97A3B4;
     line-height: 22px;
+}
+.doc-detailed-back{
+    color: #646464;
 }
 </style>

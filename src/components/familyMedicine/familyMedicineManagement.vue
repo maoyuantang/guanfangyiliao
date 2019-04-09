@@ -59,8 +59,9 @@
 				</div>
 				<div class="part-two-body">
 					<div class="part-two-body-layout">
-						<normalColumnChart v-model="statisticsInfo.push"></normalColumnChart>
-						<normalColumnChart v-model="statisticsInfo.query"></normalColumnChart>
+						<!-- <normalColumnChart v-model="statisticsInfo.push"></normalColumnChart> -->
+						<!-- <normalColumnChart v-model="statisticsInfo.query"></normalColumnChart> -->
+						<normalColumnChart v-model="statisticsInfo.count"></normalColumnChart>
 					</div>
 				</div>
 			</div>
@@ -351,7 +352,7 @@
 	import { 
 		stencilName, toolBusinessType, toolDept, doctorsByOrgCodeAndDeptId, fetchHospitalDepts, businessType, protocols, protocolById,
 		addBusiness, stencilModel, getChildrenByDepartmentId, businessCondition, disableClinic, updateBusiness, queryStatisticalData,
-		pushStatisticalData, toolBusinessModel, 
+		pushStatisticalData, toolBusinessModel, orderFmsCharts
 	} from '../../api/apiAll.js'
 	import apiBaseURL from '../../enums/apiBaseURL.js'
 	export default {
@@ -367,9 +368,10 @@
 			},
 			'statisticsInfo.countMethod.select.value':{
 				handler(n){
-					this.getPushStatisticalData();
-					this.getQueryStatisticalData();
-					console.log('i is fish')
+					// this.getPushStatisticalData();
+					// this.getQueryStatisticalData();
+					// console.log('i is fish')
+					this.getOrderFmsCharts();
 				}
 			},
 			'global.businessType':{
@@ -471,6 +473,12 @@
 						title:'查询提取统计',//标题
 						total:'',//副标题
 					},
+					count:{//家医系统业务人次统计图
+						dataAxis:[],//x轴
+						data:[],//y轴
+						title:'业务人次',//标题
+						total:'',//副标题
+					}
 				},
 				showInfo:{//显示的业务列表 
 					pageNum:1, //当前页
@@ -773,6 +781,42 @@
 				this.getBussByCondition();
 			},
 			/**
+			 * 获取 业务人次统计图
+			 */
+			async getOrderFmsCharts(){
+				// const query = {
+				// 	token:A7ADEB23E6DC404394B4E27474C82754,
+				// 	deptId:'',
+				// 	starTime:'2018-11-01',
+				// 	endTime:'2019-01-25',
+				// 	type:YEAR
+				// };
+				const query = {
+					token:this.userInfo.token,
+					type:this.statisticsInfo.countMethod.select.value,
+				};
+				if(this.statisticsInfo.period){
+					query.starTime = this.statisticsInfo.period[0];
+					query.endTime = this.statisticsInfo.period[1];
+					query.deptId = this.statisticsInfo.department.id || ''
+				}
+				const res = await orderFmsCharts(query);
+				console.log(res);
+				if(res.data&&res.data.errCode===0){
+					this.statisticsInfo.count.dataAxis = res.data.body.data.map(item=>item.x);
+					this.statisticsInfo.count.data = res.data.body.data.map(item=>item.y);
+					this.statisticsInfo.count.total = `总数: ${res.data.body.total}`;
+					this.statisticsInfo.count = Object.assign({},this.statisticsInfo.count)
+					console.log(this.statisticsInfo.count)
+				}else{
+					this.$notify({
+						title: '业务人次统计获取失败',
+						message: res.data.errMsg,
+						type: 'error'
+					});
+				}
+			},
+			/**
 			 * 获取 推送档案统计
 			 */
 			async getPushStatisticalData(){
@@ -801,6 +845,7 @@
 					});
 				}
 			},
+
 			/**
 			 * 获取 查询提取统计
 			 */
@@ -836,8 +881,9 @@
 			timeValueFun(data){
 				console.log(data);
 				this.statisticsInfo.period = data;
-				this.getPushStatisticalData();
-				this.getQueryStatisticalData();
+				// this.getPushStatisticalData();
+				// this.getQueryStatisticalData();
+				this.getOrderFmsCharts();
 			},
 			
 			/**
@@ -896,8 +942,9 @@
 				// this.searchCondition.department.id = item.index.deptId || '';
 				// this.searchCondition.pageNum = 1;
 				// this.getBussByCondition();
-				this.getPushStatisticalData();
-				this.getQueryStatisticalData();
+				// this.getPushStatisticalData();
+				// this.getQueryStatisticalData();
+				this.getOrderFmsCharts();
 			},
 
 			/**
@@ -908,6 +955,7 @@
 				this.searchCondition.department.id = item.index.deptId || '';
 				this.searchCondition.pageNum = 1;
 				this.getBussByCondition();
+				this.getOrderFmsCharts();
 				// this.getPushStatisticalData();
 				// this.getQueryStatisticalData();   
 			},
@@ -1864,8 +1912,9 @@
 			this.getBussModuleList();
 			this.getBussTypeList();
 			this.getBussByCondition();
-			this.getPushStatisticalData();
-			this.getQueryStatisticalData();
+			// this.getPushStatisticalData();
+			// this.getQueryStatisticalData();
+			this.getOrderFmsCharts();
 			
 		}
 	}

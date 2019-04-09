@@ -399,6 +399,7 @@ export default {
          * 获取科室列表
          */
         async getHospitalDepts() {
+            if(this.userState.rooter)return;//后面要求，超级管理员不发请求
             const res = await fetchHospitalDepts({
                 orgCode: this.userSelfInfo.orgCode,
                 deptId: ""

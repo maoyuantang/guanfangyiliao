@@ -312,6 +312,7 @@ export default {
     bindSession:'/m/v1/api/order/bindSession',
     webDocGetFollowupPlan:'/m/v1/api/followup/followupPlan/webDocGetFollowupPlan',//2.医生查看成员随访计划列表【医生web】
     webDocGetDeviceList:'/m/v1/api/device/house/webDocGetDeviceList',//2.医生查看成员设备数据列表【医生web】
-    sendBtnVisable:'/m/v1/api/clinic/clinic/sendMe'
+    sendBtnVisable:'/m/v1/api/clinic/clinic/sendMe',
+    orderFmsCharts:'/m/v1/api/order/orderFmsCharts',//17.16.家医系统业务人次统计图
 }
 
