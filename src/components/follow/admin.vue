@@ -178,7 +178,7 @@
         </div>
         <!-- 使用量 -->
         <div v-if="userNumVisible">
-            <el-dialog class="evaluateBox evaluateBox2" title="历史计划" :visible.sync="userNumVisible" width="782px" hight="356px" center :show-header="showHeadViable">
+            <el-dialog class="evaluateBox evaluateBox2" :title="userNumTitle" :visible.sync="userNumVisible" width="782px" hight="356px" center >
 
                 <tableList :tableData="userNumTable" :columns="userNumColum" :total="userNumTotal" @rebackFenye="changeCurrent3"></tableList>
 
@@ -418,6 +418,7 @@ export default {
             userNumTotal: 0,
             userNumPage: 0,
             userNumVisible: false,
+            userNumTitle:'',
             pieChartVisable: true,
             groupId: "",
             groupValue: "",
@@ -724,7 +725,7 @@ export default {
                 },
                 {
                     prop: "alertInfo",
-                    label: "告警情况 "
+                    label: "告警情况"
                 }
             ],
             cellColor: [
@@ -3179,6 +3180,7 @@ export default {
             this.userNumVisible = true;
             console.log(data);
             if (data[1].label == "使用量") {
+                this.userNumTitle='使用详情'
                 this.departVisible = true;
                 let _this = this;
                 let query = {
@@ -3231,6 +3233,7 @@ export default {
                     });
                 }
             } else if (data[1].label == "告警情况") {
+                this.userNumTitle='告警详情'
                 this.doctorVisible = true;
                 let _this = this;
                 let query = {
@@ -3249,28 +3252,24 @@ export default {
                             label: "时间"
                         },
                         {
-                            prop: "firstType",
+                            prop: "testType",
                             label: "测量项"
                         },
                         {
-                            prop: "firstValue",
-                            label: "测量值"
+                            prop: "alertNumber",
+                            label: "设置告警值"
                         },
                         {
-                            prop: "secondType",
-                            label: "测量项"
+                            prop: "testNumber",
+                            label: "实际测量值"
                         },
                         {
-                            prop: "secondValue",
-                            label: "测量值"
+                            prop: "doctorName",
+                            label: "告警医生"
                         },
                         {
-                            prop: "thirdType",
-                            label: "测量项"
-                        },
-                        {
-                            prop: "thirdValue",
-                            label: "测量值"
+                            prop: "status",
+                            label: "处理情况"
                         }
                     ];
                 } else {
