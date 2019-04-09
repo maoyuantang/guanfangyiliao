@@ -11,6 +11,7 @@
         </div>
         <div class="chatMessage">
             <ul class="chatRecord" id="scrolldIV">
+                
                 <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
@@ -405,6 +406,7 @@ export default {
             areadyReadNum: "", //已读
             chatUser: "", //参与聊天的成员
             messageList: [],
+            messageList1:[],
             input: "",
             childMessageType: "", //发送的消息类型
             messageBody: "", //发送的文字消息内容
@@ -1137,9 +1139,9 @@ export default {
                 } else {
                     this.loadMoreVisable = false;
                 }
-                let odata = res.data.body.reverse();
-
-                $.each(odata, function(index, text) {
+                // let odata = res.data.body.reverse();
+               console.log(this.messageList1)
+                $.each(res.data.body, function(index, text) {
                     let timestamp4 = new Date(text.serverTime);
                     let y = timestamp4.getHours();
                     let d = timestamp4.getMinutes();
@@ -1151,9 +1153,12 @@ export default {
                     }
                     console.log(y + "-" + d);
                     text.serverTime = y + ":" + d;
-                    _this.messageList.push(text);
+                    _this.messageList1.push(text);
                 });
-
+               _this.messageList=_this.messageList1;
+               _this.messageList=_this.messageList.reverse()
+               let odata=this.messageList
+               console.log(this.messageList)
                 for (let i = 0; i < odata.length; i++) {
                     if (this.areadyReadNum > odata[i].msgId) {
                         this.messageList[i].oRead = true;
@@ -1291,6 +1296,7 @@ export default {
                         }
                     }
                 }
+                console.log(this.messageList)
             } else {
                 //失败
                 this.$notify.error({
