@@ -560,14 +560,17 @@ function  submit() {
             data:JSON.stringify(data),
             success:function (data) {
                 if(data.errCode==0) {
-                    alert(data.body.planId)
+                    // alert(data)
+                    // alert(data.body.planId)
+                    // window.android.jsMethodFollowSubmit(true,data.body.planId);
+                    // window.androidShare.jsMethodFollow(data.body.planId);
                     if (navigator.userAgent.match(/(iPhone|iPod|iPad)/i)) {
                         alert(data.body.planId+'ios')
                         window.webkit.messageHandlers.submit.postMessage(data.body);
                     } else if (navigator.userAgent.match(/android/i)) {
                         // alert(data)
                         alert(data.body.planId+'安卓')
-                        window.android.jsMethodFollowSubmit(true,data.body.planId);
+                        window.android.jsMethodFollowSubmit(true,45);
                         window.androidShare.jsMethodFollow(data.body.planId);
                     }
                 }else{
