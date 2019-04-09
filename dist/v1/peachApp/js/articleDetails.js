@@ -176,14 +176,33 @@ function  appQueryCommentList() {
     load(page);
     //滚动加载更多
     var loading = false;  //状态标记
-    $(document.body).infinite().on("infinite", function() {
-        if(loading) return;
-        loading = true;
-        setTimeout(function() {
-            page=page+1;
-            load(page);
-            loading = false;
-        }, 1000);   //模拟延迟
+    // $(document.body).infinite().on("infinite", function() {
+    //     alert('dd')
+    //     if(loading) return;
+    //     loading = true;
+    //     setTimeout(function() {
+    //         page=page+1;
+    //         load(page);
+    //         loading = false;
+    //     }, 1000);   //模拟延迟
+    // });
+
+
+    $(document.body).scroll(function(){
+        var $this =$(this),
+            viewH =$(this).height(),//可见高度
+            contentH =$(this).get(0).scrollHeight,//内容高度
+            scrollTop =$(this).scrollTop();//滚动高度
+        if(contentH = viewH + scrollTop) { //当滚动到底部时，
+
+        }
+        if(contentH - viewH - scrollTop <= 100) { //当滚动到距离底部100px时,
+
+        }
+        if(scrollTop/(contentH -viewH) >= 0.95){ //当滚动到距离底部5%时
+            // 这里加载数据..
+            alert('dd')
+        }
     });
     //ajax加载数据
     function load(p) {
@@ -198,7 +217,7 @@ function  appQueryCommentList() {
             },
             data:{
                 "articleId":id,
-                "count":(p-1)*max,          //已查询过了多少条
+                "count":p-1,          //已查询过了多少条
                 "pageSize":max       //默认每页加载10条，可自定义
             },
             success: function (data) {
@@ -235,6 +254,7 @@ function  appQueryCommentList() {
                                 +'</div>'
                                 +'</div>';
                         }
+                        $("#appQueryCommentList").html('')
                            $("#appQueryCommentList").append(pahtml)
                         var t_img; // 定时器
                         var isLoad = true; // 控制变量
@@ -338,36 +358,39 @@ $(".weui-ar-btn").click(function () {
             }),
             success: function (data) {
                 if(data.errCode==0) {
-                    var userId=data.body.userId;
-                    var pahtml="";
-                    var img="/user/api/v2/public/download?downType=Head&secId=" + estxt + "&userId=" + userId + "&layer=00&deType=HD"
-                    pahtml+='<div class="weui-row weui-back-fff">'
-                        +'<div class="weui-col-30">'
-                        +'<div class="weui-media-box__hd">'
-                        +'<img class="weui-media-box__thumb weui-img-wi" src="'+img+'">'
-                        +'</div>'
-                        +'</div>'
-                        +'<div class="weui-col-70">'
-                        +'<h4 class="weui-media-box__title">'
-                        +data.body.userName
-                        +'</h4>'
-                        +'<p class="weui-media-boxee">'
-                        +data.body.content
-                        +'</p>'
-                        +'<p class="weui-time">'
-                        +format(data.body.createTime)
-                        +'</p>'
-                        +'</div>'
-                        +'</div>';
-                    $(".wuie-art-list").prepend(pahtml);
-                    $("#article").val("");
-                    $.toast("评论成功");
+                    // var userId=data.body.userId;
+                    // var pahtml="";
+                    // var img="/user/api/v2/public/download?downType=Head&secId=" + estxt + "&userId=" + userId + "&layer=00&deType=HD"
+                    // var img= 'images/a1.png'
+                    // pahtml+='<div class="weui-row weui-back-fff">'
+                    //     +'<div class="weui-col-30">'
+                    //     +'<div class="weui-media-box__hd">'
+                    //     +'<img class="weui-media-box__thumb weui-img-wi" src="'+img+'">'
+                    //     +'</div>'
+                    //     +'</div>'
+                    //     +'<div class="weui-col-70">'
+                    //     +'<h4 class="weui-media-box__title">'
+                    //     +data.body.userName
+                    //     +'</h4>'
+                    //     +'<p class="weui-media-boxee">'
+                    //     +data.body.content
+                    //     +'</p>'
+                    //     +'<p class="weui-time">'
+                    //     +format(data.body.createTime)
+                    //     +'</p>'
+                    //     +'</div>'
+                    //     +'</div>';
+                    // $(".wuie-art-list").prepend(pahtml);
+
+                    // $.toast("评论成功");
+                    // alert("评论成功")
                     // window.location.reload();
-                    // appQueryCommentList();
-                    setTimeout(function () {
-                        var t = $('#appQueryCommentList').offset().top;//  获取需要跳转到标签的top值
-                        $("html,body").animate({ scrollTop: t}, 500); // 动态跳转到指定位置（数值越大滚动速度越慢）
-                    },700)
+                    $("#article").val("");
+                    appQueryCommentList();
+                    // setTimeout(function () {
+                    //     var t = $('#appQueryCommentList').offset().top;//  获取需要跳转到标签的top值
+                    //     $("html,body").animate({ scrollTop: t}, 500); // 动态跳转到指定位置（数值越大滚动速度越慢）
+                    // },700)
 
                 }
             },

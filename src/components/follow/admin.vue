@@ -180,7 +180,7 @@
         <div v-if="userNumVisible">
             <el-dialog class="evaluateBox evaluateBox2" :title="userNumTitle" :visible.sync="userNumVisible" width="782px" hight="356px" center >
 
-                <tableList :tableData="userNumTable" :columns="userNumColum" :total="userNumTotal" @rebackFenye="changeCurrent3"></tableList>
+                <tableList :tableData="userNumTable" :columns="userNumColum" :total="userNumTotal" @rebackFenye="changeCurrent5"></tableList>
 
             </el-dialog>
         </div>
@@ -277,7 +277,7 @@
                         <search @searchValue="searchChange"></search>
                     </div>
                     <div>
-                        <tableList :tableData="tableDataListFa" :columns="columnsFa" :total="adminTotal3" @rebackFenye="changeCurrent3" :cellColor='cellColor' @cellClickData="cellClickData"></tableList>
+                        <tableList :tableData="tableDataListFa" :columns="columnsFa" :total="adminTotal3" @rebackFenye="changeCurrent3" :cellColor='cellColor' @cellClickData="cellClickData1"></tableList>
                     </div>
                 </div>
                 <!-- 统计 -->
@@ -416,7 +416,8 @@ export default {
             userNumTable: [],
             userNumColum: [],
             userNumTotal: 0,
-            userNumPage: 0,
+            userNumData:[],
+            userNumPage: 1,
             userNumVisible: false,
             userNumTitle:'',
             pieChartVisable: true,
@@ -1185,7 +1186,7 @@ export default {
         },
         changeCurrent5(data) {
             this.userNumPage = data;
-            this.cellClickData();
+            this.cellClickData(this.userNumData);
         },
         oTab66Remove() {
             console.log(this.oTab66.list);
@@ -3176,7 +3177,15 @@ export default {
             });
         },
         //家医使用量和告警
+        cellClickData1(data){
+            this.userNumPage=1
+            this.cellClickData(data)
+
+
+        },
+        
         async cellClickData(data) {
+            this.userNumData=data
             this.userNumVisible = true;
             console.log(data);
             if (data[1].label == "使用量") {
