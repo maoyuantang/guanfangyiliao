@@ -562,7 +562,7 @@ function  submit() {
                 if(data.errCode==0) {
                     alert(data)
                     alert(data.body.planId)
-                    window.android.jsMethodFollowSubmit(true,45);
+                    window.android.jsMethodFollowSubmit(true,'45');
                     window.androidShare.jsMethodFollow(data.body.planId);
                     // if (navigator.userAgent.match(/(iPhone|iPod|iPad)/i)) {
                     //     alert(data.body.planId+'ios')
