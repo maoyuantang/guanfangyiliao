@@ -182,6 +182,7 @@
       <div class="manager_count_midle">
         <div>
           <normalColumnChart :inData="testdata1"> </normalColumnChart>
+          
         </div>
       </div>
     </div>
