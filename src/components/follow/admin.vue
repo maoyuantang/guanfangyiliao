@@ -123,11 +123,11 @@
                                         <el-form-item label="所属分类" class="classification">
                                             <div class="ificationBox">
                                                 <el-input v-model="mydTemlateName.title">dfdfdfd</el-input>
-                                                <div @click="ificationBoxClick()">
+                                                <div @click="ificationBoxClick(index)">
                                                     <img src="../../../static/assets/img/downXia.png" />
                                                 </div>
                                             </div>
-                                            <div class="mydAddSuosuClass" v-show="mydAddSuosuClassVis">
+                                            <div class="mydAddSuosuClass" v-show="text.oVisable">
                                                 <ul>
                                                     <li v-for="(text1,index1) in oTab66.list" :key="index1" :value="text1.value" @click="sendTemplateList1(text1.value)">
                                                         {{text1.text}}>
@@ -146,7 +146,7 @@
                                             </div>
                                         </el-form-item>
                                     </div>
-                                    <span>
+                                    <span v-show='index!=0' @click="deleteMydList(index)">
                                         删除
                                     </span>
                                 </li>
@@ -178,7 +178,7 @@
         </div>
         <!-- 使用量 -->
         <div v-if="userNumVisible">
-            <el-dialog class="evaluateBox evaluateBox2" :title="userNumTitle" :visible.sync="userNumVisible" width="782px" hight="356px" center >
+            <el-dialog class="evaluateBox evaluateBox2" :title="userNumTitle" :visible.sync="userNumVisible" width="782px" hight="356px" center>
 
                 <tableList :tableData="userNumTable" :columns="userNumColum" :total="userNumTotal" @rebackFenye="changeCurrent5"></tableList>
 
@@ -416,10 +416,10 @@ export default {
             userNumTable: [],
             userNumColum: [],
             userNumTotal: 0,
-            userNumData:[],
+            userNumData: [],
             userNumPage: 1,
             userNumVisible: false,
-            userNumTitle:'',
+            userNumTitle: "",
             pieChartVisable: true,
             groupId: "",
             groupValue: "",
@@ -770,7 +770,8 @@ export default {
                 associations: [
                     {
                         answer: " ",
-                        associationId: " "
+                        associationId: " ",
+                        oVisable:false
                     }
                 ]
             },
@@ -806,8 +807,8 @@ export default {
                 value: "value",
                 children: "cities"
             },
-            searchDataFa:'',
-            searchData:'',
+            searchDataFa: "",
+            searchData: "",
             mydTableChecked: false,
             mydTemplateTitle: [],
             sendTemplateId: [], //要发送的模板id
@@ -1200,7 +1201,7 @@ export default {
         async getDepartment() {
             let _this = this;
             let query = {
-                type: 'MANAGE',
+                type: "MANAGE",
                 token: this.userState.token
             };
             const res = await toolDept(query);
@@ -1933,7 +1934,7 @@ export default {
                 //     _this.drawData.dataAxis.push(text.x);
                 //     _this.drawData.data.push(text.y);
                 // });
-                this.drawData.total = '总数：'+ res.data.body.total;
+                this.drawData.total = "总数：" + res.data.body.total;
                 this.drawData.dataAxis = res.data.body.data.map(item => item.x);
                 this.drawData.data = res.data.body.data.map(item => item.y);
                 this.drawData = Object.assign({}, this.drawData);
@@ -1964,7 +1965,7 @@ export default {
                 //     _this.drawDataStart.dataAxis.push(text.x);
                 //     _this.drawDataStart.data.push(text.y);
                 // });
-                this.drawDataStart.total = '总数：'+ res.data.body.total;
+                this.drawDataStart.total = "总数：" + res.data.body.total;
                 this.drawDataStart.dataAxis = res.data.body.data.map(
                     item => item.x
                 );
@@ -1994,7 +1995,7 @@ export default {
             };
             const res = await SETEQUIPMENT(options);
             if (res.data && res.data.errCode === 0) {
-                this.drawDataEquipment.total = '总数：'+ res.data.body.total;
+                this.drawDataEquipment.total = "总数：" + res.data.body.total;
                 this.drawDataEquipment.dataAxis = res.data.body.data.map(
                     item => item.x
                 );
@@ -2027,7 +2028,7 @@ export default {
             };
             const res = await SETFOLLOWCHART(options);
             if (res.data && res.data.errCode === 0) {
-                this.drawDataFollow.total = '总数：'+ res.data.body.total;
+                this.drawDataFollow.total = "总数：" + res.data.body.total;
                 this.drawDataFollow.dataAxis = res.data.body.data.map(
                     item => item.x
                 );
@@ -2087,12 +2088,12 @@ export default {
             this.getFoList();
             this.oGetModelList();
             this.oGetResultList();
-            
+
             this.searchData = data;
         },
-        searchChangeFa(data){
-this.searchDataFa = data;
-this.oManagerGetDeviceList()
+        searchChangeFa(data) {
+            this.searchDataFa = data;
+            this.oManagerGetDeviceList();
         },
         //医生端接口
         //医生端tab切换
@@ -2909,11 +2910,14 @@ this.oManagerGetDeviceList()
             console.log(this.addArticleData.pictureId);
         },
         //满意度新增模板跳出
-        ificationBoxClick() {
-            if (this.mydAddSuosuClassVis) {
-                this.mydAddSuosuClassVis = false;
+        ificationBoxClick(index) {
+            $.each(this.mydAddData.associations,function(index,text){
+                text.oVisable=false
+            })
+            if (this.mydAddData.associations[index].oVisable) {
+                this.mydAddData.associations[index].oVisable = false;
             } else {
-                this.mydAddSuosuClassVis = true;
+                this.mydAddData.associations[index].oVisable = true;
             }
         },
         //满意度饼图
@@ -2970,8 +2974,13 @@ this.oManagerGetDeviceList()
         addMydList() {
             this.mydAddData.associations.push({
                 answer: "0",
-                associationId: "5e34d5bb8aaf445794e56998e21587e8"
+                associationId: "5e34d5bb8aaf445794e56998e21587e8",
+                oVisable:false
             });
+        },
+        //满意度模板删除项
+        deleteMydList(index) {
+            this.mydAddData.associations.splice(index,1);
         },
         //创建满意度模板
         async addMydTemplate() {
@@ -2997,7 +3006,8 @@ this.oManagerGetDeviceList()
                         associations: [
                             {
                                 answer: " ",
-                                associationId: " "
+                                associationId: " ",
+                                oVisable:false
                             }
                         ]
                     };
@@ -3184,19 +3194,17 @@ this.oManagerGetDeviceList()
             });
         },
         //家医使用量和告警
-        cellClickData1(data){
-            this.userNumPage=1
-            this.cellClickData(data)
-
-
+        cellClickData1(data) {
+            this.userNumPage = 1;
+            this.cellClickData(data);
         },
-        
+
         async cellClickData(data) {
-            this.userNumData=data
+            this.userNumData = data;
             this.userNumVisible = true;
             console.log(data);
             if (data[1].label == "使用量") {
-                this.userNumTitle='使用详情'
+                this.userNumTitle = "使用详情";
                 this.departVisible = true;
                 let _this = this;
                 let query = {
@@ -3249,7 +3257,7 @@ this.oManagerGetDeviceList()
                     });
                 }
             } else if (data[1].label == "告警情况") {
-                this.userNumTitle='告警详情'
+                this.userNumTitle = "告警详情";
                 this.doctorVisible = true;
                 let _this = this;
                 let query = {

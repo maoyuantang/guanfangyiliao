@@ -449,11 +449,11 @@ export default {
                 this.sendMessageBoxType = "consultation";
             }
         }
-
+        this.alreadyRead();
         this.getDoctorVis();
         this.getHisRecord();
         this.getMemberMess();
-        this.alreadyRead();
+
         this.updated();
         this.ourl =
             "/m/v1/api/hdfs/fs/upload?token=" +
@@ -469,8 +469,10 @@ export default {
         updated() {
             this.$nextTick(function() {
                 let div = document.getElementById("scrolldIV");
-                console.log(div.scrollTop);
+
                 div.scrollTop = div.scrollHeight;
+                // div.scrollHeight
+                console.log(div.scrollTop);
             });
         },
         //发送
@@ -679,7 +681,7 @@ export default {
             //     this.showVideoBtnVisable = false;
             //     this.setVideo(0); //单聊
             // }
-            if (this.userSocketInfo.videoUser >= 4) {
+            if (this.userSocketInfo.videoUser >= 1) {
                 this.$notify.error({
                     title: "警告",
                     message: "当前视频人数超过4人，不能进入视频"
@@ -1122,7 +1124,14 @@ export default {
             }
         },
         //获取历史记录
-        async getHisRecord() {
+        async getHisRecord(num) {
+             if (num == 0) {
+                        //首次进入
+                        this.messageList1 = [];
+                        this.messageList1.length=0
+                        // this.messageList1 = Object.assign({},this.messageList1)
+                        console.log(this.messageList1);
+                    }
             console.log("历史消息");
             console.log(this.sessionId);
             let _this = this;
@@ -1147,9 +1156,10 @@ export default {
                 } else {
                     this.loadMoreVisable = false;
                 }
-                // let odata = res.data.body.reverse();
+               
                 console.log(this.messageList1);
                 $.each(res.data.body, function(index, text) {
+                    
                     let timestamp4 = new Date(text.serverTime);
                     let y = timestamp4.getHours();
                     let d = timestamp4.getMinutes();
@@ -1168,10 +1178,10 @@ export default {
                 let odata = this.messageList;
                 console.log(this.messageList);
                 for (let i = 0; i < odata.length; i++) {
-                    if (this.areadyReadNum > odata[i].msgId) {
-                        this.messageList[i].oRead = true;
+                    if (this.areadyReadNum >= odata[i].msgId) {
+                        this.messageList[i].oRead = true; //已读
                     } else {
-                        this.messageList[i].oRead = false;
+                        this.messageList[i].oRead = false; //未读
                     }
                     var ImgObj = new Image(); //判断图片是否存在
                     ImgObj.src = this.userSocketInfo.imgUrl + odata[i].from;
@@ -1583,9 +1593,11 @@ export default {
             handler(n, o) {
                 let _this = this;
                 $.each(n.syncData, function(index, text) {
-                    if (text.command == "SYNC_SESSION") {
+                    if (text.command == "SYNC_UPDATE_READ_STATE") {
+                        _this.oMsgId =
+                            _this.$store.state.socket.messageTicket.oMsgId;
                         _this.alreadyRead();
-                        _this.getHisRecord();
+                        _this.getHisRecord(0);
                     }
                 });
             }
@@ -1784,7 +1796,7 @@ export default {
 .chatMessage > ul {
     padding: 20px 0;
     overflow-y: scroll;
-    height: 300px;
+    height: 320px;
 }
 .chatRecord > li:after {
     content: "";

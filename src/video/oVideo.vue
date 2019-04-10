@@ -150,6 +150,8 @@ export default {
     },
     data() {
         return {
+            userResource:'',
+            videoUser:0,
             screenClickVisable: false,
             screenVisible: false,
             installScreenVisible: false,
@@ -172,7 +174,7 @@ export default {
             questVisable: true,
             closePatientNumVisable: false,
             videoChatVisable: false,
-            doctorVis: 1,
+            // doctorVis: 1,
             videoIng: 0,
             loadingUs: true,
             loadingOther: true,
@@ -1031,6 +1033,8 @@ export default {
                     resource,
                     function(success) {
                         console.info("remove participant success", success);
+                        _this.videoUser -=1
+                        alert('视频人数不能超过4人')
                     },
                     function(error) {
                         console.error("remove participant failed", error);
@@ -1349,6 +1353,7 @@ export default {
                 false,
                 function(result) {
                     console.log("join conference success : ", result);
+                    _this.userResource=result.response.info.resource
                     $("#localVideos").append(
                         _this.generateParticipant(result, true)
                     );
@@ -1568,6 +1573,10 @@ export default {
         } else {
             this.screenClickVisable = false;
         }
+        //人数超过3人呗踢出
+        if(this.videoUser>3){
+            this.generateRemoveElement(_this.userResource)
+        }
         this.createVideoRoomData1 = this.createVideoRoomData;
         let _this = this;
 
@@ -1595,8 +1604,9 @@ export default {
          */
         Manis.onJoinConference(function(result) {
             $("#remoteVideos").append(_this.generateParticipant(result, false));
-            this.$store.commit("socket/VIDEOUSER", 1);
-            alert(this.userSocketInfo.videoUser)
+            // _this.$store.commit("socket/VIDEOUSER", 1);
+            _this.videoUser +=1
+            alert(_this.videoUser)
         });
         /**
          * 收到有人离开房间
@@ -1607,8 +1617,9 @@ export default {
                     ".participant_container_" + result.response.resource
                 ).remove();
             }
-            this.$store.commit("socket/VIDEOUSER", 0);
-            alert(this.userSocketInfo.videoUser)
+            // _this.$store.commit("socket/VIDEOUSER", 0);
+            _this.videoUser -=1
+            alert(_this.videoUser)
         });
         /**
          * 收到文件信息
