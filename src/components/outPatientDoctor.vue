@@ -612,7 +612,8 @@
         // 谭莹
         fetchChatSession, //创建单聊会话
         doctorInto, //进入门诊
-        sendBtnVisable
+        sendBtnVisable,
+        bindSession,
         // 废弃接口
         // fetchHospitalDepts,//2.2.获取医院科室列表
     } from "../api/apiAll.js";
@@ -897,6 +898,7 @@
                 }
             },
             // 我的诊室发送消息
+            // 我的诊室发送消息
             async sendMessage(text, text1) {
                 console.log(text);
                 console.log(text1);
@@ -917,23 +919,43 @@
                 };
                 const res = await sendBtnVisable(query);
                 if (res.data && res.data.errCode === 0) {
-                    _this.sessionId = res.data.body.bindSession;
+
                     if (res.data.body.bindSession && res.data.body.bindDoctor) {
                         text1.disabledStatus = false;
-                        _this.chatVisible = true;
+
+                        _this.sendMessage1(text, text1)
                     } else if (
                         !res.data.body.bindSession &&
                         !res.data.body.bindDoctor
                     ) {
                         text1.disabledStatus = false;
-                        _this.chatVisible = true;
+                        _this.sendMessage1(text, text1)
                     } else if (
                         res.data.body.bindSession ||
                         res.data.body.bindDoctor
                     ) {
                         text1.disabledStatus = true;
                     }
-
+                } else {
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
+            },
+            async sendMessage1(text, text1) {
+                let _this = this;
+                let query = {
+                    token: this.userInfo.token
+                };
+                let options = {
+                    orderId: text1.clinicOrderId,
+                    orderNo: ""
+                };
+                const res = await bindSession(query, options);
+                if (res.data && res.data.errCode === 0) {
+                    _this.sessionId = res.data.body
+                    _this.chatVisible = true;
                 } else {
                     this.$notify.error({
                         title: "警告",
