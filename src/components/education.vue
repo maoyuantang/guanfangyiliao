@@ -35,6 +35,7 @@
 
 <style scoped>
 	.education{
-
-    }
+		padding-right: .2rem;
+	}
+	
 </style>

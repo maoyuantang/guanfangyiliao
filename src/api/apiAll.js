@@ -3288,3 +3288,25 @@ export const webDocGetDeviceList = query => { //2.医生查看成员设备数据
         }
     })
 }
+export const orderFmsCharts = query => { //17.16.家医系统业务人次统计图
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.orderFmsCharts,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const queryPageByassessPlan = query => { //12.WEB端获取评估计划列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.queryPageByassessPlan,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
