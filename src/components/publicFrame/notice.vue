@@ -24,7 +24,7 @@
                 </div>
             </li>
         </ul>
-        <div class="loadMore" @click="getNoticeList()">
+        <div class="loadMore" @click="getNoticeList(0)">
             加载更多
         </div>
         <div v-show="nodataVisable">
@@ -88,7 +88,8 @@ export default {
     computed: {
         ...mapState({
             userState: state => state.user.userInfo,
-            userSelfInfo: state => state.user.userSelfInfo
+            userSelfInfo: state => state.user.userSelfInfo,
+            userSocketInfo: state => state.socket
         })
     },
     watch: {
@@ -96,7 +97,9 @@ export default {
             handler(n, o) {
                 let _this = this;
                 $.each(n.syncData, function(index, text) {
-                    if (text.command == "NOTICE") {
+                    if (text.command == "SYNC_SESSION") {
+                        _this.msgId =
+                            _this.$store.state.socket.messageTicket.oMsgId;
                         _this.getNoticeList();
                     }
                 });
@@ -107,7 +110,7 @@ export default {
         videoclick(data) {
             this.centerDialogVisible = false;
         },
-        async getNoticeList() {
+        async getNoticeList(num) {
             let _this = this;
             let query = {
                 token: this.userState.token,
@@ -116,11 +119,16 @@ export default {
             };
             const res = await fetchNoticeInfo(query);
             if (res.data && res.data.errCode === 0) {
-                $.each(res.data.body, function(index, text) {
-                    _this.noticeList.push(text);
-                });
-                let oLength= res.data.body.length
-                _this.msgId = res.data.body[oLength-1].msgId;
+                if (num == 0) {
+                    $.each(res.data.body, function(index, text) {
+                        _this.noticeList.push(text);
+                    });
+                } else {
+                    _this.noticeList = res.data.body;
+                }
+
+                let oLength = res.data.body.length;
+                _this.msgId = res.data.body[oLength - 1].msgId;
                 if (res.data.body.length > 0) {
                     this.nodataVisable = false;
                 } else {

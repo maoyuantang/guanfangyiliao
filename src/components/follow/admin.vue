@@ -274,7 +274,7 @@
                             <selftag :inData="oTab5" @reback="getOTab5"></selftag>
                         </div>
 
-                        <search @searchValue="searchChange"></search>
+                        <search @searchValue="searchChangeFa"></search>
                     </div>
                     <div>
                         <tableList :tableData="tableDataListFa" :columns="columnsFa" :total="adminTotal3" @rebackFenye="changeCurrent3" :cellColor='cellColor' @cellClickData="cellClickData1"></tableList>
@@ -806,6 +806,8 @@ export default {
                 value: "value",
                 children: "cities"
             },
+            searchDataFa:'',
+            searchData:'',
             mydTableChecked: false,
             mydTemplateTitle: [],
             sendTemplateId: [], //要发送的模板id
@@ -1287,7 +1289,7 @@ export default {
         },
         // 管理端类型
         getOTab2(data) {
-            this.followMobanType = data.index.value;
+            this.otype = data.index.value;
             this.getFoList();
         },
         // 管理端方式
@@ -1302,7 +1304,7 @@ export default {
         },
         //家用设备类型筛选
         getOTab5(data) {
-            this.equiType = data.index.value;
+            this.houseDeviceType = data.index.value;
             this.oManagerGetDeviceList();
         },
         getOTab6(data) {
@@ -1894,7 +1896,7 @@ export default {
             const options = {
                 token: this.userState.token,
                 houseDeviceType: this.houseDeviceType,
-                search: this.searchData,
+                search: this.searchDataFa,
                 department: this.department,
                 pageNum: this.adminPageNum3,
                 pageSize: 10
@@ -1931,7 +1933,7 @@ export default {
                 //     _this.drawData.dataAxis.push(text.x);
                 //     _this.drawData.data.push(text.y);
                 // });
-                this.drawData.total = res.data.body.total;
+                this.drawData.total = '总数：'+ res.data.body.total;
                 this.drawData.dataAxis = res.data.body.data.map(item => item.x);
                 this.drawData.data = res.data.body.data.map(item => item.y);
                 this.drawData = Object.assign({}, this.drawData);
@@ -1962,7 +1964,7 @@ export default {
                 //     _this.drawDataStart.dataAxis.push(text.x);
                 //     _this.drawDataStart.data.push(text.y);
                 // });
-                this.drawDataStart.total = res.data.body.total;
+                this.drawDataStart.total = '总数：'+ res.data.body.total;
                 this.drawDataStart.dataAxis = res.data.body.data.map(
                     item => item.x
                 );
@@ -1992,7 +1994,7 @@ export default {
             };
             const res = await SETEQUIPMENT(options);
             if (res.data && res.data.errCode === 0) {
-                this.drawDataEquipment.total = res.data.body.total;
+                this.drawDataEquipment.total = '总数：'+ res.data.body.total;
                 this.drawDataEquipment.dataAxis = res.data.body.data.map(
                     item => item.x
                 );
@@ -2025,7 +2027,7 @@ export default {
             };
             const res = await SETFOLLOWCHART(options);
             if (res.data && res.data.errCode === 0) {
-                this.drawDataFollow.total = res.data.body.total;
+                this.drawDataFollow.total = '总数：'+ res.data.body.total;
                 this.drawDataFollow.dataAxis = res.data.body.data.map(
                     item => item.x
                 );
@@ -2085,7 +2087,12 @@ export default {
             this.getFoList();
             this.oGetModelList();
             this.oGetResultList();
+            
             this.searchData = data;
+        },
+        searchChangeFa(data){
+this.searchDataFa = data;
+this.oManagerGetDeviceList()
         },
         //医生端接口
         //医生端tab切换

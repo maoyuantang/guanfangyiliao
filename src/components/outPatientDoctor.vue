@@ -909,7 +909,7 @@ export default {
             };
             const res = await sendBtnVisable(query);
             if (res.data && res.data.errCode === 0) {
-                _this.sessionId = res.data.body.bindSession;
+                
                 if (res.data.body.bindSession && res.data.body.bindDoctor) {
                     text1.disabledStatus = false;
                     
@@ -944,6 +944,7 @@ export default {
             };
             const res = await bindSession(query, options);
             if (res.data && res.data.errCode === 0) {
+                _this.sessionId = res.data.body
                 _this.chatVisible = true;
             } else {
                 this.$notify.error({

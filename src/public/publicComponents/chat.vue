@@ -275,6 +275,7 @@
 </template>
 
 <script>
+import { deepCopy } from '../publicJs/deepCopy.js';
 import apiBaseURL from "../../enums/apiBaseURL.js";
 import protobuf from "protobufjs";
 import { mapState } from "vuex";
@@ -1154,7 +1155,7 @@ export default {
                     text.serverTime = y + ":" + d;
                     _this.messageList1.push(text);
                 });
-               _this.messageList=_this.messageList1;
+               _this.messageList=deepCopy(_this.messageList1);
                _this.messageList=_this.messageList.reverse()
                let odata=this.messageList
                console.log(this.messageList)
