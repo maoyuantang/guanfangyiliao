@@ -11,7 +11,7 @@
         </div>
         <div class="chatMessage">
             <ul class="chatRecord" id="scrolldIV">
-                
+
                 <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
@@ -145,7 +145,7 @@
                     <li @click="openManFile()">孕妇答案</li>
                 </ul>
             </span>
-            <span v-show="oDoctorVis"  title="健康处方">
+            <span v-show="oDoctorVis" title="健康处方">
                 <img src="../../assets/img/sendNew11.png" />
             </span>
             <span v-show="oDoctorVis" title="转诊">
@@ -275,7 +275,7 @@
 </template>
 
 <script>
-import { deepCopy } from '../publicJs/deepCopy.js';
+import { deepCopy } from "../publicJs/deepCopy.js";
 import apiBaseURL from "../../enums/apiBaseURL.js";
 import protobuf from "protobufjs";
 import { mapState } from "vuex";
@@ -406,7 +406,7 @@ export default {
             areadyReadNum: "", //已读
             chatUser: "", //参与聊天的成员
             messageList: [],
-            messageList1:[],
+            messageList1: [],
             input: "",
             childMessageType: "", //发送的消息类型
             messageBody: "", //发送的文字消息内容
@@ -468,8 +468,8 @@ export default {
     methods: {
         updated() {
             this.$nextTick(function() {
-                var div = document.getElementById("scrolldIV");
-                console.log(div);
+                let div = document.getElementById("scrolldIV");
+                console.log(div.scrollTop);
                 div.scrollTop = div.scrollHeight;
             });
         },
@@ -669,15 +669,23 @@ export default {
             }
         },
         showVideoBtn() {
-            if (this.userMemberNum.length > 1) {
-                if (this.showVideoBtnVisable) {
-                    this.showVideoBtnVisable = false;
-                } else {
-                    this.showVideoBtnVisable = true;
-                }
+            // if (this.userMemberNum.length > 1) {
+            //     if (this.showVideoBtnVisable) {
+            //         this.showVideoBtnVisable = false;
+            //     } else {
+            //         this.showVideoBtnVisable = true;
+            //     }
+            // } else {
+            //     this.showVideoBtnVisable = false;
+            //     this.setVideo(0); //单聊
+            // }
+            if (this.userSocketInfo.videoUser >= 4) {
+                this.$notify.error({
+                    title: "警告",
+                    message: "当前视频人数超过4人，不能进入视频"
+                });
             } else {
-                this.showVideoBtnVisable = false;
-                this.setVideo(0); //单聊
+                this.setVideo(0);
             }
         },
         //创建视频
@@ -1140,7 +1148,7 @@ export default {
                     this.loadMoreVisable = false;
                 }
                 // let odata = res.data.body.reverse();
-               console.log(this.messageList1)
+                console.log(this.messageList1);
                 $.each(res.data.body, function(index, text) {
                     let timestamp4 = new Date(text.serverTime);
                     let y = timestamp4.getHours();
@@ -1155,10 +1163,10 @@ export default {
                     text.serverTime = y + ":" + d;
                     _this.messageList1.push(text);
                 });
-               _this.messageList=deepCopy(_this.messageList1);
-               _this.messageList=_this.messageList.reverse()
-               let odata=this.messageList
-               console.log(this.messageList)
+                _this.messageList = deepCopy(_this.messageList1);
+                _this.messageList = _this.messageList.reverse();
+                let odata = this.messageList;
+                console.log(this.messageList);
                 for (let i = 0; i < odata.length; i++) {
                     if (this.areadyReadNum > odata[i].msgId) {
                         this.messageList[i].oRead = true;
@@ -1296,7 +1304,7 @@ export default {
                         }
                     }
                 }
-                console.log(this.messageList)
+                console.log(this.messageList);
             } else {
                 //失败
                 this.$notify.error({
@@ -1970,5 +1978,8 @@ d .sendImgCss {
     width: 100%;
     height: 100%;
     border-radius: 50%;
+}
+.chatDialog .el-dialog__body {
+    padding-top: 0;
 }
 </style>

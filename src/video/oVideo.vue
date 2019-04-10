@@ -1595,6 +1595,8 @@ export default {
          */
         Manis.onJoinConference(function(result) {
             $("#remoteVideos").append(_this.generateParticipant(result, false));
+            this.$store.commit("socket/VIDEOUSER", 1);
+            alert(this.userSocketInfo.videoUser)
         });
         /**
          * 收到有人离开房间
@@ -1605,6 +1607,8 @@ export default {
                     ".participant_container_" + result.response.resource
                 ).remove();
             }
+            this.$store.commit("socket/VIDEOUSER", 0);
+            alert(this.userSocketInfo.videoUser)
         });
         /**
          * 收到文件信息
