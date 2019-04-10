@@ -1651,7 +1651,7 @@
 					}
 				}
 				else if (this.sureVisiable == 2) {
-
+					console.log(data)
 					console.log(this.addData.agreement)
 					let a = 0;
 					for (let index = 0; index < this.addData.agreement.list.length; index++) {
@@ -1690,12 +1690,14 @@
 						clinicProtocolName: data.agreement.default.label,//String true 远程门诊协议名 
 						status: this.state//boolean false 远程门诊状态（禁用操作时值必传） 
 					};
+					console.log(data.agreement)
+					console.log(data.agreement.default)
 					const res = await updateClinic(query, options);
 					if (res.data && res.data.errCode === 0) {
 						console.log('7.2编辑业务+成功')
 						this.getList1()
 						this.addData.show = false
-						this.addData.agreement.default = { label: "", value: "" }
+						// this.addData.agreement.default = { label: "", value: "" }
 					} else {
 						console.log('7.2编辑业务+失败')
 						//失败
