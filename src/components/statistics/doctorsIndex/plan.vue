@@ -261,7 +261,7 @@
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="userName" label=" " width="">
+                        <el-table-column prop="doctor" label=" " width="">
                         </el-table-column>
                         <el-table-column label=" " width="">
                             <template slot-scope="scope">
@@ -354,7 +354,7 @@
 
         <div v-if="chatVisible">
             <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-                <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox"></chat>
+                <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox" :userMessage="userMessage"></chat>
             </el-dialog>
         </div>
         <!-- 谭莹备注 -->
@@ -418,7 +418,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination background layout="prev, pager, next" page-sizes="10" :total="planTotal" :current-change="currentChangePlan">
+                <el-pagination background layout="prev, pager, next" :page-sizes="planSize" :total="planTotal" @current-change="currentChangePlan">
                 </el-pagination>
             </el-dialog>
         </div>
@@ -454,7 +454,7 @@
                     </el-table-column>
 
                 </el-table>
-                <el-pagination background layout="prev, pager, next" page-sizes="10" :total="warnTotal" :current-change="currentChangeWarn">
+                <el-pagination background layout="prev, pager, next" :page-sizes="planSize" :total="warnTotal" @current-change="currentChangeWarn">
                 </el-pagination>
             </el-dialog>
         </div>
@@ -519,6 +519,8 @@ export default {
     },
     data() {
         return {
+            planSize: [10],
+            userMessage: {},
             oclick: "click",
             chatTypeBox: {
                 startDoctorName: "",
@@ -777,6 +779,9 @@ export default {
         },
         //发送消息
         sendMessage(row) {
+            this.userMessage = {
+                userId: row.userId
+            };
             this.createChat(row);
         },
         //查看档案
@@ -1075,7 +1080,16 @@ export default {
                     message: "录入成功"
                 });
                 setTimeout(function() {
-                    _this.puBlicManData.show = false;
+                    _this.puBlicManData = {
+                        //新增 孕妇档案  弹窗数据
+                        show: false,
+                        nameSelectId: "", //选择名字
+                        nameList: [], //名字列表
+                        husband: "", //丈夫
+                        phone: "", //电话
+                        addr: "", //地址
+                        LastMenstrualPeriod: null //末次月经
+                    };
                 }, 1000);
             } else {
                 //失败
@@ -1107,7 +1121,24 @@ export default {
                     message: "录入成功"
                 });
                 setTimeout(function() {
-                    _this.puBlicFileData.show = false;
+                    _this.puBlicFileData = {
+                        //新增 普通档案  弹窗数据
+                        // id:'1231321',
+                        show: false, //是否显示
+                        nameSelectId: "", //选择名字
+                        nameList: [], //名字列表
+                        sexList: [
+                            //性别
+                            { label: "女", value: 0 },
+                            { label: "男", value: 1 }
+                        ],
+                        sexSelectId: 0,
+                        age: "", //年龄
+                        addr: "", //地址
+                        org: "", //机构
+                        diagnosis: "", //诊断
+                        deal: "" //处理意见
+                    };
                 }, 1000);
             } else {
                 //失败

@@ -87,7 +87,7 @@
                             </el-table-column>
                             <el-table-column prop="drugQuantity" label="数量" width="120">
                                 <template slot-scope="scope">
-                                    <input class="drugsListInput" v-model="scope.row.drugQuantity" type="number" @change="countAll()" />
+                                    <input class="drugsListInput" v-model="scope.row.drugQuantity" type="number" @input="countAll()" />
                                 </template>
                             </el-table-column>
                             <el-table-column prop="drugPriceAll" label="合计" width="120">

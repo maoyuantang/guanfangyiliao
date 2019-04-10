@@ -7,7 +7,9 @@
                 <tag :inData="queryConditions.status" @reback="getStatusSelect"></tag>
             </div>
             <div class="class-scheduling-top-right">
-                <search @searchValue="searchChange"></search>
+                <div class="class-scheduling-top-right-searchChange-outclass">
+                    <search @searchValue="searchChange"></search>
+                </div>
                 <el-button type="primary" @click="newPlan">新增</el-button>
             </div>
         </div>
@@ -32,15 +34,51 @@
                     </thead>
                     <tbody class="class-scheduling-tbody">
                         <tr v-for="(item,index) in timetable" :key="index"> 
-                            <th>{{item.courseNumber}}</th>
-                            <th>{{item.department}}</th>
-                            <th>{{item.type}}</th>
-                            <th>{{item.name}}</th>
-                            <th>{{item.source}}</th>
-                            <th>{{item.createTime}}</th>
-                            <th>{{item.teacher}}</th>
-                            <th>{{item.teachTime}}</th>
-                            <th class="class-scheduling-tbody-spe">{{item.number}}</th>
+                            <th>
+                                <el-tooltip effect="light" :content="item.courseNumber" placement="top">
+                                    <div>{{item.courseNumber.length>7?`${item.courseNumber.substring(0,7)}...`:item.courseNumber}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th>
+                                <el-tooltip effect="light" :content="item.department" placement="top">
+                                    <div>{{item.department.length>7?`${item.department.substring(0,7)}...`:item.department}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th>
+                                <el-tooltip effect="light" :content="item.type" placement="top">
+                                    <div>{{item.type.length>7?`${item.type.substring(0,7)}...`:item.type}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th>
+                                <el-tooltip effect="light" :content="item.name" placement="top">
+                                    <div>{{item.name.length>7?`${item.name.substring(0,7)}...`:item.name}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th>
+                                 <el-tooltip effect="light" :content="item.source" placement="top">
+                                    <div>{{item.source&&item.source.length>7?`${item.source.substring(0,7)}...`:item.source}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th>
+                                <el-tooltip effect="light" :content="item.createTime" placement="top">
+                                    <div>{{item.createTime.length>7?`${item.createTime.substring(0,7)}...`:item.createTime}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th>
+                                <el-tooltip effect="light" :content="item.teacher" placement="top">
+                                    <div>{{item.teacher.length>7?`${item.teacher.substring(0,7)}...`:item.teacher}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th>
+                                <el-tooltip effect="light" :content="item.teachTime" placement="top">
+                                    <div>{{item.teachTime.length>7?`${item.teachTime.substring(0,7)}...`:item.teachTime}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th class="class-scheduling-tbody-spe">
+                                <el-tooltip effect="light" :content="item.number" placement="top">
+                                    <div>{{item.number&&item.number.length>7?`${item.number.substring(0,7)}...`:item.number}}</div>
+                                </el-tooltip>
+                            </th>
                             
                             <th>{{item.state}}</th>
                             <th>最近修改</th>
@@ -223,7 +261,7 @@
                         more:false
                     },
                     mode:{//方式 
-                        title:'方式 ',
+                        title:'方式',
                         select:0,
                         list:[],
                         more:false
@@ -816,11 +854,18 @@
         box-shadow: 0 6px 36px 0 rgba(0,62,100,0.04);
         border-radius: 4px;
         padding-top: .32rem;
-        padding-left: .38rem;
+        padding-left: .1rem;
         padding-right: .68rem;
         padding-bottom: .68rem;	
     }
     .class-scheduling-body-paging{
         text-align: center;
+    }
+    .class-scheduling-top-right-searchChange-outclass{
+        display: inline-block;
+        margin-right: 1rem;
+    }
+    .class-scheduling-top-right>.el-button{
+        width:1.96rem;
     }
 </style>

@@ -912,7 +912,7 @@ export default {
                 //     _this.drawData.dataAxis.push(text.unit);
                 //     _this.drawData.data.push(text.number);
                 // });
-                this.drawData.total = res.data.body.total;
+                this.drawData.total ='总数：'+ res.data.body.total;
                 this.drawData.dataAxis = res.data.body.data.map(item => item.x);
                 this.drawData.data = res.data.body.data.map(item => item.y);
                 this.drawData = Object.assign({}, this.drawData);

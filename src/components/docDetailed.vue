@@ -1,7 +1,8 @@
 <template>
     <div class="doc-detailed">
         <div class="doc-detailed-">
-            <el-button type="primary" @click="reBack">返回</el-button>
+            <!-- <el-button  @click="reBack" icon="el-icon-arrow-left"></el-button> -->
+            <el-button type="text" icon="el-icon-arrow-left" @click="reBack" class="doc-detailed-back"></el-button>
         </div>
         <div class="doc-detailed-alert">
           <div class="doc-detailed-alert-content">
@@ -26,7 +27,7 @@
                     {{item.laber}}
                     </span>
                     <div class="doc-detailed-nav-select">
-                        <el-select v-model="testData.select" clearable placeholder="请选择">
+                        <el-select v-model="testData.select" clearable placeholder="请选择" v-if="nav.list[nav.index].page === 'inSide'">
                             <el-option
                             v-for="(item,index) in testData.list"
                             :key="index"
@@ -51,7 +52,7 @@ import record from './docDetailed/record.vue'
 import inSide from './docDetailed/inSide.vue'
 import outSide from './docDetailed/outSide.vue'
 import { mapState } from "vuex";
-import { queryListByUserId} from '../api/apiAll.js'//api
+import { queryListByUserId, lastAssessPlan} from '../api/apiAll.js'//api
 export default {
     name: "docDetailed",
     components: {
@@ -70,7 +71,7 @@ export default {
                 list:[]//列表
             },
             nav:{//顶部nav数据
-                index:0,//选中
+                index:0,//选中  
                 list:[
                     {laber:'电子病历',page:'record'},
                     {laber:'院内档案',page:'inSide'},
@@ -100,6 +101,27 @@ export default {
     
     methods: {
         /**
+         * 11.获取成员最后一次评估相关
+         */
+        async getLastAssessPlan(){
+            const res = await lastAssessPlan({
+                token:this.userState.token,
+                userId:this.$route.query.id,
+                familyMemberId:this.topTag.list[this.topTag.index]?this.topTag.list[this.topTag.index].id:'', 
+            });
+            console.log(res);
+            if(res.data&&res.data.errCode===0){
+                
+            }else{
+                this.$notify({
+                    title: '获取成员最后一次评估相关失败',
+                    message: res.data.errMsg, 
+                    type: 'error'
+				});
+            }
+            
+        },
+        /**
          * 返回
          */
         reBack(){
@@ -118,8 +140,8 @@ export default {
                 this.topTag.list = res.data.body
             }else{
                 this.$notify({
-                    title: '失败',
-                    message: '成员列表获取失败', 
+                    title: '成员列表获取失败',
+                    message: res.data.errMsg, 
                     type: 'error'
 				});
             }
@@ -140,6 +162,7 @@ export default {
     },
     created() {
         this.getUsersList();
+        // this.getLastAssessPlan();
     },
     watch: {},
     /**
@@ -323,5 +346,8 @@ export default {
     font-size: 13px;
     color: #97A3B4;
     line-height: 22px;
+}
+.doc-detailed-back{
+    color: #646464;
 }
 </style>

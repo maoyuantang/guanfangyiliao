@@ -43,7 +43,7 @@
 
 <script>
     import { mapState } from 'vuex'
-    import {patientInfo} from '../../api/apiAll.js'
+    import {patientInfo, lastAssessPlan, lastUserRecord, nearlyFollowup, nearlyDevice} from '../../api/apiAll.js'
     import plan from './outSide/plan.vue'
     import assessment from './outSide/assessment.vue'
     import equipment from './outSide/equipment.vue'
@@ -81,7 +81,7 @@
                         {
                             name:'风险评估',
                             time:'2018-12-12',
-                            component:'assessment',   
+                            component:'assessment',     
                             msg:''
                         },
                         {
@@ -111,6 +111,96 @@
 		},
 		
 		methods:{
+            /**
+             * 11.获取成员最后一次评估相关
+             */
+            async getLastAssessPlan(){
+                // console.log({
+                //     token:this.userInfo.token,
+                //     userId:this.inData.userId,
+                //     familyMemberId:this.inData.id,
+                // })
+                const res = await lastAssessPlan({
+                    token:this.userInfo.token,
+                    userId:this.inData.userId,
+                    familyMemberId:this.inData.id, 
+                });
+                console.log(res);
+                if(res.data&&res.data.errCode===0){
+                    this.showInfo.navList[1].time = res.data.body.lastDate
+                }else{
+                    this.$notify({
+                        title: '获取成员最后一次评估相关失败',
+                        message: res.data.errMsg, 
+                        type: 'error'
+                    });
+                } 
+            },
+            /**
+             * 7.获取患者最后一次上传档案信息
+             */
+            async getLastUserRecord(){
+                // console.log({
+                //     token:this.userInfo.token,
+                //     userId:this.inData.userId,
+                //     familyMemberId:this.inData.id,
+                // })
+                const res = await lastAssessPlan({
+                    token:this.userInfo.token,
+                    userId:this.inData.userId,
+                    familyMemberId:this.inData.id, 
+                });
+                console.log(res);
+                if(res.data&&res.data.errCode===0){
+                    this.showInfo.navList[3].time = res.data.body.lastDate
+                }else{
+                    this.$notify({
+                        title: '获取成员最后一次评估相关失败',
+                        message: res.data.errMsg, 
+                        type: 'error'
+                    });
+                } 
+            },
+            /**
+             * 1.医生查看成员最近随访
+             */
+            async getNearlyFollowup(){
+                const res = await lastAssessPlan({
+                    token:this.userInfo.token,
+                    userId:this.inData.userId,
+                    memberId:this.inData.id, 
+                });
+                console.log(res);
+                if(res.data&&res.data.errCode===0){
+                    this.showInfo.navList[0].time = res.data.body.lastDate
+                }else{
+                    this.$notify({
+                        title: '成员最近随访获取失败',
+                        message: res.data.errMsg, 
+                        type: 'error'
+                    });
+                } 
+            },
+            /**
+             * 1.医生查看成员最近自测
+             */
+            async getNearlyDevice(){
+                const res = await nearlyDevice({
+                    token:this.userInfo.token,
+                    userId:this.inData.userId,
+                    memberId:this.inData.id, 
+                });
+                console.log(res);
+                if(res.data&&res.data.errCode===0){
+                    this.showInfo.navList[2].time = res.data.body.nearlyDate
+                }else{
+                    this.$notify({
+                        title: '成员最近自测获取失败',
+                        message: res.data.errMsg, 
+                        type: 'error'
+                    });
+                } 
+            },
 			/**
              * 切换 菜单
              */
@@ -141,9 +231,14 @@
 			
 		},
 		async created(){
-            // debugger
             console.log(this.inData);
             this.getPatientInfo();
+            Promise.all([
+                this.getLastAssessPlan(),
+                this.getLastUserRecord(),
+                this.getNearlyFollowup(),
+                this.getNearlyDevice()
+            ]);
 		}
 	}
 </script>

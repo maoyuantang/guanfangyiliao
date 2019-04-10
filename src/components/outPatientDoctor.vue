@@ -823,8 +823,6 @@
 
                 this.oClinicId = text.id;
                 this.centerDialogVisible = true;
-                console.log(text);
-                
                 // let _this = this;
                 // let query = {
                 //   token: this.userInfo.token

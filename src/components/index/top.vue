@@ -60,7 +60,8 @@ export default {
             viewRoot: state => state.user.viewRoot,
             userInfo: state => state.user.userInfo,
             userSocketInfo: state => state.socket,
-            userState: state => state.user.userInfo
+            userState: state => state.user.userInfo,
+             userSocketInfo: state => state.socket
         }),
         imgSrc() {
             return this.userSelfInfo.headId? `${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${this.userSelfInfo.headId}`: "../../../static/assets/img/a-6.png";
@@ -185,6 +186,19 @@ export default {
     async created() {
         this.countShowWhich();
         this.getNoticeList();
+    },
+    watch: {
+        "userSocketInfo.synchroMessage": {
+            handler(n, o) {
+                let _this = this;
+                $.each(n.syncData, function(index, text) {
+                    if (text.command == "SYNC_SESSION") {
+                        _this.msgId = _this.$store.state.socket.messageTicket.oMsgId;
+                        _this.getNoticeList();
+                    }
+                });
+            }
+        }
     },
     // beforeRouteEnter(to,from,next){
     //     next(vm=>{

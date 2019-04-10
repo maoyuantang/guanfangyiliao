@@ -13,6 +13,7 @@ export default {
                 type: 0
             }
         },
+        videoUser:0,
         messageTicket: {
             ticket: "", //票据，登录即可返回
             sequence: "", //序列号
@@ -55,6 +56,14 @@ export default {
         IFENTERVIDEO(state, data) {
             state.ifEnterVideo = data
         },
+        VIDEOUSER(state,data){
+            if(data==0){
+                state.videoUser  -=1
+            }else if(data==1){
+                state.videoUser += 1
+            }
+           
+        }
     },
     actions: {
         setSocket(context, data) {
@@ -74,6 +83,9 @@ export default {
         },
         oIfEnterVideo(context, data) {
             context.commit("IFENTERVIDEO", data);
+        },
+        VIDEOUSER(context, data) {
+            context.commit("VIDEOUSER", data);
         },
     }
 }

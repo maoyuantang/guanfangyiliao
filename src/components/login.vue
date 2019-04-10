@@ -308,7 +308,7 @@ export default {
                 this.getUserInfo(); //使用登录页、过后的token，请求用户个人信息
                 this.setViewRoot(res.data.body); //计算用户权限
                 // websocket.initWebSocket(this.userState.token)
-                this.$refs.mychild.initWebSocket(this.userState.token);d
+                this.$refs.mychild.initWebSocket(this.userState.token);
             } else {
                 //失败
                 this.$notify.error({
@@ -398,6 +398,7 @@ export default {
          * 获取科室列表
          */
         async getHospitalDepts() {
+            if(this.userState.rooter)return;//后面要求，超级管理员不发请求
             const res = await fetchHospitalDepts({
                 orgCode: this.userSelfInfo.orgCode,
                 deptId: ""
