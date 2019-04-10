@@ -547,7 +547,7 @@
                     <li class="noBorder">
                         <el-table :data="huanzheList4[index]" style="border:none;">
                             <el-table-column prop="askTime" label="接诊时间"></el-table-column>
-                            <el-table-column prop="" label="首诊医生"></el-table-column>
+                            <el-table-column prop="doctorName" label="首诊医生"></el-table-column>
                             <el-table-column prop="askPrice" label="问诊费用"></el-table-column>
                             <el-table-column prop="prescriptionPrice" label="处方费"></el-table-column>
                         </el-table>
@@ -823,6 +823,8 @@
 
                 this.oClinicId = text.id;
                 this.centerDialogVisible = true;
+                console.log(text);
+                
                 // let _this = this;
                 // let query = {
                 //   token: this.userInfo.token
