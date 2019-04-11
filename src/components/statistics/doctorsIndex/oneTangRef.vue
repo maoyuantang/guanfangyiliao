@@ -120,7 +120,7 @@
         </el-table-column>
         <el-table-column prop="patientName" label="病人" :show-overflow-tooltip="true"></el-table-column>
         <!-- <el-table-column prop="applyOrgName" label="申请医院" :show-overflow-tooltip="true"></el-table-column> -->
-        <el-table-column :data="docTableData"  width="150">
+        <el-table-column :data="docTableData" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             {{docTableData[0].applyOrgName}}|{{docTableData[0].applyDeptName}}
           </template>

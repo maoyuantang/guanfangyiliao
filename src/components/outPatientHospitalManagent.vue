@@ -44,7 +44,8 @@
 					</el-table>
 				</div>
 				<div style="text-align: center;padding: 10px 0;">
-					<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
+					<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+						@current-change="currentChange1">
 					</el-pagination>
 				</div>
 			</div>
@@ -68,9 +69,10 @@
 
 				</div>
 				<div class="online-clinic-middle">
-					<publicList :columns="prescriptionAuditDistribution.tableBody.columns" :tableData="prescriptionAuditDistribution.tableBody.tableData"
-					 :tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :cellColor="cellColor" :pageSize="pageSize" :total="totals"
-					 @rebackFenye="currentChange2">
+					<publicList :columns="prescriptionAuditDistribution.tableBody.columns"
+						:tableData="prescriptionAuditDistribution.tableBody.tableData"
+						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :cellColor="cellColor" :pageSize="pageSize"
+						:total="totals" @rebackFenye="currentChange2">
 					</publicList>
 				</div>
 			</div>
@@ -97,19 +99,19 @@
 		</div>
 		<!-- 新增门诊弹框 -->
 		<addNewFrame :inData="addData" @reback="getData" @department="getDepartment" @getAgreementSelect="getSelectInfo"
-		 :sureVisiable="sureVisiable"></addNewFrame>
+			:sureVisiable="sureVisiable"></addNewFrame>
 		<!-- 表一查看关联医生弹框 -->
 		<div v-if="isShowrelationalDoctor">
-			<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="500px" max-hight="450px"
-			 center>
+			<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="500px"
+				max-hight="450px" center>
 				<el-scrollbar style="height:100%;">
 					<ul style="max-height: 450px;">
 						<li v-for="(text,index) in relationalDoctor" :key="index">
 							<div class="evaluateCont1">
 								<!-- 待头像 -->
 								<img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-								<img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'
-								 alt="医生头像">
+								<img v-if="text.headId"
+									:src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
 								<h5>{{text.doctorName}}</h5>
 							</div>
 							<div class="evaluateCont2">
@@ -148,9 +150,7 @@
 		<!-- 查看详情弹框中的聊天弹框 -->
 		<div v-if="isShowRecordChat">
 			<el-dialog class="" title="聊天记录" :visible.sync="isShowRecordChat" center>
-				<!-- <viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord> -->
 				<viewRecord :sessionId="sessionIds" v-if="sessionIds"></viewRecord>
-				<noData v-if="!messageRecord"></noData>
 			</el-dialog>
 		</div>
 
@@ -160,7 +160,8 @@
 		<!-- 处方详情 -->
 		<div v-if="chuFangDetailList2">
 			<el-dialog title="处方详情" :visible.sync="chuFangDetailList2" center>
-				<img style="width:100%" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
+				<img style="width:100%"
+					:src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
 			</el-dialog>
 		</div>
 
@@ -188,9 +189,7 @@
 		<!-- 查看处方配送记录 -->
 		<div v-if="viewRecordList2">
 			<el-dialog class="  " title="处方配送聊天记录" :visible.sync="viewRecordList2" width="602px" hight="356px" center>
-				<!-- <viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord> -->
 				<viewRecord :sessionId="sessionIds" v-if="sessionIds"></viewRecord>
-				<noData v-if="!messageRecord"></noData>
 			</el-dialog>
 		</div>
 
@@ -316,14 +315,13 @@
 				status: [],//业务人次表里的状态
 				tableData: [],//表1  传入数据参数
 				state: false,//boolean false 远程门诊状态（禁用操作时值必传） 
-				sessionIds:"",
+				sessionIds: "",
 				//管理2端   筛选返回值  
 				string: "",//门诊订单号			number
 				reviewEnum: "",//审核状态（REVIEWED, //已审核；UNREVIEWED, //未审核；FAILREVIEWED, 
 				sendDoctorId: "",//发药医生
 				reviewDoctorId: "",//审核医生
 				sendEnum: "",//配送状态（UNSEND, //未配送；SENDING, //配送中；SENDOVER, //已签收）
-				messageRecord: "",//查看记录拉回来的历史消息
 				//管理统计端  统计筛选返回值  接收参数
 				time0: "2017-06-01",//统计筛选起始时间
 				time1: "2019-01-25",//统计筛选结束时间
@@ -1020,31 +1018,10 @@
 			// 管理1表
 			//业务人次   中发起会谈
 			async isShowRecordChatFun(data) {
+				this.sessionIds = ""
 				this.isShowRecordChat = true;
 				console.log(data)
-				// this.messageRecord = data.bindSessionId  sessionId
 				this.sessionIds = data.bindSessionId
-				// let query = {
-				// 	token: this.userInfo.token
-				// };
-				// let options = {
-				// 	userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
-				// 	sessionId: [data.bindSessionId],//目标会话ID集合/数组
-				// 	msgId: 100,//拉取节点（从这个节点开始拉取历史消息）
-				// 	pageNums: 15//每页拉取数量
-				// };
-				// const res = await fetchHistoryMessage(query, options);
-				// if (res.data && res.data.errCode === 0) {
-				// 	console.log(res)
-				// 	this.messageRecord = res.data.body
-				// 	console.log("聊天记录+成功");
-				// } else {
-				// 	console.log('聊天记录+失败')
-				// 	this.$notify.error({
-				// 		title: "警告",
-				// 		message: res.data.errMsg
-				// 	});
-				// }
 			},
 			async relateDoctors2(row, column, cell, event) {
 				console.log(row, column)
@@ -1565,49 +1542,10 @@
 			},
 			//聊天记录   管理2表
 			async viewRecordList2Fun(index, row) {
+				this.sessionIds = ""
 				this.viewRecordList2 = true;
 				console.log(index, row)
-				this.messageRecord = row.prescriptionSessionId
-				// let query = {
-				// 	token: this.userInfo.token
-				// };
-				// let options = {
-				// 	userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
-				// 	sessionId: [row.prescriptionSessionId],//目标会话ID集合/数组
-				// 	msgId: 100,//拉取节点（从这个节点开始拉取历史消息）
-				// 	pageNums: 15//每页拉取数量
-				// };
-				// const res = await fetchHistoryMessage(query, options);
-				// if (res.data && res.data.errCode === 0) {
-				// 	console.log(res)
-				// 	this.messageRecord = res.data.body
-				// 	console.log("聊天记录+成功");
-				// } else {
-				// 	console.log('聊天记录+失败')
-				// 	this.$notify.error({
-				// 		title: "警告",
-				// 		message: res.data.errMsg
-				// 	});
-				// }
-
-
-				//废弃接口
-				// let query = {
-				// 	token: this.userInfo.token,
-				// 	prescriptionId: row.id
-				// };
-
-				// const res = await drugSendRecord(query);
-				// if (res.data && res.data.errCode === 0) {
-				// 	console.log(res)
-				// 	console.log("处方发货记录+成功");
-				// } else {
-				// 	console.log('处方发货记录+失败')
-				// 	this.$notify.error({
-				// 		title: "警告",
-				// 		message: res.data.errMsg
-				// 	});
-				// }
+				this.sessionIds = row.prescriptionSessionId
 			},
 
 
