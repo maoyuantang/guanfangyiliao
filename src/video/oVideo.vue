@@ -1622,7 +1622,7 @@ export default {
             $("#remoteVideos").append(_this.generateParticipant(result, false));
             // _this.$store.commit("socket/VIDEOUSER", 1);
             _this.videoUser += 1;
-            alert(_this.videoUser);
+            alert('收到有人进入房间'+_this.videoUser);
         });
         /**
          * 收到有人离开房间
@@ -1635,7 +1635,7 @@ export default {
             }
             // _this.$store.commit("socket/VIDEOUSER", 0);
             _this.videoUser -= 1;
-            alert(_this.videoUser);
+            alert('收到有人进入房间'+_this.videoUser);
         });
         /**
          * 收到文件信息
