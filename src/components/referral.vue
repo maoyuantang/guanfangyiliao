@@ -331,7 +331,7 @@
         //管理统计端  筛选工具栏  统计筛选返回值  接收参数
         time0: "",///统计筛选开始时间     DatePicker 日期选择器
         time1: "",//统计筛选结束时间      DatePicker 日期选择器
-        type: 'MONTH', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天       Select 选择器
+        type: 'DAY', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天       Select 选择器
         types: '', //String MANAGE账号是什么权限
         yTotal1: 0,//统计y轴相加
         yTotal2: 0,//统计y轴相加
@@ -531,6 +531,8 @@
           this.goNo();
           this.getList1()
         } else if (data.i == 1) {
+          this.time0 = "";//统计筛选开始时间
+          this.time1 = "";//统计筛选结束时间
           this.getList1().then(val => {
             this.goNo();
             this.getList2();
@@ -571,24 +573,24 @@
       //点击筛选日期    医生端
       getOTab4(data) {
         console.log(data)
-        var date = new Date();
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        if (month < 10) {
-          month = "0" + month;
-        }
-        if (day < 10) {
-          day = "0" + day;
-        }
-        var nowDate = year + "-" + month + "-" + day;
-        if (data.index.value == "TODAY") {
-          this.time0 = nowDate;
-          this.time1 = nowDate;
-        } else if (data.index.value == "ALL") {
-          this.time0 = "";
-          this.time1 = "";
-        }
+        // var date = new Date();
+        // var year = date.getFullYear();
+        // var month = date.getMonth() + 1;
+        // var day = date.getDate();
+        // if (month < 10) {
+        //   month = "0" + month;
+        // }
+        // if (day < 10) {
+        //   day = "0" + day;
+        // }
+        // var nowDate = year + "-" + month + "-" + day;
+        // if (data.index.value == "TODAY") {
+        //   this.time0 = nowDate;
+        //   this.time1 = nowDate;
+        // } else if (data.index.value == "ALL") {
+        //   this.time0 = "";
+        //   this.time1 = "";
+        // }
         // this.doctorDate = data.index.value;//这个参数不用了
         this.getList2();
         this.DoctorList();//医生端列表
@@ -749,6 +751,7 @@
           const lists = res.data.body.data2.list
           this.totals = res.data.body.data2.total
           this.manageBodyData = lists
+          this.departmentId = ""
         } else {
           console.log('管理1表+失败')
           this.$notify.error({
