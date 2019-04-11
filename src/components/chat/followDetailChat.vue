@@ -4,7 +4,7 @@
             <el-form ref="form" :model="addFollowData" label-width="80px">
 
                 <el-form-item>
-                    <el-input class="addFollowTitle" disabled v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
+                    <el-input class="addFollowTitle"  v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
                 </el-form-item>
                 <el-form-item label="">
                     <el-radio-group v-model="addFollowData.type">
@@ -14,7 +14,7 @@
                 </el-form-item>
                 <div class="addFollowMain addFollowMain1">
                     <el-form-item class="addFollowM-bot firstDoctorTimeBox" label="首次治疗">
-                        <el-date-picker class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
+                        <el-date-picker v-model="addFollowData.firstTreatmentTime" class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
                         </el-date-picker>
                     </el-form-item>
                     <ul>
@@ -56,13 +56,13 @@
 
                         </li>
                     </ul>
-                    <div class="addFollowM-bot remindTime">
+                    <!-- <div class="addFollowM-bot remindTime">
                         提醒时间
                         <el-select class="addFollowHou" v-model="addFollowData.remindDays" placeholder="请选择">
                             <el-option v-for="(text,index) in 100" :key="index" :label="text" :value="text">
                             </el-option>
                         </el-select>
-                    </div>
+                    </div> -->
                 </div>
 
             </el-form>

@@ -283,7 +283,7 @@
                         <el-table-column label=" " width="220">
                             <template slot-scope="scope">
                                 <el-button class="seeDanganClass" @click="sendArchives(scope.row)" type="text" size="small">查看档案</el-button>
-                                <el-button class="enterHuizClass" @click="enterHuiz(scope.row)" type="text" size="small">进入会诊</el-button>
+                                <el-button class="enterHuizClass" @click="enterHuiz(scope.row,'会诊')" type="text" size="small">进入会诊</el-button>
                                 <el-button class="invitedClass" @click="invitedUser(scope.row)" type="text" size="small">邀请</el-button>
 
                             </template>
@@ -340,7 +340,7 @@
                         <el-table-column label=" " width="220">
                             <template slot-scope="scope">
                                 <el-button class="seeDanganClass" @click="sendArchives(scope.row)" type="text" size="small">查看档案</el-button>
-                                <el-button class="enterHuizClass" @click="enterHuiz(scope.row)" type="text" size="small">进入协作</el-button>
+                                <el-button class="enterHuizClass" @click="enterHuiz(scope.row,'协作')" type="text" size="small">进入协作</el-button>
                                 <el-button class="invitedClass" @click="invitedUserXie(scope.row)" type="text" size="small">邀请</el-button>
 
                             </template>
@@ -779,9 +779,11 @@ export default {
         },
         //发送消息
         sendMessage(row) {
+            this.doctorVis = 1;
             this.userMessage = {
                 userId: row.userId
             };
+            this.chatTypeBox.startDoctorTYpe = "随访";
             this.createChat(row);
         },
         //查看档案
@@ -932,9 +934,17 @@ export default {
             }
         },
         //进入会诊
-        enterHuiz(row) {
+        enterHuiz(row, type) {
+            if (type == "会诊") {
+                this.chatTypeBox.startDoctorName = row.doctor;
+            } else if (type == "协作") {
+                this.chatTypeBox.startDoctorName = row.applyUserName;
+            }
+
             this.chatVisible = true;
             this.sessionId = row.sessionId;
+            this.doctorVis = 0;
+            this.chatTypeBox.startDoctorTYpe = type;
             if (row.state == "NEW") {
                 row.state = "UNDERWAY";
                 this.overclick(row, "on");
@@ -952,9 +962,11 @@ export default {
         seeMore(num) {
             if (num == 1) {
                 this.planVisible = true;
+                this.planNum=1
                 this.getMorePlanList();
             } else if (num == 2) {
                 this.warnVisible = true;
+                this.warnNum=1
                 this.getMoreWarnList();
             } else if (num == 3) {
                 sessionStorage.setItem(

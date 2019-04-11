@@ -1898,7 +1898,7 @@ export default {
                 token: this.userState.token,
                 houseDeviceType: this.houseDeviceType,
                 search: this.searchDataFa,
-                department: this.department,
+                department: this.odepartment,
                 pageNum: this.adminPageNum3,
                 pageSize: 10
             };

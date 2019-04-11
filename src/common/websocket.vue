@@ -535,6 +535,7 @@ export default {
                                             "&"
                                         )[1]
                                     };
+                                    console.log(_this.createVideoRoomData)
                             // $.each(reciveUserList, function(index, text) {
                             //     if (_this.userSelfInfo.userId == text) {
                             //         _this.receiveVideoVisable = true;
