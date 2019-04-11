@@ -273,17 +273,23 @@ router.beforeEach((to, from, next) => {
 			path:'/familyMedicine',   
 			code:'110000'
 		},
+		{
+			name:'冠方医疗-查看档案',//手动添加
+			select:false,
+			path:'/docDetailed',   
+			code:'000001'
+		},
 	];
-	console.log(to);
-	console.log('change');
-	if(to.path === './docDetailed'){//这是新增功能 真是让人头大
-		sessionStorage.setItem('page',JSON.stringify({
-			name:to.meta.title,
-			select:true,
-			path: to.path,
-			code:routerMap.find(item=>item.path === to.path)?routerMap.find(item=>item.path === to.path).code:''
-		}));//存缓存
-	}
+	// console.log(to);
+	// console.log('change');
+	// if(to.path === './docDetailed'){//这是新增功能 真是让人头大
+	// 	sessionStorage.setItem('page',JSON.stringify({
+	// 		name:to.meta.title,
+	// 		select:true,
+	// 		path: to.path,
+	// 		code:routerMap.find(item=>item.path === to.path)?routerMap.find(item=>item.path === to.path).code:''
+	// 	}));//存缓存
+	// }
 	if(!store.state.user.userInfo.isLogin&&to.path!=='/login'){//vuex中没有用户信息，并且不在登录页面,检查缓存中有没有数据，判断是否是刷新
 		let userInfo = sessionStorage.getItem('userInfo');//用户信息
 		let userSelfInfo = sessionStorage.getItem('userSelfInfo');//用户个人信息

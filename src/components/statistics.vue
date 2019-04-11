@@ -44,7 +44,7 @@ import {initializeTheCreationOfHospital,userList,settingsList} from '../api/apiA
 		},
 		async created(){
 			// console.log(this.$store.state.user);
-			window.onerror = err=>console.log(err);
+			// window.onerror = err=>console.log(err);
 			console.log(this.$store.state.user.userInfo.hasAuth)
 			// console.log('test');
 			// const test = await settingsList({token:this.$store.state.user.userInfo.token});

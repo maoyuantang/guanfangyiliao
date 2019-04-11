@@ -140,6 +140,12 @@ import { parse } from 'protobufjs';
 						path:'/familyMedicine',   
 						code:'110000'
 					},
+					{
+						name:'冠方医疗-查看档案',//手动添加
+						select:false,
+						path:'/docDetailed',   
+						code:'000001'
+					},
 				],
 
 			}
@@ -179,7 +185,6 @@ import { parse } from 'protobufjs';
 			 * 该函数恢复页面，主要用在刷新之后
 			 */
 			restorePage(){
-				// return
 				let rePage = sessionStorage.getItem('page');
 				if(rePage){//说明以前有记录，恢复他
 					try{
@@ -190,6 +195,10 @@ import { parse } from 'protobufjs';
 							title: '错误',
 							message: '记录恢复失败!'
 						});
+						return;
+					}
+					if(rePage.path === './docDetailed'){//这个是自己加的，所有要特别处理下
+						this.$router.push({path:rePage.path,query:this.$route.query});
 						return;
 					}
 					const index = this.viewRoot[this.viewRoot.now.name].find(item=>{//该权限视图是否包含该页面

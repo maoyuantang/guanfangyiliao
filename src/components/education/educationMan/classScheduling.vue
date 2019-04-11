@@ -41,42 +41,42 @@
                             </th>
                             <th>
                                 <el-tooltip effect="light" :content="item.department" placement="top">
-                                    <div>{{item.department.length>7?`${item.department.substring(0,7)}...`:item.department}}</div>
+                                    <div>{{item.department.length>5?`${item.department.substring(0,5)}...`:item.department}}</div>
                                 </el-tooltip>
                             </th>
                             <th>
                                 <el-tooltip effect="light" :content="item.type" placement="top">
-                                    <div>{{item.type.length>7?`${item.type.substring(0,7)}...`:item.type}}</div>
+                                    <div>{{item.type.length>5?`${item.type.substring(0,5)}...`:item.type}}</div>
                                 </el-tooltip>
                             </th>
                             <th>
                                 <el-tooltip effect="light" :content="item.name" placement="top">
-                                    <div>{{item.name.length>7?`${item.name.substring(0,7)}...`:item.name}}</div>
+                                    <div>{{item.name.length>5?`${item.name.substring(0,5)}...`:item.name}}</div>
                                 </el-tooltip>
                             </th>
                             <th>
                                  <el-tooltip effect="light" :content="item.source" placement="top">
-                                    <div>{{item.source&&item.source.length>7?`${item.source.substring(0,7)}...`:item.source}}</div>
+                                    <div>{{item.source&&item.source.length>5?`${item.source.substring(0,5)}...`:item.source}}</div>
                                 </el-tooltip>
                             </th>
                             <th>
                                 <el-tooltip effect="light" :content="item.createTime" placement="top">
-                                    <div>{{item.createTime.length>7?`${item.createTime.substring(0,7)}...`:item.createTime}}</div>
+                                    <div>{{item.createTime.length>5?`${item.createTime.substring(0,5)}...`:item.createTime}}</div>
                                 </el-tooltip>
                             </th>
                             <th>
                                 <el-tooltip effect="light" :content="item.teacher" placement="top">
-                                    <div>{{item.teacher.length>7?`${item.teacher.substring(0,7)}...`:item.teacher}}</div>
+                                    <div>{{item.teacher.length>5?`${item.teacher.substring(0,5)}...`:item.teacher}}</div>
                                 </el-tooltip>
                             </th>
                             <th>
                                 <el-tooltip effect="light" :content="item.teachTime" placement="top">
-                                    <div>{{item.teachTime.length>7?`${item.teachTime.substring(0,7)}...`:item.teachTime}}</div>
+                                    <div>{{item.teachTime.length>5?`${item.teachTime.substring(0,5)}...`:item.teachTime}}</div>
                                 </el-tooltip>
                             </th>
                             <th class="class-scheduling-tbody-spe">
                                 <el-tooltip effect="light" :content="item.number" placement="top">
-                                    <div>{{item.number&&item.number.length>7?`${item.number.substring(0,7)}...`:item.number}}</div>
+                                    <div>{{item.number&&item.number.length>5?`${item.number.substring(0,5)}...`:item.number}}</div>
                                 </el-tooltip>
                             </th>
                             
@@ -749,7 +749,8 @@
         display: inline-block;
     }
     .class-scheduling-table{
-        width: 100%;
+        /* width: 100%; */
+        width: 16rem;
     }
     .class-scheduling-table tr{
         border-bottom: 1px solid #E5EDF3;
@@ -759,7 +760,6 @@
 
     }
     .class-scheduling-tbody{
-
     }
     .class-scheduling-tbody th{
         font-weight: 100;
@@ -867,5 +867,8 @@
     }
     .class-scheduling-top-right>.el-button{
         width:1.96rem;
+    }
+    .class-scheduling-body-content{
+        overflow-x: hidden;
     }
 </style>

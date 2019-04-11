@@ -3,6 +3,7 @@
 	<div class="equipment">
         <div class="equipment-content">
             <lineChart :inData="item" v-for="(item,index) in listData" :key="index"></lineChart>
+            <lineChart :inData="chartData"></lineChart>
         </div>
        <div class="pagination">
 			<el-pagination
@@ -46,6 +47,19 @@
                     total:0
                 },
                 listData:[],
+                chartData:{//图表 数据
+                    xAxis:['周一','周二','周三','周四','周五','周六','周日'],//x轴  
+                    series:[
+                        {
+                            name:'邮件营销',
+                            data:[120, 132, 101, 134, 90, 230, 210]
+                        },
+                        {
+                            name:'联盟广告',
+                            data:[220, 182, 191, 234, 290, 330, 310]
+                        },
+                    ]
+                }
                 // testData1:{
                 //     xAxis:['周一','周二','周三','周四','周五','周六','周日'],//x轴  
                 //     series:[
@@ -107,7 +121,6 @@
                                 }]
                             }
                         }
-                        
                     });
                     this.page.total = res.data.body.total
 				}else{

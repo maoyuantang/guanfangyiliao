@@ -987,7 +987,6 @@ export default {
      * 获取新增用户提交数据
      */
     getAddSubData() {
-      // debugger
       const options = {
         //提交数据
         account: this.addData.account,
@@ -1615,5 +1614,8 @@ export default {
 }
 .item{
   width:.2rem;
+}
+.search{
+  margin-right: 1rem;
 }
 </style>

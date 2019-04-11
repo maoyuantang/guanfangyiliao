@@ -174,20 +174,100 @@ export default {
      * 将前一个页面的code当做这个页面的code
      */
     beforeRouteEnter(to,from,next){
-        console.log('enter')
-        let getSession = sessionStorage.getItem('page');
-        try{
-            getSession = JSON.parse(getSession)
-        }catch(e){
-            console.log(e);
-        }
+        // const routerMap = [
+        //     {
+        //         name:'冠方医疗-首页',
+        //         select:true,
+        //         path:'/',
+        //         code:0
+        //     },
+        //     {
+        //         name:'冠方医疗-远程门诊系统',
+        //         select:false,
+        //         path:'/outpatient',
+        //         code:'10000'
+        //     },
+        //     {
+        //         name:'冠方医疗-远程会诊系统',
+        //         select:false,
+        //         path:'/consultation',
+        //         code:'20000'
+        //     },
+        //     {
+        //         name:'冠方医疗-远程协作系统',
+        //         select:false,
+        //         path:'/cooperation',
+        //         code:'30000'
+        //     },
+        //     {
+        //         name:'冠方医疗-智能随访系统',
+        //         select:false,
+        //         path:'/followUp',
+        //         code:'40000'
+        //     },
+        //     {
+        //         name:'冠方医疗-健康档案系统',
+        //         select:false,
+        //         path:'/files',
+        //         code:'50000'
+        //     },
+        //     {
+        //         name:'冠方医疗-远程教育系统',
+        //         select:false,
+        //         path:'/education',
+        //         code:'60000'
+        //     },
+        //         {
+        //         name:'冠方医疗-分级诊疗系统',
+        //         select:false,
+        //         path:'/medicalTreatment',
+        //         code:'70000'
+        //     },
+        //         {
+        //         name:'冠方医疗-双向转诊系统',
+        //         select:false,
+        //         path:'/referral',
+        //         code:'80000'
+        //     },
+        //         {
+        //         name:'冠方医疗-移动查房系统',
+        //         select:false,
+        //         path:'/rounds',
+        //         code:'90000'
+        //     },
+        //         {
+        //         name:'冠方医疗-终端管理系统',
+        //         select:false,
+        //         path:'/management',
+        //         code:'100000'
+        //     },
+        //     {
+        //         name:'冠方医疗-家医服务',
+        //         select:false,
+        //         path:'/familyMedicine',   
+        //         code:'110000'
+        //     },
+        //     {
+        //         name:'冠方医疗-查看档案',//手动添加
+        //         select:false,
+        //         path:'/docDetailed',   
+        //         code:'000001'
+        //     },
+        // ];
+        // console.log('enter')
+        // let getSession = sessionStorage.getItem('page');
+        // try{
+        //     getSession = JSON.parse(getSession)
+        // }catch(e){
+        //     console.log(e);
+        // }
         sessionStorage.setItem('page',JSON.stringify({//存缓存
-            name:"查看档案",
+            name:'冠方医疗-查看档案',//手动添加
             select:true,
-            path:"/docDetailed",
-            code:getSession?getSession.code:0
+            path:'/docDetailed',   
+            code:'000001'
         }));
-        next()
+        next();
     },
 };
 </script>
