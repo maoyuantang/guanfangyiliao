@@ -152,6 +152,7 @@ export default {
         return {
             userResource: "",
             videoUser: 0,
+            videoUser1: 0,//判断有没有人接收了视频
             screenClickVisable: false,
             screenVisible: false,
             installScreenVisible: false,
@@ -651,11 +652,11 @@ export default {
 
                     childMessageType = 6;
 
-                    if (_this.userSocketInfo.ifVideoImg == 0) {
+                    if (_this.videoUser1 == 0) {
                         _this.$emit("reback", "closeCancle");
                         messageBody = "cancle";
                         _this.sendMessageChat("6", "cancle", "VIDEO");
-                    } else if (_this.userSocketInfo.ifVideoImg == 1) {
+                    } else if (_this.videoUser1 > 0) {
                         alert("1111");
                         _this.$emit("reback", "closeComplete");
                         messageBody = "complete";
@@ -1844,6 +1845,7 @@ export default {
                                     this.closePublicVideo();
                                     this.$emit("reback");
                                 }
+                                
                             } else if (messageBody.indexOf("complete") > -1) {
                                 //对方挂断了视频
                                 if (this.videoType == "门诊") {
@@ -1852,9 +1854,11 @@ export default {
                                     this.closePublicVideo();
                                     this.$emit("reback");
                                 }
+                                this.videoUser1-=1
                             } else if (messageBody.indexOf("accept") > -1) {
                                 console.log(messageBody);
                                 this.$store.commit("socket/IFVIDEOIMG", 1);
+                                this.videoUser1+=1
                             } else if (messageBody.indexOf("videoing") > -1) {
                                 //对方正在通话中
                                 if (this.videoType == "门诊") {
