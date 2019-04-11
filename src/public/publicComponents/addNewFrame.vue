@@ -257,7 +257,7 @@
         methods: {
             contentChange(){
                 // this.inData.agreement.default.value = ""
-                // this.inData.agreement.default = { label: "", value: "" }
+                this.inData.agreement.default = { label: "", value: "" }
             },
             test() {
                 console.log(555);

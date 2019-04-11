@@ -17,7 +17,8 @@
           <!-- 头像姓名 -->
           <div class="moved_top">
             <img v-if="dualReferralRecordFile.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-            <img v-if="dualReferralRecordFile.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+dualReferralRecordFile.headId'
+            <img v-if="dualReferralRecordFile.headId"
+              :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+dualReferralRecordFile.headId'
               alt="医生头像">
             <p>{{dualReferralRecordFile.patientName}}</p>
           </div>
@@ -64,33 +65,39 @@
           <div style="display:flex;margin:10px 0;">
             <el-form-item label="转诊类型:" :label-width="formLabelWidth">
               <el-select v-model="addForm.typeList.value" placeholder="上转/下转" clearable @change='upOrDown()'>
-                <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in addForm.typeList.list||[]" :key="item.value" :label="item.label"
+                  :value="item.value"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label="疾病名称:" :label-width="formLabelWidth">
-              <el-select v-model="addForm.diseaseName.value" placeholder="请选择" clearable @change='diseaseNameId()' ref="ceshi1">
-                <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-select v-model="addForm.diseaseName.value" placeholder="请选择" clearable @change='diseaseNameId()'
+                ref="ceshi1">
+                <el-option v-for="item in addForm.diseaseName.list||[]" :key="item.value" :label="item.label"
+                  :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </div>
 
           <el-form-item label="病     人:" :label-width="formLabelWidth">
             <el-select v-model="addForm.patient.value" placeholder="请选择" clearable ref="ceshi2">
-              <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label" :value="item.value">
+              <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label"
+                :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
 
           <div class="block" style="margin-bottom: 22px;">
-            <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
-            <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.value" @change="handleChange"
-              clearable ref="ceshi3">
+            <span class="demonstration"
+              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
+            <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.value"
+              @change="handleChange" clearable ref="ceshi3">
             </el-cascader>
           </div>
 
           <div class="block" style="margin-bottom: 22px;">
-            <span class="demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
+            <span class="demonstration"
+              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转诊时间:</span>
             <el-date-picker v-model="addForm.moveTime.value" type="datetime" placeholder="请选择" default-time="12:00:00">
             </el-date-picker>
           </div>
@@ -140,8 +147,8 @@
         <div class="manager_moveManage" v-if="navInfo.i===0">
           <div class="manager_moveManage_top mainTab">
             <div class="manager_moveManage_top_left">
-              <selftag :inData="onLineList.topFlag[0]" @reback="getFilter0"></selftag>
-              <selftag :inData="onLineList.topFlag[2]" @reback="getFilter2"></selftag>
+              <selftag :inData="onLineList.topFlag[0]" @reback="getFilter0" v-if="chongZ"></selftag>
+              <selftag :inData="onLineList.topFlag[2]" @reback="getFilter2" v-if="chongZ"></selftag>
             </div>
             <div class="manager_moveManage_top_right">
               <search @searchValue="adminSearchOne"></search>
@@ -158,7 +165,7 @@
               <el-table-column prop="intention" label="目的" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="patientName" label="病人" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="" label="预约类型" :show-overflow-tooltip="true"></el-table-column>
-              <el-table-column prop="typeName" label="方向" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="direction" label="方向" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="receiveTime" label="接诊时间" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="操作" width="300">
@@ -169,7 +176,8 @@
             </el-table>
           </div>
           <div style="text-align: center;padding: 10px 0;">
-            <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
+            <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+              @current-change="currentChange1">
             </el-pagination>
           </div>
         </div>
@@ -177,7 +185,7 @@
         <div v-else-if="navInfo.i===1" class="count">
           <div class="manager_count_top mainTab">
             <div class="manager_count_top_left">
-              <selftag v-model="statistics.topFlag[0]" @reback="getFilter0"></selftag>
+              <selftag v-model="statistics.topFlag[0]" @reback="getFilter0" v-if="chongZ"></selftag>
             </div>
             <div class="manager_count_top_right">
               <statisticsWay v-model="time" @reBack="getFilterTime"></statisticsWay>
@@ -195,7 +203,7 @@
     <!-- 医生端 -->
     <div v-else>
       <div class="doctorStyle">
-        <selftag :inData="oTab4" @reback="getOTab4"></selftag>
+        <selftag :inData="oTab4" @reback="getOTab4" v-if="chongZ"></selftag>
         <div style="display: flex;align-items: center;">
           <div class="manager_count_top_right">
             <statisticsWay1 v-model="time" @reBack="getFilterTime"></statisticsWay1>
@@ -220,14 +228,17 @@
               <template slot-scope="scope">
                 <button class="huangSe" @click="seeHistory(scope.row.patientId)">查看档案</button>
                 <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
-                <button :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
-                  v-for="(text,index) in scope.row.buttons" :key="index" @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button>
+                <button
+                  :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
+                  v-for="(text,index) in scope.row.buttons" :key="index"
+                  @click="list2Done(text.btnCommand,scope.row)">{{text.btnName}}</button>
               </template>
             </el-table-column>
           </el-table>
         </div>
         <div style="text-align: center;padding: 10px 0;">
-          <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange2">
+          <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+            @current-change="currentChange2">
           </el-pagination>
         </div>
       </div>
@@ -288,7 +299,7 @@
 
   //引入token
   import { mapState } from "vuex";
-
+  // import { deepCopy } from '../public/publicJs/deepCopy.js'
   export default {
     components: {
       normalTab,
@@ -300,6 +311,7 @@
     },
     data() {
       return {
+        chongZ: true,
         // 常用参数
         //管理1表 查看记录  弹框
         isShowmoveUser1: false,//显示  转诊记录
@@ -516,12 +528,20 @@
       getNav(data) {
         this.getList1();
         if (data.i == 0) {
+          this.goNo();
           this.getList1()
         } else if (data.i == 1) {
           this.getList1().then(val => {
+            this.goNo();
             this.getList2();
           });
         }
+      },
+      goNo() {
+        this.chongZ = false;
+        this.$nextTick(() => {
+          this.chongZ = true;
+        });
       },
       //筛选返回值  管理端
       getFilter0(data) {//科室筛选
@@ -625,6 +645,21 @@
             this.onLineList.topFlag[0].more = false;
             this.statistics.topFlag[0].more = false;
           }
+
+          //深拷贝
+          // this.onLineList.topFlag[0].list = deepCopy(res.data.body).map(item => {
+          //   item.text = item.name;
+          //   item.value = item.id;
+          //   return item;
+          // });
+          // this.statistics.topFlag[0].list = deepCopy(res.data.body).map(item => {
+          //   item.text = item.name;
+          //   item.value = item.id;
+          //   return item;
+          // })
+
+
+
           $.each(res.data.body, function (index, text) {
             //双向转诊   科室   筛选列表   管理1
             _this.onLineList.topFlag[0].list.push({

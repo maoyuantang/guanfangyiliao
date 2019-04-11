@@ -108,9 +108,9 @@
     <div v-if="barInfo.i == 0" class="medical_body0">
       <div class="medical_nav ">
         <div class="medical_nav_left">
-          <selftag :inData="onLineList.topFlag[0]" @reback="getFilter0"></selftag>
-          <selftag v-model="onLineList.topFlag[1]" @reback="getFilter1"></selftag>
-          <selftag v-model="onLineList.topFlag[2]" @reback="getFilter2"></selftag>
+          <selftag :inData="onLineList.topFlag[0]" @reback="getFilter0" v-if="chongZ"></selftag>
+          <selftag :inData="onLineList.topFlag[1]" @reback="getFilter1" v-if="chongZ"></selftag>
+          <selftag :inData="onLineList.topFlag[2]" @reback="getFilter2" v-if="chongZ"></selftag>
         </div>
         <div class="medical_nav_right">
           <search @searchValue="adminSearchOne"></search>
@@ -147,7 +147,7 @@
     <div v-if="barInfo.i == 1" class="medical_body1">
       <div class="medical_nav ">
         <div class="medical_nav_left">
-          <selftag :inData="onLineList.topFlag[0]" @reback="getFilter0"></selftag>
+          <selftag :inData="onLineList.topFlag[0]" @reback="getFilter0" v-if="chongZ"></selftag>
         </div>
         <div class="medical_nav_right">
           <search @searchValue="adminSearchOne"></search>
@@ -183,7 +183,7 @@
     <div v-if="barInfo.i == 2" class="medical_body2">
       <div class="manager_count_top mainTab">
         <div class="manager_count_top_left">
-          <selftag v-model="onLineList.topFlag[0]" @reback="getFilter0"></selftag>
+          <selftag v-model="onLineList.topFlag[0]" @reback="getFilter0" v-if="chongZ"></selftag>
         </div>
         <div class="manager_count_top_right">
           <!-- <statisticsWay v-model="time" @reBack="getFilterTime"></statisticsWay> -->
@@ -255,6 +255,7 @@
     },
     data() {
       return {
+        chongZ: true,
         // 弹框  1  参数
         kuangData1: {
           show: false,
@@ -326,7 +327,7 @@
         //管理统计端  筛选工具栏  统计筛选返回值  接收参数
         time0: "",///统计筛选开始时间     DatePicker 日期选择器
         time1: "",//统计筛选结束时间      DatePicker 日期选择器
-        type: 'MONTH', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天       Select 选择器
+        type: 'DAY', //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天       Select 选择器
         types: '', //String MANAGE账号是什么权限
         //医生端  筛选工具栏  日期筛选返回值  接收参数
         // 新增
@@ -410,14 +411,23 @@
       getBar(data) {
         console.log(data)
         if (data.i == 0) {
+          this.goNo();
           this.getList1()
         } else if (data.i == 1) {
+          this.goNo();
           this.getList2()
         } else if (data.i == 2) {
           this.getList1().then(val => {
+            this.goNo();
             this.getList3();
           });
         }
+      },
+      goNo() {
+        this.chongZ = false;
+        this.$nextTick(() => {
+          this.chongZ = true;
+        });
       },
       //筛选返回值  管理端
       getFilter0(data) {//科室筛选

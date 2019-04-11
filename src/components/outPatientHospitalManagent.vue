@@ -12,7 +12,7 @@
 			<div class="online-clinic" v-if="navInfo.i===0">
 				<div class="online-clinic-top mainTab">
 					<div class="online-clinic-top-left">
-						<selftag :inData="onLineList.topFlag[0]" @reback="getSelect0"></selftag>
+						<selftag :inData="onLineList.topFlag[0]" @reback="getSelect0" v-if="chongZ"></selftag>
 					</div>
 					<div class="online-clinic-top-right">
 						<search @searchValue="adminSearchOne"></search>
@@ -55,11 +55,11 @@
 			<div v-else-if="navInfo.i===1">
 				<div class="online-clinic-top">
 					<div class="online-clinic-top-left">
-						<selftag v-model="prescriptionAuditDistribution.topFlag[0]" @reback="getSelect0"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[1]" @reback="getSelect1"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[2]" @reback="getSelect2"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[3]" @reback="getSelect3"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[4]" @reback="getSelect4"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[0]" @reback="getSelect0" v-if="chongZ"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[1]" @reback="getSelect1" v-if="chongZ"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[2]" @reback="getSelect2" v-if="chongZ"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[3]" @reback="getSelect3" v-if="chongZ"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[4]" @reback="getSelect4" v-if="chongZ"></selftag>
 					</div>
 					<div class="online-clinic-top-right">
 						<search @searchValue="adminSearchOne"></search>
@@ -78,7 +78,7 @@
 			<div v-else-if="navInfo.i===2" class="statistics">
 				<div class="hospital-management-outpatient-statistics-top">
 					<div class="hospital-management-outpatient-statistics-top-left">
-						<selftag v-model="statistics.topFlag[0]" @reback="getSelect0"></selftag>
+						<selftag v-model="statistics.topFlag[0]" @reback="getSelect0" v-if="chongZ"></selftag>
 					</div>
 					<div class="hospital-management-outpatient-statistics-top-right">
 						<statisticsWay v-model="time" @reBack="getFilterTime"></statisticsWay>
@@ -262,7 +262,7 @@
 		},
 		data() {
 			return {
-
+				chongZ: true,
 				// 显示隐藏
 				isShowrelationalDoctor: false,//关联医生
 				isShowRecord: false,//查看详情
@@ -619,14 +619,23 @@
 				this.getFilter3();//审核医生
 				this.getFilter4();//发药医生
 				if (data.i == 0) {
+					this.goNo();
 					this.getList1();//管理列表1
 				} else if (data.i == 1) {
+					this.goNo();
 					this.getList2();//管理列表2
 				} else if (data.i == 2) {
+					this.goNo();
 					this.getList1().then(val => {
 						this.getList3();
 					});
 				}
+			},
+			goNo() {
+				this.chongZ = false;
+				this.$nextTick(() => {
+					this.chongZ = true;
+				});
 			},
 			//筛选返回值
 			getSelect0(data) {//科室筛选
