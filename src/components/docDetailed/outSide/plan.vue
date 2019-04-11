@@ -185,6 +185,7 @@
              * 关闭弹窗
              */
             closeAlert(){
+                this.alertData.src = '';
                 this.alertData.show = false;
             },
             /**

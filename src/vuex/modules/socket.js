@@ -13,6 +13,7 @@ export default {
                 type: 0
             }
         },
+        videoUser:0,
         messageTicket: {
             ticket: "", //票据，登录即可返回
             sequence: "", //序列号
@@ -20,8 +21,8 @@ export default {
             serverTime: "", //服务器时间
             oMsgId: "",
         },
-        headImg:'https://demo.chuntaoyisheng.com:10002/m/v1/api/user/user/avatar/',//头像公共前缀
-        imgUrl:'https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/',//图片下载地址前缀
+        headImg:process.env.IMG_PREFIX+'/m/v1/api/user/user/avatar/',//头像公共前缀
+        imgUrl:process.env.IMG_PREFIX+'/m/v1/api/hdfs/fs/download/',//图片下载地址前缀
     },
     mutations: {
         /**
@@ -55,6 +56,14 @@ export default {
         IFENTERVIDEO(state, data) {
             state.ifEnterVideo = data
         },
+        VIDEOUSER(state,data){
+            if(data==0){
+                state.videoUser  -=1
+            }else if(data==1){
+                state.videoUser += 1
+            }
+           
+        }
     },
     actions: {
         setSocket(context, data) {
@@ -74,6 +83,9 @@ export default {
         },
         oIfEnterVideo(context, data) {
             context.commit("IFENTERVIDEO", data);
+        },
+        VIDEOUSER(context, data) {
+            context.commit("VIDEOUSER", data);
         },
     }
 }

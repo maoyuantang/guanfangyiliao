@@ -469,7 +469,7 @@ export default {
                 dataAxis: [], //每个柱子代表的类名
                 data: [], //具体数值
                 title: "发起科室", //图表标题
-                totalNumber: "34"
+                total: "34"
             },
             oUserType: "",
             pageSizeNum: 10
@@ -991,7 +991,7 @@ export default {
             const res = await queryStatisticalByApplication(options);
             if (res.data && res.data.errCode === 0) {
                 // res.data.body.data.splice(1,res.data.body.data.length);
-                this.drawData1.total = res.data.body.totalNumber;
+                this.drawData1.total ='总数：'+ res.data.body.totalNumber;
                 this.drawData1.dataAxis = res.data.body.data.map(
                     item => item.x
                 );
@@ -1025,7 +1025,7 @@ export default {
                 //     _this.drawDataStart.data.push(text.y);
                 // });
                 // res.data.body.data.splice(1,res.data.body.data.length);
-                this.drawDataStart.total = res.data.body.totalNumber;
+                this.drawDataStart.total = '总数：'+res.data.body.totalNumber;
                 this.drawDataStart.dataAxis = res.data.body.data.map(
                     item => item.x
                 );

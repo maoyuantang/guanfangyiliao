@@ -220,8 +220,10 @@ export default {
                 message
             ).finish();
 
+            // "wss://demo.chuntaoyisheng.com:10002/chat"
             //ws地址
-            let wsUrl = "wss://demo.chuntaoyisheng.com:10002/chat"; //测试
+            let wsUrl =process.env.WSS_PATH ; //测试
+            console.log(wsUrl)
             // let wsUrl = "wss://demo.chuntaoyisheng.com:10002/chat";//开发
 
             if (!window.webSocket) {
@@ -535,6 +537,7 @@ export default {
                                             "&"
                                         )[1]
                                     };
+                                    console.log(_this.createVideoRoomData)
                             // $.each(reciveUserList, function(index, text) {
                             //     if (_this.userSelfInfo.userId == text) {
                             //         _this.receiveVideoVisable = true;

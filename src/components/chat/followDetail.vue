@@ -14,7 +14,7 @@
                 </el-form-item>
                 <div class="addFollowMain addFollowMain1">
                     <el-form-item class="addFollowM-bot firstDoctorTimeBox" label="首次治疗">
-                        <el-date-picker class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
+                        <el-date-picker class="oTime"  v-model="addFollowData.firstTreatmentTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
                         </el-date-picker>
                     </el-form-item>
                     <ul>

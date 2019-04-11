@@ -16,7 +16,7 @@
                         <th>{{item.title}}</th>
                         <th>{{item.familyMemberName}}</th>
                         <th>{{item.createTime}}</th>
-                        <th class="see">查看</th>
+                        <th class="see" @click="see(item)">查看</th>
                     </tr>
                 </tbody>
             </table>
@@ -32,12 +32,25 @@
 			    ></el-pagination>
             </div>
         </div>
+        <!-- 弹窗 -->
+        <el-dialog
+        title=" "
+        append-to-body
+        :visible.sync="alertData.show"
+        width="40vw"
+        :before-close="closeAlert"
+        >
+            <div class="assessment-alert">
+                <iframe :src="alertData.src" class="assessment-alert-iframe"></iframe>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import { mapState } from 'vuex'
     import {queryPageByassessPlan} from '../../../api/apiAll.js'
+    import apiBaseURL from '../../../enums/apiBaseURL.js'
 	export default {
         props: ['inData'],
 		components:{
@@ -60,11 +73,30 @@
                     current:1,  
                     total:0
                 },
-                list:[]
+                list:[],
+                alertData:{
+                    show:false,
+                    src:''
+                }
             }
 		},
 		
 		methods:{
+            /**
+             * 查看
+             */
+            see(item){
+                console.log(item)
+                this.alertData.src = `${apiBaseURL.developmentEnvironment}/v1/peachApp/diseaseAssess.html?token=${this.userInfo.token}&id=${item.familyMemberId}`;
+                this.alertData.show = true;
+            },
+            /**
+             * 关闭 查看弹窗
+             */
+            closeAlert(){
+                this.alertData.src = '';
+                this.alertData.show = false;
+            },
             /**
              *  12.WEB端获取评估计划列表
              */
@@ -152,5 +184,12 @@
     }
     .page{
         text-align: center;
+    }
+    .assessment-alert{
+        height: 50vw;
+    }
+    .assessment-alert-iframe{
+        width:100%;
+        height: 100%;
     }
 </style>

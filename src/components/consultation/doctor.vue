@@ -59,13 +59,13 @@
         <!-- 接收科室 -->
         <div v-if="departVisible">
             <el-dialog class="evaluateBox" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
-                <receiveDepartent :receptionDepartment="receptionDepartment"></receiveDepartent>
+                <receiveDepartent :receptionDepartment="receptionDepartment" v-if='receptionDepartment.length>0'></receiveDepartent>
             </el-dialog>
         </div>
         <!-- 医生详情 -->
         <div v-if="doctorVisible">
             <el-dialog class="evaluateBox evaluateBox2" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
-                <doctorDetail :doctorDetailData="doctorDetailData"></doctorDetail>
+                <doctorDetail :doctorDetailData="doctorDetailData" v-if='doctorDetailData.length>0'></doctorDetail>
 
             </el-dialog>
         </div>
@@ -94,7 +94,7 @@
             </div>
 
             <div class="public-list">
-                <el-table class='' :data="docTableData" border style="width: 100%">
+                <el-table class='' :data="docTableData" border style="width: 100%" @cell-click="cooperationCellClick">
                     <el-table-column prop="consultationId" label="会诊编号" width="150">
                     </el-table-column>
                     <el-table-column prop="hospital" label="发起医院" width="120">
@@ -116,6 +116,9 @@
                     <el-table-column prop="consultationPurpose" label="目的" width="120">
                     </el-table-column>
                     <el-table-column prop="doctorNumber" label="参与专家" width="120">
+                        <template slot-scope="scope">
+                            <span class='ooRed'>{{scope.row.doctorNumber}}</span>
+                        </template>
                     </el-table-column>
                     <el-table-column prop="status" label="状态" width="120">
                         <template slot-scope="scope">
@@ -511,6 +514,12 @@ export default {
         })
     },
     methods: {
+        //医生端参与专家
+        cooperationCellClick(row, column) {
+            let data = [row, column];
+            console.log(data);
+            this.cellClickData(data);
+        },
         //关闭协作会话
         closeChat() {
             this.getDocList();
@@ -617,9 +626,8 @@ export default {
             this.getDepartment1(this.userSelfInfo.orgCode);
         },
         //发起会诊时删除医生和科室
-        hospOrDer(text,index){
-this.startHz.consultationHospitalDept.splice(index,1)
-
+        hospOrDer(text, index) {
+            this.startHz.consultationHospitalDept.splice(index, 1);
         },
         //查看记录
         recordFun() {

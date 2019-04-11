@@ -142,7 +142,7 @@
                             <!-- <div class="show-agreement">
                                 {{inData.agreement.showContent||''}}
                             </div> -->
-                            <textarea class="show-agreement1" v-model="inData.agreement.showContent" :readonly="sureVisiable===1?'readonly':false"></textarea>
+                            <textarea class="show-agreement1" v-model="inData.agreement.showContent" :readonly="sureVisiable===1?'readonly':false" @change="contentChange"></textarea>
                         </div>
                     </div>
 
@@ -179,7 +179,20 @@
             },
             inData(n) {
                 console.log(n);
-            }
+            },
+            // inData:{
+            //     handler(data) {
+            //         console.log(data);
+            //     },
+            //     deep: true,
+            //     immediate: true
+            // },
+            "inData.agreement.default.value": {
+                handler(n) {
+                    console.log(n);
+                    // this.inData.agreement.default.value = ""
+                }
+            },
         },
         data() {
             return {
@@ -242,6 +255,10 @@
             };
         },
         methods: {
+            contentChange(){
+                // this.inData.agreement.default.value = ""
+                this.inData.agreement.default = { label: "", value: "" }
+            },
             test() {
                 console.log(555);
             },
@@ -266,7 +283,9 @@
                 this.$emit("reback", this.inData);
             },
             chooseAgreement(item, index) {
-                this.inData.agreement.default = item;
+                // this.inData.agreement.default = item;
+                this.inData.agreement.default.label = item.label;
+                this.inData.agreement.default.value = item.value;
                 this.$emit("getAgreementSelect", { item, index });
             }
         },

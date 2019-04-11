@@ -46,7 +46,8 @@
                         <th class="family-medicine-doctor-body-spe">
                             <el-button type="warning" size="mini" plain @click="checkDoc(item,index)">查看档案</el-button>
                             <el-button type="success" size="mini" plain @click="sendMsg(item)">发送</el-button>
-                            <el-button type="primary" size="mini" plain @click="checkRcord(item)">查看记录</el-button>
+                            <el-button type="primary" size="mini" v-if="item.status === '已完成'" plain @click="checkRcord(item)">查看记录</el-button>
+                            <el-button type="primary" size="mini" plain v-if="item.model === 'ZXZX'" @click="enterRoom(item)">进入诊室</el-button>
                         </th>
                     </tr>
                 </tbody>
@@ -110,6 +111,10 @@
             <viewRecord :storyMessage="record.storyMessage"></viewRecord>
         </el-dialog>
         
+        <!-- 进入门诊 弹窗 -->
+        <el-dialog :visible.sync="enterClinic.show">
+            <ovideo :createVideoRoomData="enterClinic.createVideoRoomData" :videoType="enterClinic.videoType" :oClinicId="enterClinic.oClinicId"></ovideo>
+        </el-dialog>
 	</div>
 </template>
 
@@ -121,6 +126,7 @@
     import { stencilName, fetchOrderInfo, updateOrderServices, fetchChatSession, fetchHistoryMessage } from '../../api/apiAll.js'
     import chat from '../../public/publicComponents/chat.vue'
     import viewRecord from './../xiezuo/viewRecord.vue'
+    import oVideo from '../../video/oVideo.vue'
     
 	export default {
         components:{
@@ -152,6 +158,15 @@
         },
 		data () {
 			return {
+                enterClinic:{//进入 门诊 弹窗 数据 （谭银组件） 
+                    show:false,
+                    createVideoRoomData: {
+                        conferenceId: "",
+                        conferenceNumber: ""
+                    },
+                    videoType:"门诊",
+                    oClinicId:"当前门诊id"
+                },
                 chatData:{//谭颖的组件 数据   
                     sessionId:'',
                     doctorVis:0,
@@ -216,6 +231,13 @@
 			}
 		},
 		methods:{
+            /**
+             * 进入 门诊
+             */
+            enterRoom(item){
+                console.log(item);
+                // this.enterClinic.show = true;
+            },
             /**
              * 查看记录
              */

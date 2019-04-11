@@ -12,7 +12,7 @@
 			<div class="online-clinic" v-if="navInfo.i===0">
 				<div class="online-clinic-top mainTab">
 					<div class="online-clinic-top-left">
-						<selftag :inData="onLineList.topFlag[0]" @reback="getSelect0"></selftag>
+						<selftag :inData="onLineList.topFlag[0]" @reback="getSelect0" v-if="chongZ"></selftag>
 					</div>
 					<div class="online-clinic-top-right">
 						<search @searchValue="adminSearchOne"></search>
@@ -44,7 +44,8 @@
 					</el-table>
 				</div>
 				<div style="text-align: center;padding: 10px 0;">
-					<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals" @current-change="currentChange1">
+					<el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="totals"
+						@current-change="currentChange1">
 					</el-pagination>
 				</div>
 			</div>
@@ -55,11 +56,11 @@
 			<div v-else-if="navInfo.i===1">
 				<div class="online-clinic-top">
 					<div class="online-clinic-top-left">
-						<selftag v-model="prescriptionAuditDistribution.topFlag[0]" @reback="getSelect0"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[1]" @reback="getSelect1"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[2]" @reback="getSelect2"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[3]" @reback="getSelect3"></selftag>
-						<selftag v-model="prescriptionAuditDistribution.topFlag[4]" @reback="getSelect4"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[0]" @reback="getSelect0" v-if="chongZ"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[1]" @reback="getSelect1" v-if="chongZ"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[2]" @reback="getSelect2" v-if="chongZ"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[3]" @reback="getSelect3" v-if="chongZ"></selftag>
+						<selftag v-model="prescriptionAuditDistribution.topFlag[4]" @reback="getSelect4" v-if="chongZ"></selftag>
 					</div>
 					<div class="online-clinic-top-right">
 						<search @searchValue="adminSearchOne"></search>
@@ -68,9 +69,10 @@
 
 				</div>
 				<div class="online-clinic-middle">
-					<publicList :columns="prescriptionAuditDistribution.tableBody.columns" :tableData="prescriptionAuditDistribution.tableBody.tableData"
-					 :tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :cellColor="cellColor" :pageSize="pageSize" :total="totals"
-					 @rebackFenye="currentChange2">
+					<publicList :columns="prescriptionAuditDistribution.tableBody.columns"
+						:tableData="prescriptionAuditDistribution.tableBody.tableData"
+						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :cellColor="cellColor" :pageSize="pageSize"
+						:total="totals" @rebackFenye="currentChange2">
 					</publicList>
 				</div>
 			</div>
@@ -78,7 +80,7 @@
 			<div v-else-if="navInfo.i===2" class="statistics">
 				<div class="hospital-management-outpatient-statistics-top">
 					<div class="hospital-management-outpatient-statistics-top-left">
-						<selftag v-model="statistics.topFlag[0]" @reback="getSelect0"></selftag>
+						<selftag v-model="statistics.topFlag[0]" @reback="getSelect0" v-if="chongZ"></selftag>
 					</div>
 					<div class="hospital-management-outpatient-statistics-top-right">
 						<statisticsWay v-model="time" @reBack="getFilterTime"></statisticsWay>
@@ -97,19 +99,19 @@
 		</div>
 		<!-- 新增门诊弹框 -->
 		<addNewFrame :inData="addData" @reback="getData" @department="getDepartment" @getAgreementSelect="getSelectInfo"
-		 :sureVisiable="sureVisiable"></addNewFrame>
+			:sureVisiable="sureVisiable"></addNewFrame>
 		<!-- 表一查看关联医生弹框 -->
 		<div v-if="isShowrelationalDoctor">
-			<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="500px" max-hight="450px"
-			 center>
+			<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="500px"
+				max-hight="450px" center>
 				<el-scrollbar style="height:100%;">
 					<ul style="max-height: 450px;">
 						<li v-for="(text,index) in relationalDoctor" :key="index">
 							<div class="evaluateCont1">
 								<!-- 待头像 -->
 								<img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-								<img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'
-								 alt="医生头像">
+								<img v-if="text.headId"
+									:src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
 								<h5>{{text.doctorName}}</h5>
 							</div>
 							<div class="evaluateCont2">
@@ -148,9 +150,7 @@
 		<!-- 查看详情弹框中的聊天弹框 -->
 		<div v-if="isShowRecordChat">
 			<el-dialog class="" title="聊天记录" :visible.sync="isShowRecordChat" center>
-				<!-- <viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord> -->
 				<viewRecord :sessionId="sessionIds" v-if="sessionIds"></viewRecord>
-				<noData v-if="!messageRecord"></noData>
 			</el-dialog>
 		</div>
 
@@ -160,7 +160,8 @@
 		<!-- 处方详情 -->
 		<div v-if="chuFangDetailList2">
 			<el-dialog title="处方详情" :visible.sync="chuFangDetailList2" center>
-				<img style="width:100%" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
+				<img style="width:100%"
+					:src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
 			</el-dialog>
 		</div>
 
@@ -188,9 +189,7 @@
 		<!-- 查看处方配送记录 -->
 		<div v-if="viewRecordList2">
 			<el-dialog class="  " title="处方配送聊天记录" :visible.sync="viewRecordList2" width="602px" hight="356px" center>
-				<!-- <viewRecord :storyMessage="messageRecord" v-if="messageRecord"></viewRecord> -->
 				<viewRecord :sessionId="sessionIds" v-if="sessionIds"></viewRecord>
-				<noData v-if="!messageRecord"></noData>
 			</el-dialog>
 		</div>
 
@@ -262,7 +261,7 @@
 		},
 		data() {
 			return {
-
+				chongZ: true,
 				// 显示隐藏
 				isShowrelationalDoctor: false,//关联医生
 				isShowRecord: false,//查看详情
@@ -316,14 +315,13 @@
 				status: [],//业务人次表里的状态
 				tableData: [],//表1  传入数据参数
 				state: false,//boolean false 远程门诊状态（禁用操作时值必传） 
-				sessionIds:"",
+				sessionIds: "",
 				//管理2端   筛选返回值  
 				string: "",//门诊订单号			number
 				reviewEnum: "",//审核状态（REVIEWED, //已审核；UNREVIEWED, //未审核；FAILREVIEWED, 
 				sendDoctorId: "",//发药医生
 				reviewDoctorId: "",//审核医生
 				sendEnum: "",//配送状态（UNSEND, //未配送；SENDING, //配送中；SENDOVER, //已签收）
-				messageRecord: "",//查看记录拉回来的历史消息
 				//管理统计端  统计筛选返回值  接收参数
 				time0: "2017-06-01",//统计筛选起始时间
 				time1: "2019-01-25",//统计筛选结束时间
@@ -619,14 +617,23 @@
 				this.getFilter3();//审核医生
 				this.getFilter4();//发药医生
 				if (data.i == 0) {
+					this.goNo();
 					this.getList1();//管理列表1
 				} else if (data.i == 1) {
+					this.goNo();
 					this.getList2();//管理列表2
 				} else if (data.i == 2) {
+					this.goNo();
 					this.getList1().then(val => {
 						this.getList3();
 					});
 				}
+			},
+			goNo() {
+				this.chongZ = false;
+				this.$nextTick(() => {
+					this.chongZ = true;
+				});
 			},
 			//筛选返回值
 			getSelect0(data) {//科室筛选
@@ -1011,31 +1018,10 @@
 			// 管理1表
 			//业务人次   中发起会谈
 			async isShowRecordChatFun(data) {
+				this.sessionIds = ""
 				this.isShowRecordChat = true;
 				console.log(data)
-				// this.messageRecord = data.bindSessionId  sessionId
 				this.sessionIds = data.bindSessionId
-				// let query = {
-				// 	token: this.userInfo.token
-				// };
-				// let options = {
-				// 	userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
-				// 	sessionId: [data.bindSessionId],//目标会话ID集合/数组
-				// 	msgId: 100,//拉取节点（从这个节点开始拉取历史消息）
-				// 	pageNums: 15//每页拉取数量
-				// };
-				// const res = await fetchHistoryMessage(query, options);
-				// if (res.data && res.data.errCode === 0) {
-				// 	console.log(res)
-				// 	this.messageRecord = res.data.body
-				// 	console.log("聊天记录+成功");
-				// } else {
-				// 	console.log('聊天记录+失败')
-				// 	this.$notify.error({
-				// 		title: "警告",
-				// 		message: res.data.errMsg
-				// 	});
-				// }
 			},
 			async relateDoctors2(row, column, cell, event) {
 				console.log(row, column)
@@ -1556,49 +1542,10 @@
 			},
 			//聊天记录   管理2表
 			async viewRecordList2Fun(index, row) {
+				this.sessionIds = ""
 				this.viewRecordList2 = true;
 				console.log(index, row)
-				this.messageRecord = row.prescriptionSessionId
-				// let query = {
-				// 	token: this.userInfo.token
-				// };
-				// let options = {
-				// 	userId: this.userSelfInfo.userId,//拉取消息的用户ID（谁拉取历史消息）
-				// 	sessionId: [row.prescriptionSessionId],//目标会话ID集合/数组
-				// 	msgId: 100,//拉取节点（从这个节点开始拉取历史消息）
-				// 	pageNums: 15//每页拉取数量
-				// };
-				// const res = await fetchHistoryMessage(query, options);
-				// if (res.data && res.data.errCode === 0) {
-				// 	console.log(res)
-				// 	this.messageRecord = res.data.body
-				// 	console.log("聊天记录+成功");
-				// } else {
-				// 	console.log('聊天记录+失败')
-				// 	this.$notify.error({
-				// 		title: "警告",
-				// 		message: res.data.errMsg
-				// 	});
-				// }
-
-
-				//废弃接口
-				// let query = {
-				// 	token: this.userInfo.token,
-				// 	prescriptionId: row.id
-				// };
-
-				// const res = await drugSendRecord(query);
-				// if (res.data && res.data.errCode === 0) {
-				// 	console.log(res)
-				// 	console.log("处方发货记录+成功");
-				// } else {
-				// 	console.log('处方发货记录+失败')
-				// 	this.$notify.error({
-				// 		title: "警告",
-				// 		message: res.data.errMsg
-				// 	});
-				// }
+				this.sessionIds = row.prescriptionSessionId
 			},
 
 
@@ -1651,7 +1598,7 @@
 					}
 				}
 				else if (this.sureVisiable == 2) {
-
+					console.log(data)
 					console.log(this.addData.agreement)
 					let a = 0;
 					for (let index = 0; index < this.addData.agreement.list.length; index++) {
@@ -1690,12 +1637,14 @@
 						clinicProtocolName: data.agreement.default.label,//String true 远程门诊协议名 
 						status: this.state//boolean false 远程门诊状态（禁用操作时值必传） 
 					};
+					console.log(data.agreement)
+					console.log(data.agreement.default)
 					const res = await updateClinic(query, options);
 					if (res.data && res.data.errCode === 0) {
 						console.log('7.2编辑业务+成功')
 						this.getList1()
 						this.addData.show = false
-						this.addData.agreement.default = { label: "", value: "" }
+						// this.addData.agreement.default = { label: "", value: "" }
 					} else {
 						console.log('7.2编辑业务+失败')
 						//失败

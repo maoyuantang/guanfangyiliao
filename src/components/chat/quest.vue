@@ -81,7 +81,9 @@ export default {
                     title: this.addQuestData.title,
                     firstTreatmentTime: this.addQuestData.createTime,
                     content: "",
-                    status: ""
+                    content1:this.addQuestData.bankModels[0].title,
+                    status: "",
+                    
                 };
                 console.log(oMessage);
                 this.$emit("osendmessagechat", oMessage);

@@ -1508,7 +1508,7 @@ export default {
 </script>
 
 <style>
-.sendMessageChat {
+/* .sendMessageChat {
 }
 .chat {
     width: 636px;
@@ -1840,5 +1840,5 @@ export default {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-}
+} */
 </style>

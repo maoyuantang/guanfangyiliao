@@ -11,7 +11,7 @@
         </div>
         <div class="chatMessage">
             <ul class="chatRecord" id="scrolldIV">
-                
+
                 <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
                     <div class="otherImg">
@@ -66,7 +66,9 @@
                                                 <span v-show="text.childMessageType=='ARTICLE'">文章</span>
                                                 / {{text.content.title}}
                                             </h3>
-                                            <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                            <p v-show="text.childMessageType=='FOLLOWUP'">首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                            <p v-show="text.childMessageType=='INTERROGATION'">{{text.content.content1}}</p>
+                                            
                                         </div>
 
                                     </div>
@@ -81,7 +83,8 @@
                                                 <span v-show="text.childMessageType=='INTERROGATION'">问诊</span>
                                                 <span v-show="text.childMessageType=='ARTICLE'">文章</span>
                                                 /{{text.content.title}}</h3>
-                                            <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                             <p v-show="text.childMessageType=='FOLLOWUP'">首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                            <p v-show="text.childMessageType=='INTERROGATION'">{{text.content.content1}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -132,7 +135,7 @@
             <span v-show="oDoctorVis" @click="addRemarks()" title="添加备注">
                 <img src="../../assets/img/sendNew6.png" />
             </span>
-            <span v-show="oDoctorVis" title="药品处方" @click="addDrugs()">
+            <span v-show="oDoctorVis && chatTypeBox.startDoctorTYpe=='门诊'" title="药品处方" @click="addDrugs()">
                 <img src="../../assets/img/sendNew8.png" />
             </span>
             <span v-show="oDoctorVis" @click="addPlan()" title="计划">
@@ -145,7 +148,7 @@
                     <li @click="openManFile()">孕妇答案</li>
                 </ul>
             </span>
-            <span v-show="oDoctorVis"  title="健康处方">
+            <span v-show="oDoctorVis" title="健康处方">
                 <img src="../../assets/img/sendNew11.png" />
             </span>
             <span v-show="oDoctorVis" title="转诊">
@@ -275,6 +278,7 @@
 </template>
 
 <script>
+import { deepCopy } from "../publicJs/deepCopy.js";
 import apiBaseURL from "../../enums/apiBaseURL.js";
 import protobuf from "protobufjs";
 import { mapState } from "vuex";
@@ -405,7 +409,7 @@ export default {
             areadyReadNum: "", //已读
             chatUser: "", //参与聊天的成员
             messageList: [],
-            messageList1:[],
+            messageList1: [],
             input: "",
             childMessageType: "", //发送的消息类型
             messageBody: "", //发送的文字消息内容
@@ -448,11 +452,11 @@ export default {
                 this.sendMessageBoxType = "consultation";
             }
         }
-
+        this.alreadyRead();
         this.getDoctorVis();
         this.getHisRecord();
         this.getMemberMess();
-        this.alreadyRead();
+
         this.updated();
         this.ourl =
             "/m/v1/api/hdfs/fs/upload?token=" +
@@ -467,9 +471,11 @@ export default {
     methods: {
         updated() {
             this.$nextTick(function() {
-                var div = document.getElementById("scrolldIV");
-                console.log(div);
+                let div = document.getElementById("scrolldIV");
+
                 div.scrollTop = div.scrollHeight;
+                // div.scrollHeight
+                console.log(div.scrollTop);
             });
         },
         //发送
@@ -668,16 +674,17 @@ export default {
             }
         },
         showVideoBtn() {
-            if (this.userMemberNum.length > 1) {
-                if (this.showVideoBtnVisable) {
-                    this.showVideoBtnVisable = false;
-                } else {
-                    this.showVideoBtnVisable = true;
-                }
-            } else {
-                this.showVideoBtnVisable = false;
-                this.setVideo(0); //单聊
-            }
+            // if (this.userMemberNum.length > 1) {
+            //     if (this.showVideoBtnVisable) {
+            //         this.showVideoBtnVisable = false;
+            //     } else {
+            //         this.showVideoBtnVisable = true;
+            //     }
+            // } else {
+            //     this.showVideoBtnVisable = false;
+            //     this.setVideo(0); //单聊
+            // }
+           this.setVideo(0);
         },
         //创建视频
         setVideo(num) {
@@ -1113,7 +1120,14 @@ export default {
             }
         },
         //获取历史记录
-        async getHisRecord() {
+        async getHisRecord(num) {
+             if (num == 0) {
+                        //首次进入
+                        this.messageList1 = [];
+                        this.messageList1.length=0
+                        // this.messageList1 = Object.assign({},this.messageList1)
+                        console.log(this.messageList1);
+                    }
             console.log("历史消息");
             console.log(this.sessionId);
             let _this = this;
@@ -1138,9 +1152,10 @@ export default {
                 } else {
                     this.loadMoreVisable = false;
                 }
-                // let odata = res.data.body.reverse();
-               console.log(this.messageList1)
+               
+                console.log(this.messageList1);
                 $.each(res.data.body, function(index, text) {
+                    
                     let timestamp4 = new Date(text.serverTime);
                     let y = timestamp4.getHours();
                     let d = timestamp4.getMinutes();
@@ -1154,15 +1169,15 @@ export default {
                     text.serverTime = y + ":" + d;
                     _this.messageList1.push(text);
                 });
-               _this.messageList=_this.messageList1;
-               _this.messageList=_this.messageList.reverse()
-               let odata=this.messageList
-               console.log(this.messageList)
+                _this.messageList = deepCopy(_this.messageList1);
+                _this.messageList = _this.messageList.reverse();
+                let odata = this.messageList;
+                console.log(this.messageList);
                 for (let i = 0; i < odata.length; i++) {
-                    if (this.areadyReadNum > odata[i].msgId) {
-                        this.messageList[i].oRead = true;
+                    if (this.areadyReadNum >= odata[i].msgId) {
+                        this.messageList[i].oRead = true; //已读
                     } else {
-                        this.messageList[i].oRead = false;
+                        this.messageList[i].oRead = false; //未读
                     }
                     var ImgObj = new Image(); //判断图片是否存在
                     ImgObj.src = this.userSocketInfo.imgUrl + odata[i].from;
@@ -1295,7 +1310,7 @@ export default {
                         }
                     }
                 }
-                console.log(this.messageList)
+                console.log(this.messageList);
             } else {
                 //失败
                 this.$notify.error({
@@ -1574,9 +1589,11 @@ export default {
             handler(n, o) {
                 let _this = this;
                 $.each(n.syncData, function(index, text) {
-                    if (text.command == "SYNC_SESSION") {
+                    if (text.command == "SYNC_UPDATE_READ_STATE") {
+                        _this.oMsgId =
+                            _this.$store.state.socket.messageTicket.oMsgId;
                         _this.alreadyRead();
-                        _this.getHisRecord();
+                        _this.getHisRecord(0);
                     }
                 });
             }
@@ -1775,7 +1792,7 @@ export default {
 .chatMessage > ul {
     padding: 20px 0;
     overflow-y: scroll;
-    height: 300px;
+    height: 320px;
 }
 .chatRecord > li:after {
     content: "";
@@ -1969,5 +1986,8 @@ d .sendImgCss {
     width: 100%;
     height: 100%;
     border-radius: 50%;
+}
+.chatDialog .el-dialog__body {
+    padding-top: 0;
 }
 </style>

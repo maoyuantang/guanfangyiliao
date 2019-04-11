@@ -28,7 +28,7 @@
 
                         <div>
                             <div class="videoTopBtnBox">
-                                <div>
+                                <div @click='sendArchives()'>
                                     <img src="./../../static/assets/img/danganVideo.png" /> 查档案
                                 </div>
                                 <div>
@@ -150,6 +150,8 @@ export default {
     },
     data() {
         return {
+            userResource: "",
+            videoUser: 0,
             screenClickVisable: false,
             screenVisible: false,
             installScreenVisible: false,
@@ -172,7 +174,7 @@ export default {
             questVisable: true,
             closePatientNumVisable: false,
             videoChatVisable: false,
-            doctorVis: 1,
+            // doctorVis: 1,
             videoIng: 0,
             loadingUs: true,
             loadingOther: true,
@@ -180,6 +182,15 @@ export default {
         };
     },
     methods: {
+        //查看档案
+        sendArchives() {
+            this.$router.push({
+                path: "/docDetailed",
+                query: {
+                    id: this.userMessage.userId
+                }
+            });
+        },
         //屏幕分享
         screenClick() {
             this.screenVisible = true;
@@ -1031,6 +1042,9 @@ export default {
                     resource,
                     function(success) {
                         console.info("remove participant success", success);
+                        _this.videoUser -= 1;
+                        _this.$emit("reback", "closeVideoOnly");
+                        alert("视频人数不能超过4人");
                     },
                     function(error) {
                         console.error("remove participant failed", error);
@@ -1296,6 +1310,7 @@ export default {
             let _this = this;
             // var conferenceName = $("#conferenceName").val();
             let conferenceName = this.createVideoRoomData1.conferenceNumber;
+
             if (!conferenceName) {
                 alert("请输入会议室号");
                 return;
@@ -1329,6 +1344,7 @@ export default {
             let _this = this;
             // var conferenceName = $("#anonymousConferenceName").val();
             let conferenceName = this.createVideoRoomData1.conferenceNumber;
+            alert(conferenceName);
             if (!conferenceName) {
                 alert("请输入会议室号");
                 return;
@@ -1349,12 +1365,15 @@ export default {
                 false,
                 function(result) {
                     console.log("join conference success : ", result);
+                    _this.userResource = result.response.info.resource;
+                    alert(_this.userResource);
                     $("#localVideos").append(
                         _this.generateParticipant(result, true)
                     );
                 },
                 function(error) {
                     console.log("join conference failure , error : ", error);
+                    // _this.firstSet()
                 }
             );
             $(this).toggleClass("btn-primary disabled");
@@ -1568,6 +1587,11 @@ export default {
         } else {
             this.screenClickVisable = false;
         }
+        //人数超过3人呗踢出
+        if(this.videoUser>0){
+            this.generateRemoveElement(_this.userResource)
+
+        }
         this.createVideoRoomData1 = this.createVideoRoomData;
         let _this = this;
 
@@ -1595,6 +1619,9 @@ export default {
          */
         Manis.onJoinConference(function(result) {
             $("#remoteVideos").append(_this.generateParticipant(result, false));
+            // _this.$store.commit("socket/VIDEOUSER", 1);
+            _this.videoUser += 1;
+            alert(_this.videoUser);
         });
         /**
          * 收到有人离开房间
@@ -1605,6 +1632,9 @@ export default {
                     ".participant_container_" + result.response.resource
                 ).remove();
             }
+            // _this.$store.commit("socket/VIDEOUSER", 0);
+            _this.videoUser -= 1;
+            alert(_this.videoUser);
         });
         /**
          * 收到文件信息
@@ -1806,7 +1836,7 @@ export default {
 
                         if (oData.info.childMessageType == 6) {
                             childMessageType = "VIDEO";
-                            if (messageBody.indexOf("refuse") - 1) {
+                            if (messageBody.indexOf("refuse") > -1) {
                                 //对方拒绝了视频
                                 if (this.videoType == "门诊") {
                                     this.closeTheVideo();
@@ -1814,7 +1844,7 @@ export default {
                                     this.closePublicVideo();
                                     this.$emit("reback");
                                 }
-                            } else if (messageBody.indexOf("complete") - 1) {
+                            } else if (messageBody.indexOf("complete") > -1) {
                                 //对方挂断了视频
                                 if (this.videoType == "门诊") {
                                     this.closeTheVideo();
@@ -1822,10 +1852,10 @@ export default {
                                     this.closePublicVideo();
                                     this.$emit("reback");
                                 }
-                            } else if (messageBody.indexOf("accept") - 1) {
+                            } else if (messageBody.indexOf("accept") > -1) {
                                 console.log(messageBody);
                                 this.$store.commit("socket/IFVIDEOIMG", 1);
-                            } else if (messageBody.indexOf("videoing") - 1) {
+                            } else if (messageBody.indexOf("videoing") > -1) {
                                 //对方正在通话中
                                 if (this.videoType == "门诊") {
                                     this.closeTheVideo();
