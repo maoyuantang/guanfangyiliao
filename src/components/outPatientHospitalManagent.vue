@@ -623,6 +623,8 @@
 					this.goNo();
 					this.getList2();//管理列表2
 				} else if (data.i == 2) {
+					this.time0 = "";//统计筛选开始时间
+					this.time1 = "";//统计筛选结束时间
 					this.goNo();
 					this.getList1().then(val => {
 						this.getList3();
@@ -879,19 +881,19 @@
 
 			// 管理1表			7.5根据条件搜索在线诊室业务 获取列表
 			async getList1() {
-				var date = new Date();
-				var year = date.getFullYear();
-				var month = date.getMonth() + 1;
-				var day = date.getDate();
-				if (month < 10) {
-					month = "0" + month;
-				}
-				if (day < 10) {
-					day = "0" + day;
-				}
-				var nowDate = year + "-" + month + "-" + day;
-				this.time0 = nowDate;
-				this.time1 = nowDate;
+				// var date = new Date();
+				// var year = date.getFullYear();
+				// var month = date.getMonth() + 1;
+				// var day = date.getDate();
+				// if (month < 10) {
+				// 	month = "0" + month;
+				// }
+				// if (day < 10) {
+				// 	day = "0" + day;
+				// }
+				// var nowDate = year + "-" + month + "-" + day;
+				// this.time0 = nowDate;
+				// this.time1 = nowDate;
 
 				let query = {
 					token: this.userInfo.token,
@@ -1104,10 +1106,10 @@
 				let query = {
 					token: this.userInfo.token,
 					deptId: this.departmentId, //String false 科室ID 
-					// starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
-					// endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
-					starTime: "", //String false 开始日期，示例：2019-01 - 01 
-					endTime: "", //String false 结束日期，示例：2019-01 - 25 
+					starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
+					endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
+					// starTime: "", //String false 开始日期，示例：2019-01 - 01 
+					// endTime: "", //String false 结束日期，示例：2019-01 - 25 
 					type: this.type //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
 				};
 				// console.log(query)
@@ -1145,10 +1147,10 @@
 				let query = {
 					token: this.userInfo.token,
 					deptId: this.departmentId, //String false 科室ID 
-					// starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
-					// endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
-					starTime: "", //String false 开始日期，示例：2019-01 - 01 
-					endTime: "", //String false 结束日期，示例：2019-01 - 25 
+					starTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
+					endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
+					// starTime: "", //String false 开始日期，示例：2019-01 - 01 
+					// endTime: "", //String false 结束日期，示例：2019-01 - 25 
 					type: this.type //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
 				};
 				// console.log(query)
@@ -1187,10 +1189,10 @@
 				let query = {
 					token: this.userInfo.token,
 					departmentId: this.departmentId, //String false 科室ID 
-					// startTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
-					// endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
-					starTime: "", //String false 开始日期，示例：2019-01 - 01 
-					endTime: "", //String false 结束日期，示例：2019-01 - 25 
+					startTime: this.time0, //String false 开始日期，示例：2019-01 - 01 
+					endTime: this.time1, //String false 结束日期，示例：2019-01 - 25 
+					// startTime: "", //String false 开始日期，示例：2019-01 - 01 
+					// endTime: "", //String false 结束日期，示例：2019-01 - 25 
 					type: this.type //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
 				};
 				// console.log(query)

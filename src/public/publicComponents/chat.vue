@@ -1920,7 +1920,7 @@ d .sendImgCss {
 }
 .otherNumClass {
     position: relative;
-    width: 100%;
+    width: 94%;
     padding: 0 10px;
     overflow: hidden;
     height: 23px;

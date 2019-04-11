@@ -506,7 +506,7 @@
                             <img style="width: 53px; margin: 0 30px 0 0;" src="../assets/img/a-6.png" alt="">
                             <div>
                                 <!-- <img src="../assets/img/a-6.png" alt=""> -->
-                                <h1 style="margin: 0 0 10px 0;">{{text5.userName}}</h1>
+                                <h1 style="margin: 0 0 10px 0;font-family: PingFangSC-Semibold;font-size: 15px;color: #002257;letter-spacing: 0.1px;">{{text5.userName}}</h1>
                                 <div class="orderTime">
                                     <span>下单时间:</span>
                                     <span class="span">{{text5.clinicOrderTime}}</span>

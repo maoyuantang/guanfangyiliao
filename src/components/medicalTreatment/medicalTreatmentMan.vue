@@ -417,6 +417,9 @@
           this.goNo();
           this.getList2()
         } else if (data.i == 2) {
+          this.departmentId = ""
+          this.time0 = "";//统计筛选开始时间
+          this.time1 = "";//统计筛选结束时间
           this.getList1().then(val => {
             this.goNo();
             this.getList3();
@@ -594,19 +597,19 @@
 
       // 管理1.1表
       async getList1() {
-        var date = new Date();
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        if (month < 10) {
-          month = "0" + month;
-        }
-        if (day < 10) {
-          day = "0" + day;
-        }
-        var nowDate = year + "-" + month + "-" + day;
-        this.time0 = nowDate;
-        this.time1 = nowDate;
+        // var date = new Date();
+        // var year = date.getFullYear();
+        // var month = date.getMonth() + 1;
+        // var day = date.getDate();
+        // if (month < 10) {
+        //   month = "0" + month;
+        // }
+        // if (day < 10) {
+        //   day = "0" + day;
+        // }
+        // var nowDate = year + "-" + month + "-" + day;
+        // this.time0 = nowDate;
+        // this.time1 = nowDate;
 
         let _this = this;
         let query = {
