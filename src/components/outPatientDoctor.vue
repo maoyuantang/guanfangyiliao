@@ -589,6 +589,7 @@
 <script>
     //引入接口
     import {
+        bindSession,
         // 已使用接口
         addClinic, //7.1新增业务
         searchClinic, //7.5门诊列表1
@@ -897,50 +898,115 @@
                 }
             },
             // 我的诊室发送消息
-            async sendMessage(text, text1) {
-                console.log(text);
-                console.log(text1);
+            // async sendMessage(text, text1) {
+            //     console.log(text);
+            //     console.log(text1);
 
-                this.userMessage = {
-                    clinicId: text.id,
-                    departmentId: text.departmentId,
-                    userId: text1.userId,
-                    orgCode: text.orgCode,
-                    clinicOrderId: text1.clinicOrderId //订单id
-                };
-                console.log(this.userMessage);
-                let _this = this;
-                let query = {
-                    token: this.userInfo.token,
-                    userId: text1.userId,
-                    orderId: text1.clinicOrderId
-                };
-                const res = await sendBtnVisable(query);
-                if (res.data && res.data.errCode === 0) {
-                    _this.sessionId = res.data.body.bindSession;
-                    if (res.data.body.bindSession && res.data.body.bindDoctor) {
-                        text1.disabledStatus = false;
-                        _this.chatVisible = true;
-                    } else if (
-                        !res.data.body.bindSession &&
-                        !res.data.body.bindDoctor
-                    ) {
-                        text1.disabledStatus = false;
-                        _this.chatVisible = true;
-                    } else if (
-                        res.data.body.bindSession ||
-                        res.data.body.bindDoctor
-                    ) {
-                        text1.disabledStatus = true;
-                    }
+            //     this.userMessage = {
+            //         clinicId: text.id,
+            //         departmentId: text.departmentId,
+            //         userId: text1.userId,
+            //         orgCode: text.orgCode,
+            //         clinicOrderId: text1.clinicOrderId //订单id
+            //     };
+            //     console.log(this.userMessage);
+            //     let _this = this;
+            //     let query = {
+            //         token: this.userInfo.token,
+            //         userId: text1.userId,
+            //         orderId: text1.clinicOrderId
+            //     };
+            //     const res = await sendBtnVisable(query);
+            //     if (res.data && res.data.errCode === 0) {
+            //         _this.sessionId = res.data.body.bindSession;
+            //         if (res.data.body.bindSession && res.data.body.bindDoctor) {
+            //             text1.disabledStatus = false;
+            //             _this.chatVisible = true;
+            //         } else if (
+            //             !res.data.body.bindSession &&
+            //             !res.data.body.bindDoctor
+            //         ) {
+            //             text1.disabledStatus = false;
+            //             _this.chatVisible = true;
+            //         } else if (
+            //             res.data.body.bindSession ||
+            //             res.data.body.bindDoctor
+            //         ) {
+            //             text1.disabledStatus = true;
+            //         }
 
-                } else {
-                    this.$notify.error({
-                        title: "警告",
-                        message: res.data.errMsg
-                    });
+            //     } else {
+            //         this.$notify.error({
+            //             title: "警告",
+            //             message: res.data.errMsg
+            //         });
+            //     }
+            // },
+            // 我的诊室发送消息
+        async sendMessage(text, text1) {
+            console.log(text);
+            console.log(text1);
+
+            this.userMessage = {
+                clinicId: text.id,
+                departmentId: text.departmentId,
+                userId: text1.userId,
+                orgCode: text.orgCode,
+                clinicOrderId: text1.clinicOrderId //订单id
+            };
+            console.log(this.userMessage);
+            let _this = this;
+            let query = {
+                token: this.userInfo.token,
+                userId: text1.userId,
+                orderId: text1.clinicOrderId
+            };
+            const res = await sendBtnVisable(query);
+            if (res.data && res.data.errCode === 0) {
+                
+                if (res.data.body.bindSession && res.data.body.bindDoctor) {
+                    text1.disabledStatus = false;
+                    
+                    _this.sendMessage1(text, text1)
+                } else if (
+                    !res.data.body.bindSession &&
+                    !res.data.body.bindDoctor
+                ) {
+                    text1.disabledStatus = false;
+                     _this.sendMessage1(text, text1)
+                } else if (
+                    res.data.body.bindSession ||
+                    res.data.body.bindDoctor
+                ) {
+                    text1.disabledStatus = true;
                 }
-            },
+            } else {
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        async sendMessage1(text, text1) {
+            let _this = this;
+            let query = {
+                token: this.userInfo.token
+            };
+            let options = {
+                orderId: text1.clinicOrderId,
+                orderNo: ""
+            };
+            const res = await bindSession(query, options);
+            if (res.data && res.data.errCode === 0) {
+                _this.sessionId = res.data.body
+                _this.chatVisible = true;
+            } else {
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
             //返回赋值函数
             getConsulTabData(res) {
                 //顶部切换返回函数
