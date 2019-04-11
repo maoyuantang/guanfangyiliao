@@ -638,7 +638,7 @@
                 //谭莹变量
                 chatTypeBox: {
                     startDoctorName: "",
-                    startDoctorTYpe: ""
+                    startDoctorTYpe: "门诊"
                 },
                 VideoshowClose: false,
                 videoType: "门诊",

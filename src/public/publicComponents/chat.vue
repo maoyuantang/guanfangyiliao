@@ -66,7 +66,9 @@
                                                 <span v-show="text.childMessageType=='ARTICLE'">文章</span>
                                                 / {{text.content.title}}
                                             </h3>
-                                            <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                            <p v-show="text.childMessageType=='FOLLOWUP'">首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                            <p v-show="text.childMessageType=='INTERROGATION'">{{text.content.content1}}</p>
+                                            
                                         </div>
 
                                     </div>
@@ -81,7 +83,8 @@
                                                 <span v-show="text.childMessageType=='INTERROGATION'">问诊</span>
                                                 <span v-show="text.childMessageType=='ARTICLE'">文章</span>
                                                 /{{text.content.title}}</h3>
-                                            <p>首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                             <p v-show="text.childMessageType=='FOLLOWUP'">首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                            <p v-show="text.childMessageType=='INTERROGATION'">{{text.content.content1}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -132,7 +135,7 @@
             <span v-show="oDoctorVis" @click="addRemarks()" title="添加备注">
                 <img src="../../assets/img/sendNew6.png" />
             </span>
-            <span v-show="oDoctorVis" title="药品处方" @click="addDrugs()">
+            <span v-show="oDoctorVis && chatTypeBox.startDoctorTYpe=='门诊'" title="药品处方" @click="addDrugs()">
                 <img src="../../assets/img/sendNew8.png" />
             </span>
             <span v-show="oDoctorVis" @click="addPlan()" title="计划">
@@ -681,14 +684,7 @@ export default {
             //     this.showVideoBtnVisable = false;
             //     this.setVideo(0); //单聊
             // }
-            if (this.userSocketInfo.videoUser >= 1) {
-                this.$notify.error({
-                    title: "警告",
-                    message: "当前视频人数超过4人，不能进入视频"
-                });
-            } else {
-                this.setVideo(0);
-            }
+           this.setVideo(0);
         },
         //创建视频
         setVideo(num) {

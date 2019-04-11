@@ -11,15 +11,23 @@
                 <el-button class="startConsul" type="text" @click="initiateCollaboration() ">发起协作</el-button>
             </div>
             <div class="public-list">
-                <el-table :data="docTableData" border style="width: 100%">
-                    <el-table-column fixed prop="synergyNo" label="协作编号"></el-table-column>
-                    <el-table-column fixed prop="applyDeptName" label="发起科室"></el-table-column>
-                    <el-table-column fixed prop="applyUserName" label="发起医生"></el-table-column>
-                    <el-table-column fixed prop="createTime" label="发起时间"></el-table-column>
-                    <el-table-column fixed prop="synergyIntention" label="目的"></el-table-column>
-                    <el-table-column fixed prop="synergyDeptName" label="协作科室"></el-table-column>
-                    <el-table-column fixed prop="synergyUserName" label="协作医生"></el-table-column>
-                    <el-table-column fixed prop="synergyStatus" label="状态">
+                <el-table :data="docTableData" border style="width: 100%" @cell-click="cooperationCellClick">
+                    <el-table-column  prop="synergyNo" label="协作编号"></el-table-column>
+                    <el-table-column  prop="applyDeptName" label="发起科室"></el-table-column>
+                    <el-table-column  prop="applyUserName" label="发起医生"></el-table-column>
+                    <el-table-column  prop="createTime" label="发起时间"></el-table-column>
+                    <el-table-column  prop="synergyIntention" label="目的"></el-table-column>
+                    <el-table-column  prop="synergyDeptName" label="协作科室">
+                        <template slot-scope="scope">
+                            <span class='ooRed'>{{scope.row.synergyDeptName}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column  prop="synergyUserName" label="协作医生">
+                        <template slot-scope="scope">
+                            <span class='ooRed'>{{scope.row.synergyUserName}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column  prop="synergyStatus" label="状态">
                         <template slot-scope="scope">
                             <span v-if="scope.row.synergyStatus==0">未开始</span>
                             <span v-if="scope.row.synergyStatus==1">进行中</span>
@@ -58,7 +66,7 @@
                 </el-form-item>
 
                 <el-form-item class='invitationClassInputBtn'>
-                    <el-button class='btnClass' type="primary" @click="launchXiezuo()" >确认</el-button>
+                    <el-button class='btnClass' type="primary" @click="launchXiezuo()">确认</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -66,6 +74,19 @@
         <div v-if="recordVisible">
             <el-dialog class="evaluateBox evaluateBox2 consultationDetailClass" title=" 查看记录" :visible.sync="recordVisible" width="602px" hight="356px" center>
                 <viewRecord :sessionId="sessionId"></viewRecord>
+            </el-dialog>
+        </div>
+         <!-- 接收科室 -->
+        <div v-if="departVisible">
+            <el-dialog class=" consultationDetailClass" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
+                <receiveDepartent :receptionDepartment="receptionDepartment"  v-if="receptionDepartment.length>0"></receiveDepartent>
+            </el-dialog>
+        </div>
+        <!-- 医生详情 -->
+        <div v-if="doctorVisible">
+            <el-dialog class=" consultationDetailClass" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="470px" center>
+                <doctorDetail :doctorDetailData="doctorDetailData" v-if="doctorDetailData.length>0"></doctorDetail>
+
             </el-dialog>
         </div>
         <!-- 接收科室 -->
@@ -150,7 +171,7 @@ export default {
     },
     data() {
         return {
-            disabledXie:false,
+            disabledXie: false,
             pageSizeNum: 10,
             docTotal: 0,
             storyMessage: [],
@@ -368,10 +389,10 @@ export default {
             invitationSelectList: [],
             docTime0: "",
             docTime1: "",
-             chatTypeBox:{
-                startDoctorName:'',
-                startDoctorTYpe:'协作'
-            },
+            chatTypeBox: {
+                startDoctorName: "",
+                startDoctorTYpe: "协作"
+            }
         };
     },
 
@@ -383,10 +404,15 @@ export default {
     },
 
     methods: {
+        cooperationCellClick(row, column){
+            let data=[row, column]
+            console.log(data)
+            this.cellClickData(data)
+        },
         //进入协作
         async toConsultation(row) {
             this.sessionId = row.sessionId;
-this.chatTypeBox.startDoctorName=row.applyUserName
+            this.chatTypeBox.startDoctorName = row.applyUserName;
             let _this = this;
             let query = {
                 token: this.userState.token,
@@ -404,8 +430,8 @@ this.chatTypeBox.startDoctorName=row.applyUserName
             }
         },
         //关闭协作会话
-        closeChat(){
-            this.DoctorList()
+        closeChat() {
+            this.DoctorList();
         },
         //协作
         async xiezOver(row) {
@@ -423,7 +449,7 @@ this.chatTypeBox.startDoctorName=row.applyUserName
                         title: "成功",
                         message: "请求成功"
                     });
-                    _this.DoctorList()
+                    _this.DoctorList();
                 } else {
                     //失败
                     this.$notify.error({
@@ -531,7 +557,7 @@ this.chatTypeBox.startDoctorName=row.applyUserName
         },
         //获取邀请列表
         async Invitation(row) {
-            this.disabledXie=false
+            this.disabledXie = false;
             this.xiezuoId = row.id;
             this.invitationData = [];
             this.invitationVisible = true;
@@ -581,7 +607,7 @@ this.chatTypeBox.startDoctorName=row.applyUserName
         },
         // 发起协作
         async launchXiezuo() {
-            this.disabledXie=true
+            this.disabledXie = true;
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -593,14 +619,14 @@ this.chatTypeBox.startDoctorName=row.applyUserName
                     title: "成功",
                     message: "发起成功"
                 });
-                 
+
                 setTimeout(function() {
                     _this.centerDialogVisible = false;
                     _this.DoctorList();
                 }, 1000);
             } else {
                 //失败
-                _this.disabledXie=false
+                _this.disabledXie = false;
                 this.$notify.error({
                     title: "警告",
                     message: res.data.errMsg
@@ -623,7 +649,6 @@ this.chatTypeBox.startDoctorName=row.applyUserName
             console.log(data);
             if (data[1].label == "协作科室") {
                 this.departVisible = true;
-                // this.receptionDepartment=data[0].synergyDeptName
                 console.log(this.receptionDepartment);
                 let _this = this;
                 let query = {
@@ -642,7 +667,6 @@ this.chatTypeBox.startDoctorName=row.applyUserName
                 }
             } else if (data[1].label == "协作医生") {
                 this.doctorVisible = true;
-                // this.doctorDetailData=data[0].synergyUserName
                 let _this = this;
                 let query = {
                     token: this.userState.token,
@@ -1024,7 +1048,7 @@ this.chatTypeBox.startDoctorName=row.applyUserName
 
     async created() {
         this.DoctorList(); //医生协作列表
-        this.otherDoctor(); 
+        this.otherDoctor();
     },
     watch: {
         "$store.state.user.viewRoot.now.name": {
