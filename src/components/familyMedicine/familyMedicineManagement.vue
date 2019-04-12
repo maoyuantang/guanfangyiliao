@@ -921,7 +921,7 @@
 					// 	label:this.testData.departmentList.list[0].label,
 					// 	value:this.testData.departmentList.list[0].value,
 					// };
-					this.getSelectDepartment(this.testData.departmentList.list[0].value);
+					this.getSelectDepartment(this.testData.departmentList.default.value || this.testData.departmentList.list[0].value);
 					this.getProtocols(this.testData.departmentList.list[0].value);
 				}
 				
@@ -1468,6 +1468,7 @@
 						this.newGetToolBusinessType();
 					}
 					this.getBussModuleList();
+					this.getFetchHospitalDepts();
 				}else{
 					console.log('error')
 					this.$notify({

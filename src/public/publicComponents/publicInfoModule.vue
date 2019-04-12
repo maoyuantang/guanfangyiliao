@@ -19,9 +19,9 @@
                     <div class="public-info-module-Introduction-bottom">
                         <span>{{inData.businessType}}</span>
                         <span class="public-info-module-Introduction-bottom-span">
-                            <el-tooltip class="item" effect="light" :content="inData.departmentId" placement="top">
+                            <!-- <el-tooltip class="item" effect="light" :content="inData.departmentId" placement="top">
                                 <el-button>{{inData.departmentId.substring(0,12)}}...</el-button>
-                            </el-tooltip>  
+                            </el-tooltip>   -->
                         </span>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                     <thead class="public-info-module-thead">
                         <tr>
                             <th>价格</th>
-                            <th>服务人员</th>
+                            <th class="add-padding">服务人员</th>
                             <th>业务人次</th>
                             <th>总收入</th>
                             <th></th>
@@ -188,6 +188,10 @@
         font-size: 13px;
         color: #4D7CFE;
         line-height: 22px;
+        padding-left: .1rem;
+    }
+    .add-padding{
+        padding-left: .1rem;
     }
     .public-info-item-count{
         font-family: PingFangSC-Semibold;
