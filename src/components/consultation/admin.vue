@@ -313,10 +313,10 @@ export default {
                 ]
             },
             columnsDoc: [
-                {
-                    prop: "consultationId",
-                    label: "会诊编号",
-                },
+                // {
+                //     prop: "consultationId",
+                //     label: "会诊编号",
+                // },
                 {
                     prop: "hospital",
                     label: "发起医院"
@@ -351,10 +351,10 @@ export default {
                 }
             ],
             columns: [
-                {
-                    prop: "consultationId",
-                    label: "会诊编号"
-                },
+                // {
+                //     prop: "consultationId",
+                //     label: "会诊编号"
+                // },
                 {
                     prop: "hospital",
                     label: "发起医院"

@@ -27,6 +27,7 @@
                         <th>{{tableInfo.thead.orderTime || 'null'}}</th>
                         <th>{{tableInfo.thead.userName || 'null'}}</th>
                         <th>{{tableInfo.thead.userPhone || 'null'}}</th>
+                        <th>{{tableInfo.thead.serviceTime || 'null'}}</th>
                         <th>{{tableInfo.thead.doctorName || 'null'}}</th>
                         <th>{{tableInfo.thead.status || 'null'}}</th>
                         <th>{{tableInfo.thead.orderId || 'null'}}</th>
@@ -35,19 +36,52 @@
                 </thead>
                 <tbody  class="family-medicine-doctor-body">
                     <tr v-for="(item,index) in tableInfo.tbody" :key="index">
-                        <th>{{item.businessName || 'null'}}</th>
-                        <th>{{item.modelName || 'null'}}</th>
-                        <th>{{item.orderTime || 'null'}}</th>
-                        <th>{{item.userName || 'null'}}</th>
-                        <th>{{item.userPhone || 'null'}}</th>
-                        <th>{{item.doctorName || ''}}</th>
-                        <th>{{item.status || 'null'}}</th>
+                        <th>
+                            <el-tooltip class="item" effect="light" :content="item.businessName" placement="top">
+                                <div>{{item.businessName.length>5?`${item.businessName.substring(0,5)}...`:item.businessName}}</div>
+                            </el-tooltip>
+                        </th>
+                        <th>
+                            <el-tooltip class="item" effect="light" :content="item.modelName" placement="top">
+                                <div>{{item.modelName.length>5?`${item.modelName.substring(0,5)}...`:item.modelName}}</div>
+                            </el-tooltip>
+                        </th>
+                        <th>
+                            <el-tooltip class="item" effect="light" :content="item.orderTime" placement="top">
+                                <div>{{item.orderTime.length>5?`${item.orderTime.substring(0,5)}...`:item.orderTime}}</div>
+                            </el-tooltip>
+                        </th>
+                        <th>
+                            <el-tooltip class="item" effect="light" :content="item.userName" placement="top">
+                                <div>{{item.userName.length>5?`${item.userName.substring(0,5)}...`:item.userName}}</div>
+                            </el-tooltip>
+                        </th>
+                        <th>
+                            <el-tooltip class="item" effect="light" :content="item.userPhone" placement="top">
+                                <div>{{item.userPhone.length>5?`${item.userPhone.substring(0,5)}...`:item.userPhone}}</div>
+                            </el-tooltip>
+                        </th>
+                        <th>
+                            <el-tooltip class="item" effect="light" :content="item.serviceTime" placement="top">
+                                <div>{{item.serviceTime.length>5?`${item.serviceTime.substring(0,5)}...`:item.serviceTime}}</div>
+                            </el-tooltip>
+                         </th>
+                        <th>
+                            <el-tooltip class="item" effect="light" :content="item.doctorName" placement="top">
+                                <div>{{item.doctorName.length>5?`${item.doctorName.substring(0,5)}...`:item.doctorName}}</div>
+                            </el-tooltip>
+                        </th>
+                        <th>
+                            <el-tooltip class="item" effect="light" :content="item.status" placement="top">
+                                <div>{{item.status.length>5?`${item.status.substring(0,5)}...`:item.status}}</div>
+                            </el-tooltip>
+                        </th>
                         <th><el-button type="danger" plain size="mini" @click="changeStatus(item,index)">服务变更</el-button></th>
                         <th class="family-medicine-doctor-body-spe">
                             <el-button type="warning" size="mini" plain @click="checkDoc(item,index)">查看档案</el-button>
-                            <el-button type="success" size="mini" plain @click="sendMsg(item)">发送</el-button>
+                            <el-button type="success" size="mini" v-if="item.status !== '已完成'" plain @click="sendMsg(item)">发送</el-button>
                             <el-button type="primary" size="mini" v-if="item.status === '已完成'" plain @click="checkRcord(item)">查看记录</el-button>
-                            <el-button type="primary" size="mini" plain v-if="item.model === 'ZXZX'" @click="enterRoom(item)">进入诊室</el-button>
+                            <el-button type="primary" size="mini" plain v-if="item.model === 'ZXZX' && item.status === '进行中'" @click="enterRoom(item)" class="enter-room">进入诊室</el-button>
                         </th>
                     </tr>
                 </tbody>
@@ -103,8 +137,11 @@
         </el-dialog>
         <el-dialog
         :visible.sync="chatData.show">
-            <chat :sessionId="chatData.sessionId" :doctorVis="chatData.doctorVis"></chat>
+            <chat :sessionId="chatData.sessionId" :doctorVis="chatData.doctorVis" :userMessage="chatData.userMessage" :chatType1="chatData.videoType" :chatTypeBox="chatData.chatTypeBox"></chat>
         </el-dialog>
+
+
+
         <el-dialog
         title="历史记录"
         :visible.sync="record.show">
@@ -134,7 +171,8 @@
             publicTime,
             tag,
             chat,
-            viewRecord
+            viewRecord,
+            oVideo
         },
         computed:{
 			...mapState({
@@ -170,7 +208,13 @@
                 chatData:{//谭颖的组件 数据   
                     sessionId:'',
                     doctorVis:0,
-                    show:false
+                    show:false,
+                    userMessage:{},
+                    videoType: "门诊",
+                    chatTypeBox: {
+                    startDoctorName: "",
+                    startDoctorTYpe: "门诊"
+                },
                 },
                 record:{//谭颖的组件 数据    
                     storyMessage:[],
@@ -236,7 +280,7 @@
              */
             enterRoom(item){
                 console.log(item);
-                // this.enterClinic.show = true;
+                this.enterClinic.show = true;
             },
             /**
              * 查看记录
@@ -289,6 +333,7 @@
              * 发送消息
              */
             async sendMsg(item){
+                console.log(item)
                 const res = await fetchChatSession({token:this.userInfo.token},{
                     to:item.userId
                 });
@@ -296,6 +341,7 @@
                 if(res.data&&res.data.errCode===0){
                     this.chatData.sessionId = res.data.body;
                     this.chatData.show = true;
+                    console.log(this.chatData)
                 }else{
 
                 }
@@ -320,7 +366,6 @@
              */
             getModuleSelect(data){
                 this.queryConditions.busModules.select = data.index;
-                console.log(data);
                 this.getTableList();
             },
             // /**
@@ -336,6 +381,18 @@
             getDateSelect(item){
                 console.log(item);
                 this.queryConditions.date.select = item.index;
+                if(item.index === 1){
+                    const now = new Date();//今天
+                    const tomorrow = new Date(now.getTime() + 24*60*60*1000);//明天
+                    this.queryConditions.time = [
+                        `${now.getFullYear()}-${now.getMonth()>9?now.getMonth()+1:'0'+now.getMonth()}-${now.getDate()>10?now.getDate():'0'+now.getDate()}`,
+                        `${tomorrow.getFullYear()}-${tomorrow.getMonth()>9?tomorrow.getMonth()+1:'0'+tomorrow.getMonth()}-${tomorrow.getDate()>10?tomorrow.getDate():'0'+tomorrow.getDate()}`
+                    ];
+                }else{
+                    this.queryConditions.time = [];
+                }
+                // this.queryConditions = Object.assign({},this.queryConditions);
+                console.log(this.queryConditions.time);
                 this.getTableList();
             },
 
@@ -537,5 +594,10 @@
     }
     .family-medicine-doctor-footer{
         text-align: center;
+    }
+    .enter-room{
+        color: purple;
+        border-color: purple;
+        
     }
 </style>

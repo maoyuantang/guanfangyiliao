@@ -36,6 +36,7 @@
 <style scoped>
 	.education{
 		padding-right: .2rem;
+		min-width: 16rem;
 	}
 	
 </style>

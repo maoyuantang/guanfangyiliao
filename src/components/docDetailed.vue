@@ -38,7 +38,7 @@
                     </div>
                 </div>
             </div>
-            <div :is="viewCurrent" :inData="topTag.list[topTag.index]"></div>
+            <div :is="viewCurrent" :inData="topTag.list[topTag.index]" v-if="reLoad"></div>
           </div>
       </div>
     </div>
@@ -66,6 +66,7 @@ export default {
     
     data() {
         return {
+            reLoad:true,
             topTag:{//顶部tag数据   
                 index:0,//选中
                 list:[]//列表
@@ -151,6 +152,10 @@ export default {
          */
         selectTag(index){
             this.topTag.index = index;
+            this.reLoad = false;
+            this.$nextTick(() => {
+                this.reLoad = true;
+            });
         },
         /**
          * nav被点击

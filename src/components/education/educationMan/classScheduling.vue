@@ -28,7 +28,7 @@
                             <th>授课时间</th>
                             <th>听课</th>
                             <th>状态</th>
-                            <th>最近修改</th>
+                            <!-- <th>最近修改</th> -->
                             <th></th>
                         </tr>
                     </thead>
@@ -81,7 +81,7 @@
                             </th>
                             
                             <th>{{item.state}}</th>
-                            <th>最近修改</th>
+                            <!-- <th>最近修改</th> -->
                             <th>
                                 <el-button type="success" size="mini" @click="aditPlan(item)" plain>编辑</el-button>
                                 <el-button type="danger" size="mini" @click="cancelPlan(item)" plain>删除</el-button>

@@ -12,7 +12,7 @@
             </div>
             <div class="public-list">
                 <el-table :data="docTableData" border style="width: 100%" @cell-click="cooperationCellClick">
-                    <el-table-column  prop="synergyNo" label="协作编号"></el-table-column>
+                    <!-- <el-table-column  prop="synergyNo" label="协作编号"></el-table-column> -->
                     <el-table-column  prop="applyDeptName" label="发起科室"></el-table-column>
                     <el-table-column  prop="applyUserName" label="发起医生"></el-table-column>
                     <el-table-column  prop="createTime" label="发起时间"></el-table-column>
@@ -78,7 +78,7 @@
         </div>
          <!-- 接收科室 -->
         <div v-if="departVisible">
-            <el-dialog class=" consultationDetailClass" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
+            <el-dialog class=" consultationDetailClass" title=" 协作科室" :visible.sync="departVisible" width="503px" hight="470px" center>
                 <receiveDepartent :receptionDepartment="receptionDepartment"  v-if="receptionDepartment.length>0"></receiveDepartent>
             </el-dialog>
         </div>
@@ -312,10 +312,10 @@ export default {
                 }
             ], //管理端列表
             adminColumns: [
-                {
-                    prop: "synergyNo",
-                    label: "协作编号"
-                },
+                // {
+                //     prop: "synergyNo",
+                //     label: "协作编号"
+                // },
                 {
                     prop: "applyDeptName",
                     label: "申请科室"

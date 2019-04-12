@@ -326,10 +326,10 @@ export default {
                 }
             ], //管理端列表
             adminColumns: [
-                {
-                    prop: "synergyNo",
-                    label: "协作编号"
-                },
+                // {
+                //     prop: "synergyNo",
+                //     label: "协作编号"
+                // },
                 {
                     prop: "applyDeptName",
                     label: "申请科室"

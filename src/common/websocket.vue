@@ -7,8 +7,8 @@
                 <button @click="refuseVideo()">拒绝</button>
             </div>
         </el-dialog> -->
-        <div v-if='receiveVideoVisable'>
-            <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose" :showClose="VideoshowClose" append-to-body>
+        <div class='videoAccepclass' v-if='receiveVideoVisable'>
+            <!-- <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose" :showClose="VideoshowClose" append-to-body> -->
                 <div>
                     <h4>{{startVideoName}}邀请你视频</h4>
                     <div>
@@ -16,7 +16,7 @@
                         <button @click="refuseVideo()">拒绝</button>
                     </div>
                 </div>
-            </el-dialog>
+            <!-- </el-dialog> -->
         </div>
 
         <!-- 视频聊天 -->
@@ -1310,7 +1310,16 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+.videoAccepclass{
+    position: fixed;
+    bottom:0;
+    right:0;
+    z-index: 99999999999999999999999999999999;
+    width:200px;
+    height: 100px;
+    background: red
+}
 .steps {
 }
 </style>

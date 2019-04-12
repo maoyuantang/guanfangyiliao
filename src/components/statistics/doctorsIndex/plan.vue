@@ -268,8 +268,8 @@
                                 {{scope.row.hospital}}|{{scope.row.department}}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="consultationId" label=" " width="">
-                        </el-table-column>
+                        <!-- <el-table-column prop="consultationId" label=" " width="">
+                        </el-table-column> -->
                         <el-table-column prop="applicationTime" label=" " width="">
                         </el-table-column>
                         <el-table-column prop="status" label=" " width="">
@@ -322,11 +322,11 @@
                                 {{scope.row.synergyUserName[0]}}|{{scope.row.synergyDeptName[0]}}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="synergyNo" label=" " width="200">
+                        <!-- <el-table-column prop="synergyNo" label=" " width="200">
                             <template slot-scope="scope">
                                 {{scope.row.synergyNo}}(协作编号)
                             </template>
-                        </el-table-column>
+                        </el-table-column> -->
                         <el-table-column prop="createTime" label=" " width="160">
                         </el-table-column>
                         <el-table-column prop="synergyStatus" label=" " width="100">

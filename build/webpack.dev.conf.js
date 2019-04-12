@@ -1,4 +1,5 @@
 'use strict'
+const self = require('../config/dev.env')
 const utils = require('./utils')
 const webpack = require('webpack')
 const config = require('../config')

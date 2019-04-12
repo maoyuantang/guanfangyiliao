@@ -733,12 +733,12 @@ export default {
                 {
                     cell: 4,
                     value: "使用量",
-                    oclass: "ooRed"
+                    oclass: "ooBlue"
                 },
                 {
                     cell: 5,
                     value: "告警情况",
-                    oclass: "ooRed"
+                    oclass: "ooBlue"
                 }
             ],
             tableDataList: [],
