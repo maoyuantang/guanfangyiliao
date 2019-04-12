@@ -1,7 +1,6 @@
 <template>
     <div>
         <div class="container-fluid bs-docs-container">
-            <!-- {{userSocketInfo.ifVideoImg}} -->
             <div class="row">
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
@@ -43,9 +42,13 @@
 
                                 </div>
                                 <div @click="closeVideo()" v-show="closeVideoBtnVieable">
+                                    <div><img src="./../../static/assets/img/gua1.png" /></div>
+                                    <div>退出诊室</div>
+                                </div>
+                                <!-- <div @click="closeVideo()" v-show="closeVideoBtnVieable">
                                     <div><img src="./../../static/assets/img/videoD1.png" /></div>
                                     <div>关闭视频</div>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="videoBtn" v-show="publicVideoVisable">
                                 <div @click="closeVideoRoom(3)">
@@ -57,7 +60,7 @@
                             </div>
                         </div>
                         <div class="videoChatBox" v-if="videoChatVisable">
-                            <videoChat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage1" :chatType1="videoType"></videoChat>
+                            <videoChat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage1" :chatType1="videoType" :chatTypeBox="chatTypeBox"></videoChat>
                             <!-- <videoChat :sessionId="sessionId" :doctorVis="doctorVis"></videoChat> -->
                         </div>
 
@@ -108,7 +111,12 @@
                 </div>
             </el-dialog>
         </div>
-
+        <!--查看档案-->
+        <div v-if="archivesVisible">
+            <el-dialog title="查看档案" :visible.sync="archivesVisible" width="380px" center append-to-body fullscreen='true'>
+                <archives v-if="archivesVisible"></archives>
+            </el-dialog>
+        </div>
         <!--屏幕安装指南-->
         <div v-if="installScreenVisible">
             <el-dialog title="共享屏幕安装插件指南" :visible.sync="installScreenVisible" width="520px" center append-to-body>
@@ -123,6 +131,7 @@
 <script>
 import "../../static/assets/css/jquery-impromptu.css";
 import videoChat from "../public/publicComponents/videoChat.vue";
+import archives from "@/components/docDetailed.vue";
 import apiBaseURL from "../enums/apiBaseURL.js";
 import { mapState } from "vuex";
 import {
@@ -139,7 +148,8 @@ import {
 export default {
     name: "video",
     components: {
-        videoChat
+        videoChat,
+        archives
     },
     computed: {
         ...mapState({
@@ -150,9 +160,11 @@ export default {
     },
     data() {
         return {
+            archivesId: "",
+            archivesVisible: false,
             userResource: "",
             videoUser: 0,
-            videoUser1: 0,//判断有没有人接收了视频
+            videoUser1: 0, //判断有没有人接收了视频
             screenClickVisable: false,
             screenVisible: false,
             installScreenVisible: false,
@@ -185,12 +197,27 @@ export default {
     methods: {
         //查看档案
         sendArchives() {
-            this.$router.push({
-                path: "/docDetailed",
-                query: {
-                    id: this.userMessage.userId
-                }
-            });
+            if (this.archivesId) {
+                this.$router.replace({
+                    path: "/outpatient",
+                    query: {
+                        id: this.archivesId
+                    }
+                });
+                this.archivesVisible = true;
+            } else {
+                this.$notify.error({
+                    title: "警告",
+                    message: "请选择需要查看档案的用户"
+                });
+            }
+
+            // this.$router.push({
+            //     path: "/docDetailed",
+            //     query: {
+            //         id: this.userMessage.userId
+            //     }
+            // });
         },
         //屏幕分享
         screenClick() {
@@ -440,7 +467,7 @@ export default {
         },
         //创建会话
         async createChat(text, num) {
-            console.log(text);
+            this.archivesId = text.userId;
             this.userMessage1 = {
                 clinicId: this.userMessage.clinicId,
                 departmentId: this.userMessage.departmentId,
@@ -524,22 +551,29 @@ export default {
         },
         //问诊工具
         videoChatBtn() {
-            if (this.videoChatVisable) {
-                this.videoChatVisable = false;
-                $(".videoChatBtn").css("bottom", "0px");
-                if (this.videoType == "门诊") {
-                    this.guaVisable = true;
+            if (this.archivesId) {
+                if (this.videoChatVisable) {
+                    this.videoChatVisable = false;
+                    // $(".videoChatBtn").css("bottom", "0px");
+                    if (this.videoType == "门诊") {
+                        // this.guaVisable = true;
+                    } else {
+                        this.publicVideoVisable = true;
+                    }
                 } else {
-                    this.publicVideoVisable = true;
+                    this.videoChatVisable = true;
+                    // $(".videoChatBtn").css("bottom", "-248px");
+                    if (this.videoType == "门诊") {
+                        // this.guaVisable = false;
+                    } else {
+                        this.publicVideoVisable = false;
+                    }
                 }
             } else {
-                this.videoChatVisable = true;
-                $(".videoChatBtn").css("bottom", "-248px");
-                if (this.videoType == "门诊") {
-                    this.guaVisable = false;
-                } else {
-                    this.publicVideoVisable = false;
-                }
+                this.$notify.error({
+                    title: "警告",
+                    message: "请选择用户"
+                });
             }
         },
         //挂断普通视频
@@ -652,17 +686,20 @@ export default {
 
                     childMessageType = 6;
 
-                    if (_this.videoUser1 == 0) {
+                    if (_this.videoUser == 0) {
                         _this.$emit("reback", "closeCancle");
                         messageBody = "cancle";
                         _this.sendMessageChat("6", "cancle", "VIDEO");
-                    } else if (_this.videoUser1 > 0) {
-                        alert("1111");
+                    } else if (_this.videoUser > 0) {
+                        alert("有人在视频，然后我挂断");
                         _this.$emit("reback", "closeComplete");
                         messageBody = "complete";
                         _this.sendMessageChat("6", "complete", "VIDEO");
                     }
                     _this.$store.commit("socket/IFVIDEOIMG", 0);
+                } else if (num == 2) {
+                    //    为2是人数太多被挤出或者都挂断了视频，只剩我一个自动退出
+                    _this.$emit("reback", "closeCancle");
                 } else {
                     childMessageType = 7;
                     _this.sendMessageChat(
@@ -1588,11 +1625,7 @@ export default {
         } else {
             this.screenClickVisable = false;
         }
-        //人数超过3人呗踢出
-        if(this.videoUser>0){
-            this.generateRemoveElement(_this.userResource)
 
-        }
         this.createVideoRoomData1 = this.createVideoRoomData;
         let _this = this;
 
@@ -1622,7 +1655,13 @@ export default {
             $("#remoteVideos").append(_this.generateParticipant(result, false));
             // _this.$store.commit("socket/VIDEOUSER", 1);
             _this.videoUser += 1;
-            alert('收到有人进入房间'+_this.videoUser);
+            alert("收到有人进入房间" + _this.videoUser);
+            //人数超过3人呗踢出
+            if (_this.videoUser > 3) {
+                _this.closeVideoRoom(2);
+                // _this.$emit("reback", "closeVideoOnly");
+                // _this.generateRemoveElement(_this.userResource);
+            }
         });
         /**
          * 收到有人离开房间
@@ -1635,7 +1674,15 @@ export default {
             }
             // _this.$store.commit("socket/VIDEOUSER", 0);
             _this.videoUser -= 1;
-            alert('收到有人进入房间'+_this.videoUser);
+            if (this.videoType == "门诊") {
+                _this.closeTheVideo();
+            } else {
+                if (_this.videoUser < 1) {
+                    _this.closeVideoRoom(2);
+                }
+            }
+
+            alert("收到有人离开房间对方有几个人在" + _this.videoUser);
         });
         /**
          * 收到文件信息
@@ -1839,34 +1886,31 @@ export default {
                             childMessageType = "VIDEO";
                             if (messageBody.indexOf("refuse") > -1) {
                                 //对方拒绝了视频
-                                if (this.videoType == "门诊") {
-                                    this.closeTheVideo();
-                                } else {
-                                    this.closePublicVideo();
-                                    this.$emit("reback");
-                                }
-                                
+                                // if (this.videoType == "门诊") {
+                                //     this.closeTheVideo();
+                                // } else {
+                                //     this.closePublicVideo();
+                                //     this.$emit("reback");
+                                // }
                             } else if (messageBody.indexOf("complete") > -1) {
                                 //对方挂断了视频
-                                if (this.videoType == "门诊") {
-                                    this.closeTheVideo();
-                                } else {
-                                    this.closePublicVideo();
-                                    this.$emit("reback");
-                                }
-                                this.videoUser1-=1
+                                // if (this.videoType == "门诊") {
+                                //     this.closeTheVideo();
+                                // } else {
+                                //     this.closePublicVideo();
+                                //     this.$emit("reback");
+                                // }
                             } else if (messageBody.indexOf("accept") > -1) {
                                 console.log(messageBody);
-                                this.$store.commit("socket/IFVIDEOIMG", 1);
-                                this.videoUser1+=1
+                                // this.$store.commit("socket/IFVIDEOIMG", 1);
                             } else if (messageBody.indexOf("videoing") > -1) {
                                 //对方正在通话中
-                                if (this.videoType == "门诊") {
-                                    this.closeTheVideo();
-                                } else {
-                                    this.closePublicVideo();
-                                    this.$emit("reback");
-                                }
+                                // if (this.videoType == "门诊") {
+                                //     this.closeTheVideo();
+                                // } else {
+                                //     this.closePublicVideo();
+                                //     this.$emit("reback");
+                                // }
                             } else if (
                                 messageBody.indexOf("sendroom") > -1 ||
                                 messageBody.indexOf("MicroCinicSendRoom") > -1
@@ -1913,7 +1957,8 @@ export default {
         oClinicId: String,
         sessionId1: String,
         doctorVis: Number,
-        userMessage: Object
+        userMessage: Object,
+        chatTypeBox:Object
     },
     model: {
         prop: [
@@ -1922,7 +1967,8 @@ export default {
             "oClinicId",
             "sessionId1",
             "doctorVis",
-            "userMessage"
+            "userMessage",
+            "chatTypeBox"
         ],
         event: "reBack"
     }
@@ -2038,7 +2084,7 @@ video {
     position: fixed;
     right: 16px;
     top: 3%;
-    z-index: 999;
+    z-index: 9999999999999999999999999999;
     padding-top: 68px;
     width: 304px;
     height: 96% !important;
@@ -2162,7 +2208,7 @@ video {
     height: 100%;
 }
 .localVideos1 {
-    height: 100%;
+    height: 99.8%;
     position: absolute;
     top: 0;
     width: 100%;
@@ -2173,8 +2219,9 @@ video {
 }
 .videoChatBox {
     position: absolute;
-    bottom: -241px;
+    bottom: 1px;
     width: 100%;
+    z-index: 999999999999
 }
 .videoChatBox .chat {
     width: 100%;

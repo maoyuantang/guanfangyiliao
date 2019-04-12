@@ -68,7 +68,7 @@
                                             </h3>
                                             <p v-show="text.childMessageType=='FOLLOWUP'">首次治疗时间：{{text.content.firstTreatmentTime}}</p>
                                             <p v-show="text.childMessageType=='INTERROGATION'">{{text.content.content1}}</p>
-                                            
+
                                         </div>
 
                                     </div>
@@ -83,7 +83,7 @@
                                                 <span v-show="text.childMessageType=='INTERROGATION'">问诊</span>
                                                 <span v-show="text.childMessageType=='ARTICLE'">文章</span>
                                                 /{{text.content.title}}</h3>
-                                             <p v-show="text.childMessageType=='FOLLOWUP'">首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                            <p v-show="text.childMessageType=='FOLLOWUP'">首次治疗时间：{{text.content.firstTreatmentTime}}</p>
                                             <p v-show="text.childMessageType=='INTERROGATION'">{{text.content.content1}}</p>
                                         </div>
                                     </div>
@@ -158,10 +158,11 @@
 
             </span>
         </div>
-        <div>
+        <div class='sendBtnBox'>
             <el-input class="chatInputK" type="textarea" :rows="2" placeholder="请输入内容" v-model="messageBody" @keyup.enter.native="sendMessageChat(0,messageBody,'DEFAULT')">
             </el-input>
-            <button class="sendMessageChat" @click="sendMessageChat(0,messageBody,'DEFAULT')">发送</button>
+            <div><button class="sendMessageChat" @click="sendMessageChat(0,messageBody,'DEFAULT')">发送</button></div>
+            
         </div>
         <!-- 备注 -->
         <div v-if="remarkVisible">
@@ -684,7 +685,7 @@ export default {
             //     this.showVideoBtnVisable = false;
             //     this.setVideo(0); //单聊
             // }
-           this.setVideo(0);
+            this.setVideo(0);
         },
         //创建视频
         setVideo(num) {
@@ -1121,13 +1122,13 @@ export default {
         },
         //获取历史记录
         async getHisRecord(num) {
-             if (num == 0) {
-                        //首次进入
-                        this.messageList1 = [];
-                        this.messageList1.length=0
-                        // this.messageList1 = Object.assign({},this.messageList1)
-                        console.log(this.messageList1);
-                    }
+            if (num == 0) {
+                //首次进入
+                this.messageList1 = [];
+                this.messageList1.length = 0;
+                // this.messageList1 = Object.assign({},this.messageList1)
+                console.log(this.messageList1);
+            }
             console.log("历史消息");
             console.log(this.sessionId);
             let _this = this;
@@ -1152,10 +1153,9 @@ export default {
                 } else {
                     this.loadMoreVisable = false;
                 }
-               
+
                 console.log(this.messageList1);
                 $.each(res.data.body, function(index, text) {
-                    
                     let timestamp4 = new Date(text.serverTime);
                     let y = timestamp4.getHours();
                     let d = timestamp4.getMinutes();
@@ -1590,8 +1590,7 @@ export default {
                 let _this = this;
                 $.each(n.syncData, function(index, text) {
                     if (text.command == "SYNC_UPDATE_READ_STATE") {
-                        _this.oMsgId =
-                            _this.$store.state.socket.messageTicket.oMsgId;
+                        _this.oMsgId = "";
                         _this.alreadyRead();
                         _this.getHisRecord(0);
                     }
@@ -1620,374 +1619,26 @@ export default {
 </script>
 
 <style>
-.sendMessageChat {
-}
-.chat {
-    width: 636px;
-    height: 568px;
-}
-.chatMessage {
-    width: 100%;
-    height: 310px;
-    margin-bottom: 12px;
-    border-bottom: 1px solid #e5edf3;
-    overflow: hidden;
-}
-.sendIcon {
-    display: flex;
-    display: -webkit-flex;
-}
-.sendIcon > span {
-    position: relative;
-    margin: 0 3px;
-    display: inline-block;
-    width: 44px;
-    height: 55px;
-    color: white;
-    text-align: center;
-    line-height: 20px;
-    font-size: 8px;
-    cursor: pointer;
-}
-.enterFile:hover ul {
-    display: block;
-}
-.enterFile ul {
-    display: none;
-}
-.chatRecord > li {
-    width: 100%;
-    margin-bottom: 10px;
-}
-.recordLf {
-    display: flex;
-    text-align: left;
-}
-.recordLf .otherImg {
-    margin-right: 15px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-}
-.recordLf .otherImg > img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-}
-.recordLf .otherCon h4 {
-    font-family: Lato-Bold;
-    font-size: 14px;
-    color: #323c47;
-    letter-spacing: 0;
-    line-height: 27px;
-    margin-bottom: 2px;
-}
-.recordLf .otherCon h4 > span:nth-child(2),
-.recordRg .otherCon h4 > span:nth-child(2) {
-    font-family: Lato-Regular;
-    font-size: 12px;
-    color: #939eab;
-    letter-spacing: 0;
-    line-height: 28px;
-    margin-right: 6px;
-}
-.recordLf .otherCon div {
-    font-family: Lato-Regular;
-    font-size: 14px;
-    color: #939eab;
-    letter-spacing: 0;
-    line-height: 27px;
-}
-.recordRg {
-    text-align: right;
-}
-.recordRg .otherImg {
-    float: right;
-    margin-left: 15px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-}
-.recordRg .otherImg > img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-}
-.recordRg .otherCon h4 {
-    font-family: Lato-Bold;
-    font-size: 14px;
-    color: #323c47;
-    letter-spacing: 0;
-    line-height: 27px;
-    overflow: hidden;
-}
-.recordRg .otherCon h4 span {
-}
-.recordRg .otherCon > div {
-    font-family: Lato-Regular;
-    font-size: 14px;
-    color: #939eab;
-    letter-spacing: 0;
-    line-height: 27px;
-    text-align: left;
-}
-.recordRg .peopleName {
-    float: right;
-    font-family: Lato-Bold;
-    font-size: 14px;
-    color: #323c47;
-    letter-spacing: 0;
-    line-height: 27px;
-}
-.recordRg .otime {
-    float: right;
-    font-family: Lato-Regular;
-    font-size: 12px;
-    color: #939eab;
-    letter-spacing: 0;
-    line-height: 22px;
-}
-.recordRg .otherCon {
-    float: right;
-}
-.recordRg .messageCon {
-    float: right;
-    display: flex;
-}
-.recordLf .messageCon {
-    float: left;
-    display: flex;
-}
-.otherCon {
-    width: 86%;
-}
-.chatInputK {
-    height: 156px;
-}
-.followCon {
-    padding: 8px 20px;
-    width: 260px;
-    height: 64px;
-    border: 1px solid #e5e7e9;
-    border-radius: 3px;
-}
-.followCon h3 {
-    font-family: PingFangSC-Semibold;
-    font-size: 14px;
-    color: #323c47;
-    letter-spacing: 0;
-    line-height: 27px;
-}
 
-.followCon > div:last-child > div {
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #939eab;
-    letter-spacing: 0;
-    line-height: 22px;
-}
-.recordRg .followCon {
-    float: right;
-}
-.chatMessage > ul {
-    padding: 20px 0;
-    overflow-y: scroll;
-    height: 320px;
-}
-.chatRecord > li:after {
-    content: "";
-    height: 0;
-    line-height: 0;
-    display: block;
-    visibility: hidden;
-    clear: both;
-}
-.chatInputK textarea {
-    height: 138px;
-}
-.allReadColor {
-    color: #939eab;
-    margin-right: 10px;
-}
-.noReadColor {
-    color: #ff0000;
-    margin-right: 10px;
-}
-d .sendImgCss {
-    position: absolute;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-}
-.followBox > span:last-child {
-    float: right;
-    cursor: pointer;
-}
-.followBox {
-    padding: 4px 0;
-    cursor: pointer;
-}
-.upload-demo-chat {
-    position: absolute;
-    width: 44px;
-    height: 55px;
-}
-.upload-demo-chat > div {
-    width: 100%;
-    height: 100%;
-}
-.upload-demo-chat > div button {
-    visibility: hidden;
-    width: 100%;
-    height: 100%;
-}
-.upload-demo-chat .el-upload__input {
-    display: none;
-}
-
-.upload-demo-chat .el-upload-list {
-    display: none;
-}
-.imgUrlBig {
-    width: 50px;
-    height: 100px;
-}
-.imgUrlBig > img {
-    width: 100%;
-    height: 100%;
-}
-
-.followOrQuest {
-    display: flex;
-    display: -webkit-flex;
-    padding: 6px 12px;
-    box-sizing: border-box;
-    width: 260px;
-    height: 65px;
-    border: 1px solid #e5e7e9;
-    border-radius: 3px;
-}
-.followOrQuest > div:last-child h3 {
-    font-family: PingFangSC-Semibold;
-    font-size: 14px;
-    color: #323c47;
-    letter-spacing: 0;
-    line-height: 27px;
-}
-.followOrQuest > div:first-child {
-    margin-right: 10px;
-    padding-top: 10px;
-}
-.followOrQuest > div:last-child > div {
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #939eab;
-    letter-spacing: 0;
-    line-height: 22px;
-}
-.sendVideo {
-    position: relative;
-    display: block;
-}
-.sendVideo .userMember {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    background: white;
-    box-shadow: 4px 4px 4px #cccccc;
-    overflow-y: scroll;
-    top: -78px;
-    left: 36px;
-}
-.sendVideo .userMember .el-checkbox {
-    display: block;
-    text-align: left;
-    margin-left: 17px;
-}
-.sendVideo .userMember h4 {
-    margin-bottom: 13px;
-    padding-top: 10px;
-    font-family: PingFangSC-Regular;
-    font-size: 14px;
-    color: #5c5c5c;
-    letter-spacing: 0;
-}
-
-.setVideoBtn {
-    width: 82%;
-    height: 30px;
-    line-height: 12px;
-}
-.otherNumClass {
-    position: relative;
-    width: 94%;
-    padding: 0 10px;
-    overflow: hidden;
-    height: 23px;
-    padding-left: 17px;
-}
-.otherNumClass::before {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 7px;
-    height: 7px;
-    background: #2ebd41;
-    border-radius: 50%;
-    left: 0px;
-    top: 8px;
-}
-.contentClass {
-    font-family: Lato-Regular;
-    font-size: 14px;
-    color: #4da1ff;
-    letter-spacing: 0;
-    text-align: right;
-    line-height: 27px;
-}
-.noReadro > span {
-    display: block;
-    width: 30px;
-    margin: 0 10px;
-}
-.loadMoreChat {
-    cursor: pointer;
-    text-align: center;
-}
-.enterFile {
-    position: relative;
-}
-.enterFile ul {
-    position: absolute;
-    color: black;
-}
-.enterFile ul li {
-    text-align: center;
-    line-height: 23px;
-    font-size: 11px;
-}
-.remarkClass .el-form-item__content {
-    margin-left: 0;
-}
-.drugsDialogClass {
-    height: 100%;
-}
-.drugsDialogClass > div {
-    margin-top: 0 !important;
-    height: 100%;
-}
-.videoUserHeadClass {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-}
-.videoUserHeadClass > img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-}
-.chatDialog .el-dialog__body {
-    padding-top: 0;
-}
+        /* <div v-if="chatVisible">
+            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+                <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage" :chatType1="videoType"
+                    :chatTypeBox="chatTypeBox"></chat>
+            </el-dialog>
+        </div>
+        
+        sessionId会话id
+        doctorVis:0//是跟医生聊天
+        doctorVis:1//是跟患者聊天
+        userMessage = {
+                clinicId: text.id,//诊室id
+                departmentId: text.departmentId,//当前医生机构代码
+                userId: text1.userId,//患者的userId
+                orgCode: text.orgCode,//当前医生机构代码
+                clinicOrderId: text1.clinicOrderId //订单id
+            };
+            videoType:'门诊'，//如果是门诊就要传，不是则传空
+        */
+        
 </style>
+

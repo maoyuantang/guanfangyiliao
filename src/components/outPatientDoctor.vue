@@ -578,7 +578,7 @@
             <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body
                 fullscreen @close="closeVideo()" :showClose="VideoshowClose">
                 <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"
-                    @reback="videoclick" :doctorVis='doctorVis' :userMessage="userMessage">
+                    @reback="videoclick" :doctorVis='doctorVis' :userMessage="userMessage" :chatTypeBox="chatTypeBox">
                 </ovideo>
             </el-dialog>
         </div>
@@ -979,6 +979,10 @@
                     res.data.body.bindDoctor
                 ) {
                     text1.disabledStatus = true;
+                     this.$notify.error({
+                    title: "警告",
+                    message: '该订单已绑定服务人'
+                });
                 }
             } else {
                 this.$notify.error({

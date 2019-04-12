@@ -95,8 +95,8 @@
 
             <div class="public-list">
                 <el-table class='' :data="docTableData" border style="width: 100%" @cell-click="cooperationCellClick">
-                    <el-table-column prop="consultationId" label="会诊编号" width="150">
-                    </el-table-column>
+                    <!-- <el-table-column prop="consultationId" label="会诊编号" width="150">
+                    </el-table-column> -->
                     <el-table-column prop="hospital" label="发起医院" width="120">
                     </el-table-column>
                     <el-table-column prop="department" label="发起科室" width="120">
@@ -344,11 +344,11 @@ export default {
                 ]
             },
             columnsDoc: [
-                {
-                    prop: "consultationId",
-                    label: "会诊编号",
-                    width: "300"
-                },
+                // {
+                //     prop: "consultationId",
+                //     label: "会诊编号",
+                //     width: "300"
+                // },
                 {
                     prop: "hospital",
                     label: "发起医院"
@@ -383,10 +383,10 @@ export default {
                 }
             ],
             columns: [
-                {
-                    prop: "consultationId",
-                    label: "会诊编号"
-                },
+                // {
+                //     prop: "consultationId",
+                //     label: "会诊编号"
+                // },
                 {
                     prop: "hospital",
                     label: "发起医院"

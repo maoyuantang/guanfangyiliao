@@ -405,7 +405,7 @@ function  submit() {
             success:function (data) {
                 if(data.errCode==0) {
                     if (navigator.userAgent.match(/(iPhone|iPod|iPad)/i)) {
-                        window.webkit.messageHandlers.submit.postMessage(data.code);
+                        window.webkit.messageHandlers.submit.postMessage(data.errCode);
                     } else if (navigator.userAgent.match(/android/i)) {
                         window.android.jsMethodSubmit(true);
                     }
