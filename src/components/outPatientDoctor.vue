@@ -16,7 +16,8 @@
                     <p class="title">{{text.clinicName}}</p>
                     <div class="outpatient_user">
                         <img v-if="text.doctor[0].headId == null" src="../assets/img/a-6.png" alt="医生头像">
-                        <img v-if="text.doctor[0].headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.doctor[0].headId'
+                        <img v-if="text.doctor[0].headId"
+                            :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.doctor[0].headId'
                             alt="医生头像">
                         <div class="outpatient_name">
                             <p class="p1">{{text.doctor[0].doctorName}}</p>
@@ -24,7 +25,8 @@
                         </div>
                     </div>
                     <i></i>
-                    <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index' style="width: 90%;margin: auto;">
+                    <div v-for="(text,index) in tableDataList1" :key="index" v-if='myHomesBiao[index1]==index'
+                        style="width: 90%;margin: auto;">
                         <el-table :data="text" :cell-class-name="ceshi0" :header-cell-style="rowClass">
                             <el-table-column prop="unProcess" label="未处理"></el-table-column>
                             <el-table-column prop="process" label="已处理"></el-table-column>
@@ -39,13 +41,15 @@
                     <!-- 病人个数循环 -->
                     <noData v-if="text.clinicOrders.length == 0"></noData>
                     <span class="dian" @click="lookList(text)" v-if="text.clinicOrders.length != 0">...</span>
-                    <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-show="index <2" v-if="text.clinicOrders.length != 0">
+                    <ul v-for="(text1,index) in text.clinicOrders" :key="index" class="patientDetail" v-show="index <2"
+                        v-if="text.clinicOrders.length != 0">
 
                         <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
                             <h1>{{text1.userName}}</h1>
                             <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
                                 <span class="tanKuang1" @click="seeHistory(text1.userId)">查看档案</span>
-                                <button class="tanKuang2" @click="sendMessage(text,text1)" :disabled="text1.disabledStatus">发送</button>
+                                <button class="tanKuang2" @click="sendMessage(text,text1)"
+                                    :disabled="text1.disabledStatus">发送</button>
                                 <div class="tanKuang3">{{text1.orderState}}</div>
                                 <!-- <el-button type="success" plain @click="seeHistory(text1.userId)">查看档案</el-button> -->
                                 <!-- <el-button type="danger" @click="sendMessage(text,text1)">发送</el-button> -->
@@ -104,10 +108,12 @@
                     <span class="title2">...</span>
                 </div>
                 <div class="div">
-                    <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index,text)' :class="whichUser==index?'backgroundUser':''">
+                    <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index,text)'
+                        :class="whichUser==index?'backgroundUser':''">
                         <li>
                             <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-                            <img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'
+                            <img v-if="text.headId"
+                                :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'
                                 alt="医生头像">
                             <div>
                                 <p class="name">{{text.userName}}</p>
@@ -202,7 +208,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="result">
+                        <!-- <div class="result">
                             <div class="front">
                                 <ul>
                                     <li>
@@ -215,8 +221,8 @@
 
                                         <div class="block">
                                             <span class="demonstration">发病日期：</span>
-                                            <el-date-picker @blur="demonstration1" v-model="text.pb.occurTime" align="right"
-                                                type="date" placeholder="选择日期" disabled>
+                                            <el-date-picker @blur="demonstration1" v-model="text.pb.occurTime"
+                                                align="right" type="date" placeholder="选择日期" disabled>
                                             </el-date-picker>
                                         </div>
                                     </li>
@@ -230,6 +236,30 @@
                                     </el-date-picker>
                                 </div>
                             </div>
+                        </div> -->
+                        <div>
+                            <el-form ref="form" label-width="80px">
+                                <div class="drugsCheckBox">
+                                    <el-form-item>
+                                        <el-checkbox-group v-model="text.pb.report">
+                                            <el-checkbox label="疫情报告" name="type"></el-checkbox>
+                                        </el-checkbox-group>
+                                        <el-checkbox-group v-model="text.pb.review">
+                                            <el-checkbox label="复诊" name="type"></el-checkbox>
+                                        </el-checkbox-group>
+                                    </el-form-item>
+                                    <el-form-item label="发病日期: ">
+                                        <el-date-picker @blur="demonstration1" type="date" placeholder="选择日期"
+                                            v-model="text.pb.occurTime" style="width: 100%;">
+                                        </el-date-picker>
+                                    </el-form-item>
+                                    <el-form-item class="nextTimeClass" label="下次复查日期: ">
+                                        <el-date-picker @blur="demonstration2" type="date" placeholder="选择日期"
+                                            v-model="text.pb.occurTime" style="width: 100%;">
+                                        </el-date-picker>
+                                    </el-form-item>
+                                </div>
+                            </el-form>
                         </div>
                         <div class="dates">
                             <ul>
@@ -310,10 +340,12 @@
                     <span class="title2">...</span>
                 </div>
                 <div class="div">
-                    <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index)' :class="whichUser==index?'backgroundUser':''">
+                    <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index)'
+                        :class="whichUser==index?'backgroundUser':''">
                         <li>
                             <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-                            <img v-if="text.headId" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'
+                            <img v-if="text.headId"
+                                :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId'
                                 alt="医生头像">
                             <div>
                                 <p class="name">{{text.userName}}</p>
@@ -407,7 +439,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="result">
+                        <!-- <div class="result">
                             <div class="front">
                                 <ul>
                                     <li>
@@ -420,8 +452,8 @@
 
                                         <div class="block">
                                             <span class="demonstration">发病日期：</span>
-                                            <el-date-picker @blur="demonstration1" v-model="text.pb.occurTime" align="right"
-                                                type="date" placeholder="选择日期" disabled>
+                                            <el-date-picker @blur="demonstration1" v-model="text.pb.occurTime"
+                                                align="right" type="date" placeholder="选择日期" disabled>
                                             </el-date-picker>
                                         </div>
                                     </li>
@@ -435,6 +467,30 @@
                                     </el-date-picker>
                                 </div>
                             </div>
+                        </div> -->
+                        <div>
+                            <el-form ref="form" label-width="80px">
+                                <div class="drugsCheckBox">
+                                    <el-form-item>
+                                        <el-checkbox-group v-model="text.pb.report">
+                                            <el-checkbox label="疫情报告" name="type"></el-checkbox>
+                                        </el-checkbox-group>
+                                        <el-checkbox-group v-model="text.pb.review">
+                                            <el-checkbox label="复诊" name="type"></el-checkbox>
+                                        </el-checkbox-group>
+                                    </el-form-item>
+                                    <el-form-item label="发病日期: ">
+                                        <el-date-picker @blur="demonstration1" type="date" placeholder="选择日期"
+                                            v-model="text.pb.occurTime" style="width: 100%;">
+                                        </el-date-picker>
+                                    </el-form-item>
+                                    <el-form-item class="nextTimeClass" label="下次复查日期: ">
+                                        <el-date-picker @blur="demonstration2" type="date" placeholder="选择日期"
+                                            v-model="text.pb.reviewTime" style="width: 100%;">
+                                        </el-date-picker>
+                                    </el-form-item>
+                                </div>
+                            </el-form>
                         </div>
                         <div class="dates">
                             <ul>
@@ -500,20 +556,25 @@
         <!-- //某诊室的所有病人列表 -->
         <div v-if="isShowPatient">
             <el-dialog title="就诊列表" :visible.sync="isShowPatient" width="60%" center>
-                <ul v-for="(text5,index) in huanzheList" :key="index" class="" style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px 15px;">
-                    <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 100%;margin:0 0 20px 0;align-items: center;">
+                <ul v-for="(text5,index) in huanzheList" :key="index" class=""
+                    style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px 15px;">
+                    <li class="name"
+                        style="display:-webkit-flex;justify-content: space-between;width: 100%;margin:0 0 20px 0;align-items: center;">
                         <div style="display: flex; align-items: center;">
                             <img style="width: 53px; margin: 0 30px 0 0;" src="../assets/img/a-6.png" alt="">
                             <div>
                                 <!-- <img src="../assets/img/a-6.png" alt=""> -->
-                                <h1 style="margin: 0 0 10px 0;font-family: PingFangSC-Semibold;font-size: 15px;color: #002257;letter-spacing: 0.1px;">{{text5.userName}}</h1>
+                                <h1
+                                    style="margin: 0 0 10px 0;font-family: PingFangSC-Semibold;font-size: 15px;color: #002257;letter-spacing: 0.1px;">
+                                    {{text5.userName}}</h1>
                                 <div class="orderTime">
                                     <span>下单时间:</span>
                                     <span class="span">{{text5.clinicOrderTime}}</span>
                                 </div>
                             </div>
                         </div>
-                        <div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0;height: 40px;">
+                        <div
+                            style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0;height: 40px;">
                             <span class="tanKuang1" @click="seeHistory(text5.userId)">查看档案</span>
                             <span class="tanKuang2" @click="sendMessage(huanzheList3,text5)">发送</span>
                             <!-- <el-button type="success" plain @click="seeHistory(text5.userId)">查看档案</el-button>
@@ -522,14 +583,16 @@
                         </div>
                     </li>
 
-                    <li v-if="text5.drugDetail.length != 0" class="drug" style="padding:0 0 20px 0;border-bottom:1px solid #d8d8d8">
+                    <li v-if="text5.drugDetail.length != 0" class="drug"
+                        style="padding:0 0 20px 0;border-bottom:1px solid #d8d8d8">
                         <div>
                             <div class="drugTitle">Rx:</div>
                             <div>
                                 <div class="drugDetail">
                                     <div>
 
-                                        <ul v-for="(text,index) in text5.drugDetail" :key="index" class="flex-cell flex-row">
+                                        <ul v-for="(text,index) in text5.drugDetail" :key="index"
+                                            class="flex-cell flex-row">
                                             <li class="flex-cell flex-row">（{{index+1}}）</li>
                                             <li class="flex-cell flex-row">{{text.drugName}}</li>
                                             <li class="flex-cell flex-row">{{text.norm}}</li>
@@ -560,7 +623,8 @@
         <!-- 预览弹窗 -->
         <div v-if="dialogTableVisible">
             <el-dialog title="预览" :visible.sync="dialogTableVisible" center>
-                <img style="width:100%" :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
+                <img style="width:100%"
+                    :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
             </el-dialog>
         </div>
 
@@ -943,70 +1007,70 @@
             //     }
             // },
             // 我的诊室发送消息
-        async sendMessage(text, text1) {
-            console.log(text);
-            console.log(text1);
+            async sendMessage(text, text1) {
+                console.log(text);
+                console.log(text1);
 
-            this.userMessage = {
-                clinicId: text.id,
-                departmentId: text.departmentId,
-                userId: text1.userId,
-                orgCode: text.orgCode,
-                clinicOrderId: text1.clinicOrderId //订单id
-            };
-            console.log(this.userMessage);
-            let _this = this;
-            let query = {
-                token: this.userInfo.token,
-                userId: text1.userId,
-                orderId: text1.clinicOrderId
-            };
-            const res = await sendBtnVisable(query);
-            if (res.data && res.data.errCode === 0) {
-                
-                if (res.data.body.bindSession && res.data.body.bindDoctor) {
-                    text1.disabledStatus = false;
-                    
-                    _this.sendMessage1(text, text1)
-                } else if (
-                    !res.data.body.bindSession &&
-                    !res.data.body.bindDoctor
-                ) {
-                    text1.disabledStatus = false;
-                     _this.sendMessage1(text, text1)
-                } else if (
-                    res.data.body.bindSession ||
-                    res.data.body.bindDoctor
-                ) {
-                    text1.disabledStatus = true;
+                this.userMessage = {
+                    clinicId: text.id,
+                    departmentId: text.departmentId,
+                    userId: text1.userId,
+                    orgCode: text.orgCode,
+                    clinicOrderId: text1.clinicOrderId //订单id
+                };
+                console.log(this.userMessage);
+                let _this = this;
+                let query = {
+                    token: this.userInfo.token,
+                    userId: text1.userId,
+                    orderId: text1.clinicOrderId
+                };
+                const res = await sendBtnVisable(query);
+                if (res.data && res.data.errCode === 0) {
+
+                    if (res.data.body.bindSession && res.data.body.bindDoctor) {
+                        text1.disabledStatus = false;
+
+                        _this.sendMessage1(text, text1)
+                    } else if (
+                        !res.data.body.bindSession &&
+                        !res.data.body.bindDoctor
+                    ) {
+                        text1.disabledStatus = false;
+                        _this.sendMessage1(text, text1)
+                    } else if (
+                        res.data.body.bindSession ||
+                        res.data.body.bindDoctor
+                    ) {
+                        text1.disabledStatus = true;
+                    }
+                } else {
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
                 }
-            } else {
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
-        },
-        async sendMessage1(text, text1) {
-            let _this = this;
-            let query = {
-                token: this.userInfo.token
-            };
-            let options = {
-                orderId: text1.clinicOrderId,
-                orderNo: ""
-            };
-            const res = await bindSession(query, options);
-            if (res.data && res.data.errCode === 0) {
-                _this.sessionId = res.data.body
-                _this.chatVisible = true;
-            } else {
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
-        },
+            },
+            async sendMessage1(text, text1) {
+                let _this = this;
+                let query = {
+                    token: this.userInfo.token
+                };
+                let options = {
+                    orderId: text1.clinicOrderId,
+                    orderNo: ""
+                };
+                const res = await bindSession(query, options);
+                if (res.data && res.data.errCode === 0) {
+                    _this.sessionId = res.data.body
+                    _this.chatVisible = true;
+                } else {
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
+            },
             //返回赋值函数
             getConsulTabData(res) {
                 //顶部切换返回函数
@@ -1065,19 +1129,19 @@
             //列表
             // 7.6(WEB医生)获取所有该医生的在线诊室(医生端列表1)
             async getList1() {
-                var date = new Date();
-                var year = date.getFullYear();
-                var month = date.getMonth() + 1;
-                var day = date.getDate();
-                if (month < 10) {
-                    month = "0" + month;
-                }
-                if (day < 10) {
-                    day = "0" + day;
-                }
-                var nowDate = year + "-" + month + "-" + day;
-                this.time0 = nowDate;
-                this.time1 = nowDate;
+                // var date = new Date();
+                // var year = date.getFullYear();
+                // var month = date.getMonth() + 1;
+                // var day = date.getDate();
+                // if (month < 10) {
+                //     month = "0" + month;
+                // }
+                // if (day < 10) {
+                //     day = "0" + day;
+                // }
+                // var nowDate = year + "-" + month + "-" + day;
+                // this.time0 = nowDate;
+                // this.time1 = nowDate;
 
                 const _this = this;
                 let query = {
@@ -2461,7 +2525,36 @@
         border: none;
     }
 
+    /deep/ .el-form-item {
+        /* margin-left: 0 !important; */
+        position: relative;
+        left: -80px;
+    }
+
     .noBorder>div::before {
         display: none;
+    }
+
+    .drugsCheckBox {
+        display: flex;
+        display: -webkit-flex;
+        font-family: PingFangSC-Light;
+        font-size: 14px;
+        color: #212223;
+        line-height: 20px;
+    }
+
+    .drugsCheckBox>div:first-child>div {
+        display: flex;
+        display: -webkit-flex;
+    }
+
+    .drugsCheckBox>div:first-child>div>div {
+        margin: 0 5px;
+    }
+
+    .drugsCheckBox .el-checkbox__label,
+    .drugsCheckBox .el-form-item__label {
+        color: #212223 !important;
     }
 </style>
