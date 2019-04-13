@@ -612,9 +612,9 @@
         this.addForm.movePurpose = "";
         this.addForm.beginIdea = "";
 
-        this.addForm.typeList.list.length = 0;
+        // this.addForm.typeList.list.length = 0;
         this.addForm.diseaseName.list.length = 0;
-        this.addForm.patient.list.length = 0;
+        // this.addForm.patient.list.length = 0;//等待释放
         this.addForm.intoHospital.list.length = 0;
         this.addForm.giveRight.list.length = 0;
         this.addForm.moveTime.list.length = 0;
