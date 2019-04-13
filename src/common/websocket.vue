@@ -24,7 +24,7 @@
         <!-- 视频聊天 -->
         <div v-if="VideoVisable">
             <el-dialog class='videoClassBox' title="" :visible.sync="VideoVisable" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
-                <ovideo :createVideoRoomData="userSocketInfo.createVideoRoomData" @reback="videoclick" :sessionId1="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox" ></ovideo>
+                <ovideo :createVideoRoomData="userSocketInfo.createVideoRoomData" @reback="videoclick" :sessionId1="userSocketInfo.osessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox"></ovideo>
             </el-dialog>
         </div>
 
@@ -60,7 +60,7 @@ export default {
             VideoshowClose: false,
             startVideoName: "",
             receiveVideoVisable: true,
-            receiveVideoVisable1:0,
+            receiveVideoVisable1: 0,
             VideoVisable: false,
             webSocket: null,
             //let global_callback = null;
@@ -188,9 +188,10 @@ export default {
             let query = {
                 token: this.userState.token
             };
-            console.log(this.createVideoRoomData)
+            console.log(this.createVideoRoomData);
             const options = {
-                conferenceId: this.userSocketInfo.createVideoRoomData.conferenceId,
+                conferenceId: this.userSocketInfo.createVideoRoomData
+                    .conferenceId,
                 state: oState
             };
             const res = await storageUsers(query, options);
@@ -317,7 +318,7 @@ export default {
                     from: this.userSelfInfo.userId, //userid
                     fromNickName: this.userSelfInfo.name, //昵称
                     toNickName: "",
-                    to: this.sessionId, //发给谁，接收者的用户ID
+                    to: this.userSocketInfo.osessionId, //发给谁，接收者的用户ID
                     body: messageBody, //消息内容
                     sequence: this.$store.state.socket.messageTicket.sequence, //消息发送序号。
                     chatType: 2, //医生端标识
@@ -534,9 +535,7 @@ export default {
                             console.log("收到了邀请视频");
                             _this.$store.commit("socket/RECEIVEVIDEOVIS", true);
                             _this.userSocketInfo.receiveVideoVisable = true;
-                              console.log(
-                                _this.receiveVideoVisable1
-                            );
+                            console.log(_this.receiveVideoVisable1);
                             console.log(
                                 _this.userSocketInfo.receiveVideoVisable
                             );
@@ -546,8 +545,18 @@ export default {
                                 conferenceId: odata.info.body.split("&")[2],
                                 conferenceNumber: odata.info.body.split("&")[1]
                             };
-                             _this.$store.commit("socket/CREATEVUDEIROOM", _this.createVideoRoomData);
+                            _this.sessionId = odata.info.body.to;
+
+                            _this.$store.commit(
+                                "socket/OSESSIONID",
+                                odata.info.to
+                            );
+                            _this.$store.commit(
+                                "socket/CREATEVUDEIROOM",
+                                _this.createVideoRoomData
+                            );
                             console.log(_this.createVideoRoomData);
+                            console.log(_this.userSocketInfo.osessionId);
                             // $.each(reciveUserList, function(index, text) {
                             //     if (_this.userSelfInfo.userId == text) {
                             //         _this.receiveVideoVisable = true;
@@ -763,48 +772,54 @@ export default {
                             bodyVideo +
                             "]";
                     } else if (childMessageType == 7) {
-                        var bodyPro = this.IMessage.decode(
-                            new Uint8Array(res.data)
-                        ).info.body;
-                        var videosessionid = layui.data("videosessionidNow").id;
-                        if (
-                            bodyPro == "MicroCinic&hangup" &&
-                            videosessionid == toL
-                        ) {
-                            var kicking = layui.data("kicking").kicking; //判断是否踢人
-                            var videotyped = layui.data("videotype").type;
-                            var localTest = layui.data("videousertype").type;
-                            if (parent.quitType == "true") {
-                                layer.closeAll();
-                                parent.quitType = "false";
-                            }
-                            if (localTest == "true") {
-                                parent.leaveConference();
-                            }
+                        // var bodyPro = this.IMessage.decode(
+                        //     new Uint8Array(res.data)
+                        // ).info.body;
+                        // var bodyPro = odata.info.body;
+                        // var videosessionid = layui.data("videosessionidNow").id;
+                        // if (
+                        //     bodyPro == "MicroCinic&hangup" &&
+                        //     videosessionid == toL
+                        // ) {
+                        //     var kicking = layui.data("kicking").kicking; //判断是否踢人
+                        //     var videotyped = layui.data("videotype").type;
+                        //     var localTest = layui.data("videousertype").type;
+                        //     if (parent.quitType == "true") {
+                        //         layer.closeAll();
+                        //         parent.quitType = "false";
+                        //     }
+                        //     if (localTest == "true") {
+                        //         parent.leaveConference();
+                        //     }
 
-                            if (videotyped == "true") {
-                                if (kicking == "true") {
-                                    // return;
-                                }
-                                parent.leaveConference();
-                            }
-                        }
-                        return false;
+                        //     if (videotyped == "true") {
+                        //         if (kicking == "true") {
+                        //             // return;
+                        //         }
+                        //         parent.leaveConference();
+                        //     }
+                        // }
+                        // return false;
                     } else if (childMessageType == 18) {
-                        var formidls = this.IMessage.decode(
-                            new Uint8Array(res.data)
-                        ).info.from;
+                        // var formidls = this.IMessage.decode(
+                        //     new Uint8Array(res.data)
+
+                        // ).info.from;
+                        var formidls = odata.info.from;
                         if (formidls != layui.data("realName").id) {
-                            var fromNickName = this.IMessage.decode(
-                                new Uint8Array(res.data)
-                            ).info.fromNickName;
-                            var bodyPro = JSON.parse(
-                                this.IMessage.decode(new Uint8Array(res.data))
-                                    .info.body
-                            );
-                            var toNickName = this.IMessage.decode(
-                                new Uint8Array(res.data)
-                            ).info.toNickName;
+                            // var fromNickName = this.IMessage.decode(
+                            //     new Uint8Array(res.data)
+                            // ).info.fromNickName;
+                            var fromNickName = odata.info.fromNickName;
+                            // var bodyPro = JSON.parse(
+                            //     this.IMessage.decode(new Uint8Array(res.data))
+                            //         .info.body
+                            // );
+                            var bodyPro = odata.info.body;
+                            // var toNickName = this.IMessage.decode(
+                            //     new Uint8Array(res.data)
+                            // ).info.toNickName;
+                            var toNickName = odata.info.toNickName;
                             var phtml;
                             var fromid = odata.info.to;
                             content =
@@ -821,16 +836,19 @@ export default {
                             return false;
                         }
                     } else if (childMessageType == 20) {
-                        var fromNickName = this.IMessage.decode(
-                            new Uint8Array(res.data)
-                        ).info.fromNickName;
-                        var bodyPro = JSON.parse(
-                            this.IMessage.decode(new Uint8Array(res.data)).info
-                                .body
-                        );
-                        var toNickName = this.IMessage.decode(
-                            new Uint8Array(res.data)
-                        ).info.toNickName;
+                        // var fromNickName = this.IMessage.decode(
+                        //     new Uint8Array(res.data)
+                        // ).info.fromNickName;
+                        var fromNickName = odata.info.fromNickName;
+                        // var bodyPro = JSON.parse(
+                        //     this.IMessage.decode(new Uint8Array(res.data)).info
+                        //         .body
+                        // );
+                        var bodyPro = odata.info.body;
+                        // var toNickName = this.IMessage.decode(
+                        //     new Uint8Array(res.data)
+                        // ).info.toNickName;
+                        var toNickName = odata.info.toNickName;
                         var phtml;
                         var fromid = odata.info.to;
                         content =
@@ -844,10 +862,11 @@ export default {
                             '<p class="shouji">请在手机上查看</p>' +
                             "</div>";
                     } else if (childMessageType == 21) {
-                        var bodyPo = JSON.parse(
-                            this.IMessage.decode(new Uint8Array(res.data)).info
-                                .body
-                        );
+                        // var bodyPo = JSON.parse(
+                        //     this.IMessage.decode(new Uint8Array(res.data)).info
+                        //         .body
+                        // );
+                        var bodyPo = odata.info.body;
                         if (bodyPo.notice == "HOSPITAL") {
                             //医院通知
                             var notification = new Notification(
@@ -955,10 +974,11 @@ export default {
                             };
                         } else if (bodyPo.notice == "CLINIC_INVITED") {
                             //诊室邀请
-                            var bodyls = JSON.parse(
-                                this.IMessage.decode(new Uint8Array(res.data))
-                                    .info.body
-                            );
+                            // var bodyls = JSON.parse(
+                            //     this.IMessage.decode(new Uint8Array(res.data))
+                            //         .info.body
+                            // );
+                            var bodyls=odata.info.body
                             var botest = bodyls.body;
                             var getParams = function(name) {
                                 var search = botest;
@@ -1006,9 +1026,7 @@ export default {
                                         "./page/components/listbox/invitation.html?" +
                                         botest +
                                         "&formname=" +
-                                        this.IMessage.decode(
-                                            new Uint8Array(res.data)
-                                        ).info.fromNickName //iframe的url
+                                        odata.info.fromNickName //iframe的url
                                 });
                             } else {
                                 layer.closeAll();
@@ -1216,9 +1234,7 @@ export default {
                                     "./page/components/listbox/invitation.html?" +
                                     botest +
                                     "&formname=" +
-                                    this.IMessage.decode(
-                                        new Uint8Array(res.data)
-                                    ).info.fromNickName, //iframe的url
+                                    odata.info.fromNickName, //iframe的url
                                 cancel: function(index, layero) {
                                     parent.invitation = "";
                                 }
@@ -1316,8 +1332,8 @@ export default {
                 });
             }
         },
-        receiveVideoVisable1(n){
-            console.error(`change=>${n}`)
+        receiveVideoVisable1(n) {
+            console.error(`change=>${n}`);
         }
     }
 };

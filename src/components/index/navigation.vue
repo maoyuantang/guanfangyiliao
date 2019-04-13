@@ -167,6 +167,10 @@ import { parse } from 'protobufjs';
 		},
 		methods:{
 			/**
+			 * 计算 导航栏 现在 子系统也要加上
+			 */
+			countList(){},
+			/**
 			 * 左侧菜单导航栏被点击
 			 * 修改css样式
 			 * 记录下当前点击源，防止刷新

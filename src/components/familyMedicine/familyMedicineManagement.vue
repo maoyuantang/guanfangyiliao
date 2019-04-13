@@ -213,8 +213,28 @@
 						<div class="family-new-alert-spe-price-item-head">
 							<div class="family-new-alert-spe-price-item-head-input-div">
 								<i class="iconfont family-new-alert-spe-price-item-head-icon">&#xe76d;</i>
-								<input type="text" v-model="testData.businessPrice.data[1].worth" class="family-new-alert-spe-price-item-head-content-input">
+								<input type="text" v-model="testData.businessPrice.data[0].worth" class="family-new-alert-spe-price-item-head-content-input">
 								<p class="family-new-alert-spe-price-item-head-unit">/月</p>
+							</div>
+						</div>
+						<div class="family-new-alert-spe-price-item-body">
+							<ul>
+								<li>
+									<div class="family-new-alert-spe-price-item-body-item" v-for="(item,index) in testData.businessPrice.data[0].childList " :key="index">
+										<span class="family-new-alert-spe-price-item-body-item-name">{{item.childName}}</span>
+										<input type="number" min="0" class="family-new-alert-spe-price-item-body-item-count" v-model="item.times">
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="family-new-alert-spe-price-item-segmentation"></div>
+					<div class="family-new-alert-spe-price-item">
+						<div class="family-new-alert-spe-price-item-head">
+							<div class="family-new-alert-spe-price-item-head-input-div">
+								<i class="iconfont family-new-alert-spe-price-item-head-icon">&#xe76d;</i>
+								<input type="text" v-model="testData.businessPrice.data[1].worth" class="family-new-alert-spe-price-item-head-content-input">
+								<p class="family-new-alert-spe-price-item-head-unit">/季</p>
 							</div>
 						</div>
 						<div class="family-new-alert-spe-price-item-body">
@@ -234,33 +254,13 @@
 							<div class="family-new-alert-spe-price-item-head-input-div">
 								<i class="iconfont family-new-alert-spe-price-item-head-icon">&#xe76d;</i>
 								<input type="text" v-model="testData.businessPrice.data[2].worth" class="family-new-alert-spe-price-item-head-content-input">
-								<p class="family-new-alert-spe-price-item-head-unit">/季</p>
-							</div>
-						</div>
-						<div class="family-new-alert-spe-price-item-body">
-							<ul>
-								<li>
-									<div class="family-new-alert-spe-price-item-body-item" v-for="(item,index) in testData.businessPrice.data[2].childList " :key="index">
-										<span class="family-new-alert-spe-price-item-body-item-name">{{item.childName}}</span>
-										<input type="number" min="0" class="family-new-alert-spe-price-item-body-item-count" v-model="item.times">
-									</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div class="family-new-alert-spe-price-item-segmentation"></div>
-					<div class="family-new-alert-spe-price-item">
-						<div class="family-new-alert-spe-price-item-head">
-							<div class="family-new-alert-spe-price-item-head-input-div">
-								<i class="iconfont family-new-alert-spe-price-item-head-icon">&#xe76d;</i>
-								<input type="text" v-model="testData.businessPrice.data[3].worth" class="family-new-alert-spe-price-item-head-content-input">
 								<p class="family-new-alert-spe-price-item-head-unit">/年</p>
 							</div>
 						</div>
 						<div class="family-new-alert-spe-price-item-body">
 							<ul>
 								<li>
-									<div class="family-new-alert-spe-price-item-body-item" v-for="(item,index) in testData.businessPrice.data[3].childList " :key="index">
+									<div class="family-new-alert-spe-price-item-body-item" v-for="(item,index) in testData.businessPrice.data[2].childList " :key="index">
 										<span class="family-new-alert-spe-price-item-body-item-name">{{item.childName}}</span>
 										<input type="number" min="0" class="family-new-alert-spe-price-item-body-item-count" v-model="item.times">
 									</div>
@@ -1492,7 +1492,7 @@
 				console.log(res);
 				if(res.data&&res.data.errCode===0){
 					let i = 1;
-					for(i;i<4;i++){
+					for(i;i<3;i++){
 						// this.testData.businessPrice.data[i].childList = res.data.body.map(item=>Object({},item));
 						this.testData.businessPrice.data[i].childList = JSON.parse(JSON.stringify(res.data.body))
 					}
