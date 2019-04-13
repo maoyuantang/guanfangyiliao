@@ -1,5 +1,5 @@
-console.log('test')
-console.log(process.env.IMG_PREFIX)
+// console.log('test')
+// console.log(process.env.IMG_PREFIX)
 module.exports =  {
     // developmentEnvironment:"https://demo.chuntaoyisheng.com:10001",//测试环境
     //  developmentEnvironment:"https://demo.chuntaoyisheng.com:10002",//开发环境
