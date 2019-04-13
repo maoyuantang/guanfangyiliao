@@ -289,6 +289,7 @@
         <div class="our-staf-alert-item-value-out">
           <el-input
             placeholder="请输入对方账号和手机号"
+            :disabled="outerCourtAlert.type!==0"
             size="mini"
             v-model="outerCourtAlert.account"
             clearable>
