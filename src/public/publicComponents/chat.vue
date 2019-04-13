@@ -268,7 +268,7 @@
         <!-- 视频聊天 -->
         <div v-if="videoVisible">
             <el-dialog class='videoClassBox' title="" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo('cancle','us')" :showClose="VideoshowClose">
-                <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId" :doctorVis="doctorVis"></ovideo>
+                <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox" :userMessage="userMessage"></ovideo>
             </el-dialog>
         </div>
         <!-- 孕妇档案 -->
@@ -720,46 +720,6 @@ export default {
                     conferenceNumber: res.data.body.conferenceNumber
                 };
                 let childMessageType = 6;
-                // if (num == 1) {
-                //     //群聊
-                //     let body =
-                //         "sendroom&" +
-                //         res.data.body.conferenceNumber +
-                //         "&" +
-                //         res.data.body.conferenceId +
-                //         "$";
-                //     let oLength = this.checkList.length - 1;
-                //     $.each(this.checkList, function(index, text) {
-                //         if (index == oLength) {
-                //             body += text;
-                //         } else {
-                //             body += text + "&";
-                //         }
-                //     });
-                //     _this.sendVideoMessage(
-                //         childMessageType,
-                //         body,
-                //         res.data.body.conferenceNumber,
-                //         "",
-                //         "VIDEO"
-                //     );
-                // } else if (num == 0) {
-                //     //单聊
-                //     let body =
-                //         "sendroom&" +
-                //         res.data.body.conferenceNumber +
-                //         "&" +
-                //         res.data.body.conferenceId +
-                //         "&" +
-                //         _this.userMemberNum[0].userId;
-                //     _this.sendVideoMessage(
-                //         childMessageType,
-                //         body,
-                //         res.data.body.conferenceNumber,
-                //         "",
-                //         "VIDEO"
-                //     );
-                // }
                 let body =
                     "sendroom&" +
                     res.data.body.conferenceNumber +
@@ -1091,12 +1051,12 @@ export default {
             const res = await fetchSessionMembers(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
-                $.each(res.data.body, function(index, text) {
-                    console.log(text);
-                    if (text.userId == _this.userSelfInfo.userId) {
-                        res.data.body.splice(index, 1);
-                    }
-                });
+                // $.each(res.data.body, function(index, text) {
+                //     console.log(text);
+                //     if (text.userId == _this.userSelfInfo.userId) {
+                //         res.data.body.splice(index, 1);
+                //     }
+                // });
                 $.each(res.data.body, function(index, text) {
                     if (_this.chatUser == "") {
                         _this.chatUser = text.userName;

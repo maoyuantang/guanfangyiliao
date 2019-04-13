@@ -410,7 +410,7 @@
         </div>
         <div v-if="chatVisible">
             <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
-                <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox"></chat>
+                <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox" :userMessage="userMessage"></chat>
             </el-dialog>
         </div>
         <div v-if="groupVisible">
@@ -511,6 +511,7 @@ export default {
     },
     data() {
         return {
+            userMessage:{},
             chatTypeBox: {
                 startDoctorName: "",
                 startDoctorTYpe: "随访"
@@ -2467,6 +2468,7 @@ export default {
         },
         //我的随访发送
         async sendMessage(row) {
+            this.userMessage.userId=row.userId
             let _this = this;
             let query = {
                 token: this.userState.token

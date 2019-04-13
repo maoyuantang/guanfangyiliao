@@ -33,7 +33,10 @@
                     </div>
 
                     <el-form-item label="会诊病人:">
-                        <el-input v-model="startHz.userId"></el-input>
+                        <!-- <el-input v-model="startHz.userId"></el-input> -->
+                        <el-select placeholder="请选择活动区域" v-model="startHz.userId" >
+                                    <el-option v-for="(text,index) in hospitalList" :label="text.name" :value="text.value" :key="index"></el-option>
+                                </el-select>
                     </el-form-item>
                     <el-form-item label="病人病历:">
                         <el-input v-model="startHz.medicalHistory"></el-input>
@@ -186,12 +189,12 @@ export default {
             doctorVis: 0, //0是医生跟医生聊天
             cellColor: [
                 {
-                    cell: 6,
+                    cell: 5,
                     value: "接收科室",
                     oclass: "ooRed"
                 },
                 {
-                    cell: 7,
+                    cell: 6,
                     value: "参与专家",
                     oclass: "ooRed"
                 }
@@ -805,6 +808,50 @@ export default {
             }
         }, //获取医院列表
         async getHospitalment() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const res = await CONSULTATIONHOSPITAL(query);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body, function(index, text) {
+                    _this.hospitalList.push({
+                        name: text.name,
+                        value: text.id
+                    });
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //获取病人列表
+         async getHospitalment() {
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const res = await CONSULTATIONHOSPITAL(query);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body, function(index, text) {
+                    _this.hospitalList.push({
+                        name: text.name,
+                        value: text.id
+                    });
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //获取病历列表
+         async getHospitalment() {
             let _this = this;
             let query = {
                 token: this.userState.token

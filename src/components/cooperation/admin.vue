@@ -106,7 +106,7 @@
         </div>
         <!-- 接收科室 -->
         <div v-if="departVisible">
-            <el-dialog class=" consultationDetailClass" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
+            <el-dialog class=" consultationDetailClass" title=" 协作科室" :visible.sync="departVisible" width="503px" hight="470px" center>
                 <receiveDepartent :receptionDepartment="receptionDepartment"  v-if="receptionDepartment.length>0"></receiveDepartent>
             </el-dialog>
         </div>
@@ -195,12 +195,12 @@ export default {
             invitationVisible: false,
             cellColor: [
                 {
-                    cell: 4,
+                    cell: 3,
                     value: "协作科室",
                     oclass: "ooRed"
                 },
                 {
-                    cell: 5,
+                    cell: 4,
                     value: "协作医生",
                     oclass: "ooRed"
                 }

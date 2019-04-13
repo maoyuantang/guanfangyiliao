@@ -35,6 +35,7 @@
                                                 <el-option label="年" value="年"></el-option>
                                             </el-select>
                                         </el-form-item>
+                                         <span class='executionTime'>333</span>
                                     </div>
                                 </el-form-item>
 
@@ -273,7 +274,14 @@ export default {
         prop: ["addFollowData", "sendToUserId"],
         event: "reBack"
     },
-    created() {},
+    created() {
+        
+        alert(this.addFollowData.firstTreatmentTime.GetTime())
+        $.each(this.addFollowData.itemModels,function(index,text){
+            // text.oTime=
+
+        })
+    },
     beforeDestroy() {}
 };
 </script>

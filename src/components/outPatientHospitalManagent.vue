@@ -1773,6 +1773,7 @@
 	.online-clinic-top-right>.el-button {
 		width: 1.96rem;
 		height: 0.4rem;
+    margin: 0 0 0 0.1rem;
 		padding: 0;
 		font-size: var(--fontSize6);
 	}
