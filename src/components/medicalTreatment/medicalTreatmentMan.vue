@@ -90,6 +90,17 @@
             </el-cascader>
           </div>
 
+          <div class="input-item-div bieDou">
+            <span class="input-item-name demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室:</span>
+            <div class="input-item-value-div">
+              <el-select v-model="kuangData2.options3.value" multiple placeholder="请选择" size="mini">
+                <el-option v-for="(item,index) in kuangData2.options3.list" :key="index" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+              <i class="iconfont required-icon">&#xe7b0;</i>
+            </div>
+          </div>
+
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button v-if="YesList2 == 1" type="primary" @click="kuangData1Fun21" style="width:80%">新 增</el-button>
@@ -1484,4 +1495,8 @@
     color: #5E6875;
     letter-spacing: 0;
   }
+  .required-icon {
+        font-size: 12px;
+        color: #ff7485;
+    }
 </style>

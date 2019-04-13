@@ -557,6 +557,7 @@ export default {
 
 <style>
 .files-man {
+  padding-right: .2rem;
 }
 .files-man-body-top {
   display: flex;

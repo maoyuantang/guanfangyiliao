@@ -66,7 +66,7 @@ export default {
 			orgName:'',//医院名称: type => String
 			depts:[
 				{
-					deptId:'',//科室ID: type => String
+					deptId:'',//科室ID: type => String   
 					deptName:''//科室名称: type => String
 				}
 			]

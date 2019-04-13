@@ -87,7 +87,7 @@
              */
             see(item){
                 console.log(item)
-                this.alertData.src = `${apiBaseURL.developmentEnvironment}/v1/peachApp/diseaseAssess.html?token=${this.userInfo.token}&id=${item.familyMemberId}`;
+                this.alertData.src = `${apiBaseURL.developmentEnvironment}/v1/peachApp/queryInquiryPlan.html?id=${item.familyMemberId}&isUser=false&token=${this.userInfo.token}`;
                 this.alertData.show = true;
             },
             /**
