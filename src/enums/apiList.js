@@ -317,5 +317,7 @@ export default {
     sendBtnVisable:'/m/v1/api/clinic/clinic/sendMe',
     orderFmsCharts:'/m/v1/api/order/orderFmsCharts',//17.16.家医系统业务人次统计图
     queryPageByassessPlan:'/m/v1/api/medical/queryPageByassessPlan',//12.WEB端获取评估计划列表
+    queryByPatientInfoInfo: '/m/v1/api/consultation/queryByPatientInfoInfo',
+    queryByMedicalHistory: '/m/v1/api/consultation/queryByMedicalHistory'
 }
 

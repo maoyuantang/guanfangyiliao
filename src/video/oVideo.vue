@@ -7,10 +7,10 @@
                         <div id="remoteVideos"></div>
                         <div class="videoChatBtn" @click="videoChatBtn()">
                             <img style='width: 23px;
-    height: 25px;' src='../assets/img/jianpan.png' />
-                            <button class='questToolClass' :disabled='questVisable'>
-                                问诊工具
-                            </button>
+    height: 25px;' src='../assets/img/jianpan.png' /> 问诊工具
+                            <!-- <button class='questToolClass' :disabled='questVisable'>
+                            
+                            </button> -->
 
                         </div>
                     </div>
@@ -27,7 +27,7 @@
 
                         <div>
                             <div class="videoTopBtnBox">
-                                <div @click='sendArchives()'>
+                                <div @click='sendArchives()' v-show="chatTypeBox.startDoctorTYpe!='协作'">
                                     <img src="./../../static/assets/img/danganVideo.png" /> 查档案
                                 </div>
                                 <div>
@@ -201,7 +201,8 @@ export default {
                 this.$router.replace({
                     path: "/outpatient",
                     query: {
-                        id: this.archivesId
+                        id: this.archivesId,
+                        inData: false
                     }
                 });
                 this.archivesVisible = true;
@@ -1674,7 +1675,7 @@ export default {
             }
             // _this.$store.commit("socket/VIDEOUSER", 0);
             _this.videoUser -= 1;
-            if (this.videoType == "门诊") {
+            if (_this.videoType == "门诊") {
                 _this.closeTheVideo();
             } else {
                 if (_this.videoUser < 1) {
@@ -1807,6 +1808,11 @@ export default {
          */
         Manis.onEject(function(result) {
             console.log(result);
+            if (_this.videoType == "门诊") {
+                _this.closeTheVideo();
+            } else {
+                _this.closePublicVideo();
+            }
         });
         /**
          *
@@ -1958,7 +1964,7 @@ export default {
         sessionId1: String,
         doctorVis: Number,
         userMessage: Object,
-        chatTypeBox:Object
+        chatTypeBox: Object
     },
     model: {
         prop: [
@@ -2079,6 +2085,7 @@ video {
     background: #f4f4f4;
     height: 50px;
     padding-top: 12px;
+    font-size: 12px;
 }
 .patientClass {
     position: fixed;
@@ -2221,7 +2228,7 @@ video {
     position: absolute;
     bottom: 1px;
     width: 100%;
-    z-index: 999999999999
+    z-index: 999999999999;
 }
 .videoChatBox .chat {
     width: 100%;

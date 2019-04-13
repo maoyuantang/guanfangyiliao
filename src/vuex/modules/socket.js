@@ -14,6 +14,8 @@ export default {
             }
         },
         videoUser:0,
+        receiveVideoVisable:false,
+        createVideoRoomData:{},
         messageTicket: {
             ticket: "", //票据，登录即可返回
             sequence: "", //序列号
@@ -63,7 +65,15 @@ export default {
                 state.videoUser += 1
             }
            
-        }
+        },
+        
+        RECEIVEVIDEOVIS(state,data){
+            state.receiveVideoVisable =data
+        },
+        
+        CREATEVUDEIROOM(state,data){
+            state.createVideoRoomData =data
+        },
     },
     actions: {
         setSocket(context, data) {
@@ -86,6 +96,12 @@ export default {
         },
         VIDEOUSER(context, data) {
             context.commit("VIDEOUSER", data);
+        },
+        RECEIVEVIDEOVIS(state,data){
+            context.commit("RECEIVEVIDEOVIS", data);
+        },
+        CREATEVUDEIROOM(state,data){
+            context.commit("CREATEVUDEIROOM", data);
         },
     }
 }

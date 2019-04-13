@@ -13,7 +13,7 @@
             <ul class="chatRecord" id="scrolldIV">
 
                 <!-- <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li> -->
-                <li v-for="(text,index) in messageList" :key="index" class="recordRg">
+                <li v-for="(text,index) in messageList" :key="index" class="recordLf">
                     <div class="otherImg">
                         <img class='headImgClass' :src="userSocketInfo.headImg+text.from" :onerror="defaultImg" />
                     </div>
@@ -24,12 +24,12 @@
                         </h4>
                         <div class="messageCon">
 
-                            <div v-if="oDoctorVis" class="noReadro">
+                            <!-- <div v-if="oDoctorVis" class="noReadro">
                                 <div v-if="text.from==userSelfInfo.userId">
                                     <span class="allReadColor" v-if="text.oRead">已读 </span>
                                     <span class="noReadColor" v-else>未读</span>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div>
                                 <!-- 显示文本 -->
@@ -89,12 +89,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div v-show="oDoctorVis" class="noReadro">
-                                <div v-if="text.from!=userSelfInfo.userId">
-                                    <span class="allReadColor" v-if="text.oRead">已读 </span>
-                                    <span class="noReadColor" v-else>未读</span>
+                            <div v-show="oDoctorVis" class="noReadro">
+                                <div v-if="text.from==userSelfInfo.userId">
+                                    <span class="allReadColor allReadColorVideo" v-if="text.oRead">已读 </span>
+                                    <span class="noReadColor noReadColorVideo" v-else>未读</span>
                                 </div>
-                            </div> -->
+                            </div>
 
                         </div>
                     </div>

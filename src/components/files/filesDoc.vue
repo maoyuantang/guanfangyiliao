@@ -748,7 +748,8 @@ export default {
   flex: 1;
 }
 .files-doc-table {
-  width: 100%;
+  /* width: 100%; */
+  min-width: 17rem;
 }
 .files-doc-table th {
   border-bottom: 1px solid var(--color5);
@@ -845,5 +846,6 @@ line-height: 0.22rem;
 }
 .files-doc-body{
   padding-top: .2rem;
+  overflow-x: scroll;
 }
 </style>

@@ -7,8 +7,10 @@
                 <button @click="refuseVideo()">拒绝</button>
             </div>
         </el-dialog> -->
-        <div class='videoAccepclass' v-if='receiveVideoVisable'>
-            <!-- <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose" :showClose="VideoshowClose" append-to-body> -->
+        <!-- class='videoAccepclass' -->
+        <!-- {{receiveVideoVisable1}} -->
+        <div v-if='userSocketInfo.receiveVideoVisable'>
+            <el-dialog title="提示" :visible.sync="userSocketInfo.receiveVideoVisable" width="30%" :before-close="handleClose" :showClose="VideoshowClose" append-to-body>
                 <div>
                     <h4>{{startVideoName}}邀请你视频</h4>
                     <div>
@@ -16,13 +18,13 @@
                         <button @click="refuseVideo()">拒绝</button>
                     </div>
                 </div>
-            <!-- </el-dialog> -->
+            </el-dialog>
         </div>
 
         <!-- 视频聊天 -->
         <div v-if="VideoVisable">
-            <el-dialog class='videoClassBox' title="视频" :visible.sync="VideoVisable" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
-                <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId" :doctorVis="doctorVis"></ovideo>
+            <el-dialog class='videoClassBox' title="" :visible.sync="VideoVisable" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
+                <ovideo :createVideoRoomData="userSocketInfo.createVideoRoomData" @reback="videoclick" :sessionId1="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox" ></ovideo>
             </el-dialog>
         </div>
 
@@ -50,10 +52,15 @@ export default {
     computed: {},
     data() {
         return {
+            chatTypeBox: {
+                startDoctorName: "",
+                startDoctorTYpe: ""
+            },
             doctorVis: 0,
             VideoshowClose: false,
             startVideoName: "",
-            receiveVideoVisable: false,
+            receiveVideoVisable: true,
+            receiveVideoVisable1:0,
             VideoVisable: false,
             webSocket: null,
             //let global_callback = null;
@@ -117,11 +124,11 @@ export default {
         receiveVideo() {
             this.closeVideoOr("ON");
             this.sendMessageChat(6, "accept");
-            this.$store.commit("socket/IFVIDEOIMG", 1);
-            this.receiveVideoVisable = false;
+            // this.$store.commit("socket/IFVIDEOIMG", 1);
+            this.userSocketInfo.receiveVideoVisable = false;
         },
         refuseVideo() {
-            this.receiveVideoVisable = false;
+            this.userSocketInfo.receiveVideoVisable = false;
             this.sendMessageChat(6, "refuse");
         },
         handleClose() {},
@@ -181,8 +188,9 @@ export default {
             let query = {
                 token: this.userState.token
             };
+            console.log(this.createVideoRoomData)
             const options = {
-                conferenceId: this.createVideoRoomData.conferenceId,
+                conferenceId: this.userSocketInfo.createVideoRoomData.conferenceId,
                 state: oState
             };
             const res = await storageUsers(query, options);
@@ -222,8 +230,8 @@ export default {
 
             // "wss://demo.chuntaoyisheng.com:10002/chat"
             //ws地址
-            let wsUrl =process.env.WSS_PATH ; //测试
-            console.log(wsUrl)
+            let wsUrl = process.env.WSS_PATH; //测试
+            console.log(wsUrl);
             // let wsUrl = "wss://demo.chuntaoyisheng.com:10002/chat";//开发
 
             if (!window.webSocket) {
@@ -394,7 +402,7 @@ export default {
                 this.$store.commit("user/CLEARUSERINFO");
                 this.$store.commit("user/CLAERUSERSELFINFO");
                 sessionStorage.clear();
-                this.$store.state.socket.socketObj.close(1);
+                this.$store.state.socket.socketObj.close();
                 this.$router.replace({
                     path: "/login"
                 });
@@ -468,7 +476,7 @@ export default {
                             //     '<div style="color:#F60">拒绝了视频通话</div>';
                             // layer.msg("拒绝了视频通话");
                         } else if (bodyVideo == "cancle") {
-                            _this.receiveVideoVisable = false;
+                            _this.userSocketInfo.receiveVideoVisable = false;
                             // var videosessionid = layui.data("videosessionid")
                             //     .id;
                             // if (videosessionid == fromL) {
@@ -524,20 +532,22 @@ export default {
                             );
                             reciveUserList = reciveUserList.split("&");
                             console.log("收到了邀请视频");
-                              _this.receiveVideoVisable = true;
-                                    console.log(_this.receiveVideoVisable);
-                                    console.log("是本人收到了邀请视频");
-                                    _this.startVideoName =
-                                        odata.info.fromNickName;
-                                    _this.createVideoRoomData = {
-                                        conferenceId: odata.info.body.split(
-                                            "&"
-                                        )[2],
-                                        conferenceNumber: odata.info.body.split(
-                                            "&"
-                                        )[1]
-                                    };
-                                    console.log(_this.createVideoRoomData)
+                            _this.$store.commit("socket/RECEIVEVIDEOVIS", true);
+                            _this.userSocketInfo.receiveVideoVisable = true;
+                              console.log(
+                                _this.receiveVideoVisable1
+                            );
+                            console.log(
+                                _this.userSocketInfo.receiveVideoVisable
+                            );
+                            console.log("是本人收到了邀请视频");
+                            _this.startVideoName = odata.info.fromNickName;
+                            _this.createVideoRoomData = {
+                                conferenceId: odata.info.body.split("&")[2],
+                                conferenceNumber: odata.info.body.split("&")[1]
+                            };
+                             _this.$store.commit("socket/CREATEVUDEIROOM", _this.createVideoRoomData);
+                            console.log(_this.createVideoRoomData);
                             // $.each(reciveUserList, function(index, text) {
                             //     if (_this.userSelfInfo.userId == text) {
                             //         _this.receiveVideoVisable = true;
@@ -1230,7 +1240,7 @@ export default {
         webSocketonclose(e) {
             console.log(e);
             console.log(this.userState.token);
-            if (this.userState.userState) {
+            if (this.userState.isLogin) {
                 console.log("connection closed (" + e.code + ")");
                 this.reconnect();
             }
@@ -1305,20 +1315,23 @@ export default {
                     }
                 });
             }
+        },
+        receiveVideoVisable1(n){
+            console.error(`change=>${n}`)
         }
     }
 };
 </script>
 
 <style>
-.videoAccepclass{
+.videoAccepclass {
     position: fixed;
-    bottom:0;
-    right:0;
+    bottom: 0;
+    right: 0;
     z-index: 99999999999999999999999999999999;
-    width:200px;
+    width: 200px;
     height: 100px;
-    background: red
+    background: red;
 }
 .steps {
 }

@@ -39,6 +39,7 @@
                     </tr>
                 </tbody>
             </table>
+            <tableNoMore></tableNoMore>
             <div class="doc-page">
                 <el-pagination
                 background
@@ -57,10 +58,12 @@
 import { mapState } from "vuex"
 import tag from "../../../public/publicComponents/tag.vue"
 import search from "../../../public/publicComponents/search.vue"
+import tableNoMore from "../../../public/publicComponents/tableNoMore.vue"
 export default {
     components:{
         tag,
-        search
+        search,
+        tableNoMore
     },
     watch:{},
     computed:{
@@ -153,7 +156,8 @@ export default {
     padding-left: 20%;
 }
 .doc-table {
-  width: 100%;
+  /* width: 100%; */
+  min-width: 17rem;;
 }
 .doc-table tr{
   display: flex;
@@ -177,5 +181,8 @@ export default {
 }
 .doc-page{
     text-align: center;
+}
+.doc-body{
+    overflow-x: scroll;
 }
 </style>

@@ -590,7 +590,7 @@
                 }
                 const res = await arrangeList({
                     token:this.userState.token,
-                    department:this.queryConditions.department.list[this.queryConditions.department.select].value || '',
+                    department:this.queryConditions.department.list[this.queryConditions.department.select] ? this.queryConditions.department.list[this.queryConditions.department.select].value : '',
                     search:this.queryConditions.searchKey || '',
                     type:this.queryConditions.mode.list[this.queryConditions.mode.select]&&this.queryConditions.mode.list[this.queryConditions.mode.select].value || '',
                     state:this.queryConditions.status.list[this.queryConditions.status.select].value || '',
@@ -750,7 +750,7 @@
     }
     .class-scheduling-table{
         /* width: 100%; */
-        width: 16rem;
+        min-width: 17rem;
     }
     .class-scheduling-table tr{
         border-bottom: 1px solid #E5EDF3;
@@ -759,10 +759,16 @@
     .class-scheduling-thead{
 
     }
+    .class-scheduling-thead th{
+        color:#5e6875;
+    }
     .class-scheduling-tbody{
     }
     .class-scheduling-tbody th{
         font-weight: 100;
+    }
+    .class-scheduling-tbody th > .el-tooltip{
+        color: #5E6875;
     }
     .class-scheduling-table th{
         padding-top: 0.1rem;
@@ -869,6 +875,6 @@
         width:1.96rem;
     }
     .class-scheduling-body-content{
-        overflow-x: hidden;
+        overflow-x: scroll;
     }
 </style>

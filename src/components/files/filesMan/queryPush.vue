@@ -54,6 +54,7 @@
               </tr>
             </tbody>
           </table>
+          <tableNoMore v-if="listData.length<=0"></tableNoMore>
           <div class="files-man-page">
             <el-pagination
               background
@@ -75,6 +76,8 @@ import selftag from "../../../public/publicComponents/selftag.vue";
 import search from "../../../public/publicComponents/search.vue";
 import publicTime from "../../../public/publicComponents/publicTime.vue";
 import normalColumnChart from "../../../public/publicComponents/normalColumnChart.vue";
+import tableNoMore from "../../../public/publicComponents/tableNoMore.vue";
+
 import { queryPageByPushAndQuery, queryStatisticalData, pushStatisticalData } from "../../../api/apiAll.js";
 export default {
   components: {
@@ -82,7 +85,8 @@ export default {
     selftag,
     search,
     publicTime,
-    normalColumnChart
+    normalColumnChart,
+    tableNoMore
   },
   watch: {
     "global.manToolDept": {
@@ -512,8 +516,12 @@ export default {
 .files-man-body-top > div {
   flex: 1;
 }
+.files-man-body-list{
+  overflow-x: scroll;
+}
 .files-man-body-list-table {
-  width: 100%;
+  /* width: 100%; */
+  min-width: 17rem;
 }
 .files-man-body-list-table tr{
   display: flex;
@@ -562,6 +570,7 @@ export default {
     padding-right: .68rem;
     padding-bottom: .68rem;	
     margin-top: .44rem;
+    overflow-x: auto;
 		
 }
 </style>

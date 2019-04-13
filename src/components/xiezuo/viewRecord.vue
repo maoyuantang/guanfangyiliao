@@ -199,7 +199,13 @@ export default {
     },
     created() {
         // this.msgId=this.$store.state.socket.messageTicket.oMsgId
-        this.getStoryMessage();
+        if(this.sessionId){
+this.getStoryMessage();
+this.nodataVisable=false
+        }else{
+this.nodataVisable=true
+        }
+        
     },
     props: {
         sessionId: String

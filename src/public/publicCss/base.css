@@ -505,18 +505,121 @@ body{
 .mydAddTemplate-title {
     width: 100%;
     height: 117px;
+    line-height: 117px;
+    margin-bottom: 45px;
+    opacity: 0.56;
+font-family: PingFangSC-Regular;
+font-size: 22px;
+color: #000000;
+letter-spacing: 0.92px;
+text-align: center;
+background: url("../../assets/img/Bitmap.png") -14px -12px;
 }
 .mydAddTemplate-title > img {
     width: 100%;
     height: 100%;
 }
+.mydAddTemplateClass .el-form-item__label{
+    font-family: PingFangSC-Regular;
+font-size: 14px;
+color: #939EAB;
+letter-spacing: 0;
+}
+.mydAddTemplateClass .delete{
+    width: 20px;
+    height: 20px;
+    margin-top: 6px;
+    cursor: pointer;
+}
+.mydAddTemplateClass .sureBtn{
+    width:196px;
+    height: 39px;
+    background: #4DA1FF;
+border-radius: 4px;
+font-family: PingFangSC-Semibold;
+font-size: 12px;
+color: #FFFFFF;
+letter-spacing: 0.5px;
+text-align: center;
+margin-bottom: 70px;
+}
+.mydAddTemplateClass .addMydListClass{
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    background: #D8DFE5;
+    text-align: center;
+    line-height: 32px;
+}
+.mydAddTemplateClass .addMydListClass>img{
+    width:75%;
+    height:75%;
+}
+.mydAddTemplateClass .delete>img{
+    width:100%;
+    height: 100%;
+    }
+.mydAddTemplateClass .el-textarea__inner{
+    width: 705px;
+    height: 100px;
+}
+.mydAddTemplateClass  .el-input__inner{
+    width:240px;
+    height: 39px;
+}
+.mydAddTemplateClass .el-form-item{
+margin-bottom: 7px
+}
+.mydAddTemplateClass .el-dialog__body{
+padding: 0 !important
+}
+.mydAddTemplateClass .huifuBoxClass>div:nth-child(1){
+    line-height: 40px;
+    padding-left: 78px;
+    font-family: .PingFangSC-Regular;
+    font-size: 14px;
+    color: #4285F4;
+}
 .mydQuestList {
     display: flex;
     display: -webkit-flex;
+    padding-left: 75px;
+    margin-bottom: 11px;
 }
 .mydQuestList > div {
     display: flex;
     display: -webkit-flex;
+}
+.mydQuestList>div>div{
+    position: relative;
+    background: #FFFFFF;
+border: 1px solid #E4E8EB;
+border-radius: 5px;
+width:165px;
+height: 32px;
+margin-right: 15px;
+}
+.mydQuestList>div>div input {
+    border:none
+}
+.mydQuestList .el-form-item__label{
+    width:53px !important; 
+    line-height: 29px;
+    font-family: PingFangSC-Light;
+font-size: 14px;
+color: #4285F4;
+}
+.mydQuestList .el-form-item__content{
+    margin-left:53px !important
+}
+.mydQuestList .el-input__inner{
+    width: 80px;
+    height: 32px;
+    padding: 0;
+    vertical-align: text-bottom;
+    font-family: PingFangSC-Light;
+font-size: 14px;
+color: #4285F4;
 }
 .addTemplate {
     width: 109px;
@@ -669,22 +772,35 @@ margin-left: 21px;
     box-shadow: 3px 3px 3px #666;
 }
 .mydAddSuosuClass > ul:first-child {
+    cursor: pointer;
     width: 100px;
 }
 .mydAddSuosuClass > ul:nth-child(2) {
     width: 100px;
+    cursor: pointer;
 }
 .mydAddSuosuClass > div:last-child {
     width: 100px;
+    cursor: pointer;
 }
-
+.mydAddTemplateClass  .el-dialog__body{
+    padding:0
+}
+.mydAddTemplateClass .el-dialog__header{
+    padding:0
+}
+.mydAddTemplateClass form{
+    padding:0 74px;
+}
 .classification {
     position: relative;
 }
 .mydAddSuosuClass {
     position: absolute;
     background: white;
-    z-index:9999
+    z-index:9999;
+    padding: 14px;
+    box-sizing: border-box;
 }
 .ArcticClass .el-form-item__content {
     margin-left: 0px !important;
@@ -789,7 +905,7 @@ border-right:none
     width: 20px;
     height: 20px;
     right: 8px;
-    top: 0px;
+    top: -6px;
 }
 .ificationBox > div:last-child > img {
     width: 100%;
@@ -1323,4 +1439,48 @@ d .sendImgCss {
 }
 .chatDialog .el-dialog__body {
     padding-top: 0;
+}
+.clickColor{
+    color:#EA2929 
+}
+
+
+/* 医生详情 */
+.consultationDetailClass .el-dialog__body {
+    height: 470px;
+    overflow: auto;
+    padding: 25px 40px;
+}
+.doctorDetailBox li {
+    display: flex;
+    display: -webkit-flex;
+    margin-bottom: 35px;
+}
+.doctorDetailBox li h5 {
+    margin-bottom: 10px;
+}
+.headImg {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 22px;
+}
+.headImg > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+
+.allReadColorVideo,
+.noReadColorVideo{
+    margin-left: 10px
+}
+.executionTime{
+    font-family: .PingFangSC-Regular;
+font-size: 14px;
+color: #646464;
+letter-spacing: -0.17px;
+line-height: 51px;
+    margin-left: 10px;
 }
