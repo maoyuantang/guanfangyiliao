@@ -1372,7 +1372,7 @@
     display: -webkit-flex;
     justify-content: space-between;
     margin: 0 0 0.2rem 0;
-    white-space: nowrap;
+    /* white-space: nowrap; */
   }
 
   .medical_nav_left {
@@ -1390,7 +1390,7 @@
     align-items: center;
     width: 1.96rem;
     height: 0.4rem;
-    margin: 0 1rem;
+    margin: 0 0 0 0.1rem;
     font-size: var(--fontSize6);
   }
 
