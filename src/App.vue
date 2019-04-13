@@ -1,6 +1,15 @@
 <template>
     <div id="app">
         <websocket1 v-if="userState.isLogin" ref="mychild"></websocket1>
+        <!-- <div class='videoAccepclass' v-if='receiveVideoVisable'>
+                <div>
+                    <h4>{{startVideoName}}邀请你视频</h4>
+                    <div>
+                        <button @click="receiveVideo()">接收</button>
+                        <button @click="refuseVideo()">拒绝</button>
+                    </div>
+                </div>
+        </div> -->
         <!-- <img src="./assets/logo.png">-->
         <transition>
             <router-view class="router-view-class" />

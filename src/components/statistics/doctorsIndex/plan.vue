@@ -305,19 +305,19 @@
 
                 <div class="indexClassTable">
                     <el-table :data="cooperationData" border style="width: 100%" :show-header="showHeadViable">
-                        <el-table-column label=" " width="70">
+                        <el-table-column label=" " width="">
                             <template slot-scope="scope">
                                 <div class='indexHeadImgClass'>
                                     <img :src="userSocketInfo.headImg+scope.row.applyUserId" :onerror="defaultImg" />
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label=" " width="160">
+                        <el-table-column label=" " width="">
                             <template slot-scope="scope">
                                 {{scope.row.applyUserName}}|{{scope.row.applyDeptName}}
                             </template>
                         </el-table-column>
-                        <el-table-column label=" " width="160">
+                        <el-table-column label=" " width="">
                             <template slot-scope="scope">
                                 {{scope.row.synergyUserName[0]}}|{{scope.row.synergyDeptName[0]}}
                             </template>
@@ -327,9 +327,9 @@
                                 {{scope.row.synergyNo}}(协作编号)
                             </template>
                         </el-table-column> -->
-                        <el-table-column prop="createTime" label=" " width="160">
+                        <el-table-column prop="createTime" label=" " width="">
                         </el-table-column>
-                        <el-table-column prop="synergyStatus" label=" " width="100">
+                        <el-table-column prop="synergyStatus" label=" " width="">
                             <template slot-scope="scope">
                                 <span class="noStart" v-show="scope.row.synergyStatus==0">未开始</span>
                                 <span class="startIng" v-show="scope.row.synergyStatus==1">进行中</span>

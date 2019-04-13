@@ -66,28 +66,5 @@ export default {
 };
 </script>
 <style>
-.consultationDetailClass .el-dialog__body {
-    height: 470px;
-    overflow: auto;
-    padding: 25px 40px;
-}
-.doctorDetailBox li {
-    display: flex;
-    display: -webkit-flex;
-    margin-bottom: 35px;
-}
-.doctorDetailBox li h5 {
-    margin-bottom: 10px;
-}
-.headImg {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 22px;
-}
-.headImg > img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-}
+
 </style>

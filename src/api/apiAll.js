@@ -3078,6 +3078,28 @@ export const lastUserRecord = query => { //7.获取患者最后一次上传档�
         }
     })
 }
+export const queryByPatientInfoInfo = query => { //7.获取患者最后一次上传档案信息
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.queryByPatientInfoInfo,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const queryByMedicalHistory = query => { //7.获取患者最后一次上传档案信息
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.queryByMedicalHistory,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
 export const getUserUpDocList = query => { //5.医生WEB查询用户上传档案列表
     const sign = postQueryHandle(query);
     return axios({

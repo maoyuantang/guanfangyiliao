@@ -94,9 +94,10 @@
 
         <!-- 满意度新增模板 -->
         <div v-if="mydAddTemplate">
-            <el-dialog class="evaluateBox" title=" " :visible.sync="mydAddTemplate" width="770px" hight="356px" center>
+            <el-dialog class="evaluateBox mydAddTemplateClass" title=" " :visible.sync="mydAddTemplate" width="894px" hight="550px" center :showClose="VideoshowClose">
                 <div class="mydAddTemplate-title">
-                    <img src="../../assets/img/Bitmap.png" />
+                    <!-- <img src="../../assets/img/Bitmap.png" /> -->
+                    新增模板
                 </div>
                 <el-form ref="form" :model="mydAddData" label-width="80px">
                     <el-form-item label="所属分类">
@@ -104,38 +105,38 @@
                             <el-option v-for="(text,index) in oTab6.list" :label="text.text" :value="text.value" :key="index"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="活动名称">
+                    <el-form-item label="名称">
                         <el-input v-model="mydAddData.name"></el-input>
                     </el-form-item>
                     <el-form-item label="模板内容">
                         <el-input type="textarea" v-model="mydAddData.context"></el-input>
                     </el-form-item>
-                    <div>
+                    <div class='huifuBoxClass'>
                         <div>回复选项关联(系统根据回复自动发送后续的关联问卷)</div>
                         <div>
                             <ul>
                                 <li class="mydQuestList" v-for="(text,index) in mydAddData.associations" :key="index">
                                     <div>
-                                        <el-form-item label="活动名称">
+                                        <el-form-item label="选项">
                                             <el-input v-model="text.answer"></el-input>
                                         </el-form-item>
 
-                                        <el-form-item label="所属分类" class="classification">
+                                        <el-form-item label="关联" class="classification">
                                             <div class="ificationBox">
-                                                <el-input v-model="mydTemlateName.title">dfdfdfd</el-input>
+                                                <el-input v-model="text.title">dfdfdfd</el-input>
                                                 <div @click="ificationBoxClick(index)">
                                                     <img src="../../../static/assets/img/downXia.png" />
                                                 </div>
                                             </div>
                                             <div class="mydAddSuosuClass" v-show="text.oVisable">
                                                 <ul>
-                                                    <li v-for="(text1,index1) in oTab66.list" :key="index1" :value="text1.value" @click="sendTemplateList1(text1.value)">
-                                                        {{text1.text}}>
+                                                    <li v-for="(text1,index1) in oTab666" :key="index1" :value="text1.value" @click="sendTemplateList1(text1.value,index1,index)" :class="{'clickColor':index1==mydAddClickNum}">
+                                                        {{text1.text}}
                                                     </li>
 
                                                 </ul>
                                                 <ul>
-                                                    <li v-for="(text2,index2) in mydTemlateName.nameList" :key="index2" :value="text2.associationId" @click="sendTemplateContext(text2.title,index2,text2.associationId)">
+                                                    <li v-for="(text2,index2) in mydTemlateName.nameList" :key="index2" :value="text2.associationId" @click="sendTemplateContext(text2.title,index2,text2.associationId,index)" :class="{'clickColor':index2==mydAddClickNum1}">
                                                         {{text2.title}}
                                                     </li>
 
@@ -146,21 +147,22 @@
                                             </div>
                                         </el-form-item>
                                     </div>
-                                    <span v-show='index!=0' @click="deleteMydList(index)">
-                                        删除
+                                    <span class='delete' v-if='index!=0' @click="deleteMydList(index)">
+                                      <img src="../../assets/img/addFollowDelete.png" />
                                     </span>
+                                    <span class='addMydListClass' v-else @click="addMydList()">
+                              <img src="../../assets/img/add1.png" />
+                            </span>
                                 </li>
                             </ul>
-                            <span @click="addMydList()">
-                                添加
-                            </span>
+                            
                         </div>
                     </div>
                     <el-form-item>
                         <!-- 新增完成按钮 -->
-                        <el-button type="primary" @click="addMydTemplate()" v-if="addMydTemplateVis">完成</el-button>
+                        <el-button class='sureBtn' type="primary" @click="addMydTemplate()" v-if="addMydTemplateVis">完成</el-button>
                         <!-- 编辑完成按钮 -->
-                        <el-button type="primary" @click="editMydTemplate()" v-else>完成</el-button>
+                        <el-button class='sureBtn' type="primary" @click="editMydTemplate()" v-else>完成</el-button>
                     </el-form-item>
                 </el-form>
 
@@ -224,7 +226,7 @@
                             <selftag :inData="oTab7" @reback="getOTab7" v-show="wayVisible3"></selftag>
                         </div>
 
-                        <el-button class="startConsul" v-show="addFollowVis" type="text" @click="mydAddTemplate = true;addMydTemplateVis=true">新增模板</el-button>
+                        <el-button class="startConsul" v-show="addFollowVis" type="text" @click="addmydAddTemplateClick()  ">新增模板</el-button>
                         <el-button v-show="mydTableChecked" class="startConsul" type="text" @click="sendBtn()">发送</el-button>
                     </div>
                     <div class="sendTemplateBox" v-show="sendTemplateListVis">
@@ -413,6 +415,8 @@ export default {
     },
     data() {
         return {
+            mydAddClickNum:-1,
+            mydAddClickNum1:-1,
             userNumTable: [],
             userNumColum: [],
             userNumTotal: 0,
@@ -606,6 +610,7 @@ export default {
             oTab66: {
                 list: []
             },
+            oTab666: [],
             oTab7: {
                 more: false,
                 title: "类型",
@@ -771,7 +776,8 @@ export default {
                     {
                         answer: " ",
                         associationId: " ",
-                        oVisable:false
+                        oVisable: false,
+                        title:''
                     }
                 ]
             },
@@ -862,7 +868,7 @@ export default {
                 }
             ],
             SatisfiedBtn: [],
-
+VideoshowClose:false,
             userType: "",
             mydType: "",
             mydStartTime: "",
@@ -1137,7 +1143,6 @@ export default {
 
         this.screenPublic(this.oTab6, toolSurveyType, "类型"); //调查类型
         this.screenPublic(this.oTab66, toolSurveyType, "类型"); //调查类型
-        this.oTab66Remove();
         this.screenPublic(this.oTab8, toolSurveyMode, "方式"); //调查方式
         this.screenPublic(this.oTab5, toolDeviceType, "设备类型"); //设备类型
         this.screenPublic(this.oTab9, toolFollowupHasPlan, "随访计划"); //有无计划
@@ -1190,11 +1195,6 @@ export default {
         changeCurrent5(data) {
             this.userNumPage = data;
             this.cellClickData(this.userNumData);
-        },
-        oTab66Remove() {
-            console.log(this.oTab66.list);
-            this.oTab66.list = this.oTab6.list.slice(0);
-            console.log(this.oTab66.list);
         },
         // 赛选条件接口
         //获取科室列表
@@ -1672,7 +1672,13 @@ export default {
                 });
             }
         },
-        async sendTemplateList1(value) {
+        async sendTemplateList1(value,index1,index) {
+
+            this.mydAddClickNum=index1
+            this.mydAddClickNum1=-1
+            this.mydAddData.associations[index].title = '';
+            this.mydAddData.associations[index].associationId = '';
+            this.mydTemlateName.nameList=[]
             console.log(value);
             let _this = this;
             let query = {
@@ -1682,6 +1688,7 @@ export default {
             const res = await getTitleList(query);
             if (res.data && res.data.errCode === 0) {
                 this.mydTemlateName.nameList = res.data.body;
+                this.mydTemlateName.context=""
                 console.log(value);
                 if (value == "OUTPATIENT") {
                     _this.mydAddoptions[0].cities = [];
@@ -1793,11 +1800,14 @@ export default {
             }
         },
         //模板内容
-        sendTemplateContext(title, index, oid) {
+        sendTemplateContext(title, index2, oid,index) {
+            // (text2.title,index2,text2.associationId,index)
+            this.mydAddClickNum1=index2
             this.mydTemlateName.context = this.mydTemlateName.nameList[
-                index
+                index2
             ].context;
-            this.mydTemlateName.title = title;
+            // this.mydTemlateName.title = title;
+            this.mydAddData.associations[index].title = title;
             this.mydAddData.associations[index].associationId = oid;
         },
         addMydAddoptions(oBody, num) {
@@ -2911,12 +2921,19 @@ export default {
         },
         //满意度新增模板跳出
         ificationBoxClick(index) {
-            $.each(this.mydAddData.associations,function(index,text){
-                text.oVisable=false
-            })
+            this.mydAddClickNum=-1
+            this.mydAddClickNum1=-1
+            this.mydTemlateName.nameList=[]
+            this.mydTemlateName.context=''
             if (this.mydAddData.associations[index].oVisable) {
+                $.each(this.mydAddData.associations, function(index, text) {
+                    text.oVisable = false;
+                });
                 this.mydAddData.associations[index].oVisable = false;
             } else {
+                $.each(this.mydAddData.associations, function(index, text) {
+                    text.oVisable = false;
+                });
                 this.mydAddData.associations[index].oVisable = true;
             }
         },
@@ -2972,15 +2989,19 @@ export default {
         },
         //满意度模板添加项
         addMydList() {
+            $.each(this.mydAddData.associations, function(index, text) {
+                    text.oVisable = false;
+                });
             this.mydAddData.associations.push({
-                answer: "0",
-                associationId: "5e34d5bb8aaf445794e56998e21587e8",
-                oVisable:false
+                answer: "",
+                associationId: "",
+                oVisable: false,
+                title:'',
             });
         },
         //满意度模板删除项
         deleteMydList(index) {
-            this.mydAddData.associations.splice(index,1);
+            this.mydAddData.associations.splice(index, 1);
         },
         //创建满意度模板
         async addMydTemplate() {
@@ -3007,7 +3028,7 @@ export default {
                             {
                                 answer: " ",
                                 associationId: " ",
-                                oVisable:false
+                                oVisable: false
                             }
                         ]
                     };
@@ -3019,6 +3040,19 @@ export default {
                     message: res.data.errMsg
                 });
             }
+        },
+        //新增满意度调查模板
+        addmydAddTemplateClick() {
+            this.oTab666=[]
+            $.each(this.oTab66.list, (index, text)=> {
+                if(index!=0){
+ this.oTab666.push(text);
+                }
+               
+            });
+
+            this.mydAddTemplate = true;
+            this.addMydTemplateVis = true;
         },
         //编辑满意度调查模板
         async editModel(index, row) {
