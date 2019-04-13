@@ -202,7 +202,7 @@ export default {
                     path: "/outpatient",
                     query: {
                         id: this.archivesId,
-                        inData: false
+                        inData: true
                     }
                 });
                 this.archivesVisible = true;
@@ -555,17 +555,13 @@ export default {
             if (this.archivesId) {
                 if (this.videoChatVisable) {
                     this.videoChatVisable = false;
-                    // $(".videoChatBtn").css("bottom", "0px");
                     if (this.videoType == "门诊") {
-                        // this.guaVisable = true;
                     } else {
                         this.publicVideoVisable = true;
                     }
                 } else {
                     this.videoChatVisable = true;
-                    // $(".videoChatBtn").css("bottom", "-248px");
                     if (this.videoType == "门诊") {
-                        // this.guaVisable = false;
                     } else {
                         this.publicVideoVisable = false;
                     }
@@ -1631,6 +1627,7 @@ export default {
         let _this = this;
 
         if (this.videoType == "门诊") {
+            this.archivesId=''
             this.listVisable = true;
             this.publicVideoVisable = false;
             this.closeVideoBtnVieable = true;
@@ -1639,6 +1636,7 @@ export default {
             this.noLineUpNum();
             this.getThePatient();
         } else {
+            this.archivesId='不是门诊进入'
             this.publicVideoVisable = true;
             this.localVideoVisable = true;
             this.listVisable = false;

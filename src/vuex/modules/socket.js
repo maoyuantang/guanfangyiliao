@@ -14,6 +14,7 @@ export default {
             }
         },
         videoUser:0,
+        osessionId:'',
         receiveVideoVisable:false,
         createVideoRoomData:{},
         messageTicket: {
@@ -74,6 +75,9 @@ export default {
         CREATEVUDEIROOM(state,data){
             state.createVideoRoomData =data
         },
+        OSESSIONID(state,data){
+            state.osessionId =data
+        },
     },
     actions: {
         setSocket(context, data) {
@@ -102,6 +106,9 @@ export default {
         },
         CREATEVUDEIROOM(state,data){
             context.commit("CREATEVUDEIROOM", data);
+        },
+        OSESSIONID(state,data){
+            context.commit("OSESSIONID", data);
         },
     }
 }

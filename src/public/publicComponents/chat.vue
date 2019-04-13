@@ -268,7 +268,7 @@
         <!-- 视频聊天 -->
         <div v-if="videoVisible">
             <el-dialog class='videoClassBox' title="" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo('cancle','us')" :showClose="VideoshowClose">
-                <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox"></ovideo>
+                <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox" :userMessage="userMessage"></ovideo>
             </el-dialog>
         </div>
         <!-- 孕妇档案 -->
