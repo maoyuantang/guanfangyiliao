@@ -226,9 +226,11 @@ export default {
     dualReferralAdd:'/m/v1/api/referral/dualReferral/add',//14.6.双向转诊-WEB医生端-申请转诊
     dualReferralRecord:'/m/v1/api/referral/dualReferral/record',//14.7.双向转诊-WEB医生端-查询记录
     dualReferralUpdate:'/m/v1/api/referral/dualReferral/update',//14.8.双向转诊-WEB医生端-修改
-    applicantCANCEL:'/m/v1/api/referral/dualReferral/applicant/CANCEL',//14.9.双向转诊-WEB医生端-申请人操作
+    applicantCANCEL:'/m/v1/api/referral/dualReferral/applicant/CANCEL',//14.9.双向转诊-WEB医生端-申请人操作，
     dualReferralReception:'/m/v1/api/referral/dualReferral/reception/',//14.10.双向转诊-WEB医生端-接诊人操作
-    receptionAudit:'/m/v1/api/referral/dualReferral/reception/audit',//14.11.双向转诊-WEB医生端-审核
+    receptionAudit: '/m/v1/api/referral/dualReferral/reception/audit',//14.11.双向转诊-WEB医生端-审核
+    dualReferraltransfer: '/m/v1/api/referral/dualReferral/transfer',//14.13.双向转诊-WEB医生端-接受医生再次转诊 
+    dualReferralget: '/m/v1/api/referral/dualReferral/get',//14.14.双向转诊-WEB医生端-获取需要再次转诊的记录 
 
     getDoctorMessage1:'/m/v1/api/familyMember/getFamilyMemberInfoByDoctor',
     queryConsultationDoctorList:'/m/v1/api/consultation/queryConsultationDoctorList',

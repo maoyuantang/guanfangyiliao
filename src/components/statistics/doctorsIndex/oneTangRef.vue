@@ -125,7 +125,7 @@
             {{docTableData[0].applyOrgName}}|{{docTableData[0].applyDeptName}}
           </template>
         </el-table-column>
-        <el-table-column prop="referralNo" label="编号" :show-overflow-tooltip="true"></el-table-column>
+        <!-- <el-table-column prop="referralNo" label="编号" :show-overflow-tooltip="true"></el-table-column> -->
         <!-- <el-table-column prop="applyDeptName" label="申请科室" :show-overflow-tooltip="true"></el-table-column> -->
         <!-- <el-table-column prop="" label="申请人" :show-overflow-tooltip="true"></el-table-column> -->
         <!-- <el-table-column prop="phone" label="手机号" :show-overflow-tooltip="true"></el-table-column> -->

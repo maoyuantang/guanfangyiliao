@@ -2421,6 +2421,30 @@ export const receptionAudit = (query, data) => {//14.11.双向转诊-WEB医生�
         }
     })
 }
+export const dualReferraltransfer = (query, data) => {//14.13.双向转诊-WEB医生端-接受医生再次转诊 
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.dualReferraltransfer,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+export const dualReferralget = query => {//14.14.双向转诊-WEB医生端-获取需要再次转诊的记录 
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.dualReferralget,
+        params: query,
+        data: query,
+        headers: {
+            sign
+        }
+    })
+}
 export const queryByPage = query => { //1.患者分页列表
     const sign = postQueryHandle(query);
     return axios({

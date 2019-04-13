@@ -23,7 +23,7 @@
 
 				<div class="online-clinic-middle">
 					<el-table :data="tableData" style="width: 100%;" :cell-class-name="ceshi0" @cell-click="relateDoctors1">
-						<el-table-column prop="id" label="业务编号" :show-overflow-tooltip="true"></el-table-column>
+						<!-- <el-table-column prop="id" label="业务编号" :show-overflow-tooltip="true"></el-table-column> -->
 						<el-table-column prop="departmentName" label="科室" :show-overflow-tooltip="true"></el-table-column>
 						<el-table-column prop="fullName" label="业务名" :show-overflow-tooltip="true"></el-table-column>
 						<el-table-column prop="price" label="价格" :show-overflow-tooltip="true"></el-table-column>
@@ -136,7 +136,7 @@
 					<el-table-column prop="orderTime" label="问诊时间" :show-overflow-tooltip="true"></el-table-column>
 					<el-table-column prop="status" label="状态" :show-overflow-tooltip="true"></el-table-column>
 					<el-table-column prop="userName" label="病人" :show-overflow-tooltip="true"></el-table-column>
-					<el-table-column prop="rxOrderNo" label="处方订单号" :show-overflow-tooltip="true"></el-table-column>
+					<!-- <el-table-column prop="rxOrderNo" label="处方订单号" :show-overflow-tooltip="true"></el-table-column> -->
 					<el-table-column prop="rxFee" label="处方费" :show-overflow-tooltip="true"></el-table-column>
 					<el-table-column label="操作" width="300">
 						<template slot-scope="scope">
@@ -487,14 +487,14 @@
 								prop: "departmentName",
 								label: "科室"
 							},
-							{
-								prop: "clinicId",
-								label: "门诊订单号"
-							},
-							{
-								prop: "prescriptionOrderId",
-								label: "处方订单号"
-							},
+							// {
+							// 	prop: "clinicId",
+							// 	label: "门诊订单号"
+							// },
+							// {
+							// 	prop: "prescriptionOrderId",
+							// 	label: "处方订单号"
+							// },
 							{
 								prop: "userName",
 								label: "病人"
