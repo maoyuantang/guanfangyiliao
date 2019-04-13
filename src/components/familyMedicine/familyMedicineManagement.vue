@@ -1061,7 +1061,7 @@
 			async getToolBusinessType(){
 				const res = await businessType({
 					token:this.userInfo.token,
-					orgCode:this.userSelfInfo.orgCode,
+					orgCode:this.userSelfInfo.orgCode, 
 					departmentId:''
 				});
 				console.log(res);
@@ -1635,6 +1635,7 @@
 			 * 某个业务编辑被点击
 			 */
 			async editItem(item){
+				
 				console.log(item);
 				const option = {
 					show:false,//是否显示新增弹窗 
@@ -1709,6 +1710,8 @@
 						showContent:item.protocolContent
 					}
 				};
+				console.log(item.price)
+				console.log(this.testData.businessPrice.data)   
 				this.testData = option;
 				Promise.all([this.addBuss(), this.byStencilModel(item.stencilEnum), this.getFetchHospitalDepts()])
 				.then(res=>{

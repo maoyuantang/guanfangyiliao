@@ -2,7 +2,7 @@
     <div class="doc-detailed">
         <div class="doc-detailed-">
             <!-- <el-button  @click="reBack" icon="el-icon-arrow-left"></el-button> -->
-            <el-button type="text" icon="el-icon-arrow-left" @click="reBack" class="doc-detailed-back"></el-button>
+            <el-button type="text" icon="el-icon-arrow-left" @click="reBack" class="doc-detailed-back" v-if="inData"></el-button>
         </div>
         <div class="doc-detailed-alert">
           <div class="doc-detailed-alert-content">
@@ -63,7 +63,7 @@ export default {
         inSide,
         outSide
     },
-    
+    props: ['inData'],
     data() {
         return {
             reLoad:true,

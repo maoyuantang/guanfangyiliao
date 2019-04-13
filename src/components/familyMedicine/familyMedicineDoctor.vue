@@ -203,18 +203,24 @@
                         conferenceNumber: ""
                     },
                     videoType:"门诊",
-                    oClinicId:"当前门诊id"
+                    oClinicId:""
                 },
-                chatData:{//谭颖的组件 数据   
+                chatData:{//谭颖的组件 数据    
                     sessionId:'',
-                    doctorVis:0,
+                    doctorVis:1,
                     show:false,
-                    userMessage:{},
+                    userMessage:{
+                        clinicId: '',//诊室id
+                        departmentId: '',//当前医生机构代码
+                        userId: '',//患者的userId
+                        orgCode: '',//当前医生机构代码
+                        clinicOrderId: '' //订单id
+                    },
                     videoType: "门诊",
                     chatTypeBox: {
-                    startDoctorName: "",
-                    startDoctorTYpe: "门诊"
-                },
+                        startDoctorName: "",
+                        startDoctorTYpe: "门诊"
+                    },
                 },
                 record:{//谭颖的组件 数据    
                     storyMessage:[],
@@ -340,6 +346,11 @@
                 console.log(res)
                 if(res.data&&res.data.errCode===0){
                     this.chatData.sessionId = res.data.body;
+                    this.chatData.userMessage.clinicId = item.crId;
+                    this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
+                    this.chatData.userMessage.userId = item.userId;
+                    this.chatData.userMessage.clinicOrderId = '';
+                    this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
                     this.chatData.show = true;
                     console.log(this.chatData)
                 }else{
@@ -536,8 +547,12 @@
     .family-medicine-doctor-head>div{
         flex: 1;
     }
+    .family-medicine-doctor-body{
+        overflow-x: scroll;
+    }
     .family-medicine-doctor-body table{
-        width: 100%;
+        /* width: 100%; */
+        min-width: 17rem;
     }
     .family-medicine-doctor-body tr{
         border-bottom: 1px solid #E5EDF3;
@@ -599,5 +614,8 @@
         color: purple;
         border-color: purple;
         
+    }
+    .family-medicine-doctor-body th > .el-tooltip{
+        width: 100%;
     }
 </style>
