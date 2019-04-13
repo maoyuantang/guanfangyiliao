@@ -9,7 +9,6 @@
 
         <!-- 我的诊室-循环 -->
 
-        {{myHomes}}
         <div class="myOuts" v-if="oconsulVisable==0">
             <ul v-for="(text,index1) in myHomes" :key="index1" class="outpatient_s">
                 <li class="outpatient_left">
