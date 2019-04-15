@@ -118,7 +118,7 @@
               alt="医生头像" style="width:42px;">
           </template>
         </el-table-column>
-        <el-table-column prop="patientName" label="病人" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="patientName" label="病人" :show-overflow-tooltip="true"  width='200'></el-table-column>
         <!-- <el-table-column prop="applyOrgName" label="申请医院" :show-overflow-tooltip="true"></el-table-column> -->
         <el-table-column :data="docTableData" :show-overflow-tooltip="true">
           <template slot-scope="scope">
@@ -133,7 +133,7 @@
         <!-- <el-table-column prop="intention" label="目的" :show-overflow-tooltip="true"></el-table-column> -->
         <!-- <el-table-column prop="typeName" label="转诊类型" :show-overflow-tooltip="true"></el-table-column> -->
         <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column label="" width="450">
+        <el-table-column label="" width="220">
           <template slot-scope="scope">
             <button class="huangSe" @click="seeHistory(scope.row.patientId)">查看档案</button>
             <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>

@@ -171,7 +171,7 @@ export default {
             closeVideoBtnVieable: false,
             publicVideoVisable: false,
             listVisable: true,
-            oSeaver: "meet.xiaoqiangio.com",
+            oSeaver: "www.scmeeting.com",
             oUser: "gfki",
             oPassWord: "1qaz@WSX",
             patientNum: "", //排队患者
@@ -1077,9 +1077,9 @@ export default {
                     resource,
                     function(success) {
                         console.info("remove participant success", success);
-                        _this.videoUser -= 1;
-                        _this.$emit("reback", "closeVideoOnly");
-                        alert("视频人数不能超过4人");
+                        // _this.videoUser -= 1;
+                        // _this.$emit("reback", "closeVideoOnly");
+                        // alert("视频人数不能超过4人");
                     },
                     function(error) {
                         console.error("remove participant failed", error);
@@ -1258,10 +1258,8 @@ export default {
         //初始化配置
         firstSet() {
             let _this = this;
-            // var server = $("#server").val();
-            // var server=this.oSeaver
-            var server = "meet.xiaoqiangio.com";
-            // alert("初始化配置" + server);
+            // var server = "meet.xiaoqiangio.com";
+            var server="www.scmeeting.com"
             if (!server) {
                 alert("请输入服务器地址");
                 return false;
@@ -1285,17 +1283,12 @@ export default {
         },
         //登录
         videoLogin() {
-            // alert("登陆");
             let _this = this;
-            // var username = $("#username").val();
-            // var username=this.oUser
             var username = "gfkj";
             if (!username) {
                 alert("请输入用户名");
                 return false;
             }
-            // var password = $("#password").val();
-            // var password=this.oPassWord
             var password = "1qaz@WSX";
             if (!password) {
                 alert("请输入密码");
@@ -1341,33 +1334,32 @@ export default {
         /**
          * 加入到房间
          */
-        joinRoomBtn() {
-            let _this = this;
-            // var conferenceName = $("#conferenceName").val();
-            let conferenceName = this.createVideoRoomData1.conferenceNumber;
+        // joinRoomBtn() {
+        //     let _this = this;
+        //     let conferenceName = this.createVideoRoomData1.conferenceNumber;
 
-            if (!conferenceName) {
-                alert("请输入会议室号");
-                return;
-            }
-            $("#localVideos").html("");
-            window.roomName = conferenceName;
-            var conferencePassword = $("#conferencePassword").val();
-            Manis.joinConference(
-                conferenceName,
-                conferencePassword,
-                function(result) {
-                    console.log("join conference success : ", result);
-                    $("#localVideos").append(
-                        _this.generateParticipant(result, true)
-                    );
-                },
-                function(error) {
-                    console.log("join conference failure , error : ", error);
-                }
-            );
-            $(this).toggleClass("btn-primary disabled");
-        },
+        //     if (!conferenceName) {
+        //         alert("请输入会议室号");
+        //         return;
+        //     }
+        //     $("#localVideos").html("");
+        //     window.roomName = conferenceName;
+        //     var conferencePassword = $("#conferencePassword").val();
+        //     Manis.joinConference(
+        //         conferenceName,
+        //         conferencePassword,
+        //         function(result) {
+        //             console.log("join conference success : ", result);
+        //             $("#localVideos").append(
+        //                 _this.generateParticipant(result, true)
+        //             );
+        //         },
+        //         function(error) {
+        //             console.log("join conference failure , error : ", error);
+        //         }
+        //     );
+        //     $(this).toggleClass("btn-primary disabled");
+        // },
 
         /**
          * 匿名加入到房间
@@ -1430,110 +1422,110 @@ export default {
         /**
          * 呼叫SIP录播
          */
-        recordBtn() {
-            var sip = $("#sip").val();
-            var recordRule = $("#recordRule").val();
-            Manis.callSip(
-                sip,
-                function(success) {
-                    console.info("send sip success : ", success);
-                },
-                function(error) {
-                    console.error("send sip error : ", error);
-                },
-                recordRule
-            );
-        },
+        // recordBtn() {
+        //     var sip = $("#sip").val();
+        //     var recordRule = $("#recordRule").val();
+        //     Manis.callSip(
+        //         sip,
+        //         function(success) {
+        //             console.info("send sip success : ", success);
+        //         },
+        //         function(error) {
+        //             console.error("send sip error : ", error);
+        //         },
+        //         recordRule
+        //     );
+        // },
 
         /**
          * 参会人员列表
          */
-        memberList() {
-            Manis.memberList(function(result) {
-                if (result.code == 200) {
-                    var li = "";
-                    result.response.forEach(function(m) {
-                        console.info("permember :", m);
-                        li +=
-                            '<li class="list-group-item">' +
-                            m.nickname +
-                            "</li>";
-                    });
-                    $("#members").html(li);
-                }
-            });
-        },
+        // memberList() {
+        //     Manis.memberList(function(result) {
+        //         if (result.code == 200) {
+        //             var li = "";
+        //             result.response.forEach(function(m) {
+        //                 console.info("permember :", m);
+        //                 li +=
+        //                     '<li class="list-group-item">' +
+        //                     m.nickname +
+        //                     "</li>";
+        //             });
+        //             $("#members").html(li);
+        //         }
+        //     });
+        // },
         /**
          * 发送文字信息
          */
-        sendSipBtn() {
-            var receiver = $("#receiver").val();
-            var messageText = $("#messageText").val();
-            Manis.sendTextMessage(
-                messageText,
-                receiver,
-                function(success) {
-                    console.info("send text message success : ", success);
-                    $("#receiver").val("");
-                    $("#messageText").val("");
-                },
-                function(error) {
-                    console.error("send text message error : ", error);
-                }
-            );
-        },
+        // sendSipBtn() {
+        //     var receiver = $("#receiver").val();
+        //     var messageText = $("#messageText").val();
+        //     Manis.sendTextMessage(
+        //         messageText,
+        //         receiver,
+        //         function(success) {
+        //             console.info("send text message success : ", success);
+        //             $("#receiver").val("");
+        //             $("#messageText").val("");
+        //         },
+        //         function(error) {
+        //             console.error("send text message error : ", error);
+        //         }
+        //     );
+        // },
 
         /**
          * 呼叫SIP终端
          */
-        sendSipBtn() {
-            var sip = $("#sip").val();
-            Manis.callSip(
-                sip,
-                function(success) {
-                    console.info("send sip success : ", success);
-                },
-                function(error) {
-                    console.error("send sip error : ", error);
-                }
-            );
-        },
+        // sendSipBtn() {
+        //     var sip = $("#sip").val();
+        //     Manis.callSip(
+        //         sip,
+        //         function(success) {
+        //             console.info("send sip success : ", success);
+        //         },
+        //         function(error) {
+        //             console.error("send sip error : ", error);
+        //         }
+        //     );
+        // },
         /**
          * 获取主持人权限
          */
-        fetchAdminBtn() {
-            var pass = $("#fetchAdminPass").val();
-            Manis.fetchAdmin(
-                pass,
-                function(success) {
-                    console.info("fetch admin success : ", success);
-                },
-                function(error) {
-                    console.error("fetch admin error : ", error);
-                }
-            );
-        },
+        // fetchAdminBtn() {
+        //     var pass = $("#fetchAdminPass").val();
+        //     Manis.fetchAdmin(
+        //         pass,
+        //         function(success) {
+        //             console.info("fetch admin success : ", success);
+        //         },
+        //         function(error) {
+        //             console.error("fetch admin error : ", error);
+        //         }
+        //     );
+        // },
 
         /**
          * 拨号
          */
-        ringUpBtn() {
-            var receiver = $("#InvitePerson").val();
-            var room = config.cNumber;
-            var password = "";
-            Manis.ringUp(
-                receiver,
-                room,
-                password,
-                function(success) {
-                    window.withReply = false;
-                    console.info("send invite success : ", success);
-                },
-                function(error) {
-                    console.error("send invite error : ", error);
-                }
-            );
-        },
+        // ringUpBtn() {
+        //     var receiver = $("#InvitePerson").val();
+        //     var room = config.cNumber;
+        //     var password = "";
+        //     Manis.ringUp(
+        //         receiver,
+        //         room,
+        //         password,
+        //         function(success) {
+        //             window.withReply = false;
+        //             console.info("send invite success : ", success);
+        //         },
+        //         function(error) {
+        //             console.error("send invite error : ", error);
+        //         }
+        //     );
+        // },
 
         /**
          * 检查会议室是否已经开启
@@ -1554,14 +1546,14 @@ export default {
         /**
          * 白板共享
          */
-        whiteboardShareBtn() {
-            Manis.whiteboardShare(function(result) {
-                if (result.code !== 200) {
-                    console.error(result);
-                }
-                console.info(result);
-            });
-        },
+        // whiteboardShareBtn() {
+        //     Manis.whiteboardShare(function(result) {
+        //         if (result.code !== 200) {
+        //             console.error(result);
+        //         }
+        //         console.info(result);
+        //     });
+        // },
 
         screenShareBtn() {
             let _this = this;
@@ -1658,8 +1650,6 @@ export default {
             //人数超过3人呗踢出
             if (_this.videoUser > 3) {
                 _this.closeVideoRoom(2);
-                // _this.$emit("reback", "closeVideoOnly");
-                // _this.generateRemoveElement(_this.userResource);
             }
         });
         /**
@@ -1890,31 +1880,13 @@ export default {
                             childMessageType = "VIDEO";
                             if (messageBody.indexOf("refuse") > -1) {
                                 //对方拒绝了视频
-                                // if (this.videoType == "门诊") {
-                                //     this.closeTheVideo();
-                                // } else {
-                                //     this.closePublicVideo();
-                                //     this.$emit("reback");
-                                // }
                             } else if (messageBody.indexOf("complete") > -1) {
                                 //对方挂断了视频
-                                // if (this.videoType == "门诊") {
-                                //     this.closeTheVideo();
-                                // } else {
-                                //     this.closePublicVideo();
-                                //     this.$emit("reback");
-                                // }
                             } else if (messageBody.indexOf("accept") > -1) {
                                 console.log(messageBody);
                                 // this.$store.commit("socket/IFVIDEOIMG", 1);
                             } else if (messageBody.indexOf("videoing") > -1) {
                                 //对方正在通话中
-                                // if (this.videoType == "门诊") {
-                                //     this.closeTheVideo();
-                                // } else {
-                                //     this.closePublicVideo();
-                                //     this.$emit("reback");
-                                // }
                             } else if (
                                 messageBody.indexOf("sendroom") > -1 ||
                                 messageBody.indexOf("MicroCinicSendRoom") > -1

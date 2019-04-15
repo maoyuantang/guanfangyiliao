@@ -94,11 +94,10 @@
 
         <!-- 满意度新增模板 -->
         <div v-if="mydAddTemplate">
-            <el-dialog class="evaluateBox mydAddTemplateClass" title=" " :visible.sync="mydAddTemplate" width="894px" hight="550px" center :showClose="VideoshowClose">
-                <div class="mydAddTemplate-title">
-                    <!-- <img src="../../assets/img/Bitmap.png" /> -->
+            <el-dialog class="evaluateBox mydAddTemplateClass" title="新增模板 " :visible.sync="mydAddTemplate" width="894px" hight="550px" center >
+                <!-- <div class="mydAddTemplate-title">
                     新增模板
-                </div>
+                </div> -->
                 <el-form ref="form" :model="mydAddData" label-width="80px">
                     <el-form-item label="所属分类">
                         <el-select v-model="mydAddData.type" placeholder="请选择活动区域">
@@ -774,8 +773,8 @@ export default {
                 deptId: [],
                 associations: [
                     {
-                        answer: " ",
-                        associationId: " ",
+                        answer: "",
+                        associationId: "",
                         oVisable: false,
                         title:''
                     }
@@ -3026,8 +3025,8 @@ VideoshowClose:false,
                         deptId: [],
                         associations: [
                             {
-                                answer: " ",
-                                associationId: " ",
+                                answer: "",
+                                associationId: "",
                                 oVisable: false
                             }
                         ]

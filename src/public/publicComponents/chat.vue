@@ -426,7 +426,7 @@ export default {
             signImages: [
                 "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=85690711,3884201894&fm=27&gp=0.jpg"
             ],
-            oMsgId: "",
+            oMsgId: -1,
             ReadMessage: "", //已读未读
             loadMoreVisable: false, //加载更多是否显示
             oImgVisable: false,
@@ -467,7 +467,7 @@ export default {
         console.log(this.sessionId);
         this.messageTicket = this.$store.state.socket.messageTicket;
         console.log(this.$store.state.socket.messageTicket);
-        this.oMsgId = this.$store.state.socket.messageTicket.oMsgId;
+        // this.oMsgId = this.$store.state.socket.messageTicket.oMsgId;
     },
     methods: {
         updated() {
@@ -776,7 +776,8 @@ export default {
                     chatType: 2, //单聊  GROUP 群聊
                     clientTime: "",
                     serverTime: "",
-                    conferenceId: conferenceNumber
+                    conferenceId: conferenceNumber,
+                    location: this.sendMessageBoxType
                 }
             };
             console.log(Iessage);
@@ -1051,12 +1052,12 @@ export default {
             const res = await fetchSessionMembers(query, options);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
-                // $.each(res.data.body, function(index, text) {
-                //     console.log(text);
-                //     if (text.userId == _this.userSelfInfo.userId) {
-                //         res.data.body.splice(index, 1);
-                //     }
-                // });
+                $.each(res.data.body, function(index, text) {
+                    console.log(text);
+                    if (text.userId == _this.userSelfInfo.userId) {
+                        res.data.body.splice(index, 1);
+                    }
+                });
                 $.each(res.data.body, function(index, text) {
                     if (_this.chatUser == "") {
                         _this.chatUser = text.userName;
@@ -1550,7 +1551,7 @@ export default {
                 let _this = this;
                 $.each(n.syncData, function(index, text) {
                     if (text.command == "SYNC_UPDATE_READ_STATE") {
-                        _this.oMsgId = "";
+                        _this.oMsgId = -1;
                         _this.alreadyRead();
                         _this.getHisRecord(0);
                     }
