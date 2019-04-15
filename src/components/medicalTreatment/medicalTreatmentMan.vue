@@ -82,23 +82,29 @@
             </el-select>
           </el-form-item>
 
-          <div class="block" style="margin-bottom: 22px;">
+          <!-- <div class="block" style="margin-bottom: 22px;">
             <span class="demonstration"
               style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室:</span>
             <el-cascader :options="kuangData2.options3.list" v-model="kuangData2.options3.value" @change="inputReturn22"
               placeholder="多选" clearable style="width:65%;">
             </el-cascader>
-          </div>
+          </div> -->
 
-          <div class="input-item-div bieDou">
-            <span class="input-item-name demonstration" style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室:</span>
-            <div class="input-item-value-div">
-              <el-select v-model="kuangData2.options3.value" multiple placeholder="请选择" size="mini">
-                <el-option v-for="(item,index) in kuangData2.options3.list" :key="index" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-              <i class="iconfont required-icon">&#xe7b0;</i>
-            </div>
+
+          <div class="block" style="margin-bottom: 22px;">
+            <span class="demonstration"
+              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室</span>
+            <el-cascader expand-trigger="hover" placeholder="多选" clearable style="width:65%;"
+              :options="kuangData2.options3.list" v-model="kuangData2.options3.value" @change="inputReturn22(kuangData2.options3.value,kuangData2.options3.label)">
+            </el-cascader>
+
+            <ul>
+              <li v-for="(item,index) in hospts" :key="index"
+                style="font-family: PingFangSC-Regular;font-size: 14px;color: #323C47;letter-spacing: 0;line-height: 27px;text-align: center;">
+                {{item}}
+                <i class="el-icon-close" @click="go_delete(index)" style=""></i>
+              </li>
+            </ul>
           </div>
 
         </el-form>
@@ -133,7 +139,7 @@
         <el-table :data="medical_body0_Data" style="width: 100%" @cell-click="cellClick1">
           <el-table-column prop="deptName" label="科室" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="typeName" label="类型" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column prop="id" label="编号" :show-overflow-tooltip="true"></el-table-column>
+          <!-- <el-table-column prop="id" label="编号" :show-overflow-tooltip="true"></el-table-column> -->
           <el-table-column prop="medicalName" label="名称" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="levelName" label="分级" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="操作" width="300">
@@ -291,6 +297,7 @@
         YesList1: null,
         YesList2: null,
         // 弹框  2  参数
+        hospts: [],
         kuangData2: {
           show: false,
           options1: {
@@ -303,7 +310,86 @@
           },
           options3: {
             value: [],
-            list: [],
+            list: [
+              {
+                value: "1",
+                label: "医院1",
+                children: [
+                  {
+                    value: "101",
+                    label: "科室1",
+                    children: [
+                      {
+                        value: "10101",
+                        label: "医生1"
+                      },
+                    ]
+                  },
+                  {
+                    value: "102",
+                    label: "科室2",
+                    children: [
+                      {
+                        value: "10201",
+                        label: "医生1"
+                      },
+                      {
+                        value: "10202",
+                        label: "医生2"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                value: "2",
+                label: "医院2",
+                children: [
+                  {
+                    value: "201",
+                    label: "科室1",
+                    children: [
+                      {
+                        value: "20101",
+                        label: "医生1"
+                      },
+                      {
+                        value: "20102",
+                        label: "医生2"
+                      }
+                    ]
+                  },
+                  {
+                    value: "202",
+                    label: "科室2",
+                    children: [
+                      {
+                        value: "20201",
+                        label: "医生1"
+                      },
+                    ]
+                  },
+                ]
+              },
+              {
+                value: "3",
+                label: "医院3",
+                children: [
+                  {
+                    value: "301",
+                    label: "科室1"
+                  },
+                  {
+                    value: "302",
+                    label: "科室2"
+                  },
+                  {
+                    value: "303",
+                    label: "科室2"
+                  }
+                ]
+              }
+            ],
           },
           formLabelWidth: '120px',
         },
@@ -497,8 +583,14 @@
       inputReturn21(value) {
         console.log(value);
       },
-      inputReturn22(value) {
-        console.log(value);
+      inputReturn22(value,label) {
+        console.log(value, label);
+        this.hospts.push(value.join("---"));
+        this.kuangData2.options3.value.length = 0;
+        console.log(this.hospts)
+      },
+      go_delete(index) {
+        this.hospts.splice(index, 1);
       },
 
 
@@ -1495,8 +1587,9 @@
     color: #5E6875;
     letter-spacing: 0;
   }
+
   .required-icon {
-        font-size: 12px;
-        color: #ff7485;
-    }
+    font-size: 12px;
+    color: #ff7485;
+  }
 </style>

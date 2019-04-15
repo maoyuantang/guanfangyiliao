@@ -369,7 +369,24 @@ export default {
                 sessionStorage.setItem("viewRoot", JSON.stringify(reData)); //缓存将权限下来
                 return;
             }
+<<<<<<< HEAD
             // const uth = unique( data.hasAuth.map(item=>(Number(item)/10000) | 0) );//把子系统算计父系统(有子系统就有父系统)
+=======
+            // console.error('aten')
+            // const test01 = data.hasAuth.map(item=>item.authorityId/10000);
+            // const test02 = test01.map(item=>test01 | 0)
+            // const test03 = test02.map(item => item*10000)
+            // const test04 = Array.from( new Set(test03) )
+            // console.log(test01)
+            // console.log(test02)
+            // console.log(test03)
+            // console.log(test04)
+            // console.error(data.hasAuth.map( item=>( ( Number(item.authorityId) /10000) | 0)*10000 ))
+            // const auth = Array.from(new Set( data.hasAuth.map( item=>{//把子系统算入父系统(有子系统就有父系统)
+            //     item.authorityId = ( ( ( Number(item.authorityId) /10000) | 0) *10000 ).toString();
+            //     return item;
+            // } ) ) );
+>>>>>>> bf255874d8d2a386ee0505d4a844e72676480e46
             for (let i of this.allPages) {
                 for (let j of data.hasAuth) {
                     if (j.authorityId === i.code) {
@@ -391,14 +408,33 @@ export default {
                     type: "2"
                 };
             }
+            reData.manager  = this.unique(reData.manager.map(item=>{
+                item.code = ( ( ( Number(item.code) /10000) | 0) *10000 ).toString();
+                return item;
+            }));
+            reData.doctors  = this.unique(reData.doctors.map(item=>{
+                item.code = ( ( ( Number(item.code) /10000) | 0) *10000 ).toString();
+                return item;
+            }))
+            
             this.$store.commit("user/SETVIEWROOT", reData);
             sessionStorage.setItem("viewRoot", JSON.stringify(reData)); //缓存将权限下来
         },
         /**
-         *数组去重 
+         *数组去重 (json数组)
          */
         unique(array){
-            return Array.from(new Set(array));
+            const newArr = [];
+            array.forEach(element => {
+                for(const i of newArr){
+                    if(i.code === element.code){
+                        break;
+                    }
+                }
+                newArr.push(element)
+            });
+            return newArr;
+            // return Array.from(new Set(array));
         },
         /**
          * 获取科室列表

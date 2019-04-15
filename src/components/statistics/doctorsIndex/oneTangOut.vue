@@ -1,13 +1,24 @@
 <template>
   <div class="oneTangOut" v-show="myHomes.length != 0">
 
-
+    <!-- 视频聊天 -->
     <div v-if="centerDialogVisible">
-      <el-dialog title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
-        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick">
+      <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen
+        @close="closeVideo()" :showClose="VideoshowClose">
+        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"
+          @reback="videoclick" :doctorVis='doctorVis' :userMessage="userMessage" :chatTypeBox="chatTypeBox">
         </ovideo>
       </el-dialog>
     </div>
+
+
+    <!-- <div v-if="centerDialogVisible">
+      <el-dialog title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
+        <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"
+          @reback="videoclick">
+        </ovideo>
+      </el-dialog>
+    </div> -->
 
 
 
@@ -57,6 +68,27 @@
 
     data() {
       return {
+        // 谭莹
+        chatTypeBox: {
+          startDoctorName: "",
+          startDoctorTYpe: "门诊"
+        },
+        VideoshowClose: false,
+        videoType: "门诊",
+        chatVisible1: true,
+        doctorVis: 1, //医生跟患者单聊
+        sessionId: "", //会话id
+        chatVisible: false,
+        userMessage: {},
+        createVideoRoomData: {
+          conferenceId: "",
+          conferenceNumber: ""
+        },
+        oClinicId: [], //当前进入门诊id
+        // 谭莹
+
+
+
         myHomes: [],
         myHomesBiao: [],
         centerDialogVisible: false,
@@ -71,6 +103,49 @@
     },
 
     methods: {
+      // 视屏
+      videoclick(data) {
+        this.centerDialogVisible = false;
+      },
+      //进入门诊
+      async goShiPin(text) {
+        console.log(text)
+        this.userMessage = {
+          clinicId: text.id,
+          departmentId: text.departmentId
+        };
+
+        this.oClinicId = text.id;
+        this.centerDialogVisible = true;
+      },
+      //退出诊室
+      async closeVideo() {
+        let _this = this;
+        let query = {
+          token: this.userInfo.token
+        };
+        const options = {
+          conferenceId: this.createVideoRoomData.conferenceId,
+          state: "OFF"
+        };
+        const res = await storageUsers(query, options);
+        console.log(res);
+        if (res.data && res.data.errCode === 0) {
+          this.$notify.success({
+            title: "成功",
+            message: "退出成功！"
+          });
+          _this.createVideoVisable = false;
+          _this.sendMessageChat(6, "cancle", "VIDEO");
+        } else {
+          //失败
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
+
       // 7.6(WEB医生)获取所有该医生的在线诊室(医生端列表1)
       async getList1() {
         var date = new Date();
@@ -100,18 +175,6 @@
           console.log(this.time1)
           this.myHomes = res.data.body.data2.list;
           console.log(this.myHomes);
-          // this.myHomesBiao.length = 0;
-          // $.each(res.data.body.data2.list, function (index, text) {
-          //   _this.myHomesBiao.push(index);
-          //   _this.tableDataList1.push([
-          //     {
-          //       process: text.process,
-          //       unProcess: text.unProcess,
-          //       doctorCount: text.doctorCount,
-          //     }
-          //   ]);
-          // });
-          // console.log(this.tableDataList1);
         } else {
           //失败
           console.log("医生端列表1+失败");
@@ -146,31 +209,6 @@
         this.$router.push({
           path: "/outpatient",
         })
-      },
-      async goShiPin(data) {//首页点击进入视屏
-        this.oClinicId = data.id;
-        let _this = this;
-        let query = {
-          token: this.userInfo.token
-        };
-        const options = {
-          clinicId: data.id
-        };
-        const res = await doctorInto(query, options);
-        console.log(res);
-        if (res.data && res.data.errCode === 0) {
-          _this.centerDialogVisible = true;
-        } else {
-          //失败
-          this.$notify.error({
-            title: "警告",
-            message: res.data.errMsg
-          });
-        }
-
-      },
-      videoclick(data) {
-        this.centerDialogVisible = false;
       },
 
 

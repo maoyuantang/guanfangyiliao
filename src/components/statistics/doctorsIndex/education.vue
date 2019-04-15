@@ -2,7 +2,8 @@
     远程教育
 -->
 <template>
-<div class="doctors-index-education" v-if="show">
+<div class="doctors-index-education">
+    <!-- <div class="doctors-index-education" v-if="show"> -->
     <div class="doctors-index-rounds">
 		<div class="doctors-index-rounds-head">
             <span class="doctors-index-rounds-name">远程教育</span>
@@ -38,6 +39,18 @@
                 </div>
             </div>
         </div>
+        <!-- 弹窗 -->
+        <el-dialog
+        title=" "
+        append-to-body
+        width="50vw"
+        :visible.sync="alertData.show"
+        :before-close="closeAlert"
+        >
+            <div class="doctors-index-education-alert">
+                <video ref="videoElement" class="centeredVideo" controls autoplay >Your browser is too old which doesn't support HTML5 video.</video>
+            </div>
+        </el-dialog>
         <!-- <div class="no-data">
             <h1>暂无数据</h1>
         </div> -->
@@ -47,6 +60,7 @@
 
 <script>
     import { mapState } from 'vuex'
+    import flv from 'flv.js'
     import apiBaseURL from '../../../enums/apiBaseURL.js'
 	import { 
 		signUp, intoClassroom, intoPlatform, webCourseList
@@ -64,11 +78,20 @@
 		data () {
 			return {	
                 info:{},
-                show:false
+                show:false,
+                alertData:{
+                    show:true
+                }
 			}
 		},
 		
 		methods:{	
+            /**
+             * 关闭弹窗
+             */
+            closeAlert(){
+                this.alertData.show = false;
+            },
             /**
              * 按钮被点击  操作
              */
@@ -117,6 +140,7 @@
                 });
                 console.log(res);
                 if(res.data && res.data.errCode === 0){
+                    this.createVedio(res.data.body.playUrl.flv);
                 }else{
                     this.$notify({
                         title: '进入失败',
@@ -129,12 +153,15 @@
              * 进入教学
              */
             async TOTEACH(item){
+                console.log(item);
                 const res = await intoPlatform({
                     token:this.userInfo.token,
                     id:item.id
                 });
                 console.log(res);
                 if(res.data && res.data.errCode === 0){
+                    
+                    
                 }else{
                     this.$notify({
                         title: '进入失败',
@@ -190,12 +217,29 @@
                     this.show = false;
                 }
             },
+            createVedio(url){
+                this.$nextTick(arg=>{
+                    if (flv.isSupported()) {
+                        const flvPlayer = flv.createPlayer({
+                            type: 'flv',
+                            url
+                        });
+                        flvPlayer.attachMediaElement(this.$refs.videoElement);
+                        flvPlayer.load();
+                        flvPlayer.play();
+                        this.$refs.videoElement.play();
+                        this.alertData.show = true;
+                    }
+                });
+            },
 		},
 		components:{
 		},
-		async created(){
+		created(){
             this.getWebCourseList();
-		}
+        },
+        mounted(){
+        }
 	}
 </script>
 
@@ -286,5 +330,12 @@
         color: #002257;
         line-height: 22px;
         font-weight: bold;
+    }
+    .doctors-index-education-alert{
+        height: 40vw;
+    }
+    .centeredVideo{
+        width: 100%;
+        height: 100%;
     }
 </style>
