@@ -95,14 +95,14 @@
             <span class="demonstration"
               style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室</span>
             <el-cascader expand-trigger="hover" placeholder="多选" clearable style="width:65%;"
-              :options="kuangData2.options3.list" v-model="kuangData2.options3.value" @change="inputReturn22(kuangData2.options3.value,kuangData2.options3.label)">
+              :options="kuangData2.options3.list" @change="inputReturn22">
             </el-cascader>
 
             <ul>
               <li v-for="(item,index) in hospts" :key="index"
                 style="font-family: PingFangSC-Regular;font-size: 14px;color: #323C47;letter-spacing: 0;line-height: 27px;text-align: center;">
                 {{item}}
-                <i class="el-icon-close" @click="go_delete(index)" style=""></i>
+                <i class="el-icon-close" @click="go_delete(index)"></i>
               </li>
             </ul>
           </div>
@@ -113,7 +113,7 @@
           <el-button v-if="YesList2 == 2" type="primary" @click="kuangData1Fun22" style="width:80%">编 辑</el-button>
         </div>
       </el-dialog>
-      {{kuangData2.options3.value}}
+      <!-- {{kuangData2.options3.value}} -->
     </div>
 
 
@@ -297,7 +297,12 @@
         YesList1: null,
         YesList2: null,
         // 弹框  2  参数
-        hospts: [],
+        hospts: [],//存全部所选医院科室label
+        beiY1: [],//存当前所选医院科室id
+        beiY2: 2,
+        // beiY3: [],
+        hosptDpart: [],
+
         kuangData2: {
           show: false,
           options1: {
@@ -583,14 +588,169 @@
       inputReturn21(value) {
         console.log(value);
       },
-      inputReturn22(value,label) {
-        console.log(value, label);
-        this.hospts.push(value.join("---"));
-        this.kuangData2.options3.value.length = 0;
+      inputReturn22(value) {
+        // console.log(value)
+        let list = this.kuangData2.options3.list
+        for (var i = 0; i < list.length; i++) {
+          if (value[0] == list[i].value) {
+            this.beiY1[0] = list[i].label
+          }
+          for (var j = 0; j < list[i].children.length; j++) {
+            if (value[1] == list[i].children[j].value) {
+              this.beiY1[1] = list[i].children[j].label
+            }
+          }
+        }
+        this.hospts.push(this.beiY1.join("-"))
+        this.hospts = this.uniq(this.hospts)
         console.log(this.hospts)
+
+        // for (var a = 0; a < list.length; a++) {
+        //   for (var b = 0; b < list[a].children.length; b++) {
+        //     if (list[a].children[b].value == value[1]) {
+
+        //       for (var i = 0; i < list.length; i++) {
+        //         for (var j = 0; j < list[i].children.length; j++) {
+        //           if (value[1] == list[i].children[j].value) {
+        //             this.hosptDpart.push(
+        //               {
+        //                 hospitalId: value[0],
+        //                 deptIds: [value[1]]
+        //               }
+        //             )
+        //           }
+        //         }
+        //       }
+
+        //     }
+        //   }
+        // }
+
+        if (this.hosptDpart.length != 0) {
+          // alert(1)
+          // for (var a = 0; a < this.hosptDpart.length; a++) {
+          //   for (var b = 0; b < this.hosptDpart[a].deptIds.length; b++) {
+          //     if (this.hosptDpart[a].deptIds[b] == value[1]) {
+          //       console.log(555555)
+          //       this.beiY2 = 0
+          //       console.log(this.beiY2)
+          //     }
+          //   }
+          // }
+          // console.log(this.beiY2)
+          // if (this.beiY2 == 2) {
+          //   this.hosptDpart.push(
+          //     {
+          //       hospitalId: value[0],
+          //       deptIds: [value[1]]
+          //     }
+          //   )
+          // }
+
+          //医院是否相同
+          for (var a = 0; a < this.hosptDpart.length; a++) {
+            if (this.hosptDpart[a] == value[0]) {
+              this.beiY2 = 1
+            } else {
+              this.beiY2 = 2
+            }
+          }
+          //医院相同
+          if (this.beiY2 = 1) {
+            let gg = true;
+            for (var a = 0; a < this.hosptDpart.length; a++) {
+              for (var b = 0; b < this.hosptDpart[a].deptIds.length; b++) {
+                if (this.hosptDpart[a].deptIds[b] == value[1]) {
+                  gg = false
+                  break
+                }
+              }
+            }
+            if(gg == true){
+              for(var a = 0; a < this.hosptDpart.length; a++){
+                // 等待
+              }
+            }
+          }
+          //医院不同
+          if (this.beiY2 == 2) {
+            this.hosptDpart.push(
+              {
+                hospitalId: value[0],
+                deptIds: [value[1]]
+              }
+            )
+          }
+          console.log(this.beiY2)
+          console.log(this.hosptDpart);
+        } else if (this.hosptDpart.length == 0) {   //新增时
+          alert(0)
+          for (var a = 0; a < list.length; a++) {
+            for (var b = 0; b < list[a].children.length; b++) {
+              if (list[a].children[b].value == value[1]) {
+
+                for (var i = 0; i < list.length; i++) {
+                  for (var j = 0; j < list[i].children.length; j++) {
+                    if (value[1] == list[i].children[j].value) {
+                      this.hosptDpart.push(
+                        {
+                          hospitalId: value[0],
+                          deptIds: [value[1]]
+                        }
+                      )
+                    }
+                  }
+                }
+
+              }
+            }
+          }
+          console.log(this.hosptDpart);
+          this.beiY2 = 2;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // this.kuangData2.options3.value = list.map(item => {
+        //   return {
+        //     hospitalId: item.value,
+        //     deptIds: item.children.map(ele => ele.value)
+        //   }
+        // });
+
+        // for (var i = 0; i < list.length; i++) {
+        //   for (var j = 0; j < list[i].children.length; j++) {
+        //     console.log(value)
+        //     if (value == list[i].children[j].value) {
+        //       console.log(list[i].label, list[i].children[j].label)
+        //     }
+        //   }
+        // }
       },
       go_delete(index) {
         this.hospts.splice(index, 1);
+        this.hosptDpart.splice(index, 1);
+        console.log(this.hospts)
+        console.log(this.hosptDpart);
+      },
+      uniq(array) {
+        var temp = []; //一个新的临时数组
+        for (var i = 0; i < array.length; i++) {
+          if (temp.indexOf(array[i]) == -1) {
+            temp.push(array[i]);
+          }
+        }
+        return temp;
       },
 
 
@@ -1229,6 +1389,9 @@
         this.chooseDept().then(val => {//执行完科室获取再执行获取名称list
           this.isHaveDepartment21();
         });
+        this.hosptDpart.length = 0;
+        this.hospts.length = 0;
+        this.beiY2 = 2;
       },
       async chooseDept() {
         const _this = this
@@ -1264,6 +1427,8 @@
             message: res1.data.errMsg
           });
         }
+
+
         let query2 = {
           token: this.userInfo.token,
         };
@@ -1272,7 +1437,8 @@
           console.log('权限控制-申请医院和科室下拉框 +成功')
           console.log(res2)
           this.kuangData2.options3.list.length = 0;
-          $.each(res2.data.body, function (index, text) {
+          this.kuangData2.options3.value.length = 0;
+          $.each(res2.data.body, function (index1, text) {
             _this.kuangData2.options3.list.push(
               {
                 label: text.label,
@@ -1282,8 +1448,8 @@
               }
             )
             if (text.children.length != 0) {
-              $.each(text.children, function (index, text) {
-                _this.kuangData2.options3.list[index].children.push(
+              $.each(text.children, function (index2, text) {
+                _this.kuangData2.options3.list[index1].children.push(
                   {
                     label: text.label,
                     value: text.id,
@@ -1328,6 +1494,8 @@
             });
           }
         }
+        this.kuangData2.options3.value.length = 0;
+        console.log(this.kuangData2.options3.value)
       },
       //弹出  新增业务2   提交 
       async kuangData1Fun21() {
@@ -1341,12 +1509,7 @@
         let options = {
           deptId: this.kuangData2.options1.value,
           levels: this.kuangData2.options2.value,
-          applyDepts: [
-            {
-              hospitalId: this.kuangData2.options3.value[0],
-              deptIds: [this.kuangData2.options3.value[1]]
-            }
-          ]
+          applyDepts: this.hosptDpart
         }
         const res = await addMedicalControl(query, options);                                 //13.8.权限控制-新增  
         if (res.data && res.data.errCode === 0) {
