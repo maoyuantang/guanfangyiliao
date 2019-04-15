@@ -13,15 +13,15 @@
 
                 <div class="indexClassTable">
                     <el-table :data="planData" border style="width: 100%" :show-header="showHeadViable">
-                        <el-table-column label=" " width="">
+                        <el-table-column label=" " width="70">
                             <template slot-scope="scope">
                                 <div class='indexHeadImgClass'>
                                     <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
                                 </div>
-
+                                <!-- {{scope.row.userName}} -->
                             </template>
                         </el-table-column>
-                        <el-table-column prop="userName" label=" " width="">
+                        <el-table-column prop="userName" label=" " width="200">
                         </el-table-column>
                         <el-table-column prop="phone" label=" " width="">
                             <template slot-scope="scope">
@@ -92,14 +92,14 @@
 
                 <div class="indexClassTable">
                     <el-table :data="warnData" border style="width: 100%" :show-header="showHeadViable">
-                        <el-table-column label=" " width="">
+                        <el-table-column label=" " width="70">
                             <template slot-scope="scope">
                                 <div class='indexHeadImgClass'>
                                     <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="userName" label=" " width="">
+                        <el-table-column prop="userName" label=" " width="200">
                         </el-table-column>
                         <el-table-column prop="phone" label=" " width="">
                             <template slot-scope="scope">
@@ -164,14 +164,14 @@
 
                 <div class="indexClassTable">
                     <el-table :data="followData" border style="width: 100%" :show-header="showHeadViable">
-                        <el-table-column label=" " width="">
+                        <el-table-column label=" " width="70">
                             <template slot-scope="scope">
                                 <div class='indexHeadImgClass'>
                                     <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="userName" label=" " width="">
+                        <el-table-column prop="userName" label=" " width="200">
                         </el-table-column>
                         <el-table-column prop="phone" label=" " width="">
                             <template slot-scope="scope">
@@ -254,14 +254,14 @@
 
                 <div class="indexClassTable">
                     <el-table :data="consultationData" border style="width: 100%" :show-header="showHeadViable">
-                        <el-table-column label=" " width="">
+                        <el-table-column label=" " width="70">
                             <template slot-scope="scope">
                                 <div class='indexHeadImgClass'>
                                     <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="doctor" label=" " width="">
+                        <el-table-column prop="doctor" label=" " width="200">
                         </el-table-column>
                         <el-table-column label=" " width="">
                             <template slot-scope="scope">
@@ -305,14 +305,14 @@
 
                 <div class="indexClassTable">
                     <el-table :data="cooperationData" border style="width: 100%" :show-header="showHeadViable">
-                        <el-table-column label=" " width="">
+                        <el-table-column label=" " width="70">
                             <template slot-scope="scope">
                                 <div class='indexHeadImgClass'>
                                     <img :src="userSocketInfo.headImg+scope.row.applyUserId" :onerror="defaultImg" />
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label=" " width="">
+                        <el-table-column label=" " width="200">
                             <template slot-scope="scope">
                                 {{scope.row.applyUserName}}|{{scope.row.applyDeptName}}
                             </template>

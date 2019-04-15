@@ -48,7 +48,7 @@ export default {
             timeList: [],
             nodataVisable: false,
             storyMessage: [],
-            msgId: "",
+            msgId: -1,
             imgUrl:
                 "https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/",
             moreLoadVisable: false,

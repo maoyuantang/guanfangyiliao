@@ -24,7 +24,7 @@
         <!-- 视频聊天 -->
         <div v-if="VideoVisable">
             <el-dialog class='videoClassBox' title="" :visible.sync="VideoVisable" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
-                <ovideo :createVideoRoomData="userSocketInfo.createVideoRoomData" @reback="videoclick" :sessionId1="userSocketInfo.osessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox"></ovideo>
+                <ovideo :createVideoRoomData="userSocketInfo.createVideoRoomData" @reback="videoclick" :sessionId1="userSocketInfo.osessionId" :doctorVis="doctorVis" :chatTypeBox="userSocketInfo.chatTypeBox"></ovideo>
             </el-dialog>
         </div>
 
@@ -546,7 +546,20 @@ export default {
                                 conferenceNumber: odata.info.body.split("&")[1]
                             };
                             _this.sessionId = odata.info.body.to;
+let chatTypeBox={
+    startDoctorName: "",
+                startDoctorTYpe: ""
+}
+                             if (odata.info.location == "cooperation") {
+                chatTypeBox.startDoctorTYpe = "协作";
+            } else if (odata.info.location == "consultation") {
+                chatTypeBox.startDoctorTYpe = "会诊";
+            }
 
+ _this.$store.commit(
+                                "socket/CHATTYPEBOX",
+                                chatTypeBox
+                            );
                             _this.$store.commit(
                                 "socket/OSESSIONID",
                                 odata.info.to

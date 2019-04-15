@@ -15,6 +15,7 @@ export default {
         },
         videoUser:0,
         osessionId:'',
+        chatTypeBox:{},
         receiveVideoVisable:false,
         createVideoRoomData:{},
         messageTicket: {
@@ -78,6 +79,9 @@ export default {
         OSESSIONID(state,data){
             state.osessionId =data
         },
+        CHATTYPEBOX(state,data){
+            state.chatTypeBox =data
+        },
     },
     actions: {
         setSocket(context, data) {
@@ -109,6 +113,9 @@ export default {
         },
         OSESSIONID(state,data){
             context.commit("OSESSIONID", data);
+        },
+        CHATTYPEBOX(state,data){
+            context.commit("CHATTYPEBOX", data);
         },
     }
 }

@@ -1,4 +1,7 @@
 'use strict'
+process.env.WSS_PATH = "wss://demo.chuntaoyisheng.com:10001/chat"
+process.env.HTTPS_PATH = "https://demo.chuntaoyisheng.com:10001"
+process.env.IMG_PREFIX = "https://demo.chuntaoyisheng.com:10001"
 module.exports = {
   NODE_ENV: '"production"',
 

@@ -570,9 +570,9 @@ margin-bottom: 70px;
 .mydAddTemplateClass .el-form-item{
 margin-bottom: 7px
 }
-.mydAddTemplateClass .el-dialog__body{
+/* .mydAddTemplateClass .el-dialog__body{
 padding: 0 !important
-}
+} */
 .mydAddTemplateClass .huifuBoxClass>div:nth-child(1){
     line-height: 40px;
     padding-left: 78px;
@@ -614,7 +614,7 @@ color: #4285F4;
 }
 .mydQuestList .el-input__inner{
     width: 80px;
-    height: 32px;
+    height: 30px;
     padding: 0;
     vertical-align: text-bottom;
     font-family: PingFangSC-Light;
@@ -786,12 +786,12 @@ margin-left: 21px;
 .mydAddTemplateClass  .el-dialog__body{
     padding:0
 }
-.mydAddTemplateClass .el-dialog__header{
+/* .mydAddTemplateClass .el-dialog__header{
     padding:0
-}
-.mydAddTemplateClass form{
+} */
+/* .mydAddTemplateClass form{
     padding:0 74px;
-}
+} */
 .classification {
     position: relative;
 }
