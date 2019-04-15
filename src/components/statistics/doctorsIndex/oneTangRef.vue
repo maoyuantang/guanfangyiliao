@@ -77,13 +77,16 @@
         <div class="moved">
           <!-- 头像姓名 -->
           <div class="moved_top">
-            <img src="../../../assets/img/a-6.png" />
+            <!-- <img src="../../../assets/img/a-6.png" /> -->
+            <img v-if="docTableData.applyDoctorHead == null" src="../../../assets/img/a-6.png" alt="医生头像">
+            <img v-if="docTableData.applyDoctorHead"
+              :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+docTableData.applyDoctorHead' alt="医生头像">
             <p>{{dualReferralRecordFile.patientName}}</p>
           </div>
           <!-- 转院路程 -->
           <div class="moved_middle">
             <span class="Hospital1">{{dualReferralRecordFile.applyOrgName}}</span>
-            <img src="../../../assets/img/a-6.png" />
+            <i class="el-icon-refresh"></i>
             <span class="Hospital1">{{dualReferralRecordFile.receiveOrgName}}</span>
           </div>
           <!-- 转院详情 -->
@@ -118,8 +121,10 @@
               alt="医生头像" style="width:42px;">
           </template>
         </el-table-column>
-        <el-table-column prop="patientName" label="病人" :show-overflow-tooltip="true"></el-table-column>
+        <!-- <el-table-column prop="patientName" label="病人" :show-overflow-tooltip="true"></el-table-column> -->
         <!-- <el-table-column prop="applyOrgName" label="申请医院" :show-overflow-tooltip="true"></el-table-column> -->
+        <el-table-column prop="applyDoctorName" label="申请人" :show-overflow-tooltip="true"></el-table-column>
+
         <el-table-column :data="docTableData" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             {{docTableData[0].applyOrgName}}|{{docTableData[0].applyDeptName}}
@@ -127,7 +132,6 @@
         </el-table-column>
         <!-- <el-table-column prop="referralNo" label="编号" :show-overflow-tooltip="true"></el-table-column> -->
         <!-- <el-table-column prop="applyDeptName" label="申请科室" :show-overflow-tooltip="true"></el-table-column> -->
-        <!-- <el-table-column prop="" label="申请人" :show-overflow-tooltip="true"></el-table-column> -->
         <!-- <el-table-column prop="phone" label="手机号" :show-overflow-tooltip="true"></el-table-column> -->
         <el-table-column prop="applyTime" label="申请时间" :show-overflow-tooltip="true"></el-table-column>
         <!-- <el-table-column prop="intention" label="目的" :show-overflow-tooltip="true"></el-table-column> -->
@@ -927,6 +931,11 @@
     font-size: 12px;
     color: #5E6875;
     letter-spacing: 0;
+  }
+  .el-icon-refresh {
+    margin: 0 20px;
+    font-size: 30px;
+    color: #27AD9A;
   }
 </style>
 <!--

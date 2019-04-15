@@ -46,7 +46,7 @@ export default {
     },
     created() {
         console.log('登录成功后执行app.vue文件')
-        console.log(this.userState.token)
+        console.error(process.env.WSS_PATH)
         if (this.userState.token) {
             this.lianjie();
         }

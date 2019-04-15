@@ -131,7 +131,7 @@ export default {
             this.$store.commit("user/CLEARUSERINFO");
             this.$store.commit("user/CLAERUSERSELFINFO");
             sessionStorage.clear();
-            this.$store.state.socket.socketObj.close()
+            this.$store.state.socket.socketObj && this.$store.state.socket.socketObj.close()
             this.$router.replace({
                 path: "/login"
             });

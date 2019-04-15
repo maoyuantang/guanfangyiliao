@@ -18,7 +18,7 @@
           <div class="moved_top">
             <img v-if="dualReferralRecordFile.headId == null" src="../assets/img/a-6.png" alt="医生头像">
             <img v-if="dualReferralRecordFile.headId"
-              :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+dualReferralRecordFile.headId'
+              :src='process.env.IMG_PREFIX+"/m/v1/api/hdfs/fs/download/"+dualReferralRecordFile.headId'
               alt="医生头像">
             <p>{{dualReferralRecordFile.patientName}}</p>
           </div>

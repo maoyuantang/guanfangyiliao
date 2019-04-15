@@ -5,6 +5,8 @@
 
 const path = require('path')
 const baseURL = require('../src/enums/apiBaseURL.js')
+console.log('baseURL')
+console.log(baseURL)
 module.exports = {
   dev: {
 

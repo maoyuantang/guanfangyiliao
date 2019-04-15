@@ -111,7 +111,7 @@
 								<!-- 待头像 -->
 								<img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
 								<img v-if="text.headId"
-									:src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
+									:src='process.env.IMG_PREFIX+"/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
 								<h5>{{text.doctorName}}</h5>
 							</div>
 							<div class="evaluateCont2">
@@ -161,7 +161,7 @@
 		<div v-if="chuFangDetailList2">
 			<el-dialog title="处方详情" :visible.sync="chuFangDetailList2" center>
 				<img style="width:100%"
-					:src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
+					:src='process.env.IMG_PREFIX+"/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
 			</el-dialog>
 		</div>
 
@@ -643,7 +643,7 @@
 				this.departmentId = data.index.value;
 				console.log(this.departmentId)
 				this.getList1();
-				// this.getList2();
+				this.getList2();
 				this.getList3();
 			},
 			getSelect1(data) {//审核状态
