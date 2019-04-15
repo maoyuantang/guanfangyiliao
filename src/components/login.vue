@@ -369,9 +369,6 @@ export default {
                 sessionStorage.setItem("viewRoot", JSON.stringify(reData)); //缓存将权限下来
                 return;
             }
-<<<<<<< HEAD
-            // const uth = unique( data.hasAuth.map(item=>(Number(item)/10000) | 0) );//把子系统算计父系统(有子系统就有父系统)
-=======
             // console.error('aten')
             // const test01 = data.hasAuth.map(item=>item.authorityId/10000);
             // const test02 = test01.map(item=>test01 | 0)
@@ -386,7 +383,6 @@ export default {
             //     item.authorityId = ( ( ( Number(item.authorityId) /10000) | 0) *10000 ).toString();
             //     return item;
             // } ) ) );
->>>>>>> bf255874d8d2a386ee0505d4a844e72676480e46
             for (let i of this.allPages) {
                 for (let j of data.hasAuth) {
                     if (j.authorityId === i.code) {

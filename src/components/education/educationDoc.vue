@@ -34,6 +34,18 @@
                 ></el-pagination>
             </div>
         </div>
+        <!-- 进入学习 弹窗 -->
+        <el-dialog
+        title=" "
+        append-to-body
+        width="50vw"
+        :visible.sync="alertData.show"
+        :before-close="closeAlert"
+        >
+            <div class="doctors-index-education-alert">
+                <video ref="videoElement" class="centeredVideo" controls autoplay >Your browser is too old which doesn't support HTML5 video.</video>
+            </div>
+        </el-dialog>
 	</div>
 </template>
 
@@ -44,6 +56,7 @@
     import educationDocLabel from '../../public/publicComponents/educationDocLabel.vue'
     import { webCourseList, signUp, intoClassroom, intoPlatform } from '../../api/apiAll.js'
     import urls from '../../enums/apiBaseURL.js'
+    import flv from 'flv.js'
     
 	export default {
 		computed:{
@@ -68,6 +81,12 @@
 		},
 		data () {
 			return {
+                /**
+                 * 弹窗数据
+                 */
+                alertData:{ 
+                    show:false
+                },
                 queryConditions:{//查询条件   
                     days:{
                         title:'日期',
@@ -98,6 +117,12 @@
 			}
 		},
 		methods:{
+            /**
+             * 关闭 弹窗
+             */
+            closeAlert(){
+                this.alertData.show = false;
+            },
             /**
              * 元素 按钮 被点击
              */
@@ -147,6 +172,7 @@
                 });
                 console.log(res);
                 if(res.data && res.data.errCode === 0){
+                    this.createVedio(res.data.body.playUrl.flv.replace('http','https'));
                     // this.$notify({
                     //     title: '成功',
                     //     message: '报名成功',
@@ -184,6 +210,24 @@
                         type: 'error'
                     });
                 }
+            },
+            /**
+             * 开启 视频
+             */
+            createVedio(url){
+                this.$nextTick(arg=>{
+                    if (flv.isSupported()) {
+                        const flvPlayer = flv.createPlayer({
+                            type: 'flv',
+                            url
+                        });
+                        flvPlayer.attachMediaElement(this.$refs.videoElement);
+                        flvPlayer.load();
+                        flvPlayer.play();
+                        this.$refs.videoElement.play();
+                        this.alertData.show = true;
+                    }
+                });
             },
             /**
              * 参数 传递 错误
@@ -289,5 +333,12 @@
     }
     .education-doc-page{
         text-align: center;
+    }
+    .centeredVideo{
+        width: 100%;
+        height: 100%;
+    }
+    .doctors-index-education-alert{
+        height: 40vw;
     }
 </style>

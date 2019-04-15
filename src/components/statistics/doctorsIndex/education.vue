@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <!-- 弹窗 -->
+        <!-- 进入学习 弹窗 -->
         <el-dialog
         title=" "
         append-to-body
@@ -80,7 +80,7 @@
                 info:{},
                 show:false,
                 alertData:{
-                    show:true
+                    show:false
                 }
 			}
 		},
@@ -152,7 +152,7 @@
             /**
              * 进入教学
              */
-            async TOTEACH(item){
+            async TOTEACH(item){  
                 console.log(item);
                 const res = await intoPlatform({
                     token:this.userInfo.token,
