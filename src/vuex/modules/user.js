@@ -211,8 +211,8 @@ export default {
 		/**
 		 * 作用：设置用户个人信息
 		 */
-		setUserSelfInfo(context){
-			context.commit("SETUSERSELFINFO");
+		setUserSelfInfo(context,data){
+			context.commit("SETUSERSELFINFO",data);
 		},
 
 		/**

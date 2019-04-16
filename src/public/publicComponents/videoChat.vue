@@ -110,22 +110,9 @@
                 </el-upload>
                 <img src="../../assets/img/sendNew1.png" />
             </span>
-            <span title="发送视频" class="sendVideo" @click="showVideoBtn()">
+            <!-- <span title="发送视频" class="sendVideo" @click="showVideoBtn()">
                 <img src="../../assets/img/sendNew2.png" />
-                <!-- <div class="userMember" v-show="showVideoBtnVisable">
-                    <h4>视频窗口最多拉取3个人</h4>
-                    <el-checkbox-group style='margin-bottom:18px' v-model="checkList">
-                        <el-checkbox v-for="(text,index) in userMemberNum" :label="text.userId" :key="index">
-                            <span class='videoUserHeadClass'>
-                                <img class='headImgClass' :src="userSocketInfo.headImg+text.userId" :onerror="defaultImg" />
-                            </span>
-
-                            {{text.userName}}
-                        </el-checkbox>
-                    </el-checkbox-group>
-                    <el-button class="setVideoBtn" @click="setVideo(1)" type="primary">确认</el-button>
-                </div> -->
-            </span>
+            </span> -->
             <span v-show="oDoctorVis" @click="addFollow()" title="发送随访">
                 <img src="../../assets/img/sendNew4.png" />
             </span>

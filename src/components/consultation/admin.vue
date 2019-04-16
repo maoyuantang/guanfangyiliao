@@ -829,7 +829,7 @@ export default {
             }
         },
         //获取病人列表
-         async getHospitalment() {
+         async getHospitalment1() {
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -851,7 +851,7 @@ export default {
             }
         },
         //获取病历列表
-         async getHospitalment() {
+         async getHospitalment2() {
             let _this = this;
             let query = {
                 token: this.userState.token

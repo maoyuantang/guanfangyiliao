@@ -64,43 +64,43 @@
 
                     <div class="public-list drugTable">
                         <el-table :data="chufangData.drugDetails" border style="width: 100%">
-                            <el-table-column prop="date" label="序号" width="150">
+                            <el-table-column prop="date" label="序号" width="">
                                 <template slot-scope="scope">
                                     <!-- {{scope.row}} -->
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="drugName" label="药品名称" width="120">
+                            <el-table-column prop="drugName" label="药品名称" width=" ">
                             </el-table-column>
-                            <el-table-column prop="drugUse" label="用法" width="120">
+                            <el-table-column prop="drugUse" label="用法" width=" ">
                             </el-table-column>
-                            <el-table-column prop="drugTimes" label="频率" width="120">
+                            <el-table-column prop="drugTimes" label="频率" width=" ">
                                 <template slot-scope="scope">
                                     <input class="drugsListInput" v-model="scope.row.drugTimes" type="text" @change="countAll()" />
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="drugDosage" label="用量" width="300">
+                            <el-table-column prop="drugDosage" label="用量" width=" ">
                                 <template slot-scope="scope">
                                     <input class="drugsListInput" v-model="scope.row.drugDosage" type="text" @change="countAll()" />
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="drugPrice" label="单价" width="120">
+                            <el-table-column prop="drugPrice" label="单价" width=" ">
                             </el-table-column>
-                            <el-table-column prop="drugQuantity" label="数量" width="120">
+                            <el-table-column prop="drugQuantity" label="数量" width=" ">
                                 <template slot-scope="scope">
                                     <input class="drugsListInput" v-model="scope.row.drugQuantity" type="number" @input="countAll()" />
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="drugPriceAll" label="合计" width="120">
+                            <el-table-column prop="drugPriceAll" label="合计" width=" ">
                                 <template slot-scope="scope">
                                     <input class="drugsListInput" disabled v-model="scope.row.drugQuantity * scope.row.drugPrice" type="text" />
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="doctorAsk" label="医生嘱托" width="120">
+                            <el-table-column prop="doctorAsk" label="医生嘱托" width=" ">
                                 <template slot-scope="scope">
                                     <input class="drugsListInput" v-model="scope.row.doctorAsk" type="text" />
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作" width="100">
+                            <el-table-column label="操作" width=" ">
                                 <template slot-scope="scope">
                                     <el-button @click="deleteDrugs(scope.row)" type="text" size="small">删除</el-button>
                                 </template>
