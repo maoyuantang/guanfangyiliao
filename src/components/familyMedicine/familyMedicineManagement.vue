@@ -1330,7 +1330,7 @@
 				];
 				if(this.testData.businessTemplate.default.value==='JTYS'){//家庭医生 这个模板和其他模板的价格是不一样的，判断下
 					let i = 1; 
-					for(i;i<4;i++){
+					for(i;i<3;i++){
 						postData[1].businessPrice.push({ 
 							worth:this.testData.businessPrice.data[i].worth,//价格数值
 							unitEnum:this.testData.businessPrice.data[i].unitEnum,//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
@@ -1571,7 +1571,7 @@
                         {
 							text:'陪护',
 							color:'#F4B400',
-							bgColor:'rgba(136,0,244,0.20)',
+							bgColor:'#fdf0cc',
                             en:'PHFW'
                         }
 					];

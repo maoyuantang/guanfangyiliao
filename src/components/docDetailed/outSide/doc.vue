@@ -80,6 +80,7 @@
              * 展示大图弹窗
              */
             showBigImg(item){
+                console.log(item);
                 this.alertData.imgSrc = value.imgSrc;
                 this.alertData.show = true;
             },
