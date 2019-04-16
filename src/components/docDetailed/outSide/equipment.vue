@@ -98,6 +98,7 @@
                 console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.listData = res.data.body.list.map(iten=>{
+
                         if(item.deviceType === 'TONOMETER'){//血压计
                             return {
                                 xAxis:item.dataList.map(ele=>ele.dataTime),
@@ -122,6 +123,7 @@
                             }
                         }
                     });
+                    console.log(this.listData)
                     this.page.total = res.data.body.total
 				}else{
 					this.$notify({
