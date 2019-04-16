@@ -5,11 +5,13 @@
 -->
 <template>
     <div class="outPatientDoctor">
+        
         <doctorTab :inData="oAdminTab" @reBack="getConsulTabData"></doctorTab>
-
+        
         <!-- 我的诊室-循环 -->
-
+{{apiBaseURL}}娇姐娇姐军军军军
         <div class="myOuts" v-if="oconsulVisable==0">
+            
             <ul v-for="(text,index1) in myHomes" :key="index1" class="outpatient_s">
                 <li class="outpatient_left">
                     <!-- <p class="title">{{text.orgName}}-{{text.clinicName}}</p> -->
@@ -17,7 +19,7 @@
                     <div class="outpatient_user">
                         <img v-if="text.doctor[0].headId == null" src="../assets/img/a-6.png" alt="医生头像">
                         <img v-if="text.doctor[0].headId"
-                            :src='process.env.IMG_PREFIX+"/m/v1/api/hdfs/fs/download/"+text.doctor[0].headId'
+                            :src='apiBaseURL.imgBaseUrl+"/m/v1/api/hdfs/fs/download/"+text.doctor[0].headId'
                             alt="医生头像">
                         <div class="outpatient_name">
                             <p class="p1">{{text.doctor[0].doctorName}}</p>
@@ -112,7 +114,7 @@
                         :class="whichUser==index?'backgroundUser':''">
                         <li>
                             <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-                            <img v-if="text.headId" :src='process.env.IMG_PREFIX+"/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
+                            <img v-if="text.headId" :src='apiBaseURL.imgBaseUrl+"/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
                             <div>
                                 <p class="name">{{text.userName}}</p>
                                 <p class="depart">问诊医生:
@@ -342,7 +344,7 @@
                         <li>
                             <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
                             <img v-if="text.headId"
-                                :src='process.env.IMG_PREFIX+"/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
+                                :src='apiBaseURL.imgBaseUrl+"/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
                             <div>
                                 <p class="name">{{text.userName}}</p>
                                 <p class="depart">问诊医生:
@@ -619,7 +621,7 @@
         <div v-if="dialogTableVisible">
             <el-dialog title="预览" :visible.sync="dialogTableVisible" center>
                 <img style="width:100%"
-                    :src='process.env.IMG_PREFIX+"/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
+                    :src='apiBaseURL.imgBaseUrl+"/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
             </el-dialog>
         </div>
 
@@ -685,6 +687,10 @@
     import search from "../public/publicComponents/search.vue";
     import noData from "../public/publicComponents/noData.vue";
     import ovideo from "../video/oVideo.vue";
+    // const apiBaseURL = require('./../enums/apiBaseURL.js')
+    // import apiBaseURL from './../enums/apiBaseURL.js' 
+    import apiBaseURL from "./../enums/apiBaseURL.js";
+
     export default {
         components: {
             doctorTab,
@@ -1745,6 +1751,7 @@
         },
 
         async created() {
+            console.error(apiBaseURL)
             this.getList1(); //7.6医生列表1
             // this.addPrescription();//7.8开处方
             console.log(process.env.IMG_PREFIX)

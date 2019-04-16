@@ -36,7 +36,7 @@
                         </span>
                     </div>
                     <el-form-item label="会诊病人:">
-                        <el-select placeholder="" v-model="startHz.userId" @change="hosChange1(index,text.value)">
+                        <el-select placeholder="" v-model="startHz.userId" @change="hosChange1(index,startHz.userId)">
                                     <el-option v-for="(text,index) in hospitalList1" :label="text.name" :value="text.value" :key="index"></el-option>
                                 </el-select>
                     </el-form-item>
