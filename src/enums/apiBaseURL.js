@@ -20,4 +20,3 @@ module.exports =  {
     // wstestEnvironment:'',
     imgBaseUrl:process.env.IMG_PREFIX,//图片基础路径      
 }
-

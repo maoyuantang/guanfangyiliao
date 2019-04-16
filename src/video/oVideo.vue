@@ -706,7 +706,10 @@ export default {
                     );
                 }
                 _this.closeVideoBtnVieable = true; //关闭视频显示
-                _this.deleteVideoRoom();
+                if (_this.videoUser > 1) {
+                    _this.deleteVideoRoom();
+                }
+
                 console.log("离开房间");
                 _this.leaveRoomBtn();
             } else {
@@ -1259,7 +1262,7 @@ export default {
         firstSet() {
             let _this = this;
             // var server = "meet.xiaoqiangio.com";
-            var server="www.scmeeting.com"
+            var server = "www.scmeeting.com";
             if (!server) {
                 alert("请输入服务器地址");
                 return false;
@@ -1619,7 +1622,7 @@ export default {
         let _this = this;
 
         if (this.videoType == "门诊") {
-            this.archivesId=''
+            this.archivesId = "";
             this.listVisable = true;
             this.publicVideoVisable = false;
             this.closeVideoBtnVieable = true;
@@ -1628,7 +1631,7 @@ export default {
             this.noLineUpNum();
             this.getThePatient();
         } else {
-            this.archivesId='不是门诊进入'
+            this.archivesId = "不是门诊进入";
             this.publicVideoVisable = true;
             this.localVideoVisable = true;
             this.listVisable = false;
@@ -1650,6 +1653,10 @@ export default {
             //人数超过3人呗踢出
             if (_this.videoUser > 3) {
                 _this.closeVideoRoom(2);
+                _this.$notify.error({
+                    title: "警告",
+                    message: "当前视频人数已满"
+                });
             }
         });
         /**
