@@ -129,7 +129,7 @@ export default {
 };
 </script>
 <style>
-.addQuestBox .el-form-item__label {
+/* .addQuestBox .el-form-item__label {
     width: 20px !important;
 }
 .addQuestBox .el-form-item__content {
@@ -183,5 +183,5 @@ export default {
 .choiceItemBox > span {
     padding: 0 5px;
     cursor: pointer;
-}
+} */
 </style>

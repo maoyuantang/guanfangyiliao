@@ -110,7 +110,7 @@
         </div>
         <!--新增问诊模板 -->
         <div v-if="QuestTableVisible">
-            <el-dialog class="evaluateBox addQuestBox " title=" " :visible.sync="QuestTableVisible" width="717px" hight="356px" center>
+            <el-dialog class="addQuestBox " title=" " :visible.sync="QuestTableVisible" width="717px" hight="356px" center>
                 <el-form ref="form" :model="addQuestData" label-width="80px" style="height: 600px; overflow: auto;">
                     <el-form-item style="margin-bottom:30px">
                         <el-input class="addFollowTitle" v-model="addQuestData.title" placeholder="请输入问诊标题(40字内)" onfocus="this.placeholder=''" onblur="this.placeholder='请输入问诊标题(40字内)'"></el-input>
