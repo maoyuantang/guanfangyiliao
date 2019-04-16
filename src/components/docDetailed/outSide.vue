@@ -43,7 +43,7 @@
 
 <script>
     import { mapState } from 'vuex'
-    import {patientInfo, lastAssessPlan, lastUserRecord, nearlyFollowup, nearlyDevice} from '../../api/apiAll.js'
+    import {patientInfo, lastAssessPlan, lastUserRecord, nearlyFollowup, nearlyDevice, getDoctorMessage1} from '../../api/apiAll.js'
     import plan from './outSide/plan.vue'
     import assessment from './outSide/assessment.vue'
     import equipment from './outSide/equipment.vue'
@@ -212,14 +212,27 @@
              */
             async getPatientInfo(){
                 console.log('enter')
-                const res = await patientInfo({
+                const res = await getDoctorMessage1({
                     token:this.userInfo.token,
-                    orgCode:this.userSelfInfo.orgCode,
+                    // orgCode:this.userSelfInfo.orgCode,
                     familyMemberId:this.inData.id
                 });
                 console.log(res);
                 if(res.data && res.data.errCode === 0){
-					this.patientInfo = res.data.body;
+                    this.patientInfo = {
+                        userId:res.data.body[0].userId,
+                        id:res.data.body[0].id,
+                        name:res.data.body[0].name,
+                        sex:res.data.body[0].sex,//性别
+                        age:res.data.body[0].age,//年龄
+                        birthday:res.data.body[0].birthday,
+                        phone:res.data.body[0].phone,
+                        address:res.data.body[0].address,
+                        isVisible:res.data.body[0].isVisible,
+                        papersType:res.data.body[0].papersType,
+                        idNo:res.data.body[0].identityCard//身份证
+                    },
+					this.patientInfo = res.data.body[0].name;
 				}else{
 					this.$notify({
 						title: '患者信息获取失败',

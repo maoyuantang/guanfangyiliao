@@ -1417,7 +1417,6 @@
             //列表
             // 7.6(WEB医生)获取所有该医生的在线诊室(医生端列表1)
             async getList1() {
-                alert(0)
                 // var date = new Date();
                 // var year = date.getFullYear();
                 // var month = date.getMonth() + 1;
