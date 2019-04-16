@@ -79,7 +79,7 @@
 						<el-input
 						placeholder=""
 						size="mini"
-						v-model="cloudStorage.fullName"
+						v-model="cloudStorageCopy.fullName"
 						clearable>
 						</el-input>
 					</div>
@@ -87,7 +87,7 @@
 				<div class="editing-business-alert-item">
 					<span class="editing-business-alert-item-name">价格</span>
 					<div class="editing-business-alert-item-value">
-						<div class="editing-business-price-item" v-for="(item,index) in cloudStorage.price" :key="index">
+						<div class="editing-business-price-item" v-for="(item,index) in cloudStorageCopy.price" :key="index">
 							<div class="editing-business-alert-input-price">
 								<el-input
 								placeholder=""
@@ -113,7 +113,7 @@
 				<div class="editing-business-alert-item">
 					<span class="editing-business-alert-item-name">医院配置</span>
 					<div class="editing-business-alert-item-value">
-						<el-select v-model="cloudStorage.hospital" multiple placeholder="" size="mini">
+						<el-select v-model="cloudStorageCopy.hospital" multiple placeholder="" size="mini">
 							<el-option
 							v-for="item in configurationsList"
 							:key="item.hospitalOrgCode"
@@ -130,7 +130,7 @@
 					</div>
 				</div>
 				<div class="editing-business-alert-item">
-					<el-checkbox v-model="cloudStorage.agree">用户协议</el-checkbox>
+					<el-checkbox v-model="cloudStorageCopy.agree">用户协议</el-checkbox>
 				</div>
 				<div class="editing-business-alert-item editing-business-sub">
 					<el-button type="primary" @click="subHospitalConfig">确定</el-button>
@@ -143,7 +143,8 @@
 <script>
 	import { mapState } from "vuex"
 	import search from '../public/publicComponents/search.vue'
-	import {fetchUserCloud, viewCloud, hospitalsByCloud, updateCloud} from '../api/apiAll.js'
+	import {fetchUserCloud, viewCloud, hospitalsByCloud, updateCloud, addCloud} from '../api/apiAll.js'
+	import { deepCopy } from '../public/publicJs/deepCopy.js'
 	export default {
 		watch:{
 			'cloudStorage.hospital':{
@@ -226,6 +227,19 @@
 						// 	valueUnit:0//价格单位值
 						// }
 					],
+					protocolContent:null, 
+					protocolId:null,
+					protocolName:null,
+					agree:false
+				},
+				cloudStorageCopy:{//云存储 副本,给弹窗用的，免得相互影响
+					description:'',//
+					fullName:'',//
+					hospital:[],
+					hospitalCount:0,//
+					id:'',//
+					phone:'',//
+					price:[],
 					protocolContent:null, 
 					protocolId:null,
 					protocolName:null,
@@ -326,7 +340,7 @@
 				console.log(res);
 				if(res.data && res.data.errCode === 0){
 					res.data.body.agree = res.data.body.protocolId!=='';
-					res.data.body.hospital = res.data.body.hospital.map(item=>item.hospitalOrgCode);//拍平，只留下hospitalOrgCode
+					res.data.body.hospital = res.data.body.hospital.map(item=>item.hospitalOrgCode);//拍平，只留下hospitalOrgCode。特么反回个null什么意思
 					this.cloudStorage = res.data.body;
 					// this.showsSelectList = res.data.body.hospital;
 				}else{
@@ -368,6 +382,7 @@
 			 * 
 			 */
 			editBusiness(){
+				this.cloudStorageCopy = deepCopy(this.cloudStorage); 
 				this.editingBusiness.show = true;
 			},
 
@@ -387,14 +402,14 @@
 			 * 编辑业务 -> 添加'价格'
 			 */
 			addPriceItem(){
-				if(this.cloudStorage.price.length>=3){
+				if(this.cloudStorageCopy.price.length>=3){
 					this.$notify({
 						title: '添加失败',
 						message: '最多只能添加三个!!',
 						type: 'error'
 					});
 				}else{
-					this.cloudStorage.price.push({worth: 0,unitEnum: "YEAR",valueUnit: 1 });
+					this.cloudStorageCopy.price.push({worth: 0,unitEnum: "YEAR",valueUnit: 1 });
 				}
 			},
 
@@ -404,10 +419,10 @@
 			handleCommand(i,index){
 				console.log(i)
 				console.log(index)
-				const newObj = this.cloudStorage.price[index];
+				const newObj = this.cloudStorageCopy.price[index];
 				// console.log(newObj)
 				newObj.valueUnit = i;
-				this.cloudStorage.price.splice(index,1,newObj);
+				this.cloudStorageCopy.price.splice(index,1,newObj);
 			},
 
 			/**
@@ -421,7 +436,7 @@
 						item.hospitalOrgCode = item.code;
 						return item;
 					});
-					const newArr = [...new Set(this.cloudStorage.hospital)];
+					const newArr = [...new Set(this.cloudStorageCopy.hospital)];
 					this.showsSelectList = this.configurationsList.filter(v=>{
 						for(const i of newArr){
 							if(i === v.hospitalOrgCode) return v;
@@ -440,22 +455,27 @@
 			 * 提交医院配置
 			 */
 			async subHospitalConfig(){
-				
 				const options = [
 					{token: this.userState.token},
 					{
-						cloudId:this.cloudStorage.id,
-						cloudName:this.cloudStorage.fullName,
-						price:this.cloudStorage.price,
-						cloudDesc:this.cloudStorage.description,
-						protocolId:this.cloudStorage.protocolId,
-						protocolName:this.cloudStorage.protocolName,
-						protocolContent:this.cloudStorage.protocolContent,
-						phone:this.cloudStorage.phone,
+						cloudId:this.cloudStorageCopy.id,
+						cloudName:this.cloudStorageCopy.fullName,
+						price:this.cloudStorageCopy.price,
+						cloudDesc:this.cloudStorageCopy.description,
+						protocolId:this.cloudStorageCopy.protocolId,
+						protocolName:this.cloudStorageCopy.protocolName,
+						protocolContent:this.cloudStorageCopy.protocolContent,
+						phone:this.cloudStorageCopy.phone,
 						hospital:this.showsSelectList
 					}
 				];
 				console.log(options)
+				options.cloudId ? this.editOption(options) : this.addOption(options);
+			},
+			/**
+			 * 修改 医院配置
+			 */
+			async editOption(options){
 				const res = await updateCloud(...options);
 				console.log(res);
 				if(res.data && res.data.errCode === 0){
@@ -466,10 +486,34 @@
 					});
 					this.getBusinessInfo();
 					this.editingBusiness.show = false;
+					this.cloudStorage = deepCopy(this.cloudStorageCopy);
 				}else{
 					this.$notify({
-						title: '失败',
-						message: '修改失败',
+						title: '修改失败',
+						message: res.data.errMsg,
+						type: 'error'
+					});
+				}
+			},
+			/**
+			 * 添加 医院配置
+			 */
+			async addOption(options){
+				const res = await addCloud(...options);
+				console.log(res);
+				if(res.data && res.data.errCode === 0){
+					this.$notify({
+						title: '成功',
+						message: '添加成功',
+						type: 'success'
+					});
+					this.getBusinessInfo();
+					this.editingBusiness.show = false;
+					this.cloudStorage = deepCopy(this.cloudStorageCopy);
+				}else{
+					this.$notify({
+						title: '添加失败',
+						message: res.data.errMsg,
 						type: 'error'
 					});
 				}

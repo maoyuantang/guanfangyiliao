@@ -74,25 +74,25 @@
                     navList:[  
                         {
                             name:'随访计划',   
-                            time:'2018-12-12',
+                            time:'',
                             component:'plan',
                             msg:''
                         },
                         {
                             name:'风险评估',
-                            time:'2018-12-12',
+                            time:'',
                             component:'assessment',     
                             msg:''
                         },
                         {
                             name:'设备自测',
-                            time:'2018-12-12',
+                            time:'',
                             component:'equipment',
                             msg:''
                         },
                         {
                             name:'上传档案',
-                            time:'2018-12-12',
+                            time:'',
                             component:'doc',
                             msg:''
                         },
@@ -220,19 +220,19 @@
                 console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.patientInfo = {
-                        userId:res.data.body[0].userId,
-                        id:res.data.body[0].id,
-                        name:res.data.body[0].name,
-                        sex:res.data.body[0].sex,//性别
-                        age:res.data.body[0].age,//年龄
-                        birthday:res.data.body[0].birthday,
-                        phone:res.data.body[0].phone,
-                        address:res.data.body[0].address,
-                        isVisible:res.data.body[0].isVisible,
-                        papersType:res.data.body[0].papersType,
-                        idNo:res.data.body[0].identityCard//身份证
-                    },
-					this.patientInfo = res.data.body[0].name;
+                        userId:res.data.body.userId,
+                        id:res.data.body.id,
+                        name:res.data.body.name,
+                        sex:res.data.body.sex,//性别
+                        age:res.data.body.age,//年龄
+                        birthday:res.data.body.birthday,
+                        phone:res.data.body.phone,
+                        address:res.data.body.address,
+                        isVisible:res.data.body.isVisible,
+                        papersType:res.data.body.papersType,
+                        idNo:res.data.body.identityCard//身份证
+                    }
+					// this.patientInfo = res.data.body[0].name;
 				}else{
 					this.$notify({
 						title: '患者信息获取失败',

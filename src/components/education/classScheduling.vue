@@ -41,7 +41,6 @@
                             <th>{{item.teacher}}</th>
                             <th>{{item.teachTime}}</th>
                             <th class="class-scheduling-tbody-spe">{{item.number}}</th>
-                            
                             <th>{{item.state}}</th>
                             <th>最近修改</th>
                             <th>

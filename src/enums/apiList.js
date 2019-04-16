@@ -24,7 +24,7 @@ export default {
     deleteHospitalDept:'/m/v1/api/basics/hospital/deleteHospitalDept',//8.8.删除医院科室
     // settingsList:'/m/v1/api/basics/hospital/fetchHospitalDepts',//8.9获取协作人员设置树
     // settingsUpdate:'/m/v1/api/synergySystem/settingsUpdate',//8.10超级管理员更新协作人员
-    addCloud:'/m/v1/api/cloud/addCloud',//11.1.新增云存储业务
+    addCloud:'/m/v1/api/cloud/cloud/addCloud',//11.1.新增云存储业务
     updateCloud:'/m/v1/api/cloud/cloud/updateCloud',//11.2.更新云存储业务
     cloudDetail:'/m/v1/api/cloud/cloudDetail',//11.3.查看云存储服务
     publishArticle:'/m/v1/api/inquiry/article/publishArticle',//13.1.1 文章发布【医生web】

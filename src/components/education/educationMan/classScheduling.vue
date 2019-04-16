@@ -76,7 +76,7 @@
                             </th>
                             <th class="class-scheduling-tbody-spe">
                                 <el-tooltip effect="light" :content="item.number" placement="top">
-                                    <div>{{item.number&&item.number.length>5?`${item.number.substring(0,5)}...`:item.number}}</div>
+                                    <div>{{item.number}}</div>
                                 </el-tooltip>
                             </th>
                             
@@ -744,6 +744,10 @@
     }
     .class-scheduling-top-right{
         flex:1;
+        display: inline-flex;
+        justify-content: space-between;
+        height: .4rem;
+        padding-right: 3.6%;
     }
     .class-scheduling-top-right>.search{
         display: inline-block;
