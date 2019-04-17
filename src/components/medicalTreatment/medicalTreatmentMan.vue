@@ -618,7 +618,7 @@
       },
       threeInput(list, value) {
         if (this.hosptDpart.length != 0) {
-          alert(1)
+          // alert(1)
           //医院是否相同
           let diyic = true;
           for (var a = 0; a < this.hosptDpart.length; a++) {
@@ -639,7 +639,7 @@
           // alert(this.beiY2 + "1是医院相同，2是医院不同")
           //医院相同
           if (this.beiY2 == 1) {
-            alert("this.beiY2 = 1" + '医院相同判断完成')
+            // alert("this.beiY2 = 1" + '医院相同判断完成')
             let gg = true;
             for (var a = 0; a < this.hosptDpart.length; a++) {
               for (var b = 0; b < this.hosptDpart[a].deptIds.length; b++) {
@@ -650,13 +650,13 @@
                 }
               }
             }
-            alert("科室判断完成")
+            // alert("科室判断完成")
             if (gg == false) {
-              alert("科室相同，取消")
+              // alert("科室相同，取消")
             }
             if (gg == true) {
-              alert("科室不同，新增科室")
-              alert("gg == true")
+              // alert("科室不同，新增科室")
+              // alert("gg == true")
               for (var a = 0; a < this.hosptDpart.length; a++) {
                 if (value[0] == this.hosptDpart[a].hospitalId) {
                   this.hosptDpart[a].deptIds.push(value[1])
@@ -666,7 +666,7 @@
           }
           //医院不同
           if (this.beiY2 == 2) {
-            alert("this.beiY2 == 2" + "医院不同判断完成")
+            // alert("this.beiY2 == 2" + "医院不同判断完成")
             this.hosptDpart.push(
               {
                 hospitalId: value[0],
@@ -1018,7 +1018,7 @@
       },
       //范围弹框（子组件  reback函数）
       doctorDetailFun() {
-        alert()
+        // alert()
       },
       // 管理    1.1表   操作区
       // 表一编辑
