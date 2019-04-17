@@ -220,7 +220,7 @@
         </div>
         <!-- 问诊 -->
         <div v-if="questVisible">
-            <el-dialog title="发送问诊" :visible.sync="questVisible" center append-to-body width='500px'>
+            <el-dialog  title="发送问诊" :visible.sync="questVisible" center append-to-body width='500px'>
                 <ul>
                     <li class="followBox" v-for="(text,index) in questList" :key="index" @click="QuestDetail(text.id)">
                         <span>{{text.title}}</span>
@@ -231,7 +231,7 @@
         </div>
         <!-- 问诊详情 -->
         <div v-if="questDetailVisible">
-            <el-dialog title="问诊详情" :visible.sync="questDetailVisible" center append-to-body>
+            <el-dialog class='addQuestBox' title="问诊详情" :visible.sync="questDetailVisible" center append-to-body>
                 <quest :addQuestId="addQuestId" @osendmessagechat="getSendMessageChat1" :sendToUserId="sendToUserId"></quest>
             </el-dialog>
         </div>

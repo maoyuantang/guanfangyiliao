@@ -146,15 +146,15 @@
                                             </div>
                                         </el-form-item>
                                     </div>
-                                    <span class='delete' v-if='index!=0' @click="deleteMydList(index)">
+                                    <span class='delete' @click="deleteMydList(index)">
                                       <img src="../../assets/img/addFollowDelete.png" />
                                     </span>
-                                    <span class='addMydListClass' v-else @click="addMydList()">
-                              <img src="../../assets/img/add1.png" />
-                            </span>
+                                    
                                 </li>
                             </ul>
-                            
+                            <span class='addMydListClass'  @click="addMydList()">
+                              <img src="../../assets/img/add1.png" />
+                            </span>
                         </div>
                     </div>
                     <el-form-item>
@@ -767,7 +767,7 @@ export default {
             associationId: [],
             sendTemplate1: [],
             mydAddData: {
-                type: "OUTPATIENT",
+                type: "",
                 name: "",
                 context: " ",
                 deptId: [],
@@ -3018,10 +3018,10 @@ VideoshowClose:false,
                 setTimeout(function() {
                     _this.mydAddTemplate = false;
                     _this.oGetModelList();
-                    this.mydAddData = {
+                    _this.mydAddData = {
                         type: "OUTPATIENT",
                         name: "",
-                        context: " ",
+                        context: "",
                         deptId: [],
                         associations: [
                             {
@@ -3042,6 +3042,19 @@ VideoshowClose:false,
         },
         //新增满意度调查模板
         addmydAddTemplateClick() {
+            this.mydAddData = {
+                        type: "OUTPATIENT",
+                        name: "",
+                        context: "",
+                        deptId: [],
+                        associations: [
+                            {
+                                answer: "",
+                                associationId: "",
+                                oVisable: false
+                            }
+                        ]
+                    };
             this.oTab666=[]
             $.each(this.oTab66.list, (index, text)=> {
                 if(index!=0){
@@ -3049,6 +3062,7 @@ VideoshowClose:false,
                 }
                
             });
+
 
             this.mydAddTemplate = true;
             this.addMydTemplateVis = true;

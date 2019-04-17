@@ -192,6 +192,7 @@
     }
     .add-padding{
         padding-left: .1rem;
+        color: #4D7CFE;
     }
     .public-info-item-count{
         font-family: PingFangSC-Semibold;

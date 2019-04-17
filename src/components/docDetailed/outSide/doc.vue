@@ -7,10 +7,10 @@
                     <p class="visiting-hospital">{{item.hospital}}</p>
                     <p class="visiting-department">
                         <span class="visiting-department-on">on</span>
-                        <span class="visiting-department-name">{{item.dept}}  |  {{item.describe}}</span>
+                        <span class="visiting-department-name">{{item.dept}}  |  {{item.zhType}}</span>
                     </p>
                     <div class="visiting-content">
-                        <img :src="value.imgSrc || ''" alt="" srcset="" v-for="(value,key) in item.imgs" :key="key">
+                        <img :src="value.imgSrc || ''" alt="" srcset="" v-for="(value,key) in item.imgs" :key="key" @click="showBigImg(value)">
                         <!-- <img src="../../../../static/assets/img/ME.png" alt="" srcset="" v-for="(value,key) in item.imgs" :key="key"> -->
                     </div>
                 </TimelineItem>
@@ -27,6 +27,17 @@
             @current-change="ChangePage"
 			></el-pagination>
        </div>
+       <!-- 查看大图 弹窗 -->
+        <el-dialog
+        title=" "
+        append-to-body
+        :visible.sync="alertData.show"
+        :before-close="closeAlert"
+        >
+        <div class="doc-alert-div">
+            <img :src="alertData.imgSrc" alt="" srcset="">
+        </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -56,11 +67,30 @@
                     current:1,
                     total:0
                 },
-                listData:[]
+                listData:[],
+                alertData:{
+                    show:false,   
+                    imgSrc:''
+                }
             }
 		},
 		
 		methods:{
+            /**
+             * 展示大图弹窗
+             */
+            showBigImg(item){
+                console.log(item);
+                this.alertData.imgSrc = value.imgSrc;
+                this.alertData.show = true;
+            },
+            /**
+             * 关闭 查看大图弹窗
+             */
+            closeAlert(){
+                this.alertData.show = false;
+                this.alertData.imgSrc = '';
+            },
             /**
              * 分页
              */
@@ -81,9 +111,17 @@
                 });
                 console.log(res);
                 if(res.data && res.data.errCode === 0){
+                    const typeMap = {
+                        SURVEYING:'检验检查',
+                        RECIPE:'处方',
+                        IMAGE:'影像',
+                        DIAGNOSISL:'诊断结论',
+                        OTHER:'其他'
+                    };
                     this.listData = res.data.body.data2.list.map(item=>{
                         item.imgs = item.imgs.map(ele=>{
                             ele.imgSrc = ele.imgId?`${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${ele.imgId}`:ele.imgId;
+                            ele.zhType = typeMap[ele.type] || '其他';
                             return ele;
                         })
                         return item;

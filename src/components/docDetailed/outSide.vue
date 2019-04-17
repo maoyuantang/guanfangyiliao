@@ -43,7 +43,7 @@
 
 <script>
     import { mapState } from 'vuex'
-    import {patientInfo, lastAssessPlan, lastUserRecord, nearlyFollowup, nearlyDevice} from '../../api/apiAll.js'
+    import {patientInfo, lastAssessPlan, lastUserRecord, nearlyFollowup, nearlyDevice, getDoctorMessage1} from '../../api/apiAll.js'
     import plan from './outSide/plan.vue'
     import assessment from './outSide/assessment.vue'
     import equipment from './outSide/equipment.vue'
@@ -74,25 +74,25 @@
                     navList:[  
                         {
                             name:'随访计划',   
-                            time:'2018-12-12',
+                            time:'',
                             component:'plan',
                             msg:''
                         },
                         {
                             name:'风险评估',
-                            time:'2018-12-12',
+                            time:'',
                             component:'assessment',     
                             msg:''
                         },
                         {
                             name:'设备自测',
-                            time:'2018-12-12',
+                            time:'',
                             component:'equipment',
                             msg:''
                         },
                         {
                             name:'上传档案',
-                            time:'2018-12-12',
+                            time:'',
                             component:'doc',
                             msg:''
                         },
@@ -212,14 +212,27 @@
              */
             async getPatientInfo(){
                 console.log('enter')
-                const res = await patientInfo({
+                const res = await getDoctorMessage1({
                     token:this.userInfo.token,
-                    orgCode:this.userSelfInfo.orgCode,
+                    // orgCode:this.userSelfInfo.orgCode,
                     familyMemberId:this.inData.id
                 });
                 console.log(res);
                 if(res.data && res.data.errCode === 0){
-					this.patientInfo = res.data.body;
+                    this.patientInfo = {
+                        userId:res.data.body.userId,
+                        id:res.data.body.id,
+                        name:res.data.body.name,
+                        sex:res.data.body.sex,//性别
+                        age:res.data.body.age,//年龄
+                        birthday:res.data.body.birthday,
+                        phone:res.data.body.phone,
+                        address:res.data.body.address,
+                        isVisible:res.data.body.isVisible,
+                        papersType:res.data.body.papersType,
+                        idNo:res.data.body.identityCard//身份证
+                    }
+					// this.patientInfo = res.data.body[0].name;
 				}else{
 					this.$notify({
 						title: '患者信息获取失败',

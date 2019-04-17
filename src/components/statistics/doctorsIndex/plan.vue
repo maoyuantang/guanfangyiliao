@@ -372,7 +372,7 @@
         <WomanDoc :inData="puBlicManData" @reback="addPublicMan"></WomanDoc>
         <!-- 会诊邀请弹框 -->
         <div v-if="invitationVisible">
-            <el-dialog class="evaluateBox evaluateBox2" title=" 邀请医生" :visible.sync="invitationVisible" width="602px" hight="356px" center>
+            <el-dialog class="invitationClass" title=" 邀请医生" :visible.sync="invitationVisible"  width="240px" hight="356px" center>
                 <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
                 <el-button type="primary" @click="sureInvitation()">确认邀请</el-button>
             </el-dialog>
@@ -380,7 +380,7 @@
 
         <!-- 协作邀请弹框 -->
         <div v-if="invitationVisible">
-            <el-dialog class="planWarnClass" title=" 邀请医生" :visible.sync="invitationVisible" width="602px" hight="356px" center>
+            <el-dialog class="invitationClass" title=" 邀请医生" :visible.sync="invitationVisible"  width="240px" hight="356px" center>
                 <el-tree :data="invitationDataXiez" :props="defaultProps" @check="handleCheckChangeXiez" show-checkbox></el-tree>
                 <el-button type="primary" @click="sureInvitationXiez()">确认邀请</el-button>
             </el-dialog>

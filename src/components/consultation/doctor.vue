@@ -36,14 +36,21 @@
                         </span>
                     </div>
                     <el-form-item label="会诊病人:">
-                        <el-select placeholder="" v-model="startHz.userId" @change="hosChange1(index,text.value)">
-                                    <el-option v-for="(text,index) in hospitalList1" :label="text.name" :value="text.value" :key="index"></el-option>
-                                </el-select>
+                        <el-select placeholder="" v-model="startHz.userId" @change="hosChange1(startHz.userId)">
+                            <el-option v-for="(text,index) in hospitalList1" :label="text.name" :value="text.value" :key="index"></el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="病人病历:">
-                         <el-select placeholder="" v-model="startHz.medicalHistory">
+                        <!-- <el-select placeholder="" v-model="startHz.medicalHistory">
                                     <el-option v-for="(text,index) in hospitalList2" :label="text.name" :value="text.value" :key="index"></el-option>
-                                </el-select>
+                                </el-select> -->
+                        <!-- <el-select v-model="startHz.medicalHistorys" multiple placeholder="请选择">
+                            <el-option-group v-for="group in hospitalList2" :key="group.label" :label="group.label">
+                                <el-option v-for="item in group.options" :key="item.visitNo" :label="item.hospitalName" :value="item.visitNo">
+                                </el-option>
+                            </el-option-group>
+                        </el-select> -->
+                        <el-tree v-model="startHz.medicalHistorys" :data="hospitalList2" :props="defaultProps1" @check="handleCheckChange1" show-checkbox></el-tree>
                     </el-form-item>
                     <el-form-item label="申请时间:">
                         <el-date-picker v-model="startHz.applicationTime" type="datetime" placeholder="" value-format="yyyy-MM-dd HH:mm">
@@ -234,8 +241,12 @@ export default {
             ],
             invitationData: [],
             defaultProps: {
-                children: "children",
+                children: "hospitalName",
                 label: "name"
+            },
+            defaultProps1: {
+                children: "children",
+                label: "hospitalName"
             },
             invitationVisible: false,
             receptionDepartment: [], //接收科室数据
@@ -325,7 +336,7 @@ export default {
             startHz: {
                 type: "SPECIALIST",
                 userId: " ",
-                medicalHistory: "",
+                medicalHistorys: [],
                 applicationTime: "",
                 consultationPurpose: "",
                 consultationHospitalDept: [
@@ -631,8 +642,8 @@ export default {
         startHuizhen() {
             this.centerDialogVisible = true;
             this.getDepartment1(this.userSelfInfo.orgCode);
-            this.getHospitalment()
-            this.getHospitalment1()
+            this.getHospitalment();
+            this.getHospitalment1();
         },
         //发起会诊时删除医生和科室
         hospOrDer(text, index) {
@@ -657,6 +668,20 @@ export default {
             });
             console.log(this.invitationSelectList);
             console.log(odata);
+        },
+        // 发起会诊病历
+        handleCheckChange1(data, odata) {
+            console.log(data, odata);
+            // this.invitationSelectList = [];
+            let _this = this;
+
+            $.each(odata.checkedNodes, function(index, text) {
+                if (text.visitNo) {
+                    _this.startHz.medicalHistorys.push(text);
+                }
+            });
+            // console.log(this.invitationSelectList);
+            // console.log(odata);
         },
         //确认邀请
         async sureInvitation() {
@@ -753,6 +778,10 @@ export default {
                     departmentsId: text.departmentsId
                 });
             });
+            $.each(this.startHz.medicalHistorys, function(index, text) {
+                text.medicalHistoryId=text.visitNo
+            });
+
             let query = {
                 token: this.userState.token
             };
@@ -760,7 +789,7 @@ export default {
                 type: this.startHz.type,
                 deptId: this.startHz.deptId,
                 userId: this.startHz.userId,
-                medicalHistory: this.startHz.medicalHistory,
+                medicalHistorys: this.startHz.medicalHistorys,
                 applicationTime: this.startHz.applicationTime,
                 consultationPurpose: this.startHz.consultationPurpose,
                 consultationHospitalDept: addHzConsultatonList
@@ -898,7 +927,7 @@ export default {
             }
         }, //获取医院列表
         async getHospitalment() {
-            this.hospitalList=[]
+            this.hospitalList = [];
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -919,8 +948,8 @@ export default {
                 });
             }
         },
-         async getHospitalment1() {
-             this.hospitalList1=[]
+        async getHospitalment1() {
+            this.hospitalList1 = [];
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -941,21 +970,39 @@ export default {
                 });
             }
         },
-         async getHospitalment2(oid) {
-             this.hospitalList2=[]
+        async getHospitalment2(oid) {
+            this.hospitalList2 = [
+                {
+                    hospitalName: "就诊记录",
+                    children: []
+                },
+                {
+                    hospitalName: "电子病历",
+                    children: []
+                }
+            ];
             let _this = this;
             let query = {
                 token: this.userState.token,
-                patientId:oid
+                patientId: oid
             };
             const res = await queryByMedicalHistory(query);
             if (res.data && res.data.errCode === 0) {
-                $.each(res.data.body, function(index, text) {
-                    _this.hospitalList2.push({
-                        name: text.visit-visitType,
-                        value: text.visitNo
-                    });
-                });
+                this.hospitalList2[0].children = res.data.body.visit;
+                this.hospitalList2[1].children =
+                    res.data.body.electronicMedical;
+                    $.each(this.hospitalList2[0].children,function(index,text){
+                        text.type='VISIT'
+                    })
+                    $.each(this.hospitalList2[1].children,function(index,text){
+                        text.type='HISTORY'
+                    })
+                // $.each(res.data.body.electronicMedical, function(index, text) {
+                //     _this.hospitalList2.push({
+                //         name: text.codeName,
+                //         value: text.visitNo
+                //     });
+                // });
             } else {
                 //失败
                 this.$notify.error({
@@ -969,9 +1016,9 @@ export default {
             this.getDepartment2(oindex, orgCode);
         },
         //改变病人
-        hosChange1(oindex, orgCode) {
-            this.getDepartment2(oindex, orgCode);
-            this.getHospitalment2(orgCode)
+        hosChange1(orgCode) {
+            // this.getDepartment2(oindex, orgCode);
+            this.getHospitalment2(orgCode);
         },
         //获取邀请列表
         async Invitation(row) {

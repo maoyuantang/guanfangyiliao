@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { deepCopy } from "../public/publicJs/deepCopy.js";
 import ovideo from "../video/oVideo.vue";
 import apiBaseURL from "../enums/apiBaseURL.js";
 import { mapState } from "vuex";
@@ -77,7 +78,8 @@ export default {
             content: "",
             heartCheck: {},
             createVideoRoomData: {},
-            sessionId: ""
+            sessionId: "",
+            tongbuIf:false,
         };
     },
     computed: {
@@ -146,10 +148,13 @@ export default {
             const res = await fetchSyncInfo(query);
             console.log(res);
             if (res.data && res.data.errCode === 0) {
-                let oUserSelfInfo = this.userSelfInfo;
+                console.log(res.data.body.currMaxVersion);
+                let oUserSelfInfo = deepCopy(this.userSelfInfo);
                 oUserSelfInfo.currMaxVersion = res.data.body.currMaxVersion;
-                this.$store.commit("user/SETUSERSELFINFO", oUserSelfInfo);
-                this.$store.commit("socket/SYNCHROIMESSAGE", res.data.body);
+                _this.$store.commit("user/SETUSERSELFINFO", oUserSelfInfo);
+                console.log(_this.userSelfInfo);
+                _this.$store.commit("socket/SYNCHROIMESSAGE", res.data.body);
+                _this.tongbuIf=true
             } else {
                 //失败
                 this.$notify.error({
@@ -435,7 +440,12 @@ export default {
                 return false;
             } else if (RequestType == 0) {
                 //同步
-                this.pullSynchro();
+                if(this.tongbuIf){
+                    this.pullSynchro();
+                    this.tongbuIf=false
+                }
+               
+
                 return false;
             } else if (RequestType == 6) {
                 this.sessionId = odata.info.to;
@@ -546,17 +556,17 @@ export default {
                                 conferenceNumber: odata.info.body.split("&")[1]
                             };
                             _this.sessionId = odata.info.body.to;
-let chatTypeBox={
-    startDoctorName: "",
-                startDoctorTYpe: ""
-}
-                             if (odata.info.location == "cooperation") {
-                chatTypeBox.startDoctorTYpe = "协作";
-            } else if (odata.info.location == "consultation") {
-                chatTypeBox.startDoctorTYpe = "会诊";
-            }
+                            let chatTypeBox = {
+                                startDoctorName: "",
+                                startDoctorTYpe: ""
+                            };
+                            if (odata.info.location == "cooperation") {
+                                chatTypeBox.startDoctorTYpe = "协作";
+                            } else if (odata.info.location == "consultation") {
+                                chatTypeBox.startDoctorTYpe = "会诊";
+                            }
 
- _this.$store.commit(
+                            _this.$store.commit(
                                 "socket/CHATTYPEBOX",
                                 chatTypeBox
                             );
@@ -804,7 +814,6 @@ let chatTypeBox={
                         //     if (localTest == "true") {
                         //         parent.leaveConference();
                         //     }
-
                         //     if (videotyped == "true") {
                         //         if (kicking == "true") {
                         //             // return;
@@ -991,7 +1000,7 @@ let chatTypeBox={
                             //     this.IMessage.decode(new Uint8Array(res.data))
                             //         .info.body
                             // );
-                            var bodyls=odata.info.body
+                            var bodyls = odata.info.body;
                             var botest = bodyls.body;
                             var getParams = function(name) {
                                 var search = botest;

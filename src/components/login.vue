@@ -282,6 +282,7 @@ export default {
                 : (options.captcha = this.passwd.text);
             const res = await login(options);
             if (res.data && res.data.errCode === 0) {
+                console.log(res)
                 //成功
                 res.data.body.isLogin = true; //添加个字段，方便前端操作
                 const sign = this.reverseStr(res.data.body.sign); //翻转sign
@@ -369,7 +370,11 @@ export default {
                 sessionStorage.setItem("viewRoot", JSON.stringify(reData)); //缓存将权限下来
                 return;
             }
-            // const uth = unique( data.hasAuth.map(item=>(Number(item)/10000) | 0) );//把子系统算计父系统(有子系统就有父系统)
+            data.hasAuth = data.hasAuth.map(item=>{
+                item.authorityId = ( ( ( Number(item.authorityId)/10000 ) | 0 ) *10000 ).toString();
+                return item;
+            });
+            data.hasAuth = this.uniqueArray(data.hasAuth,'authorityId','type');
             for (let i of this.allPages) {
                 for (let j of data.hasAuth) {
                     if (j.authorityId === i.code) {
@@ -379,6 +384,7 @@ export default {
                     }
                 }
             }
+            console.log(reData)
             if (reData.manager.length > 1) {
                 //为什么是大于1？因为我一开始就在里面放了个元素，还有为什么我不用用户的身份判断？因为那东西是真的水，根据产品设计，用户不是管理员也有可能操作管理员页面~~~！
                 reData.now = {
@@ -391,34 +397,52 @@ export default {
                     type: "2"
                 };
             }
-            reData.manager  = this.unique(reData.manager.map(item=>{
-                item.code = ( ( ( Number(item.code) /10000) | 0) *10000 ).toString();
-                return item;
-            }));
-            reData.doctors  = this.unique(reData.doctors.map(item=>{
-                item.code = ( ( ( Number(item.code) /10000) | 0) *10000 ).toString();
-                return item;
-            }))
-            
+            // reData.manager  = this.unique(reData.manager.map(item=>{
+            //     item.code = ( ( ( Number(item.code) /10000) | 0) *10000 ).toString();
+            //     return item;
+            // }));
+            // reData.doctors  = this.unique(reData.doctors.map(item=>{
+            //     item.code = ( ( ( Number(item.code) /10000) | 0) *10000 ).toString();
+            //     return item;
+            // }))
+            console.log(reData)
             this.$store.commit("user/SETVIEWROOT", reData);
             sessionStorage.setItem("viewRoot", JSON.stringify(reData)); //缓存将权限下来
         },
+
         /**
          *数组去重 (json数组)
          */
-        unique(array){
-            const newArr = [];
-            array.forEach(element => {
-                for(const i of newArr){
-                    if(i.code === element.code){
+        uniqueArray(array, key, key2){
+            let result = [array[0]];
+            let i = 0;
+            const length = array.length;
+            for(; i < length; i++){
+                let item = array[i];
+                let repeat = false;
+                for (let j = 0; j < result.length; j++) {
+                    if (item[key] == result[j][key] && item[key2] == result[j][key2]) {
+                        repeat = true;
                         break;
                     }
                 }
-                newArr.push(element)
-            });
-            return newArr;
-            // return Array.from(new Set(array));
+                !repeat ? result.push(item) : null;
+            }
+            return result;
         },
+        // unique(array){
+        //     const newArr = [];
+        //     array.forEach(element => {
+        //         for(const i of newArr){
+        //             if(i.code === element.code && i.type === element.type){
+        //                 return;
+        //             }
+        //         }
+        //         newArr.push(element)
+        //     });
+        //     return newArr;
+        //     // return Array.from(new Set(array));
+        // },
         /**
          * 获取科室列表
          */
