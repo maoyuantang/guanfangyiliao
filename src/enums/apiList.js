@@ -318,6 +318,10 @@ export default {
     orderFmsCharts:'/m/v1/api/order/orderFmsCharts',//17.16.家医系统业务人次统计图
     queryPageByassessPlan:'/m/v1/api/medical/queryPageByassessPlan',//12.WEB端获取评估计划列表
     queryByPatientInfoInfo: '/m/v1/api/consultation/queryByPatientInfoInfo',
-    queryByMedicalHistory: '/m/v1/api/consultation/queryByMedicalHistory'
+    queryByMedicalHistory: '/m/v1/api/consultation/queryByMedicalHistory',
+    referredPatientList:'/m/v1/api/referral/referredPatientList',//14.15.转诊-获取病人列表
+    patientMedicalHistory:'/m/v1/api/referral/patientMedicalHistory',//14.16.转诊-获取病历列表
+    patientMedicalDetail:'/m/v1/api/referral/patientMedicalDetail',//14.17.转诊-获取病历详情
+    toUpdate:'/m/v1/api/referral/dualReferral/toUpdate',//14.18.双向转诊-WEB医生端-获取修改记录
 }
 
