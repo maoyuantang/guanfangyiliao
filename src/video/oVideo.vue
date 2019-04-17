@@ -114,7 +114,7 @@
         <!--查看档案-->
         <div v-if="archivesVisible">
             <el-dialog title="查看档案" :visible.sync="archivesVisible" width="380px" center append-to-body fullscreen='true'>
-                <archives v-if="archivesVisible"></archives>
+                <archives v-if="archivesVisible" :inData='archivesIdVisable'></archives>
             </el-dialog>
         </div>
         <!--屏幕安装指南-->
@@ -191,18 +191,20 @@ export default {
             videoIng: 0,
             loadingUs: true,
             loadingOther: true,
-            streamObject: {}
+            streamObject: {},
+            archivesIdVisable:true
         };
     },
     methods: {
         //查看档案
         sendArchives() {
+            console.log(this.archivesId)
             if (this.archivesId) {
                 this.$router.replace({
                     path: "/outpatient",
                     query: {
                         id: this.archivesId,
-                        inData: true
+                        
                     }
                 });
                 this.archivesVisible = true;
@@ -213,12 +215,6 @@ export default {
                 });
             }
 
-            // this.$router.push({
-            //     path: "/docDetailed",
-            //     query: {
-            //         id: this.userMessage.userId
-            //     }
-            // });
         },
         //屏幕分享
         screenClick() {
@@ -635,7 +631,7 @@ export default {
         closeTheVideo1() {},
         //关闭视频退出诊室
         async closeVideo() {
-            this.streamObject.getTracks()[0].stop();
+            // this.streamObject.getTracks()[0].stop();
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -688,7 +684,7 @@ export default {
                         messageBody = "cancle";
                         _this.sendMessageChat("6", "cancle", "VIDEO");
                     } else if (_this.videoUser > 0) {
-                        alert("有人在视频，然后我挂断");
+                        // alert("有人在视频，然后我挂断");
                         _this.$emit("reback", "closeComplete");
                         messageBody = "complete";
                         _this.sendMessageChat("6", "complete", "VIDEO");
@@ -1374,7 +1370,7 @@ export default {
             let _this = this;
             // var conferenceName = $("#anonymousConferenceName").val();
             let conferenceName = this.createVideoRoomData1.conferenceNumber;
-            alert(conferenceName);
+            // alert(conferenceName);
             if (!conferenceName) {
                 alert("请输入会议室号");
                 return;
@@ -1396,7 +1392,7 @@ export default {
                 function(result) {
                     console.log("join conference success : ", result);
                     _this.userResource = result.response.info.resource;
-                    alert(_this.userResource);
+                    // alert(_this.userResource);
                     $("#localVideos").append(
                         _this.generateParticipant(result, true)
                     );
@@ -1631,7 +1627,7 @@ export default {
             this.noLineUpNum();
             this.getThePatient();
         } else {
-            this.archivesId = "不是门诊进入";
+            this.archivesId = this.userMessage.userId;
             this.publicVideoVisable = true;
             this.localVideoVisable = true;
             this.listVisable = false;
@@ -1649,7 +1645,7 @@ export default {
             $("#remoteVideos").append(_this.generateParticipant(result, false));
             // _this.$store.commit("socket/VIDEOUSER", 1);
             _this.videoUser += 1;
-            alert("收到有人进入房间" + _this.videoUser);
+            // alert("收到有人进入房间" + _this.videoUser);
             //人数超过3人呗踢出
             if (_this.videoUser > 3) {
                 _this.closeVideoRoom(2);
@@ -1678,7 +1674,7 @@ export default {
                 }
             }
 
-            alert("收到有人离开房间对方有几个人在" + _this.videoUser);
+            // alert("收到有人离开房间对方有几个人在" + _this.videoUser);
         });
         /**
          * 收到文件信息

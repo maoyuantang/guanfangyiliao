@@ -718,6 +718,9 @@ padding-left: 19px;
     position: relative;
     padding-top: 10px;
 }
+.addQuestUl .el-checkbox__label{
+    padding-left:0
+}
 .deleteQuestList {
     position: absolute;
     right: 107px;
