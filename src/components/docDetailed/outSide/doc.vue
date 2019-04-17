@@ -81,7 +81,7 @@
              */
             showBigImg(item){
                 console.log(item);
-                this.alertData.imgSrc = value.imgSrc;
+                this.alertData.imgSrc = item.imgSrc;
                 this.alertData.show = true;
             },
             /**

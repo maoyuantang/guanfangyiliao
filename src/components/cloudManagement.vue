@@ -11,8 +11,9 @@
 						<i class="iconfont edit-business" @click="editBusiness">&#xe608;</i>
 					</div>
 					<div class="config-module-content-price-list">
+						<span class="price-to">To</span>
 						<div class="config-module-content-price" v-for="(item,index) in cloudStorage.price" :key="index" v-show="index<3">
-							<span class="price-to">To</span>
+							<!-- <span class="price-to">To</span> -->
 							<span class="price-symbol"><i class="iconfont price-symbol-icon">&#xe76d;</i></span>
 							<span class="price-num">{{item.worth}}<span>/{{item.valueUnit}}年</span></span>
 						</div>
@@ -147,7 +148,7 @@
 	import { deepCopy } from '../public/publicJs/deepCopy.js'
 	export default {
 		watch:{
-			'cloudStorage.hospital':{
+			'cloudStorageCopy.hospital':{
 				handler(n){
 					let newArr = [...new Set(n)];
 					this.showsSelectList = this.configurationsList.filter(v=>{
@@ -342,6 +343,12 @@
 					res.data.body.agree = res.data.body.protocolId!=='';
 					res.data.body.hospital = res.data.body.hospital.map(item=>item.hospitalOrgCode);//拍平，只留下hospitalOrgCode。特么反回个null什么意思
 					this.cloudStorage = res.data.body;
+					let newArr = [...new Set(this.cloudStorage.hospital)];
+					this.showsSelectList = this.configurationsList.filter(v=>{  
+						for(const i of newArr){
+							if(i === v.hospitalOrgCode) return v;
+						}
+					});
 					// this.showsSelectList = res.data.body.hospital;
 				}else{
 					this.$notify({
@@ -470,7 +477,7 @@
 					}
 				];
 				console.log(options)
-				options.cloudId ? this.editOption(options) : this.addOption(options);
+				options[1].cloudId ? this.editOption(options) : this.addOption(options);
 			},
 			/**
 			 * 修改 医院配置
@@ -484,9 +491,15 @@
 						message: '修改成功',
 						type: 'success'
 					});
-					this.getBusinessInfo();
+					// this.getBusinessInfo();
 					this.editingBusiness.show = false;
 					this.cloudStorage = deepCopy(this.cloudStorageCopy);
+					let newArr = [...new Set(this.cloudStorageCopy.hospital)];
+					this.showsSelectList = this.configurationsList.filter(v=>{
+						for(const i of newArr){
+							if(i === v.hospitalOrgCode) return v;
+						}
+					});
 				}else{
 					this.$notify({
 						title: '修改失败',
@@ -507,9 +520,15 @@
 						message: '添加成功',
 						type: 'success'
 					});
-					this.getBusinessInfo();
+					// this.getBusinessInfo();
 					this.editingBusiness.show = false;
 					this.cloudStorage = deepCopy(this.cloudStorageCopy);
+					let newArr = [...new Set(this.cloudStorageCopy.hospital)];
+					this.showsSelectList = this.configurationsList.filter(v=>{
+						for(const i of newArr){
+							if(i === v.hospitalOrgCode) return v;
+						}
+					});
 				}else{
 					this.$notify({
 						title: '添加失败',
@@ -587,6 +606,8 @@
 		font-family: var(--fontFamily4);
 		color: var(--color19);
 		padding-right: 0.08rem;
+		display: flex;
+		align-items: flex-end;
 	}
 	.price-symbol-icon{
 		color: var(--borderColor5);
@@ -642,6 +663,7 @@
 	}
 	.config-module-content-price-list{
 		display: flex;
+		position: relative;
 	}
 	.price-num>span{
 		font-size: var(--fontSize3);
