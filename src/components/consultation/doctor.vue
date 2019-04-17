@@ -221,7 +221,8 @@ export default {
             userMessage:{},
             chatTypeBox: {
                 startDoctorName: "",
-                startDoctorTYpe: "会诊"
+                startDoctorTYpe: "会诊",
+                archivesUrl:'/consultation'
             }, //发起医生
             docTotal: 0,
             adminTotal: 0,
