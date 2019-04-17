@@ -391,7 +391,8 @@ export default {
             docTime1: "",
             chatTypeBox: {
                 startDoctorName: "",
-                startDoctorTYpe: "协作"
+                startDoctorTYpe: "协作",
+                archivesUrl:'/cooperation'
             }
         };
     },

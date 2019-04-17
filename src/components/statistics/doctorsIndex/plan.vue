@@ -524,7 +524,8 @@ export default {
             oclick: "click",
             chatTypeBox: {
                 startDoctorName: "",
-                startDoctorTYpe: "随访"
+                startDoctorTYpe: "随访",
+                archivesUrl:'/'
             },
             // seeRemarksListVisable1: false,
             // seeRemarksListVisable2: false,

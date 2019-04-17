@@ -192,19 +192,19 @@ export default {
             loadingUs: true,
             loadingOther: true,
             streamObject: {},
-            archivesIdVisable:true
+            archivesIdVisable: true,
+        //    archivesUrl :'/outpatient',
         };
     },
     methods: {
         //查看档案
         sendArchives() {
-            console.log(this.archivesId)
+            console.log(this.archivesId);
             if (this.archivesId) {
                 this.$router.replace({
-                    path: "/outpatient",
+                    path: this.chatTypeBox.archivesUrl,
                     query: {
-                        id: this.archivesId,
-                        
+                        id: this.archivesId
                     }
                 });
                 this.archivesVisible = true;
@@ -214,7 +214,6 @@ export default {
                     message: "请选择需要查看档案的用户"
                 });
             }
-
         },
         //屏幕分享
         screenClick() {
@@ -1616,7 +1615,6 @@ export default {
 
         this.createVideoRoomData1 = this.createVideoRoomData;
         let _this = this;
-
         if (this.videoType == "门诊") {
             this.archivesId = "";
             this.listVisable = true;
@@ -1627,7 +1625,11 @@ export default {
             this.noLineUpNum();
             this.getThePatient();
         } else {
-            this.archivesId = this.userMessage.userId;
+            if (this.chatTypeBox.startDoctorTYpe != "协作") {
+                this.archivesId = this.userMessage.userId;
+            } else {
+                this.archivesId = "不是门诊和协作进入";
+            }
             this.publicVideoVisable = true;
             this.localVideoVisable = true;
             this.listVisable = false;
