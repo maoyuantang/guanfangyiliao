@@ -122,7 +122,7 @@
                                     <img src="../../assets/img/questCha.png" />
                                 </span>
                                 <div v-show="text.questionType=='RADIO'">
-                                    <el-form-item :label="index+1">
+                                    <el-form-item :label="index+1+'.'">
                                         <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
                                     </el-form-item>
                                     <el-radio-group class="redioSingle redioSingleInput">
@@ -265,7 +265,7 @@
                     <el-form-item label="">
                         <el-select v-model="addArticleData.articleType" placeholder="请选择活动区域">
 
-                            <el-option v-for="(text1,index) in oTab14.list " :label="text1.text" :value="text1.value" :key="index">
+                            <el-option v-for="(text1,index) in oTab144 " :label="text1.text" :value="text1.value" :key="index">
 
                             </el-option>
                         </el-select>
@@ -782,6 +782,7 @@ export default {
             oTab11: { list: [] },
             oTab12: { list: [] }, //我的随访分组
             oTab14: { list: [] },
+            oTab144:[],
             oTab15: { list: [] },
             odata: 1,
             columns: [
@@ -2583,6 +2584,12 @@ export default {
                 this.QuestTableVisible = true;
             } else if (this.oDocThis == 3) {
                 this.articleTableVisible = true;
+            
+                $.each(this.oTab14.list,(index,text)=>{
+                    if(index!=0){
+                        this.oTab144.push(text)
+                    }
+                })
             }
         },
 
@@ -3331,9 +3338,9 @@ export default {
 }
 
 .addFollowTitle .el-input__inner::-webkit-input-placeholder {
-    font-family: .PingFangSC-Regular;
+    /* font-family: .PingFangSC-Regular;
     font-size: 18px;
     color: #281012;
-    letter-spacing: -0.25px;
+    letter-spacing: -0.25px; */
 }
 </style>

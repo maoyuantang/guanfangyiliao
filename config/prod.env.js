@@ -16,9 +16,9 @@ module.exports = {
   IMG_PREFIX: '"https://demo.chuntaoyisheng.com:10001"',
 
   //线上
-  // WSS_PATH: '"wss://demo.chuntaoyisheng.com:10002/chat"',
-  // HTTPS_PATH: '"https://demo.chuntaoyisheng.com:10002"',
-  // IMG_PREFIX: '"https://demo.chuntaoyisheng.com:10002"'
+  // WSS_PATH: '"wss://cms.chuntaoyisheng.com/chat"',
+  // HTTPS_PATH: '"https://cms.chuntaoyisheng.com"',
+  // IMG_PREFIX: '"https://cms.chuntaoyisheng.com"'
 
 
   

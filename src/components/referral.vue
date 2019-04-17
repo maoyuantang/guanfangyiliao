@@ -18,8 +18,7 @@
           <div class="moved_top">
             <img v-if="dualReferralRecordFile.headId == null" src="../assets/img/a-6.png" alt="医生头像">
             <img v-if="dualReferralRecordFile.headId"
-              :src='process.env.IMG_PREFIX+"/m/v1/api/hdfs/fs/download/"+dualReferralRecordFile.headId'
-              alt="医生头像">
+              :src='process.env.IMG_PREFIX+"/m/v1/api/hdfs/fs/download/"+dualReferralRecordFile.headId' alt="医生头像">
             <p>{{dualReferralRecordFile.patientName}}</p>
           </div>
           <!-- 转院路程 -->
@@ -87,11 +86,19 @@
             </el-select>
           </el-form-item>
 
-          <div class="block" style="margin-bottom: 22px;">
+          <!-- <div class="block" style="margin-bottom: 22px;">
             <span class="demonstration"
               style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院:</span>
             <el-cascader :options="addForm.intoHospital.list" v-model="addForm.intoHospital.value"
               @change="handleChange" clearable ref="ceshi3">
+            </el-cascader>
+          </div> -->
+
+          <div class="block" style="margin-bottom: 22px;">
+            <span class="demonstration"
+              style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院</span>
+            <el-cascader expand-trigger="hover" placeholder="单选" clearable style="width:65%;"
+              :options="addForm.intoHospital.list" @change="handleChange" ref="ceshi3">
             </el-cascader>
           </div>
 
@@ -601,6 +608,7 @@
       },
       handleChange(value) {
         console.log(value);
+        this.addForm.intoHospital.value = value
       },
       handleClose1(done) {
         this.addForm.typeList.value = "";
@@ -961,7 +969,7 @@
           console.log('医生端-医院与科室下拉框联动 +成功')
           console.log(res)
           this.addForm.intoHospital.list.length = 0;
-          $.each(res.data.body, function (index, text) {
+          $.each(res.data.body, function (index1, text) {
             _this.addForm.intoHospital.list.push(
               {
                 label: text.label,
@@ -972,7 +980,7 @@
             )
             if (text.children.length != 0) {
               $.each(text.children, function (index, text) {
-                _this.addForm.intoHospital.list[index].children.push(
+                _this.addForm.intoHospital.list[index1].children.push(
                   {
                     label: text.label,
                     value: text.id,
@@ -1044,19 +1052,21 @@
           token: this.userInfo.token
         };
         let options = {
-          referralType: this.addForm.typeList.value,
+          referralType: this.addForm.typeList.value,//转诊类型：UP上转，DOWN下转
           illnessId: this.addForm.diseaseName.value,
           illnessName: this.$refs.ceshi1.selectedLabel,
           patientId: this.addForm.patient.value,
           patientName: this.$refs.ceshi2.selectedLabel,
-          receiveOrgCode: this.addForm.intoHospital.value[0],
-          receiveOrgName: this.$refs.ceshi3.currentLabels[0],
-          receiveDeptId: this.addForm.intoHospital.value[1],
-          receiveDeptName: this.$refs.ceshi3.currentLabels[1],
-          intention: this.addForm.movePurpose,
-          diagnose: this.addForm.beginIdea,
+          receiveOrgName: this.$refs.ceshi3.currentLabels[0],//接收医生名称 
+          receiveOrgCode: this.addForm.intoHospital.value[0],//	接收医院代码  
+          receiveDeptName: this.$refs.ceshi3.currentLabels[1],//	接收科室名称 
+          receiveDeptId: this.addForm.intoHospital.value[1],//接收科室ID 
+          applyTime: this.addForm.moveTime.value,
+          intention: this.addForm.movePurpose,//转诊目的 
+          diagnose: this.addForm.beginIdea,//	初步诊断 
           // archivesAuthority: this.addForm.giveRight.value,
-          medicalRecordIds: this.arrayMed
+          // id:"", //上次转诊记录ID
+          medicalRecordIds: this.arrayMed//病历授权（数组） 
         };
         console.log(options)
         const res = await dualReferralAdd(query, options);                                   //  14.6.双向转诊-WEB医生端-申请转诊 
@@ -1249,6 +1259,7 @@
           receiveOrgName: this.$refs.ceshi3.currentLabels[0],//接收医生名称 
           receiveDeptId: this.addForm.intoHospital.value[1],//接收科室ID
           receiveDeptName: this.$refs.ceshi3.currentLabels[1],//接收科室名称
+          // applyTime: this.addForm.moveTime.value,
           intention: this.addForm.movePurpose,//转诊目的
           diagnose: this.addForm.beginIdea,//初步诊断
           // archivesAuthority: this.addForm.giveRight.value,//病历授权
@@ -1376,7 +1387,7 @@
         this.kuang2Save = 3
         let query = {
           token: this.userInfo.token,
-            referralId: data2.referralId,//转诊ID
+          referralId: data2.referralId,//转诊ID
         };
         const res = await dualReferralget(query);                                   //14.14.双向转诊-WEB医生端-获取需要再次转诊的记录 
         if (res.data && res.data.errCode === 0) {
@@ -1421,6 +1432,7 @@
           receiveOrgName: this.$refs.ceshi3.currentLabels[0],//接收医生名称 
           receiveDeptId: this.addForm.intoHospital.value[1],//接收科室ID
           receiveDeptName: this.$refs.ceshi3.currentLabels[1],//接收科室名称
+          applyTime: this.addForm.moveTime.value,
           intention: this.addForm.movePurpose,//转诊目的
           diagnose: this.addForm.beginIdea,//初步诊断
           // archivesAuthority: this.addForm.giveRight.value,//病历授权
