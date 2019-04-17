@@ -104,13 +104,21 @@
             </thead>
             <tbody class="account-authority-tbody">
               <tr v-for="(item,index) in outerCourt.list" :key="index">
-                <th>item.</th>
-                <th>item.name</th>
-                <th>item.account</th>
-                <th>item.phone</th>
-                <th>item.busRange.length</th>
-                <th>item.regTime</th>
-                <th>item.hasDeptManage?'有':'无'</th>
+                <th>{{item.userOrgName}}</th>
+                <th>{{item.deptNames}}</th>
+                <th>{{item.userName}}</th>
+                <th>{{item.account}}</th>
+                <th>{{item.phone}}</th>
+                <th>
+                  <el-tooltip class="item" effect="light" placement="top">
+                      <div slot="content">
+                          <p v-for="(value,key) in item.busRange" :key="key">{{value.doctorName}}</p>
+                      </div>
+                      <div class="Account-authority-append-class">{{item.busRange.length}}</div>
+                  </el-tooltip>
+                  <!-- {{item.busRange}} -->
+                </th>
+                <th>{{item.updateTime}}</th>
                 <th>
                   <el-button type="success" size="mini" plain @click="revisionCollaboration(item)">编辑</el-button>
                   <el-button type="danger" size="mini" plain>删除</el-button>
@@ -611,6 +619,9 @@ export default {
      * 修改协作 按钮 被点击
      */
     revisionCollaboration(item){
+      this.outerCourtAlert.account = item.account;
+      this.outerCourtAlert.range.select = item.busRange;
+      // this.outerCourt.department.list = item.busRange;
       this.outerCourtAlert.show = true;
       this.outerCourtAlert.type = 1;
     },
