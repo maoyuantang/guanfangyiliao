@@ -669,15 +669,20 @@ color: #4285F4;
 }
 .addQuestBox .el-form-item__label {
     width: 20px !important;
-    line-height: 27px;
+    line-height: 28px;
     padding: 0;
+    text-align: center
 }
 .addQuestBox .el-form-item__content {
     margin-left: 20px !important;
 }
+.addQuestBox .addFollowTitle{
+    margin-left: -16px;
+}
 .addQuestBox input {
     width: 500px;
     border: none;
+    padding-left:2px;
 }
 .addQuestBox input::-webkit-input-placeholder{
    font-size: 14px
