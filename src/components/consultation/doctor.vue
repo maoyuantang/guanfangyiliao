@@ -156,7 +156,7 @@
         </div>
         <div v-if="chatVisible">
             <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px" @close="closeChat()">
-                <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox"></chat>
+                <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox" :userMessage='userMessage'></chat>
             </el-dialog>
         </div>
 
@@ -218,6 +218,7 @@ export default {
     },
     data() {
         return {
+            userMessage:{},
             chatTypeBox: {
                 startDoctorName: "",
                 startDoctorTYpe: "会诊"
@@ -815,6 +816,7 @@ export default {
         //进入会诊
         async toConsultation(oObject) {
             this.sessionId = oObject.sessionId;
+            this.userMessage.userId=oObject.userId
             this.chatTypeBox.startDoctorName = oObject.doctor;
 
             this.startDoctor = oObject.doctor;

@@ -371,18 +371,18 @@
         <!-- 孕妇档案 -->
         <WomanDoc :inData="puBlicManData" @reback="addPublicMan"></WomanDoc>
         <!-- 会诊邀请弹框 -->
-        <div v-if="invitationVisible">
-            <el-dialog class="invitationClass" title=" 邀请医生" :visible.sync="invitationVisible"  width="240px" hight="356px" center>
+        <div v-if="invitationVisibleHui">
+            <el-dialog class="invitationClass" title="" :visible.sync="invitationVisibleHui"  width="240px" hight="356px" center>
                 <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
-                <el-button type="primary" @click="sureInvitation()">确认邀请</el-button>
+                <el-button class='btnClass' type="primary" @click="sureInvitation()">确认邀请</el-button>
             </el-dialog>
         </div>
 
         <!-- 协作邀请弹框 -->
         <div v-if="invitationVisible">
-            <el-dialog class="invitationClass" title=" 邀请医生" :visible.sync="invitationVisible"  width="240px" hight="356px" center>
+            <el-dialog class="invitationClass" title="" :visible.sync="invitationVisible"  width="240px" hight="356px" center>
                 <el-tree :data="invitationDataXiez" :props="defaultProps" @check="handleCheckChangeXiez" show-checkbox></el-tree>
-                <el-button type="primary" @click="sureInvitationXiez()">确认邀请</el-button>
+                <el-button  class='btnClass' type="primary" @click="sureInvitationXiez()">确认邀请</el-button>
             </el-dialog>
         </div>
         <!-- 更多计划 -->
@@ -555,6 +555,7 @@ export default {
             doctorVis: 1,
             remarks: [],
             remarksVisible: false,
+            invitationVisibleHui:false,
             invitationVisible: false,
             puBlicFileData: {
                 //新增 普通档案  弹窗数据
@@ -1221,7 +1222,7 @@ export default {
         async Invitation(row) {
             this.consultationId = row.id;
             this.invitationData = [];
-            this.invitationVisible = true;
+            this.invitationVisibleHui = true;
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -1279,7 +1280,7 @@ export default {
                         message: "邀请成功"
                     });
                     setTimeout(function() {
-                        _this.invitationVisible = false;
+                        _this.invitationVisibleHui = false;
                     }, 1000);
                 } else {
                     //失败

@@ -1692,6 +1692,12 @@ background: white
     letter-spacing: 0;
     line-height: 27px;
 }
+.videoChatMessage .recordLf .otherCon div{
+color: white;
+}
+.videoChatMessage .recordLf .otherCon h4 > span:nth-child(2), .recordRg .otherCon h4 > span:nth-child(2){
+color: #666666;
+}
 .recordRg {
     text-align: right;
 }
