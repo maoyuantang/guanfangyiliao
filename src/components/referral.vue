@@ -1066,7 +1066,8 @@
           diagnose: this.addForm.beginIdea,//	初步诊断 
           // archivesAuthority: this.addForm.giveRight.value,
           // id:"", //上次转诊记录ID
-          medicalRecordIds: this.arrayMed//病历授权（数组） 
+          // medicalRecordIds: this.arrayMed,//病历授权（数组） 
+          medicalHistorys: this.arrayMed//病历授权（与会诊相同）
         };
         console.log(options)
         const res = await dualReferralAdd(query, options);                                   //  14.6.双向转诊-WEB医生端-申请转诊 
@@ -1263,7 +1264,7 @@
           intention: this.addForm.movePurpose,//转诊目的
           diagnose: this.addForm.beginIdea,//初步诊断
           // archivesAuthority: this.addForm.giveRight.value,//病历授权
-          medicalRecordIds: this.arrayMed
+          medicalHistorys: this.arrayMed
         };
         console.log(options)
         const res = await dualReferralUpdate(query, options);                                   //  14.8.双向转诊-WEB医生端-修改
@@ -1436,7 +1437,7 @@
           intention: this.addForm.movePurpose,//转诊目的
           diagnose: this.addForm.beginIdea,//初步诊断
           // archivesAuthority: this.addForm.giveRight.value,//病历授权
-          medicalRecordIds: this.arrayMed
+          medicalHistorys: this.arrayMed
         };
         console.log(options)
         const res = await dualReferraltransfer(query, options);                                   //  14.13.双向转诊-WEB医生端-接受医生再次转诊 
