@@ -679,6 +679,9 @@ color: #4285F4;
     width: 500px;
     border: none;
 }
+.addQuestBox input::-webkit-input-placeholder{
+   font-size: 14px
+}
 .addQuestBox .el-form-item {
     width: 500px;
     height: 27px;
@@ -695,13 +698,21 @@ color: #4285F4;
         margin: 10px 0;
     
     position: relative;
-    width: 377px
+    width: 377px;
+    background: white;
+    margin-left: -20px;
+    padding-left: 10px;
+}
+.redioSingle .el-radio+.el-radio{
+    margin-left:-19px;
 }
 .redioSingle > label:hover .questItemDelete{
     display: block
 }
 .redioSingle > .el-checkbox {
-margin-left: 21px;
+margin-left: 0;
+background: white;
+padding-left: 19px;
 }
 .addQuestUl > li {
     position: relative;
