@@ -101,8 +101,8 @@
             <ul>
               <li v-for="(item,index) in hospts" :key="index"
                 style="font-family: PingFangSC-Regular;font-size: 14px;color: #323C47;letter-spacing: 0;line-height: 27px;text-align: center;">
-                {{item}}
-                <i class="el-icon-close" @click="go_delete(index)"></i>
+                {{item.test}}
+                <i class="el-icon-close" @click="go_delete(index,item)"></i>
               </li>
             </ul>
           </div>
@@ -300,8 +300,9 @@
         hospts: [],//存全部所选医院科室label
         beiY1: [],//存当前所选医院科室id
         beiY2: 2,
-        // beiY3: [],
+        beiY3: [],
         hosptDpart: [],
+        hosptDpart2: [],
 
         kuangData2: {
           show: false,
@@ -589,91 +590,83 @@
         console.log(value);
       },
       inputReturn22(value) {
-        // console.log(value)
+        console.log(value)
         let list = this.kuangData2.options3.list
         for (var i = 0; i < list.length; i++) {
           if (value[0] == list[i].value) {
             this.beiY1[0] = list[i].label
+            this.beiY3[0] = list[i].value
           }
           for (var j = 0; j < list[i].children.length; j++) {
             if (value[1] == list[i].children[j].value) {
               this.beiY1[1] = list[i].children[j].label
+              this.beiY3[1] = list[i].children[j].value
             }
           }
         }
-        this.hospts.push(this.beiY1.join("-"))
-        this.hospts = this.uniq(this.hospts)
+        this.hospts.push({
+          hospitalId: this.beiY3[0],
+          deptId: this.beiY3[1],
+          test: this.beiY1.join("-")
+        })
+        // this.hospts = this.uniq(this.hospts)
+        this.hospts = this.deduplication(this.hospts, "test");
+        // console.log(this.hospts)
+        this.threeInput(list, value);
         console.log(this.hospts)
 
-        // for (var a = 0; a < list.length; a++) {
-        //   for (var b = 0; b < list[a].children.length; b++) {
-        //     if (list[a].children[b].value == value[1]) {
-
-        //       for (var i = 0; i < list.length; i++) {
-        //         for (var j = 0; j < list[i].children.length; j++) {
-        //           if (value[1] == list[i].children[j].value) {
-        //             this.hosptDpart.push(
-        //               {
-        //                 hospitalId: value[0],
-        //                 deptIds: [value[1]]
-        //               }
-        //             )
-        //           }
-        //         }
-        //       }
-
-        //     }
-        //   }
-        // }
-
+      },
+      threeInput(list, value) {
         if (this.hosptDpart.length != 0) {
           // alert(1)
-          // for (var a = 0; a < this.hosptDpart.length; a++) {
-          //   for (var b = 0; b < this.hosptDpart[a].deptIds.length; b++) {
-          //     if (this.hosptDpart[a].deptIds[b] == value[1]) {
-          //       console.log(555555)
-          //       this.beiY2 = 0
-          //       console.log(this.beiY2)
-          //     }
-          //   }
-          // }
-          // console.log(this.beiY2)
-          // if (this.beiY2 == 2) {
-          //   this.hosptDpart.push(
-          //     {
-          //       hospitalId: value[0],
-          //       deptIds: [value[1]]
-          //     }
-          //   )
-          // }
-
           //医院是否相同
+          let diyic = true;
           for (var a = 0; a < this.hosptDpart.length; a++) {
-            if (this.hosptDpart[a] == value[0]) {
-              this.beiY2 = 1
+            console.log(value[0], this.hosptDpart[a].hospitalId)
+            if (this.hosptDpart[a].hospitalId == value[0]) {
+              diyic = false;
+              break;
             } else {
-              this.beiY2 = 2
+              // diyic = true;
             }
+            // alert(this.beiY2+"循环")
           }
+          if (diyic) {
+            this.beiY2 = 2
+          } else {
+            this.beiY2 = 1
+          }
+          // alert(this.beiY2 + "1是医院相同，2是医院不同")
           //医院相同
-          if (this.beiY2 = 1) {
+          if (this.beiY2 == 1) {
+            // alert("this.beiY2 = 1" + '医院相同判断完成')
             let gg = true;
             for (var a = 0; a < this.hosptDpart.length; a++) {
               for (var b = 0; b < this.hosptDpart[a].deptIds.length; b++) {
+                console.log(this.hosptDpart[a].deptIds[b], value[1])
                 if (this.hosptDpart[a].deptIds[b] == value[1]) {
                   gg = false
-                  break
+                  break;
                 }
               }
             }
-            if(gg == true){
-              for(var a = 0; a < this.hosptDpart.length; a++){
-                // 等待
+            // alert("科室判断完成")
+            if (gg == false) {
+              // alert("科室相同，取消")
+            }
+            if (gg == true) {
+              // alert("科室不同，新增科室")
+              // alert("gg == true")
+              for (var a = 0; a < this.hosptDpart.length; a++) {
+                if (value[0] == this.hosptDpart[a].hospitalId) {
+                  this.hosptDpart[a].deptIds.push(value[1])
+                }
               }
             }
           }
           //医院不同
           if (this.beiY2 == 2) {
+            // alert("this.beiY2 == 2" + "医院不同判断完成")
             this.hosptDpart.push(
               {
                 hospitalId: value[0],
@@ -681,10 +674,9 @@
               }
             )
           }
-          console.log(this.beiY2)
           console.log(this.hosptDpart);
         } else if (this.hosptDpart.length == 0) {   //新增时
-          alert(0)
+          // alert(0)
           for (var a = 0; a < list.length; a++) {
             for (var b = 0; b < list[a].children.length; b++) {
               if (list[a].children[b].value == value[1]) {
@@ -706,40 +698,34 @@
             }
           }
           console.log(this.hosptDpart);
-          this.beiY2 = 2;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // this.kuangData2.options3.value = list.map(item => {
-        //   return {
-        //     hospitalId: item.value,
-        //     deptIds: item.children.map(ele => ele.value)
-        //   }
-        // });
-
-        // for (var i = 0; i < list.length; i++) {
-        //   for (var j = 0; j < list[i].children.length; j++) {
-        //     console.log(value)
-        //     if (value == list[i].children[j].value) {
-        //       console.log(list[i].label, list[i].children[j].label)
-        //     }
-        //   }
-        // }
       },
-      go_delete(index) {
+      go_delete(index, item) {
+        // console.log(item)
+        this.hosptDpart.forEach((v, k) => {
+          // console.log(0)
+          // console.log('____________________________')
+          // console.log(v.hospitalId)
+          // console.log(item.hospitalId)
+          // console.log('____________________________')
+          if (v.hospitalId === item.hospitalId) {
+            // console.log(1)
+            // console.log(this.hosptDpart[k].deptIds)
+            this.hosptDpart[k].deptIds.forEach((value, key) => {
+              if (value === item.deptId) {
+                console.log(2)
+                this.hosptDpart[k].deptIds.splice(key, 1);
+                if (this.hosptDpart[k].deptIds.length <= 0) {
+                  this.hosptDpart.splice(k, 1);
+                }
+              }
+            });
+          }
+        });
+
+
         this.hospts.splice(index, 1);
-        this.hosptDpart.splice(index, 1);
+        // this.hosptDpart.splice(index, 1);
         console.log(this.hospts)
         console.log(this.hosptDpart);
       },
@@ -752,6 +738,33 @@
         }
         return temp;
       },
+      // uniqObj(a) {
+      //   // 数组对象去重
+
+      //   var keys = []; //一个新的临时数组
+      //   var values = [];
+      //   for (var key in a) {
+      //     keys.push(key);
+      //     values.push(a[key]);//取得value      
+      //   }
+
+      //   return (keys,values);
+      // },
+      deduplication(arr, key) {// 数组对象去重
+        const result = [];
+        arr.forEach((v, k) => {
+          if (result.length <= 0) {
+            result.push(v);
+            return;
+          }
+          result.find(value => value[key] === v[key]) ? null : result.push(v)
+        });
+        return result;
+      },
+
+
+
+
 
 
 
@@ -1005,7 +1018,7 @@
       },
       //范围弹框（子组件  reback函数）
       doctorDetailFun() {
-        alert()
+        // alert()
       },
       // 管理    1.1表   操作区
       // 表一编辑
@@ -1017,9 +1030,6 @@
         });
         console.log(data)
         const _this = this
-        console.log(this.kuangData1.options1.list)
-        console.log(this.kuangData1.options2.list)
-        console.log(this.kuangData1.options3.list)
         this.adds = data.id
         this.kuangData1.options1.value = data.deptId
         this.kuangData1.options2.value = data.diseaseTypeId
@@ -1111,6 +1121,10 @@
       // 管理   1.2表   操作区
       //1.2表   操作区   编辑
       editList2(data) {
+        console.error(data.deptRels)
+        console.log(this.hospts)
+        console.log(this.hosptDpart);
+        this.hospts = [];
         const _this = this
         console.log(data)
         this.YesList2 = 2;
@@ -1120,13 +1134,47 @@
           this.isHaveDepartment21();
         });
         this.kuangData2.options1.value = data.deptId
-        this.kuangData2.options2.value.length = 0
-        this.kuangData2.options3.value.length = 0
-        $.each(data.levels, function (index, text) {
-          _this.kuangData2.options2.value.push(text.level)
-        })
-        console.log(this.kuangData2.options2.value)
-        this.kuangData2.options3.value.push(data.deptRels[0].hospitalId, data.deptRels[0].deptId)
+        this.kuangData2.options2.value = data.levels.map(item => item.level)
+        console.log(this.kuangData2.options3.list)
+        let list = this.kuangData2.options3.list
+
+        for (var a = 0; a < data.deptRels.length; a++) {
+          this.beiY1[0] = data.deptRels[a].hospitalName
+          this.beiY1[1] = data.deptRels[a].deptName
+          this.hospts.push({
+            test: `${data.deptRels[a].hospitalName}-${data.deptRels[a].deptName}`,
+            hospitalId: data.deptRels[a].hospitalId,
+            // beiY1:data.deptRels[a].hospitalName,
+            // beiY2: data.deptRels[a].deptName,
+            deptId: data.deptRels[a].deptId
+          })
+          // this.hospts.push(this.beiY1.join("-"))
+        }
+        // this.hospts = this.uniq(this.hospts)//修改
+        this.hospts = this.deduplication(this.hospts, "test");
+
+        const result = [];
+        data.deptRels.map(item => {
+          let index = null;
+          result.forEach((v, k) => v.hospitalId === item.hospitalId ? index = k : null);
+          if (index !== null) {//找到 存在 该医院
+            console.log(result[index])
+            console.log(index)
+            console.log(result.length)
+            result[index].deptIds.push(item.deptId);
+          } else {//否则
+            result.push({
+              hospitalId: item.hospitalId,
+              deptIds: [item.deptId]
+            });
+          }
+
+        });
+        this.hosptDpart = result;
+        console.log(this.hospts)
+        console.log(this.hosptDpart)//等待渲染
+
+
       },
       // 表2编辑   提交
       async kuangData1Fun22() {
@@ -1135,6 +1183,9 @@
       },
       //表2编辑提交函数 
       async editMedicalControl() {
+        console.log(this.kuangData2.options1.value)
+        console.log(this.kuangData2.options2.value)
+        console.log(this.kuangData2.options3.value)
         let query = {
           token: this.userInfo.token,
         };
@@ -1142,12 +1193,7 @@
           id: this.adds2,
           deptId: this.kuangData2.options1.value,
           levels: this.kuangData2.options2.value,
-          applyDepts: [
-            {
-              hospitalId: this.kuangData2.options3.value[0],
-              deptIds: [this.kuangData2.options3.value[1]]
-            }
-          ]
+          applyDepts: this.hosptDpart
         }
         const res = await editMedicalControl(query, options);//               //13.9.权限控制-编辑 
         if (res.data && res.data.errCode === 0) {
@@ -1472,7 +1518,12 @@
       //13.6.权限控制-接诊疾病等级下拉框
       async isHaveDepartment21() {
         // this.kuangData2.options2.value.length = 0;
-        this.kuangData2.options3.value.length = 0;
+        this.kuangData2.options2.value = [];
+        // this.kuangData2.options3.value = [];
+        // this.kuangData2.options3.list = [];
+        // console.log(this.kuangData2.options3.value);
+        // console.log(this.kuangData2.options3.list);
+
         if (this.kuangData2.options1.value != "") {
           let query = {
             token: this.userInfo.token,
@@ -1494,14 +1545,9 @@
             });
           }
         }
-        this.kuangData2.options3.value.length = 0;
-        console.log(this.kuangData2.options3.value)
       },
       //弹出  新增业务2   提交 
       async kuangData1Fun21() {
-        console.log(this.kuangData2.options1.value)
-        console.log(this.kuangData2.options2.value)
-        console.log(this.kuangData2.options3.value)
         this.kuangData2.show = false
         let query = {
           token: this.userInfo.token,
@@ -1517,6 +1563,8 @@
           console.log(res)
           this.getList2();
           this.handleClose2();
+          this.hospts = [];
+          this.beiY1 = [];
         } else {
           //失败
           console.log('权限控制-新增  +失败')
