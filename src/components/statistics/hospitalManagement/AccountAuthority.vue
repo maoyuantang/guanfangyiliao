@@ -112,7 +112,7 @@
                 <th>
                   <el-tooltip class="item" effect="light" placement="top">
                       <div slot="content">
-                          <p v-for="(value,key) in item.busRange" :key="key">{{value.doctorName}}</p>
+                          <p v-for="(value,key) in item.busRange" :key="key">{{value}}</p>
                       </div>
                       <div class="Account-authority-append-class">{{item.busRange.length}}</div>
                   </el-tooltip>
