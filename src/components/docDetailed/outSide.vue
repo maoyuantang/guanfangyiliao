@@ -8,7 +8,7 @@
                 </div>
                 <p class="new-content-username">{{patientInfo.name}}</p>
                 <div class="new-content-msg">
-                    <p class="new-content--msg-item">性别：{{patientInfo.sex}}</p>
+                    <p class="new-content--msg-item">性别：{{patientInfo.sex ? '男' : '女'}}</p>
                     <p class="new-content--msg-item">年龄：{{patientInfo.age}}</p>
                     <p class="new-content--msg-item">身份证：{{patientInfo.idNo}}</p>
                 </div>

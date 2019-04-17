@@ -3356,3 +3356,47 @@ export const queryPageByassessPlan = query => { //12.WEB端获取评估计划列
         }
     })
 }
+export const referredPatientList = query => { //14.15.转诊-获取病人列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.referredPatientList,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const patientMedicalHistory = query => { //14.16.转诊-获取病历列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.patientMedicalHistory,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const patientMedicalDetail = query => { //14.17.转诊-获取病历详情
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.patientMedicalDetail,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const toUpdate = query => { //14.18.双向转诊-WEB医生端-获取修改记录
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.toUpdate,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

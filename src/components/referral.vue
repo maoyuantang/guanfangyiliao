@@ -79,7 +79,7 @@
           </div>
 
           <el-form-item label="病     人:" :label-width="formLabelWidth">
-            <el-select v-model="addForm.patient.value" placeholder="请选择" clearable ref="ceshi2">
+            <el-select v-model="addForm.patient.value" placeholder="请选择" clearable ref="ceshi2" @change="patientChange">
               <el-option v-for="item in addForm.patient.list||[]" :key="item.value" :label="item.label"
                 :value="item.value">
               </el-option>
@@ -298,6 +298,10 @@
     dualReferraltransfer,//14.13.双向转诊-WEB医生端-接受医生再次转诊 
     dualReferralget,//14.14.双向转诊-WEB医生端-获取需要再次转诊的记录 
 
+    referredPatientList,//14.15.转诊-获取病人列表
+    patientMedicalHistory,//14.16.转诊-获取病历列表
+    patientMedicalDetail,//14.17.转诊-获取病历详情
+    toUpdate,//14.18.双向转诊-WEB医生端-获取修改记录
 
   } from "../api/apiAll.js";
   //引入组件
@@ -365,6 +369,7 @@
         invitationData1: [],
         defaultProps: {
           label: "name",
+          value:"",
           children: "children"
         },
 
@@ -581,29 +586,35 @@
         this.getList2();
         this.DoctorList();
       },
+      nowDateF(data){
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        if (month < 10) {
+          month = "0" + month;
+        }
+        if (day < 10) {
+          day = "0" + day;
+        }
+        
+        var nowDate = year + "-" + month + "-" + day;
+        if (data.index.value == "TODAY") {
+          this.time0 = nowDate;
+          this.time1 = nowDate;
+        } else if (data.index.value == "ALL") {
+          this.time0 = "";
+          this.time1 = "";
+        }
+        alert(this.time0)
+        alert(this.time1)
+      },
       //点击筛选日期    医生端
       getOTab4(data) {
         console.log(data)
-        // var date = new Date();
-        // var year = date.getFullYear();
-        // var month = date.getMonth() + 1;
-        // var day = date.getDate();
-        // if (month < 10) {
-        //   month = "0" + month;
-        // }
-        // if (day < 10) {
-        //   day = "0" + day;
-        // }
-        // var nowDate = year + "-" + month + "-" + day;
-        // if (data.index.value == "TODAY") {
-        //   this.time0 = nowDate;
-        //   this.time1 = nowDate;
-        // } else if (data.index.value == "ALL") {
-        //   this.time0 = "";
-        //   this.time1 = "";
-        // }
         // this.doctorDate = data.index.value;//这个参数不用了
-        this.getList2();
+        // this.getList2();
+        this.nowDateF(data)
         this.DoctorList();//医生端列表
       },
       handleChange(value) {
@@ -864,6 +875,7 @@
           query: this.doctorDate,//查询数据  (不能用)用的日期筛选返回值
           direction: this.direction,//方向：into转入，转出out
         };
+        console.log(options)
         const res = await dualReferralPage(options);                  //14.5.双向转诊-WEB医生端-列表
         if (res.data && res.data.errCode === 0) {
           console.log('医生表+成功')
@@ -906,6 +918,7 @@
       async addMove() {
         this.isShowaddMove = true
         this.kuang2Save = 1
+        this.patientChange();
       },
       //新增弹框首选项   转诊类型选的什么
       upOrDown() {
@@ -1000,20 +1013,55 @@
           });
         }
       },
+      //获取病人
+      async patientChange() {
+        let query = {
+          token: this.userInfo.token,
+        };
+        const res = await referredPatientList(query);
+        if (res.data && res.data.errCode === 0) {
+          console.log("获取病人列表成功")
+          this.addForm.patient.list.length = 0;
+          res.data.body.map((item, index) => {
+            console.log(item, index)
+            this.addForm.patient.list.push({
+              value: item.patientId,
+              label: item.name
+            })
+          })
+          console.log(this.addForm.patient.list);
+          console.log(this.addForm.patient.value);
+        } else {
+          //失败
+          this.$notify.error({
+            title: "警告",
+            message: res.data.errMsg
+          });
+        }
+      },
       // 病历授权
       async medicalDone() {
         this.isShowaddMoveNei = true
         // this.consultationId = row.id;
         this.invitationData1 = [];
         // this.invitationVisible = true;
-        let _this = this;
         let query = {
-          token: this.userInfo.token
+          token: this.userInfo.token,
+          patientId: this.addForm.patient.value
         };
-        const res = await enableSynergyDoctor(query);
+        console.log(query)
+        const res = await patientMedicalHistory(query);
         if (res.data && res.data.errCode === 0) {
-          console.log(res.data.body);
-          this.invitationData1 = res.data.body;
+          console.log("获取授权列表成功")
+          console.log(res);
+          let objList = res.data.body
+          for (let keys in objList) {
+            console.log(keys, objList[keys])
+            // this.invitationData1.push(
+
+            // )
+          }
+          // this.invitationData1 = res.data.body;
         } else {
           //失败
           this.$notify.error({
@@ -1066,7 +1114,8 @@
           diagnose: this.addForm.beginIdea,//	初步诊断 
           // archivesAuthority: this.addForm.giveRight.value,
           // id:"", //上次转诊记录ID
-          medicalRecordIds: this.arrayMed//病历授权（数组） 
+          // medicalRecordIds: this.arrayMed,//病历授权（数组） 
+          medicalHistorys: this.arrayMed//病历授权（与会诊相同）
         };
         console.log(options)
         const res = await dualReferralAdd(query, options);                                   //  14.6.双向转诊-WEB医生端-申请转诊 
@@ -1263,7 +1312,7 @@
           intention: this.addForm.movePurpose,//转诊目的
           diagnose: this.addForm.beginIdea,//初步诊断
           // archivesAuthority: this.addForm.giveRight.value,//病历授权
-          medicalRecordIds: this.arrayMed
+          medicalHistorys: this.arrayMed
         };
         console.log(options)
         const res = await dualReferralUpdate(query, options);                                   //  14.8.双向转诊-WEB医生端-修改
@@ -1436,7 +1485,7 @@
           intention: this.addForm.movePurpose,//转诊目的
           diagnose: this.addForm.beginIdea,//初步诊断
           // archivesAuthority: this.addForm.giveRight.value,//病历授权
-          medicalRecordIds: this.arrayMed
+          medicalHistorys: this.arrayMed
         };
         console.log(options)
         const res = await dualReferraltransfer(query, options);                                   //  14.13.双向转诊-WEB医生端-接受医生再次转诊 

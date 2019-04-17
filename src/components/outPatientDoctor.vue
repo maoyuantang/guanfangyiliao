@@ -9,7 +9,6 @@
         <doctorTab :inData="oAdminTab" @reBack="getConsulTabData"></doctorTab>
         
         <!-- 我的诊室-循环 -->
-{{apiBaseURL}}娇姐娇姐军军军军
         <div class="myOuts" v-if="oconsulVisable==0">
             
             <ul v-for="(text,index1) in myHomes" :key="index1" class="outpatient_s">
