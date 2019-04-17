@@ -17,6 +17,7 @@ export default {
         osessionId:'',
         chatTypeBox:{},
         receiveVideoVisable:false,
+        receiveVideoUserId:"",
         createVideoRoomData:{},
         messageTicket: {
             ticket: "", //票据，登录即可返回
@@ -82,6 +83,11 @@ export default {
         CHATTYPEBOX(state,data){
             state.chatTypeBox =data
         },
+        // 接收视频对方id
+        
+        RECEIVEVIDEOUSERID(state,data){
+            state.receiveVideoUserId =data
+        },
     },
     actions: {
         setSocket(context, data) {
@@ -116,6 +122,10 @@ export default {
         },
         CHATTYPEBOX(state,data){
             context.commit("CHATTYPEBOX", data);
+        },
+        RECEIVEVIDEOUSERID(state,data){
+
+            context.commit("RECEIVEVIDEOUSERID", data);
         },
     }
 }

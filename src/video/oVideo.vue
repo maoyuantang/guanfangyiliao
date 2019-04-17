@@ -701,7 +701,7 @@ export default {
                     );
                 }
                 _this.closeVideoBtnVieable = true; //关闭视频显示
-                if (_this.videoUser > 1) {
+                if (_this.videoUser <2) {
                     _this.deleteVideoRoom();
                 }
 
@@ -2066,7 +2066,7 @@ video {
     position: fixed;
     right: 16px;
     top: 3%;
-    z-index: 9999999999999999999999999999;
+    z-index: 999999999;
     padding-top: 68px;
     width: 304px;
     height: 96% !important;

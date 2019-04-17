@@ -41,16 +41,15 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="病人病历:">
-                        <!-- <el-select placeholder="" v-model="startHz.medicalHistory">
-                                    <el-option v-for="(text,index) in hospitalList2" :label="text.name" :value="text.value" :key="index"></el-option>
-                                </el-select> -->
-                        <!-- <el-select v-model="startHz.medicalHistorys" multiple placeholder="请选择">
-                            <el-option-group v-for="group in hospitalList2" :key="group.label" :label="group.label">
-                                <el-option v-for="item in group.options" :key="item.visitNo" :label="item.hospitalName" :value="item.visitNo">
-                                </el-option>
-                            </el-option-group>
-                        </el-select> -->
-                        <el-tree v-model="startHz.medicalHistorys" :data="hospitalList2" :props="defaultProps1" @check="handleCheckChange1" show-checkbox></el-tree>
+                        <!-- <el-input v-model="bingliSelect"></el-input> -->
+                        <!-- <div class='bingliSelectClass' style="width:162px; height:28px;    border: 1px solid #dcdfe6;margin-top: 6px;">
+                            <div style="width:100%; padding:0 5px">
+                                {{bingliSelect}}
+                            </div>
+                        </div> -->
+
+                        <el-tree style='    margin-left: -14px;
+    margin-top: 10px;' v-model="startHz.medicalHistorys" :data="hospitalList2" :props="defaultProps1" @check="handleCheckChange1" show-checkbox></el-tree>
                     </el-form-item>
                     <el-form-item label="申请时间:">
                         <el-date-picker v-model="startHz.applicationTime" type="datetime" placeholder="" value-format="yyyy-MM-dd HH:mm">
@@ -218,11 +217,12 @@ export default {
     },
     data() {
         return {
-            userMessage:{},
+            bingliSelect: "",
+            userMessage: {},
             chatTypeBox: {
                 startDoctorName: "",
                 startDoctorTYpe: "会诊",
-                archivesUrl:'/consultation'
+                archivesUrl: "/consultation"
             }, //发起医生
             docTotal: 0,
             adminTotal: 0,
@@ -642,6 +642,22 @@ export default {
         },
         //发起会诊
         startHuizhen() {
+            this.bingliSelect=''
+            this.startHz= {
+                type: "SPECIALIST",
+                userId: " ",
+                medicalHistorys: [],
+                applicationTime: "",
+                consultationPurpose: "",
+                consultationHospitalDept: [
+                    {
+                        hospitalId: "",
+                        departmentsId: "",
+                        departmentListOO: []
+                    }
+                ]
+            },
+            this.hospitalList2=[]
             this.centerDialogVisible = true;
             this.getDepartment1(this.userSelfInfo.orgCode);
             this.getHospitalment();
@@ -659,12 +675,10 @@ export default {
 
         handleCheckChange(data, odata) {
             this.invitationSelectList = [];
-            let _this = this;
-
-            $.each(odata.checkedNodes, function(index, text) {
+            $.each(odata.checkedNodes, (index, text) => {
                 if (text.type == 2) {
                     if (text.id) {
-                        _this.invitationSelectList.push(text.id);
+                        this.invitationSelectList.push(text.id);
                     }
                 }
             });
@@ -674,16 +688,19 @@ export default {
         // 发起会诊病历
         handleCheckChange1(data, odata) {
             console.log(data, odata);
-            // this.invitationSelectList = [];
-            let _this = this;
-
-            $.each(odata.checkedNodes, function(index, text) {
+            this.bingliSelect = "";
+            $.each(odata.checkedNodes, (index, text) => {
                 if (text.visitNo) {
-                    _this.startHz.medicalHistorys.push(text);
+                    this.startHz.medicalHistorys.push(text);
+                    this.bingliSelect += text.hospitalName + ",";
+                    
                 }
             });
-            // console.log(this.invitationSelectList);
-            // console.log(odata);
+            // if (this.bingliSelect) {
+            //           $(".bingliSelectClass").css("height", "auto");
+            //         } else {
+            //              $(".bingliSelectClass").css("height", "28px"); 
+            //         }
         },
         //确认邀请
         async sureInvitation() {
@@ -781,7 +798,7 @@ export default {
                 });
             });
             $.each(this.startHz.medicalHistorys, function(index, text) {
-                text.medicalHistoryId=text.visitNo
+                text.medicalHistoryId = text.visitNo;
             });
 
             let query = {
@@ -817,7 +834,7 @@ export default {
         //进入会诊
         async toConsultation(oObject) {
             this.sessionId = oObject.sessionId;
-            this.userMessage.userId=oObject.userId
+            this.userMessage.userId = oObject.userId;
             this.chatTypeBox.startDoctorName = oObject.doctor;
 
             this.startDoctor = oObject.doctor;
@@ -994,12 +1011,12 @@ export default {
                 this.hospitalList2[0].children = res.data.body.visit;
                 this.hospitalList2[1].children =
                     res.data.body.electronicMedical;
-                    $.each(this.hospitalList2[0].children,function(index,text){
-                        text.type='VISIT'
-                    })
-                    $.each(this.hospitalList2[1].children,function(index,text){
-                        text.type='HISTORY'
-                    })
+                $.each(this.hospitalList2[0].children, function(index, text) {
+                    text.type = "VISIT";
+                });
+                $.each(this.hospitalList2[1].children, function(index, text) {
+                    text.type = "HISTORY";
+                });
                 // $.each(res.data.body.electronicMedical, function(index, text) {
                 //     _this.hospitalList2.push({
                 //         name: text.codeName,

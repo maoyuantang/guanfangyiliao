@@ -1,22 +1,28 @@
 <template>
     <div>
-
-        <!-- <el-dialog title="提示" :visible.sync="receiveVideoVisable" width="30%" :before-close="handleClose">
-            <div>
-                <button @click="receiveVideo()">接收</button>
-                <button @click="refuseVideo()">拒绝</button>
-            </div>
-        </el-dialog> -->
-        <!-- class='videoAccepclass' -->
-        <!-- {{receiveVideoVisable1}} -->
         <div v-if='userSocketInfo.receiveVideoVisable'>
-            <el-dialog title="提示" :visible.sync="userSocketInfo.receiveVideoVisable" width="30%" :before-close="handleClose" :showClose="VideoshowClose" append-to-body>
-                <div>
-                    <h4>{{startVideoName}}邀请你视频</h4>
+            <el-dialog class='receiveVideoClass' title="" :visible.sync="userSocketInfo.receiveVideoVisable" width='602px' height='376px' :before-close="handleClose" :showClose="VideoshowClose" append-to-body>
+
+                <div class='receiveVideoHead'>
                     <div>
-                        <button @click="receiveVideo()">接收</button>
-                        <button @click="refuseVideo()">拒绝</button>
+                        <img :src="userSocketInfo.headImg+userSocketInfo.receiveVideoUserId" :onerror="defaultImg" />
                     </div>
+                    <h4>{{startVideoName}}</h4>
+                    <div>邀请您加入视频...</div>
+                </div>
+
+                <div class='receiveVideoBtn'>
+                    <div @click="refuseVideo()">
+                        <div>
+                            <img src="./../../static/assets/img/gua1.png" /></div>
+                        <div>拒绝</div>
+                    </div>
+                    <div @click="receiveVideo()">
+                        <div>
+                            <img src="./../assets/img/jiet.png" /> </div>
+                        <div>接收</div>
+                    </div>
+
                 </div>
             </el-dialog>
         </div>
@@ -79,7 +85,8 @@ export default {
             heartCheck: {},
             createVideoRoomData: {},
             sessionId: "",
-            tongbuIf:false,
+            tongbuIf: false,
+            defaultImg: 'this.src="' + require("../assets/img/a-6.png") + '"'
         };
     },
     computed: {
@@ -154,7 +161,7 @@ export default {
                 _this.$store.commit("user/SETUSERSELFINFO", oUserSelfInfo);
                 console.log(_this.userSelfInfo);
                 _this.$store.commit("socket/SYNCHROIMESSAGE", res.data.body);
-                _this.tongbuIf=true
+                _this.tongbuIf = true;
             } else {
                 //失败
                 this.$notify.error({
@@ -188,7 +195,6 @@ export default {
         },
         // 进入或退出视频
         async closeVideoOr(oState) {
-            alert("dd");
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -440,11 +446,10 @@ export default {
                 return false;
             } else if (RequestType == 0) {
                 //同步
-                if(this.tongbuIf){
+                if (this.tongbuIf) {
                     this.pullSynchro();
-                    this.tongbuIf=false
+                    this.tongbuIf = false;
                 }
-               
 
                 return false;
             } else if (RequestType == 6) {
@@ -558,12 +563,15 @@ export default {
                             _this.sessionId = odata.info.body.to;
                             let chatTypeBox = {
                                 startDoctorName: "",
-                                startDoctorTYpe: ""
+                                startDoctorTYpe: "",
+                                 archivesUrl:''
                             };
                             if (odata.info.location == "cooperation") {
                                 chatTypeBox.startDoctorTYpe = "协作";
+                                chatTypeBox.archivesUrl='/cooperation'
                             } else if (odata.info.location == "consultation") {
                                 chatTypeBox.startDoctorTYpe = "会诊";
+                                chatTypeBox.archivesUrl='/consultation'
                             }
 
                             _this.$store.commit(
@@ -578,6 +586,12 @@ export default {
                                 "socket/CREATEVUDEIROOM",
                                 _this.createVideoRoomData
                             );
+                            _this.$store.commit(
+                                "socket/RECEIVEVIDEOUSERID",
+                                odata.info.from
+                            );
+
+                            
                             console.log(_this.createVideoRoomData);
                             console.log(_this.userSocketInfo.osessionId);
                             // $.each(reciveUserList, function(index, text) {

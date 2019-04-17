@@ -127,7 +127,8 @@
                                     </el-form-item>
                                     <el-radio-group class="redioSingle redioSingleInput">
                                         <el-radio v-for="(text1,index1) in text.solutionModels" :key="index1" :label="index1">
-                                            <span>{{text1.tag}}</span>
+                                            <el-input class="QuestTitle1" v-model="text1.tag">
+                                            </el-input>
                                             <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容">
                                             </el-input>
                                             <span class="questItemDelete" @click="deleteQuestText(index,index1)">
@@ -146,7 +147,8 @@
                                     </el-form-item>
                                     <el-checkbox-group class="redioSingle redioSingleInput">
                                         <el-checkbox v-for="(text1,index1) in text.solutionModels" :key="index1" :label="index1">
-                                            <span>{{text1.tag}}</span>
+                                           <el-input class="QuestTitle1" v-model="text1.tag">
+                                            </el-input>
                                             <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容">
                                             </el-input>
                                             <span class="questItemDelete" @click="deleteQuestText(index,index1)">
@@ -671,7 +673,7 @@ export default {
                     value: ""
                 },
                 {
-                    name: "门诊模板",
+                    name: "问诊模板",
                     value: ""
                 },
                 {
@@ -2292,10 +2294,10 @@ export default {
                 this.doctorArticleVisiable = false;
                 this.docAddTemplate = true;
                 (this.doctorColumns = [
-                    {
-                        prop: "id",
-                        label: "编号"
-                    },
+                    // {
+                    //     prop: "id",
+                    //     label: "编号"
+                    // },
                     {
                         prop: "department",
                         label: "科室"
@@ -2339,10 +2341,10 @@ export default {
                 this.myFollowVisable = false;
                 this.docAddTemplate = true;
                 (this.doctorColumns = [
-                    {
-                        prop: "id",
-                        label: "编号"
-                    },
+                    // {
+                    //     prop: "id",
+                    //     label: "编号"
+                    // },
                     {
                         prop: "department",
                         label: "科室"
@@ -2386,10 +2388,10 @@ export default {
                 this.myFollowVisable = false;
                 this.docAddTemplate = true;
                 (this.doctorColumns = [
-                    {
-                        prop: "id",
-                        label: "编号"
-                    },
+                    // {
+                    //     prop: "id",
+                    //     label: "编号"
+                    // },
                     {
                         prop: "department",
                         label: "科室"
@@ -2433,10 +2435,10 @@ export default {
                 this.myFollowVisable = false;
                 this.docAddTemplate = false;
                 (this.doctorColumns = [
-                    {
-                        prop: "id",
-                        label: "编号"
-                    },
+                    // {
+                    //     prop: "id",
+                    //     label: "编号"
+                    // },
                     {
                         prop: "department",
                         label: "科室"
