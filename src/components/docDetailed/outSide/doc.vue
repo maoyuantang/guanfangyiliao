@@ -181,4 +181,7 @@
         width: 1.25rem;
         height: 1.38rem;
     }
+    .doc-alert-div>img{
+        max-width: 100%;
+    }
 </style>
