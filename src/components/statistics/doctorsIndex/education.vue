@@ -218,6 +218,7 @@
                 }
             },
             createVedio(url){
+                this.alertData.show = true;
                 this.$nextTick(arg=>{
                     if (flv.isSupported()) {
                         const flvPlayer = flv.createPlayer({
@@ -228,7 +229,6 @@
                         flvPlayer.load();
                         flvPlayer.play();
                         this.$refs.videoElement.play();
-                        this.alertData.show = true;
                     }
                 });
             },
