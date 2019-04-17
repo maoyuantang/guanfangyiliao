@@ -81,7 +81,7 @@
              */
             showBigImg(item){
                 console.log(item);
-                this.alertData.imgSrc = value.imgSrc;
+                this.alertData.imgSrc = item.imgSrc;
                 this.alertData.show = true;
             },
             /**
@@ -180,5 +180,8 @@
         margin-right: .15rem;
         width: 1.25rem;
         height: 1.38rem;
+    }
+    .doc-alert-div>img{
+        max-width: 100%;
     }
 </style>

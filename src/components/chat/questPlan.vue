@@ -1,6 +1,6 @@
 <template>
     <div class="evaluateBox addQuestBox">
-        <el-form ref="form" :model="addQuestData" label-width="80px">
+        <!-- <el-form ref="form" :model="addQuestData" label-width="80px">
 
             <el-form-item>
                 <el-input class="addFollowTitle" v-model="addQuestData.title" placeholder="请输入问诊标题"></el-input>
@@ -37,10 +37,50 @@
                         </div>
                     </li>
                 </ul>
-                <!-- <el-button @click="addQuestTable()" type="primary">发送</el-button> -->
             </div>
 
-        </el-form>
+        </el-form> -->
+        <el-form ref="form" :model="addQuestData" label-width="80px" style="height: 600px; overflow: auto;">
+                    <el-form-item style="margin-bottom:30px">
+                        <el-input class="addFollowTitle" v-model="addQuestData.title" placeholder="请输入问诊标题(40字内)" onfocus="this.placeholder=''" onblur="this.placeholder='请输入问诊标题(40字内)'"></el-input>
+                    </el-form-item>
+                    <div class="addFollowMain">
+                        <ul class="addQuestUl">
+                            <li v-for="(text,index) in addQuestData.solutionDtos" :key="index">
+                                <div v-show="text.questionType=='RADIO'">
+                                    <el-form-item :label="index+1+'.'">
+                                        <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
+                                    </el-form-item>
+                                    <el-radio-group class="redioSingle redioSingleInput">
+                                        <el-radio v-for="(text1,index1) in text.solutionAsDtos" :key="index1" :label="index1">
+                                            <span>{{text1.tag}}</span>
+                                            <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容">
+                                            </el-input>
+                                        </el-radio>
+                                    </el-radio-group>
+                                </div>
+                                <div v-show="text.questionType=='CHECKBOX'">
+                                    <el-form-item :label="index+1">
+                                        <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
+                                    </el-form-item>
+                                    <el-checkbox-group class="redioSingle redioSingleInput">
+                                        <el-checkbox v-for="(text1,index1) in text.solutionAsDtos" :key="index1" :label="index1">
+                                            <span>{{text1.tag}}</span>
+                                            <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容">
+                                            </el-input>
+                                        </el-checkbox>
+                                    </el-checkbox-group>
+                                </div>
+                                <div v-show="text.questionType=='TEXT'">
+                                    <el-form-item :label="index+1">
+                                        <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
+                                    </el-form-item>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </el-form>
     </div>
 </template>
 <script>

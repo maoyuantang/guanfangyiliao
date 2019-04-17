@@ -231,13 +231,13 @@
         </div>
         <!-- 问诊详情 -->
         <div v-if="questDetailVisible">
-            <el-dialog class='addQuestBox' title="问诊详情" :visible.sync="questDetailVisible" center append-to-body>
+            <el-dialog class='addQuestBox' title="问诊详情" :visible.sync="questDetailVisible" center append-to-body  width="717px" hight="356px">
                 <quest :addQuestId="addQuestId" @osendmessagechat="getSendMessageChat1" :sendToUserId="sendToUserId"></quest>
             </el-dialog>
         </div>
         <!-- 问诊详情 -->
         <div v-if="questPlanVisible">
-            <el-dialog title="问诊计划详情" :visible.sync="questPlanVisible" center append-to-body>
+            <el-dialog class='addQuestBox' title="问诊计划详情" :visible.sync="questPlanVisible" center append-to-body  width="717px" hight="356px">
                 <questPlan :addQuestId="addQuestPlanId"></questPlan>
             </el-dialog>
         </div>

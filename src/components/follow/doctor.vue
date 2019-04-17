@@ -514,7 +514,8 @@ export default {
             userMessage:{},
             chatTypeBox: {
                 startDoctorName: "",
-                startDoctorTYpe: "随访"
+                startDoctorTYpe: "随访",
+                archivesUrl:'/followUp'
             },
             quillDiabled: false,
             urlDiabled: false,
@@ -2585,7 +2586,7 @@ export default {
             } else if (this.oDocThis == 3) {
                 this.articleTableVisible = true;
             
-                $.each(this.oTab14.list,(index,text)=>{
+                $.each(this.oTab14.list,function(index,text){
                     if(index!=0){
                         this.oTab144.push(text)
                     }
