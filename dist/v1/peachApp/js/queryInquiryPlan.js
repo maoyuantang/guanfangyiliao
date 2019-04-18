@@ -266,7 +266,9 @@ $(document).ready(function(){
     })
 })
 
-
+$('.aaaa').click(function(){
+    submit()
+})
 function  submit() {
     var textarea=$(".weui-textarea").val();
     console.log(textarea);
@@ -371,7 +373,9 @@ function  submit() {
             console.log(mid);
             basicInfoMap.text=daan;
             basicInfoMap.mid=mid;
-            basicInfoMap.items=[daan];
+            // basicInfoMap.items=[daan];
+            delete basicInfoMap.items
+            // basicInfoMap.items='ddd';
         }
 
         data.basicInfoMap.push(basicInfoMap);
@@ -384,6 +388,7 @@ function  submit() {
     })
     var ajaxradio=$("#ajaxradio").val();
     var ajaxcheck=$("#ajaxcheck").val();
+    console.log(data.basicInfoMap)
     for(var i=0;i<data.basicInfoMap.length;i++){
         console.log(data.basicInfoMap[i].items);
         if(data.basicInfoMap[i].items==""){
@@ -410,7 +415,7 @@ function  submit() {
                         window.android.jsMethodSubmit(true);
                     }
                 }else{
-                    $.alert(data.message);
+                    $.alert(data.errMsg);
                     window.android.jsMethodSubmit(false);
                 }
             },
