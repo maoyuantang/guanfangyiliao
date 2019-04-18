@@ -1,7 +1,6 @@
 'use strict'
 const merge = require('webpack-merge')
 const prodEnv = require('./prod.env')
-console.log('enter')
 process.env.WSS_PATH = "wss://demo.chuntaoyisheng.com:10002/chat"
 process.env.HTTPS_PATH = "https://demo.chuntaoyisheng.com:10002"
 process.env.IMG_PREFIX = "https://demo.chuntaoyisheng.com:10002"

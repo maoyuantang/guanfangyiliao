@@ -95,7 +95,7 @@
                     pageNum:this.page.current,
                     pageSize:this.page.size
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     // chartData:{//图表 数据
                     //     xAxis:['周一','周二','周三','周四','周五','周六','周日'],//x轴  
@@ -136,7 +136,7 @@
                             }
                         }
                     });
-                    console.log(this.listData)
+                    // console.log(this.listData)
                     this.page.total = res.data.body.total
 				}else{
 					this.$notify({

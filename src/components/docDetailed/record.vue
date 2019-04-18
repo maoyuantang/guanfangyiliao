@@ -262,7 +262,7 @@
             },
 		},
 		async created(){
-			console.log(this.inData)
+			// console.log(this.inData)
 		}
 	}
 </script>

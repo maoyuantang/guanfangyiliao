@@ -499,9 +499,9 @@ $("#discussion").click(function () {
         console.log("b");
     }
 })
-$('.aaaa').click(function(){
-    submit()
-})
+// $('.aaaa').click(function(){
+//     submit()
+// })
 var oType=""
 // submit()
 function  submit() {

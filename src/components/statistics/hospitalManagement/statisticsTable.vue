@@ -49,7 +49,7 @@
         watch:{
             'global.departmentList':{
                 handler(n){
-                    console.log(n);
+                    // console.log(n);
                     this.getDepartmentList();
                 }
             }
@@ -124,7 +124,7 @@
              * 科室 被选中
              */
             getDepartmentSelect(data){
-                console.log(data);
+                // console.log(data);
                 this.queryConditions.department.select = data.index;
             },
             /**

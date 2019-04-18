@@ -86,6 +86,7 @@
                     </tr>
                 </tbody>
             </table>
+            <tableNoMore v-if="tableInfo.tbody.length <= 0"></tableNoMore>
         </div>
          <div class="family-medicine-doctor-footer">
             <el-pagination
@@ -164,6 +165,7 @@
     import chat from '../../public/publicComponents/chat.vue'
     import viewRecord from './../xiezuo/viewRecord.vue'
     import oVideo from '../../video/oVideo.vue'
+    import tableNoMore from '../../public/publicComponents/tableNoMore.vue'
     
 	export default {
         components:{
@@ -172,7 +174,8 @@
             tag,
             chat,
             viewRecord,
-            oVideo
+            oVideo,
+            tableNoMore
         },
         computed:{
 			...mapState({

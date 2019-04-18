@@ -271,12 +271,12 @@
                     orgCode:this.userSelfInfo.orgCode,
                     familyMemberId:this.inData.id
                 });
-                console.log(res)
+                // console.log(res)
             },
 			
 		},
 		async created(){
-            console.log(this.inData);
+            // console.log(this.inData);
             this.getPatientInfo();
 		}
 	}

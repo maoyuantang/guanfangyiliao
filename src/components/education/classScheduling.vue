@@ -297,7 +297,7 @@
                     {token:this.userState.token},
                     {id:item.id}
                 ]);
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.$notify({
                         title: '成功',
@@ -321,7 +321,7 @@
                     token:this.userState.token,
                     id:id
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     return {
                         ok:true,
@@ -343,7 +343,7 @@
              * 编辑 被点击
              */
             async aditPlan(item){
-                console.log(item);
+                // console.log(item);
                 const resData = await this.getArrange(item.id);
                 if(!resData.ok)return; 
                 this.alertData.type = 1;
@@ -375,7 +375,7 @@
                     orgCode:this.userState.hospitalCode,
                     deptId:''
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.alertData.data.lecturerList = res.data.body.map(item => {
                         item.label = item.doctorName;
@@ -400,7 +400,7 @@
              *  新增
              */
             async add(){
-                console.log(this.alertData.data.time);
+                // console.log(this.alertData.data.time);
                 if(!this.alertData.data.time)return;
                 const postData = {
                     name:this.alertData.data.name,
@@ -414,12 +414,12 @@
                     department:this.alertData.data.departmentSelect,
                     autoApply:this.alertData.data.auto,
                 };
-                console.log(postData)
+                // console.log(postData)
                 const res = await eduCourseArrange(...[
                     {token:this.userState.token},
                     postData
                 ]);
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.$notify({
                         title: '成功',
@@ -458,7 +458,7 @@
                     {token:this.userState.token},
                     postData
                 ]);
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.$notify({
                         title: '成功',
@@ -506,7 +506,7 @@
                     pageNum:this.queryConditions.paging.current,
                     pageSize:this.queryConditions.paging.size,
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.timetable = res.data.body.data2.list;
                     this.queryConditions.paging.total = res.data.body.data2.total;
@@ -522,7 +522,7 @@
              * 切换分页
              */
             ChangePage(data){
-                console.log(data);
+                // console.log(data);
                 this.queryConditions.paging.current = data;
                 this.getArrangeList();
             },
@@ -530,7 +530,7 @@
              * 获取 搜索关键字
              */
             searchChange(data){
-                console.log(data)
+                // console.log(data)
                 this.queryConditions.searchKey = data;
                 this.getArrangeList();
             },
@@ -539,7 +539,7 @@
              */
             async getTypeList(){
                 const res = await typeList({token:this.userState.token});
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.queryConditions.mode.list = res.data.body.map(item=>{
                         item.label = item.name;
