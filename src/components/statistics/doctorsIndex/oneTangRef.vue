@@ -121,7 +121,7 @@
               alt="医生头像" style="width:42px;">
           </template>
         </el-table-column>
-        <el-table-column prop="patientName" label="病人" :show-overflow-tooltip="true"  width='200'></el-table-column>
+        <!-- <el-table-column prop="patientName" label="病人" :show-overflow-tooltip="true"  width='200'></el-table-column> -->
         <!-- <el-table-column prop="applyOrgName" label="申请医院" :show-overflow-tooltip="true"></el-table-column> -->
         <el-table-column prop="applyDoctorName" label="申请人" :show-overflow-tooltip="true"></el-table-column>
 
