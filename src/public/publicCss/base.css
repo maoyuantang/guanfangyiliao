@@ -74,6 +74,19 @@ html{
 body{
 	font-size: 0.14rem;
 }
+.select-time-css>.el-input__inner{
+    border: none !important;
+    height: auto;
+}
+.select-time-css>.el-input__inner>.el-range-input{
+    border: 1px solid #dcdfe6;
+    width: 109px;
+    height: 35px;
+    border-radius: 4px;
+}
+.select-time-css>.el-input__inner>i{
+    display: none;
+}
 .mark{
 	position:fixed;
 	top: 0;
@@ -1510,7 +1523,7 @@ d .sendImgCss {
     margin-left: 10px
 }
 .executionTime{
-    font-family: .PingFangSC-Regular;
+    font-family: PingFangSC-Regular;
 font-size: 14px;
 color: #646464;
 letter-spacing: -0.17px;

@@ -79,7 +79,7 @@
         <div class="right-model-head">
           <div class="right-model-head-flag">
             <div>
-              <selftag @reback="outerCourtUserHospitalSelect" v-model="outerCourt.hospital"></selftag>
+              <!-- <selftag @reback="outerCourtUserHospitalSelect" v-model="outerCourt.hospital"></selftag> -->
               <selftag @reback="outerCourtUserDepartmentSelect" v-model="outerCourt.department"></selftag>
             </div>
           </div>
@@ -97,8 +97,8 @@
                 <th>姓名</th>
                 <th>账号</th>
                 <th>手机号</th>
-                <th>业务范围</th>
-                <th>入住时间</th>
+                <!-- <th>业务范围</th> -->
+                <th>入驻时间</th>
                 <th>操作</th>
               </tr>
             </thead>
@@ -109,16 +109,15 @@
                 <th>{{item.userName}}</th>
                 <th>{{item.account}}</th>
                 <th>{{item.phone}}</th>
-                <th>
+                <!-- <th>
                   <el-tooltip class="item" effect="light" placement="top">
                       <div slot="content">
                           <p v-for="(value,key) in item.busRange" :key="key">{{value}}</p>
                       </div>
                       <div class="Account-authority-append-class">{{item.busRange.length}}</div>
                   </el-tooltip>
-                  <!-- {{item.busRange}} -->
-                </th>
-                <th>{{item.updateTime}}</th>
+                </th> -->
+                <th>{{item.updateTime?item.updateTime.substring(0,10):''}}</th>
                 <th>
                   <el-button type="success" size="mini" plain @click="revisionCollaboration(item)">编辑</el-button>
                   <el-button type="danger" size="mini" plain>删除</el-button>
@@ -620,7 +619,7 @@ export default {
      */
     revisionCollaboration(item){
       this.outerCourtAlert.account = item.account;
-      this.outerCourtAlert.range.select = item.busRange;
+      this.outerCourtAlert.range.select = item.deptNames;
       // this.outerCourt.department.list = item.busRange;
       this.outerCourtAlert.show = true;
       this.outerCourtAlert.type = 1;
@@ -697,6 +696,7 @@ export default {
      * 外院 医院 被选中
      */
     outerCourtUserHospitalSelect(data) {
+      console.log(data)
       this.outerCourt.hospitalSelect = data.index;
       this.getSynergyManageList();
     },
@@ -717,7 +717,8 @@ export default {
         pageNum: this.outerCourt.page.pageNum,
         pageSize: this.outerCourt.page.pageSize,
         query: this.outerCourt.searchKey,
-        departmentId: this.outerCourt.departmentSelect.orgCode || ""
+        departmentId : this.outerCourt.department.list[this.outerCourt.department.index]?this.outerCourt.department.list[this.outerCourt.department.index].deptId:''
+        // departmentId: this.outerCourt.departmentSelect.orgCode || ""
       });
       console.log(res)
       if (res.data.errCode === 0) {

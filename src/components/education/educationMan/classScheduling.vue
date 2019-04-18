@@ -75,9 +75,9 @@
                                 </el-tooltip>
                             </th>
                             <th class="class-scheduling-tbody-spe">
-                                <el-tooltip effect="light" :content="item.number" placement="top">
+                                <!-- <el-tooltip effect="light" :content="item.number.toString()" placement="top"> -->
                                     <div>{{item.number}}</div>
-                                </el-tooltip>
+                                <!-- </el-tooltip> -->
                             </th>
                             
                             <th>{{item.state}}</th>

@@ -5,14 +5,14 @@
                 <tag :inData="queryConditions.date" @reback="getDateSelect"></tag>
                 <tag :inData="queryConditions.busModules" @reback="getModuleSelect"></tag>
             </div>
-            <div class="family-medicine-doctor-head-right">
+            <div class="family-medicine-doctor-head-right select-time-css">
                 <!-- <publicTime @timeValue="getSelectTime"></publicTime> -->
                 <span class="time-paragraph">时间段：</span>
                 <el-date-picker
                 v-model="queryConditions.time"
                 type="datetimerange"
                 size="mini" value-format="yyyy-MM-dd HH:mm:ss"
-                range-separator="至"
+                range-separator="-"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期">
                 </el-date-picker>
@@ -136,7 +136,7 @@
         </span> -->
         </el-dialog>
         <el-dialog
-        :visible.sync="chatData.show">
+        :visible.sync="chatData.show" class="chatDialog">
             <chat :sessionId="chatData.sessionId" :doctorVis="chatData.doctorVis" :userMessage="chatData.userMessage" :chatType1="chatData.videoType" :chatTypeBox="chatData.chatTypeBox"></chat>
         </el-dialog>
 

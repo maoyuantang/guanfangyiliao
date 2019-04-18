@@ -2,7 +2,7 @@
     远程教育
 -->
 <template>
-<div class="doctors-index-education">
+<div class="doctors-index-education" v-if="show">
     <!-- <div class="doctors-index-education" v-if="show"> -->
     <div class="doctors-index-rounds">
 		<div class="doctors-index-rounds-head">

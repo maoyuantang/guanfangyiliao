@@ -369,7 +369,7 @@
         invitationData1: [],
         defaultProps: {
           label: "name",
-          value:"",
+          value: "",
           children: "children"
         },
 
@@ -586,7 +586,7 @@
         this.getList2();
         this.DoctorList();
       },
-      nowDateF(data){
+      nowDateF(data) {
         var date = new Date();
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -597,7 +597,7 @@
         if (day < 10) {
           day = "0" + day;
         }
-        
+
         var nowDate = year + "-" + month + "-" + day;
         if (data.index.value == "TODAY") {
           this.time0 = nowDate;

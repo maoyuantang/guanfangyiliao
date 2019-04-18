@@ -31,14 +31,14 @@
 					i:0,//当前页面
 					list:[
 						{
-							en:'Teaching resources',
-							zh:'教学资源',
-							page:'resources'
-						},
-						{
 							en:'Timetable plan',
 							zh:'排课计划',
 							page:'classScheduling'
+						},
+						{
+							en:'Teaching resources',
+							zh:'教学资源',
+							page:'resources'
 						},
 						{
 							en:'statistics',
