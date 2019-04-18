@@ -59,7 +59,7 @@
 			 * bar 切换数据
 			 */
 			getBar(data){
-				console.log(data)
+				// console.log(data)
 			},
 		},
 		async created(){

@@ -89,6 +89,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <tableNoMore v-if="timetable.length<=0"></tableNoMore>
             </div>
             <div class="class-scheduling-body-paging">
                 <el-pagination
@@ -232,6 +233,8 @@
     import Check from '../../../public/publicJs/check.js'
     import tag from '../../../public/publicComponents/tag.vue'
     import search from '../../../public/publicComponents/search.vue'
+    import tableNoMore from '../../../public/publicComponents/tableNoMore.vue'
+    
 	export default {
 		watch:{
 			'global.departmentList':{
@@ -337,7 +340,7 @@
                     {token:this.userState.token},
                     {id:item.id}
                 ]);
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.$notify({
                         title: '成功',
@@ -361,7 +364,7 @@
                     token:this.userState.token,
                     id:id
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     return {
                         ok:true,
@@ -383,7 +386,7 @@
              * 编辑 被点击
              */
             async aditPlan(item){
-                console.log(item);
+                // console.log(item);
                 const resData = await this.getArrange(item.id);
                 if(!resData.ok)return; 
                 this.alertData.type = 1;
@@ -415,7 +418,7 @@
                     orgCode:this.userState.hospitalCode,
                     deptId:''
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.alertData.data.lecturerList = res.data.body.map(item => {
                         item.label = item.doctorName;
@@ -496,12 +499,12 @@
                     department:this.alertData.data.departmentSelect,
                     autoApply:this.alertData.data.auto,
                 };
-                console.log(postData)
+                // console.log(postData)
                 const res = await eduCourseArrange(...[
                     {token:this.userState.token},
                     postData
                 ]);
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.$notify({
                         title: '成功',
@@ -540,7 +543,7 @@
                     {token:this.userState.token},
                     postData
                 ]);
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.$notify({
                         title: '成功',
@@ -592,12 +595,12 @@
                     token:this.userState.token,
                     department:this.queryConditions.department.list[this.queryConditions.department.select] ? this.queryConditions.department.list[this.queryConditions.department.select].value : '',
                     search:this.queryConditions.searchKey || '',
-                    type:this.queryConditions.mode.list[this.queryConditions.mode.select]&&this.queryConditions.mode.list[this.queryConditions.mode.select].value || '',
-                    state:this.queryConditions.status.list[this.queryConditions.status.select].value || '',
+                    type:this.queryConditions.mode.list[this.queryConditions.mode.select] ? this.queryConditions.mode.list[this.queryConditions.mode.select].value : '',
+                    state:this.queryConditions.status.list[this.queryConditions.status.select] ? this.queryConditions.status.list[this.queryConditions.status.select].value : '',
                     pageNum:this.queryConditions.paging.current,
                     pageSize:this.queryConditions.paging.size,
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.timetable = res.data.body.data2.list;
                     this.queryConditions.paging.total = res.data.body.data2.total;
@@ -613,7 +616,7 @@
              * 切换分页
              */
             ChangePage(data){
-                console.log(data);
+                // console.log(data);
                 this.queryConditions.paging.current = data;
                 this.getArrangeList();
             },
@@ -621,7 +624,7 @@
              * 获取 搜索关键字
              */
             searchChange(data){
-                console.log(data)
+                // console.log(data)
                 this.queryConditions.searchKey = data;
                 this.getArrangeList();
             },
@@ -630,7 +633,7 @@
              */
             async getTypeList(){
                 const res = await typeList({token:this.userState.token});
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.queryConditions.mode.list = res.data.body.map(item=>{
                         item.label = item.name;
@@ -691,7 +694,7 @@
                     token: this.userState.token,
                     type:'MANAGE'
                 });
-                console.log(res)
+                // console.log(res)
                 if(res.data && res.data.errCode === 0){
                    this.alertData.data.departmentList = res.data.body.map(item=>{
                         item.label = item.deptName;
@@ -719,7 +722,8 @@
 		},
 		components:{
             tag,
-            search
+            search,
+            tableNoMore
 		},
 		async created(){
             this.getTypeList();

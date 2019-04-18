@@ -20,6 +20,7 @@
                     </tr>
                 </tbody>
             </table>
+            <tableNoMore v-if="list.length <= 0"></tableNoMore>
             <div class="page">
                 <el-pagination
 					background
@@ -51,10 +52,11 @@
     import { mapState } from 'vuex'
     import {queryPageByassessPlan} from '../../../api/apiAll.js'
     import apiBaseURL from '../../../enums/apiBaseURL.js'
+    import tableNoMore from '../../../public/publicComponents/tableNoMore.vue'
 	export default {
         props: ['inData'],
 		components:{
-			
+			tableNoMore
 		},
 		watch:{
 			
@@ -86,7 +88,7 @@
              * 查看
              */
             see(item){
-                console.log(item)
+                // console.log(item)
                 this.alertData.src = `${apiBaseURL.developmentEnvironment}/v1/peachApp/diseaseAssess.html?id=${item.planId}&token=${this.userInfo.token}`;
                 this.alertData.show = true;
             },
@@ -107,17 +109,17 @@
                     pageSize:this.page.size,                                         
                     familyMemberId:this.inData.id,
                 });
-                console.log({
-                    token:this.userInfo.token,
-                    pageNum:this.page.current,                                              
-                    pageSize:this.page.size,                                         
-                    familyMemberId:this.inData.id,
-                })
-                console.log(res);
+                // console.log({
+                //     token:this.userInfo.token,
+                //     pageNum:this.page.current,                                              
+                //     pageSize:this.page.size,                                         
+                //     familyMemberId:this.inData.id,
+                // })
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.list = res.data.body.data2.list;
                     this.page.total = res.data.body.data2.total;
-                    console.log(this.list)
+                    // console.log(this.list)
 				}else{
 					this.$notify({
 						title: '评估计划列表获取失败',

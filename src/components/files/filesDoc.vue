@@ -51,6 +51,7 @@
           </tr>
         </tbody>
       </table>
+      <tableNoMore v-if="userList.length <= 0"></tableNoMore>
     </div>
     <div class="files-doc-footer">
       <div class="files-doc-footer-left">
@@ -131,6 +132,7 @@ import doctorTab from "../../public/publicComponents/doctorTab.vue";
 
 import norDocAlert from "../../public/publicComponents/norDocAlert.vue";
 import WomanDoc from "../../public/publicComponents/WomanDoc.vue";
+import tableNoMore from "../../public/publicComponents/tableNoMore.vue";
 
 import { deepCopy } from "../../public/publicJs/deepCopy.js";
 import { queryByPage, groupSelects, addGroupMember, queryListByUserId, addOrdinaryArchives, addWomanMessage } from "../../api/apiAll.js";
@@ -140,7 +142,8 @@ export default {
     search,
     doctorTab,
     norDocAlert,
-    WomanDoc
+    WomanDoc,
+    tableNoMore
   },
   watch: {
     /**

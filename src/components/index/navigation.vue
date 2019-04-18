@@ -54,7 +54,7 @@ import { parse } from 'protobufjs';
 				}
 			},
 			$route(n){
-				console.log(n)
+				// console.log(n)
 				sessionStorage.setItem('page',JSON.stringify({
 					name:n.meta.title,
 					select:true,
@@ -194,7 +194,7 @@ import { parse } from 'protobufjs';
 					try{
 						rePage = JSON.parse(rePage);
 					}catch(e){
-						console.log(e);
+						// console.log(e);
 						this.$notify.error({
 							title: '错误',
 							message: '记录恢复失败!'

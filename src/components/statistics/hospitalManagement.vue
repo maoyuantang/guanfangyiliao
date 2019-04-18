@@ -60,8 +60,8 @@ import steps from '../../public/publicComponents/steps.vue'
 			 * 顶部当行模块被点击，返回结果
 			 */
 			reData(data){
-				console.log(data);
-				console.log(this.some)
+				// console.log(data);
+				// console.log(this.some)
 			},
 		},
 		components:{
@@ -72,8 +72,8 @@ import steps from '../../public/publicComponents/steps.vue'
 		},
 		async created(){
 			this.getViewRoot();
-			console.log(this.userSelfInfo.userId)
-			console.log(this.userInfo.token)
+			// console.log(this.userSelfInfo.userId)
+			// console.log(this.userInfo.token)
 		}
 	}
 </script>

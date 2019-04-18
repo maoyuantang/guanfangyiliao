@@ -111,7 +111,7 @@
                     department:this.queryConditions.department.list[this.queryConditions.department.select].value || ''
                 };
                 const res = await countStudent(query);
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.chartData.speak.total = res.data.body.total;
                     this.chartData.speak.dataAxis = res.data.body.data.map(item=>item.x);
@@ -136,7 +136,7 @@
                     department:this.queryConditions.department.list[this.queryConditions.department.select].value || ''
                 };
                 const res = await countStudent(query);
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.chartData.listen.total = res.data.body.total;
                     this.chartData.listen.dataAxis = res.data.body.data.map(item=>item.x);
@@ -153,7 +153,7 @@
              * 获取 选取 时间
              */
             timeValueFun(time){
-                console.log(time);
+                // console.log(time);
                 this.queryConditions.time = time;
                 this.getCountStudent();
                 this.getCountTeacher();

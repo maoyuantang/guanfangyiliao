@@ -96,7 +96,7 @@
              * 按钮被点击  操作
              */
             operating(){
-                console.log(this.info)
+                // console.log(this.info)
                 const funCMap = {
                     TOSIGNUP:this.TOSIGNUP,//报名
                     TOLEARN:this.TOLEARN,//进入学习
@@ -109,12 +109,12 @@
              * 报名
              */
             async TOSIGNUP(item){
-                console.log(item)
+                // console.log(item)
                 const res = await signUp({
                     token:this.userInfo.token,
                     id:item.id
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.$notify({
                         title: '成功',
@@ -138,7 +138,7 @@
                     token:this.userInfo.token,
                     id:item.id
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.createVedio(res.data.body.playUrl.flv);
                 }else{
@@ -153,12 +153,12 @@
              * 进入教学
              */
             async TOTEACH(item){  
-                console.log(item);
+                // console.log(item);
                 const res = await intoPlatform({
                     token:this.userInfo.token,
                     id:item.id
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     
                     
@@ -184,7 +184,7 @@
                     pageNum:1,
                 };
                 const res = await webCourseList(query);
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     const reData = res.data.body.list[0];
                     reData.imgUrl = reData.headId?`${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${reData.headId}`:reData.headId;
@@ -204,7 +204,7 @@
                             label:'进入教学'
                         },
                     }
-                    console.log(reData.action);
+                    // console.log(reData.action);
                     reData.btnName = btnStatus[reData.action]?btnStatus[reData.action].label:'';
                     this.info = reData;
                     this.show = true;

@@ -18,9 +18,12 @@
             </div>
             
         </div>
-        <div class="education-doc-body">
-            <educationDocLabel v-for="(item, index) in list" :key="index" :inData="item" @reback="getItemClick"></educationDocLabel>
+        <div class="education-doc-body-container">
+            <div class="education-doc-body">
+                <educationDocLabel v-for="(item, index) in list" :key="index" :inData="item" @reback="getItemClick"></educationDocLabel>
+            </div>
         </div>
+        
         <div class="education-doc-foo">
             <div class="education-doc-page">
                 <el-pagination
@@ -69,7 +72,7 @@
         watch:{
             'queryConditions.time':{
                 handler(n){
-                    console.log(n);
+                    // console.log(n);
                     this.getWebCourseList();
                 }
             }
@@ -146,7 +149,7 @@
                     token:this.userState.token,
                     id:item.id
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.$notify({
                         title: '成功',
@@ -170,7 +173,7 @@
                     token:this.userState.token,
                     id:item.id
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.createVedio(res.data.body.playUrl.flv.replace('http','https'));
                     // this.$notify({
@@ -195,7 +198,7 @@
                     token:this.userState.token,
                     id:item.id
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     // this.$notify({
                     //     title: '成功',
@@ -243,7 +246,7 @@
              * 切换分页
              */
             ChangePage(num){
-                console.log(num);
+                // console.log(num);
                 this.queryConditions.page.current = num;
                 this.getWebCourseList();
             },
@@ -261,9 +264,9 @@
                     query.startTime = this.queryConditions.time[0];
                     query.endTime = this.queryConditions.time[1];
                 }
-                console.log(query)
+                // console.log(query)
                 const res = await webCourseList(query);
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.list = res.data.body.list.map(item=>{
                         item.imgUrl = item.headId?`${urls.imgBaseUrl}/m/v1/api/hdfs/fs/download/${item.headId}`:item.headId;
@@ -271,7 +274,7 @@
                         return item;
                     });
                     this.queryConditions.page.total = res.data.body.total;
-                    console.log(this.list)
+                    // console.log(this.list)
                 }else{
                      this.$notify({
                         title: '课程列表获取失败',
@@ -285,16 +288,16 @@
              */
             getdaysSelect(data){
                 this.queryConditions.days.select = data.index;
-                console.log(this.queryConditions.days.select)
+                // console.log(this.queryConditions.days.select)
                 this.getWebCourseList();
             },
             /**
              * 获取 选取 时间
              */
             timeValueFun(time){
-                console.log(enter)
+                // console.log(enter)
                 this.queryConditions.time = time;
-                console.log(this.queryConditions.time);
+                // console.log(this.queryConditions.time);
                 
             },
 		},
@@ -322,6 +325,10 @@
         font-size: 14px;
         color: #646464;
     }
+    .education-doc-body-container{
+        overflow-x: scroll;
+        width: 100%;
+    }
     .education-doc-body{
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
@@ -330,6 +337,7 @@
         align-items:center;
         grid-row-gap:0.2rem;
         padding-top: 0.2rem;
+        min-width: 16rem;;
     }
     .education-doc-page{
         text-align: center;

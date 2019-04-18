@@ -62,6 +62,7 @@
               </tr>
             </tbody>
           </table>
+          <tableNoMore v-if="ourStaff.ourStaffUser.list.length <= 0"></tableNoMore>
         </div>
         <div class="pagination-div">
           <el-pagination
@@ -125,6 +126,7 @@
               </tr>
             </tbody>
           </table>
+          <tableNoMore v-if="outerCourt.list.length <= 0"></tableNoMore>
           <!-- <div class="pagination-div">
             <el-pagination
               background
@@ -334,6 +336,7 @@ import selectTree from "../../../public/publicComponents/selectTree.vue";
 import sensitiveWordCheck from "../../../public/publicJs/sensitiveWordCheck.js";
 import search from "../../../public/publicComponents/search.vue";
 import { deepCopy } from "../../../public/publicJs/deepCopy.js";
+import tableNoMore from "../../../public/publicComponents/tableNoMore.vue";
 import {
   fetchHospitalDepts,
   fetchDoctorSubSystems,
@@ -520,7 +523,7 @@ export default {
      */
     "global.allHospital": {
       handler(n) {
-        console.log(n);
+        // console.log(n);
         this.setHospitalList(n);
       }
     }
@@ -535,7 +538,7 @@ export default {
         orgCode: this.userSelfInfo.orgCode,
       });
       if (res.data && res.data.errCode === 0){
-        console.log(res);
+        // console.log(res);
         this.newAppend = res.data.body.map(item=>{
           item.value = item.doctorName;
           return item;
@@ -559,13 +562,13 @@ export default {
      * 新增需求  选中
      */
     handleSelect(item){
-      console.log(item)
+      // console.log(item)
     },
     /**
      * 删除 用户
      */
     async deleteItem(item,index){
-      console.log(item)
+      // console.log(item)
       if(this.userSelfInfo.userId === item.id){
         this.$notify.error({
           title: "删除失败",
@@ -600,7 +603,7 @@ export default {
         token: this.userInfo.token,
         userId: item.id,
       });
-      console.log(res);
+      // console.log(res);
       if (res.data && res.data.errCode === 0){
         this.ourStaff.ourStaffUser.list[index].addAttributeDoc = res.data.body[0];
         this.ourStaff.ourStaffUser.list[index].addAttributeMan = res.data.body[1];
@@ -696,7 +699,7 @@ export default {
      * 外院 医院 被选中
      */
     outerCourtUserHospitalSelect(data) {
-      console.log(data)
+      // console.log(data)
       this.outerCourt.hospitalSelect = data.index;
       this.getSynergyManageList();
     },
@@ -704,7 +707,7 @@ export default {
      * 院外 关键字搜索
      */
     outSearch(value){
-      console.log(value)
+      // console.log(value)
       this.outerCourt.searchKey = value;
       this.getSynergyManageList();
     },
@@ -720,7 +723,7 @@ export default {
         departmentId : this.outerCourt.department.list[this.outerCourt.department.index]?this.outerCourt.department.list[this.outerCourt.department.index].deptId:''
         // departmentId: this.outerCourt.departmentSelect.orgCode || ""
       });
-      console.log(res)
+      // console.log(res)
       if (res.data.errCode === 0) {
         this.outerCourt.list = res.data.body.data2.list;
         this.outerCourt.page.total = res.data.body.data2.total;
@@ -773,7 +776,7 @@ export default {
      * 修改用户信息
      */
     async modifyUserInfo(item) {
-      console.log(item)
+      // console.log(item)
       const res = await this.getUserInfo({
         token: this.userInfo.token,
         userId: item.id,
@@ -794,7 +797,7 @@ export default {
         // console.log(res.data.depts.map(
         //   item => item.deptId
         // )[0])
-        console.log(res.data.systemBusList)
+        // console.log(res.data.systemBusList)
         const resultList = [];
         const getValue = data =>{
           for(const i of data){
@@ -873,7 +876,7 @@ export default {
     getOurStafDocBus(data) {
       this.ourStafAlert.data.docBus.select = data;
       return;
-      console.log(data);
+      // console.log(data);
       let mid = deepCopy(this.ourStafAlert.data.docBus.list);
       const setStatus = (arr, tag) => {
         for (const i of arr) {
@@ -890,21 +893,21 @@ export default {
       const deleteChild = data => {
         for (const i in data) {
           if (!data[i].select) {
-            console.log("delete");
+            // console.log("delete");
             const test = data.splice(i, 1);
-            console.log(test);
+            // console.log(test);
           }
-          console.log(data[i]);
+          // console.log(data[i]);
 
           if (data[i] && data[i].children.length > 0) {
-            console.log("enter");
+            // console.log("enter");
             deleteChild[data[i].children];
           }
         }
       };
       setStatus(mid, data);
       deleteChild(mid);
-      console.log(mid);
+      // console.log(mid);
     },
 
     /**
@@ -957,7 +960,7 @@ export default {
         data
       );
       this.DepartmentManagementAuthoritySelect = result.ok ? result.data : [];
-      console.log(this.DepartmentManagementAuthoritySelect);
+      // console.log(this.DepartmentManagementAuthoritySelect);
     },
     /**
      * 大致检查新增用户数据是否正确,是否为空，是否有敏感字
@@ -1035,20 +1038,21 @@ export default {
         //取出被选中的科室列表的id，放入需要的数据组
         options.deptIds.push(i.deptId);
       }
-      console.log(options);
+      // console.log(options);
       return options;
     },
     /**
      * 提交数据
      */
     async submission() {
-      this.ourStafAlert.type === 0 ? this.addSub() : this.modifyUser();
+      await this.ourStafAlert.type === 0 ? this.addSub() : this.modifyUser();
+      this.ourStafClose();
     },
     /**
      * 修改用户
      */
     async modifyUser() {
-      console.log("modifyUser");
+      // console.log("modifyUser");
       const postData = [
         { token: this.userInfo.token },
         {
@@ -1078,7 +1082,7 @@ export default {
       // console.log(postData[1]);
       // return;
       const res = await updateUser(...postData);
-      console.log(res);
+      // console.log(res);
       if (res.data.errCode === 0) {
         this.$notify({
           title: "成功",
@@ -1123,10 +1127,10 @@ export default {
           })
         ]
       };
-      console.log(postData);
+      // console.log(postData);
       const postQuery = { token: this.userInfo.token };
       const res = await createUser(postQuery, postData);
-      console.log(res);
+      // console.log(res);
       if (res.data.errCode === 0) {
         	this.$notify({
 						title: '成功',
@@ -1175,7 +1179,7 @@ export default {
         token: this.userInfo.token,
         type:'MANAGE'
       });
-      console.log(res)
+      // console.log(res)
       if (res.data.errCode === 0) {
         this.departmentlist = JSON.parse(JSON.stringify(res.data.body));
         this.outerCourt.department.list = JSON.parse(JSON.stringify(res.data.body.map(item=>{
@@ -1201,7 +1205,7 @@ export default {
         //     })
         //   ])
         // );
-        console.log(this.departmentlist);
+        // console.log(this.departmentlist);
       } else {
         this.$notify.error({
           title: "数据获取失败",
@@ -1264,7 +1268,7 @@ export default {
         query:this.ourStaff.searchKey
       });
       if (res.data && res.data.errCode === 0) {
-        console.log(res);
+        // console.log(res);
         this.ourStaff.ourStaffUser.list = res.data.body.data2.list.map(item=>{
           const now = new Date(item.regTime);
           item.newTime = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;
@@ -1278,7 +1282,7 @@ export default {
      * 本院人员 搜索框搜索
      */
     async ourStaffSearchChange(data) {
-      console.log(data);
+      // console.log(data);
       this.ourStaff.searchKey = data;
       this.getUserList();
     },
@@ -1290,7 +1294,8 @@ export default {
   components: {
     selftag,
     selectTree,
-    search
+    search,
+    tableNoMore
   },
   async created() {
     this.getDepartmentList();

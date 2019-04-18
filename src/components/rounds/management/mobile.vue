@@ -183,9 +183,9 @@
                     // query.startTime = `${nowData.getFullYear()-1}-${nowData.getMonth()}-${nowData.getDate()}`;
                     // query.endTime = `${nowData.getFullYear()}-${nowData.getMonth()+1}-${nowData.getDate()}`;
                 }
-                console.log(query)
+                // console.log(query)
                 const res = await roundsManager(query);
-                console.log(res);
+                // console.log(res);
                 if(res.data&&res.data.errCode===0){
                     this.queryConditions.page.total = res.data.body.data2.total;
                     this.roundsList = res.data.body.data2.list;
@@ -218,7 +218,7 @@
              */
             getDepartmentSelect(data){
                 this.queryConditions.department.select = data.index;
-                console.log(this.queryConditions.department.select);
+                // console.log(this.queryConditions.department.select);
                 this.getRoundsManager();
             },
             /**
@@ -226,7 +226,7 @@
              */
             getDateSelect(data){
                 this.queryConditions.date.select = data.index;
-                console.log(this.queryConditions.date.select);
+                // console.log(this.queryConditions.date.select);
                 this.getRoundsManager();
             },
             /**
@@ -234,7 +234,7 @@
              */
             timeValueFun(time){
                 this.queryConditions.time = time;
-                console.log(this.queryConditions.time)
+                // console.log(this.queryConditions.time)
                 this.getRoundsManager();
             },
             /**
@@ -242,7 +242,7 @@
              */
             searchChange(data){
                 this.queryConditions.keyWorlds = data;
-                console.log(this.queryConditions.keyWorlds);
+                // console.log(this.queryConditions.keyWorlds);
                 this.getRoundsManager();
             },
 		},

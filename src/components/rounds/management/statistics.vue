@@ -131,16 +131,16 @@
                     query.startTime = `${nowData.getFullYear()-1}-${nowData.getMonth()<9?'0'+(nowData.getMonth()+1):nowData.getMonth()+1}-${nowData.getDate()<10?'0'+nowData.getDate():nowData.getDate()}`;
                     query.endTime = `${nowData.getFullYear()}-${nowData.getMonth()<9?'0'+(nowData.getMonth()+1):nowData.getMonth()+1}-${nowData.getDate()<10?'0'+nowData.getDate():nowData.getDate()}`;
                 }
-                console.log(query); 
+                // console.log(query); 
                 const res = await roundsStatistics(query);
-                console.log(res);
+                // console.log(res);
                 if(res.data&&res.data.errCode===0){
                     this.chartData.chart1.dataAxis = res.data.body.map(item=>item.x);
                     this.chartData.chart1.data = res.data.body.map(item=>item.y);
                     let initialValue=0;
                     this.chartData.chart1.total = `总数：${res.data.body.reduce((a,b)=>a+b.y,initialValue)}`;
                     this.chartData.chart1 = Object.assign({},this.chartData.chart1)
-                    console.log(this.chartData.chart1)
+                    // console.log(this.chartData.chart1)
                 }else{
                     this.$notify({
 						title: '失败',
@@ -171,7 +171,7 @@
              */
             getDepartmentSelect(data){
                 this.queryConditions.department.select = data.index;
-                console.log(this.queryConditions.department.select);
+                // console.log(this.queryConditions.department.select);
                 this.getRoundsStatistics();
             },
              /**
@@ -179,7 +179,7 @@
              */
             timeValueFun(time){
                 this.queryConditions.time = time;
-                console.log(this.queryConditions.time);
+                // console.log(this.queryConditions.time);
                 this.getRoundsStatistics();
             },
 		},

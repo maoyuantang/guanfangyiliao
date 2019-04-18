@@ -191,7 +191,7 @@
                 this.alertInfo.index = index;
                 this.alertInfo.data.imgSrc = this.alertInfo.data.patientHeadId?`${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${this.alertInfo.data.patientHeadId}`:this.alertInfo.data.patientHeadId;
                 this.alertInfo.show = true;
-                console.log(item)
+                // console.log(item)
             },
             /**
              * 获取 列表 数据
@@ -213,7 +213,7 @@
                     // query.endTime = `${nowData.getFullYear()}-${nowData.getMonth()+1}-${nowData.getDate()}`;
                 }
                 const res = await myRounds(query);
-                console.log(res);
+                // console.log(res);
                 if(res.data&&res.data.errCode===0){
                     this.tableData = res.data.body.data2.list;
                     this.queryConditions.page.total = res.data.body.data2.total;
@@ -236,14 +236,14 @@
              */
             outerCourtChangePage(num){
                 this.queryConditions.page.current = num;
-                console.log(this.queryConditions.page.current);
+                // console.log(this.queryConditions.page.current);
                 this.getMyRounds(); 
             },
             /**
              * 获取 日期 选择
              */
             getDateSelect(data){
-                console.log(data);
+                // console.log(data);
                 this.queryConditions.date.select = data.index;  
                 this.getMyRounds(); 
             },
@@ -251,7 +251,7 @@
              * 获取 时间段
              */
             timeValueFun(time){
-                console.log(time);
+                // console.log(time);
                 this.queryConditions.time = time;
                 this.getMyRounds(); 
             },

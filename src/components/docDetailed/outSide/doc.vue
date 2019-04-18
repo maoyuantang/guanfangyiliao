@@ -80,7 +80,7 @@
              * 展示大图弹窗
              */
             showBigImg(item){
-                console.log(item);
+                // console.log(item);
                 this.alertData.imgSrc = item.imgSrc;
                 this.alertData.show = true;
             },
@@ -109,7 +109,7 @@
                     pageNum:this.page.current,
                     pageSize:this.page.size
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     const typeMap = {
                         SURVEYING:'检验检查',

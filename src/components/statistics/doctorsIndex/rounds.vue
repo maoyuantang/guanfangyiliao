@@ -50,7 +50,7 @@
              */
             async getTodayRounds(){
                 const res = await todayRounds({token:this.userInfo.token});
-                console.log(res);
+                // console.log(res);
                 if(res.data&&res.data.errCode===0){
                     this.info = res.data.body;
                 }else{

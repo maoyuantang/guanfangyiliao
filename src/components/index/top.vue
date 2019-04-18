@@ -105,11 +105,8 @@ export default {
                 });
             }
         },
-        switchStatus() {
-            console.log("444");
-        },
         handleSelect(index) {
-            console.log(index);
+            // console.log(index);
             const obj = {
                 "1": "manager",
                 "2": "doctors"
@@ -120,9 +117,9 @@ export default {
             };
             this.$store.commit("user/CHANGEVIEWAUTH", sendData);
             sessionStorage.setItem("viewRoot", JSON.stringify(this.viewRoot));
-            console.log(index);
+            // console.log(index);
             // sessionStorage.setItem('page',JSON.stringify(item));
-            console.log(this.$store.state.user.viewRoot.now);
+            // console.log(this.$store.state.user.viewRoot.now);
         },
         /**
          * 注销

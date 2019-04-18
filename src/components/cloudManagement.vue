@@ -57,6 +57,7 @@
 						</tr>
 					</tbody>
 				</table>
+				<tableNoMore v-if="tableInfo.data.list.length <= 0"></tableNoMore>
 			</div>
 		</div>
 		<div class="pagination">
@@ -149,6 +150,7 @@
 	import search from '../public/publicComponents/search.vue'
 	import {fetchUserCloud, viewCloud, hospitalsByCloud, updateCloud, addCloud} from '../api/apiAll.js'
 	import { deepCopy } from '../public/publicJs/deepCopy.js'
+	import tableNoMore from '../public/publicComponents/tableNoMore.vue'
 	export default {
 		watch:{
 			'cloudStorageCopy.hospital':{
@@ -164,6 +166,7 @@
 		},
 		components:{
 			search,
+			tableNoMore
 		},
 		computed: {
 			...mapState({
@@ -332,7 +335,7 @@
 			 * 分页切换
 			 */
 			ChangePage(data){
-				console.log(data);
+				// console.log(data);
 				this.queryConditions.page.current = data;
 				this.getTableInfo();
 			},
@@ -341,7 +344,7 @@
 			 */
 			async getBusinessInfo(){
 				const res = await viewCloud({token: this.userState.token});
-				console.log(res);
+				// console.log(res);
 				if(res.data && res.data.errCode === 0){
 					res.data.body.agree = res.data.body.protocolId!=='';
 					res.data.body.hospital = res.data.body.hospital.map(item=>item.hospitalOrgCode);//拍平，只留下hospitalOrgCode。特么反回个null什么意思
@@ -372,13 +375,13 @@
 					pageNum:this.queryConditions.page.current,
 					pageSize:this.queryConditions.page.size
 				});
-				console.log(res);
+				// console.log(res);
 				if(res.data && res.data.errCode === 0){
 					this.tableInfo.header = res.data.body.header;
 					this.tableInfo.data = res.data.body.data2;
 					this.queryConditions.page.total = res.data.body.data2.total
 				}else{
-					console.log('fail')
+					// console.log('fail')
 					this.$notify({
 						title: '失败',
 						message: '表格数据获取失败',
@@ -427,8 +430,8 @@
 			 * 用户选择年限
 			 */
 			handleCommand(i,index){
-				console.log(i)
-				console.log(index)
+				// console.log(i)
+				// console.log(index)
 				const newObj = this.cloudStorageCopy.price[index];
 				// console.log(newObj)
 				newObj.valueUnit = i;
@@ -440,7 +443,7 @@
 			 */
 			async getHospitalsByCloud(){
 				const res = await hospitalsByCloud({token: this.userState.token});
-				console.log(res)
+				// console.log(res)
 				if(res.data && res.data.errCode === 0){
 					this.configurationsList = res.data.body.map(item=>{
 						item.hospitalOrgCode = item.code;
@@ -479,7 +482,7 @@
 						hospital:this.showsSelectList
 					}
 				];
-				console.log(options)
+				// console.log(options)
 				options[1].cloudId ? this.editOption(options) : this.addOption(options);
 			},
 			/**
@@ -487,7 +490,7 @@
 			 */
 			async editOption(options){
 				const res = await updateCloud(...options);
-				console.log(res);
+				// console.log(res);
 				if(res.data && res.data.errCode === 0){
 					this.$notify({
 						title: '成功',
@@ -516,7 +519,7 @@
 			 */
 			async addOption(options){
 				const res = await addCloud(...options);
-				console.log(res);
+				// console.log(res);
 				if(res.data && res.data.errCode === 0){
 					this.$notify({
 						title: '成功',
