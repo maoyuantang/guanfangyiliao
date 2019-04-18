@@ -4,7 +4,7 @@
             <p class="login-title">账号登录</p>
             <div class="login-input-div">
                 <span class="login-input-name">账号</span>
-                <input type="text" name="" placeholder="请输入手机号/账号" class="login-input" v-model="account.text" @keyup="listenLogin($event)">
+                <input type="text" name="" placeholder="请输入手机号/账号" class="login-input" v-model="account.text" @keyup="listenLogin($event)" autocomplete="off">
             </div>
             <div class="login-check-box-div">
                 <el-radio-group v-model="way">
@@ -14,7 +14,7 @@
             </div>
             <div class="login-input-div">
                 <span class="login-input-name">{{way?"密码":"验证码"}}</span>
-                <input type="password" name="" placeholder="" class="login-input" v-model="passwd.text" @keyup="listenLogin($event)">
+                <input type="password" name="" placeholder="" class="login-input" v-model="passwd.text" @keyup="listenLogin($event)" autocomplete="off">
                 <span class="get-code" v-if="!way" @click="getCode">发送验证码</span>
             </div>
             <div class="login-btn-div">

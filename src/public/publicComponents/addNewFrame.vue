@@ -127,7 +127,7 @@
                         <div class="make-agreement">
                             <div class="agreement-list">
                                 <!-- <span class="select-agreement-name">{{inData.agreement.default.label||''}}</span> -->
-                                <input type="text" class="select-agreement-name1" v-model="inData.agreement.default.label"
+                                <input type="text" class="select-agreement-name1" v-model="inData.agreement.default.label" autocomplete="off"
                                     :readonly="sureVisiable===1?'readonly':false"></input>
                                 <Dropdown>
                                     <p>

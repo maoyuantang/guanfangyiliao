@@ -213,7 +213,7 @@
 						<div class="family-new-alert-spe-price-item-head">
 							<div class="family-new-alert-spe-price-item-head-input-div">
 								<i class="iconfont family-new-alert-spe-price-item-head-icon">&#xe76d;</i>
-								<input type="text" v-model="testData.businessPrice.data[0].worth" class="family-new-alert-spe-price-item-head-content-input">
+								<input type="text" v-model="testData.businessPrice.data[0].worth" class="family-new-alert-spe-price-item-head-content-input" autocomplete="off">
 								<p class="family-new-alert-spe-price-item-head-unit">/月</p>
 							</div>
 						</div>
@@ -222,7 +222,7 @@
 								<li>
 									<div class="family-new-alert-spe-price-item-body-item" v-for="(item,index) in testData.businessPrice.data[0].childList " :key="index">
 										<span class="family-new-alert-spe-price-item-body-item-name">{{item.childName}}</span>
-										<input type="number" min="0" class="family-new-alert-spe-price-item-body-item-count" v-model="item.times">
+										<input type="number" min="0" class="family-new-alert-spe-price-item-body-item-count" v-model="item.times" autocomplete="off">
 									</div>
 								</li>
 							</ul>
@@ -233,7 +233,7 @@
 						<div class="family-new-alert-spe-price-item-head">
 							<div class="family-new-alert-spe-price-item-head-input-div">
 								<i class="iconfont family-new-alert-spe-price-item-head-icon">&#xe76d;</i>
-								<input type="text" v-model="testData.businessPrice.data[1].worth" class="family-new-alert-spe-price-item-head-content-input">
+								<input type="text" v-model="testData.businessPrice.data[1].worth" class="family-new-alert-spe-price-item-head-content-input" autocomplete="off">
 								<p class="family-new-alert-spe-price-item-head-unit">/季</p>
 							</div>
 						</div>
@@ -242,7 +242,7 @@
 								<li>
 									<div class="family-new-alert-spe-price-item-body-item" v-for="(item,index) in testData.businessPrice.data[1].childList " :key="index">
 										<span class="family-new-alert-spe-price-item-body-item-name">{{item.childName}}</span>
-										<input type="number" min="0" class="family-new-alert-spe-price-item-body-item-count" v-model="item.times">
+										<input type="number" min="0" class="family-new-alert-spe-price-item-body-item-count" v-model="item.times" autocomplete="off">
 									</div>
 								</li>
 							</ul>
@@ -253,7 +253,7 @@
 						<div class="family-new-alert-spe-price-item-head">
 							<div class="family-new-alert-spe-price-item-head-input-div">
 								<i class="iconfont family-new-alert-spe-price-item-head-icon">&#xe76d;</i>
-								<input type="text" v-model="testData.businessPrice.data[2].worth" class="family-new-alert-spe-price-item-head-content-input">
+								<input type="text" v-model="testData.businessPrice.data[2].worth" class="family-new-alert-spe-price-item-head-content-input" autocomplete="off">
 								<p class="family-new-alert-spe-price-item-head-unit">/年</p>
 							</div>
 						</div>
@@ -262,7 +262,7 @@
 								<li>
 									<div class="family-new-alert-spe-price-item-body-item" v-for="(item,index) in testData.businessPrice.data[2].childList " :key="index">
 										<span class="family-new-alert-spe-price-item-body-item-name">{{item.childName}}</span>
-										<input type="number" min="0" class="family-new-alert-spe-price-item-body-item-count" v-model="item.times">
+										<input type="number" min="0" class="family-new-alert-spe-price-item-body-item-count" v-model="item.times" autocomplete="off">
 									</div>
 								</li>
 							</ul>
@@ -296,7 +296,7 @@
 					<div class="family-new-alert-normal-item-value family-new-alert-normal-item-value-spe">
 						 <div class="input-item-value-div input-item-value-div-spe">
 							<div class="family-new-alert-agreement-head">
-								<input type="text" v-model="testData.agreement.default.label" class="family-new-alert-edit-agreement" @change="clearAgreementId">
+								<input type="text" v-model="testData.agreement.default.label" class="family-new-alert-edit-agreement" @change="clearAgreementId" autocomplete="off">
 								<!-- <span>{{testData.agreement.default.label||''}}</span> -->
 								<Dropdown>
 									<p>
