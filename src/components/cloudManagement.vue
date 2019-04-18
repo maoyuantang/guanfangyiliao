@@ -12,11 +12,14 @@
 					</div>
 					<div class="config-module-content-price-list">
 						<span class="price-to">To</span>
-						<div class="config-module-content-price" v-for="(item,index) in cloudStorage.price" :key="index" v-show="index<3">
-							<!-- <span class="price-to">To</span> -->
-							<span class="price-symbol"><i class="iconfont price-symbol-icon">&#xe76d;</i></span>
-							<span class="price-num">{{item.worth}}<span>/{{item.valueUnit}}年</span></span>
+						<div  class="config-module-content-price-out">
+							<div class="config-module-content-price" v-for="(item,index) in cloudStorage.price" :key="index" v-show="index<3">
+								<!-- <span class="price-to">To</span> -->
+								<span class="price-symbol"><i class="iconfont price-symbol-icon">&#xe76d;</i></span>
+								<span class="price-num">{{item.worth}}<span>/{{item.valueUnit}}年</span></span>
+							</div>
 						</div>
+						
 					</div>
 					<div class="config-module-content-config">
 						<p class="config-module-content-config-title">医院配置</p>
@@ -728,5 +731,8 @@
 	.pagination{
 		text-align: center;
 		width:100%;
+	}
+	.config-module-content-price-out{
+		display: flex;
 	}
 </style>

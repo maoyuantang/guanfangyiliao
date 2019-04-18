@@ -349,6 +349,7 @@
 	import publicTime from './../../public/publicComponents/publicTime.vue'
 	import normalColumnChart from './../../public/publicComponents/normalColumnChart.vue'
 	import check from './../../public/publicJs/check.js'
+	import { deepCopy } from './../../public/publicJs/deepCopy.js'
 	import { 
 		stencilName, toolBusinessType, toolDept, doctorsByOrgCodeAndDeptId, fetchHospitalDepts, businessType, protocols, protocolById,
 		addBusiness, stencilModel, getChildrenByDepartmentId, businessCondition, disableClinic, updateBusiness, queryStatisticalData,
@@ -559,21 +560,21 @@
 						// 	}
 						// ],
 						data:[ 
-							{
-								worth:0,//价格数值    
-								unitEnum:'',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
-								valueUnit:1,//价格单位值
-								childList:[//该价格下的子业务 
-									// {
-									// 	childId:'',//子业务id
-									// 	childName:'',//子业务名称
-									// 	childDepName:'',//子业务科室名
-									// 	childDoctors:'',//子业务人员
-									// 	stencilEnum:'',//子业务模版（"JTYS", //家庭医生；"SMFW", //上门服务；"ZNPJ", //智能陪检；"YCJH", //远程监护；"ZXZX", //在线咨询；"JYSB", //家用设备； "PHFW" //陪护服务；）
-									// 	times:0//子业务次数
-									// }
-								]
-							},
+							// {
+							// 	worth:0,//价格数值    
+							// 	unitEnum:'',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
+							// 	valueUnit:1,//价格单位值
+							// 	childList:[//该价格下的子业务 
+							// 		// {
+							// 		// 	childId:'',//子业务id
+							// 		// 	childName:'',//子业务名称
+							// 		// 	childDepName:'',//子业务科室名
+							// 		// 	childDoctors:'',//子业务人员
+							// 		// 	stencilEnum:'',//子业务模版（"JTYS", //家庭医生；"SMFW", //上门服务；"ZNPJ", //智能陪检；"YCJH", //远程监护；"ZXZX", //在线咨询；"JYSB", //家用设备； "PHFW" //陪护服务；）
+							// 		// 	times:0//子业务次数
+							// 		// }
+							// 	]
+							// },
 							{
 								worth:0,//价格数值   
 								unitEnum:'MONTH',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
@@ -1329,11 +1330,12 @@
 					}
 				];
 				if(this.testData.businessTemplate.default.value==='JTYS'){//家庭医生 这个模板和其他模板的价格是不一样的，判断下
-					let i = 1; 
-					for(i;i<3;i++){
+					// testData.businessPrice.data[0].childList
+					let i = 0; 
+					for(i;i<this.testData.businessPrice.data.length;i++){
 						postData[1].businessPrice.push({ 
 							worth:this.testData.businessPrice.data[i].worth,//价格数值
-							unitEnum:this.testData.businessPrice.data[i].unitEnum,//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
+							unitEnum:i===0 ? 'MONTH' : this.testData.businessPrice.data[i].unitEnum,//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
 							valueUnit:1,//价格单位值
 							childList:[//该价格下的子业务
 								...this.testData.businessPrice.data[i].childList.map(v=>{
@@ -1358,6 +1360,8 @@
 						childList:[]
 					})
 				}
+				// console.error(postData[1].businessPrice)
+				// return
 				//下面注意下，value=customize说明是自定义，需要取label，其他取value
 				postData[1].businessType = this.testData.businessTypeList.default.value==='customize' ?this.testData.businessTypeList.default.label:this.testData.businessTypeList.default.value;
 				console.log(this.testData.type)
@@ -1392,12 +1396,12 @@
 						businessPrice:{//业务定价  为何如此坑  
 							show:false, 
 							data:[
-								{
-									worth:0,//价格数值    
-									unitEnum:'',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
-									valueUnit:1,//价格单位值
-									childList:[]//该价格下的子业务 
-								},
+								// {
+								// 	worth:0,//价格数值    
+								// 	unitEnum:'',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
+								// 	valueUnit:1,//价格单位值
+								// 	childList:[]//该价格下的子业务 
+								// },
 								{
 									worth:0,//价格数值   
 									unitEnum:'MONTH',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
@@ -1491,8 +1495,8 @@
 				});
 				console.log(res);
 				if(res.data&&res.data.errCode===0){
-					let i = 1;
-					for(i;i<3;i++){
+					let i = 0;
+					for(i;i<this.testData.businessPrice.data.length;i++){
 						// this.testData.businessPrice.data[i].childList = res.data.body.map(item=>Object({},item));
 						this.testData.businessPrice.data[i].childList = JSON.parse(JSON.stringify(res.data.body))
 					}
@@ -1637,6 +1641,9 @@
 			async editItem(item){
 				
 				console.log(item);
+				let priceList = deepCopy(this.testData.businessPrice.data);
+				item.price.forEach((v,k)=>{priceList[k] = v});
+				// item.price
 				const option = {
 					show:false,//是否显示新增弹窗 
 					state:item.state,
@@ -1673,7 +1680,8 @@
 					}, 
 					businessPrice:{//业务定价  为何如此坑  
 						show:false, 
-						data:item.price
+						data:priceList
+						// data:item.price
 					},
 					departmentList:{//科室列表   
 							show:false,

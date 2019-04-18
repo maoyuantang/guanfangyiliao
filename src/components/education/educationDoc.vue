@@ -4,7 +4,7 @@
             <div class="education-doc-top-left">
                 <tag :inData="queryConditions.days" @reback="getdaysSelect"></tag>
             </div>
-            <div class="education-doc-top-right">
+            <div class="education-doc-top-right select-time-css">
                 <!-- <publicTime @timeValue="timeValueFun"></publicTime> -->
                 <span class="time-paragraph">时间段：</span>
                 <el-date-picker
