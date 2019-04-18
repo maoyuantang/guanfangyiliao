@@ -4,7 +4,7 @@
             <p class="login-title">账号登录</p>
             <div class="login-input-div">
                 <span class="login-input-name">账号</span>
-                <input type="text" name="" placeholder="请输入手机号/账号" class="login-input" v-model="account.text" @keyup="listenLogin($event)">
+                <input type="text" name="" placeholder="请输入手机号/账号" class="login-input" v-model="account.text" @keyup="listenLogin($event)" autocomplete="off">
             </div>
             <div class="login-check-box-div">
                 <el-radio-group v-model="way">
@@ -14,11 +14,11 @@
             </div>
             <div class="login-input-div">
                 <span class="login-input-name">{{way?"密码":"验证码"}}</span>
-                <input type="password" name="" placeholder="" class="login-input" v-model="passwd.text" @keyup="listenLogin($event)">
+                <input type="password" name="" placeholder="" class="login-input" v-model="passwd.text" @keyup="listenLogin($event)" autocomplete="off">
                 <span class="get-code" v-if="!way" @click="getCode">发送验证码</span>
             </div>
             <div class="login-btn-div">
-                <span class="login-btn" @click="loginMethod">登录</span>
+                <span class="login-btn" @click="loginMethod" v-loading="pendding">登录</span>
             </div>
         </div>
         <div class="login-welcome"><p>Welcome</p></div>
@@ -46,6 +46,7 @@ export default {
     },
     data() {
         return {
+            pendding:false,//是否正在请求
             way: true, //登录方式，true为密码登录，false为验证码登录，默认true
             account: {
                 text: "", //gftechadmin
@@ -145,7 +146,7 @@ export default {
          * 监听 键盘事件 回车登录
          */
         listenLogin(e){
-            console.log(e)
+            // console.log(e)
             if(e.keyCode === 13){
                 this.loginMethod();
             }
@@ -269,8 +270,9 @@ export default {
          * 登录
          */
         async loginMethod() {
-            if(!this.checkAccount())return
-            if(!this.checkPasswd())return
+            if(this.pendding)return;
+            if(!this.checkAccount())return;
+            if(!this.checkPasswd())return;
             // if (!this.account.ok || !this.passwd.ok) return; //账号信息是否有误
             const options = {
                 account: this.account.text,
@@ -280,9 +282,10 @@ export default {
             this.way
                 ? (options.passwd = this.passwd.text)
                 : (options.captcha = this.passwd.text);
+                this.pendding = true;
             const res = await login(options);
             if (res.data && res.data.errCode === 0) {
-                console.log(res)
+                // console.log(res)
                 //成功
                 res.data.body.isLogin = true; //添加个字段，方便前端操作
                 const sign = this.reverseStr(res.data.body.sign); //翻转sign
@@ -317,6 +320,7 @@ export default {
                     message: res.data.errMsg
                 });
             }
+            this.pendding = false;
         },
 
         /**
@@ -384,7 +388,7 @@ export default {
                     }
                 }
             }
-            console.log(reData)
+            // console.log(reData)
             if (reData.manager.length > 1) {
                 //为什么是大于1？因为我一开始就在里面放了个元素，还有为什么我不用用户的身份判断？因为那东西是真的水，根据产品设计，用户不是管理员也有可能操作管理员页面~~~！
                 reData.now = {
@@ -405,7 +409,7 @@ export default {
             //     item.code = ( ( ( Number(item.code) /10000) | 0) *10000 ).toString();
             //     return item;
             // }))
-            console.log(reData)
+            // console.log(reData)
             this.$store.commit("user/SETVIEWROOT", reData);
             sessionStorage.setItem("viewRoot", JSON.stringify(reData)); //缓存将权限下来
         },
@@ -452,10 +456,10 @@ export default {
                 orgCode: this.userSelfInfo.orgCode,
                 deptId: ""
             });
-            console.log(res);
+            // console.log(res);
             if (res.data && res.data.errCode === 0) {
                 this.$store.commit("global/SETDEPARTENTLIST", res.data.body);
-                console.log(this.global.departmentList);
+                // console.log(this.global.departmentList);
             } else {
                 this.$notify({
                     title: "失败",

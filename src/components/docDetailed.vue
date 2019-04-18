@@ -110,7 +110,7 @@ export default {
                 userId:this.$route.query.id,
                 familyMemberId:this.topTag.list[this.topTag.index]?this.topTag.list[this.topTag.index].id:'', 
             });
-            console.log(res);
+            // console.log(res);
             if(res.data&&res.data.errCode===0){
                 
             }else{
@@ -136,7 +136,7 @@ export default {
                 token:this.userState.token,
                 userId:this.$route.query.id
             });
-            console.log(res);
+            // console.log(res);
             if(res.data&&res.data.errCode===0){
                 this.topTag.list = res.data.body
             }else{
@@ -162,7 +162,7 @@ export default {
          */
         selectNav(index){
             this.nav.index = index;
-            console.log(index)
+            // console.log(index)
         },
     },
     created() {

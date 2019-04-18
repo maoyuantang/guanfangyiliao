@@ -43,6 +43,7 @@
                    </tr>
                </tbody>
            </table>
+           <tableNoMore v-if="tableData.data.length <= 0"></tableNoMore>
            <Modal
                 v-model="showAdd"
                 title="新增医院"
@@ -241,20 +242,22 @@
 import { 
     fetchHospitalList, fetchAllSubSystem ,fetchHospitalDepts,fetchHospitalRel,getSettingsList,initializeTheCreationOfHospital,deleteHospitalDept,
     createHospitalDept, updateSubSystemRel, updateHospital, settingsUpdate, getConsultationTree, updateConsultationTree, updateHospitalRel
-} from "../../api/apiAll.js"; 
-import { mapState } from "vuex";
-import search from "../../public/publicComponents/search.vue";
-import publicList from "../../public/publicComponents/publicList.vue";
-import alertTree from "../../public/publicComponents/alertTree.vue";
-import selfTab from "../../public/publicComponents/selfTab.vue";
+} from "../../api/apiAll.js"
+import { mapState } from "vuex"
+import search from "../../public/publicComponents/search.vue"
+import publicList from "../../public/publicComponents/publicList.vue"
+import alertTree from "../../public/publicComponents/alertTree.vue"
+import selfTab from "../../public/publicComponents/selfTab.vue"
 import sensitiveWordCheck from '../../public/publicJs/sensitiveWordCheck.js'
 import createUUID from '../../public/publicJs/createUUID.js'
+import tableNoMore from "../../public/publicComponents/tableNoMore.vue";
 export default {
     components: {
         search,
         publicList,
         alertTree,
-        selfTab
+        selfTab,
+        tableNoMore
     },
     data() {
         return {
@@ -369,7 +372,7 @@ export default {
          * 搜索框数据
          */
         searchChange(data){
-            console.log(data);
+            // console.log(data);
             this.search = data;
             this.getTableData();
         },
@@ -377,21 +380,21 @@ export default {
          * 切换分页
          */
         async ChangePage(data){
-            console.log(data);
+            // console.log(data);
             const isOk = await this.getTableData(data);
             if(isOk){
                 this.page.pageNum = data;
             } 
         },
         getSelect(item){
-            console.log(item)
+            // console.log(item)
             const table = {
                 subSystemNum:async data=>{
                     const res = await updateSubSystemRel({token:this.userState.token},{
                         hospitalId:this.nowItem.id||'',
                         subCodes:item.select.map(item=>item.id)
                     });
-                    console.log(res);
+                    // console.log(res);
                     if(res.data && res.data.errCode === 0){
                         this.$notify({
                             title: '成功',
@@ -409,7 +412,7 @@ export default {
                     }
                 },
                 superOrgNum:async data=>{
-                    console.log('make');
+                    // console.log('make');
                     const postData = [
                         {token:this.userState.token},
                         {
@@ -418,12 +421,12 @@ export default {
                         }
                     ];
                     const res = await updateHospitalRel(...postData);
-                    console.log(res);
+                    // console.log(res);
                     if(res.data && res.data.errCode === 0){
-                        console.log('success');
+                        // console.log('success');
                         this.getTableData();
                     }else{
-                        console.log('error')
+                        // console.log('error')
                     }
                 },
                 teamNum:async data =>{
@@ -460,7 +463,7 @@ export default {
                         }
                     ];
                     const res = await settingsUpdate(...ask);
-                    console.log(res);
+                    // console.log(res);
                     if(res.data && res.data.errCode === 0){
                         this.$notify({
                             title: '成功',
@@ -477,7 +480,7 @@ export default {
                     }
                 },
                 consNum: async data=>{
-                    console.log('enter')
+                    // console.log('enter')
                     const setMap = (arr,tag) => {//拷贝原数组，找出被选值
                         return arr.map(item=>{
                             tag.forEach(v=>item.ok = item.ok?item.ok:item.id === v.id);
@@ -513,7 +516,7 @@ export default {
                             list:fanal
                         }
                     ]);
-                    console.log(res)
+                    // console.log(res)
                     if(res.data.errCode === 0){
                         this.$notify({
                             title: '成功',
@@ -537,7 +540,7 @@ export default {
             }
         },
         setNowItem(item){
-            console.log(item)
+            // console.log(item)
             this.nowItem = item
         },
 
@@ -555,7 +558,7 @@ export default {
             };
             // data = data || options;
             const res = await fetchHospitalList(options);
-            console.log(res);
+            // console.log(res);
             if (res.data && res.data.errCode === 0) {
                 this.tableData.head = res.data.body.header;
                 this.tableData.data = res.data.body.data2.list;
@@ -613,7 +616,7 @@ export default {
                 token:this.userState.token
             });
             if(res.data&&res.data.errCode===0){
-                console.log(res.data.body)
+                // console.log(res.data.body)
                 this.testData.data = res.data.body.map(value=>{
                     value.id = value.subCode;
                     value.label = value.subName;
@@ -621,14 +624,14 @@ export default {
                     value.identification = createUUID()+ new Date().getTime();
                     return value;
                 });
-                console.log(this.testData.data)
+                // console.log(this.testData.data)
                 this.testData.title = '子系统';
                 this.testData.canClick = true;
                 this.testData.show = true;
                 this.testData.tag = item;
                 this.testData = Object.assign({},this.testData)
                 this.showAlertTree = true;
-                console.log(this.testData)
+                // console.log(this.testData)
             }else{
 
             }
@@ -638,9 +641,9 @@ export default {
          * 科室
          */
         async deptNum(item){
-            console.log(item)
+            // console.log(item)
             const res = await fetchHospitalDepts({orgCode:item.value.code});
-            console.log(res)
+            // console.log(res)
             if(res.data&&res.data.errCode===0){
                 this.department.list = res.data.body
                 this.department.show = true;
@@ -678,12 +681,12 @@ export default {
          * 上级医院，下级医院(后端说这两个其实就是一个玩意)
          */
         async superOrgNum(item){
-            console.log('enter')
+            // console.log('enter')
             const res = await fetchHospitalRel({
                 hospitalId:item.value.id,
                 token:this.userState.token
             });
-            console.log(res)
+            // console.log(res)
             // return;
             if(res.data&&res.data.errCode===0){
                 this.testData.data = res.data.body.map(value=>{
@@ -699,7 +702,7 @@ export default {
                 this.testData.show = true;
                 this.testData.tag = item;
                 this.showAlertTree = true;
-                console.log(this.testData)
+                // console.log(this.testData)
             }else{
 
             }
@@ -709,9 +712,9 @@ export default {
          * 协作人员
          */
         async teamNum(item){
-            console.log(123)
+            // console.log(123)
             const res = await getSettingsList({token:this.userState.token,orgCode:item.value.code});
-            console.log(res)
+            // console.log(res)
             if(res.data&&res.data.errCode===0){
                 function iteration(arr){
                     const newArr = arr.map(value=>{
@@ -738,17 +741,17 @@ export default {
                 });
                 deleteOutSelect(mid);
                 // this.testData.data = mid;
-                console.log(mid)
+                // console.log(mid)
                 this.testData.data = iteration(res.data.body).map(item=>{
                     item.check = item.checked;
                     return item;
                 });
-                console.log(this.testData.data)
+                // console.log(this.testData.data)
                 this.testData.title = '协作人员';
                 this.testData.canClick = true;
                 this.testData.show = true;
                 this.testData.tag = item;
-                console.log(this.testData)
+                // console.log(this.testData)
                 this.showAlertTree = true;
             }else{
 
@@ -759,12 +762,12 @@ export default {
          * 会诊范围
          */
         async consNum(item){
-           console.log(item)
+        //    console.log(item)
            const res = await getConsultationTree({
                token:this.userState.token,
                orgCode:item.value.code
            });
-           console.log(res);
+        //    console.log(res);
            if(res.data&&res.data.errCode===0){
                 const handle = data => {
                    data.forEach(item=>{
@@ -846,12 +849,12 @@ export default {
          * 删除科室
          */
         async deleteDepartment(item,index){
-            console.log(item);
+            // console.log(item);
             const res = await deleteHospitalDept({token: this.userState.token},{
                 deptId:item.deptId,
                 hospitalId:this.nowItem.id||''
             });
-            console.log(res);
+            // console.log(res);
             if(res.data&&res.data.errCode===0){
                 this.department.list.splice(index,1);
             }else{
@@ -874,7 +877,7 @@ export default {
                     hospitalId:this.nowItem.id||'',
                     deptName:this.department.addDepartmentName
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data&&res.data.errCode===0){
                     this.$notify({
                         title: '成功',
@@ -911,8 +914,8 @@ export default {
          * 按钮被点击
          */
         btnClick(v,item){
-            console.log(v)
-            console.log(item)
+            // console.log(v)
+            // console.log(item)
             this.editHospital.obj = item;
             this.editHospital.name = item.name;
             this.editHospital.wsAddress = item.wsAddress;
@@ -938,7 +941,7 @@ export default {
                     return;
                 }
             }
-            console.log(this.editHospital)
+            // console.log(this.editHospital)
             const options = [
                 {token: this.userState.token},
                 {
@@ -956,7 +959,7 @@ export default {
             // console.log(options)
             // return 
             const res = await updateHospital(...options);
-            console.log(res);
+            // console.log(res);
             if(res.data&&res.data.errCode===0){
                 this.$notify({
                     title: '成功',
@@ -992,11 +995,8 @@ export default {
         teamNumOk(){},
 
         canClick(){
-            console.log('can click')
+            // console.log('can click')
         },
-        iviewTest(data){
-            console.log(this.$refs.iviewTree.getCheckedNodes())
-        }
     },
     async created() {
         this.getTableData();

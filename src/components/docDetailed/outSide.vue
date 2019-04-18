@@ -125,7 +125,7 @@
                     userId:this.inData.userId,
                     familyMemberId:this.inData.id, 
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data&&res.data.errCode===0){
                     this.showInfo.navList[1].time = res.data.body.lastDate
                 }else{
@@ -150,7 +150,7 @@
                     userId:this.inData.userId,
                     familyMemberId:this.inData.id, 
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data&&res.data.errCode===0){
                     this.showInfo.navList[3].time = res.data.body.lastDate
                 }else{
@@ -170,7 +170,7 @@
                     userId:this.inData.userId,
                     memberId:this.inData.id, 
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data&&res.data.errCode===0){
                     this.showInfo.navList[0].time = res.data.body.lastDate
                 }else{
@@ -190,7 +190,7 @@
                     userId:this.inData.userId,
                     memberId:this.inData.id, 
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data&&res.data.errCode===0){
                     this.showInfo.navList[2].time = res.data.body.nearlyDate
                 }else{
@@ -211,13 +211,13 @@
              * 获取 患者信息
              */
             async getPatientInfo(){
-                console.log('enter')
+                // console.log('enter')
                 const res = await getDoctorMessage1({
                     token:this.userInfo.token,
                     // orgCode:this.userSelfInfo.orgCode,
                     familyMemberId:this.inData.id
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.patientInfo = {
                         userId:res.data.body.userId,
@@ -244,7 +244,7 @@
 			
 		},
 		async created(){
-            console.log(this.inData);
+            // console.log(this.inData);
             this.getPatientInfo();
             Promise.all([
                 this.getLastAssessPlan(),

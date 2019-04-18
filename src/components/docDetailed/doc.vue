@@ -247,7 +247,7 @@
                     userId:this.inData.userId,
                     memberId:this.inData.id
                 });
-                console.log(res);
+                // console.log(res);
                 if (res.data && res.data.errCode === 0){
                     if(res.data.body){
                         this.evaluation.lastDate = res.data.body.lastDate;
@@ -271,7 +271,7 @@
                     userId:this.inData.userId,
                     memberId:this.inData.id
                 });
-                console.log(res);
+                // console.log(res);
                 if (res.data && res.data.errCode === 0){
                     this.followUp.nearDate = res.data.body.nearDate;
                     this.followUp.content = res.data.body.content;
@@ -292,7 +292,7 @@
                     userId:this.inData.userId,
                     memberId:this.inData.id
                 });
-                console.log(res);
+                // console.log(res);
                 if (res.data && res.data.errCode === 0){
                     this.selfTest.nearlyDate = res.data.body.nearlyDate;
                     this.selfTest.data = res.data.body.data;
@@ -308,13 +308,13 @@
              * 获取患者最后一次上传档案信息
              */
             async getLastUserRecord(){
-                console.log('enter')
+                // console.log('enter')
                 const res = await lastUserRecord({
                     token: this.userState.token,
                     userId:this.inData.userId,
                     familyMemberId:this.inData.id
                 });
-                console.log(res);
+                // console.log(res);
                 if (res.data && res.data.errCode === 0){
                     this.upDoc.lastDate = res.data.body.lastDate;
                     this.upDoc.title = res.data.body.title;
@@ -337,7 +337,7 @@
                     pageSize:2,
                     pageNum:1
                 });
-                console.log(res);
+                // console.log(res);
                 if (res.data && res.data.errCode === 0){
                     this.upDoc.alertData.list = res.data.body.data2.list.map(item=>{
                         item.imgs = item.imgs.map(ele=>{

@@ -22,6 +22,7 @@
                     </tr>
                 </tbody>
             </table>
+            <tableNoMore v-if="list.length <= 0"></tableNoMore>
             <div class="page">
                 <el-pagination
 					background
@@ -118,10 +119,11 @@
     import { mapState } from 'vuex'
     import {webDocGetFollowupPlan, getFollowUpPlan} from '../../../api/apiAll.js'
     import apiBaseURL from '../../../enums/apiBaseURL.js'
+    import tableNoMore from '../../../public/publicComponents/tableNoMore.vue'
 	export default {
         props: ['inData'],
 		components:{
-			
+			tableNoMore
 		},
 		watch:{
 			
@@ -194,7 +196,7 @@
              */
             async see(item,index){
                 this.alertData.src = `${apiBaseURL.developmentEnvironment}/v1/peachApp/FollowupPlanUser.html?token=${this.userInfo.token}&id=${item.id}`;
-                console.log(this.alertData.src)
+                // console.log(this.alertData.src)
                 this.alertData.show = true;
                 // const res = await getFollowUpPlan({
                 //     token:this.userInfo.token,
@@ -211,7 +213,7 @@
 				// 	});
 				// }
                 // this.$router.push({path:'/followUp'});
-                console.log(item);
+                // console.log(item);
             },
             /**
              * 获取表格信息
@@ -224,7 +226,7 @@
                     pageNum:this.page.current,
                     pageSize:this.page.size
                 });
-                console.log(res);
+                // console.log(res);
                 if(res.data && res.data.errCode === 0){
                     this.list = res.data.body.data2.list;
                     this.page.total = res.data.body.data2.total;
@@ -397,5 +399,8 @@
     .plan-alert-iframe{
         width:100%;
         height: 100%;
+    }
+    .page{
+        text-align: center;
     }
 </style>

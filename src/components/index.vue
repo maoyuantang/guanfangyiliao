@@ -198,7 +198,7 @@ export default {
 		 */
 		async getToolSurveyMode(){
 			const res = await toolSurveyMode({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETINVESTIGATIONMETHOD", res.data.body);
 				// console.log(this.global.investigationMethod)
@@ -216,7 +216,7 @@ export default {
 		 */
 		async getToolSurveyType(){
 			const res = await toolSurveyType({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETSURVEYTYPES", res.data.body);
 				// console.log(this.global.surveyTypes)
@@ -234,7 +234,7 @@ export default {
 		 */
 		async getToolFollowupContent(){
 			const res = await toolFollowupContent({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETFOLLOWUPCONTENT", res.data.body);
 				// console.log(this.global.followupContents)
@@ -251,7 +251,7 @@ export default {
 		 */
 		async getToolFollowupMode(){
 			const res = await toolFollowupMode({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETFOLLOWUPMODE", res.data.body);
 				// console.log(this.global.followupMode)
@@ -269,7 +269,7 @@ export default {
 		 */
 		async getToolFollowupType(){
 			const res = await toolFollowupType({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETFOLLOWUPTYPE", res.data.body);
 				// console.log(this.global.followupType)
@@ -287,7 +287,7 @@ export default {
 		 */
 		async getToolBusinessType(){
 			const res = await toolBusinessType({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETBUSINESSTYPE", res.data.body);
 				// console.log(this.global.businessType)
@@ -305,7 +305,7 @@ export default {
 		 */
 		async getToolBusinessModel(){
 			const res = await toolBusinessModel({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETBUSINESSMODULE", res.data.body);
 				// console.log(this.global.businessModule)
@@ -323,7 +323,7 @@ export default {
 		 */
 		async getToolArchivesSource(){
 			const res = await toolArchivesSource({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETFILESOURCE", res.data.body);
 				// console.log(this.global.fileSource)
@@ -341,7 +341,7 @@ export default {
 		 */
 		async getToolSynergyStatus(){
 			const res = await toolSynergyStatus({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETCOLLABORATIONSTATE", res.data.body);
 				// console.log(this.global.collaborationState)
@@ -360,7 +360,7 @@ export default {
 		 */
 		async getStateList(){
 			const res = await stateList({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETCONSULTATIONSTATUS", res.data.body);
 				// console.log(this.global.consultationStatus)
@@ -378,7 +378,7 @@ export default {
 		 */
 		async getToolConsultationType(){
 			const res = await toolConsultationType({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETCONSULTATONTYPE", res.data.body);
 				// console.log(this.global.consultationType)
@@ -398,7 +398,7 @@ export default {
 						orgCode:this.userSelfInfo.orgCode,
 						deptId:''
 				});
-				console.log(res)
+				// console.log(res)
 				if(res.data&&res.data.errCode===0){
 						this.$store.commit("global/SETDEPARTENTLIST", res.data.body)
 						// console.log(this.global.departmentList)
@@ -416,7 +416,7 @@ export default {
 		 */
 		async getGroup(){
 			const res = await toolMemberGroup({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETGROUP", res.data.body);
 				// console.log(this.global.group)
@@ -434,7 +434,7 @@ export default {
 		 */
 		async getDocumentsClassification(){
 			const res = await toolArchivesType({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETDOCUMENTSCLASSIFICATION", res.data.body);
 				// console.log(this.global.documentsClassification)
@@ -452,7 +452,7 @@ export default {
 		 */
 		async getUserSource(){
 			const res = await toolUserSource({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETUSERSOURCE", res.data.body);
 				// console.log(this.global.userSource)
@@ -470,7 +470,7 @@ export default {
 		 */
 		async getHospitalArchives(){
 			const res = await toolArchivesInside({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETHOSPITALARCHIVES", res.data.body);
 				// console.log(this.global.hospitalArchives)
@@ -488,7 +488,7 @@ export default {
 		 */
 		async getToolRxReviewStatus(){
 			const res = await toolRxReviewStatus({token:this.userState.token});
-			console.log(res);
+			// console.log(res);
 			if(res.data&&res.data.errCode===0){
 				this.$store.commit("global/SETPRESCRIPTIONREVIEWSTATUS", res.data.body);
 				// console.log(this.global.prescriptionReviewStatus)
@@ -506,7 +506,7 @@ export default {
 		 */
 		async getToolRxSendStatus(){
 				const res = await toolRxSendStatus({token:this.userState.token});
-				console.log(res);
+				// console.log(res);
 				if(res.data&&res.data.errCode===0){
 					this.$store.commit("global/SETPRESCRIPTIONDISTRIBUTIONSTATUS", res.data.body);
 					// console.log(this.global.prescriptionDistributionStatus)
@@ -524,7 +524,7 @@ export default {
 		 */
 		async getToolRxReviewDoctors(){
 			const res = await toolRxReviewDoctors({token:this.userState.token});
-				console.log(res);
+				// console.log(res);
 				if(res.data&&res.data.errCode===0){
 					this.$store.commit("global/SETPRESCRIPTIONAUDITDOCTOR", res.data.body);
 					// console.log(this.global.prescriptionAuditDoctor)
@@ -542,7 +542,7 @@ export default {
 		 */
 		async getToolRxSendDoctors(){
 			const res = await toolRxSendDoctors({token:this.userState.token});
-				console.log(res);
+				// console.log(res);
 				if(res.data&&res.data.errCode===0){
 					this.$store.commit("global/SETPRESCRIPTIONDISPENSER", res.data.body);
 					// console.log(this.global.PrescriptionDispenser)
@@ -638,7 +638,7 @@ export default {
 		padding-top: 0.25rem;
 		padding-left: 0.37rem;
 		flex: 1;
-		overflow-x: auto;
+		overflow-x: hidden;
 		/* overflow-y: auto; */
 		/* height: 100%; */
 	}

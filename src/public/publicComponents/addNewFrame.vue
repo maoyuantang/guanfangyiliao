@@ -127,7 +127,7 @@
                         <div class="make-agreement">
                             <div class="agreement-list">
                                 <!-- <span class="select-agreement-name">{{inData.agreement.default.label||''}}</span> -->
-                                <input type="text" class="select-agreement-name1" v-model="inData.agreement.default.label"
+                                <input type="text" class="select-agreement-name1" v-model="inData.agreement.default.label" autocomplete="off"
                                     :readonly="sureVisiable===1?'readonly':false"></input>
                                 <Dropdown>
                                     <p>
@@ -178,7 +178,7 @@
                 }
             },
             inData(n) {
-                console.log(n);
+                // console.log(n);
             },
             // inData:{
             //     handler(data) {
@@ -189,7 +189,7 @@
             // },
             "inData.agreement.default.value": {
                 handler(n) {
-                    console.log(n);
+                    // console.log(n);
                     // this.inData.agreement.default.value = ""
                 }
             },
@@ -260,7 +260,7 @@
                 this.inData.agreement.default = { label: "", value: "" }
             },
             test() {
-                console.log(555);
+                // console.log(555);
             },
             ok() {
                 // this.$emit("reback",'666');
@@ -298,15 +298,13 @@
             event: "reback"
         },
         created() {
-            console.log(this.sureVisiable)
+            // console.log(this.sureVisiable)
             this.inData.businessTypeList.list.push({
                 label: "自定义",
                 value: "-1"
             });
             // alert('enter')
-            setTimeout(() => {
-                console.log(this.inData);
-            }, 10000);
+           
         },
         beforeDestroy() { }
     };

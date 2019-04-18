@@ -58,7 +58,8 @@
     <div v-if="isShowaddMove">
       <el-dialog class="eldialog" title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
         <el-dialog class="eldialogs" :visible.sync="isShowaddMoveNei" append-to-body>
-          <el-tree :data="invitationData1" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
+          <el-tree v-model="addForm.giveRight.value" :data="invitationData1" :props="defaultProps"
+            @check="handleCheckChange" show-checkbox></el-tree>
         </el-dialog>
         <el-form :model="addForm">
           <div style="display:flex;margin:10px 0;">
@@ -111,7 +112,7 @@
 
           <el-form-item label="病历授权:" :label-width="formLabelWidth">
             <div @click="medicalDone">
-              <el-input v-model="addForm.giveRight.value" placeholder="请选择"></el-input>
+              <el-input v-model="bingliSelect" placeholder="请选择"></el-input>
             </div>
           </el-form-item>
 
@@ -367,9 +368,10 @@
 
         // 病历授权
         invitationData1: [],
+        bingliSelect: "",
         defaultProps: {
-          label: "name",
-          value: "",
+          label: "hospitalName",
+          // value: "",
           children: "children"
         },
 
@@ -626,7 +628,7 @@
         this.addForm.diseaseName.value = "";
         this.addForm.patient.value = "";
         this.addForm.intoHospital.value.length = 0;
-        this.addForm.giveRight.value = "";
+        this.addForm.giveRight.value = [];
         this.addForm.moveTime.value = "";
         this.addForm.movePurpose = "";
         this.addForm.beginIdea = "";
@@ -1043,7 +1045,16 @@
       async medicalDone() {
         this.isShowaddMoveNei = true
         // this.consultationId = row.id;
-        this.invitationData1 = [];
+        this.invitationData1 = [
+          {
+            hospitalName: "就诊记录",
+            children: []
+          },
+          {
+            hospitalName: "电子病历",
+            children: []
+          }
+        ];
         // this.invitationVisible = true;
         let query = {
           token: this.userInfo.token,
@@ -1055,13 +1066,16 @@
           console.log("获取授权列表成功")
           console.log(res);
           let objList = res.data.body
-          for (let keys in objList) {
-            console.log(keys, objList[keys])
-            // this.invitationData1.push(
-
-            // )
-          }
-          // this.invitationData1 = res.data.body;
+          this.invitationData1[0].children = objList.visit;
+          this.invitationData1[1].children = objList.electronicMedical;
+          console.log(this.invitationData1)
+          $.each(this.invitationData1[0].children, function (index, text) {
+            text.type = "VISIT";
+          });
+          $.each(this.invitationData1[1].children, function (index, text) {
+            text.type = "HISTORY";
+          });
+          console.log(this.invitationData1)
         } else {
           //失败
           this.$notify.error({
@@ -1070,22 +1084,34 @@
           });
         }
       },
-      handleCheckChange(data, checked, indeterminate) {
-        this.addForm.giveRight.value = "";
-        this.addForm.giveRight.list.length = 0;
-        console.log(checked);
-        let _this = this;
-        $.each(checked.checkedNodes, function (index, text) {
-          console.log(text);
-          if (text.type == 3) {
-            _this.addForm.giveRight.value = _this.addForm.giveRight.value + " " + text.name;
-            _this.addForm.giveRight.list.push({
-              label: text.name,
-              value: text.id,
-            })
+      // handleCheckChange(data, checked, indeterminate) {
+      //   this.addForm.giveRight.value = [];
+      //   this.addForm.giveRight.list.length = 0;
+      //   console.log(checked);
+      //   let _this = this;
+      //   $.each(checked.checkedNodes, function (index, text) {
+      //     console.log(text);
+      //     if (text.type == 3) {
+      //       _this.addForm.giveRight.value = _this.addForm.giveRight.value + " " + text.name;
+      //       _this.addForm.giveRight.list.push({
+      //         label: text.name,
+      //         value: text.id,
+      //       })
+      //     }
+      //   });
+      //   console.log(this.addForm.giveRight.list)
+      // },
+      handleCheckChange(data, odata) {
+        this.addForm.giveRight.value = [];
+        // console.log(data, odata);
+        this.bingliSelect = "";
+        $.each(odata.checkedNodes, (index, text) => {
+          if (text.visitNo) {
+            this.addForm.giveRight.value.push(text);
+            this.bingliSelect += text.hospitalName + ",";
+
           }
         });
-        console.log(this.addForm.giveRight.list)
       },
       //点击确定    新增门诊
       async dualReferralAdd1() {
@@ -1115,7 +1141,7 @@
           // archivesAuthority: this.addForm.giveRight.value,
           // id:"", //上次转诊记录ID
           // medicalRecordIds: this.arrayMed,//病历授权（数组） 
-          medicalHistorys: this.arrayMed//病历授权（与会诊相同）
+          medicalHistorys: this.addForm.giveRight.value//病历授权（与会诊相同）
         };
         console.log(options)
         const res = await dualReferralAdd(query, options);                                   //  14.6.双向转诊-WEB医生端-申请转诊 
@@ -1274,7 +1300,8 @@
           this.addForm.typeList.value = res.data.body.typeCode
           this.addForm.diseaseName.value = res.data.body.illnessId
           this.addForm.patient.value = res.data.body.patientId
-          this.addForm.intoHospital.value = [res.data.body.receiveOrgCode, res.data.body.receiveDeptId]
+          // this.addForm.intoHospital.value = [res.data.body.receiveOrgCode, res.data.body.receiveDeptId]
+          this.addForm.intoHospital.value = res.data.body.receiveDeptName
           this.addForm.giveRight.value = res.data.body.archivesAuthority
           this.addForm.moveTime.value = res.data.body.applyTime
           this.addForm.movePurpose = res.data.body.intention
