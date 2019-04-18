@@ -991,10 +991,10 @@ export default {
             const res = await getFollowDetail(query);
             if (res.data && res.data.errCode === 0) {
                 this.followDetailData = res.data.body;
-                let oldDay = 0;
+                let oldDay = 2;
                     let oldSecond = 0;
                 $.each(this.followDetailData.itemModels, (index, text) => {
-                    
+                    console.log(text.calcUnit)
                     if (text.calcUnit == "日") {
                         oldDay = text.calcVal * 1;
                     } else if (text.calcUnit == "周") {
