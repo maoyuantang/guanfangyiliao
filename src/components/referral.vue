@@ -589,8 +589,8 @@
           this.time0 = "";
           this.time1 = "";
         }
-        alert(this.time0)
-        alert(this.time1)
+        // alert(this.time0)
+        // alert(this.time1)
       },
       //点击筛选日期    医生端
       getOTab4(data) {
