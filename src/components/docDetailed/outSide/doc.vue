@@ -119,9 +119,9 @@
                         OTHER:'其他'
                     };
                     this.listData = res.data.body.data2.list.map(item=>{
+                        item.zhType = typeMap[item.type] || '其他';
                         item.imgs = item.imgs.map(ele=>{
                             ele.imgSrc = ele.imgId?`${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${ele.imgId}`:ele.imgId;
-                            ele.zhType = typeMap[ele.type] || '其他';
                             return ele;
                         })
                         return item;

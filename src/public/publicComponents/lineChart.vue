@@ -102,7 +102,7 @@
 		props: ['inData'],
 		async created(){
             this.draw();
-            console.log(this.inData)
+            // console.log(this.inData)
         },
         async beforeMount(){
             

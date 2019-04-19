@@ -769,11 +769,17 @@
     }
     .class-scheduling-thead th{
         color:#5e6875;
+        font-family: PingFangSC-Semibold;
+        letter-spacing: 0;
     }
     .class-scheduling-tbody{
     }
     .class-scheduling-tbody th{
         font-weight: 100;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #5E6875;
+        letter-spacing: 0;
     }
     .class-scheduling-tbody th > .el-tooltip{
         color: #5E6875;
