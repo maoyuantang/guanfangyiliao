@@ -11,14 +11,14 @@ module.exports = {
   // IMG_PREFIX: '"https://demo.chuntaoyisheng.com:10002"',
 
   //测试
-  // WSS_PATH: '"wss://demo.chuntaoyisheng.com:10001/chat"',
-  // HTTPS_PATH: '"https://demo.chuntaoyisheng.com:10001"',
-  // IMG_PREFIX: '"https://demo.chuntaoyisheng.com:10001"',
+  WSS_PATH: '"wss://demo.chuntaoyisheng.com:10001/chat"',
+  HTTPS_PATH: '"https://demo.chuntaoyisheng.com:10001"',
+  IMG_PREFIX: '"https://demo.chuntaoyisheng.com:10001"',
 
   //线上
-  WSS_PATH: '"wss://www.guanfangyiliao.com/chat"',
-  HTTPS_PATH: '"https://www.guanfangyiliao.com"',
-  IMG_PREFIX: '"https://www.guanfangyiliao.com"'
+  // WSS_PATH: '"wss://www.guanfangyiliao.com/chat"',
+  // HTTPS_PATH: '"https://www.guanfangyiliao.com"',
+  // IMG_PREFIX: '"https://www.guanfangyiliao.com"'
 
 
   

@@ -309,10 +309,11 @@ export default {
         //计算总价格
         countAll() {
             this.countAllPrice = 0;
-            let _this = this;
-            $.each(this.chufangData.drugDetails, function(index, text) {
-                _this.countAllPrice += text.drugPrice * text.drugQuantity;
+            $.each(this.chufangData.drugDetails, (index, text)=> {
+                this.countAllPrice += text.drugPrice * text.drugQuantity;
+                
             });
+            this.countAllPrice=this.countAllPrice.toFixed(2); 
         },
         setMessage() {
             console.log(this.userMessage);

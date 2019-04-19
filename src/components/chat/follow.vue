@@ -35,7 +35,7 @@
                                                 <el-option label="年" value="年"></el-option>
                                             </el-select>
                                         </el-form-item>
-                                         <span class='executionTime'>333</span>
+                                        <span class='executionTime'>{{text.executionTime}}</span>
                                     </div>
                                 </el-form-item>
 
@@ -264,6 +264,12 @@ export default {
                 });
             });
             this.questVisible = false;
+        },
+        //时间戳转换成日期
+        getLocalTime(nS) {
+            return new Date(parseInt(nS) * 1000)
+                .toLocaleString()
+                .replace(/:\d{1,2}$/, " ");
         }
     },
     props: {
@@ -275,12 +281,30 @@ export default {
         event: "reBack"
     },
     created() {
-        
-        alert(this.addFollowData.firstTreatmentTime.GetTime())
-        $.each(this.addFollowData.itemModels,function(index,text){
-            // text.oTime=
+        // let odata = new Date();
+        // odata.setHours(0);
+        // odata.setMinutes(0);
+        // odata.setSeconds(0);
+        // odata.setMilliseconds(0);
+        // let oldTime = Math.floor(odata.getTime() / 1000);
+        // alert(oldTime);
+        // $.each(this.addFollowData.itemModels, (index, text) => {
+        //     let oldDay = 0;
+        //     let oldSecond = 0;
+        //     if (text.calcUnit == "日") {
+        //         oldDay = text.calcVal * 1;
+        //     } else if (text.calcUnit == "周") {
+        //         oldDay = text.calcVal * 7;
+        //     } else if (text.calcUnit == "月") {
+        //         oldDay = text.calcVal * 30;
+        //     } else if (text.calcUnit == "年") {
+        //         oldDay = text.calcVal * 365;
+        //     }
+        //     oldSecond = oldDay * 24 * 60 * 60;
 
-        })
+        //     text.executionTime = this.getLocalTime(oldTime + oldSecond);
+        // });
+        console.log(this.addFollowData.itemModels);
     },
     beforeDestroy() {}
 };

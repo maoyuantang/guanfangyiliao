@@ -31,7 +31,10 @@
                                     <img src="./../../static/assets/img/danganVideo.png" /> 查档案
                                 </div>
                                 <div>
-                                    <div v-if="screenClickVisable" @click="screenClick()">屏幕分享</div>
+                                    
+                                    <div v-if="screenClickVisable" @click="screenClick()">
+                                        <a href='../../static/Manis-Meetings-Chrome-Extension_v0.0.9.crx'>屏幕分享</a>
+                                        </div>
                                     <div @click="openPatientNum()" v-show="listVisable">列表</div>
                                 </div>
                             </div>
@@ -105,6 +108,7 @@
         <div v-if="screenVisible">
             <el-dialog title="屏幕分享" :visible.sync="screenVisible" width="380px" center append-to-body>
                 <div class="screenBtn">
+                    
                     <el-button type="primary" @click="sureScreen()">确认</el-button>
                     <el-button type="primary" @click="installScreen()">共享屏幕插件安装指南</el-button>
                     <el-button type="primary" @click="closeScreen()">取消</el-button>
@@ -224,6 +228,7 @@ export default {
         },
         //确认分享
         sureScreen() {
+
             this.screenShareBtn();
         },
         //安装指南
@@ -2176,6 +2181,13 @@ video {
     font-size: 15px;
     color: white;
     cursor: pointer;
+}
+.videoTopBtnBox > div:nth-child(2) > div>a{
+    font-size: 15px;
+    color: white;
+}
+.videoTopBtnBox > div:nth-child(2) > div>a:hover{
+    text-decoration: none;
 }
 #participant_stream_ {
 }

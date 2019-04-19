@@ -112,19 +112,6 @@
             </span>
             <span title="发送视频" class="sendVideo" @click="showVideoBtn()">
                 <img src="../../assets/img/sendNew2.png" />
-                <!-- <div class="userMember" v-show="showVideoBtnVisable">
-                    <h4>视频窗口最多拉取3个人</h4>
-                    <el-checkbox-group style='margin-bottom:18px' v-model="checkList">
-                        <el-checkbox v-for="(text,index) in userMemberNum" :label="text.userId" :key="index">
-                            <span class='videoUserHeadClass'>
-                                <img class='headImgClass' :src="userSocketInfo.headImg+text.userId" :onerror="defaultImg" />
-                            </span>
-
-                            {{text.userName}}
-                        </el-checkbox>
-                    </el-checkbox-group>
-                    <el-button class="setVideoBtn" @click="setVideo(1)" type="primary">确认</el-button>
-                </div> -->
             </span>
             <span v-show="oDoctorVis" @click="addFollow()" title="发送随访">
                 <img src="../../assets/img/sendNew4.png" />
@@ -161,8 +148,10 @@
         <div class='sendBtnBox'>
             <el-input class="chatInputK" type="textarea" :rows="2" placeholder="请输入内容" v-model="messageBody" @keyup.enter.native="sendMessageChat(0,messageBody,'DEFAULT')">
             </el-input>
-            <div><button class="sendMessageChat" @click="sendMessageChat(0,messageBody,'DEFAULT')">发送</button></div>
-            
+            <div>
+                <button class="sendMessageChat" @click="sendMessageChat(0,messageBody,'DEFAULT')">发送</button>
+            </div>
+
         </div>
         <!-- 备注 -->
         <div v-if="remarkVisible">
@@ -220,7 +209,7 @@
         </div>
         <!-- 问诊 -->
         <div v-if="questVisible">
-            <el-dialog  title="发送问诊" :visible.sync="questVisible" center append-to-body width='500px'>
+            <el-dialog title="发送问诊" :visible.sync="questVisible" center append-to-body width='500px'>
                 <ul>
                     <li class="followBox" v-for="(text,index) in questList" :key="index" @click="QuestDetail(text.id)">
                         <span>{{text.title}}</span>
@@ -231,13 +220,13 @@
         </div>
         <!-- 问诊详情 -->
         <div v-if="questDetailVisible">
-            <el-dialog class='addQuestBox' title="问诊详情" :visible.sync="questDetailVisible" center append-to-body  width="717px" hight="356px">
+            <el-dialog class='addQuestBox' title="问诊详情" :visible.sync="questDetailVisible" center append-to-body width="717px" hight="356px">
                 <quest :addQuestId="addQuestId" @osendmessagechat="getSendMessageChat1" :sendToUserId="sendToUserId"></quest>
             </el-dialog>
         </div>
         <!-- 问诊详情 -->
         <div v-if="questPlanVisible">
-            <el-dialog class='addQuestBox' title="问诊计划详情" :visible.sync="questPlanVisible" center append-to-body  width="717px" hight="356px">
+            <el-dialog class='addQuestBox' title="问诊计划详情" :visible.sync="questPlanVisible" center append-to-body width="717px" hight="356px">
                 <questPlan :addQuestId="addQuestPlanId"></questPlan>
             </el-dialog>
         </div>
@@ -979,8 +968,21 @@ export default {
         sendMessage2() {
             let ohtml = this.messageTicket.content;
         },
+        //时间戳转换成日期
+        getLocalTime(nS) {
+            return new Date(parseInt(nS) * 1000)
+                .toLocaleString()
+                .replace(/:\d{1,2}$/, " ");
+        },
         //随访模板详情
         async getFollowDetailMoban(oid) {
+            let odata = new Date();
+            odata.setHours(0);
+            odata.setMinutes(0);
+            odata.setSeconds(0);
+            odata.setMilliseconds(0);
+            console.log(odata)
+            let oldTime = Math.floor(odata.getTime() / 1000);
             console.log(this.userSelfInfo.userId);
             let query = {
                 token: this.userState.token,
@@ -989,6 +991,23 @@ export default {
             const res = await getFollowDetail(query);
             if (res.data && res.data.errCode === 0) {
                 this.followDetailData = res.data.body;
+                let oldDay = 2;
+                    let oldSecond = 0;
+                $.each(this.followDetailData.itemModels, (index, text) => {
+                    console.log(text.calcUnit)
+                    if (text.calcUnit == "日") {
+                        oldDay = text.calcVal * 1;
+                    } else if (text.calcUnit == "周") {
+                        oldDay = text.calcVal * 7;
+                    } else if (text.calcUnit == "月") {
+                        oldDay = text.calcVal * 30;
+                    } else if (text.calcUnit == "年") {
+                        oldDay = text.calcVal * 365;
+                    }
+                    oldSecond = oldDay * 24 * 60 * 60;
+                    
+                    text.executionTime = this.getLocalTime(oldTime + oldSecond);
+                });
             } else {
                 //失败
                 this.$notify.error({
@@ -1580,8 +1599,7 @@ export default {
 </script>
 
 <style>
-
-        /* <div v-if="chatVisible">
+/* <div v-if="chatVisible">
             <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
                 <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage" :chatType1="videoType"
                     :chatTypeBox="chatTypeBox"></chat>
@@ -1600,6 +1618,5 @@ export default {
             };
             videoType:'门诊'，//如果是门诊就要传，不是则传空
         */
-        
 </style>
 

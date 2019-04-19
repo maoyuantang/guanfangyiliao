@@ -689,6 +689,7 @@ export default {
         handleCheckChange1(data, odata) {
             console.log(data, odata);
             this.bingliSelect = "";
+            this.startHz.medicalHistorys=[]
             $.each(odata.checkedNodes, (index, text) => {
                 if (text.visitNo) {
                     this.startHz.medicalHistorys.push(text);
