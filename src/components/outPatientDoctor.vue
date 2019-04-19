@@ -9,7 +9,7 @@
 		<doctorTab :inData="oAdminTab" @reBack="getConsulTabData"></doctorTab>
 
 		<!-- 我的诊室-循环 -->
-		<div class="myOuts" v-if="oconsulVisable==0 && this.typeQuan1==true">
+		<div class="myOuts" v-if="oconsulVisable==0 && this.typeQuan3==true">
 			<ul v-for="(text,index1) in myHomes" :key="index1" class="outpatient_s">
 				<li class="outpatient_left">
 					<!-- <p class="title">{{text.orgName}}-{{text.clinicName}}</p> -->
@@ -327,7 +327,7 @@
 			</li>
 		</ul>
 
-		<ul v-if="oconsulVisable == 2 && this.typeQuan3==true" class="transport">
+		<ul v-if="oconsulVisable == 2 && this.typeQuan1==true" class="transport">
 			<li class="checkList">
 				<div class="title">
 					<span class="title1">审核列表</span>

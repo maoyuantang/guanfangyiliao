@@ -178,7 +178,7 @@
               <el-table-column prop="direction" label="方向" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="receiveTime" label="接诊时间" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
-              <el-table-column label="操作" width="300">
+              <el-table-column fixed = right label="操作" width="100">
                 <template slot-scope="scope">
                   <button class="lanSe" @click="dualReferralRecord1(scope.row)">查看记录</button>
                 </template>
@@ -234,7 +234,7 @@
             <el-table-column prop="intention" label="目的" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="typeName" label="方向" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column label="操作" min-width="400">
+            <el-table-column fixed = right label="操作" min-width="400">
               <template slot-scope="scope">
                 <button class="huangSe" @click="seeHistory(scope.row.patientId)">查看档案</button>
                 <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
