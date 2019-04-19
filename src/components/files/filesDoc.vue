@@ -44,7 +44,7 @@
                <el-button type="danger" size="mini" plain>录入档案</el-button>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item @click.native="openPregnantWomanDoc">孕妇信息</el-dropdown-item>
-                  <el-dropdown-item @click.native="openAlertNor">普通档案</el-dropdown-item>
+                  <el-dropdown-item @click.native="openAlertNor(item)">普通档案</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </th>
@@ -410,7 +410,8 @@ export default {
     /**
      * 打开 新增 普通档案 弹窗
      */
-    openAlertNor(){
+    async openAlertNor(item){
+      await this.getQueryListByUserId(item);
       this.norDoc.show = true;
     },
     /**
@@ -425,7 +426,6 @@ export default {
           diagnosis:data.diagnosis,
           opinion:data.deal
       };
-      console.log(postData);
       if(!postData.memberId){
         this.$notify({
           title: "错误",
@@ -465,10 +465,10 @@ export default {
     /**
      * 获取 家庭成员列表
      */
-    async getQueryListByUserId(){
+    async getQueryListByUserId(item){
       const res = await queryListByUserId({
         token: this.userInfo.token,
-        userId: this.userSelfInfo.userId
+        userId: item.userId
       });
       console.log(res); 
       if (res.data && res.data.errCode === 0) {
@@ -736,7 +736,7 @@ export default {
     this.getSource();
     this.getHospitalArchives();
     this.getGroupSelects();
-    this.getQueryListByUserId();
+    // this.getQueryListByUserId();
   }
 };
 </script>
@@ -761,6 +761,9 @@ export default {
 }
 .files-doc--thead th {
   /* text-align: center; */
+  font-family: PingFangSC-Semibold;
+  color: #5E6875;
+  letter-spacing: 0;
 }
 .files-doc-footer {
   display: flex;
@@ -846,6 +849,10 @@ line-height: 0.22rem;
 }
 .files-doc--tbody th{
   font-weight: 100;
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #5E6875;
+  letter-spacing: 0;
 }
 .files-doc-body{
   padding-top: .2rem;

@@ -378,7 +378,7 @@
 
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="操作" width="250">
+                                <el-table-column fixed="right"  label="操作" width="250">
                                     <template slot-scope="scope">
                                         <el-button class='seeDanganClass' @click="seeDanganClick(scope.row)" type="text" size="small">查看档案</el-button>
                                         <el-button class='sendMessage' @click="sendMessage(scope.row)" type="text" size="small">发送</el-button>
@@ -389,13 +389,20 @@
                             <el-pagination style='text-align:center' background layout="prev, pager, next" :total="adminTotal5" :current-change="changeCurrent5">
                             </el-pagination>
                             <div class="groupClass">
-                                <div>移动到</div>
+                                <!-- <div>移动到</div>
                                 <ul>
                                     <li :class="oGroupClick==-1?'groupClick':''" @click="addGroup()">新增组</li>
                                     <li :class="oGroupClick==index?'groupClick':''" v-for="(item,index) in groupList" :key="index" @click="changeGroup(item.groupId,index)">
                                         {{item.groupName}}
                                     </li>
-                                </ul>
+                                </ul> -->
+                                <el-dropdown>
+                                        <el-button class="groupClassBtn" type="danger" size="mini" plain>移动到</el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item @click.native="addGroup()">新增组</el-dropdown-item>
+                                            <el-dropdown-item v-for="(item,index) in groupList"  :key="index" @click.native="changeGroup(item.groupId,index)">{{item.groupName}}</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
                             </div>
                         </div>
                         <tableList v-else :tableData="doctorList" :columns="doctorColumns" :checkVisable="docTableChecked" :tableBtn="doctorBtn" :total="adminTotal4" @rebackFenye="changeCurrent4"></tableList>

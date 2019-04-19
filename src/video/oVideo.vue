@@ -4,13 +4,12 @@
             <div class="row">
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
-                        <div id="remoteVideos"></div>
+                        <div id="remoteVideos" v-loading="loadingOther" element-loading-text="加载视频中"  element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
+                            ddd
+                        </div>
                         <div class="videoChatBtn" @click="videoChatBtn()">
                             <img style='width: 23px;
     height: 25px;' src='../assets/img/jianpan.png' /> 问诊工具
-                            <!-- <button class='questToolClass' :disabled='questVisable'>
-                            
-                            </button> -->
 
                         </div>
                     </div>
@@ -31,10 +30,10 @@
                                     <img src="./../../static/assets/img/danganVideo.png" /> 查档案
                                 </div>
                                 <div>
-                                    
+
                                     <div v-if="screenClickVisable" @click="screenClick()">
                                         <a href='../../static/Manis-Meetings-Chrome-Extension_v0.0.9.crx'>屏幕分享</a>
-                                        </div>
+                                    </div>
                                     <div @click="openPatientNum()" v-show="listVisable">列表</div>
                                 </div>
                             </div>
@@ -108,7 +107,7 @@
         <div v-if="screenVisible">
             <el-dialog title="屏幕分享" :visible.sync="screenVisible" width="380px" center append-to-body>
                 <div class="screenBtn">
-                    
+
                     <el-button type="primary" @click="sureScreen()">确认</el-button>
                     <el-button type="primary" @click="installScreen()">共享屏幕插件安装指南</el-button>
                     <el-button type="primary" @click="closeScreen()">取消</el-button>
@@ -194,10 +193,10 @@ export default {
             // doctorVis: 1,
             videoIng: 0,
             loadingUs: true,
-            loadingOther: true,
+            loadingOther: false,
             streamObject: {},
-            archivesIdVisable: true,
-        //    archivesUrl :'/outpatient',
+            archivesIdVisable: true
+            //    archivesUrl :'/outpatient',
         };
     },
     methods: {
@@ -228,7 +227,6 @@ export default {
         },
         //确认分享
         sureScreen() {
-
             this.screenShareBtn();
         },
         //安装指南
@@ -706,7 +704,7 @@ export default {
                     );
                 }
                 _this.closeVideoBtnVieable = true; //关闭视频显示
-                if (_this.videoUser <2) {
+                if (_this.videoUser < 2) {
                     _this.deleteVideoRoom();
                 }
 
@@ -1630,8 +1628,8 @@ export default {
             this.noLineUpNum();
             this.getThePatient();
         } else {
-            if (this.chatTypeBox.startDoctorTYpe != "协作") {
-                this.archivesId = this.userMessage.userId;
+            if (this.chatTypeBox.startDoctorTYpe == "会诊") {
+                this.archivesId = this.chatTypeBox.bingUserId;
             } else {
                 this.archivesId = "不是门诊和协作进入";
             }
@@ -2182,11 +2180,11 @@ video {
     color: white;
     cursor: pointer;
 }
-.videoTopBtnBox > div:nth-child(2) > div>a{
+.videoTopBtnBox > div:nth-child(2) > div > a {
     font-size: 15px;
     color: white;
 }
-.videoTopBtnBox > div:nth-child(2) > div>a:hover{
+.videoTopBtnBox > div:nth-child(2) > div > a:hover {
     text-decoration: none;
 }
 #participant_stream_ {

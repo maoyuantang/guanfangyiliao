@@ -63,7 +63,7 @@ export default {
         this.$refs.alertTree.getCheckedKeys();
     },
     findSelect(){
-      console.log(this.inData)
+      // console.log(this.inData)
         this.selectIdList = [];
         const findSelect = arr =>{
           for(const i of arr){
@@ -80,7 +80,7 @@ export default {
         }
         findSelect(this.inData.data);
         // this.inData.data.forEach(i=>i.check?this.selectIdList.push(i.id):null);
-        console.log(this.selectIdList);
+        // console.log(this.selectIdList);
     }
   },
   props:[
@@ -89,7 +89,7 @@ export default {
   created() {
     // console.log(createUUID()+ new Date().getTime())
     this.findSelect();
-    console.log(this.selectIdList)
+    // console.log(this.selectIdList)
   },
   beforeDestroy(){
   }

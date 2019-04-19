@@ -35,14 +35,14 @@ export default {
   methods:{
     reBackFn(item,index) {
         this.selectIndex = index;
-        console.log(this.selectIndex)
+        // console.log(this.selectIndex)
         this.inData.index=item;
         this.$emit("reback",Object.assign({},this.inData));
         // :class="index===0?'all':''" 
         // :class="item.warning?'warning':''"
     },
     showMore(){
-      console.log('enter')
+      // console.log('enter')
       this.more = false;
     },
     isMore(){

@@ -34,7 +34,7 @@
                             <span v-if="scope.row.synergyStatus==2">结束</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" width="300">
+                    <el-table-column  fixed="right"  label="操作" width="300">
                         <template slot-scope="scope">
                             <el-button class="seeDanganClass" @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
                             <el-button class="inviteUserClass" v-show="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>

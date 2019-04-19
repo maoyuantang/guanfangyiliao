@@ -127,7 +127,7 @@
                 });
                 // console.log(res);
                 if(res.data&&res.data.errCode===0){
-                    this.showInfo.navList[1].time = res.data.body.lastDate
+                    this.showInfo.navList[1].time = res.data.body.lastDate || '';//后端有时候啊，直接不返回这玩意，弄个默认值
                 }else{
                     this.$notify({
                         title: '获取成员最后一次评估相关失败',

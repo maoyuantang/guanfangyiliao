@@ -29,7 +29,7 @@
                     title:n.title,
                     total:n.total
                 });
-                console.log('change')
+                // console.log('change')
             }
         },
 		methods:{
@@ -90,7 +90,7 @@
                     const myChart = echarts.init(this.$refs.testEcharts);
                     let getMaxNum = this.getMax(setData.data);
                     if(!getMaxNum.ok){
-                        console.log(getMaxNum.msg);
+                        // console.log(getMaxNum.msg);
                         return;
                     }
                     let yMax = this.getNum(getMaxNum.max);
@@ -223,7 +223,7 @@
 			event:'reBack'
 		},
 		async created(){
-            console.log(this.inData)
+            // console.log(this.inData)
             this.draw({
                 dataAxis:this.inData.dataAxis,
                 data:this.inData.data,
