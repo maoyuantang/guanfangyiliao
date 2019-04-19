@@ -206,13 +206,13 @@
         </div>
         <!-- 随访计划详情 -->
         <div v-if="followListVisible">
-            <el-dialog title="随访" class='evaluateBox addFollowBox addFollowBoxFollow' :visible.sync="followListVisible" center append-to-body>
+            <el-dialog title="随访" class='evaluateBox addFollowBox addFollowBoxFollow' :visible.sync="followListVisible" center append-to-body width="602px" hight="356px">
                 <follow :addFollowData="followDetailData" @osendmessagechat="getSendMessageChat" :sendToUserId="sendToUserId"></follow>
             </el-dialog>
         </div>
         <!-- 随访消息点击详情 -->
         <div v-if="followDetailVisible">
-            <el-dialog title="随访" class='evaluateBox addFollowBox addFollowBoxFollow' :visible.sync="followDetailVisible" center append-to-body>
+            <el-dialog title="随访" class='evaluateBox addFollowBox addFollowBoxFollow' :visible.sync="followDetailVisible" center append-to-body width="602px" hight="356px">
                 <followDetailChat :addFollowData="followDetailData"></followDetailChat>
             </el-dialog>
         </div>
@@ -1600,13 +1600,7 @@ export default {
 </script>
 
 <style>
-.chatFileClass{
-        border: none;
-    width: 40px;
-    height: 55px;
-    background: none;
-    margin-top: -4px;
-}
+
 /* <div v-if="chatVisible">
             <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
                 <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage" :chatType1="videoType"

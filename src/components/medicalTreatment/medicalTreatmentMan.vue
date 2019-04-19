@@ -91,11 +91,11 @@
           </div> -->
 
 
-          <div class="block" style="margin-bottom: 22px;">
+          <div class="block blocksa" style="margin-bottom: 22px;">
             <span class="demonstration"
               style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室</span>
             <el-cascader expand-trigger="hover" placeholder="多选" clearable style="width:65%;"
-              :options="kuangData2.options3.list" @change="inputReturn22">
+              :options="kuangData2.options3.list"  @change="inputReturn22">
             </el-cascader>
 
             <ul>
@@ -142,7 +142,7 @@
           <!-- <el-table-column prop="id" label="编号" :show-overflow-tooltip="true"></el-table-column> -->
           <el-table-column prop="medicalName" label="名称" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="levelName" label="分级" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column label="操作" width="300">
+          <el-table-column fixed=right label="操作" width="300">
             <template slot-scope="scope">
               <button class="bianJi" @click="editList1(scope.row)">编 辑</button>
               <button class="jingYong" @click="delectList1(scope.row)">删 除</button>
@@ -178,7 +178,7 @@
           <el-table-column prop="direction" label="方向" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="scope" label="范围" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="levelDesc" label="疾病等级" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column label="" width="300">
+          <el-table-column fixed=right label="操作" width="300">
             <template slot-scope="scope">
               <button v-if="scope.row.direction == '转入'" class="bianJi" @click="editList2(scope.row)">编 辑</button>
               <button v-if="scope.row.direction == '转入'" class="jingYong" @click="delectList2(scope.row)">删 除</button>
@@ -615,7 +615,6 @@
         // console.log(this.hospts)
         this.threeInput(list, value);
         console.log(this.hospts)
-
       },
       threeInput(list, value) {
         if (this.hosptDpart.length != 0) {
@@ -1804,5 +1803,9 @@
   .required-icon {
     font-size: 12px;
     color: #ff7485;
+  }
+
+  .blocksa /deep/ .el-cascader__label{
+    opacity: 0;
   }
 </style>
