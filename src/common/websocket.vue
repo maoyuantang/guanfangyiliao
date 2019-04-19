@@ -107,6 +107,7 @@ export default {
             start: function() {
                 // console.log('heart');
                 // let self = this;
+                console.log("发送心跳中");
                 let data = {
                     RequestType: 3,
                     ticket: self.$store.state.socket.messageTicket.ticket
@@ -393,7 +394,9 @@ export default {
                     oMsgId: odata.status.msgId
                 };
                 this.$store.commit("socket/MESSAGETICKET", oMessageTicket);
-                this.heartCheck.start();
+                setInterval(() => {
+                    this.heartCheck.start();
+                }, 20000);
             } else if (RequestType == 104) {
                 console.log(odata.status.message);
                 if (odata.status.message == "发送成功") {
@@ -1309,9 +1312,6 @@ export default {
             }
 
             //发送心跳  进行保持长连接 /心跳检测重置
-            setInterval(() => {
-                this.heartCheck.start();
-            });
         },
         //重新连接IM
         reconnect(otoken) {
