@@ -1375,13 +1375,13 @@
 				}
 				this.typeQuan.forEach((element, index) => {
 					// console.log(element, index, element[index])
-					// if (element == 10001) {
-					this.typeQuan1 = false;
-					// } else if (element == 10002) {
-					this.typeQuan2 = true;
-					// } else if (element == 10003) {
-					this.typeQuan3 = true;
-					// }
+					if (element == 10001) {
+						this.typeQuan1 = true;
+					} else if (element == 10002) {
+						this.typeQuan2 = true;
+					} else if (element == 10003) {
+						this.typeQuan3 = true;
+					}
 				});
 				// var typeQuanS = [this.typeQuan1, this.typeQuan2, this.typeQuan3]
 				// this.adss = 0;
