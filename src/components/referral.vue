@@ -18,7 +18,7 @@
           <div class="moved_top">
             <img v-if="dualReferralRecordFile.headId == null" src="../assets/img/a-6.png" alt="医生头像">
             <img v-if="dualReferralRecordFile.headId"
-              :src='process.env.IMG_PREFIX+"/m/v1/api/hdfs/fs/download/"+dualReferralRecordFile.headId' alt="医生头像">
+              :src='userSocketInfo.imgUrl+dualReferralRecordFile.headId' alt="医生头像">
             <p>{{dualReferralRecordFile.patientName}}</p>
           </div>
           <!-- 转院路程 -->
@@ -297,12 +297,14 @@
     //审核通过  点击（接收方）
     receptionAudit,//14.11.双向转诊-WEB医生端-审核
     dualReferraltransfer,//14.13.双向转诊-WEB医生端-接受医生再次转诊 
-    dualReferralget,//14.14.双向转诊-WEB医生端-获取需要再次转诊的记录 
+    dualReferralget,//14.14.双向转诊-WEB医生端-获取需要再次转诊的记录 //
 
     referredPatientList,//14.15.转诊-获取病人列表
     patientMedicalHistory,//14.16.转诊-获取病历列表
-    patientMedicalDetail,//14.17.转诊-获取病历详情
-    toUpdate,//14.18.双向转诊-WEB医生端-获取修改记录
+    patientMedicalDetail,//14.17.转诊-获取病历详情//
+
+
+    toUpdate,//14.18.双向转诊-WEB医生端-获取修改记录//
 
   } from "../api/apiAll.js";
   //引入组件
@@ -464,36 +466,15 @@
           },
           patient: {//病人
             value: "",
-            list: [
-              {
-                label: "病人1",
-                value: "paientId1"
-              }
-            ],
+            list: [],
           },
           intoHospital: {//转入医院
             value: [],
-            list: [
-              // {
-              //   label: 123,
-              //   value: 456,
-              //   children: [
-              //     {
-              //       label: 321,
-              //       value: 654
-              //     }
-              //   ]
-              // }
-            ],
+            list: [],
           },
           giveRight: {//病历授权
-            value: "",
-            list: [
-              {
-                value: '12',
-                label: '21',
-              }
-            ],
+            value: [],
+            list: [],
           },
           moveTime: {//转诊时间
             value: "",
@@ -1231,7 +1212,7 @@
       async list2Done(data1, data2) {
         console.log(data1, data2)
         this.referralId = data2.referralId
-        if (data1 == "UPDATE") {//编辑
+        if (data1 == "UPDATE") {//修改
           this.dualReferralUpdate(data2);
           this.kuang2Save = 2
           this.DoctorList()
@@ -1282,18 +1263,19 @@
 
 
 
-      //编辑     (按钮)
-      //开始渲染
+      //修改    (按钮)
+      //开始渲染                                        
       async dualReferralUpdate(data2) {
         this.isShowaddMove = true
         this.referralId = data2.referralId
         console.log(data2)
+        console.log(this.userInfo.hasAuth)
         let _this = this;
         const options = {
           token: this.userInfo.token,
           referralId: data2.referralId,//转诊ID
         };
-        const res = await dualReferralRecord(options);                  //14.7.双向转诊-WEB医生端-查询记录 
+        const res = await toUpdate(options);                  //14.18.双向转诊-WEB医生端-获取修改记录
         if (res.data && res.data.errCode === 0) {
           console.log('医生端-查询记录 (按钮)+成功')
           console.log(res)
@@ -1301,8 +1283,8 @@
           this.addForm.diseaseName.value = res.data.body.illnessId
           this.addForm.patient.value = res.data.body.patientId
           // this.addForm.intoHospital.value = [res.data.body.receiveOrgCode, res.data.body.receiveDeptId]
-          this.addForm.intoHospital.value = res.data.body.receiveDeptName
-          this.addForm.giveRight.value = res.data.body.archivesAuthority
+          // this.addForm.intoHospital.value = res.data.body.receiveDeptName
+          this.addForm.giveRight.value = res.data.body.medicalHistoryIds
           this.addForm.moveTime.value = res.data.body.applyTime
           this.addForm.movePurpose = res.data.body.intention
           this.addForm.beginIdea = res.data.body.diagnose
@@ -1469,18 +1451,24 @@
         if (res.data && res.data.errCode === 0) {
           console.log('医生端-再次转诊渲染信息+成功')
           console.log(res)
-          // this.addForm.typeList.value = res.data.body.typeCode
-          // this.addForm.diseaseName.value = res.data.body.illnessId
-          this.addForm.patient.value = res.data.body.patientId
-          // this.addForm.intoHospital.value = [res.data.body.receiveOrgCode, res.data.body.receiveDeptId]
-          // this.addForm.giveRight.value = res.data.body.archivesAuthority
-          // this.addForm.moveTime.value = res.data.body.applyTime
-          // this.addForm.movePurpose = res.data.body.intention
-          // this.addForm.beginIdea = res.data.body.diagnose
+
+
+
+          // 渲染
+          this.addForm.typeList.value = res.data.body.typeCode
+          this.addForm.diseaseName.value = res.data.body.illnessName//后患
+          this.addForm.patient.value = res.data.body.patientName//后患
+          this.addForm.intoHospital.value = [res.data.body.receiveOrgCode, res.data.body.receiveDeptId]//后边有问题
+          this.addForm.moveTime.value = res.data.body.applyTime
+          this.addForm.movePurpose = res.data.body.intention
+          this.addForm.beginIdea = res.data.body.diagnose
+          this.addForm.giveRight.value = res.data.body.archivesAuthority//后边有问题
+
+
           console.log(this.addForm)
-          // this.upOrDown().then(val => {
-          //   this.diseaseNameId();
-          // });
+          this.upOrDown().then(val => {
+            this.diseaseNameId();
+          });
           this.getList1()
           this.DoctorList()
         } else {
@@ -1512,7 +1500,7 @@
           intention: this.addForm.movePurpose,//转诊目的
           diagnose: this.addForm.beginIdea,//初步诊断
           // archivesAuthority: this.addForm.giveRight.value,//病历授权
-          medicalHistorys: this.arrayMed
+          medicalHistorys: this.addForm.giveRight.value
         };
         console.log(options)
         const res = await dualReferraltransfer(query, options);                                   //  14.13.双向转诊-WEB医生端-接受医生再次转诊 

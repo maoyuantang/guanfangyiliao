@@ -27,7 +27,7 @@ export default {
             oMsgId: "",
         },
         headImg:process.env.IMG_PREFIX+'/m/v1/api/user/user/avatar/',//头像公共前缀
-        imgUrl:process.env.IMG_PREFIX+'/m/v1/api/hdfs/fs/download/',//图片下载地址前缀
+        imgUrl: process.env.IMG_PREFIX + '/m/v1/api/hdfs/fs/download/',//图片下载地址前缀
         imgUrl1:process.env.IMG_PREFIX
     },
     mutations: {
