@@ -27,7 +27,7 @@
                                             </el-form-item>
                                             <el-form-item label=" ">
                                                 <el-select v-model="text.calcUnit" placeholder=" ">
-                                                    <el-option label="日" value="日"></el-option>
+                                                    <el-option label="日" value="天"></el-option>
                                                     <el-option label="周" value="周"></el-option>
                                                     <el-option label="月" value="月"></el-option>
                                                     <el-option label="年" value="年"></el-option>
