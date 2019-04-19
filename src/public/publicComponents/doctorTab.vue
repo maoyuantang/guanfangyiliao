@@ -1,78 +1,106 @@
 <template>
-    <div class="doctor-tab">
-      <div class="tab-item" v-for="(item,index) in inData.list" :key="index" @click="reBackFn(index)" :class="index===inData.i?'selected-item-css':''">
-        <!-- <span class="item-en">{{item.en}}</span> -->
-        <span class="item-zh">{{item.zh}}</span>
-      </div>
+  <div class="doctor-tab">
+    <div v-if="item.ad" class="tab-item" v-for="(item,index) in inData.list" :key="index" @click="reBackFn(index)"
+      :class="index===inData.i?'selected-item-css':''">
+      <!-- <span class="item-en">{{item.en}}</span> -->
+      <span class="item-zh">{{item.zh}}</span>
     </div>
-  </template>
-  
-  <script>
-    export default {
-      data () {
-        return {
-          
-        }
-      },
-      methods:{
-        reBackFn(index){
-          this.inData.i = index
-          this.$emit('reBack',this.inData)
-        }
-      },
-      props: {
-        inData:Object
-      },
-      model:{
-        prop:['inData'],
-        event:'reBack'
-      },
-      async created(){
+  </div>
+</template>
+
+<script>
+  export default {
+    data() {
+      return {
+
       }
-    }
-  </script>
-  
-  <style scoped>
-    .doctor-tab{
-      display: flex;
-    }
-    .tab-item{
-      width: 1.76rem;
-      height: 0.4rem;
-      background-color: var(--whiteColor);
-      box-shadow: 0 0.06rem 36rem 0 rgba(0,62,100,0.04);
-      border-radius: 0.04rem;
+    },
+    created() {
+      // console.log(this.inData)
+      // for (let i = 0; i < this.inData.list; i++) {
+      //   console.log(this.inData)
+      //   if (this.inData.list[i].ad == false) {
+      //     this.inData.list[i].removed();
+      //   }
+      // }
+      // console.log(this.inData)
+      let i = 0;
+      const length = this.inData.list.length;
+      for(; i < length; i++){
+        if(this.inData.list[i].ad === true){
+          this.inData.i = i;
+          this.reBackFn(i);
+          console.warn(i)
+          return;
+        }
+      }
       
-      /* border: 1px solid var(--color5); */
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      /* padding-left: 0.2rem; */
-      margin-right: 0.24rem;
-      cursor: pointer;
-    }
-    .tab-item .item-zh{
-      text-align: center;
-    }
-    .item-en{
-      font-family: var(--fontFamily2);
-      font-size: var(--fontSize1);
-      color: var(--color3);
-    }
-    .item-zh{
-      font-family:var(--fontFamily3);
-      font-size: var(--fontSize4);
-      color: var(--color4);
-    }
-    .selected-item-css{
-      background: #0064D9;
-      /* background: var(--bgColor3); */
-    }
-    .selected-item-css>span{
-      color: var(--whiteColor);
-    }
-  </style>
-  <!-- 
+    },
+    methods: {
+      reBackFn(index) {
+        this.inData.i = index
+        console.log(this.inData)
+        this.$emit('reBack', this.inData)
+      },
+    },
+    props: {
+      inData: Object
+    },
+    model: {
+      prop: ['inData'],
+      event: 'reBack'
+    },
+    // async created() { }
+  }
+</script>
+
+<style scoped>
+  .doctor-tab {
+    display: flex;
+  }
+
+  .tab-item {
+    width: 1.76rem;
+    height: 0.4rem;
+    background-color: var(--whiteColor);
+    box-shadow: 0 0.06rem 36rem 0 rgba(0, 62, 100, 0.04);
+    border-radius: 0.04rem;
+
+    /* border: 1px solid var(--color5); */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* padding-left: 0.2rem; */
+    margin-right: 0.24rem;
+    cursor: pointer;
+  }
+
+  .tab-item .item-zh {
+    text-align: center;
+  }
+
+  .item-en {
+    font-family: var(--fontFamily2);
+    font-size: var(--fontSize1);
+    color: var(--color3);
+  }
+
+  .item-zh {
+    font-family: var(--fontFamily3);
+    font-size: var(--fontSize4);
+    color: var(--color4);
+  }
+
+  .selected-item-css {
+    background: #0064D9;
+    /* background: var(--bgColor3); */
+  }
+
+  .selected-item-css>span {
+    color: var(--whiteColor);
+  }
+</style>
+<!-- 
     使用先知：
       -该组件是一个类似选项卡的组件，因为用的较多抽象成一个公共组件
       -传入参数为一个对象
@@ -149,4 +177,3 @@
         }
       </script>
    -->
-  
