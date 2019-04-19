@@ -111,7 +111,7 @@
     <div class="body">
       <!-- {{docTableData}} -->
       <el-table :data="docTableData" style="width: 100%" :show-header="false">
-        <el-table-column label=" " width="70">
+        <el-table-column label="操作" width="70">
           <template slot-scope="scope">
             <!-- <img src="../../../assets/img/a-6.png" style="width:42px;" /> -->
             <img v-if="docTableData.applyDoctorHead == null" src="../../../assets/img/a-6.png" alt="医生头像"
@@ -137,7 +137,7 @@
         <!-- <el-table-column prop="intention" label="目的" :show-overflow-tooltip="true"></el-table-column> -->
         <!-- <el-table-column prop="typeName" label="转诊类型" :show-overflow-tooltip="true"></el-table-column> -->
         <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column label="" width="220">
+        <el-table-column fixed = right label="操作" width="400">
           <template slot-scope="scope">
             <button class="huangSe" @click="seeHistory(scope.row.patientId)">查看档案</button>
             <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>

@@ -142,7 +142,7 @@
           <!-- <el-table-column prop="id" label="编号" :show-overflow-tooltip="true"></el-table-column> -->
           <el-table-column prop="medicalName" label="名称" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="levelName" label="分级" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column label="操作" width="300">
+          <el-table-column fixed = right label="操作" width="300">
             <template slot-scope="scope">
               <button class="bianJi" @click="editList1(scope.row)">编 辑</button>
               <button class="jingYong" @click="delectList1(scope.row)">删 除</button>
@@ -178,7 +178,7 @@
           <el-table-column prop="direction" label="方向" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="scope" label="范围" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="levelDesc" label="疾病等级" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column label="" width="300">
+          <el-table-column fixed = right label="操作" width="300">
             <template slot-scope="scope">
               <button v-if="scope.row.direction == '转入'" class="bianJi" @click="editList2(scope.row)">编 辑</button>
               <button v-if="scope.row.direction == '转入'" class="jingYong" @click="delectList2(scope.row)">删 除</button>
