@@ -26,6 +26,7 @@ export default {
             serverTime: "", //服务器时间
             oMsgId: "",
         },
+        videoList:[],
         headImg:process.env.IMG_PREFIX+'/m/v1/api/user/user/avatar/',//头像公共前缀
         imgUrl: process.env.IMG_PREFIX + '/m/v1/api/hdfs/fs/download/',//图片下载地址前缀
         imgUrl1:process.env.IMG_PREFIX
@@ -89,6 +90,10 @@ export default {
         RECEIVEVIDEOUSERID(state,data){
             state.receiveVideoUserId =data
         },
+        
+        VIDEOLIST(state,data){
+            state.videoList =data
+        },
     },
     actions: {
         setSocket(context, data) {
@@ -127,6 +132,9 @@ export default {
         RECEIVEVIDEOUSERID(state,data){
 
             context.commit("RECEIVEVIDEOUSERID", data);
+        },
+        VIDEOLIST(state,data){
+            context.commit("VIDEOLIST", data);
         },
     }
 }

@@ -549,6 +549,9 @@ export default {
                             //     odata.info.body.length
                             // );
                             // reciveUserList = reciveUserList.split("&");
+                            // let videoList=[]
+                            // _this.userSocketInfo.
+                            //  _this.$store.commit("socket/VIDEOLIST", true);
                             _this.$store.commit("socket/RECEIVEVIDEOVIS", true);
                             _this.userSocketInfo.receiveVideoVisable = true;
                             console.log(
