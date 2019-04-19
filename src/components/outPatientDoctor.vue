@@ -1373,6 +1373,7 @@
 						this.typeQuan.push(quanXian[i].authorityId)
 					}
 				}
+				console.log(this.typeQuan+"-------------")
 				this.typeQuan.forEach((element, index) => {
 					// console.log(element, index, element[index])
 					if (element == 10001) {
@@ -1403,9 +1404,9 @@
 				// }
 				// console.log(this.oconsulVisable)
 
-				this.oAdminTab.list[0].ad = this.typeQuan1
+				this.oAdminTab.list[2].ad = this.typeQuan1
 				this.oAdminTab.list[1].ad = this.typeQuan2
-				this.oAdminTab.list[2].ad = this.typeQuan3
+				this.oAdminTab.list[0].ad = this.typeQuan3
 				console.log(this.typeQuan1, this.oAdminTab.list[0].ad)
 				console.log(this.typeQuan2, this.oAdminTab.list[1].ad)
 				console.log(this.typeQuan3, this.oAdminTab.list[2].ad)

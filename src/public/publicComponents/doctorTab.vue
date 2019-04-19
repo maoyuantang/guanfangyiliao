@@ -23,12 +23,13 @@
       //     this.inData.list[i].removed();
       //   }
       // }
-      // console.log(this.inData)
+      console.log(this.inData)
       let i = 0;
       const length = this.inData.list.length;
       for(; i < length; i++){
         if(this.inData.list[i].ad === true){
           this.inData.i = i;
+          this.index = i;
           this.reBackFn(i);
           console.warn(i)
           return;
