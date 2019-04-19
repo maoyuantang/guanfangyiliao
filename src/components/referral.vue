@@ -235,10 +235,11 @@
             <el-table-column prop="intention" label="目的" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="typeName" label="方向" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column fixed=right label="操作" min-width="400">
+            <el-table-column fixed=right label="操作" min-width="460">
               <template slot-scope="scope">
                 <button class="huangSe" @click="seeHistory(scope.row.patientId)">查看档案</button>
                 <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
+                <button class="huangSe" @click="dualReferralRecord3(scope.row)">病历详情</button>
                 <button
                   :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
                   v-for="(text,index) in scope.row.buttons" :key="index"
@@ -1266,6 +1267,16 @@
             message: res.data.errMsg
           });
         }
+      },
+      //病历详情
+      async dualReferralRecord3(data) {
+        console.log(data)
+        this.$router.push({
+          path: "/docDetailed",
+          query: {
+            id: data.referralId
+          }
+        })
       },
 
 

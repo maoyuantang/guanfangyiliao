@@ -1035,6 +1035,12 @@
         this.kuangData1.options2.value = data.diseaseTypeId
         this.kuangData1.options3.value = data.diseaseId//疾病ID
         this.kuangData1 = Object.assign({}, this.kuangData1)
+        // console.log(this.kuangData1.options1.value)
+        // console.log(this.kuangData1.options1.list)
+        // console.log(this.kuangData1.options2.value)
+        // console.log(this.kuangData1.options2.list)
+        // console.log(this.kuangData1.options3.value)
+        // console.log(this.kuangData1.options3.list)
         $.each(this.kuangData1.options4.list, function (index, text) {
           if (_this.kuangData1.options4.list[index].label == data.levelName) {
             _this.kuangData1.options4.value = _this.kuangData1.options4.list[index].value
