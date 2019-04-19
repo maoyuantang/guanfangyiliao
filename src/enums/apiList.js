@@ -304,7 +304,6 @@ export default {
     SETFOLLOWCHART   :'/m/v1/api/followup/followupRemind/countFollowup',
     CONSULTATIONHOSPITAL:'/m/v1/api/consultation/queryConsultationHospitalScope',
     CONSULTATIONDER:'/m/v1/api/consultation/queryConsultationDeptScope',
-    SETFOLLOWCHART   :'/m/v1/api/followup/followupRemind/countFollowup',
     getUserItemInfo:'/m/v1/api/user/user/userInfo',//3.8获取用户信息
     deleteUserItem:'/m/v1/api/user/user/deleteUser',//3.5首页-账号及权限-删除用户
     listBusRange:'/m/v1/api/user/user/listBusRange',//3.9获取医生业务范围
@@ -323,5 +322,7 @@ export default {
     patientMedicalHistory:'/m/v1/api/referral/dualReferral/patientMedicalHistory',//14.16.转诊-获取病历列表
     patientMedicalDetail:'/m/v1/api/referral/dualReferral/patientMedicalDetail',//14.17.转诊-获取病历详情
     toUpdate:'/m/v1/api/referral/dualReferral/toUpdate',//14.18.双向转诊-WEB医生端-获取修改记录
+    registeredStatistics:'/m/v1/api/user/user/registeredStatistics',//3.11 注册用户
+    eMRList:'/m/v1/api/record/nosocomialRecord/eMRList',//2.电子病历列表
 }
 

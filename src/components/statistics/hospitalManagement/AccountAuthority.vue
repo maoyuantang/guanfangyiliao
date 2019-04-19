@@ -1680,6 +1680,10 @@ export default {
 }
 .account-authority-tbody th{
   font-weight: 100;
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #5E6875;
+  letter-spacing: 0;
 }
 .content-item-title{
   color: #D4D4D4;
@@ -1689,5 +1693,11 @@ export default {
 }
 .search{
   margin-right: 1rem;
+}
+.account-authority-thead th{
+  font-family: PingFangSC-Semibold;
+  font-size: 14px;
+  color: #5E6875;
+  letter-spacing: 0;
 }
 </style>

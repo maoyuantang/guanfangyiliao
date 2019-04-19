@@ -43,7 +43,7 @@
               <el-dropdown>
                <el-button type="danger" size="mini" plain>录入档案</el-button>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item @click.native="openPregnantWomanDoc">孕妇信息</el-dropdown-item>
+                  <el-dropdown-item @click.native="openPregnantWomanDoc(item)">孕妇信息</el-dropdown-item>
                   <el-dropdown-item @click.native="openAlertNor(item)">普通档案</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -338,7 +338,9 @@ export default {
     /**
      * 打开 孕妇 档案
      */
-    openPregnantWomanDoc(){
+    async openPregnantWomanDoc(item){
+      await this.getQueryListByUserId(item);
+
       this.pregnantWomanDoc.show = true; 
     },
     /**
@@ -393,9 +395,9 @@ export default {
      /**
      * 打开 新增 孕妇档案 弹窗
      */
-    openPregnantWomanDoc(){
-      this.pregnantWomanDoc.show = true;
-    },
+    // openPregnantWomanDoc(){
+    //   this.pregnantWomanDoc.show = true;
+    // },
     /**
      * 关闭 新增 孕妇 档案
      */
@@ -741,7 +743,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .files-doc {
 }
 .files-doc-top {
@@ -848,6 +850,13 @@ line-height: 0.22rem;
   color: red;
 }
 .files-doc--tbody th{
+  font-weight: 100;
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #5E6875;
+  letter-spacing: 0;
+}
+.files-doc--tbody th .el-checkbox__label{
   font-weight: 100;
   font-family: PingFangSC-Regular;
   font-size: 12px;

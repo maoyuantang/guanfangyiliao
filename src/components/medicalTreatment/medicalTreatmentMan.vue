@@ -1024,10 +1024,11 @@
       // 表一编辑
       editList1(data) {
         this.YesList1 = 2;
-        this.kuangData1.show = true;
+        
         this.fetchHospitalDepts().then(val => {//执行完科室获取再执行获取名称list
-          this.isHaveDepartment11();
-        });
+          return this.isHaveDepartment11();
+        })
+        .then(res=>this.kuangData1.show = true);
         console.log(data)
         const _this = this
         this.adds = data.id
@@ -1046,7 +1047,7 @@
             _this.kuangData1.options4.value = _this.kuangData1.options4.list[index].value
           }
         })
-
+        
         // console.log()
       },
       // 表一编辑   提交
