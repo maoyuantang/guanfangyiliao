@@ -121,7 +121,7 @@
                 <th>{{item.updateTime?item.updateTime.substring(0,10):''}}</th>
                 <th>
                   <el-button type="success" size="mini" plain @click="revisionCollaboration(item)">编辑</el-button>
-                  <el-button type="danger" size="mini" plain>删除</el-button>
+                  <el-button type="danger" size="mini" plain @click="deleteDoctor(item)">删除</el-button>
                 </th>
               </tr>
             </tbody>
@@ -352,6 +352,8 @@ import {
   listBusRange,
   fetchHospitalDeptAuth,
   internalHospitalDoctor,
+  synergyManageUpdate,
+  synergyManageDelete
 } from "../../../api/apiAll.js";
 
 export default {
@@ -490,6 +492,7 @@ export default {
           select:[],//选中   
           list:[],//没用这个  直接用的 outerCourt.department
         },
+        id:'',
       },
       tabPosition: "left",
     };
@@ -529,6 +532,31 @@ export default {
     }
   },
   methods: {
+    /**
+     * 删除 协作医生
+     */
+    async deleteDoctor(item){
+      console.log(item);
+      const res = await synergyManageDelete({
+        token: this.userInfo.token,
+        id:item.id
+      })
+      if (res.data && res.data.errCode === 0){
+        this.$notify({
+          title: "成功",
+          message: "删除成功",
+          type: "success"
+        });
+        this.outerCourtAlertClose();
+        this.getSynergyManageList();
+      }else{
+        this.$notify.error({
+          title: "删除失败",
+          message: res.data.errMsg
+        });
+      }
+      
+    },
     /**
      * 获取 新增功能的 数据
      */
@@ -621,8 +649,10 @@ export default {
      * 修改协作 按钮 被点击
      */
     revisionCollaboration(item){
+      console.log(item)
       this.outerCourtAlert.account = item.account;
-      this.outerCourtAlert.range.select = item.deptNames;
+      this.outerCourtAlert.id = item.id;
+      this.outerCourtAlert.range.select = item.deptIds || []; //后台会返回null 弄个默认值
       // this.outerCourt.department.list = item.busRange;
       this.outerCourtAlert.show = true;
       this.outerCourtAlert.type = 1;
@@ -659,6 +689,7 @@ export default {
           type: "success"
         });
         this.outerCourtAlertClose();
+        this.getSynergyManageList();
       }else{
         this.$notify.error({
           title: "邀请失败",
@@ -669,8 +700,30 @@ export default {
      /**
      * 院外协作人员 弹窗 修改
      */
-    outerCourtModify(){
-
+    async outerCourtModify(){
+      const postData = [
+        {token: this.userInfo.token},
+        {
+          id:this.outerCourtAlert.id,
+          deptId:this.outerCourtAlert.range.select
+        }
+      ];
+      const res = await synergyManageUpdate(...postData);
+      if (res.data && res.data.errCode === 0) {
+        this.$notify({
+          title: "成功",
+          message: "修改成功",
+          type: "success"
+        });
+        this.outerCourtAlertClose();
+        this.getSynergyManageList();
+      }else{
+        this.$notify.error({
+          title: "修改失败",
+          message: res.data.errMsg
+        });
+      }
+      // 
     },
     /**
      * 外院 弹窗 关闭
@@ -720,7 +773,8 @@ export default {
         pageNum: this.outerCourt.page.pageNum,
         pageSize: this.outerCourt.page.pageSize,
         query: this.outerCourt.searchKey,
-        departmentId : this.outerCourt.department.list[this.outerCourt.department.index]?this.outerCourt.department.list[this.outerCourt.department.index].deptId:''
+        departmentId:this.outerCourt.departmentSelect.deptId
+        // departmentId : this.outerCourt.department.list[this.outerCourt.department.index]?this.outerCourt.department.list[this.outerCourt.department.index].deptId:''
         // departmentId: this.outerCourt.departmentSelect.orgCode || ""
       });
       // console.log(res)

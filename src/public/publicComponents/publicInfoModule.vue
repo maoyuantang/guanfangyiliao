@@ -68,7 +68,7 @@
 <script>
 	export default {
         watch:{
-            inData(n){console.log('change')}
+            
         },
         props:[
             'inData'
@@ -95,7 +95,7 @@
              */
             edit(){
                 this.$emit("edit",Object.assign({},this.inData));
-                console.log(Object.assign({},this.inData))
+                // console.log(Object.assign({},this.inData))
             },
 		},
 		async created(){

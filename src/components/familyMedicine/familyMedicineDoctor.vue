@@ -1,5 +1,6 @@
 <template>
 	<div class="family-medicine-doctor">
+        {{chatData.chatTypeBox}}
         <div class="family-medicine-doctor-head">
             <div class="family-medicine-doctor-head-left">
                 <tag :inData="queryConditions.date" @reback="getDateSelect"></tag>
@@ -136,8 +137,7 @@
             <el-button type="primary" @click="alertInfo.show = false">确 定</el-button>
         </span> -->
         </el-dialog>
-        <el-dialog
-        :visible.sync="chatData.show" class="chatDialog">
+        <el-dialog :visible.sync="chatData.show" class="chatDialog" width="680px">
             <chat :sessionId="chatData.sessionId" :doctorVis="chatData.doctorVis" :userMessage="chatData.userMessage" :chatType1="chatData.videoType" :chatTypeBox="chatData.chatTypeBox"></chat>
         </el-dialog>
 
@@ -161,10 +161,10 @@
     import selftag from './../../public/publicComponents/selftag.vue'
     import tag from './../../public/publicComponents/tag.vue'
     import publicTime from './../../public/publicComponents/publicTime.vue'
-    import { stencilName, fetchOrderInfo, updateOrderServices, fetchChatSession, fetchHistoryMessage } from '../../api/apiAll.js'
+    import { stencilName, fetchOrderInfo, updateOrderServices, fetchChatSession, fetchHistoryMessage, bindSession } from '../../api/apiAll.js'
     import chat from '../../public/publicComponents/chat.vue'
     import viewRecord from './../xiezuo/viewRecord.vue'
-    import oVideo from '../../video/oVideo.vue'
+    import ovideo from '../../video/oVideo.vue'
     import tableNoMore from '../../public/publicComponents/tableNoMore.vue'
     
 	export default {
@@ -174,7 +174,7 @@
             tag,
             chat,
             viewRecord,
-            oVideo,
+            ovideo,
             tableNoMore
         },
         computed:{
@@ -339,29 +339,102 @@
                 
             },
             /**
+             * 
+             */
+            async getBindSession(item){
+                const res = await bindSession({token:this.userInfo.token},{
+                    orderId:item.orderId,
+                    orderNo:item.orderNo
+                });
+                console.log(res)
+                if(res.data&&res.data.errCode===0){
+                   return {
+                       ok:true,
+                       id:res.data.body
+                   }
+                }else{
+                    this.$notify({
+						title: '失败',
+						message: res.data.errMsg,
+						type: 'error'
+					});
+                    return {
+                       ok:false,
+                       id:''
+                   }
+                }
+            },
+            /**
+             * 
+             */
+            async getFetchChatSession(item){
+                const res = await fetchChatSession({token:this.userInfo.token},{to:item.userId});
+                console.log(res)
+                if(res.data&&res.data.errCode===0){
+                   return {
+                       ok:true,
+                       data:res
+                   }
+                }else{
+                    this.$notify({
+						title: '失败',
+						message: res.data.errMsg,
+						type: 'error'
+					});
+                    return {
+                       ok:false,
+                       data:null
+                   }
+                }
+            },
+            /**
              * 发送消息
              */
             async sendMsg(item){
                 console.log(item)
-                const res = await fetchChatSession({token:this.userInfo.token},{
-                    to:item.userId
+                Promise.all([//又修改了流程，原先一个fetchChatSession就ok，现在需要再加一个getBindSession
+                    this.getFetchChatSession(item),
+                    this.getBindSession(item)
+                ])
+                .then(res => {
+                    if(res[0].ok && res[1].ok){
+                        this.chatData.sessionId = res[0].data.body;
+                        this.chatData.userMessage.clinicId = item.crId;
+                        this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
+                        this.chatData.userMessage.userId = item.userId;
+                        this.chatData.userMessage.clinicOrderId = '';
+                        this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
+                        this.chatData.show = true;
+                        console.log(this.chatData)
+                    }
+                })
+                .catch(err => {
+                    this.$notify({
+						title: '失败',
+						message: err,
+						type: 'error'
+					});
                 });
-                console.log(res)
-                if(res.data&&res.data.errCode===0){
-                    this.chatData.sessionId = res.data.body;
-                    this.chatData.userMessage.clinicId = item.crId;
-                    this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
-                    this.chatData.userMessage.userId = item.userId;
-                    this.chatData.userMessage.clinicOrderId = '';
-                    this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
-                    this.chatData.show = true;
-                    console.log(this.chatData)
-                }else{
+                // const res = await fetchChatSession({token:this.userInfo.token},{
+                //     to:item.userId
+                // });
+                // console.log(res)
+                // if(res.data&&res.data.errCode===0){
+                //     this.chatData.sessionId = res.data.body;
+                //     this.chatData.userMessage.clinicId = item.crId;
+                //     this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
+                //     this.chatData.userMessage.userId = item.userId;
+                //     this.chatData.userMessage.clinicOrderId = '';
+                //     this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
+                //     this.chatData.show = true;
+                //     console.log(this.chatData)
+                // }else{
 
-                }
+                // }
 
 
             },
+
             // /**
             //  * 获取 Sessionid
             //  */

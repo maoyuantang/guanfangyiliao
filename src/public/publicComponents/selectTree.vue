@@ -30,9 +30,6 @@
 <script>
 export default {
   watch:{
-      select(n){
-          console.log(n)
-      }
   },
   data() {
     return {
@@ -47,7 +44,7 @@ export default {
     },
     selectItem(){
         // console.log(this.$refs.tree.getCheckedKeys())
-        console.log(this.$refs.tree.getCheckedNodes(false,false))
+        // console.log(this.$refs.tree.getCheckedNodes(false,false))
         this.$emit("reback",this.$refs.tree.getCheckedNodes(false,false));
     },
     unShow(){
@@ -66,8 +63,8 @@ export default {
   ],
   created() {
     this.documentClick();
-    console.log(this.inData)
-    console.log(this.select)
+    // console.log(this.inData)
+    // console.log(this.select)
     let arr = [];
     this.select.forEach(item => {
         if (item.id) {

@@ -53,7 +53,7 @@
                 )
             },
             getIndex(index){//点击调用该函数
-                console.log(this.testData[index])
+                // console.log(this.testData[index])
                 this.defaultSelect = this.testData[index];
                 this.sendData();
             }
