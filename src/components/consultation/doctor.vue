@@ -136,7 +136,7 @@
                             <span v-else-if="scope.row.status=='OVER'">结束</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" width="300">
+                    <el-table-column  fixed="right"  label="操作" width="300">
                         <template slot-scope="scope">
                             <el-button class="seeDanganClass" @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
                             <el-button class="inviteUserClass" v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
@@ -222,7 +222,8 @@ export default {
             chatTypeBox: {
                 startDoctorName: "",
                 startDoctorTYpe: "会诊",
-                archivesUrl: "/consultation"
+                archivesUrl: "/consultation",
+                bingUserId:''
             }, //发起医生
             docTotal: 0,
             adminTotal: 0,
@@ -243,7 +244,7 @@ export default {
             ],
             invitationData: [],
             defaultProps: {
-                children: "hospitalName",
+                children: "children",
                 label: "name"
             },
             defaultProps1: {
@@ -689,6 +690,7 @@ export default {
         handleCheckChange1(data, odata) {
             console.log(data, odata);
             this.bingliSelect = "";
+            this.startHz.medicalHistorys=[]
             $.each(odata.checkedNodes, (index, text) => {
                 if (text.visitNo) {
                     this.startHz.medicalHistorys.push(text);
@@ -836,7 +838,7 @@ export default {
             this.sessionId = oObject.sessionId;
             this.userMessage.userId = oObject.userId;
             this.chatTypeBox.startDoctorName = oObject.doctor;
-
+            this.chatTypeBox.bingUserId=oObject.userId
             this.startDoctor = oObject.doctor;
             // if (oObject.state == "NEW") {
             //     oObject.state = "UNDERWAY";

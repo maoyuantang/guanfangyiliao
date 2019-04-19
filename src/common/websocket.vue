@@ -257,8 +257,6 @@ export default {
             this.$store.state.socket.socketObj.binaryType = "arraybuffer";
             //接受消息
             this.$store.state.socket.socketObj.onmessage = e => {
-                console.log("dd");
-
                 let odata = this.$store.state.socket.IMessage.decode(
                     new Uint8Array(e.data)
                 );
@@ -275,6 +273,7 @@ export default {
             //连接发生错误的回调方法
             this.$store.state.socket.socketObj.onerror = e => {
                 console.log("WebSocket连接发生错误");
+                console.error(e);
                 this.reconnect(otoken);
             };
             // })
@@ -541,16 +540,14 @@ export default {
                             bodyVideo.indexOf("sendroom") > -1 ||
                             bodyVideo.indexOf("MicroCinicSendRoom") > -1
                         ) {
-                            let oindex = odata.info.body.lastIndexOf("$");
-                            let reciveUserList = odata.info.body.substring(
-                                oindex + 1,
-                                odata.info.body.length
-                            );
-                            reciveUserList = reciveUserList.split("&");
-                            console.log("收到了邀请视频");
+                            // let oindex = odata.info.body.lastIndexOf("$");
+                            // let reciveUserList = odata.info.body.substring(
+                            //     oindex + 1,
+                            //     odata.info.body.length
+                            // );
+                            // reciveUserList = reciveUserList.split("&");
                             _this.$store.commit("socket/RECEIVEVIDEOVIS", true);
                             _this.userSocketInfo.receiveVideoVisable = true;
-                            console.log(_this.receiveVideoVisable1);
                             console.log(
                                 _this.userSocketInfo.receiveVideoVisable
                             );
@@ -564,20 +561,25 @@ export default {
                             let chatTypeBox = {
                                 startDoctorName: "",
                                 startDoctorTYpe: "",
-                                 archivesUrl:''
+                                archivesUrl: "",
+                                bingUserId: ""
                             };
                             if (odata.info.location == "cooperation") {
                                 chatTypeBox.startDoctorTYpe = "协作";
-                                chatTypeBox.archivesUrl='/cooperation'
+                                chatTypeBox.archivesUrl = "/cooperation";
                             } else if (odata.info.location == "consultation") {
                                 chatTypeBox.startDoctorTYpe = "会诊";
-                                chatTypeBox.archivesUrl='/consultation'
+                                chatTypeBox.archivesUrl = "/consultation";
+                                chatTypeBox.bingUserId = odata.info.body.split(
+                                    "&"
+                                )[3];
                             }
 
                             _this.$store.commit(
                                 "socket/CHATTYPEBOX",
                                 chatTypeBox
                             );
+
                             _this.$store.commit(
                                 "socket/OSESSIONID",
                                 odata.info.to
@@ -591,7 +593,6 @@ export default {
                                 odata.info.from
                             );
 
-                            
                             console.log(_this.createVideoRoomData);
                             console.log(_this.userSocketInfo.osessionId);
                             // $.each(reciveUserList, function(index, text) {
@@ -1308,7 +1309,9 @@ export default {
             }
 
             //发送心跳  进行保持长连接 /心跳检测重置
-            this.heartCheck.start();
+            setInterval(() => {
+                this.heartCheck.start();
+            });
         },
         //重新连接IM
         reconnect(otoken) {

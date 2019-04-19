@@ -267,7 +267,8 @@
       ...mapState({
         userInfo: state => state.user.userInfo,
         userSelfInfo: state => state.user.userSelfInfo,
-        global: state => state.global
+        global: state => state.global,
+        userSocketInfo: state => state.socket
       }),
     },
     data() {

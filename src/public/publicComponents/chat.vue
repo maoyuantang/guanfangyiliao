@@ -112,19 +112,6 @@
             </span>
             <span title="发送视频" class="sendVideo" @click="showVideoBtn()">
                 <img src="../../assets/img/sendNew2.png" />
-                <!-- <div class="userMember" v-show="showVideoBtnVisable">
-                    <h4>视频窗口最多拉取3个人</h4>
-                    <el-checkbox-group style='margin-bottom:18px' v-model="checkList">
-                        <el-checkbox v-for="(text,index) in userMemberNum" :label="text.userId" :key="index">
-                            <span class='videoUserHeadClass'>
-                                <img class='headImgClass' :src="userSocketInfo.headImg+text.userId" :onerror="defaultImg" />
-                            </span>
-
-                            {{text.userName}}
-                        </el-checkbox>
-                    </el-checkbox-group>
-                    <el-button class="setVideoBtn" @click="setVideo(1)" type="primary">确认</el-button>
-                </div> -->
             </span>
             <span v-show="oDoctorVis" @click="addFollow()" title="发送随访">
                 <img src="../../assets/img/sendNew4.png" />
@@ -142,12 +129,21 @@
                 <img src="../../assets/img/sendNew9.png" />
             </span>
             <span v-show="oDoctorVis" title="录入档案" class="enterFile">
-                <img src="../../assets/img/sendNew10.png" />
+                <!-- <img src="../../assets/img/sendNew10.png" />
                 <ul>
                     <li @click="openPublicFile()">普通档案</li>
                     <li @click="openManFile()">孕妇答案</li>
-                </ul>
+                </ul> -->
+                <el-dropdown>
+                                        <el-button class="chatFileClass" type="danger" size="mini" plain><img src="../../assets/img/sendNew10.png" /></el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item @click.native="openManFile(scope.row)">孕妇信息</el-dropdown-item>
+                                            <el-dropdown-item @click.native="openPublicFile(scope.row)">普通档案</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
             </span>
+
+            
             <span v-show="oDoctorVis" title="健康处方">
                 <img src="../../assets/img/sendNew11.png" />
             </span>
@@ -161,8 +157,10 @@
         <div class='sendBtnBox'>
             <el-input class="chatInputK" type="textarea" :rows="2" placeholder="请输入内容" v-model="messageBody" @keyup.enter.native="sendMessageChat(0,messageBody,'DEFAULT')">
             </el-input>
-            <div><button class="sendMessageChat" @click="sendMessageChat(0,messageBody,'DEFAULT')">发送</button></div>
-            
+            <div>
+                <button class="sendMessageChat" @click="sendMessageChat(0,messageBody,'DEFAULT')">发送</button>
+            </div>
+
         </div>
         <!-- 备注 -->
         <div v-if="remarkVisible">
@@ -220,7 +218,7 @@
         </div>
         <!-- 问诊 -->
         <div v-if="questVisible">
-            <el-dialog  title="发送问诊" :visible.sync="questVisible" center append-to-body width='500px'>
+            <el-dialog title="发送问诊" :visible.sync="questVisible" center append-to-body width='500px'>
                 <ul>
                     <li class="followBox" v-for="(text,index) in questList" :key="index" @click="QuestDetail(text.id)">
                         <span>{{text.title}}</span>
@@ -231,13 +229,13 @@
         </div>
         <!-- 问诊详情 -->
         <div v-if="questDetailVisible">
-            <el-dialog class='addQuestBox' title="问诊详情" :visible.sync="questDetailVisible" center append-to-body  width="717px" hight="356px">
+            <el-dialog class='addQuestBox' title="问诊详情" :visible.sync="questDetailVisible" center append-to-body width="717px" hight="356px">
                 <quest :addQuestId="addQuestId" @osendmessagechat="getSendMessageChat1" :sendToUserId="sendToUserId"></quest>
             </el-dialog>
         </div>
         <!-- 问诊详情 -->
         <div v-if="questPlanVisible">
-            <el-dialog class='addQuestBox' title="问诊计划详情" :visible.sync="questPlanVisible" center append-to-body  width="717px" hight="356px">
+            <el-dialog class='addQuestBox' title="问诊计划详情" :visible.sync="questPlanVisible" center append-to-body width="717px" hight="356px">
                 <questPlan :addQuestId="addQuestPlanId"></questPlan>
             </el-dialog>
         </div>
@@ -435,7 +433,8 @@ export default {
                 require("../../assets/img/publicHeadImg.png") +
                 '"',
             ifSendMessageNum: 0,
-            sendMessageBoxType: ""
+            sendMessageBoxType: "",
+            ifVIdeoIng:'',
         };
     },
     computed: {
@@ -675,33 +674,10 @@ export default {
             }
         },
         showVideoBtn() {
-            // if (this.userMemberNum.length > 1) {
-            //     if (this.showVideoBtnVisable) {
-            //         this.showVideoBtnVisable = false;
-            //     } else {
-            //         this.showVideoBtnVisable = true;
-            //     }
-            // } else {
-            //     this.showVideoBtnVisable = false;
-            //     this.setVideo(0); //单聊
-            // }
             this.setVideo(0);
         },
         //创建视频
         setVideo(num) {
-            // if (num == 1) {
-            //     if (this.checkList.length > 3) {
-            //         this.$notify.error({
-            //             title: "警告",
-            //             message: "最多只能邀请3个人"
-            //         });
-            //         return;
-            //     } else {
-            //         this.setVideo2(num);
-            //     }
-            // } else {
-            //     this.setVideo2(num);
-            // }
             this.setVideo2(num);
         },
         async setVideo2(num) {
@@ -726,6 +702,9 @@ export default {
                     "&" +
                     res.data.body.conferenceId +
                     "&";
+                if (_this.chatTypeBox.startDoctorTYpe == "会诊") {
+                    body += _this.chatTypeBox.bingUserId;
+                }
                 _this.sendVideoMessage(
                     childMessageType,
                     body,
@@ -979,8 +958,21 @@ export default {
         sendMessage2() {
             let ohtml = this.messageTicket.content;
         },
+        //时间戳转换成日期
+        getLocalTime(nS) {
+            return new Date(parseInt(nS) * 1000)
+                .toLocaleString()
+                .replace(/:\d{1,2}$/, " ");
+        },
         //随访模板详情
         async getFollowDetailMoban(oid) {
+            let odata = new Date();
+            odata.setHours(0);
+            odata.setMinutes(0);
+            odata.setSeconds(0);
+            odata.setMilliseconds(0);
+            console.log(odata);
+            let oldTime = Math.floor(odata.getTime() / 1000);
             console.log(this.userSelfInfo.userId);
             let query = {
                 token: this.userState.token,
@@ -989,6 +981,25 @@ export default {
             const res = await getFollowDetail(query);
             if (res.data && res.data.errCode === 0) {
                 this.followDetailData = res.data.body;
+                let oldDay = 0;
+                let oldSecond = 0;
+                $.each(this.followDetailData.itemModels, (index, text) => {
+                    console.log(text.calcUnit);
+                    if (text.calcUnit == "天") {
+                        oldDay = text.calcVal * 1;
+                    } else if (text.calcUnit == "周") {
+                        oldDay = text.calcVal * 7;
+                    } else if (text.calcUnit == "月") {
+                        oldDay = text.calcVal * 30;
+                    } else if (text.calcUnit == "年") {
+                        oldDay = text.calcVal * 365;
+                    }
+                    oldSecond = oldDay * 24 * 60 * 60;
+
+                    text.executionTime = this.getLocalTime(
+                        oldTime + oldSecond
+                    ).substring(0, 10);
+                });
             } else {
                 //失败
                 this.$notify.error({
@@ -1155,17 +1166,26 @@ export default {
                     if (odata[i].from != this.userSelfInfo.userId) {
                         if (odata[i].childMessageType == "INTERROGATION") {
                             //问诊
-                            this.messageList[i].content =
-                                '<div class=" followCon"> <div> </div> <div> <h3>问诊表/随访表的标题</h3> <div>2018中医国际标准</div>  </div> </div>';
+                            this.messageList[i].content = JSON.parse(
+                                odata[i].body
+                            );
+                            // this.messageList[i].content =
+                            //     '<div class=" followCon"> <div> </div> <div> <h3>问诊表/随访表的标题</h3> <div>2018中医国际标准</div>  </div> </div>';
                         } else if (odata[i].childMessageType == "ARTICLE") {
                             //文章
-                            this.messageList[i].content = "文章";
+                            // this.messageList[i].content = "文章";
+                            this.messageList[i].content = JSON.parse(
+                                odata[i].body
+                            );
                         } else if (odata[i].childMessageType == "CRVIDEO") {
                             //视频
                             this.messageList[i].content = "视频";
                         } else if (odata[i].childMessageType == "FOLLOWUP") {
                             //随访
-                            this.messageList[i].content = "随访";
+                            // this.messageList[i].content = "随访";
+                            this.messageList[i].content = JSON.parse(
+                                odata[i].body
+                            );
                         } else if (odata[i].childMessageType == "AUDIO") {
                             //音频
                             this.messageList[i].content =
@@ -1580,8 +1600,14 @@ export default {
 </script>
 
 <style>
-
-        /* <div v-if="chatVisible">
+.chatFileClass{
+        border: none;
+    width: 40px;
+    height: 55px;
+    background: none;
+    margin-top: -4px;
+}
+/* <div v-if="chatVisible">
             <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
                 <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage" :chatType1="videoType"
                     :chatTypeBox="chatTypeBox"></chat>
@@ -1600,6 +1626,5 @@ export default {
             };
             videoType:'门诊'，//如果是门诊就要传，不是则传空
         */
-        
 </style>
 

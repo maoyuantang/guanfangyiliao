@@ -78,9 +78,9 @@
         width: 247px;
         border: none;
     }
-   .statistics-way .el-input__icon{
+   /* .statistics-way .el-input__icon{
         display: none;
-    }
+    } */
     .statistics-way .el-range-input{
        border: 1px solid #E5EDF3;
        border-radius: 4px;

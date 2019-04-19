@@ -110,8 +110,7 @@
 							<div class="evaluateCont1">
 								<!-- 待头像 -->
 								<img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-								<img v-if="text.headId"
-									:src='process.env.IMG_PREFIX+"/m/v1/api/hdfs/fs/download/"+text.headId' alt="医生头像">
+								<img v-if="text.headId" :src='userSocketInfo.imgUrl+text.headId' alt="医生头像">
 								<h5>{{text.doctorName}}</h5>
 							</div>
 							<div class="evaluateCont2">
@@ -161,7 +160,7 @@
 		<div v-if="chuFangDetailList2">
 			<el-dialog title="处方详情" :visible.sync="chuFangDetailList2" center>
 				<img style="width:100%"
-					:src='process.env.IMG_PREFIX+"/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
+					:src='userSocketInfo.imgUrl1+"/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
 			</el-dialog>
 		</div>
 
@@ -604,6 +603,7 @@
 			...mapState({
 				userSelfInfo: state => state.user.userSelfInfo,
 				userInfo: state => state.user.userInfo,
+				userSocketInfo: state => state.socket
 			}),
 		},
 		methods: {
@@ -1118,7 +1118,7 @@
 					console.log('统计图+门诊订单+成功')
 					console.log(res)
 					const lists = res.data.body.data
-					console.log(lists)
+					// console.log(lists)
 					console.log(this.type)
 					this.yTotal1 = 0
 					this.testdata1.dataAxis.length = 0
@@ -1201,7 +1201,7 @@
 					console.log('统计图+就诊人次+成功')
 					console.log(res)
 					const lists = res.data.body
-					console.log(lists)
+					// console.log(lists)
 					console.log(this.type)
 					this.yTotal3 = 0
 					this.testdata3.dataAxis.length = 0
@@ -1773,7 +1773,7 @@
 	.online-clinic-top-right>.el-button {
 		width: 1.96rem;
 		height: 0.4rem;
-    margin: 0 0 0 0.1rem;
+		margin: 0 0 0 0.1rem;
 		padding: 0;
 		font-size: var(--fontSize6);
 	}
