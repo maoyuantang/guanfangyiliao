@@ -29,13 +29,13 @@
                                         </el-form-item>
                                         <el-form-item label=" ">
                                             <el-select v-model="text.calcUnit" placeholder=" ">
-                                                <el-option label="日" value="日"></el-option>
+                                                <el-option label="日" value="天"></el-option>
                                                 <el-option label="周" value="周"></el-option>
                                                 <el-option label="月" value="月"></el-option>
                                                 <el-option label="年" value="年"></el-option>
                                             </el-select>
                                         </el-form-item>
-                                        <span class='executionTime'>{{text.executionTime}}</span>
+                                        <!-- <span class='executionTime'>{{text.executionTime}}</span> -->
                                     </div>
                                 </el-form-item>
 
@@ -86,7 +86,7 @@
                     <div class="addFollowM-bot remindTime">
                         提醒时间
                         <el-select class="addFollowHou" v-model="addFollowData.remindDays" placeholder="请选择">
-                            <el-option v-for="(text,index) in 100" :key="index" :label="text" :value="text">
+                            <el-option v-for="(text,index) in 100" :key="index" :label="text+'天'" :value="text">
                             </el-option>
                         </el-select>
                     </div>
