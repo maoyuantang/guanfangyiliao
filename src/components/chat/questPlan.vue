@@ -41,46 +41,54 @@
 
         </el-form> -->
         <el-form ref="form" :model="addQuestData" label-width="80px" style="height: 600px; overflow: auto;">
-                    <el-form-item style="margin-bottom:30px">
-                        <el-input class="addFollowTitle" v-model="addQuestData.title" placeholder="请输入问诊标题(40字内)" onfocus="this.placeholder=''" onblur="this.placeholder='请输入问诊标题(40字内)'"></el-input>
-                    </el-form-item>
-                    <div class="addFollowMain">
-                        <ul class="addQuestUl">
-                            <li v-for="(text,index) in addQuestData.solutionDtos" :key="index">
-                                <div v-show="text.questionType=='RADIO'">
-                                    <el-form-item :label="index+1+'.'">
-                                        <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
-                                    </el-form-item>
-                                    <el-radio-group class="redioSingle redioSingleInput">
-                                        <el-radio v-for="(text1,index1) in text.solutionAsDtos" :key="index1" :label="index1">
-                                            <span>{{text1.tag}}</span>
-                                            <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容">
-                                            </el-input>
-                                        </el-radio>
-                                    </el-radio-group>
-                                </div>
-                                <div v-show="text.questionType=='CHECKBOX'">
-                                    <el-form-item :label="index+1">
-                                        <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
-                                    </el-form-item>
-                                    <el-checkbox-group class="redioSingle redioSingleInput">
-                                        <el-checkbox v-for="(text1,index1) in text.solutionAsDtos" :key="index1" :label="index1">
-                                            <span>{{text1.tag}}</span>
-                                            <el-input class="" v-model="text1.answerDescribe" placeholder="请输入选项内容">
-                                            </el-input>
-                                        </el-checkbox>
-                                    </el-checkbox-group>
-                                </div>
-                                <div v-show="text.questionType=='TEXT'">
-                                    <el-form-item :label="index+1">
-                                        <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
-                                    </el-form-item>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+            <el-form-item style="margin-bottom:30px">
+                <el-input class="addFollowTitle" v-model="addQuestData.title" placeholder="请输入问诊标题(40字内)" onfocus="this.placeholder=''" onblur="this.placeholder='请输入问诊标题(40字内)'"></el-input>
+            </el-form-item>
+            <div class="addFollowMain">
+                <ul class="addQuestUl">
+                    <li v-for="(text,index) in addQuestData.solutionDtos" :key="index">
+                        <div v-show="text.questionType=='RADIO'">
+                            <el-form-item :label="index+1+'.'">
+                                <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
+                            </el-form-item>
 
-                </el-form>
+                            <el-radio-group v-model="text.selectType1" class="redioSingle redioSingleInput">
+                                <el-radio v-for="(text1,index1) in text.solutionAsDtos" :key="index1" :label="text1.desc">
+                                    <span>{{text1.tag}}</span>
+                                    <el-input class="" v-model="text1.desc" placeholder="请输入选项内容">
+                                    </el-input>
+                                </el-radio>
+                            </el-radio-group>
+                        </div>
+
+                        <div v-show="text.questionType=='CHECKBOX'">
+                            <el-form-item :label="index+1">
+                                <el-input class="" v-model="text.title" placeholder="请输入题目名称"></el-input>
+                            </el-form-item>
+                            <el-checkbox-group v-model="text.selectType" class="redioSingle redioSingleInput">
+                                <el-checkbox v-for="(text1,index1) in text.solutionAsDtos" :key="index1" :label="text1.desc">
+                                    <span>{{text1.tag}}</span>
+                                    <el-input class="" v-model="text1.desc" placeholder="请输入选项内容">
+                                    </el-input>
+                                </el-checkbox>
+                            </el-checkbox-group>
+                        </div>
+                        <div v-show="text.questionType=='TEXT'">
+                            <el-form-item :label="index+1">
+                                <el-input class="" v-model="text.title"></el-input>
+
+                            </el-form-item>
+                            <el-form-item>
+                                <el-input class="" v-model="text.text"></el-input>
+
+                            </el-form-item>
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </el-form>
     </div>
 </template>
 <script>
@@ -102,34 +110,6 @@ export default {
         })
     },
     methods: {
-        // async addQuestTable() {
-        //     let _this = this;
-        //     let query = {
-        //         token: this.userState.token
-        //     };
-        //     const options = {
-        //         id: this.addQuestId,
-        //         userId: this.sendToUserId
-        //     };
-        //     const res = await queryInquiryPlan(query, options);
-        //     if (res.data && res.data.errCode === 0) {
-        //         let oMessage = {
-        //             url: res.data.body,
-        //             title: this.addQuestData.title,
-        //             firstTreatmentTime: this.addQuestData.createTime,
-        //             content: "",
-        //             status: ""
-        //         };
-        //         console.log(oMessage);
-        //         this.$emit("osendmessagechat", oMessage);
-        //     } else {
-        //         //失败
-        //         this.$notify.error({
-        //             title: "警告",
-        //             message: res.data.errMsg
-        //         });
-        //     }
-        // },
         //问诊详情
         async QuestDetail(oid) {
             let _this = this;
@@ -139,8 +119,23 @@ export default {
             };
             const res = await queryInquiryPlan(query);
             if (res.data && res.data.errCode === 0) {
-                // _this.questDetailData = res.data.body;
                 this.addQuestData = res.data.body;
+                $.each(this.addQuestData.solutionDtos, function(index, text) {
+                    text.selectType=[]
+                    if (text.questionType == "CHECKBOX") {
+                        $.each(text.solutionAsDtos, function(index1, text1) {
+                            if (text1.checked) {
+                                text.selectType.push(text1.desc);
+                            }
+                        });
+                    } else if (text.questionType == "RADIO") {
+                        $.each(text.solutionAsDtos, function(index1, text1) {
+                            if (text1.checked) {
+                                text.selectType1 = text1.desc;
+                            }
+                        });
+                    }
+                });
             } else {
                 //失败
                 this.$notify.error({
@@ -151,7 +146,7 @@ export default {
         }
     },
     props: {
-        addQuestId: String,
+        addQuestId: String
     },
     model: {
         prop: ["addQuestId"],

@@ -21,7 +21,7 @@
                                 <!-- {{scope.row.userName}} -->
                             </template>
                         </el-table-column>
-                        <el-table-column prop="userName" label=" " width="200">
+                        <el-table-column prop="userName" label=" " width="100">
                         </el-table-column>
                         <el-table-column prop="phone" label=" " width="">
                             <template slot-scope="scope">
@@ -72,7 +72,7 @@
 
                             </template>
                         </el-table-column>
-                        <el-table-column label=" " width="100">
+                        <el-table-column fixed="right"  label=" " width="100">
                             <template slot-scope="scope">
                                 <el-button class="solveOver" @click="solveOver(scope.row,0)" type="text" size="small">处理完成</el-button>
                             </template>
@@ -99,7 +99,7 @@
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="userName" label=" " width="200">
+                        <el-table-column prop="userName" label=" " width="100">
                         </el-table-column>
                         <el-table-column prop="phone" label=" " width="">
                             <template slot-scope="scope">
@@ -128,11 +128,6 @@
                                 </el-dropdown>
                                 <el-button class="btnClass" @click="sendArchives(scope.row)" type="text" size="small">看档案</el-button>
                                 <div class="entryFile">
-                                    <!-- <el-button class="btnClass" type="text" size="small">录入档案</el-button>
-                                    <ul>
-                                        <li @click="addPublicDangan()">普通档案</li>
-                                        <li @click="addWomanDangan()">孕妇档案</li>
-                                    </ul> -->
                                     <el-dropdown>
                                         <el-button class="btnClass" type="danger" size="mini" plain>录入档案</el-button>
                                         <el-dropdown-menu slot="dropdown">
@@ -144,7 +139,7 @@
 
                             </template>
                         </el-table-column>
-                        <el-table-column label=" " width="100">
+                        <el-table-column fixed="right"  label=" " width="100">
                             <template slot-scope="scope">
                                 <el-button class="solveOver" @click="solveOver(scope.row,1)" type="text" size="small">处理完成</el-button>
                             </template>
@@ -171,7 +166,7 @@
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="userName" label=" " width="200">
+                        <el-table-column prop="userName" label=" " width="100">
                         </el-table-column>
                         <el-table-column prop="phone" label=" " width="">
                             <template slot-scope="scope">
@@ -186,7 +181,7 @@
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label=" " width="300">
+                        <el-table-column label=" " width="">
                             <template slot-scope="scope">
                                 <div>
                                     <div> {{scope.row.complete}}</div>
@@ -232,7 +227,7 @@
 
                             </template>
                         </el-table-column>
-                        <el-table-column label=" " width="100">
+                        <el-table-column fixed="right" label=" " width="100">
                             <template slot-scope="scope">
                                 <el-button class="solveOver" @click="solveOver(scope.row,2)" type="text" size="small">处理完成</el-button>
                             </template>
@@ -319,14 +314,9 @@
                         </el-table-column>
                         <el-table-column label=" " width="">
                             <template slot-scope="scope">
-                                {{scope.row.synergyUserName[0]}}|{{scope.row.synergyDeptName[0]}}
+                                接受协作医生：{{scope.row.synergyUserName[0]}}|{{scope.row.synergyDeptName[0]}}
                             </template>
                         </el-table-column>
-                        <!-- <el-table-column prop="synergyNo" label=" " width="200">
-                            <template slot-scope="scope">
-                                {{scope.row.synergyNo}}(协作编号)
-                            </template>
-                        </el-table-column> -->
                         <el-table-column prop="createTime" label=" " width="">
                         </el-table-column>
                         <el-table-column prop="synergyStatus" label=" " width="">
@@ -372,7 +362,7 @@
         <WomanDoc :inData="puBlicManData" @reback="addPublicMan"></WomanDoc>
         <!-- 会诊邀请弹框 -->
         <div v-if="invitationVisibleHui">
-            <el-dialog class="invitationClass" title="" :visible.sync="invitationVisibleHui"  width="240px" hight="356px" center>
+            <el-dialog class="invitationClass" title="" :visible.sync="invitationVisibleHui" width="240px" hight="356px" center>
                 <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
                 <el-button class='btnClass' type="primary" @click="sureInvitation()">确认邀请</el-button>
             </el-dialog>
@@ -380,9 +370,9 @@
 
         <!-- 协作邀请弹框 -->
         <div v-if="invitationVisible">
-            <el-dialog class="invitationClass" title="" :visible.sync="invitationVisible"  width="240px" hight="356px" center>
+            <el-dialog class="invitationClass" title="" :visible.sync="invitationVisible" width="240px" hight="356px" center>
                 <el-tree :data="invitationDataXiez" :props="defaultProps" @check="handleCheckChangeXiez" show-checkbox></el-tree>
-                <el-button  class='btnClass' type="primary" @click="sureInvitationXiez()">确认邀请</el-button>
+                <el-button class='btnClass' type="primary" @click="sureInvitationXiez()">确认邀请</el-button>
             </el-dialog>
         </div>
         <!-- 更多计划 -->
@@ -525,7 +515,7 @@ export default {
             chatTypeBox: {
                 startDoctorName: "",
                 startDoctorTYpe: "随访",
-                archivesUrl:'/'
+                archivesUrl: "/"
             },
             // seeRemarksListVisable1: false,
             // seeRemarksListVisable2: false,
@@ -556,7 +546,7 @@ export default {
             doctorVis: 1,
             remarks: [],
             remarksVisible: false,
-            invitationVisibleHui:false,
+            invitationVisibleHui: false,
             invitationVisible: false,
             puBlicFileData: {
                 //新增 普通档案  弹窗数据
@@ -964,11 +954,11 @@ export default {
         seeMore(num) {
             if (num == 1) {
                 this.planVisible = true;
-                this.planNum=1
+                this.planNum = 1;
                 this.getMorePlanList();
             } else if (num == 2) {
                 this.warnVisible = true;
-                this.warnNum=1
+                this.warnNum = 1;
                 this.getMoreWarnList();
             } else if (num == 3) {
                 sessionStorage.setItem(

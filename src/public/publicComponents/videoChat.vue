@@ -110,9 +110,6 @@
                 </el-upload>
                 <img src="../../assets/img/sendNew1.png" />
             </span>
-            <!-- <span title="发送视频" class="sendVideo" @click="showVideoBtn()">
-                <img src="../../assets/img/sendNew2.png" />
-            </span> -->
             <span v-show="oDoctorVis" @click="addFollow()" title="发送随访">
                 <img src="../../assets/img/sendNew4.png" />
             </span>
@@ -129,11 +126,18 @@
                 <img src="../../assets/img/sendNew9.png" />
             </span>
             <span v-show="oDoctorVis" title="录入档案" class="enterFile">
-                <img src="../../assets/img/sendNew10.png" />
+                <!-- <img src="../../assets/img/sendNew10.png" />
                 <ul>
                     <li @click="openPublicFile()">普通档案</li>
                     <li @click="openManFile()">孕妇答案</li>
-                </ul>
+                </ul> -->
+                 <el-dropdown>
+                                        <el-button class="chatFileClass" type="danger" size="mini" plain><img src="../../assets/img/sendNew10.png" /></el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item @click.native="openManFile(scope.row)">孕妇信息</el-dropdown-item>
+                                            <el-dropdown-item @click.native="openPublicFile(scope.row)">普通档案</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
             </span>
             <span v-show="oDoctorVis" title="健康处方">
                 <img src="../../assets/img/sendNew11.png" />

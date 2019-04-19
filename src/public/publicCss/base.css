@@ -269,6 +269,7 @@ body{
     display: inline !important;
 }
 /* 随访 */
+
 .QuestTitle1{
     width:23px !important;
 }
@@ -690,7 +691,8 @@ color: #4285F4;
     width: 20px !important;
     line-height: 28px;
     padding: 0;
-    text-align: center
+    text-align: center;
+   
 }
 .addQuestBox .el-form-item__content {
     margin-left: 20px !important;
@@ -710,6 +712,7 @@ color: #4285F4;
     width: 500px;
     height: 27px;
     background: white;
+    margin-bottom: 10px;
 }
 .addQuestBox .el-form-item__content {
     line-height: 27px;
@@ -724,11 +727,11 @@ color: #4285F4;
     position: relative;
     width: 377px;
     background: white;
-    margin-left: -20px;
+    margin-left: 3px;
     padding-left: 10px;
 }
 .redioSingle .el-radio+.el-radio{
-    margin-left:-19px;
+    margin-left:3px;
 }
 .redioSingle > label:hover .questItemDelete{
     display: block
@@ -977,14 +980,14 @@ border-right:none
     height: 16px;
     background: url(../../assets/img/Shape-Copy.png);
 }
-.groupClass {
+/* .groupClass {
     position: relative;
     cursor: pointer;
 }
 .groupClass:hover ul {
     display: block;
-}
-.groupClass > div:first-child {
+} */
+ /* .groupClass > div:first-child {
     width: 50px;
     height: 20px;
     text-align: center;
@@ -994,7 +997,8 @@ border-right:none
     font-size: 12px;
     color: #5e696e;
     letter-spacing: 0;
-}
+} */
+/*
 .groupClass > ul {
     position: absolute;
     display: none;
@@ -1012,6 +1016,18 @@ border-right:none
     width: 100%;
     height: 22px;
     background: #f4f8fa;
+} */
+.groupClassBtn{
+    width: 50px !important;
+    height: 20px !important;
+    text-align: center;
+    line-height: 20px !important;
+    background: #c1d9f3 !important;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #5e696e !important;
+    border:none;
+    letter-spacing: 0;
 }
 .groupClick {
     background: #cccccc;
@@ -1101,6 +1117,13 @@ box-shadow: inset 0 0 1px 0 rgba(0,0,0,0.50);
     }
 
 /* 聊天狂样式 */
+.chatFileClass{
+    border: none;
+width: 40px;
+height: 55px;
+background: none;
+margin-top: -4px;
+}
 .sendMessageChat {
 }
 .chat {

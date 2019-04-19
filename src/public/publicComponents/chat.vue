@@ -129,12 +129,21 @@
                 <img src="../../assets/img/sendNew9.png" />
             </span>
             <span v-show="oDoctorVis" title="录入档案" class="enterFile">
-                <img src="../../assets/img/sendNew10.png" />
+                <!-- <img src="../../assets/img/sendNew10.png" />
                 <ul>
                     <li @click="openPublicFile()">普通档案</li>
                     <li @click="openManFile()">孕妇答案</li>
-                </ul>
+                </ul> -->
+                <el-dropdown>
+                                        <el-button class="chatFileClass" type="danger" size="mini" plain><img src="../../assets/img/sendNew10.png" /></el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item @click.native="openManFile(scope.row)">孕妇信息</el-dropdown-item>
+                                            <el-dropdown-item @click.native="openPublicFile(scope.row)">普通档案</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
             </span>
+
+            
             <span v-show="oDoctorVis" title="健康处方">
                 <img src="../../assets/img/sendNew11.png" />
             </span>
@@ -424,7 +433,8 @@ export default {
                 require("../../assets/img/publicHeadImg.png") +
                 '"',
             ifSendMessageNum: 0,
-            sendMessageBoxType: ""
+            sendMessageBoxType: "",
+            ifVIdeoIng:'',
         };
     },
     computed: {
@@ -664,33 +674,10 @@ export default {
             }
         },
         showVideoBtn() {
-            // if (this.userMemberNum.length > 1) {
-            //     if (this.showVideoBtnVisable) {
-            //         this.showVideoBtnVisable = false;
-            //     } else {
-            //         this.showVideoBtnVisable = true;
-            //     }
-            // } else {
-            //     this.showVideoBtnVisable = false;
-            //     this.setVideo(0); //单聊
-            // }
             this.setVideo(0);
         },
         //创建视频
         setVideo(num) {
-            // if (num == 1) {
-            //     if (this.checkList.length > 3) {
-            //         this.$notify.error({
-            //             title: "警告",
-            //             message: "最多只能邀请3个人"
-            //         });
-            //         return;
-            //     } else {
-            //         this.setVideo2(num);
-            //     }
-            // } else {
-            //     this.setVideo2(num);
-            // }
             this.setVideo2(num);
         },
         async setVideo2(num) {
@@ -715,6 +702,9 @@ export default {
                     "&" +
                     res.data.body.conferenceId +
                     "&";
+                if (_this.chatTypeBox.startDoctorTYpe == "会诊") {
+                    body += _this.chatTypeBox.bingUserId;
+                }
                 _this.sendVideoMessage(
                     childMessageType,
                     body,
@@ -981,7 +971,7 @@ export default {
             odata.setMinutes(0);
             odata.setSeconds(0);
             odata.setMilliseconds(0);
-            console.log(odata)
+            console.log(odata);
             let oldTime = Math.floor(odata.getTime() / 1000);
             console.log(this.userSelfInfo.userId);
             let query = {
@@ -991,11 +981,11 @@ export default {
             const res = await getFollowDetail(query);
             if (res.data && res.data.errCode === 0) {
                 this.followDetailData = res.data.body;
-                let oldDay = 2;
-                    let oldSecond = 0;
+                let oldDay = 0;
+                let oldSecond = 0;
                 $.each(this.followDetailData.itemModels, (index, text) => {
-                    console.log(text.calcUnit)
-                    if (text.calcUnit == "日") {
+                    console.log(text.calcUnit);
+                    if (text.calcUnit == "天") {
                         oldDay = text.calcVal * 1;
                     } else if (text.calcUnit == "周") {
                         oldDay = text.calcVal * 7;
@@ -1005,8 +995,10 @@ export default {
                         oldDay = text.calcVal * 365;
                     }
                     oldSecond = oldDay * 24 * 60 * 60;
-                    
-                    text.executionTime = this.getLocalTime(oldTime + oldSecond);
+
+                    text.executionTime = this.getLocalTime(
+                        oldTime + oldSecond
+                    ).substring(0, 10);
                 });
             } else {
                 //失败
@@ -1174,17 +1166,26 @@ export default {
                     if (odata[i].from != this.userSelfInfo.userId) {
                         if (odata[i].childMessageType == "INTERROGATION") {
                             //问诊
-                            this.messageList[i].content =
-                                '<div class=" followCon"> <div> </div> <div> <h3>问诊表/随访表的标题</h3> <div>2018中医国际标准</div>  </div> </div>';
+                            this.messageList[i].content = JSON.parse(
+                                odata[i].body
+                            );
+                            // this.messageList[i].content =
+                            //     '<div class=" followCon"> <div> </div> <div> <h3>问诊表/随访表的标题</h3> <div>2018中医国际标准</div>  </div> </div>';
                         } else if (odata[i].childMessageType == "ARTICLE") {
                             //文章
-                            this.messageList[i].content = "文章";
+                            // this.messageList[i].content = "文章";
+                            this.messageList[i].content = JSON.parse(
+                                odata[i].body
+                            );
                         } else if (odata[i].childMessageType == "CRVIDEO") {
                             //视频
                             this.messageList[i].content = "视频";
                         } else if (odata[i].childMessageType == "FOLLOWUP") {
                             //随访
-                            this.messageList[i].content = "随访";
+                            // this.messageList[i].content = "随访";
+                            this.messageList[i].content = JSON.parse(
+                                odata[i].body
+                            );
                         } else if (odata[i].childMessageType == "AUDIO") {
                             //音频
                             this.messageList[i].content =
@@ -1599,6 +1600,13 @@ export default {
 </script>
 
 <style>
+.chatFileClass{
+        border: none;
+    width: 40px;
+    height: 55px;
+    background: none;
+    margin-top: -4px;
+}
 /* <div v-if="chatVisible">
             <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
                 <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage" :chatType1="videoType"

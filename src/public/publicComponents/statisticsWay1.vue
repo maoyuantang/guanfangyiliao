@@ -15,7 +15,7 @@
                        {{defaultSelect.name}}
                         <Icon type="ios-arrow-down"></Icon>
                     </a>
-                    <DropdownMenu slot="list">
+                    <DropdownMenu slot="list">.statistics-way .el-input__icon
                         <DropdownItem v-for="(item,index) in testData" :key="index" @click.native="getIndex(index)">{{item.name}}</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
@@ -75,9 +75,9 @@
             width: 247px;
             border: none;
         }
-       .statistics-way .el-input__icon{
+       /* .statistics-way .el-input__icon{
             display: none;
-        }
+        } */
         .statistics-way .el-range-input{
            border: 1px solid #E5EDF3;
            border-radius: 4px;
