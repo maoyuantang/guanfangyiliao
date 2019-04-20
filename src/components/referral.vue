@@ -107,7 +107,7 @@
             <span class="demonstration"
               style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请时间:</span>
             <el-date-picker v-model="addForm.moveTime.value" type="datetime" placeholder="请选择"
-              value-format="yyyy-MM-dd HH:mm">
+              value-format="yyyy-MM-dd HH:mm:ss">
             </el-date-picker>
           </div>
 
@@ -179,7 +179,7 @@
               <el-table-column prop="direction" label="方向" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="receiveTime" label="接诊时间" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
-              <el-table-column fixed=right label="操作" width="100">
+              <el-table-column fixed=right label="操作" max-width="400" min-width="100">
                 <template slot-scope="scope">
                   <button class="lanSe" @click="dualReferralRecord1(scope.row)">查看记录</button>
                 </template>
@@ -237,9 +237,9 @@
             <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column fixed=right label="操作" min-width="460">
               <template slot-scope="scope">
-                <button class="huangSe" @click="seeHistory(scope.row.patientId)">查看档案</button>
+                <!-- <button class="huangSe" @click="seeHistory(scope.row.patientId)">查看档案</button> -->
+                <button class="huangSe" @click="dualReferralRecord3(scope.row)">查看档案</button>
                 <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
-                <button class="huangSe" @click="dualReferralRecord3(scope.row)">病历详情</button>
                 <button
                   :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
                   v-for="(text,index) in scope.row.buttons" :key="index"
@@ -1512,7 +1512,7 @@
 
           illnessId: this.addForm.diseaseName.value,//疾病ID
           illnessName: this.$refs.ceshi1.selectedLabel,//疾病名称
-          
+
           patientId: this.addForm.patient.value,//病人ID（编号） 
           patientName: this.$refs.ceshi2.selectedLabel,//病人名称 
           receiveOrgCode: this.addForm.intoHospital.value[0],//接收医院代码 
