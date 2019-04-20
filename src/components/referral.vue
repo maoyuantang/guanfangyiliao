@@ -1129,7 +1129,7 @@
           applyTime: this.addForm.moveTime.value,
           intention: this.addForm.movePurpose,//转诊目的 
           diagnose: this.addForm.beginIdea,//	初步诊断 
-
+          medicalRecordIds: this.addForm.giveRight.value,
           medicalHistorys: this.addForm.giveRight.value//病历授权（与会诊相同）
         };
         console.log(options)
@@ -1327,19 +1327,21 @@
         let options = {
           id: this.referralId,//ID
           referralType: this.addForm.typeList.value,//转诊类型：UP上转，DOWN下转
+          
           illnessId: this.addForm.diseaseName.value,//疾病ID
           illnessName: this.$refs.ceshi1.selectedLabel,//疾病名称
           patientId: this.addForm.patient.value,//病人ID（编号） 
           patientName: this.$refs.ceshi2.selectedLabel,//病人名称 
+
           receiveOrgCode: this.addForm.intoHospital.value[0],//接收医院代码 
           receiveOrgName: this.$refs.ceshi3.currentLabels[0],//接收医生名称 
           receiveDeptId: this.addForm.intoHospital.value[1],//接收科室ID
           receiveDeptName: this.$refs.ceshi3.currentLabels[1],//接收科室名称
-          // applyTime: this.addForm.moveTime.value,
+          
           intention: this.addForm.movePurpose,//转诊目的
           diagnose: this.addForm.beginIdea,//初步诊断
-          // archivesAuthority: this.addForm.giveRight.value,//病历授权
-          // medicalHistorys: this.arrayMed,   
+          
+          archivesAuthority: this.addForm.giveRight.value,//病历授权
           medicalHistorys: this.addForm.giveRight.value
         };
         console.log(options)
@@ -1507,18 +1509,22 @@
         let options = {
           id: this.referralId,//ID
           referralType: this.addForm.typeList.value,//转诊类型：UP上转，DOWN下转
+
           illnessId: this.addForm.diseaseName.value,//疾病ID
           illnessName: this.$refs.ceshi1.selectedLabel,//疾病名称
+          
           patientId: this.addForm.patient.value,//病人ID（编号） 
           patientName: this.$refs.ceshi2.selectedLabel,//病人名称 
           receiveOrgCode: this.addForm.intoHospital.value[0],//接收医院代码 
           receiveOrgName: this.$refs.ceshi3.currentLabels[0],//接收医生名称 
           receiveDeptId: this.addForm.intoHospital.value[1],//接收科室ID
           receiveDeptName: this.$refs.ceshi3.currentLabels[1],//接收科室名称
+
           applyTime: this.addForm.moveTime.value,
           intention: this.addForm.movePurpose,//转诊目的
           diagnose: this.addForm.beginIdea,//初步诊断
-          // archivesAuthority: this.addForm.giveRight.value,//病历授权
+
+          archivesAuthority: this.addForm.giveRight.value,//病历授权
           medicalHistorys: this.addForm.giveRight.value
 
 

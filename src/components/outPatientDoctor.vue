@@ -985,13 +985,14 @@
 			},
 			// 医生端权限
 			doctorQuanXian() {
-				let quanXian = this.userInfo.hasAuth
+				let quanXian = this.userInfo.hasAuth.filter(item => item.type==='2')
 				this.typeQuan = []
 				this.typeQuan1 = false
 				this.typeQuan2 = false
 				this.typeQuan3 = false
-				console.log(quanXian)
+				console.table(quanXian)
 				for (let i = 0; i < quanXian.length; i++) {
+						console.log(quanXian[i].authorityId)
 					if (quanXian[i].type == 2) {
 						console.log(quanXian[i].authorityId)
 						this.typeQuan.push(quanXian[i].authorityId)
