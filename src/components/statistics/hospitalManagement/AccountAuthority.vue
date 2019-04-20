@@ -106,7 +106,7 @@
             <tbody class="account-authority-tbody">
               <tr v-for="(item,index) in outerCourt.list" :key="index">
                 <th>{{item.userOrgName}}</th>
-                <th>{{item.deptNames}}</th>
+                <th>{{item.userDeptName}}</th>
                 <th>{{item.userName}}</th>
                 <th>{{item.account}}</th>
                 <th>{{item.phone}}</th>
@@ -777,9 +777,12 @@ export default {
         // departmentId : this.outerCourt.department.list[this.outerCourt.department.index]?this.outerCourt.department.list[this.outerCourt.department.index].deptId:''
         // departmentId: this.outerCourt.departmentSelect.orgCode || ""
       });
-      // console.log(res)
+      console.log(res)
       if (res.data.errCode === 0) {
-        this.outerCourt.list = res.data.body.data2.list;
+        this.outerCourt.list = res.data.body.data2.list.map(item=>{
+          item.deptIds ? item.deptIds = item.deptIds.split(',') : null;
+          return item;
+        });
         this.outerCourt.page.total = res.data.body.data2.total;
       } else {
         this.$notify.error({
