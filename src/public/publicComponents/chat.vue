@@ -11,8 +11,8 @@
         </div>
         <div class="chatMessage">
             <div class='videoUserNumClass' v-show='videoUserNum!=0' @click="closeVideo('ON',1)">
-               <img src="../../assets/img/videoUserNum.png" /> 
-                快速进入视频</div>
+                <img src="../../assets/img/videoUserNum.png" /> 快速进入视频
+            </div>
             <ul class="chatRecord" id="scrolldIV">
 
                 <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
@@ -267,7 +267,7 @@
         </div>
         <!-- 视频聊天 -->
         <div v-if="videoVisible">
-            <el-dialog class='videoClassBox' title="" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo('OFF')" :showClose="VideoshowClose">
+            <el-dialog class='videoClassBox' title="" :visible.sync="videoVisible" center append-to-body fullscreen :showClose="VideoshowClose">
                 <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox" :userMessage="userMessage"></ovideo>
             </el-dialog>
         </div>
@@ -683,7 +683,7 @@ export default {
         },
         //判断是否有在视频
         async panIfVideo() {
-            this.videoUserNum=0
+            this.videoUserNum = 0;
             console.log(this.userSocketInfo.videoList);
             $.each(this.userSocketInfo.videoList, (index, text) => {
                 if (text.sessionId == this.sessionId) {
@@ -703,7 +703,7 @@ export default {
                 const res = await queryStorageUsers(query);
                 if (res.data && res.data.errCode === 0) {
                     _this.videoUserNum = res.data.body.length;
-                    console.log(_this.videoUserNum)
+                    console.log(_this.videoUserNum);
                 } else {
                     _this.videoUserNum = 0;
                     //失败
@@ -1569,9 +1569,10 @@ export default {
         //视频组件传过来的事件
         videoclick(data) {
             this.videoVisible = false;
+            console.log('关闭弹窗')
             this.alreadyRead();
             this.getHisRecord();
-            this.panIfVideo()
+            this.panIfVideo();
         },
         //删除视频房间
         async deleteVideoRoom() {
@@ -1599,7 +1600,7 @@ export default {
             handler(data, o) {
                 let olength = data.length;
                 let oData = data[olength - 1];
-                console.log(data);
+                console.log(oData);
                 if (oData.RequestType == 6) {
                     if (this.sessionId == oData.info.to) {
                         let oTime = oData.info.serverTime;
@@ -1624,13 +1625,22 @@ export default {
 
                         if (oData.info.childMessageType == 6) {
                             childMessageType = "VIDEO";
-                            if (messageBody == "refuse") {
+                            if (messageBody.indexOf("refuse") > -1) {
                                 //对方拒绝了视频
                                 // this.closeVideo();
-                            } else if (messageBody == "complete") {
+                            } else if (messageBody.indexOf("complete") > -1) {
+                                this.alreadyRead();
+                                this.getHisRecord();
+                                this.panIfVideo();
                                 //对方挂断了视频
                                 // this.closeVideo(messageBody, "other");
-                            } else if (messageBody == "accept") {
+                            } else if (messageBody.indexOf("cancle") > -1 ) {
+                                this.alreadyRead();
+                                this.getHisRecord();
+                                this.panIfVideo();
+                                //对方挂断了视频
+                                // this.closeVideo(messageBody, "other");
+                            }  else if (messageBody.indexOf("accept") > -1 ) {
                                 this.$store.commit("socket/IFVIDEOIMG", 1);
                             } else if (messageBody == "videoing") {
                                 this.$store.commit("socket/IFVIDEOIMG", 0);
@@ -1645,6 +1655,10 @@ export default {
                                 messageBody.indexOf("sendroom") > -1 ||
                                 messageBody.indexOf("MicroCinicSendRoom") > -1
                             ) {
+                                console.log('收到视频邀请')
+                                this.alreadyRead();
+                                this.getHisRecord();
+                                this.panIfVideo();
                             }
                         } else if (oData.info.childMessageType == 4) {
                             childMessageType = "AUDIO";

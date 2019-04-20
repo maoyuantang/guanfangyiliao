@@ -602,6 +602,7 @@ export default {
         },
         //挂断当前视频
         async closeTheVideo() {
+            console.log('挂断当前视频')
             // this.streamObject.getTracks()[0].stop();
             let _this = this;
             let query = {
@@ -663,6 +664,12 @@ export default {
         },
         //退出视频房间
         async closeVideoRoom(num) {
+           
+            if (num == 2) {
+                //    为2是人数太多被挤出或者都挂断了视频，只剩我一个自动退出
+                console.log("被挤下去");
+                this.$emit("reback", "closeCancle");
+            }
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -675,31 +682,35 @@ export default {
             if (res.data && res.data.errCode === 0) {
                 let childMessageType = "";
                 let messageBody = "complete";
-                if (num != 2) {
-                    if (_this.videoUser < 2) {
-                        _this.deleteVideoRoom();
-                    }
-                }
+                 console.log(num)
                 if (num == 3) {
                     console.log("离开房间1");
 
                     childMessageType = 6;
 
                     if (_this.videoUser == 0) {
-                        _this.$emit("reback", "closeCancle");
+                        console.log("离开房间2");
+                        _this.deleteVideoRoom();
                         messageBody = "cancle";
                         _this.sendMessageChat("6", "cancle", "VIDEO");
                     } else if (_this.videoUser > 0) {
-                        // alert("有人在视频，然后我挂断");
-                        _this.$emit("reback", "closeComplete");
-                        messageBody = "complete";
-                        _this.sendMessageChat("6", "complete", "VIDEO");
+                        console.log("离开房间3");
+                        if (_this.videoUser < 2) {
+                            console.log("离开房间4");
+                            _this.deleteVideoRoom();
+                        } else {
+                            console.log("离开房间5");
+                            messageBody = "complete";
+                            _this.sendMessageChat("6", "complete", "VIDEO");
+                            _this.$emit("reback", "closeCancle");
+                        }
                     }
                     _this.$store.commit("socket/IFVIDEOIMG", 0);
-                } else if (num == 2) {
-                    //    为2是人数太多被挤出或者都挂断了视频，只剩我一个自动退出
-                    _this.$emit("reback", "closeCancle");
-                } else {
+                } else if (num == 0) {
+                    console.log('0000000000000000000000000000000000000000')
+                    if (_this.videoUser < 2) {
+                        _this.deleteVideoRoom();
+                    }
                     childMessageType = 7;
                     _this.sendMessageChat(
                         childMessageType,
@@ -717,6 +728,7 @@ export default {
                     title: "警告",
                     message: res.data.errMsg
                 });
+                this.$emit("reback", "closeCancle");
             }
         },
         //删除视频房间
@@ -729,6 +741,10 @@ export default {
             const res = await closeVideoRoom(query);
             if (res.data && res.data.errCode === 0) {
                 console.log("删除房间陈宫");
+                if (_this.videoType != "门诊") {
+                     console.log("删除房间陈宫1");
+                    _this.$emit("reback");
+                }
             } else {
                 //失败
                 this.$notify.error({
@@ -1809,6 +1825,7 @@ export default {
                 _this.closeTheVideo();
             } else {
                 // _this.closePublicVideo();
+                console.log("8989");
                 _this.closeVideoRoom(2);
             }
         });
