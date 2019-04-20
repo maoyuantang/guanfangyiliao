@@ -10,6 +10,9 @@
 
         </div>
         <div class="chatMessage">
+            <div class='videoUserNumClass' v-show='videoUserNum!=0' @click="closeVideo('ON',1)">
+               <img src="../../assets/img/videoUserNum.png" /> 
+                快速进入视频</div>
             <ul class="chatRecord" id="scrolldIV">
 
                 <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
@@ -135,15 +138,14 @@
                     <li @click="openManFile()">孕妇答案</li>
                 </ul> -->
                 <el-dropdown>
-                                        <el-button class="chatFileClass" type="danger" size="mini" plain><img src="../../assets/img/sendNew10.png" /></el-button>
-                                        <el-dropdown-menu slot="dropdown">
-                                            <el-dropdown-item @click.native="openManFile(scope.row)">孕妇信息</el-dropdown-item>
-                                            <el-dropdown-item @click.native="openPublicFile(scope.row)">普通档案</el-dropdown-item>
-                                        </el-dropdown-menu>
-                                    </el-dropdown>
+                    <el-button class="chatFileClass" type="danger" size="mini" plain><img src="../../assets/img/sendNew10.png" /></el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="openManFile()">孕妇信息</el-dropdown-item>
+                        <el-dropdown-item @click.native="openPublicFile()">普通档案</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
             </span>
 
-            
             <span v-show="oDoctorVis" title="健康处方">
                 <img src="../../assets/img/sendNew11.png" />
             </span>
@@ -265,7 +267,7 @@
         </div>
         <!-- 视频聊天 -->
         <div v-if="videoVisible">
-            <el-dialog class='videoClassBox' title="" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo('cancle','us')" :showClose="VideoshowClose">
+            <el-dialog class='videoClassBox' title="" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo('OFF')" :showClose="VideoshowClose">
                 <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox" :userMessage="userMessage"></ovideo>
             </el-dialog>
         </div>
@@ -313,7 +315,8 @@ import {
     addOrdinaryArchives,
     getFollowUpPlan,
     setRemark,
-    bindSession
+    bindSession,
+    queryStorageUsers
 } from "../../api/apiAll.js";
 import ovideo from "../../video/oVideo.vue";
 import { setTimeout } from "timers";
@@ -334,6 +337,8 @@ export default {
     },
     data() {
         return {
+            videoUserNum: 0,
+            conferenceId1: "",
             puBlicFileData: {
                 //新增 普通档案  弹窗数据
                 // id:'1231321',
@@ -434,7 +439,7 @@ export default {
                 '"',
             ifSendMessageNum: 0,
             sendMessageBoxType: "",
-            ifVIdeoIng:'',
+            ifVIdeoIng: ""
         };
     },
     computed: {
@@ -452,12 +457,14 @@ export default {
                 this.sendMessageBoxType = "consultation";
             }
         }
+
         this.alreadyRead();
         this.getDoctorVis();
         this.getHisRecord();
         this.getMemberMess();
 
         this.updated();
+        this.panIfVideo();
         this.ourl =
             "/m/v1/api/hdfs/fs/upload?token=" +
             this.userState.token +
@@ -552,6 +559,7 @@ export default {
                 });
             }
         },
+
         // 添加消息到发送框
         addMessageK(
             ouserId,
@@ -673,13 +681,85 @@ export default {
                 alert("失败");
             }
         },
-        showVideoBtn() {
-            this.setVideo(0);
+        //判断是否有在视频
+        async panIfVideo() {
+            this.videoUserNum=0
+            console.log(this.userSocketInfo.videoList);
+            $.each(this.userSocketInfo.videoList, (index, text) => {
+                if (text.sessionId == this.sessionId) {
+                    this.conferenceId1 = text.conferenceId;
+                    this.createVideoRoomData.conferenceId = text.conferenceId;
+                    this.createVideoRoomData.conferenceNumber =
+                        text.conferenceNumber;
+                }
+            });
+            // alert(this.conferenceId1);
+            if (this.conferenceId1) {
+                let _this = this;
+                let query = {
+                    token: this.userState.token,
+                    conferenceId: this.conferenceId1
+                };
+                const res = await queryStorageUsers(query);
+                if (res.data && res.data.errCode === 0) {
+                    _this.videoUserNum = res.data.body.length;
+                    console.log(_this.videoUserNum)
+                } else {
+                    _this.videoUserNum = 0;
+                    //失败
+                    this.$notify.error({
+                        title: "警告",
+                        message: res.data.errMsg
+                    });
+                }
+            }
         },
+        async showVideoBtn() {
+            console.log(this.videoUserNum);
+            if (this.videoUserNum > 0 && this.videoUserNum < 4) {
+                this.closeVideo("ON", 1);
+            } else if (this.videoUserNum >= 4) {
+                this.$notify.error({
+                    title: "警告",
+                    message: "当前视频人数已满，无法进入"
+                });
+            } else if (this.videoUserNum == 0) {
+                this.setVideo(0);
+            }
+            // if (this.conferenceId1) {
+            //     let _this = this;
+            //     let query = {
+            //         token: this.userState.token,
+            //         conferenceId: this.conferenceId1
+            //     };
+            //     const res = await queryStorageUsers(query);
+            //     if (res.data && res.data.errCode === 0) {
+            //         if (4 > res.data.body.length > 0) {
+            //             _this.closeVideo("ON", 1);
+            //         } else if (res.data.body.length >= 4) {
+            //             this.$notify.error({
+            //                 title: "警告",
+            //                 message: "当前视频人数已满，无法进入"
+            //             });
+            //         }
+            //     } else {
+            //         _this.setVideo(0);
+            //         //失败
+            //         this.$notify.error({
+            //             title: "警告",
+            //             message: res.data.errMsg
+            //         });
+            //     }
+            // } else {
+            //     this.setVideo(0);
+            // }
+        },
+
         //创建视频
         setVideo(num) {
             this.setVideo2(num);
         },
+        //创建视频
         async setVideo2(num) {
             let _this = this;
             let query = {
@@ -695,24 +775,83 @@ export default {
                     conferenceId: res.data.body.conferenceId,
                     conferenceNumber: res.data.body.conferenceNumber
                 };
-                let childMessageType = 6;
-                let body =
-                    "sendroom&" +
-                    res.data.body.conferenceNumber +
-                    "&" +
-                    res.data.body.conferenceId +
-                    "&";
-                if (_this.chatTypeBox.startDoctorTYpe == "会诊") {
-                    body += _this.chatTypeBox.bingUserId;
+
+                this.closeVideo("ON", 0); //进入视频
+                //收到视频后存好sessionId和房间id
+                let videoList = [];
+                videoList = deepCopy(_this.userSocketInfo.videoList);
+                let videoList1 = 0;
+                $.each(videoList, (index, text) => {
+                    if (text.sessionId == this.sessionId) {
+                        text.conferenceId = this.createVideoRoomData.conferenceId;
+                        text.conferenceNumber = this.createVideoRoomData.conferenceNumber;
+                        videoList1 += 1;
+                    }
+                });
+
+                if (videoList1 == 0) {
+                    let ovideo = {
+                        sessionId: this.sessionId,
+                        conferenceId: this.createVideoRoomData.conferenceId,
+                        conferenceNumber: this.createVideoRoomData
+                            .conferenceNumber
+                    };
+                    videoList.push(ovideo);
                 }
-                _this.sendVideoMessage(
-                    childMessageType,
-                    body,
-                    res.data.body.conferenceNumber,
-                    "",
-                    "VIDEO"
-                );
-                this.videoVisible = true;
+
+                _this.$store.commit("socket/VIDEOLIST", videoList);
+                console.log(_this.userSocketInfo.videoList);
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+        //进入或退出视频
+        async closeVideo(type, num) {
+            this.videoVisible = false;
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const options = {
+                conferenceId: this.createVideoRoomData.conferenceId,
+                state: type
+            };
+            const res = await storageUsers(query, options);
+            console.log(res);
+            if (res.data && res.data.errCode === 0) {
+                if (type == "OFF") {
+                    _this.deleteVideoRoom();
+                } else {
+                    let childMessageType = 6;
+
+                    let body = "";
+                    if (num == 0) {
+                        body =
+                            "sendroom&" +
+                            _this.createVideoRoomData.conferenceNumber +
+                            "&" +
+                            _this.createVideoRoomData.conferenceId +
+                            "&";
+                    } else if (num == 1) {
+                        body = "accept";
+                    }
+
+                    if (_this.chatTypeBox.startDoctorTYpe == "会诊") {
+                        body += _this.chatTypeBox.bingUserId;
+                    }
+                    _this.sendVideoMessage(
+                        childMessageType,
+                        body,
+                        _this.createVideoRoomData.conferenceNumber,
+                        "",
+                        "VIDEO"
+                    );
+                    this.videoVisible = true;
+                }
             } else {
                 //失败
                 this.$notify.error({
@@ -1426,48 +1565,13 @@ export default {
                 });
             }
         },
-        //退出视频
-        async closeVideo(oMessageType, closeUser) {
-            this.videoVisible = false;
-            let _this = this;
-            let query = {
-                token: this.userState.token
-            };
-            const options = {
-                conferenceId: this.createVideoRoomData.conferenceId,
-                state: "OFF"
-            };
-            const res = await storageUsers(query, options);
-            console.log(res);
-            if (res.data && res.data.errCode === 0) {
-                // this.$notify.success({
-                //     title: "成功",
-                //     message: "退出成功！"
-                // });
-                // _this.createVideoVisable = false;
-                // if (this.userSocketInfo.ifVideoImg == 1) {
-                //     oMessageType = "complete";
-                // } else {
-                //     oMessageType = "cancle";
-                // }
-                // if (closeUser == "us") {
-                //     _this.sendMessageChat(6, oMessageType, "VIDEO");
-                //     this.$store.commit("socket/IFVIDEOIMG", 0);
-                // }
-                _this.deleteVideoRoom();
-            } else {
-                //失败
-                this.$notify.error({
-                    title: "警告",
-                    message: res.data.errMsg
-                });
-            }
-        },
+
         //视频组件传过来的事件
         videoclick(data) {
             this.videoVisible = false;
             this.alreadyRead();
             this.getHisRecord();
+            this.panIfVideo()
         },
         //删除视频房间
         async deleteVideoRoom() {
@@ -1522,7 +1626,7 @@ export default {
                             childMessageType = "VIDEO";
                             if (messageBody == "refuse") {
                                 //对方拒绝了视频
-                                // this.closeVideo(messageBody, "other");
+                                // this.closeVideo();
                             } else if (messageBody == "complete") {
                                 //对方挂断了视频
                                 // this.closeVideo(messageBody, "other");
@@ -1600,7 +1704,6 @@ export default {
 </script>
 
 <style>
-
 /* <div v-if="chatVisible">
             <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
                 <chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage" :chatType1="videoType"
