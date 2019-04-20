@@ -326,7 +326,7 @@
 			</li>
 		</ul>
 
-		<ul v-if="oconsulVisable == 2 && this.typeQuan1==true" class="transport">
+		<ul v-if="oconsulVisable == 2 && typeQuan1==true" class="transport">
 			<li class="checkList">
 				<div class="title">
 					<span class="title1">审核列表</span>
@@ -985,14 +985,14 @@
 			},
 			// 医生端权限
 			doctorQuanXian() {
-				let quanXian = this.userInfo.hasAuth.filter(item => item.type==='2')
+				let quanXian = this.userInfo.hasAuth.filter(item => item.type === '2')
 				this.typeQuan = []
 				this.typeQuan1 = false
 				this.typeQuan2 = false
 				this.typeQuan3 = false
 				console.table(quanXian)
 				for (let i = 0; i < quanXian.length; i++) {
-						console.log(quanXian[i].authorityId)
+					console.log(quanXian[i].authorityId)
 					if (quanXian[i].type == 2) {
 						console.log(quanXian[i].authorityId)
 						this.typeQuan.push(quanXian[i].authorityId)
@@ -1089,6 +1089,9 @@
 				// var nowDate = year + "-" + month + "-" + day;
 				// this.time0 = nowDate;
 				// this.time1 = nowDate;
+				if (!this.typeQuan3) {
+					return
+				}
 
 				const _this = this;
 				let query = {
@@ -1196,6 +1199,9 @@
 			},
 			// 7.10.1按审方医生获取处方审核列表 (医生列表2)
 			async getList2() {
+				if (!this.typeQuan2) {
+					return
+				}
 				const _this = this;
 				let query = {
 					token: this.userInfo.token,
@@ -1224,6 +1230,9 @@
 			},
 			// 7.10.2药品配送列表 (医生列表3)
 			async getList3() {
+				if (!this.typeQuan1) {
+					return
+				}
 				const _this = this;
 				let query = {
 					token: this.userInfo.token,
@@ -1364,10 +1373,14 @@
 		},
 
 		async created() {
+			this.doctorQuanXian();
+
+
 			this.getList1(); //7.6医生列表1
 			// this.addPrescription();//7.8开处方
 			console.log(process.env.IMG_PREFIX)
-			this.doctorQuanXian();
+
+
 		},
 		watch: {
 			"userSocketInfo.synchroMessage": {

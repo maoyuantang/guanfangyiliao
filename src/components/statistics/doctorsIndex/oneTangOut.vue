@@ -148,6 +148,9 @@
 
       // 7.6(WEB医生)获取所有该医生的在线诊室(医生端列表1)
       async getList1() {
+        if (!this.typeQuan3) {
+          return
+        }
         var date = new Date();
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
