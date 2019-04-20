@@ -622,7 +622,7 @@ export default {
                 console.log("关闭视频成功");
                 _this.localVideoVisable = false;
                 _this.videoIng = 0;
-                _this.$store.commit("socket/IFENTERVIDEO", 0); //当前登录用户没有在视频
+                // _this.$store.commit("socket/IFENTERVIDEO", 0);
             } else {
                 //失败
                 this.$notify.error({
@@ -728,7 +728,7 @@ export default {
                     title: "警告",
                     message: res.data.errMsg
                 });
-                this.$emit("reback", "closeCancle");
+                // this.$emit("reback", "closeCancle");
             }
         },
         //删除视频房间
