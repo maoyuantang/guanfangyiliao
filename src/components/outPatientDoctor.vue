@@ -1375,8 +1375,6 @@
 					$.each(n.syncData, function (index, text) {
 						console.log(`text.command=>${text.command}`)
 						if (text.command == "SYNC_SESSION") {   ///   SYNC_SESSION
-							alert(1111)
-							console.error('enter')
 							_this.getList1();
 						}
 					});

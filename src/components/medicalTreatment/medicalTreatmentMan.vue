@@ -81,6 +81,8 @@
               </el-option>
             </el-select>
           </el-form-item>
+          {{kuangData2.options2.value}}
+          {{kuangData2.options2.list}}
 
           <!-- <div class="block" style="margin-bottom: 22px;">
             <span class="demonstration"
@@ -1134,9 +1136,22 @@
         this.chooseDept().then(val => {//执行完科室获取再执行获取名称list
           this.isHaveDepartment21();
         });
+        this.kuangData2.options2.value = [];
+        this.kuangData2.options2.list = [];
+        data.levels.map(item => {
+          this.kuangData2.options2.list.push({
+            label:item.levelName,
+            value:item.controlId
+          })
+        })
         this.kuangData2.options1.value = data.deptId
-        this.kuangData2.options2.value = data.levels.map(item => item.level)
-        console.log(this.kuangData2.options3.list)
+        this.kuangData2.options2.value = data.id
+        
+        console.log(this.kuangData2.options2.value)
+        console.log(this.kuangData2.options2.list)
+
+
+
         let list = this.kuangData2.options3.list
 
         for (var a = 0; a < data.deptRels.length; a++) {
