@@ -6,19 +6,18 @@
                 <div class="new-content-headimg">
                     <img src="../../../static/assets/img/a-6.png" alt="">
                 </div>
-                <p class="new-content-username">kition</p>
+                <p class="new-content-username">{{patientInfo.name}}</p>
                 <div class="new-content-msg">
-                    <p class="new-content--msg-item">性别：男</p>
-                    <p class="new-content--msg-item">年龄：20</p>
-                    <p class="new-content--msg-item">省份证：500222111111111111</p>
+                    <p class="new-content--msg-item">性别：{{patientInfo.sex ? '男' : '女'}}</p>
+                    <p class="new-content--msg-item">年龄：{{patientInfo.age}}</p>
+                    <p class="new-content--msg-item">身份证：{{patientInfo.idNo}}</p>
                 </div>
             </div>
             <div class="new-content-content">
                 <div class="new-content-content-item" 
-                v-for="(item,index) in userInfo.list" 
+                v-for="(item,index) in patientListInfo.list" 
                 :key="index" @click="selectModule(item,index)" 
                 :class="nowNav===index?'new-content-content-item-select':''">
-                    <!-- <p class="new-content-content-item-title">门诊记录</p> -->
                     <p class="new-content-content-item-info">入住医院:{{item.name}}</p>
                     <p class="new-content-content-item-info">入院时间{{item.time}}</p>
                     <p class="new-content-content-item-info">入住科室:{{item.department}}</p>
@@ -30,31 +29,30 @@
             <div class="new-content-body-nav">
                 <div class="new-content-body-nav-item" 
                 @click="selectChildModule(item,index)" 
-                v-for="(item,index) in userInfo.list[nowNav]?userInfo.list[nowNav].childModules:[]" 
-                :class="userInfo.list[nowNav]?(userInfo.list[nowNav].showChildModuleIndex===index?'new-content-body-nav-item-select':''):''"
+                v-for="(item,index) in patientListInfo.list[nowNav]?patientListInfo.list[nowNav].childModules:[]" 
+                :class="patientListInfo.list[nowNav]?(patientListInfo.list[nowNav].showChildModuleIndex===index?'new-content-body-nav-item-select':''):''"
                 :key="index">
-                <!-- {{userInfo.list[nowNav]?(userInfo.list[nowNav].showChildModuleIndex===index?'new-content-body-nav-item-select':''):''}} -->
                     <div class="new-content-body-nav-item-name">{{item.name}}</div>
                     <div class="new-content-body-nav-item-time">{{item.time}}</div>
                 </div>
             </div>
             <div class="new-content-body-content">
-                <!-- {{userInfo.list[nowNav].childModules[userInfo.list[nowNav].showChildModuleIndex].code}} -->
-                <!-- {{userInfo.list[nowNav].showChildModuleIndex}} -->
                 <div 
-                :is="userInfo.list[nowNav].childModules[userInfo.list[nowNav].showChildModuleIndex].code"
-                :inData="userInfo.list[nowNav].childModules[userInfo.list[nowNav].showChildModuleIndex].data"></div>
+                :is="patientListInfo.list[nowNav].childModules[patientListInfo.list[nowNav].showChildModuleIndex].code"
+                :inData="patientListInfo.list[nowNav].childModules[patientListInfo.list[nowNav].showChildModuleIndex].data"></div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import { mapState } from 'vuex'
+    import {eMRList, getDoctorMessage1, eMRInRecord} from '../../api/apiAll.js'
     import beHospitalized from './record/beHospitalized.vue'//首次入院记录
     import diseaseCourse from './record/diseaseCourse.vue'//首次病程记录
     import dailyDiseaseCourse from './record/dailyDiseaseCourse.vue'//日常病程记录
     import leaveHospital from './record/leaveHospital.vue'//出院记录
-    import clinicalThermometer from './record/clinicalThermometer.vue'//体温表
+    import clinicalThermometer from './record/clinicalThermometer.vue'//体温表 
 	export default {
         props: ['inData'],
 		components:{
@@ -65,19 +63,37 @@
             clinicalThermometer
 		},
 		watch:{
+            inData(n){
+                this.getUserInfo();
+                this.getEMRList();
+            }
 		},
 		computed:{
-			
+			...mapState({
+				userInfo:state => state.user.userInfo,
+                userSelfInfo:state => state.user.userSelfInfo,   
+                global: state => state.global 
+			})
 		},
 		
 		data () {
 			return {
                 nowNav:0,
                 /**
+                 * 患者信息
+                 */
+                patientInfo:{
+                    name:'',//姓名
+                    sex:'',//性别
+                    age:'',//年龄
+                    idNo:''//身份证
+                },
+                /************************************************************** */
+                /**
                  * 用户信息
                  */
-                userInfo:{
-                    list:[//住院信息  userInfo.list             userInfo.list[nowNav].childModules  
+                patientListInfo:{
+                    list:[//住院信息 
                         {
                             name:'XXXX医院',//入住医院,
                             time:'208-12-25 10:00',//入院时间
@@ -251,18 +267,139 @@
              * 获取用户信息
              */
             async getUserInfo(){
-
+                if(!this.inData)return;
+                const res = await getDoctorMessage1({
+                    token:this.userInfo.token,
+                    familyMemberId:this.inData.id
+                });
+                if(res.data && res.data.errCode === 0){
+                    this.patientInfo = {
+                        userId:res.data.body.userId,
+                        id:res.data.body.id,
+                        name:res.data.body.name,
+                        sex:res.data.body.sex,//性别
+                        age:res.data.body.age,//年龄
+                        birthday:res.data.body.birthday,
+                        phone:res.data.body.phone,
+                        address:res.data.body.address,
+                        isVisible:res.data.body.isVisible,
+                        papersType:res.data.body.papersType,
+                        idNo:res.data.body.identityCard//身份证
+                    }
+				}else{
+					this.$notify({
+						title: '患者信息获取失败',
+						message: res.data.errMsg,  
+						type: 'error'
+					});
+				}
             },
+            /**
+             * 2.电子病历列表 获取
+             */
+            async getEMRList(){
+                if(!this.inData)return;
+                const res = await eMRList({
+                    token:this.userInfo.token,
+                    familyMemberId:this.inData.id,
+                    orgCode:this.userSelfInfo.orgCode,
+                });
+                if(res.data && res.data.errCode === 0){
+                    console.error(res);
+                    this.patientListInfo.list = [];
+                    res.data.body.forEach((item,index)=>{
+                        this.patientListInfo.list.push({
+                            name:item.hospitalName,
+                            time:item.visitDtime,
+                            department:item.deptName,
+                            bedNum:item.bedNo,
+                            showChildModuleIndex:0,
+                            childModules:[]
+                        });
+                        this.getEMRInRecord(item.visitNo)
+                        .then(response=>{
+                            if(response.data && response.data.errCode === 0){
+                                console.error(response)
+                                this.patientListInfo.list[index].childModules = response.data.body.map(ele => {
+                                    ele.code = '';
+                                    ele.name = '首次入院记录';
+                                    ele.time = ele.recordDtime;
+
+                                });
+                            }else{
+                                this.$notify({
+                                    title: '首次入院记录获取失败',
+                                    message: response.data.errMsg,  
+                                    type: 'error'
+                                });
+                            }
+                        })
+                        .catch(err=>{
+                            this.$notify({
+                                title: '首次入院记录获取失败',
+                                message: err,  
+                                type: 'error'
+                            });
+                        });
+                    });
+                    
+                    
+				}else{
+					this.$notify({
+						title: '患者信息获取失败',
+						message: res.data.errMsg,  
+						type: 'error'
+					});
+				}
+            },
+            /**
+             * 获取 单个模块所有子模块列表数据
+             */
+            getAllChildrenModulesList(id,index){
+                return Promise.all([
+                    this.getEMRInRecord(id)
+                ])
+                .then(resList => {
+
+                })
+                .catch(err => {
+
+                });
+            },
+            /**
+             * 3.根据电子病历ID获取首次入院记录
+             */
+            async getEMRInRecord(id){
+                if(!this.inData)return;
+                const res = await eMRInRecord({
+                    token:this.userInfo.token,
+                    familyMemberId:this.inData.id,
+                    orgCode:this.userSelfInfo.orgCode,
+                    id
+                });
+                if(res.data && res.data.errCode === 0){
+                    console.error(res)
+                    
+				}else{
+					this.$notify({
+						title: '首次入院记录获取失败',
+						message: res.data.errMsg,  
+						type: 'error'
+					});
+				}
+            },
+
             selectModule(item,index){
                 this.nowNav = index;
             },
 			selectChildModule(item,index){
-                // this.userInfo.list[this.nowNav].hospitalInfo.showModule = item;
-                this.userInfo.list[this.nowNav].showChildModuleIndex = index;
+                this.patientListInfo.list[this.nowNav].showChildModuleIndex = index;
             },
 		},
 		async created(){
-			// console.log(this.inData)
+            console.log(78979878979)
+            this.getUserInfo();
+            this.getEMRList();
 		}
 	}
 </script>

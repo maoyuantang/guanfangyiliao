@@ -5,13 +5,13 @@
             <tag :inData="queryConditions.department" @reback="getDepartmentSelect"></tag>
         </div>
         <div class="statistics-table-option-right">
-            <div class="statistics-time">
+            <div class="statistics-time select-time-css">
                 <span class="time-paragraph">时间段：</span>
                 <el-date-picker
                 v-model="queryConditions.time"
                 type="datetimerange"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                range-separator="至"
+                value-format="yyyy-MM-dd"
+                range-separator="-"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期">
                 </el-date-picker>
@@ -29,7 +29,17 @@
         </div>
     </div>
     <div class="statistics-table-content">
-        <normalColumnChart  v-for="(item,index) in drawData" :key="index" v-model="item.data"></normalColumnChart>
+        <div class="statistics-table-content-inner" v-if="outpatient.total">
+            <normalColumnChart v-model="outpatient"></normalColumnChart>
+        </div>
+        <div class="statistics-table-content-inner" v-if="device.total">
+            <normalColumnChart v-model="device"></normalColumnChart>
+        </div>
+        <div class="statistics-table-content-inner" v-if="followUp.total">
+            <normalColumnChart v-model="followUp"></normalColumnChart>
+        </div>
+        
+        <!-- <normalColumnChart  v-for="(item,index) in drawData" :key="index" v-model="item.data"></normalColumnChart> -->
     </div>
 </div>
 </template>
@@ -37,13 +47,15 @@
 <script>
     import { mapState } from 'vuex'
     import normalColumnChart from '../../../public/publicComponents/normalColumnChart.vue'
-    import {fetchHospitalDepts} from '../../../api/apiAll.js'
+    import {statisticsPeople, SETEQUIPMENT, SETFOLLOWCHART, registeredStatistics} from '../../../api/apiAll.js'
     import tag from '../../../public/publicComponents/tag.vue'
+    import { Progress } from 'element-ui';
 	export default {
         computed:{
 			...mapState({
-                userInfo:state => state.user.userInfo,
-                global: state => state.global
+				userInfo:state => state.user.userInfo,
+                userSelfInfo:state => state.user.userSelfInfo,   
+                global: state => state.global 
 			})
         },
         watch:{
@@ -52,11 +64,29 @@
                     // console.log(n);
                     this.getDepartmentList();
                 }
+            },
+            'queryConditions.time':{
+                handler(n){
+                    // console.log(n);
+                   this.fetchAllApi();
+                }
+            },
+            'queryConditions.way.select':{
+                handler(n){
+                    // console.log(n);
+                   this.fetchAllApi();
+                }
+            },
+            'global.manToolDept':{
+                handler(n){
+                    this.getDepartmentList();
+                }
             }
+            
         },
 		data(){
 			return {
-                queryConditions:{//查询条件 
+                queryConditions:{//查询条件  
                     department:{//科室
                         title:'科室',
                         select:0,
@@ -73,14 +103,38 @@
                     },
                     time:null,
                     way:{  
-                        select:'keshi',
+                        select:'DEPT',
                         list:[
-                            {label:'按科室统计',value:'keshi'},
-                            {label:'按日统计',value:'ri'},
-                            {label:'按月统计',value:'yue'},
-                            {label:'按年统计',value:'nian'},
+                            {label:'按科室统计',value:'DEPT'},
+                            {label:'按日统计',value:'DAY'},
+                            {label:'按月统计',value:'MONTH'},
+                            {label:'按年统计',value:'YEAR'},
                         ]
                     }
+                },
+                outpatient:{//2.4.1远程门诊就诊人次柱状统计图 数据
+                    dataAxis:[],//x轴
+                    data:[],//y轴
+                    title:'远程门诊就诊人次柱状统计图',
+                    total:0,
+                },
+                device:{//10.7.3 设备监测人次
+                    dataAxis:[],//x轴
+                    data:[],//y轴
+                    title:'设备监测人次',
+                    total:0,
+                },
+                followUp:{//10.7.4 智能随访人次
+                    dataAxis:[],//x轴
+                    data:[],//y轴
+                    title:'设备监测人次',
+                    total:0,
+                },
+                registeredUsers:{//3.11 注册用户
+                    dataAxis:[],//x轴
+                    data:[],//y轴
+                    title:'设备监测人次',
+                    total:0,
                 },
                 drawData:[
                     {
@@ -121,11 +175,155 @@
         },
         methods:{
             /**
+             * 调用 所有 获取 所有 统计图 接口
+             */
+            fetchAllApi(){
+                return Promise.all([
+                    this.getStatisticsPeople(),
+                    this.getSETEQUIPMENT(),
+                    this.getSETFOLLOWCHART(),
+                    this.getRegisteredStatistics()
+                ]);
+            },
+            /**
+             * 3.11 注册用户 统计图 获取
+             */
+            async getRegisteredStatistics(){
+                const query = {
+                    token:this.userInfo.token,
+                    departmentId:this.queryConditions.department.list[this.queryConditions.department.select] ? this.queryConditions.department.list[this.queryConditions.department.select].id : '',
+                    type:this.queryConditions.way.select,
+                };
+                if(this.queryConditions.time){
+                    query.startTime = this.queryConditions.time[0];
+                    query.endTime = this.queryConditions.time[1];
+                }else{
+                    query.startTime = '';
+                    query.endTime = '';
+                }
+                const res = await registeredStatistics(query);
+                console.log(res)
+                if(res.data&&res.data.errCode===0){
+                    // let initialValue=0;
+                    this.registeredUsers.total = `总数：${res.data.body.total}`;
+                    this.registeredUsers.dataAxis = res.data.body.data.map(item=>item.x);
+                    this.registeredUsers.data = res.data.body.data.map(item=>item.y);
+                    this.registeredUsers = Object.assign({},this.registeredUsers)
+                    console.log(this.registeredUsers)
+                }else{
+                    this.$notify({
+						title: '注册用户获取失败',
+						message: res.data.errMsg,
+						type: 'error'
+					});
+                }
+            },
+            /**
+             * 10.7.4 智能随访人次 统计图 数据
+             */
+            async getSETFOLLOWCHART(){
+                const query = {
+                    token:this.userInfo.token,
+                    departmentId:this.queryConditions.department.list[this.queryConditions.department.select] ? this.queryConditions.department.list[this.queryConditions.department.select].id : '',
+                    type:this.queryConditions.way.select,
+                };
+                if(this.queryConditions.time){
+                    query.startTime = this.queryConditions.time[0];
+                    query.endTime = this.queryConditions.time[1];
+                }else{
+                    query.startTime = '';
+                    query.endTime = '';
+                }
+                const res = await SETFOLLOWCHART(query);
+                console.log(res)
+                if(res.data&&res.data.errCode===0){
+                    // let initialValue=0;
+                    this.followUp.total = `总数：${res.data.body.total}`;
+                    this.followUp.dataAxis = res.data.body.data.map(item=>item.x);
+                    this.followUp.data = res.data.body.data.map(item=>item.y);
+                    this.followUp = Object.assign({},this.followUp)
+                    console.log(this.followUp)
+                }else{
+                    this.$notify({
+						title: '设备监测人次获取失败',
+						message: res.data.errMsg,
+						type: 'error'
+					});
+                }
+            },
+            /**
+             * 获取 10.7.3 设备监测人次 统计图 数据
+             */
+            async getSETEQUIPMENT(){
+                const query = {
+                    token:this.userInfo.token,
+                    departmentId:this.queryConditions.department.list[this.queryConditions.department.select] ? this.queryConditions.department.list[this.queryConditions.department.select].id : '',
+                    type:this.queryConditions.way.select,
+                };
+                if(this.queryConditions.time){
+                    query.startTime = this.queryConditions.time[0];
+                    query.endTime = this.queryConditions.time[1];
+                }else{
+                    query.startTime = '';
+                    query.endTime = '';
+                }
+                const res = await SETEQUIPMENT(query);
+                console.log(res)
+                if(res.data&&res.data.errCode===0){
+                    // let initialValue=0;
+                    this.device.total = `总数：${res.data.body.total}`;
+                    this.device.dataAxis = res.data.body.data.map(item=>item.x);
+                    this.device.data = res.data.body.data.map(item=>item.y);
+                    this.device = Object.assign({},this.device)
+                    console.log(this.device)
+                }else{
+                    this.$notify({
+						title: '设备监测人次获取失败',
+						message: res.data.errMsg,
+						type: 'error'
+					});
+                }
+            },
+            /**
+             * 获取 远程门诊就诊人次柱状统计图 数据
+             */
+            async getStatisticsPeople(){
+                const query = {
+                    token:this.userInfo.token,
+                    departmentId:this.queryConditions.department.list[this.queryConditions.department.select] ? this.queryConditions.department.list[this.queryConditions.department.select].id : '',
+                    type:this.queryConditions.way.select,
+                };
+                if(this.queryConditions.time){
+                    query.startTime = this.queryConditions.time[0];
+                    query.endTime = this.queryConditions.time[1];
+                }else{
+                    query.startTime = '';
+                    query.endTime = '';
+                }
+                const res = await statisticsPeople(query);
+                console.log(res)
+                if(res.data&&res.data.errCode===0){
+                    let initialValue=0;
+                    this.outpatient.dataAxis = res.data.body.map(item=>item.x);
+                    this.outpatient.data = res.data.body.map(item=>item.y);
+                    this.outpatient.total = `总数：${res.data.body.reduce((a,b)=>a+b.y,initialValue)}`;
+                    this.outpatient = Object.assign({},this.outpatient)
+                    console.log(this.outpatient)
+                }else{
+                    this.$notify({
+						title: '远程门诊就诊人次柱状统计图获取失败',
+						message: res.data.errMsg,
+						type: 'error'
+					});
+                }
+            },
+            /**
              * 科室 被选中
              */
             getDepartmentSelect(data){
                 // console.log(data);
                 this.queryConditions.department.select = data.index;
+                this.fetchAllApi()
             },
             /**
 			 * 获取科室列表
@@ -140,6 +338,7 @@
         },
         async created(){
             this.getDepartmentList();
+            this.fetchAllApi();
         },
         components:{
             normalColumnChart,
@@ -165,13 +364,15 @@
         padding-right: 0.28rem;
     }
     .statistics-table-content{
-        display: flex;
-        flex-wrap: wrap;
-        /* justify-content: space-around; */
-    }
-    .statistics-table-content{
         padding-left: 1.09rem;
         margin-top: 1.02rem;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    .statistics-table-content-inner{
+        max-width: 50%;
+        text-align: center;
     }
     .statistics-table-option-right{
         display: flex;

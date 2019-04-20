@@ -1,6 +1,5 @@
 <template>
 	<div class="family-medicine-doctor">
-        {{chatData.chatTypeBox}}
         <div class="family-medicine-doctor-head">
             <div class="family-medicine-doctor-head-left">
                 <tag :inData="queryConditions.date" @reback="getDateSelect"></tag>
@@ -222,7 +221,7 @@
                     videoType: "门诊",
                     chatTypeBox: {
                         startDoctorName: "",
-                        startDoctorTYpe: "门诊"
+                        startDoctorTYpe: "家医"
                     },
                 },
                 record:{//谭颖的组件 数据    

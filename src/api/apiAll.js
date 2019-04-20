@@ -3400,3 +3400,36 @@ export const toUpdate = query => { //14.18.双向转诊-WEB医生端-获取修�
         }
     })
 }
+export const registeredStatistics = query => { //3.11 注册用户
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.registeredStatistics,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMRList = query => { //3.11 注册用户
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRList,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMRInRecord = query => { //3.根据电子病历ID获取首次入院记录
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRInRecord,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

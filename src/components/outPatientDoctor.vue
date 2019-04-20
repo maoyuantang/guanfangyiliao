@@ -5,7 +5,6 @@
 -->
 <template>
 	<div class="outPatientDoctor">
-		<!-- {{userSocketInfo.imgUrl}} -->
 		<doctorTab :inData="oAdminTab" @reBack="getConsulTabData"></doctorTab>
 
 		<!-- 我的诊室-循环 -->
@@ -877,293 +876,6 @@
 				userSocketInfo: state => state.socket
 			})
 		},
-		// methods: {
-		//     // 谭莹事件
-		//     videoclick(data) {
-		//         this.centerDialogVisible = false;
-		//     },
-		//     //进入门诊
-		//     async enterRoomBtn(text) {
-		//         this.userMessage = {
-		//             clinicId: text.id,
-		//             departmentId: text.departmentId
-		//         };
-
-		//         this.oClinicId = text.id;
-		//         this.centerDialogVisible = true;
-		//         // let _this = this;
-		//         // let query = {
-		//         //   token: this.userInfo.token
-		//         // };
-		//         // const options = {
-		//         //   clinicId: text.id
-		//         // };
-		//         // const res = await doctorInto(query, options);
-		//         // console.log(res);
-		//         // if (res.data && res.data.errCode === 0) {
-		//         //   _this.centerDialogVisible = true;
-		//         // } else {
-		//         //   //失败
-		//         //   this.$notify.error({
-		//         //     title: "警告",
-		//         //     message: res.data.errMsg
-		//         //   });
-		//         // }
-		//     },
-		//     //退出视频
-		//     // async closeVideo() {
-		//     //     let _this = this;
-		//     //     let query = {
-		//     //         token: this.userInfo.token
-		//     //     };
-		//     //     const options = {
-		//     //         conferenceId: this.createVideoRoomData.conferenceId,
-		//     //         state: "OFF"
-		//     //     };
-		//     //     const res = await storageUsers(query, options);
-		//     //     console.log(res);
-		//     //     if (res.data && res.data.errCode === 0) {
-		//     //         this.$notify.success({
-		//     //             title: "成功",
-		//     //             message: "退出成功！"
-		//     //         });
-		//     //         _this.createVideoVisable = false;
-		//     //         _this.sendMessageChat(6, "cancle", "VIDEO");
-		//     //     } else {
-		//     //         //失败
-		//     //         this.$notify.error({
-		//     //             title: "警告",
-		//     //             message: res.data.errMsg
-		//     //         });
-		//     //     }
-		//     // },
-		//     //退出诊室
-		//     async closeVideo() {
-		//         let _this = this;
-		//         let query = {
-		//             token: this.userInfo.token
-		//         };
-		//         const options = {
-		//             conferenceId: this.createVideoRoomData.conferenceId,
-		//             state: "OFF"
-		//         };
-		//         const res = await storageUsers(query, options);
-		//         console.log(res);
-		//         if (res.data && res.data.errCode === 0) {
-		//             this.$notify.success({
-		//                 title: "成功",
-		//                 message: "退出成功！"
-		//             });
-		//             _this.createVideoVisable = false;
-		//             _this.sendMessageChat(6, "cancle", "VIDEO");
-		//         } else {
-		//             //失败
-		//             this.$notify.error({
-		//                 title: "警告",
-		//                 message: res.data.errMsg
-		//             });
-		//         }
-		//     },
-		//     // 我的诊室发送消息
-		//     // async sendMessage(text, text1) {
-		//     //     console.log(text);
-		//     //     console.log(text1);
-
-		//     //     this.userMessage = {
-		//     //         clinicId: text.id,
-		//     //         departmentId: text.departmentId,
-		//     //         userId: text1.userId,
-		//     //         orgCode: text.orgCode,
-		//     //         clinicOrderId: text1.clinicOrderId //订单id
-		//     //     };
-		//     //     console.log(this.userMessage);
-		//     //     let _this = this;
-		//     //     let query = {
-		//     //         token: this.userInfo.token,
-		//     //         userId: text1.userId,
-		//     //         orderId: text1.clinicOrderId
-		//     //     };
-		//     //     const res = await sendBtnVisable(query);
-		//     //     if (res.data && res.data.errCode === 0) {
-		//     //         _this.sessionId = res.data.body.bindSession;
-		//     //         if (res.data.body.bindSession && res.data.body.bindDoctor) {
-		//     //             text1.disabledStatus = false;
-		//     //             _this.chatVisible = true;
-		//     //         } else if (
-		//     //             !res.data.body.bindSession &&
-		//     //             !res.data.body.bindDoctor
-		//     //         ) {
-		//     //             text1.disabledStatus = false;
-		//     //             _this.chatVisible = true;
-		//     //         } else if (
-		//     //             res.data.body.bindSession ||
-		//     //             res.data.body.bindDoctor
-		//     //         ) {
-		//     //             text1.disabledStatus = true;
-		//     //         }
-
-		//     //     } else {
-		//     //         this.$notify.error({
-		//     //             title: "警告",
-		//     //             message: res.data.errMsg
-		//     //         });
-		//     //     }
-		//     // },
-		//     // 我的诊室发送消息
-		//     async sendMessage(text, text1) {
-		//         console.log(text);
-		//         console.log(text1);
-
-		//         this.userMessage = {
-		//             clinicId: text.id,
-		//             departmentId: text.departmentId,
-		//             userId: text1.userId,
-		//             orgCode: text.orgCode,
-		//             clinicOrderId: text1.clinicOrderId //订单id
-		//         };
-		//         console.log(this.userMessage);
-		//         let _this = this;
-		//         let query = {
-		//             token: this.userInfo.token,
-		//             userId: text1.userId,
-		//             orderId: text1.clinicOrderId
-		//         };
-		//         const res = await sendBtnVisable(query);
-		//         if (res.data && res.data.errCode === 0) {
-		//             if (res.data.body.bindSession && res.data.body.bindDoctor) {
-		//                 text1.disabledStatus = false;
-
-		//                 _this.sendMessage1(text, text1);
-		//             } else if (
-		//                 !res.data.body.bindSession &&
-		//                 !res.data.body.bindDoctor
-		//             ) {
-		//                 text1.disabledStatus = false;
-		//                 _this.sendMessage1(text, text1);
-		//             } else if (
-		//                 res.data.body.bindSession ||
-		//                 res.data.body.bindDoctor
-		//             ) {
-		//                 text1.disabledStatus = true;
-		//                 this.$notify.error({
-		//                     title: "警告",
-		//                     message: "该订单已绑定服务人"
-		//                 });
-		//             }
-		//         } else {
-		//             this.$notify.error({
-		//                 title: "警告",
-		//                 message: res.data.errMsg
-		//             });
-		//         }
-		//     },
-		//     async sendMessage1(text, text1) {
-		//         let _this = this;
-		//         let query = {
-		//             token: this.userInfo.token
-		//         };
-		//         let options = {
-		//             orderId: text1.clinicOrderId,
-		//             orderNo: ""
-		//         };
-		//         const res = await bindSession(query, options);
-		//         if (res.data && res.data.errCode === 0) {
-		//             _this.sessionId = res.data.body;
-		//             _this.chatVisible = true;
-		//         } else {
-		//             this.$notify.error({
-		//                 title: "警告",
-		//                 message: res.data.errMsg
-		//             });
-		//         }
-		//     },
-		//     //返回赋值函数
-		//     getConsulTabData(res) {
-		//         //顶部切换返回函数
-		//         this.oconsulVisable = res.i;
-		//         console.log(res.i);
-		//         if (res.i == 0) {
-		//             this.getList1();
-		//         } else if (res.i == 1) {
-		//             this.getList2().then(val => {
-		//                 this.whichUserFun(0, this.bcd[0]); //刷新默认读取第一条数据
-		//             });
-		//         } else if (res.i == 2) {
-		//             this.getList3();
-		//         }
-		//     },
-		//     demonstration1(res) {
-		//         //时间插件返回函数
-		//         // console.log(res)
-		//     },
-		//     demonstration2(res) {
-		//         //时间插件返回函数
-		//         // console.log(res)
-		//     },
-		//     adminSearchChange(data) {
-		//         //审核列表
-		//         this.searchValue = data;
-		//         // console.log(data)
-		//     },
-		//     whichUserFun(index, data) {
-		//         console.log(index, data);
-		//         this.whichUser = index;
-		//         if (data) {
-		//             console.log(data);
-		//             this.prescriptionId = data.pb.id;
-		//             this.secondDoctorId = data.reviewDoctor;
-		//             console.log(this.whichUser);
-		//             console.log(this.prescriptionId);
-		//             console.log(this.secondDoctorId);
-		//         }
-		//     },
-		//     // 预览
-		//     dialogTableVisibleFun(row) {
-		//         console.log(row);
-		//         this.dialogTableVisible = true;
-		//         this.srcs = row;
-		//         this.preLook();
-		//     },
-		//     // 发货
-		//     goMy() {
-		//         alert("没有接口");
-		//     },
-		//     // getData(item, index) {
-		//     //   this.testData.select = item
-		//     // },
-
-		//     //列表
-		//     // 7.6(WEB医生)获取所有该医生的在线诊室(医生端列表1)
-		//     async getList1() {
-		//         var date = new Date();
-		//         var year = date.getFullYear();
-		//         var month = date.getMonth() + 1;
-		//         var day = date.getDate();
-		//         if (month < 10) {
-		//             month = "0" + month;
-		//         }
-		//         if (day < 10) {
-		//             day = "0" + day;
-		//         }
-		//         var nowDate = year + "-" + month + "-" + day;
-		//         this.time0 = nowDate;
-		//         this.time1 = nowDate;
-
-		//         const _this = this;
-		//         let query = {
-		//             token: this.userInfo.token,
-		//             pageNum: this.pageNum,
-		//             pageSize: this.pageSize
-		//         };
-		//         const res = await onlineRoomsByDoctor(query);
-		//         if (res.data && res.data.errCode === 0) {
-		//             console.log("医生端列表1+成功");
-		//             console.log(this.time0);
-		//             console.log(this.time1);
-		//             this.myHomes = res.data.body.data2.list;
-		//             $.each(this.myHomes, function(index, text) {
-		//                 $.each(text.clinicOrders, function(index1, text1) {
-		//                     text1.disabledStatus = false;
 		methods: {
 			// 谭莹事件
 			videoclick(data) {
@@ -1179,52 +891,7 @@
 
 				this.oClinicId = text.id;
 				this.centerDialogVisible = true;
-				// let _this = this;
-				// let query = {
-				//   token: this.userInfo.token
-				// };
-				// const options = {
-				//   clinicId: text.id
-				// };
-				// const res = await doctorInto(query, options);
-				// console.log(res);
-				// if (res.data && res.data.errCode === 0) {
-				//   _this.centerDialogVisible = true;
-				// } else {
-				//   //失败
-				//   this.$notify.error({
-				//     title: "警告",
-				//     message: res.data.errMsg
-				//   });
-				// }
 			},
-			//退出视频
-			// async closeVideo() {
-			//     let _this = this;
-			//     let query = {
-			//         token: this.userInfo.token
-			//     };
-			//     const options = {
-			//         conferenceId: this.createVideoRoomData.conferenceId,
-			//         state: "OFF"
-			//     };
-			//     const res = await storageUsers(query, options);
-			//     console.log(res);
-			//     if (res.data && res.data.errCode === 0) {
-			//         this.$notify.success({
-			//             title: "成功",
-			//             message: "退出成功！"
-			//         });
-			//         _this.createVideoVisable = false;
-			//         _this.sendMessageChat(6, "cancle", "VIDEO");
-			//     } else {
-			//         //失败
-			//         this.$notify.error({
-			//             title: "警告",
-			//             message: res.data.errMsg
-			//         });
-			//     }
-			// },
 			//退出诊室
 			async closeVideo() {
 				let _this = this;
@@ -1252,51 +919,6 @@
 					});
 				}
 			},
-			// 我的诊室发送消息
-			// async sendMessage(text, text1) {
-			//     console.log(text);
-			//     console.log(text1);
-
-			//     this.userMessage = {
-			//         clinicId: text.id,
-			//         departmentId: text.departmentId,
-			//         userId: text1.userId,
-			//         orgCode: text.orgCode,
-			//         clinicOrderId: text1.clinicOrderId //订单id
-			//     };
-			//     console.log(this.userMessage);
-			//     let _this = this;
-			//     let query = {
-			//         token: this.userInfo.token,
-			//         userId: text1.userId,
-			//         orderId: text1.clinicOrderId
-			//     };
-			//     const res = await sendBtnVisable(query);
-			//     if (res.data && res.data.errCode === 0) {
-			//         _this.sessionId = res.data.body.bindSession;
-			//         if (res.data.body.bindSession && res.data.body.bindDoctor) {
-			//             text1.disabledStatus = false;
-			//             _this.chatVisible = true;
-			//         } else if (
-			//             !res.data.body.bindSession &&
-			//             !res.data.body.bindDoctor
-			//         ) {
-			//             text1.disabledStatus = false;
-			//             _this.chatVisible = true;
-			//         } else if (
-			//             res.data.body.bindSession ||
-			//             res.data.body.bindDoctor
-			//         ) {
-			//             text1.disabledStatus = true;
-			//         }
-
-			//     } else {
-			//         this.$notify.error({
-			//             title: "警告",
-			//             message: res.data.errMsg
-			//         });
-			//     }
-			// },
 			// 我的诊室发送消息
 			async sendMessage(text, text1) {
 				console.log(text);
@@ -1368,12 +990,15 @@
 				this.typeQuan1 = false
 				this.typeQuan2 = false
 				this.typeQuan3 = false
+				console.log(quanXian)
 				for (let i = 0; i < quanXian.length; i++) {
 					if (quanXian[i].type == 2) {
+						console.log(quanXian[i].authorityId)
 						this.typeQuan.push(quanXian[i].authorityId)
 					}
+
 				}
-				console.log(this.typeQuan+"-------------")
+				console.log(this.typeQuan + "-------------")
 				this.typeQuan.forEach((element, index) => {
 					// console.log(element, index, element[index])
 					if (element == 10001) {
@@ -1384,25 +1009,6 @@
 						this.typeQuan3 = true;
 					}
 				});
-				// var typeQuanS = [this.typeQuan1, this.typeQuan2, this.typeQuan3]
-				// this.adss = 0;
-				// for (let i = 0; i < typeQuanS.length; i++) {
-				// 	if (typeQuanS[i] == true) {
-				// 		this.adss++;
-				// 	}
-				// }
-				// if (this.adss == 1) {
-				// 	alert()
-				// 	for (let i = 0; i < typeQuanS.length; i++) {
-				// 		if (typeQuanS[i] == true) {
-				// 			this.oconsulVisable = i
-				// 			break;
-				// 		}
-				// 	}
-				// }else if(this.adss == 2){
-
-				// }
-				// console.log(this.oconsulVisable)
 
 				this.oAdminTab.list[2].ad = this.typeQuan1
 				this.oAdminTab.list[1].ad = this.typeQuan2
@@ -1686,50 +1292,6 @@
 				}
 			},
 
-			// 7.8开处方
-			// async addPrescription() {
-			//   let _this = this;
-			//   let query = {
-			//     token: this.userInfo.token
-			//   };
-			//   let options = {
-			//     id: this.prescriptionId,
-			//     clinicId: this.clinicId,
-			//     departmentId: this.departmentId,
-			//     userId: this.userId,
-			//     firstDoctorId: this.firstDoctorId,
-			//     secondDoctorId: this.secondDoctorId,
-			//     reviewEnum: this.reviewEnum,
-			//     orgCode: this.orgCode,
-			//     complained: this.complained,
-			//     medicalHistory: this.medicalHistory,
-			//     allergyHistory: this.allergyHistory,
-			//     diagnosis: this.diagnosis,
-			//     report: this.report,
-			//     review: this.review,
-			//     occurTime: this.occurTime,
-			//     reviewTime: this.reviewTime,
-			//     drugDetails:
-			//       [{
-			//         id: this.drugId,                   //药品id
-			//         drugPrice: this.drugPrice,                  //药品价格
-			//         drugQuantity: this.drugQuantity,                   //药品数量
-			//         subtotal: this.subtotal,                   //药品🐤小计
-			//         doctorAsk: this.doctorAsk //医生嘱托
-			//       }]
-			//   };
-			//   const res = await addPrescription(query, options);
-			//   if (res.data && res.data.errCode === 0) {
-			//     console.log('开处方医生列表2+成功')
-			//     console.log(res)
-			//   } else {
-			//     console.log('开处方医生列表2+失败')
-			//     this.$notify.error({
-			//       title: "警告",
-			//       message: res.data.errMsg
-			//     });
-			//   }
-			// },
 			// 7.9审核处方   点击生成处方
 			async checkPrescription() {
 				let _this = this;
@@ -1786,9 +1348,6 @@
 			//表格样式
 			ceshi0(data) {
 				console.log(data);
-				// if (data.rowIndex == 0) {
-				//   return 'ceshiLan'
-				// }
 				if (data.columnIndex == 0) {
 					return "ceshiLan";
 				} else if (data.columnIndex == 1 || data.columnIndex == 2) {
@@ -1813,17 +1372,9 @@
 			"userSocketInfo.synchroMessage": {
 				handler(n, o) {
 					let _this = this;
-					// for (let index = 0; index < n.syncData.length; index++) {
-					//     if (text.command[index] == "SYNC_DOCTOR_ROOM") {
-					//         console.error('enter')
-					//         this.getList1();
-					//     }
-					// }
 					$.each(n.syncData, function (index, text) {
 						console.log(`text.command=>${text.command}`)
 						if (text.command == "SYNC_SESSION") {   ///   SYNC_SESSION
-							alert(1111)
-							console.error('enter')
 							_this.getList1();
 						}
 					});

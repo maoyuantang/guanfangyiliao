@@ -17,8 +17,8 @@
           <!-- 头像姓名 -->
           <div class="moved_top">
             <img v-if="dualReferralRecordFile.headId == null" src="../assets/img/a-6.png" alt="医生头像">
-            <img v-if="dualReferralRecordFile.headId"
-              :src='userSocketInfo.imgUrl+dualReferralRecordFile.headId' alt="医生头像">
+            <img v-if="dualReferralRecordFile.headId" :src='userSocketInfo.imgUrl+dualReferralRecordFile.headId'
+              alt="医生头像">
             <p>{{dualReferralRecordFile.patientName}}</p>
           </div>
           <!-- 转院路程 -->
@@ -106,7 +106,8 @@
           <div class="block" style="margin-bottom: 22px;">
             <span class="demonstration"
               style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请时间:</span>
-            <el-date-picker v-model="addForm.moveTime.value" type="datetime" placeholder="请选择" default-time="12:00:00">
+            <el-date-picker v-model="addForm.moveTime.value" type="datetime" placeholder="请选择"
+              value-format="yyyy-MM-dd HH:mm">
             </el-date-picker>
           </div>
 
@@ -137,7 +138,7 @@
           </el-button>
           <el-button type="primary" v-if="kuang2Save == 2" @click="dualReferralAdd2" style="width:70%;">编 辑
           </el-button>
-          <el-button type="primary" v-if="kuang2Save == 3" @click="dualReferralAdd3" style="width:70%;">再转
+          <el-button type="primary" v-if="kuang2Save == 3" @click="dualReferralAdd3" style="width:70%;">再 转
           </el-button>
         </div>
 
@@ -178,7 +179,7 @@
               <el-table-column prop="direction" label="方向" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="receiveTime" label="接诊时间" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
-              <el-table-column fixed = right label="操作" width="100">
+              <el-table-column fixed=right label="操作" width="100">
                 <template slot-scope="scope">
                   <button class="lanSe" @click="dualReferralRecord1(scope.row)">查看记录</button>
                 </template>
@@ -234,10 +235,11 @@
             <el-table-column prop="intention" label="目的" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="typeName" label="方向" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column fixed = right label="操作" min-width="400">
+            <el-table-column fixed=right label="操作" min-width="460">
               <template slot-scope="scope">
                 <button class="huangSe" @click="seeHistory(scope.row.patientId)">查看档案</button>
                 <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
+                <button class="huangSe" @click="dualReferralRecord3(scope.row)">病历详情</button>
                 <button
                   :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
                   v-for="(text,index) in scope.row.buttons" :key="index"
@@ -1103,6 +1105,11 @@
           _this.arrayMed.push(text.value)
         });
         console.log(this.arrayMed)
+
+        $.each(_this.addForm.giveRight.value, function (index, text) {
+          text.medicalHistoryId = text.visitNo;
+        });
+
         let query = {
           token: this.userInfo.token
         };
@@ -1110,18 +1117,19 @@
           referralType: this.addForm.typeList.value,//转诊类型：UP上转，DOWN下转
           illnessId: this.addForm.diseaseName.value,
           illnessName: this.$refs.ceshi1.selectedLabel,
+
           patientId: this.addForm.patient.value,
           patientName: this.$refs.ceshi2.selectedLabel,
-          receiveOrgName: this.$refs.ceshi3.currentLabels[0],//接收医生名称 
+
           receiveOrgCode: this.addForm.intoHospital.value[0],//	接收医院代码  
-          receiveDeptName: this.$refs.ceshi3.currentLabels[1],//	接收科室名称 
+          receiveOrgName: this.$refs.ceshi3.currentLabels[0],//接收医生名称 
           receiveDeptId: this.addForm.intoHospital.value[1],//接收科室ID 
+          receiveDeptName: this.$refs.ceshi3.currentLabels[1],//	接收科室名称 
+
           applyTime: this.addForm.moveTime.value,
           intention: this.addForm.movePurpose,//转诊目的 
           diagnose: this.addForm.beginIdea,//	初步诊断 
-          // archivesAuthority: this.addForm.giveRight.value,
-          // id:"", //上次转诊记录ID
-          // medicalRecordIds: this.arrayMed,//病历授权（数组） 
+
           medicalHistorys: this.addForm.giveRight.value//病历授权（与会诊相同）
         };
         console.log(options)
@@ -1260,6 +1268,16 @@
           });
         }
       },
+      //病历详情
+      async dualReferralRecord3(data) {
+        console.log(data)
+        this.$router.push({
+          path: "/docDetailed",
+          query: {
+            id: data.referralId
+          }
+        })
+      },
 
 
 
@@ -1321,7 +1339,8 @@
           intention: this.addForm.movePurpose,//转诊目的
           diagnose: this.addForm.beginIdea,//初步诊断
           // archivesAuthority: this.addForm.giveRight.value,//病历授权
-          medicalHistorys: this.arrayMed
+          // medicalHistorys: this.arrayMed,   
+          medicalHistorys: this.addForm.giveRight.value
         };
         console.log(options)
         const res = await dualReferralUpdate(query, options);                                   //  14.8.双向转诊-WEB医生端-修改
@@ -1501,6 +1520,10 @@
           diagnose: this.addForm.beginIdea,//初步诊断
           // archivesAuthority: this.addForm.giveRight.value,//病历授权
           medicalHistorys: this.addForm.giveRight.value
+
+
+          // archivesAuthority: ""，
+          // medicalRecordIds: ["", ""]
         };
         console.log(options)
         const res = await dualReferraltransfer(query, options);                                   //  14.13.双向转诊-WEB医生端-接受医生再次转诊 

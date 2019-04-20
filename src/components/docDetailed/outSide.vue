@@ -125,7 +125,7 @@
                     userId:this.inData.userId,
                     familyMemberId:this.inData.id, 
                 });
-                // console.log(res);
+                console.log(res);
                 if(res.data&&res.data.errCode===0){
                     this.showInfo.navList[1].time = res.data.body.lastDate || '';//后端有时候啊，直接不返回这玩意，弄个默认值
                 }else{
@@ -145,12 +145,12 @@
                 //     userId:this.inData.userId,
                 //     familyMemberId:this.inData.id,
                 // })
-                const res = await lastAssessPlan({
+                const res = await lastUserRecord({
                     token:this.userInfo.token,
                     userId:this.inData.userId,
                     familyMemberId:this.inData.id, 
                 });
-                // console.log(res);
+                console.log(res);
                 if(res.data&&res.data.errCode===0){
                     this.showInfo.navList[3].time = res.data.body.lastDate
                 }else{
@@ -165,12 +165,12 @@
              * 1.医生查看成员最近随访
              */
             async getNearlyFollowup(){
-                const res = await lastAssessPlan({
+                const res = await nearlyFollowup({
                     token:this.userInfo.token,
                     userId:this.inData.userId,
                     memberId:this.inData.id, 
                 });
-                // console.log(res);
+                console.error(res);
                 if(res.data&&res.data.errCode===0){
                     this.showInfo.navList[0].time = res.data.body.lastDate
                 }else{
