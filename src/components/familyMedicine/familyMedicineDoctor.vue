@@ -150,7 +150,7 @@
         
         <!-- 进入门诊 弹窗 -->
         <el-dialog :visible.sync="enterClinic.show">
-            <ovideo :createVideoRoomData="enterClinic.createVideoRoomData" :videoType="enterClinic.videoType" :oClinicId="enterClinic.oClinicId"></ovideo>
+            <ovideocomponent :createVideoRoomData="enterClinic.createVideoRoomData" :videoType="enterClinic.videoType" :oClinicId="enterClinic.oClinicId"></ovideocomponent>
         </el-dialog>
 	</div>
 </template>
@@ -163,7 +163,7 @@
     import { stencilName, fetchOrderInfo, updateOrderServices, fetchChatSession, fetchHistoryMessage, bindSession } from '../../api/apiAll.js'
     import chat from '../../public/publicComponents/chat.vue'
     import viewRecord from './../xiezuo/viewRecord.vue'
-    import ovideo from '../../video/oVideo.vue'
+    import ovideocomponent from '../../video/oVideo.vue'
     import tableNoMore from '../../public/publicComponents/tableNoMore.vue'
     
 	export default {
@@ -173,7 +173,7 @@
             tag,
             chat,
             viewRecord,
-            ovideo,
+            ovideocomponent,
             tableNoMore
         },
         computed:{

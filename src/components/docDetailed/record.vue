@@ -37,9 +37,11 @@
                 </div>
             </div>
             <div class="new-content-body-content">
+                <!-- {{showChildItem}} -->
+                <!-- {{patientListInfo.list[nowNav].childModules[patientListInfo.list[nowNav].showChildModuleIndex].data}} -->
                 <div 
-                :is="patientListInfo.list[nowNav].childModules[patientListInfo.list[nowNav].showChildModuleIndex].code"
-                :inData="patientListInfo.list[nowNav].childModules[patientListInfo.list[nowNav].showChildModuleIndex].data"></div>
+                :is="showChildItem"
+                :inData="showChildItemData"></div>
             </div>
         </div>
     </div>
@@ -47,7 +49,7 @@
 
 <script>
     import { mapState } from 'vuex'
-    import {eMRList, getDoctorMessage1, eMRInRecord} from '../../api/apiAll.js'
+    import {eMRList, getDoctorMessage1, eMRInRecord, eMRFirstCourse, eMREverydayCourse, eMRLeaveHospital} from '../../api/apiAll.js'
     import beHospitalized from './record/beHospitalized.vue'//首次入院记录
     import diseaseCourse from './record/diseaseCourse.vue'//首次病程记录
     import dailyDiseaseCourse from './record/dailyDiseaseCourse.vue'//日常病程记录
@@ -73,7 +75,13 @@
 				userInfo:state => state.user.userInfo,
                 userSelfInfo:state => state.user.userSelfInfo,   
                 global: state => state.global 
-			})
+            }),
+            showChildItem(){
+                return this.patientListInfo.list[this.nowNav]?this.patientListInfo.list[this.nowNav].childModules[this.patientListInfo.list[this.nowNav].showChildModuleIndex].code:''
+            },
+            showChildItemData(){
+                return this.patientListInfo.list[this.nowNav]?this.patientListInfo.list[this.nowNav].childModules[this.patientListInfo.list[this.nowNav].showChildModuleIndex].data:null
+            },
 		},
 		
 		data () {
@@ -88,177 +96,63 @@
                     age:'',//年龄
                     idNo:''//身份证
                 },
-                /************************************************************** */
+                
                 /**
                  * 用户信息
                  */
                 patientListInfo:{
                     list:[//住院信息 
-                        {
-                            name:'XXXX医院',//入住医院,
-                            time:'208-12-25 10:00',//入院时间
-                            department:'XXXX科室',//入住科室
-                            bedNum:'外科大楼5楼504',//床    号
-                            showChildModuleIndex:0,//展示子模块索引（展示第几个子模块）
-                            childModules:[//子模块
-                                {
-                                    code:'beHospitalized',//子模块识别码
-                                    name:'首次入院记录',//子模块名称
-                                    time:'208-12-25 10:00',//子模块时间
-                                    data:{
-                                        a:55
-                                    },//子模块显示数据
-                                },
-                                {
-                                    code:'diseaseCourse',//子模块识别码
-                                    name:'首次病程记录',//子模块名称
-                                    time:'208-12-25 10:00',//子模块时间
-                                    data:{
-                                        b:111
-                                    },//子模块显示数据
-                                },
-                                {
-                                    code:'dailyDiseaseCourse',//子模块识别码
-                                    name:'日常病程记录',//子模块名称
-                                    time:'208-12-25 10:00',//子模块时间
-                                    data:{
-                                        c:222
-                                    },//子模块显示数据
-                                },
-                                {
-                                    code:'leaveHospital',//子模块识别码
-                                    name:'出院记录',//子模块名称
-                                    time:'208-12-25 10:00',//子模块时间
-                                    data:{
-                                        d:333
-                                    },//子模块显示数据
-                                },
-                                {
-                                    code:'clinicalThermometer',//子模块识别码
-                                    name:'体温表',//子模块名称
-                                    time:'208-12-25 10:00',//子模块时间
-                                    data:{
-                                        e:444
-                                    },//子模块显示数据
-                                },
-                            ]
-                        },
-                        {
-                            name:'XXXX医院',//入住医院,
-                            time:'208-12-25 10:00',//入院时间
-                            department:'XXXX科室',//入住科室
-                            bedNum:'外科大楼5楼504',//床    号
-                            showChildModuleIndex:0,//展示子模块索引（展示第几个子模块）
-                            childModules:[//子模块
-                                {
-                                    code:'beHospitalized',//子模块识别码
-                                    name:'首次入院记录',//子模块名称
-                                    time:'208-12-25 10:00',//子模块时间
-                                    data:{
-                                        f:666
-                                    },//子模块显示数据
-                                },
-                                {
-                                    code:'diseaseCourse',//子模块识别码
-                                    name:'首次病程记录',//子模块名称
-                                    time:'208-12-25 10:00',//子模块时间
-                                    data:{
-                                        g:777
-                                    },//子模块显示数据
-                                },
-                                {
-                                    code:'dailyDiseaseCourse',//子模块识别码
-                                    name:'日常病程记录',//子模块名称
-                                    time:'208-12-25 10:00',//子模块时间
-                                    data:{
-                                        h:888
-                                    },//子模块显示数据
-                                }
-                            ]
-                        },
                         // {
                         //     name:'XXXX医院',//入住医院,
                         //     time:'208-12-25 10:00',//入院时间
                         //     department:'XXXX科室',//入住科室
                         //     bedNum:'外科大楼5楼504',//床    号
-                        //     hospitalInfo:{//患者在该医院信息
-                        //         showModule:'beHospitalized',
-                        //         beHospitalized:{//首次入院记录
-                        //             name:'首次入院记录2',
+                        //     showChildModuleIndex:0,//展示子模块索引（展示第几个子模块）
+                        //     childModules:[//子模块
+                        //         {
+                        //             code:'beHospitalized',//子模块识别码
+                        //             name:'首次入院记录',//子模块名称
+                        //             time:'208-12-25 10:00',//子模块时间
                         //             data:{
-                        //                 name:'2nd 首次入院记录2'
-                        //             }
+                        //                 a:55
+                        //             },//子模块显示数据
                         //         },
-                        //         diseaseCourse:{//首次病程记录
-                        //             name:'首次病程记录2',
+                        //         {
+                        //             code:'diseaseCourse',//子模块识别码
+                        //             name:'首次病程记录',//子模块名称
+                        //             time:'208-12-25 10:00',//子模块时间
                         //             data:{
-                        //                 name:'2nd 首次病程记录2'
-                        //             }
+                        //                 b:111
+                        //             },//子模块显示数据
                         //         },
-                        //         dailyDiseaseCourse:{//日常病程记录
-                        //             name:'日常病程记录2',
+                        //         {
+                        //             code:'dailyDiseaseCourse',//子模块识别码
+                        //             name:'日常病程记录',//子模块名称
+                        //             time:'208-12-25 10:00',//子模块时间
                         //             data:{
-                        //                 name:'2nd 日常病程记录2'
-                        //             }
+                        //                 c:222
+                        //             },//子模块显示数据
                         //         },
-                        //         leaveHospital:{//出院记录
-                        //             name:'出院记录2',
+                        //         {
+                        //             code:'leaveHospital',//子模块识别码
+                        //             name:'出院记录',//子模块名称
+                        //             time:'208-12-25 10:00',//子模块时间
                         //             data:{
-                        //                 name:'2nd 出院记录2'
-                        //             }
+                        //                 d:333
+                        //             },//子模块显示数据
                         //         },
-                        //         clinicalThermometer:{//体温表
-                        //             name:'体温表2',
+                        //         {
+                        //             code:'clinicalThermometer',//子模块识别码
+                        //             name:'体温表',//子模块名称
+                        //             time:'208-12-25 10:00',//子模块时间
                         //             data:{
-                        //                 name:'2nd 体温表2'
-                        //             }
-                        //         }
-                        //     },
-                        // },
-                        // {
-                        //     name:'XXXX医院',//入住医院,
-                        //     time:'208-12-25 10:00',//入院时间
-                        //     department:'XXXX科室',//入住科室
-                        //     bedNum:'外科大楼5楼504',//床    号
-                        //     hospitalInfo:{//患者在该医院信息
-                        //         showModule:'beHospitalized',
-                        //         beHospitalized:{//首次入院记录
-                        //             name:'首次入院记录3',
-                        //             data:{
-                        //                 name:'3th 首次入院记录3'
-                        //             }
+                        //                 e:444
+                        //             },//子模块显示数据
                         //         },
-                        //         diseaseCourse:{//首次病程记录
-                        //             name:'首次病程记录3',
-                        //             data:{
-                        //                 name:'3th 首次病程记录3'
-                        //             }
-                        //         },
-                        //         dailyDiseaseCourse:{//日常病程记录
-                        //             name:'日常病程记录3',
-                        //             data:{
-                        //                 name:'3th 日常病程记录3'
-                        //             }
-                        //         },
-                        //         leaveHospital:{//出院记录
-                        //             name:'出院记录3',
-                        //             data:{
-                        //                 name:'3th 出院记录3'
-                        //             }
-                        //         },
-                        //         clinicalThermometer:{//体温表
-                        //             name:'体温表3',
-                        //             data:{
-                        //                 name:'3th 体温表3'
-                        //             }
-                        //         }
-                        //     },
+                        //     ]
                         // },
                     ],
-                },
-                
-                
-                
+                },  
 			}
 		},
 		
@@ -305,7 +199,6 @@
                     orgCode:this.userSelfInfo.orgCode,
                 });
                 if(res.data && res.data.errCode === 0){
-                    console.error(res);
                     this.patientListInfo.list = [];
                     res.data.body.forEach((item,index)=>{
                         this.patientListInfo.list.push({
@@ -314,33 +207,50 @@
                             department:item.deptName,
                             bedNum:item.bedNo,
                             showChildModuleIndex:0,
-                            childModules:[]
+                            childModules:[
+                                {
+                                    code:'beHospitalized',//子模块识别码
+                                    name:'首次入院记录',//子模块名称
+                                    time:'',//子模块时间
+                                    data:{
+                                        a:55
+                                    },//子模块显示数据
+                                },
+                                {
+                                    code:'diseaseCourse',//子模块识别码
+                                    name:'首次病程记录',//子模块名称
+                                    time:'',//子模块时间
+                                    data:{
+                                        b:111
+                                    },//子模块显示数据
+                                },
+                                {
+                                    code:'dailyDiseaseCourse',//子模块识别码
+                                    name:'日常病程记录',//子模块名称
+                                    time:'',//子模块时间
+                                    data:{
+                                        c:222
+                                    },//子模块显示数据
+                                },
+                                {
+                                    code:'leaveHospital',//子模块识别码
+                                    name:'出院记录',//子模块名称
+                                    time:'',//子模块时间
+                                    data:{
+                                        d:333
+                                    },//子模块显示数据
+                                },
+                                {
+                                    code:'clinicalThermometer',//子模块识别码
+                                    name:'体温表',//子模块名称
+                                    time:'',//子模块时间
+                                    data:{
+                                        e:444
+                                    },//子模块显示数据
+                                },
+                            ]
                         });
-                        this.getEMRInRecord(item.visitNo)
-                        .then(response=>{
-                            if(response.data && response.data.errCode === 0){
-                                console.error(response)
-                                this.patientListInfo.list[index].childModules = response.data.body.map(ele => {
-                                    ele.code = '';
-                                    ele.name = '首次入院记录';
-                                    ele.time = ele.recordDtime;
-
-                                });
-                            }else{
-                                this.$notify({
-                                    title: '首次入院记录获取失败',
-                                    message: response.data.errMsg,  
-                                    type: 'error'
-                                });
-                            }
-                        })
-                        .catch(err=>{
-                            this.$notify({
-                                title: '首次入院记录获取失败',
-                                message: err,  
-                                type: 'error'
-                            });
-                        });
+                        this.getAllChildrenModulesList(item.visitNo,index);
                     });
                     
                     
@@ -357,19 +267,26 @@
              */
             getAllChildrenModulesList(id,index){
                 return Promise.all([
-                    this.getEMRInRecord(id)
+                    this.getEMRInRecord(id,index),
+                    this.getEMRFirstCourse(id,index),
+                    this.getEMREverydayCourse(id,index),
+                    this.getEMRLeaveHospital(id,index),
                 ])
                 .then(resList => {
-
+                    console.log(this.patientListInfo)
                 })
                 .catch(err => {
-
+                    this.$notify({
+						title: 'error',
+						message: err,  
+						type: 'error'
+					});
                 });
             },
             /**
              * 3.根据电子病历ID获取首次入院记录
              */
-            async getEMRInRecord(id){
+            async getEMRInRecord(id,index){
                 if(!this.inData)return;
                 const res = await eMRInRecord({
                     token:this.userInfo.token,
@@ -378,8 +295,11 @@
                     id
                 });
                 if(res.data && res.data.errCode === 0){
-                    console.error(res)
-                    
+                    this.patientListInfo.list[index].childModules[0].time = res.data.body.recordDtime;
+                    this.patientListInfo.list[index].childModules[0].data = res.data.body.contents;
+                    this.patientListInfo.list[index].childModules[0].recordName = res.data.body.recordName;//记录医生
+                    this.patientListInfo.list[index].childModules[0].inSno = res.data.body.inSno;//住院流水号
+                    this.patientListInfo = Object.assign({},this.patientListInfo);
 				}else{
 					this.$notify({
 						title: '首次入院记录获取失败',
@@ -388,7 +308,81 @@
 					});
 				}
             },
-
+            /**
+             * 12.根据电子病历ID获取首次病程记录
+             */
+            async getEMRFirstCourse(id,index){
+                if(!this.inData)return;
+                const res = await eMRFirstCourse({
+                    token:this.userInfo.token,
+                    familyMemberId:this.inData.id,
+                    orgCode:this.userSelfInfo.orgCode,
+                    id
+                });
+                if(res.data && res.data.errCode === 0){
+                    this.patientListInfo.list[index].childModules[1].time = res.data.body[0].recordDtime;
+                    this.patientListInfo.list[index].childModules[1].data = res.data.body[0].contents;
+                    this.patientListInfo.list[index].childModules[1].recordName = res.data.body[0].recordName;//记录医生
+                    this.patientListInfo.list[index].childModules[1].inSno = res.data.body[0].inSno;//住院流水号
+                    this.patientListInfo = Object.assign({},this.patientListInfo);
+				}else{
+					this.$notify({
+						title: '首次病程记录获取失败',
+						message: res.data.errMsg,  
+						type: 'error'
+					});
+				}
+            },
+            /**
+             * 13.根据电子病历ID获取日常病程记录
+             */
+            async getEMREverydayCourse(id,index){
+                if(!this.inData)return;
+                const res = await eMREverydayCourse({
+                    token:this.userInfo.token,
+                    familyMemberId:this.inData.id,
+                    orgCode:this.userSelfInfo.orgCode,
+                    id
+                });
+                if(res.data && res.data.errCode === 0){
+                    this.patientListInfo.list[index].childModules[2].time = res.data.body[0].recordDtime;
+                    this.patientListInfo.list[index].childModules[2].data = res.data.body[0].contents;
+                    this.patientListInfo.list[index].childModules[2].recordName = res.data.body[0].recordName;//记录医生
+                    this.patientListInfo.list[index].childModules[2].inSno = res.data.body[0].inSno;//住院流水号
+                    this.patientListInfo = Object.assign({},this.patientListInfo);
+				}else{
+					this.$notify({
+						title: '日常病程记录获取失败',
+						message: res.data.errMsg,  
+						type: 'error'
+					});
+				}
+            },
+            /**
+             * 14.根据电子病历ID获取出院记录
+             */
+            async getEMRLeaveHospital(id,index){
+                if(!this.inData)return;
+                const res = await eMRLeaveHospital({
+                    token:this.userInfo.token,
+                    familyMemberId:this.inData.id,
+                    orgCode:this.userSelfInfo.orgCode,
+                    id
+                });
+                if(res.data && res.data.errCode === 0){
+                    this.patientListInfo.list[index].childModules[3].time = res.data.body[0].recordDtime;
+                    this.patientListInfo.list[index].childModules[3].data = res.data.body[0].contents;
+                    this.patientListInfo.list[index].childModules[3].recordName = res.data.body[0].recordName;//记录医生
+                    this.patientListInfo.list[index].childModules[3].inSno = res.data.body[0].inSno;//住院流水号
+                    this.patientListInfo = Object.assign({},this.patientListInfo);
+				}else{
+					this.$notify({
+						title: '出院记录获取失败',
+						message: res.data.errMsg,  
+						type: 'error'
+					});
+				}
+            },
             selectModule(item,index){
                 this.nowNav = index;
             },

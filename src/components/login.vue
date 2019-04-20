@@ -39,6 +39,7 @@ import {
     fetchHospitalDepts
 } from "../api/apiAll.js"; //api
 import createUUID from "../public/publicJs/createUUID.js";
+import {deepCopy} from "../public/publicJs/deepCopy.js";
 import websocket1 from "../common/websocket.vue";
 export default {
     components: {
@@ -374,11 +375,22 @@ export default {
                 sessionStorage.setItem("viewRoot", JSON.stringify(reData)); //缓存将权限下来
                 return;
             }
-            data.hasAuth = data.hasAuth.map(item=>{
-                item.authorityId = ( ( ( Number(item.authorityId)/10000 ) | 0 ) *10000 ).toString();
-                return item;
+            const midData = deepCopy(data.hasAuth);
+            data.hasAuth.forEach(ele=>{
+                const countUnm = ( ( Number(ele.authorityId)/10000 ) | 0 ) *10000;
+                if( countUnm !== Number(ele.authorityId) ){
+                    midData.push({
+                        authorityId:countUnm.toString(),
+                        type:ele.type
+                    });
+                }
             });
-            data.hasAuth = this.uniqueArray(data.hasAuth,'authorityId','type');
+            data.hasAuth = this.uniqueArray(midData,'authorityId','type');
+            // data.hasAuth = data.hasAuth.map(item=>{
+            //     item.authorityId = ( ( ( Number(item.authorityId)/10000 ) | 0 ) *10000 ).toString();
+            //     return item;
+            // });
+            // data.hasAuth = this.uniqueArray(data.hasAuth,'authorityId','type');
             for (let i of this.allPages) {
                 for (let j of data.hasAuth) {
                     if (j.authorityId === i.code) {
@@ -388,7 +400,6 @@ export default {
                     }
                 }
             }
-            // console.log(reData)
             if (reData.manager.length > 1) {
                 //为什么是大于1？因为我一开始就在里面放了个元素，还有为什么我不用用户的身份判断？因为那东西是真的水，根据产品设计，用户不是管理员也有可能操作管理员页面~~~！
                 reData.now = {

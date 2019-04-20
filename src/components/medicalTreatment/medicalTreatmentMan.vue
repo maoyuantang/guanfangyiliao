@@ -1145,8 +1145,16 @@
           })
         })
         this.kuangData2.options1.value = data.deptId
-        this.kuangData2.options2.value = data.id
-        
+        data.levels.forEach(element => {
+          this.kuangData2.options2.value.push(element.controlId)
+        });
+        // this.kuangData2.options2.list.map((a,b)=>{
+        //   this.kuangData2.options2.value.map((c, d) => {
+        //     if(c == a.value){
+              
+        //     }
+        //   })
+        // })
         console.log(this.kuangData2.options2.value)
         console.log(this.kuangData2.options2.list)
 
