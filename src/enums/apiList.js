@@ -324,5 +324,6 @@ export default {
     toUpdate:'/m/v1/api/referral/dualReferral/toUpdate',//14.18.双向转诊-WEB医生端-获取修改记录
     registeredStatistics:'/m/v1/api/user/user/registeredStatistics',//3.11 注册用户
     eMRList:'/m/v1/api/record/nosocomialRecord/eMRList',//2.电子病历列表
+    eMRInRecord:'/m/v1/api/record/nosocomialRecord/eMRInRecord',//3.根据电子病历ID获取首次入院记录
 }
 

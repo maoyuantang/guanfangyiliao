@@ -3422,3 +3422,14 @@ export const eMRList = query => { //3.11 注册用户
         }
     })
 }
+export const eMRInRecord = query => { //3.根据电子病历ID获取首次入院记录
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRInRecord,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}

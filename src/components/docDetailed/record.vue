@@ -47,7 +47,7 @@
 
 <script>
     import { mapState } from 'vuex'
-    import {eMRList, getDoctorMessage1} from '../../api/apiAll.js'
+    import {eMRList, getDoctorMessage1, eMRInRecord} from '../../api/apiAll.js'
     import beHospitalized from './record/beHospitalized.vue'//首次入院记录
     import diseaseCourse from './record/diseaseCourse.vue'//首次病程记录
     import dailyDiseaseCourse from './record/dailyDiseaseCourse.vue'//日常病程记录
@@ -305,7 +305,45 @@
                     orgCode:this.userSelfInfo.orgCode,
                 });
                 if(res.data && res.data.errCode === 0){
-                    console.log(res)
+                    console.error(res);
+                    this.patientListInfo.list = [];
+                    res.data.body.forEach((item,index)=>{
+                        this.patientListInfo.list.push({
+                            name:item.hospitalName,
+                            time:item.visitDtime,
+                            department:item.deptName,
+                            bedNum:item.bedNo,
+                            showChildModuleIndex:0,
+                            childModules:[]
+                        });
+                        this.getEMRInRecord(item.visitNo)
+                        .then(response=>{
+                            if(response.data && response.data.errCode === 0){
+                                console.error(response)
+                                this.patientListInfo.list[index].childModules = response.data.body.map(ele => {
+                                    ele.code = '';
+                                    ele.name = '首次入院记录';
+                                    ele.time = ele.recordDtime;
+
+                                });
+                            }else{
+                                this.$notify({
+                                    title: '首次入院记录获取失败',
+                                    message: response.data.errMsg,  
+                                    type: 'error'
+                                });
+                            }
+                        })
+                        .catch(err=>{
+                            this.$notify({
+                                title: '首次入院记录获取失败',
+                                message: err,  
+                                type: 'error'
+                            });
+                        });
+                    });
+                    
+                    
 				}else{
 					this.$notify({
 						title: '患者信息获取失败',
@@ -314,6 +352,43 @@
 					});
 				}
             },
+            /**
+             * 获取 单个模块所有子模块列表数据
+             */
+            getAllChildrenModulesList(id,index){
+                return Promise.all([
+                    this.getEMRInRecord(id)
+                ])
+                .then(resList => {
+
+                })
+                .catch(err => {
+
+                });
+            },
+            /**
+             * 3.根据电子病历ID获取首次入院记录
+             */
+            async getEMRInRecord(id){
+                if(!this.inData)return;
+                const res = await eMRInRecord({
+                    token:this.userInfo.token,
+                    familyMemberId:this.inData.id,
+                    orgCode:this.userSelfInfo.orgCode,
+                    id
+                });
+                if(res.data && res.data.errCode === 0){
+                    console.error(res)
+                    
+				}else{
+					this.$notify({
+						title: '首次入院记录获取失败',
+						message: res.data.errMsg,  
+						type: 'error'
+					});
+				}
+            },
+
             selectModule(item,index){
                 this.nowNav = index;
             },
