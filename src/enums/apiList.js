@@ -325,5 +325,8 @@ export default {
     registeredStatistics:'/m/v1/api/user/user/registeredStatistics',//3.11 注册用户
     eMRList:'/m/v1/api/record/nosocomialRecord/eMRList',//2.电子病历列表
     eMRInRecord:'/m/v1/api/record/nosocomialRecord/eMRInRecord',//3.根据电子病历ID获取首次入院记录
+    eMRFirstCourse:'/m/v1/api/record/nosocomialRecord/eMRFirstCourse',//12.根据电子病历ID获取首次病程记录
+    eMREverydayCourse:'/m/v1/api/record/nosocomialRecord/eMREverydayCourse',//13.根据电子病历ID获取日常病程记录
+    eMRLeaveHospital:'/m/v1/api/record/nosocomialRecord/eMRLeaveHospital',//14.根据电子病历ID获取出院记录
 }
 

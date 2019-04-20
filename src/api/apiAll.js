@@ -3433,3 +3433,36 @@ export const eMRInRecord = query => { //3.根据电子病历ID获取首次入院
         }
     })
 }
+export const eMRFirstCourse = query => { //12.根据电子病历ID获取首次病程记录
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRFirstCourse,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMREverydayCourse = query => { //13.根据电子病历ID获取日常病程记录
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMREverydayCourse,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMRLeaveHospital = query => { //14.根据电子病历ID获取出院记录
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRLeaveHospital,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
