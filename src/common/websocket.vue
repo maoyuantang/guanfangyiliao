@@ -85,7 +85,7 @@ export default {
             heartCheck: {},
             createVideoRoomData: {},
             sessionId: "",
-            tongbuIf: false,
+            tongbuIf: true,
             defaultImg: 'this.src="' + require("../assets/img/a-6.png") + '"'
         };
     },
@@ -543,15 +543,39 @@ export default {
                             bodyVideo.indexOf("sendroom") > -1 ||
                             bodyVideo.indexOf("MicroCinicSendRoom") > -1
                         ) {
-                            // let oindex = odata.info.body.lastIndexOf("$");
-                            // let reciveUserList = odata.info.body.substring(
-                            //     oindex + 1,
-                            //     odata.info.body.length
-                            // );
-                            // reciveUserList = reciveUserList.split("&");
-                            // let videoList=[]
-                            // _this.userSocketInfo.
-                            //  _this.$store.commit("socket/VIDEOLIST", true);
+                            //收到视频后存好sessionId和房间id
+
+                            let videoList = [];
+                            let videoList1 = 0;
+                            videoList = deepCopy(
+                                _this.userSocketInfo.videoList
+                            );
+
+                            $.each(videoList, (index, text) => {
+                                if (text.sessionId == odata.info.to) {
+                                    text.conferenceId = odata.info.body.split(
+                                        "&"
+                                    )[2];
+                                    text.conferenceNumber = odata.info.body.split(
+                                        "&"
+                                    )[1];
+                                    videoList1 += 1;
+                                }
+                            });
+                            if (videoList1 == 0) {
+                                let ovideo = {
+                                    sessionId: odata.info.to,
+                                    conferenceId: odata.info.body.split("&")[2],
+                                    conferenceNumber: odata.info.body.split(
+                                        "&"
+                                    )[1]
+                                };
+                                videoList.push(ovideo);
+                            }
+
+                            console.log(videoList);
+                            _this.$store.commit("socket/VIDEOLIST", videoList);
+                            console.log(_this.userSocketInfo.videoList);
                             _this.$store.commit("socket/RECEIVEVIDEOVIS", true);
                             _this.userSocketInfo.receiveVideoVisable = true;
                             console.log(

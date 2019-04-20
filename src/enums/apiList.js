@@ -95,7 +95,8 @@ export default {
     receiveDoctor:'/m/v1/api/synergy/receiveDoctor',//9.10本院参与科室
     createVideoRoom:'/m/v1/api/basics/videoMeeting/createVideoRoom',//1.3.创建视频
     storageUsers:'/m/v1/api/basics/videoMeeting/storageUsers',//1.4.进入/退出视频房间
-    queryStorageUsers:'/m/v1/api/videoMeeting/queryStorageUsers/',//1.5.根据房间号获取用户列表
+    //queryStorageUsers:'/m/v1/api/videoMeeting/queryStorageUsers/',1.5.根据房间号获取用户列表
+    queryStorageUsers:'/m/v1/api/basics/videoMeeting/queryStorageUsers/' ,
     closeVideoRoom:'/m/v1/api/basics/videoMeeting/closeVideoRoom/',//1.6.删除视频会议房间
     videoMeetingInvited:'/m/v1/api/videoMeeting/invited/',//1.7.邀请用户进行视频通话
     invitedOff:'/m/v1/api/videoMeeting/invited/off/',//1.8.通知邀请者已经进入会议视频

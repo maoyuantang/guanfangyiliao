@@ -134,8 +134,8 @@
                  <el-dropdown>
                                         <el-button class="chatFileClass" type="danger" size="mini" plain><img src="../../assets/img/sendNew10.png" /></el-button>
                                         <el-dropdown-menu slot="dropdown">
-                                            <el-dropdown-item @click.native="openManFile(scope.row)">孕妇信息</el-dropdown-item>
-                                            <el-dropdown-item @click.native="openPublicFile(scope.row)">普通档案</el-dropdown-item>
+                                            <el-dropdown-item @click.native="openManFile()">孕妇信息</el-dropdown-item>
+                                            <el-dropdown-item @click.native="openPublicFile()">普通档案</el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
             </span>

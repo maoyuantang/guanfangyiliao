@@ -4,8 +4,8 @@
             <div class="row">
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
-                        <div id="remoteVideos" v-loading="loadingOther" element-loading-text="加载视频中"  element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
-                            ddd
+                        <div id="remoteVideos">
+
                         </div>
                         <div class="videoChatBtn" @click="videoChatBtn()">
                             <img style='width: 23px;
@@ -675,7 +675,11 @@ export default {
             if (res.data && res.data.errCode === 0) {
                 let childMessageType = "";
                 let messageBody = "complete";
-
+                if (num != 2) {
+                    if (_this.videoUser < 2) {
+                        _this.deleteVideoRoom();
+                    }
+                }
                 if (num == 3) {
                     console.log("离开房间1");
 
@@ -704,9 +708,6 @@ export default {
                     );
                 }
                 _this.closeVideoBtnVieable = true; //关闭视频显示
-                if (_this.videoUser < 2) {
-                    _this.deleteVideoRoom();
-                }
 
                 console.log("离开房间");
                 _this.leaveRoomBtn();
@@ -1807,7 +1808,8 @@ export default {
             if (_this.videoType == "门诊") {
                 _this.closeTheVideo();
             } else {
-                _this.closePublicVideo();
+                // _this.closePublicVideo();
+                _this.closeVideoRoom(2);
             }
         });
         /**
