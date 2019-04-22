@@ -1300,7 +1300,7 @@
           this.addForm.typeList.value = res.data.body.typeCode
           this.addForm.diseaseName.value = res.data.body.illnessId
           this.addForm.patient.value = res.data.body.patientId
-          // this.addForm.intoHospital.value = [res.data.body.receiveOrgCode, res.data.body.receiveDeptId]
+          // this.addForm.intoHospital.value = [res.data.body.receiveOrgCode, res.data.body.receiveDeptId]//等待
           // this.addForm.intoHospital.value = res.data.body.receiveDeptName
           this.addForm.giveRight.value = res.data.body.medicalHistoryIds
           this.addForm.moveTime.value = res.data.body.applyTime
