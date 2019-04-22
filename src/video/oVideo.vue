@@ -681,7 +681,7 @@ export default {
             const res = await storageUsers(query, options);
             if (res.data && res.data.errCode === 0) {
                 let childMessageType = "";
-                let messageBody = "complete";
+                let messageBody = "complete&time=";
                 console.log(num);
                 if (num == 3) {
                     console.log("离开房间1");
@@ -698,10 +698,11 @@ export default {
                         if (_this.videoUser < 2) {
                             console.log("离开房间4");
                             _this.deleteVideoRoom();
+                            _this.sendMessageChat("6", "complete&time=", "VIDEO");
                         } else {
                             console.log("离开房间5");
-                            messageBody = "complete";
-                            _this.sendMessageChat("6", "complete", "VIDEO");
+                            messageBody = "complete&time=";
+                            _this.sendMessageChat("6", "complete&time=", "VIDEO");
                             _this.$emit("reback", "closeCancle");
                         }
                     }
@@ -1670,13 +1671,13 @@ export default {
             _this.videoUser += 1;
             // alert("收到有人进入房间" + _this.videoUser);
             //人数超过3人呗踢出
-            if (_this.videoUser > 3) {
-                _this.closeVideoRoom(2);
-                _this.$notify.error({
-                    title: "警告",
-                    message: "当前视频人数已满"
-                });
-            }
+            // if (_this.videoUser > 3) {
+            //     _this.closeVideoRoom(2);
+            //     _this.$notify.error({
+            //         title: "警告",
+            //         message: "当前视频人数已满"
+            //     });
+            // }
         });
         /**
          * 收到有人离开房间
@@ -1690,10 +1691,8 @@ export default {
             // _this.$store.commit("socket/VIDEOUSER", 0);
             _this.videoUser -= 1;
             if (_this.videoType == "门诊") {
-                // _this.closeTheVideo();
                 _this.getThePatient();
                 _this.noLineUpNum();
-                // _this.closeVideoRoom(0);
                 _this.guaVisable = false;
                 _this.questVisable = false;
                 console.log("门诊关闭视频成功");
@@ -1701,6 +1700,7 @@ export default {
                 _this.videoIng = 0;
             } else {
                 if (_this.videoUser < 1) {
+                    console.log('有人离开人数少于1')
                     _this.closeVideoRoom(2);
                 }
             }
