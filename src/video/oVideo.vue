@@ -602,7 +602,7 @@ export default {
         },
         //挂断当前视频
         async closeTheVideo() {
-            console.log('挂断当前视频')
+            console.log("挂断当前视频");
             // this.streamObject.getTracks()[0].stop();
             let _this = this;
             let query = {
@@ -621,6 +621,7 @@ export default {
                 _this.questVisable = false;
                 console.log("关闭视频成功");
                 _this.localVideoVisable = false;
+                _this.closeVideoBtnVieable=true
                 _this.videoIng = 0;
                 // _this.$store.commit("socket/IFENTERVIDEO", 0);
             } else {
@@ -664,7 +665,6 @@ export default {
         },
         //退出视频房间
         async closeVideoRoom(num) {
-           
             if (num == 2) {
                 //    为2是人数太多被挤出或者都挂断了视频，只剩我一个自动退出
                 console.log("被挤下去");
@@ -682,7 +682,7 @@ export default {
             if (res.data && res.data.errCode === 0) {
                 let childMessageType = "";
                 let messageBody = "complete";
-                 console.log(num)
+                console.log(num);
                 if (num == 3) {
                     console.log("离开房间1");
 
@@ -707,7 +707,8 @@ export default {
                     }
                     _this.$store.commit("socket/IFVIDEOIMG", 0);
                 } else if (num == 0) {
-                    console.log('0000000000000000000000000000000000000000')
+                    messageBody='MicroCinic&hangup'
+                    console.log("0000000000000000000000000000000000000000");
                     if (_this.videoUser < 2) {
                         _this.deleteVideoRoom();
                     }
@@ -728,7 +729,7 @@ export default {
                     title: "警告",
                     message: res.data.errMsg
                 });
-                // this.$emit("reback", "closeCancle");
+                this.$emit("reback", "closeCancle");
             }
         },
         //删除视频房间
@@ -742,7 +743,7 @@ export default {
             if (res.data && res.data.errCode === 0) {
                 console.log("删除房间陈宫");
                 if (_this.videoType != "门诊") {
-                     console.log("删除房间陈宫1");
+                    console.log("删除房间陈宫1");
                     _this.$emit("reback");
                 }
             } else {
@@ -1689,7 +1690,15 @@ export default {
             // _this.$store.commit("socket/VIDEOUSER", 0);
             _this.videoUser -= 1;
             if (_this.videoType == "门诊") {
-                _this.closeTheVideo();
+                // _this.closeTheVideo();
+                _this.getThePatient();
+                _this.noLineUpNum();
+                // _this.closeVideoRoom(0);
+                _this.guaVisable = false;
+                _this.questVisable = false;
+                console.log("门诊关闭视频成功");
+                _this.localVideoVisable = false;
+                _this.videoIng = 0;
             } else {
                 if (_this.videoUser < 1) {
                     _this.closeVideoRoom(2);
