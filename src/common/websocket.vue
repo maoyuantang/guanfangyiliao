@@ -265,7 +265,7 @@ export default {
                 //心跳.
             };
             this.$store.state.socket.socketObj.onclose = e => {
-                this.webSocketonclose(e);
+                this.webSocketonclose(e,otoken);
             };
             this.$store.state.socket.socketObj.onopen = e => {
                 this.webSocketonopen(buffer);
@@ -1320,12 +1320,12 @@ export default {
         //     this.$store.state.socket.socketObj.send(msg);
         // },
         //关闭
-        webSocketonclose(e) {
+        webSocketonclose(e,otoken) {
             console.log(e);
             console.log(this.userState.token);
             if (this.userState.isLogin) {
                 console.log("connection closed (" + e.code + ")");
-                this.reconnect();
+                this.reconnect(otoken);
             }
         },
         webSocketonopen(buffer) {
