@@ -3,7 +3,7 @@
         <div class="education-doc-label-top">
             <div class="education-doc-label-imgdiv">
                 <!-- <img src="https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/5ad1576a993985e2d93b3e04735110f7" alt=""> -->
-                <img :src="inData.imgUrl || '../../../static/assets/img/a-6.png'" :alt="inData.teacherName">
+                <img :src="inData.imgUrl || '../../../static/assets/img/doctorImg.png'" :alt="inData.teacherName">
             </div>
             <div class="education-doc-label-userinfo">
                 <p class="education-doc-label-username">{{inData.teacherName || '缺失'}}</p>

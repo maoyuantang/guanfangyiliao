@@ -1004,7 +1004,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .super-management {
 }
 .super-management-top{
@@ -1098,6 +1098,13 @@ export default {
 .pagination{
     text-align: center;
     width:100%;
+}
+.super-management .el-tree-node__content .el-checkbox__inner{
+    width:14px !important;
+    height: 14px !important;
+}
+.super-management .el-tree-node__content{
+    margin:0 !important;
 }
 </style>
 <!--
