@@ -44,7 +44,7 @@
 						<li class="name" style="display:-webkit-flex;justify-content: space-between;width: 90%;">
 							<h1>{{text1.userName}}</h1>
 							<div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0">
-								<span class="tanKuang1" @click="seeHistory(text1.userId)">查看档案</span>
+								<span class="tanKuang1" @click="seeHistory(text1.userId)" style="cursor: pointer;">查看档案</span>
 								<button class="tanKuang2" @click="sendMessage(text,text1)" :disabled="text1.disabledStatus">发送</button>
 								<div class="tanKuang3">{{text1.orderState}}</div>
 								<!-- <el-button type="success" plain @click="seeHistory(text1.userId)">查看档案</el-button> -->
@@ -326,7 +326,7 @@
 			</li>
 		</ul>
 
-		<ul v-if="oconsulVisable == 2 && this.typeQuan1==true" class="transport">
+		<ul v-if="oconsulVisable == 2 && typeQuan1==true" class="transport">
 			<li class="checkList">
 				<div class="title">
 					<span class="title1">审核列表</span>
@@ -553,12 +553,13 @@
 						<div style="display: flex; align-items: center;">
 							<img v-if="text5.headId == null" style="width: 53px; margin: 0 30px 0 0;" src="../assets/img/a-6.png"
 								alt="">
-							<img v-if="text5.headId" :src='userSocketInfo.imgUrl+text5.headId' alt="医生头像">
+							<img v-if="text5.headId" :src='userSocketInfo.imgUrl+text5.headId' alt="医生头像"
+								style="width: 53px;margin: 0px 30px 0px 0px;border-radius: 50%;">
 							<div>
 								<!-- <img src="../assets/img/a-6.png" alt=""> -->
 								<h1
 									style="margin: 0 0 10px 0;font-family: PingFangSC-Semibold;font-size: 15px;color: #002257;letter-spacing: 0.1px;">
-									{{text5.userName}}{{text5}}</h1>
+									{{text5.userName}}</h1>
 								<div class="orderTime">
 									<span>下单时间:</span>
 									<span class="span">{{text5.clinicOrderTime}}</span>
@@ -566,7 +567,7 @@
 							</div>
 						</div>
 						<div style="display:-webkit-flex;justify-content: space-around;margin: 0 0.1rem 0 0;height: 40px;">
-							<span class="tanKuang1" @click="seeHistory(text5.userId)">查看档案</span>
+							<span class="tanKuang1" @click="seeHistory(text5.userId)" style="cursor: pointer;">查看档案</span>
 							<span class="tanKuang2" @click="sendMessage(huanzheList3,text5)">发送</span>
 							<!-- <el-button type="success" plain @click="seeHistory(text5.userId)">查看档案</el-button>
               <el-button type="danger" @click="sendMessage(huanzheList3,text5)">发送</el-button> -->
@@ -652,6 +653,7 @@
 		onlineRoomsByDoctor, //7.6(WEB医生)获取所有该医生的在线诊室
 		reviewList, //7.10按审方医生获取处方审核列表
 		prescriptionDetailByCondition, //7.11出方列表2
+		sendList, //7.11出方列表2
 		addPrescription, //7.8开处方
 		fsDownload, //1.9.文件下载
 
@@ -985,13 +987,14 @@
 			},
 			// 医生端权限
 			doctorQuanXian() {
-				let quanXian = this.userInfo.hasAuth
+				let quanXian = this.userInfo.hasAuth.filter(item => item.type === '2')
 				this.typeQuan = []
 				this.typeQuan1 = false
 				this.typeQuan2 = false
 				this.typeQuan3 = false
-				console.log(quanXian)
+				console.table(quanXian)
 				for (let i = 0; i < quanXian.length; i++) {
+					console.log(quanXian[i].authorityId)
 					if (quanXian[i].type == 2) {
 						console.log(quanXian[i].authorityId)
 						this.typeQuan.push(quanXian[i].authorityId)
@@ -1088,6 +1091,9 @@
 				// var nowDate = year + "-" + month + "-" + day;
 				// this.time0 = nowDate;
 				// this.time1 = nowDate;
+				if (!this.typeQuan3) {
+					return
+				}
 
 				const _this = this;
 				let query = {
@@ -1195,6 +1201,9 @@
 			},
 			// 7.10.1按审方医生获取处方审核列表 (医生列表2)
 			async getList2() {
+				if (!this.typeQuan2) {
+					return
+				}
 				const _this = this;
 				let query = {
 					token: this.userInfo.token,
@@ -1223,14 +1232,17 @@
 			},
 			// 7.10.2药品配送列表 (医生列表3)
 			async getList3() {
+				if (!this.typeQuan1) {
+					return
+				}
 				const _this = this;
 				let query = {
 					token: this.userInfo.token,
 					lookType: 1
 				};
-				const res = await reviewList(query);
+				const res = await sendList(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log("医生端列表3(发药)+成功");
+					console.log("医生端列表3(发药sendList)+成功");
 					console.log(res);
 					this.bcd = res.data.body;
 					console.log(this.bcd);
@@ -1241,7 +1253,7 @@
 					console.log(this.tableDataList3);
 				} else {
 					//失败
-					console.log("医生端列表3(发药)+失败");
+					console.log("医生端列表3(发药sendList)+失败");
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1363,10 +1375,14 @@
 		},
 
 		async created() {
+			this.doctorQuanXian();
+
+
 			this.getList1(); //7.6医生列表1
 			// this.addPrescription();//7.8开处方
 			console.log(process.env.IMG_PREFIX)
-			this.doctorQuanXian();
+
+
 		},
 		watch: {
 			"userSocketInfo.synchroMessage": {

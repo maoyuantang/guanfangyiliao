@@ -1566,6 +1566,17 @@ export const reviewList = query => {//7.10按审方医生获取处方审核列�
         }
     })
 }
+export const sendList = query => {//7.6.1按配送医生获取处方配送列表
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.sendList,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
 export const prescriptionDetailByCondition = query => {//7.11根据条件获取处方信息
     const sign = postQueryHandle(query);
     return axios({

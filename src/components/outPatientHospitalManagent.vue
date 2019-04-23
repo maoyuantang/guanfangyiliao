@@ -33,7 +33,7 @@
 						<el-table-column prop="queuePeople" label="当前排队" :show-overflow-tooltip="true"></el-table-column>
 						<!-- <el-table-column prop="updateTime" label="最近修改" :show-overflow-tooltip="true"></el-table-column> -->
 
-						<el-table-column fixed = right label="操作" width="270" >
+						<el-table-column fixed=right label="操作" width="270">
 							<template slot-scope="scope">
 								<button class="lanSe" @click="isShowViewDetailFun(scope.row)">查看详情</button>
 								<button class="lvSe" @click="isShowEditFun(scope.row)">编辑</button>
@@ -137,7 +137,7 @@
 					<el-table-column prop="userName" label="病人" :show-overflow-tooltip="true"></el-table-column>
 					<!-- <el-table-column prop="rxOrderNo" label="处方订单号" :show-overflow-tooltip="true"></el-table-column> -->
 					<el-table-column prop="rxFee" label="处方费" :show-overflow-tooltip="true"></el-table-column>
-					<el-table-column fixed = right label="操作" width="300">
+					<el-table-column fixed=right label="操作" width="300">
 						<template slot-scope="scope">
 							<el-button @click="isShowRecordChatFun(scope.row)" type="text" size="small">聊天记录</el-button>
 						</template>
@@ -1587,6 +1587,7 @@
 					const res = await addClinic(query, options);
 					if (res.data && res.data.errCode === 0) {
 						console.log('7.1新增业务+成功')
+						this.departmentId = ""
 						this.getList1()
 						this.addData.show = false
 						this.addData.agreement.default = { label: "", value: "" }

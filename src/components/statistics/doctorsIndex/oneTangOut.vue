@@ -1,6 +1,5 @@
 <template>
   <div class="oneTangOut" v-show="myHomes.length != 0">
-
     <!-- 视频聊天 -->
     <div v-if="centerDialogVisible">
       <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen
@@ -68,6 +67,11 @@
 
     data() {
       return {
+        typeQuan: [],
+        typeQuan1: false,
+        typeQuan2: false,
+        typeQuan3: false,
+        adss: 0,
         // 谭莹
         chatTypeBox: {
           startDoctorName: "",
@@ -145,9 +149,40 @@
           });
         }
       },
+      // 医生端权限
+      doctorQuanXian() {
+        let quanXian = this.userInfo.hasAuth.filter(item => item.type === '2')
+        this.typeQuan = []
+        this.typeQuan1 = false
+        this.typeQuan2 = false
+        this.typeQuan3 = false
+        console.table(quanXian)
+        for (let i = 0; i < quanXian.length; i++) {
+          console.log(quanXian[i].authorityId)
+          if (quanXian[i].type == 2) {
+            console.log(quanXian[i].authorityId)
+            this.typeQuan.push(quanXian[i].authorityId)
+          }
 
+        }
+        console.log(this.typeQuan + "-------------")
+        this.typeQuan.forEach((element, index) => {
+          // console.log(element, index, element[index])
+          if (element == 10001) {
+            this.typeQuan1 = true;
+          } else if (element == 10002) {
+            this.typeQuan2 = true;
+          } else if (element == 10003) {
+            this.typeQuan3 = true;
+          }
+        });
+      },
       // 7.6(WEB医生)获取所有该医生的在线诊室(医生端列表1)
       async getList1() {
+        console.log(this.typeQuan3)
+        if (!this.typeQuan3) {
+          return
+        }
         var date = new Date();
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -215,6 +250,7 @@
     },
 
     async created() {
+      this.doctorQuanXian()
       this.getList1()
     }
   }
@@ -242,7 +278,9 @@
         color: #778CA2;
       }
 
-      .top2 {}
+      .top2 {
+        cursor: pointer;
+      }
     }
 
     .body {

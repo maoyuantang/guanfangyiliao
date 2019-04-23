@@ -76,13 +76,11 @@
           <el-form-item label="接诊疾病等级:" :label-width="kuangData2.formLabelWidth">
             <el-select v-model="kuangData2.options2.value" multiple placeholder="多选" style="width:80%"
               @change="inputReturn21">
-              <el-option v-for="(item,index) in kuangData2.options2.list||[]" :key="index" :label="item.label"
+              <el-option v-for="(item,index) in kuangData2.options2.list" :key="item.value" :label="item.label"
                 :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
-          {{kuangData2.options2.value}}
-          {{kuangData2.options2.list}}
 
           <!-- <div class="block" style="margin-bottom: 22px;">
             <span class="demonstration"
@@ -97,7 +95,7 @@
             <span class="demonstration"
               style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">申请医院和科室</span>
             <el-cascader expand-trigger="hover" placeholder="多选" clearable style="width:65%;"
-              :options="kuangData2.options3.list"  @change="inputReturn22">
+              :options="kuangData2.options3.list" @change="inputReturn22">
             </el-cascader>
 
             <ul>
@@ -293,7 +291,9 @@
           },
           options4: {
             value: null,
-            list: [{ value: 1, label: '一级' }, { value: 2, label: '二级' }, { value: 3, label: '三级' }, { value: 4, label: '四级' },]
+            list: [
+              { value: 1, label: '一级' }, { value: 2, label: '二级' }, { value: 3, label: '三级' }, { value: 4, label: '四级' }
+            ]
           },
           formLabelWidth: '120px',
         },
@@ -320,84 +320,84 @@
           options3: {
             value: [],
             list: [
-              {
-                value: "1",
-                label: "医院1",
-                children: [
-                  {
-                    value: "101",
-                    label: "科室1",
-                    children: [
-                      {
-                        value: "10101",
-                        label: "医生1"
-                      },
-                    ]
-                  },
-                  {
-                    value: "102",
-                    label: "科室2",
-                    children: [
-                      {
-                        value: "10201",
-                        label: "医生1"
-                      },
-                      {
-                        value: "10202",
-                        label: "医生2"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                value: "2",
-                label: "医院2",
-                children: [
-                  {
-                    value: "201",
-                    label: "科室1",
-                    children: [
-                      {
-                        value: "20101",
-                        label: "医生1"
-                      },
-                      {
-                        value: "20102",
-                        label: "医生2"
-                      }
-                    ]
-                  },
-                  {
-                    value: "202",
-                    label: "科室2",
-                    children: [
-                      {
-                        value: "20201",
-                        label: "医生1"
-                      },
-                    ]
-                  },
-                ]
-              },
-              {
-                value: "3",
-                label: "医院3",
-                children: [
-                  {
-                    value: "301",
-                    label: "科室1"
-                  },
-                  {
-                    value: "302",
-                    label: "科室2"
-                  },
-                  {
-                    value: "303",
-                    label: "科室2"
-                  }
-                ]
-              }
+              // {
+              //   value: "1",
+              //   label: "医院1",
+              //   children: [
+              //     {
+              //       value: "101",
+              //       label: "科室1",
+              //       children: [
+              //         {
+              //           value: "10101",
+              //           label: "医生1"
+              //         },
+              //       ]
+              //     },
+              //     {
+              //       value: "102",
+              //       label: "科室2",
+              //       children: [
+              //         {
+              //           value: "10201",
+              //           label: "医生1"
+              //         },
+              //         {
+              //           value: "10202",
+              //           label: "医生2"
+              //         }
+              //       ]
+              //     }
+              //   ]
+              // },
+              // {
+              //   value: "2",
+              //   label: "医院2",
+              //   children: [
+              //     {
+              //       value: "201",
+              //       label: "科室1",
+              //       children: [
+              //         {
+              //           value: "20101",
+              //           label: "医生1"
+              //         },
+              //         {
+              //           value: "20102",
+              //           label: "医生2"
+              //         }
+              //       ]
+              //     },
+              //     {
+              //       value: "202",
+              //       label: "科室2",
+              //       children: [
+              //         {
+              //           value: "20201",
+              //           label: "医生1"
+              //         },
+              //       ]
+              //     },
+              //   ]
+              // },
+              // {
+              //   value: "3",
+              //   label: "医院3",
+              //   children: [
+              //     {
+              //       value: "301",
+              //       label: "科室1"
+              //     },
+              //     {
+              //       value: "302",
+              //       label: "科室2"
+              //     },
+              //     {
+              //       value: "303",
+              //       label: "科室2"
+              //     }
+              //   ]
+              // }
             ],
           },
           formLabelWidth: '120px',
@@ -420,14 +420,14 @@
         // 管理1.2表  表体点击  范围  传入参数
         doctorVisible: false,
         doctorDetailData: [
-          {
-            hosptial: "西南医院第三附属医院",
-            department: "神经内科",
-          },
-          {
-            hosptial: "西南医院第三附属医院",
-            department: "神经内科",
-          },
+          // {
+          //   hosptial: "西南医院第三附属医院",
+          //   department: "神经内科",
+          // },
+          // {
+          //   hosptial: "西南医院第三附属医院",
+          //   department: "神经内科",
+          // },
 
         ],
         //管理统计端  筛选工具栏  统计筛选返回值  接收参数
@@ -1026,11 +1026,11 @@
       // 表一编辑
       editList1(data) {
         this.YesList1 = 2;
-        
+
         this.fetchHospitalDepts().then(val => {//执行完科室获取再执行获取名称list
           return this.isHaveDepartment11();
         })
-        .then(res=>this.kuangData1.show = true);
+          .then(res => this.kuangData1.show = true);
         console.log(data)
         const _this = this
         this.adds = data.id
@@ -1043,7 +1043,7 @@
             _this.kuangData1.options4.value = _this.kuangData1.options4.list[index].value
           }
         })
-        
+
         // console.log()
       },
       // 表一编辑   提交
@@ -1053,9 +1053,25 @@
         console.log(this.kuangData1.options2.list)
         $.each(this.kuangData1.options2.list, function (index, text) {
           if (_this.$refs.ceshi1.query == _this.kuangData1.options2.list[index].label) {
-            console.log("编辑匹配到了下拉，直接提交")
+            console.log("编辑匹配到了类型，直接提交")
             abc.push("1")
-            _this.editMedicalClassify();
+            // this.kuangData1.options2.value
+            let bcd = []
+            for (var i = 0; i < _this.kuangData1.options3.list; i++) {
+              if (_this.$refs.ceshi2.query == _this.kuangData1.options3.list[i].label) {
+                console.log("编辑匹配到了名称，直接提交")
+                bcd.push("1")
+                _this.editMedicalClassify();
+              }
+            }
+            if (bcd.length == 0) {
+              console.log("编辑匹配无名称，传空新增名称")
+              _this.kuangData1.options3.value = "",//疾病ID
+                _this.editMedicalClassify();
+            } else { }
+            _this.kuangData1.show = false;
+
+            // _this.editMedicalClassify();
           } else { }
         })
         console.log(this.abc)
@@ -1133,20 +1149,29 @@
         this.YesList2 = 2;
         this.kuangData2.show = true;
         this.adds2 = data.id
-        this.chooseDept().then(val => {//执行完科室获取再执行获取名称list
-          this.isHaveDepartment21();
-        });
-        this.kuangData2.options2.value = [];
-        this.kuangData2.options2.list = [];
+        // this.chooseDept().then(val => {//执行完科室获取再执行获取名称list
+        //   this.isHaveDepartment21();
+        // });
+        this.chooseDept();
+        this.kuangData2.options1.value = data.deptId
+        this.kuangData2.options2.value.length = 0;
+        this.kuangData2.options2.list.length = 0;
+
+
+
         data.levels.map(item => {
           this.kuangData2.options2.list.push({
-            label:item.levelName,
-            value:item.controlId
+            label: item.levelName,
+            value: item.level,
           })
         })
-        this.kuangData2.options1.value = data.deptId
-        this.kuangData2.options2.value = data.id
-        
+
+        console.log(this.kuangData2.options2.value)
+        data.levels.forEach(element => {
+          this.kuangData2.options2.value.push(element.level)
+        });
+
+
         console.log(this.kuangData2.options2.value)
         console.log(this.kuangData2.options2.list)
 
@@ -1820,7 +1845,7 @@
     color: #ff7485;
   }
 
-  .blocksa /deep/ .el-cascader__label{
+  .blocksa /deep/ .el-cascader__label {
     opacity: 0;
   }
 </style>
