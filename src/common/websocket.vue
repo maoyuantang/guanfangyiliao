@@ -7,7 +7,7 @@
                     <div>
                         <img :src="userSocketInfo.headImg+userSocketInfo.receiveVideoUserId" :onerror="defaultImg" />
                     </div>
-                    <h4>{{startVideoName}}</h4>
+                    <h4>{{userSocketInfo.fromVideoName}}</h4>
                     <div>邀请您加入视频...</div>
                 </div>
 
@@ -47,7 +47,8 @@ import {
     storageUsers,
     fetchSyncInfo,
     userInfo,
-    fetchChatSession
+    fetchChatSession,
+    queryStorageUsers
 } from "../api/apiAll.js";
 
 export default {
@@ -59,6 +60,7 @@ export default {
     computed: {},
     data() {
         return {
+            videoUserNum: 0,
             chatTypeBox: {
                 startDoctorName: "",
                 startDoctorTYpe: ""
@@ -128,14 +130,40 @@ export default {
         // this.getMessageTicket();
     },
     methods: {
+        // 判断是否有人
+        async panUser(conferenceId1) {
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                conferenceId: conferenceId1
+            };
+            const res = await queryStorageUsers(query);
+            if (res.data && res.data.errCode === 0) {
+                _this.videoUserNum = res.data.body.length;
+                console.log(_this.videoUserNum);
+            } else {
+                _this.videoUserNum = 0;
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         videoclick(data) {
             this.VideoVisable = false;
         },
         receiveVideo() {
-            this.closeVideoOr("ON");
-            this.sendMessageChat(6, "accept");
-            // this.$store.commit("socket/IFVIDEOIMG", 1);
-            this.userSocketInfo.receiveVideoVisable = false;
+            if (this.videoUserNum >= 4) {
+                this.$notify.error({
+                    title: "警告",
+                    message: "视频人数已满，无法进入"
+                });
+            } else {
+                this.closeVideoOr("ON");
+                this.sendMessageChat(6, "accept");
+                this.userSocketInfo.receiveVideoVisable = false;
+            }
         },
         refuseVideo() {
             this.userSocketInfo.receiveVideoVisable = false;
@@ -265,7 +293,7 @@ export default {
                 //心跳.
             };
             this.$store.state.socket.socketObj.onclose = e => {
-                this.webSocketonclose(e,otoken);
+                this.webSocketonclose(e, otoken);
             };
             this.$store.state.socket.socketObj.onopen = e => {
                 this.webSocketonopen(buffer);
@@ -544,7 +572,7 @@ export default {
                             bodyVideo.indexOf("MicroCinicSendRoom") > -1
                         ) {
                             //收到视频后存好sessionId和房间id
-
+                            _this.panUser(odata.info.body.split("&")[2]);
                             let videoList = [];
                             let videoList1 = 0;
                             videoList = deepCopy(
@@ -604,7 +632,10 @@ export default {
                                     "&"
                                 )[3];
                             }
-
+                            _this.$store.commit(
+                                "socket/FROMVIDEONAME",
+                                odata.info.fromNickName
+                            );
                             _this.$store.commit(
                                 "socket/CHATTYPEBOX",
                                 chatTypeBox
@@ -1320,7 +1351,7 @@ export default {
         //     this.$store.state.socket.socketObj.send(msg);
         // },
         //关闭
-        webSocketonclose(e,otoken) {
+        webSocketonclose(e, otoken) {
             console.log(e);
             console.log(this.userState.token);
             if (this.userState.isLogin) {
