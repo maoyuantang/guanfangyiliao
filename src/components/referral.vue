@@ -16,7 +16,8 @@
         <div class="moved">
           <!-- 头像姓名 -->
           <div class="moved_top">
-            <img v-if="dualReferralRecordFile.headId == null" src="../assets/img/a-6.png" alt="医生头像">
+            <img v-if="dualReferralRecordFile.headId == null||!dualReferralRecordFile.headId"
+              src="../assets/img/a-6.png" alt="医生头像">
             <img v-if="dualReferralRecordFile.headId" :src='userSocketInfo.imgUrl+dualReferralRecordFile.headId'
               alt="医生头像">
             <p>{{dualReferralRecordFile.patientName}}</p>
@@ -99,7 +100,8 @@
             <span class="demonstration"
               style="display: inline-block;font-weight: 700;width: 115px;text-align: right;">转入医院</span>
             <el-cascader expand-trigger="hover" placeholder="单选" clearable style="width:65%;"
-              :options="addForm.intoHospital.list" @change="handleChange" ref="ceshi3">
+              :options="addForm.intoHospital.list" @change="handleChange" ref="ceshi3"
+              v-model="addForm.intoHospital.value">
             </el-cascader>
           </div>
 
@@ -1085,14 +1087,13 @@
       //   console.log(this.addForm.giveRight.list)
       // },
       handleCheckChange(data, odata) {
+        console.log(data, odata);
         this.addForm.giveRight.value = [];
-        // console.log(data, odata);
         this.bingliSelect = "";
         $.each(odata.checkedNodes, (index, text) => {
           if (text.visitNo) {
             this.addForm.giveRight.value.push(text);
             this.bingliSelect += text.hospitalName + ",";
-
           }
         });
       },
@@ -1289,11 +1290,8 @@
         this.referralId = data2.referralId
         console.log(data2)
         console.log(this.userInfo.hasAuth)
-        // $.each(_this.addForm.giveRight.value, function (index, text) {
-        //   text.medicalHistoryId = text.visitNo;
-        // });
-        
-        
+
+
         const options = {
           token: this.userInfo.token,
           referralId: data2.referralId,//转诊ID
@@ -1305,15 +1303,14 @@
           this.addForm.typeList.value = res.data.body.typeCode
           this.addForm.diseaseName.value = res.data.body.illnessId
           this.addForm.patient.value = res.data.body.patientId
-          // this.addForm.intoHospital.value = [res.data.body.receiveOrgCode, res.data.body.receiveDeptId]//等待
-          this.$refs.ceshi3.currentLabels[0] = res.data.body.receiveOrgCode
-          this.$refs.ceshi3.currentLabels[1] = res.data.body.receiveDeptId
-          // this.addForm.intoHospital.value = res.data.body.receiveDeptName
-          this.addForm.giveRight.value = res.data.body.medicalHistoryIds
+          this.addForm.intoHospital.value = [res.data.body.receiveOrgCode, res.data.body.receiveDeptId]//等待
           this.addForm.moveTime.value = res.data.body.applyTime
           this.addForm.movePurpose = res.data.body.intention
           this.addForm.beginIdea = res.data.body.diagnose
-          this.patientMedicalHistoryFun()
+
+          this.patientMedicalHistoryFun(res.data.body.selectedMedicalHistoryList)
+          // this.addForm.giveRight.value = res.data.body.medicalHistoryIds
+
           console.log(this.addForm)
           this.upOrDown().then(val => {
             this.diseaseNameId();
@@ -1328,7 +1325,7 @@
         }
       },
       //14.16.转诊-获取病历列表
-      async patientMedicalHistoryFun() {
+      async patientMedicalHistoryFun(data) {
         let query1 = {
           token: this.userInfo.token,
           patientId: this.addForm.patient.value
@@ -1337,6 +1334,40 @@
         if (res1.data && res1.data.errCode === 0) {
           console.log('获取病历列表+成功')
           console.log(res1)
+          var resHis = res1.data.body.electronicMedical;
+          var resEle = res1.data.body.visit;
+          // for (let e in res1.data.body) {//e:key
+          //   res1.data.body[e].map((a, i) => {
+          //     resLis.push(a)
+          //   })
+          // }
+          console.log(resHis)//电子授权
+          console.log(resEle)//就诊记录
+          console.log(data)//筛选条件
+
+          data.map((o1, e1) => {
+            if (o1.type == "HISTORY") {
+              resHis.map((o2, e2) => {
+                if (o2.visitNo == o1.medicalHistoryId) {
+                  o2.medicalHistoryId = o1.medicalHistoryId
+                  this.addForm.giveRight.value.push(o2)
+                }
+              })
+            } else { }
+            if (o1.type == "VISIT") {
+              resHis.map((o2, e2) => {
+                if (o2.visitNo == o1.medicalHistoryId) {
+                  o2.medicalHistoryId = o1.medicalHistoryId
+                  this.addForm.giveRight.value.push(o2)
+                }
+              })
+            } else { }
+          })
+          console.log(this.addForm.giveRight.value)
+          this.bingliSelect = "";
+          this.addForm.giveRight.value.map((o, e) => {
+            this.bingliSelect += o.hospitalName + ",";
+          })
 
         } else {
           //失败
@@ -1348,6 +1379,11 @@
         }
       },
       async dualReferralAdd2(data2) {
+        let _this = this;
+        $.each(_this.addForm.giveRight.value, function (index, text) {
+          text.medicalHistoryId = text.visitNo;
+        });
+
         console.log(this.addForm)
         let query = {
           token: this.userInfo.token
@@ -1365,12 +1401,16 @@
           receiveOrgName: this.$refs.ceshi3.currentLabels[0],//接收医生名称 
           receiveDeptId: this.addForm.intoHospital.value[1],//接收科室ID
           receiveDeptName: this.$refs.ceshi3.currentLabels[1],//接收科室名称
-
+          
+          applyTime: this.addForm.moveTime.value,
           intention: this.addForm.movePurpose,//转诊目的
           diagnose: this.addForm.beginIdea,//初步诊断
 
           archivesAuthority: this.addForm.giveRight.value,//病历授权
-          medicalHistorys: this.addForm.giveRight.value
+          medicalHistorys: this.addForm.giveRight.value,
+
+          // archivesAuthority: Object.assign({}, this.addForm.giveRight.value),//病历授权
+          // medicalHistorys: Object.assign({}, this.addForm.giveRight.value)
         };
         console.log(options)
         const res = await dualReferralUpdate(query, options);                                   //  14.8.双向转诊-WEB医生端-修改
@@ -1521,6 +1561,7 @@
           this.addForm.beginIdea = res.data.body.diagnose
           this.addForm.giveRight.value = res.data.body.archivesAuthority//后边有问题
 
+          // this.patientMedicalHistoryFun(res.data.body.selectedMedicalHistoryList)
 
           console.log(this.addForm)
           this.upOrDown().then(val => {

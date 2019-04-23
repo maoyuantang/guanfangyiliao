@@ -156,16 +156,16 @@
         this.typeQuan1 = false
         this.typeQuan2 = false
         this.typeQuan3 = false
-        console.table(quanXian)
+        // console.table(quanXian)
         for (let i = 0; i < quanXian.length; i++) {
-          console.log(quanXian[i].authorityId)
+          // console.log(quanXian[i].authorityId)
           if (quanXian[i].type == 2) {
-            console.log(quanXian[i].authorityId)
+            // console.log(quanXian[i].authorityId)
             this.typeQuan.push(quanXian[i].authorityId)
           }
 
         }
-        console.log(this.typeQuan + "-------------")
+        // console.log(this.typeQuan + "-------------")
         this.typeQuan.forEach((element, index) => {
           // console.log(element, index, element[index])
           if (element == 10001) {
@@ -179,7 +179,7 @@
       },
       // 7.6(WEB医生)获取所有该医生的在线诊室(医生端列表1)
       async getList1() {
-        console.log(this.typeQuan3)
+        // console.log(this.typeQuan3)
         if (!this.typeQuan3) {
           return
         }
