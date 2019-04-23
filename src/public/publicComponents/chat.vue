@@ -135,11 +135,6 @@
                 <img src="../../assets/img/sendNew9.png" />
             </span>
             <span v-show="oDoctorVis" title="录入档案" class="enterFile">
-                <!-- <img src="../../assets/img/sendNew10.png" />
-                <ul>
-                    <li @click="openPublicFile()">普通档案</li>
-                    <li @click="openManFile()">孕妇答案</li>
-                </ul> -->
                 <el-dropdown>
                     <el-button class="chatFileClass" type="danger" size="mini" plain><img src="../../assets/img/sendNew10.png" /></el-button>
                     <el-dropdown-menu slot="dropdown">
@@ -440,10 +435,8 @@ export default {
                 'this.src="' +
                 require("../../assets/img/publicHeadImg.png") +
                 '"',
-                defaultImgDoc:
-                'this.src="' +
-                require("../../assets/img/doctorImg.png") +
-                '"',
+            defaultImgDoc:
+                'this.src="' + require("../../assets/img/doctorImg.png") + '"',
             ifSendMessageNum: 0,
             sendMessageBoxType: "",
             ifVIdeoIng: ""

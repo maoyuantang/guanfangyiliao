@@ -68,7 +68,7 @@
                                             </h3>
                                             <p v-show="text.childMessageType=='FOLLOWUP'">首次治疗时间：{{text.content.firstTreatmentTime}}</p>
                                             <p v-show="text.childMessageType=='INTERROGATION'">{{text.content.content1}}</p>
-                                            
+
                                         </div>
 
                                     </div>
@@ -83,7 +83,7 @@
                                                 <span v-show="text.childMessageType=='INTERROGATION'">问诊</span>
                                                 <span v-show="text.childMessageType=='ARTICLE'">文章</span>
                                                 /{{text.content.title}}</h3>
-                                             <p v-show="text.childMessageType=='FOLLOWUP'">首次治疗时间：{{text.content.firstTreatmentTime}}</p>
+                                            <p v-show="text.childMessageType=='FOLLOWUP'">首次治疗时间：{{text.content.firstTreatmentTime}}</p>
                                             <p v-show="text.childMessageType=='INTERROGATION'">{{text.content.content1}}</p>
                                         </div>
                                     </div>
@@ -126,18 +126,20 @@
                 <img src="../../assets/img/sendNew9.png" />
             </span>
             <span v-show="oDoctorVis" title="录入档案" class="enterFile">
-                <!-- <img src="../../assets/img/sendNew10.png" />
-                <ul>
-                    <li @click="openPublicFile()">普通档案</li>
-                    <li @click="openManFile()">孕妇答案</li>
-                </ul> -->
-                 <el-dropdown>
-                                        <el-button class="chatFileClass" type="danger" size="mini" plain><img src="../../assets/img/sendNew10.png" /></el-button>
-                                        <el-dropdown-menu slot="dropdown">
-                                            <el-dropdown-item @click.native="openManFile()">孕妇信息</el-dropdown-item>
-                                            <el-dropdown-item @click.native="openPublicFile()">普通档案</el-dropdown-item>
-                                        </el-dropdown-menu>
-                                    </el-dropdown>
+                <!-- <el-dropdown>
+                    <el-button class="chatFileClass" type="danger" size="mini" plain><img src="../../assets/img/sendNew10.png" /></el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="openManFile()">孕妇信息</el-dropdown-item>
+                        <el-dropdown-item @click.native="openPublicFile()">普通档案</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown> -->
+                <el-dropdown>
+                    <el-button class="chatFileClassVideo" type="danger" size="mini" plain><img src="../../assets/img/sendNew10.png" /></el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="openManFile()">孕妇信息</el-dropdown-item>
+                        <el-dropdown-item @click.native="openPublicFile()">普通档案</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
             </span>
             <span v-show="oDoctorVis" title="健康处方">
                 <img src="../../assets/img/sendNew11.png" />
@@ -153,9 +155,9 @@
             <el-input class="chatInputK" type="textarea" :rows="2" placeholder="请输入内容" v-model="messageBody" @keyup.enter.native="sendMessageChat(0,messageBody,'DEFAULT')">
             </el-input>
             <div>
- <button class="sendMessageChat" @click="sendMessageChat(0,messageBody,'DEFAULT')">发送</button>
+                <button class="sendMessageChat" @click="sendMessageChat(0,messageBody,'DEFAULT')">发送</button>
             </div>
-           
+
         </div>
         <!-- 备注 -->
         <div v-if="remarkVisible">
@@ -451,7 +453,6 @@ export default {
         this.getHisRecord();
         this.getMemberMess();
 
-      
         this.ourl =
             "/m/v1/api/hdfs/fs/upload?token=" +
             this.userState.token +
@@ -600,7 +601,7 @@ export default {
                     childMessageType: childMessageType
                 });
             }
-              this.updated();
+            this.updated();
         },
         sendMessage(agentData) {
             if (
@@ -679,7 +680,7 @@ export default {
             //     this.showVideoBtnVisable = false;
             //     this.setVideo(0); //单聊
             // }
-           this.setVideo(0);
+            this.setVideo(0);
         },
         //创建视频
         setVideo(num) {
@@ -1116,13 +1117,13 @@ export default {
         },
         //获取历史记录
         async getHisRecord(num) {
-             if (num == 0) {
-                        //首次进入
-                        this.messageList1 = [];
-                        this.messageList1.length=0
-                        // this.messageList1 = Object.assign({},this.messageList1)
-                        console.log(this.messageList1);
-                    }
+            if (num == 0) {
+                //首次进入
+                this.messageList1 = [];
+                this.messageList1.length = 0;
+                // this.messageList1 = Object.assign({},this.messageList1)
+                console.log(this.messageList1);
+            }
             console.log("历史消息");
             console.log(this.sessionId);
             let _this = this;
@@ -1147,10 +1148,9 @@ export default {
                 } else {
                     this.loadMoreVisable = false;
                 }
-               
+
                 console.log(this.messageList1);
                 $.each(res.data.body, function(index, text) {
-                    
                     let timestamp4 = new Date(text.serverTime);
                     let y = timestamp4.getHours();
                     let d = timestamp4.getMinutes();
@@ -1306,7 +1306,7 @@ export default {
                     }
                 }
                 console.log(this.messageList);
-                  this.updated();
+                this.updated();
             } else {
                 //失败
                 this.$notify.error({
@@ -1586,7 +1586,7 @@ export default {
                 let _this = this;
                 $.each(n.syncData, function(index, text) {
                     if (text.command == "SYNC_UPDATE_READ_STATE") {
-                        _this.oMsgId =''
+                        _this.oMsgId = "";
                         _this.alreadyRead();
                         _this.getHisRecord(0);
                     }
@@ -1627,15 +1627,14 @@ export default {
     border-bottom: 1px solid #e5edf3;
     overflow: hidden;
 }
-.sendBtnBox{
-background: white
+.sendBtnBox {
+    background: white;
 }
 .sendIcon {
     display: flex;
     display: -webkit-flex;
-    padding-top:10px;
-    background: white
-    
+    padding-top: 10px;
+    background: white;
 }
 .sendIcon > span {
     position: relative;
@@ -1698,11 +1697,12 @@ background: white
     letter-spacing: 0;
     line-height: 27px;
 }
-.videoChatMessage .recordLf .otherCon div{
-color: white;
+.videoChatMessage .recordLf .otherCon div {
+    color: white;
 }
-.videoChatMessage .recordLf .otherCon h4 > span:nth-child(2), .recordRg .otherCon h4 > span:nth-child(2){
-color: #666666;
+.videoChatMessage .recordLf .otherCon h4 > span:nth-child(2),
+.recordRg .otherCon h4 > span:nth-child(2) {
+    color: #666666;
 }
 .recordRg {
     text-align: right;

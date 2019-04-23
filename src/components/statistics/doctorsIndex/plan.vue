@@ -515,7 +515,8 @@ export default {
             chatTypeBox: {
                 startDoctorName: "",
                 startDoctorTYpe: "随访",
-                archivesUrl: "/"
+                archivesUrl: "/",
+                bingUserId:''
             },
             // seeRemarksListVisable1: false,
             // seeRemarksListVisable2: false,
@@ -773,11 +774,13 @@ export default {
         },
         //发送消息
         sendMessage(row) {
+
             this.doctorVis = 1;
             this.userMessage = {
                 userId: row.userId
             };
             this.chatTypeBox.startDoctorTYpe = "随访";
+            this.chatTypeBox.bingUserId='row.userId'
             this.createChat(row);
         },
         //查看档案
