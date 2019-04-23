@@ -45,7 +45,7 @@ export default {
     selectItem(){
         // console.log(this.$refs.tree.getCheckedKeys())
         // console.log(this.$refs.tree.getCheckedNodes(false,false))
-        this.$emit("reback",this.$refs.tree.getCheckedNodes(false,false));
+        this.$emit("reback",this.$refs.tree.getCheckedNodes(false,true));
     },
     unShow(){
         this.show = false;
@@ -79,9 +79,16 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .select-tree{
     flex: 1;
+}
+.select-tree .el-tree-node__content .el-checkbox__inner{
+    width:14px !important;
+    height: 14px !important;
+}
+.select-tree .el-tree-node__content{
+    margin:0 !important;
 }
 .inner{
     position: relative;

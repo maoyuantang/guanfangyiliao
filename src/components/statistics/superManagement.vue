@@ -151,6 +151,7 @@
             @on-ok="departmentOk"
             @on-cancel="departmentCancel">
             <div class="department-out">
+                <h1>555555555555</h1>
                 <div class="department-list">
                     <ul>
                         <li v-for="(item,index) in department.list" :key="index" class="department-li">
@@ -1004,7 +1005,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .super-management {
 }
 .super-management-top{
@@ -1098,6 +1099,13 @@ export default {
 .pagination{
     text-align: center;
     width:100%;
+}
+.super-management .el-tree-node__content .el-checkbox__inner{
+    width:14px !important;
+    height: 14px !important;
+}
+.super-management .el-tree-node__content{
+    margin:0 !important;
 }
 </style>
 <!--

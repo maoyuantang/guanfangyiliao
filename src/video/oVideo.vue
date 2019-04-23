@@ -149,7 +149,7 @@ import {
     bindSession
 } from "../api/apiAll.js";
 export default {
-    name: "video",
+    name: "",
     components: {
         videoChat,
         archives
