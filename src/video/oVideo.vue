@@ -5,7 +5,9 @@
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
                         <div id="remoteVideos">
+                            <!-- <div v-for="(item,index) in resultList" :key="index" v-html="generateParticipant(item,false)">
 
+                            </div> -->
                         </div>
                         <div class="videoChatBtn" @click="videoChatBtn()">
                             <img style='width: 23px;
@@ -164,6 +166,7 @@ export default {
     },
     data() {
         return {
+            resultList: [],
             defaultImg: 'this.src="' + require("../assets/img/a-6.png") + '"',
             archivesId: "",
             archivesVisible: false,
@@ -201,7 +204,40 @@ export default {
             //    archivesUrl :'/outpatient',
         };
     },
+    mounted() {
+        // let oindex = 0;
+        // let oid = $("#localVideos>div").attr("id");
+        // $("#remoteVideos>div").click(function() {
+        //     alert('ddd')
+        //     // $(this).attr('id')
+        //     oindex = $(this).index();
+        //     $("#localVideos").html("");
+        //     $("#localVideos").append(
+        //         this.anonymousJoinRoomBtn($(this).attr("id"), true)
+        //     );
+        //     $("#remoteVideos").splice(
+        //         oindex + 1,
+        //         0,
+        //         this.generateParticipant(result, false)
+        //     );
+        // });
+    },
     methods: {
+        //切换大小窗口
+        // getChangeWindoe(){
+        //     let oindex=0
+        //     let oid=$("#localVideos>div").attr('id')
+        //     $('#remoteVideos>div').click(function(){
+        //         // $(this).attr('id')
+        //         oindex=$(this).index()
+        //         $("#localVideos").html("");
+        //           $("#localVideos").append(
+        //                     this.anonymousJoinRoomBtn($(this).attr('id'), true)
+        //                 );
+        //                 $('#remoteVideos').splice(oindex+1,0,this.generateParticipant(result, false))
+        //     })
+
+        // },
         //查看档案
         sendArchives() {
             console.log(this.archivesId);
@@ -1431,8 +1467,8 @@ export default {
                         $("#localVideos").append(
                             _this.generateParticipant(result, true)
                         );
-                    }else{
-                        alert(result.msg)
+                    } else {
+                        alert(result.msg);
                     }
                 },
                 function(error) {
@@ -1644,6 +1680,7 @@ export default {
         }
     },
     created() {
+        // this.getChangeWindoe()
         console.log(this.userMessage);
 
         if (this.doctorVis == 0) {
@@ -1664,8 +1701,8 @@ export default {
             this.noLineUpNum();
             this.getThePatient();
         } else {
-            let otype=this.chatTypeBox.startDoctorTYpe
-            if (otype == "会诊" || otype=="患者" || otype=='随访') {
+            let otype = this.chatTypeBox.startDoctorTYpe;
+            if (otype == "会诊" || otype == "患者" || otype == "随访") {
                 this.archivesId = this.chatTypeBox.bingUserId;
             } else {
                 this.archivesId = "不是门诊和协作进入";
@@ -1685,6 +1722,7 @@ export default {
          */
         Manis.onJoinConference(function(result) {
             $("#remoteVideos").append(_this.generateParticipant(result, false));
+            // _this.resultList.push(result);
             // _this.$store.commit("socket/VIDEOUSER", 1);
             _this.videoUser += 1;
             // alert("收到有人进入房间" + _this.videoUser);
@@ -2003,6 +2041,29 @@ export default {
         event: "reBack"
     }
 };
+
+// $(document).ready(function() {
+//     $(function() {
+//         alert('9090')
+//         //jq事件
+//         let oindex = 0;
+//         let oid = $("#localVideos>div").attr("id");
+//         $("#remoteVideos>div").click(function() {
+//             alert("ddd");
+//             // $(this).attr('id')
+//             oindex = $(this).index();
+//             $("#localVideos").html("");
+//             $("#localVideos").append(
+//                 this.anonymousJoinRoomBtn($(this).attr("id"), true)
+//             );
+//             $("#remoteVideos").splice(
+//                 oindex + 1,
+//                 0,
+//                 this.generateParticipant(result, false)
+//             );
+//         });
+//     });
+// });
 </script>
 <style  scope>
 video {

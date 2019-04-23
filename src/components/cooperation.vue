@@ -206,9 +206,9 @@ export default {
     margin-left: 0px !important;
 }
 
-.evaluateBox .el-dialog__body {
+/* .evaluateBox .el-dialog__body {
     padding: 25px 60px;
-}
+} */
 
 .evaluateCont {
     width: 90%;
