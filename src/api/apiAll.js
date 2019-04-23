@@ -987,6 +987,30 @@ export const receiveDoctor = query => {//9.10本院参与科室
         }
     })
 }
+export const fetchByMedicalHistory = query => {//9.10本院参与科室
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.fetchByMedicalHistory,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const fetchByPatientInfoInfo = query => {//9.10本院参与科室
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.fetchByPatientInfoInfo,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
+
 export const createVideoRoom = (query, data) => {//1.3.创建视频
     const sign = postQueryHandle(Object.assign({}, data, query));
     return axios({
@@ -999,6 +1023,19 @@ export const createVideoRoom = (query, data) => {//1.3.创建视频
         }
     })
 }
+export const sponsorSynergy = (query, data) => {//1.3.创建视频
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.sponsorSynergy,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+
 export const inviteReply = (query, data) => {//1.3.创建视频
     const sign = postQueryHandle(Object.assign({}, data, query));
     return axios({
@@ -1062,6 +1099,7 @@ export const closeVideoRoom = query => {//1.6.删除视频会议房间   注意�
         }
     })
 }
+
 export const videoMeetingInvited = query => {//1.7.邀请用户进行视频通话 注意：除了需要传入query 还需要parse
     const sign = postQueryHandle(query);
     return axios({

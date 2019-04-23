@@ -41,12 +41,6 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="病人病历:">
-                        <!-- <el-input v-model="bingliSelect"></el-input> -->
-                        <!-- <div class='bingliSelectClass' style="width:162px; height:28px;    border: 1px solid #dcdfe6;margin-top: 6px;">
-                            <div style="width:100%; padding:0 5px">
-                                {{bingliSelect}}
-                            </div>
-                        </div> -->
 
                         <el-tree style='    margin-left: -14px;
     margin-top: 10px;' v-model="startHz.medicalHistorys" :data="hospitalList2" :props="defaultProps1" @check="handleCheckChange1" show-checkbox></el-tree>
@@ -136,7 +130,7 @@
                             <span v-else-if="scope.row.status=='OVER'">结束</span>
                         </template>
                     </el-table-column>
-                    <el-table-column  fixed="right"  label="操作" width="300">
+                    <el-table-column fixed="right" label="操作" width="300">
                         <template slot-scope="scope">
                             <el-button class="seeDanganClass" @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
                             <el-button class="inviteUserClass" v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
@@ -223,7 +217,7 @@ export default {
                 startDoctorName: "",
                 startDoctorTYpe: "会诊",
                 archivesUrl: "/consultation",
-                bingUserId:''
+                bingUserId: ""
             }, //发起医生
             docTotal: 0,
             adminTotal: 0,
@@ -643,8 +637,8 @@ export default {
         },
         //发起会诊
         startHuizhen() {
-            this.bingliSelect=''
-            this.startHz= {
+            this.bingliSelect = "";
+            (this.startHz = {
                 type: "SPECIALIST",
                 userId: " ",
                 medicalHistorys: [],
@@ -657,8 +651,8 @@ export default {
                         departmentListOO: []
                     }
                 ]
-            },
-            this.hospitalList2=[]
+            }),
+                (this.hospitalList2 = []);
             this.centerDialogVisible = true;
             this.getDepartment1(this.userSelfInfo.orgCode);
             this.getHospitalment();
@@ -689,20 +683,12 @@ export default {
         // 发起会诊病历
         handleCheckChange1(data, odata) {
             console.log(data, odata);
-            this.bingliSelect = "";
-            this.startHz.medicalHistorys=[]
+            this.startHz.medicalHistorys = [];
             $.each(odata.checkedNodes, (index, text) => {
                 if (text.visitNo) {
                     this.startHz.medicalHistorys.push(text);
-                    this.bingliSelect += text.hospitalName + ",";
-                    
                 }
             });
-            // if (this.bingliSelect) {
-            //           $(".bingliSelectClass").css("height", "auto");
-            //         } else {
-            //              $(".bingliSelectClass").css("height", "28px"); 
-            //         }
         },
         //确认邀请
         async sureInvitation() {
@@ -838,7 +824,7 @@ export default {
             this.sessionId = oObject.sessionId;
             this.userMessage.userId = oObject.userId;
             this.chatTypeBox.startDoctorName = oObject.doctor;
-            this.chatTypeBox.bingUserId=oObject.userId
+            this.chatTypeBox.bingUserId = oObject.userId;
             this.startDoctor = oObject.doctor;
             // if (oObject.state == "NEW") {
             //     oObject.state = "UNDERWAY";
@@ -1019,12 +1005,6 @@ export default {
                 $.each(this.hospitalList2[1].children, function(index, text) {
                     text.type = "HISTORY";
                 });
-                // $.each(res.data.body.electronicMedical, function(index, text) {
-                //     _this.hospitalList2.push({
-                //         name: text.codeName,
-                //         value: text.visitNo
-                //     });
-                // });
             } else {
                 //失败
                 this.$notify.error({

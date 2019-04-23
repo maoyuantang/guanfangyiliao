@@ -131,16 +131,26 @@ export default {
     },
     methods: {
         // 判断是否有人
-        async panUser(conferenceId1) {
+        async receiveVideo() {
             let _this = this;
             let query = {
                 token: this.userState.token,
-                conferenceId: conferenceId1
+                conferenceId: this.userSocketInfo.createVideoRoomData
+                    .conferenceId
             };
             const res = await queryStorageUsers(query);
             if (res.data && res.data.errCode === 0) {
-                _this.videoUserNum = res.data.body.length;
-                console.log(_this.videoUserNum);
+                let videoUserNum = res.data.body.length;
+                if (videoUserNum >= 4) {
+                    this.$notify.error({
+                        title: "警告",
+                        message: "视频人数已满，无法进入"
+                    });
+                } else {
+                    this.closeVideoOr("ON");
+                    this.sendMessageChat(6, "accept");
+                    this.userSocketInfo.receiveVideoVisable = false;
+                }
             } else {
                 _this.videoUserNum = 0;
                 //失败
@@ -153,18 +163,9 @@ export default {
         videoclick(data) {
             this.VideoVisable = false;
         },
-        receiveVideo() {
-            if (this.videoUserNum >= 4) {
-                this.$notify.error({
-                    title: "警告",
-                    message: "视频人数已满，无法进入"
-                });
-            } else {
-                this.closeVideoOr("ON");
-                this.sendMessageChat(6, "accept");
-                this.userSocketInfo.receiveVideoVisable = false;
-            }
-        },
+        // receiveVideo() {
+
+        // },
         refuseVideo() {
             this.userSocketInfo.receiveVideoVisable = false;
             this.sendMessageChat(6, "refuse");
@@ -572,7 +573,7 @@ export default {
                             bodyVideo.indexOf("MicroCinicSendRoom") > -1
                         ) {
                             //收到视频后存好sessionId和房间id
-                            _this.panUser(odata.info.body.split("&")[2]);
+                            // _this.panUser(odata.info.body.split("&")[2]);
                             let videoList = [];
                             let videoList1 = 0;
                             videoList = deepCopy(

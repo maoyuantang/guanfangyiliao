@@ -330,5 +330,9 @@ export default {
     eMRFirstCourse:'/m/v1/api/record/nosocomialRecord/eMRFirstCourse',//12.根据电子病历ID获取首次病程记录
     eMREverydayCourse:'/m/v1/api/record/nosocomialRecord/eMREverydayCourse',//13.根据电子病历ID获取日常病程记录
     eMRLeaveHospital:'/m/v1/api/record/nosocomialRecord/eMRLeaveHospital',//14.根据电子病历ID获取出院记录
+
+    fetchByPatientInfoInfo: '/m/v1/api/basics/record/fetchByPatientInfoInfo',
+    fetchByMedicalHistory:'/m/v1/api/basics/record/fetchByMedicalHistory',//协作病历
+    sponsorSynergy:'/m/v1/api/synergy/sponsorSynergy'
 }
 

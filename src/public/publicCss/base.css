@@ -359,6 +359,9 @@ body{
 .questTableName {
     color: red;
 }
+.addFollowMain1{
+    margin-left: 31px;
+}
 .addFollowMain input {
     height: 27px;
 }
@@ -2047,9 +2050,7 @@ color: #8C8C8C;
     margin-left: 0px !important;
 }
 
-.evaluateBox .el-dialog__body {
-    padding: 25px 60px;
-}
+
 
 .evaluateCont {
     width: 90%;
