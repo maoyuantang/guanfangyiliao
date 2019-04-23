@@ -20,3 +20,6 @@ export default jsonData => {
     }
     return objKeySort(jsonData);
 } 
+/**
+ * 后端要求对json排序，但是json是无序的，是不能排序的，但是后端坚持，只好使用先写入先读取的特性重新写一遍json，变相实现，但是注意json不能排序
+ */

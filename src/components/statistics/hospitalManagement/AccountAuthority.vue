@@ -1184,7 +1184,8 @@ export default {
           })
         ]
       };
-      // console.log(postData);
+      console.log(postData);
+      return;
       const postQuery = { token: this.userInfo.token };
       const res = await createUser(postQuery, postData);
       // console.log(res);

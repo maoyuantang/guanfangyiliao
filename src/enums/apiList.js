@@ -139,7 +139,8 @@ export default {
     onlineRoomsByDoctor:'/m/v1/api/clinic/clinic/onlineRoomsByDoctor',//7.6(WEB医生)获取所有该医生的在线诊室
     addPrescription:'/m/v1/api/prescription/prescription/addPrescription',//7.8开处方
     updatePrescription:'/m/v1/api/prescription/prescription/updatePrescription',//7.9审核处方
-    reviewList:'/m/v1/api/prescription/prescription/reviewList',//7.10按审方医生获取处方审核列表
+    reviewList: '/m/v1/api/prescription/prescription/reviewList',//7.10按审方医生获取处方审核列表
+    sendList: '/m/v1/api/prescription/prescription/sendList',//7.6.1按配送医生获取处方配送列表
     prescriptionDetailByCondition:'/m/v1/api/prescription/prescription/prescriptionDetailByCondition',//7.11根据条件获取处方信息
     prescriptionDetailById:'/m/v1/api/prescription/prescription/prescriptionDetailById',//7.12根据处方id获取处方电子版
     drugSendRecord: '/m/v1/api/prescription/prescription/drugSendRecord',//7.13根据处方id获取处方发货记录

@@ -1284,11 +1284,16 @@
       //修改    (按钮)
       //开始渲染                                        
       async dualReferralUpdate(data2) {
+        let _this = this;
         this.isShowaddMove = true
         this.referralId = data2.referralId
         console.log(data2)
         console.log(this.userInfo.hasAuth)
-        let _this = this;
+        // $.each(_this.addForm.giveRight.value, function (index, text) {
+        //   text.medicalHistoryId = text.visitNo;
+        // });
+        
+        
         const options = {
           token: this.userInfo.token,
           referralId: data2.referralId,//转诊ID
@@ -1300,12 +1305,15 @@
           this.addForm.typeList.value = res.data.body.typeCode
           this.addForm.diseaseName.value = res.data.body.illnessId
           this.addForm.patient.value = res.data.body.patientId
-          // this.addForm.intoHospital.value = [res.data.body.receiveOrgCode, res.data.body.receiveDeptId]
+          // this.addForm.intoHospital.value = [res.data.body.receiveOrgCode, res.data.body.receiveDeptId]//等待
+          this.$refs.ceshi3.currentLabels[0] = res.data.body.receiveOrgCode
+          this.$refs.ceshi3.currentLabels[1] = res.data.body.receiveDeptId
           // this.addForm.intoHospital.value = res.data.body.receiveDeptName
           this.addForm.giveRight.value = res.data.body.medicalHistoryIds
           this.addForm.moveTime.value = res.data.body.applyTime
           this.addForm.movePurpose = res.data.body.intention
           this.addForm.beginIdea = res.data.body.diagnose
+          this.patientMedicalHistoryFun()
           console.log(this.addForm)
           this.upOrDown().then(val => {
             this.diseaseNameId();
@@ -1319,6 +1327,26 @@
           });
         }
       },
+      //14.16.转诊-获取病历列表
+      async patientMedicalHistoryFun() {
+        let query1 = {
+          token: this.userInfo.token,
+          patientId: this.addForm.patient.value
+        };
+        const res1 = await patientMedicalHistory(query1);                                   //  14.8.双向转诊-WEB医生端-修改
+        if (res1.data && res1.data.errCode === 0) {
+          console.log('获取病历列表+成功')
+          console.log(res1)
+
+        } else {
+          //失败
+          console.log('获取病历列表+失败')
+          this.$notify.error({
+            title: "警告",
+            message: res1.data.errMsg
+          });
+        }
+      },
       async dualReferralAdd2(data2) {
         console.log(this.addForm)
         let query = {
@@ -1327,7 +1355,7 @@
         let options = {
           id: this.referralId,//ID
           referralType: this.addForm.typeList.value,//转诊类型：UP上转，DOWN下转
-          
+
           illnessId: this.addForm.diseaseName.value,//疾病ID
           illnessName: this.$refs.ceshi1.selectedLabel,//疾病名称
           patientId: this.addForm.patient.value,//病人ID（编号） 
@@ -1337,10 +1365,10 @@
           receiveOrgName: this.$refs.ceshi3.currentLabels[0],//接收医生名称 
           receiveDeptId: this.addForm.intoHospital.value[1],//接收科室ID
           receiveDeptName: this.$refs.ceshi3.currentLabels[1],//接收科室名称
-          
+
           intention: this.addForm.movePurpose,//转诊目的
           diagnose: this.addForm.beginIdea,//初步诊断
-          
+
           archivesAuthority: this.addForm.giveRight.value,//病历授权
           medicalHistorys: this.addForm.giveRight.value
         };
@@ -1462,8 +1490,16 @@
       },
       //转诊     (按钮)
       async dualReferralReception3(data2) {
+        const _this = this
         this.isShowaddMove = true
         this.kuang2Save = 3
+        // $.each(_this.addForm.giveRight.value, function (index, text) {
+        //   text.medicalHistoryId = text.visitNo;
+        // });
+
+
+
+
         let query = {
           token: this.userInfo.token,
           referralId: data2.referralId,//转诊ID
@@ -1502,7 +1538,14 @@
         }
       },
       async dualReferralAdd3(data2) {
+        const _this = this
         console.log(this.addForm)
+
+        $.each(_this.addForm.giveRight.value, function (index, text) {
+          text.medicalHistoryId = text.visitNo;
+        });
+
+
         let query = {
           token: this.userInfo.token
         };
