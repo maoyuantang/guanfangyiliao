@@ -14,7 +14,7 @@
                     <!-- <p class="title">{{text.orgName}}-{{text.clinicName}}</p> -->
                     <p class="title">{{text.clinicName}}</p>
                     <div class="outpatient_user">
-                        <img v-if="text.doctor[0].headId == null" src="../assets/img/a-6.png" alt="医生头像">
+                        <img v-if="text.doctor[0].headId == null||!text.doctor[0].headId" src="../assets/img/doctorImg.png" alt="医生头像">
                         <img v-if="text.doctor[0].headId" :src='userSocketInfo.imgUrl+text.doctor[0].headId' alt="医生头像">
                         <div class="outpatient_name">
                             <p class="p1">{{text.doctor[0].doctorName}}</p>
@@ -104,7 +104,7 @@
                 <div class="div">
                     <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index,text)' :class="whichUser==index?'backgroundUser':''">
                         <li>
-                            <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
+                            <img v-if="text.headId == null||!text.headId" src="../assets/img/a-6.png" alt="医生头像">
                             <img v-if="text.headId" :src='userSocketInfo.imgUrl+text.headId' alt="医生头像">
                             <div>
                                 <p class="name">{{text.userName}}</p>
@@ -330,7 +330,7 @@
                 <div class="div">
                     <ul v-for="(text,index) in bcd" :key="index" @click='whichUserFun(index)' :class="whichUser==index?'backgroundUser':''">
                         <li>
-                            <img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
+                            <img v-if="text.headId == null||!text.headId" src="../assets/img/a-6.png" alt="医生头像">
                             <img v-if="text.headId" :src='userSocketInfo.imgUrl+text.headId' alt="医生头像">
                             <div>
                                 <p class="name">{{text.userName}}</p>
@@ -541,10 +541,10 @@
                 <ul v-for="(text5,index) in huanzheList" :key="index" class="" style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px 15px;">
                     <li class="name" style="display:-webkit-flex;justify-content: space-between;width: 100%;margin:0 0 20px 0;align-items: center;">
                         <div style="display: flex; align-items: center;">
-                            <img v-if="text5.headId == null" style="width: 53px; margin: 0 30px 0 0;" src="../assets/img/a-6.png" alt="">
+                            <img v-if="text5.headId == null||!text5.headId" style="width: 53px; margin: 0 30px 0 0;" src="../assets/img/a-6.png" alt="">
                             <img v-if="text5.headId" :src='userSocketInfo.imgUrl+text5.headId' alt="医生头像" style="width: 53px;margin: 0px 30px 0px 0px;border-radius: 50%;">
                             <div>
-                                <!-- <img src="../assets/img/a-6.png" alt=""> -->
+                                <!-- <img src="../assets/img/doctorImg.png" alt=""> -->
                                 <h1 style="margin: 0 0 10px 0;font-family: PingFangSC-Semibold;font-size: 15px;color: #002257;letter-spacing: 0.1px;">
                                     {{text5.userName}}</h1>
                                 <div class="orderTime">

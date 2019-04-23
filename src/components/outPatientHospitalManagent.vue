@@ -109,7 +109,7 @@
 						<li v-for="(text,index) in relationalDoctor" :key="index">
 							<div class="evaluateCont1">
 								<!-- 待头像 -->
-								<img v-if="text.headId == null" src="../assets/img/a-6.png" alt="医生头像">
+								<img v-if="text.headId == null||!text.headId" src="../assets/img/doctorImg.png" alt="医生头像">
 								<img v-if="text.headId" :src='userSocketInfo.imgUrl+text.headId' alt="医生头像">
 								<h5>{{text.doctorName}}</h5>
 							</div>
@@ -1291,6 +1291,7 @@
 				console.log(data)
 				if (data) {
 					this.departmentId = data;
+					this.addData.doctorList.list.length = 0
 					this.newClinic1();
 				}
 			},

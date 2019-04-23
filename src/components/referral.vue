@@ -16,7 +16,7 @@
         <div class="moved">
           <!-- 头像姓名 -->
           <div class="moved_top">
-            <img v-if="dualReferralRecordFile.headId == null" src="../assets/img/a-6.png" alt="医生头像">
+            <img v-if="dualReferralRecordFile.headId == null||!dualReferralRecordFile.headId" src="../assets/img/a-6.png" alt="医生头像">
             <img v-if="dualReferralRecordFile.headId" :src='userSocketInfo.imgUrl+dualReferralRecordFile.headId'
               alt="医生头像">
             <p>{{dualReferralRecordFile.patientName}}</p>
