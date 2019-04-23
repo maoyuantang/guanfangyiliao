@@ -1401,15 +1401,16 @@
           receiveOrgName: this.$refs.ceshi3.currentLabels[0],//接收医生名称 
           receiveDeptId: this.addForm.intoHospital.value[1],//接收科室ID
           receiveDeptName: this.$refs.ceshi3.currentLabels[1],//接收科室名称
-
+          
+          applyTime: this.addForm.moveTime.value,
           intention: this.addForm.movePurpose,//转诊目的
           diagnose: this.addForm.beginIdea,//初步诊断
 
           archivesAuthority: this.addForm.giveRight.value,//病历授权
           medicalHistorys: this.addForm.giveRight.value,
 
-          archivesAuthority: Object.assign({}, this.addForm.giveRight.value),//病历授权
-          medicalHistorys: Object.assign({}, this.addForm.giveRight.value)
+          // archivesAuthority: Object.assign({}, this.addForm.giveRight.value),//病历授权
+          // medicalHistorys: Object.assign({}, this.addForm.giveRight.value)
         };
         console.log(options)
         const res = await dualReferralUpdate(query, options);                                   //  14.8.双向转诊-WEB医生端-修改
@@ -1560,6 +1561,7 @@
           this.addForm.beginIdea = res.data.body.diagnose
           this.addForm.giveRight.value = res.data.body.archivesAuthority//后边有问题
 
+          // this.patientMedicalHistoryFun(res.data.body.selectedMedicalHistoryList)
 
           console.log(this.addForm)
           this.upOrDown().then(val => {
