@@ -5,6 +5,9 @@
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
                         <div id="remoteVideos">
+
+
+
                             <!-- <div v-for="(item,index) in resultList" :key="index" v-html="generateParticipant(item,false)">
 
                             </div> -->
@@ -1677,12 +1680,13 @@ export default {
                     console.error(result);
                 }
             });
-        }
+        },
+        
     },
     created() {
         // this.getChangeWindoe()
         console.log(this.userMessage);
-
+        this.listenClick();
         if (this.doctorVis == 0) {
             this.screenClickVisable = true;
         } else {
@@ -1721,6 +1725,8 @@ export default {
          * 收到有人进入房间
          */
         Manis.onJoinConference(function(result) {
+            // const ele = _this.generateParticipant(result, false);
+            // ele.onclick = ()=>{alert()}
             $("#remoteVideos").append(_this.generateParticipant(result, false));
             // _this.resultList.push(result);
             // _this.$store.commit("socket/VIDEOUSER", 1);
@@ -1735,6 +1741,7 @@ export default {
             //     });
             // }
         });
+
         /**
          * 收到有人离开房间
          */
