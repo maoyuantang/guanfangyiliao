@@ -451,7 +451,7 @@ export default {
         this.getHisRecord();
         this.getMemberMess();
 
-        this.updated();
+      
         this.ourl =
             "/m/v1/api/hdfs/fs/upload?token=" +
             this.userState.token +
@@ -600,6 +600,7 @@ export default {
                     childMessageType: childMessageType
                 });
             }
+              this.updated();
         },
         sendMessage(agentData) {
             if (
@@ -1305,6 +1306,7 @@ export default {
                     }
                 }
                 console.log(this.messageList);
+                  this.updated();
             } else {
                 //失败
                 this.$notify.error({

@@ -80,7 +80,8 @@
                 <ul>
                     <li @click="createChat(thePatientMessage,1)">
                         <div>
-                            <img src="../assets/img/sendNew1.png" />
+                            <!-- <img src="../assets/img/sendNew1.png" /> -->
+                             <img :src="userSocketInfo.headImg+thePatientMessage.userId" :onerror="defaultImg" />
                         </div>
                         <div>
                             {{thePatientMessage.userName}}
@@ -94,7 +95,7 @@
                 <ul v-show="noLineVisable">
                     <li v-for="(text,index) in noLineNum" :key="index" @click="createChat(text,0)">
                         <div>
-                            <img src="../assets/img/sendNew1.png" />
+                           <img :src="userSocketInfo.headImg+text.userId" :onerror="defaultImg" />
                         </div>
                         <div>
                             {{text.userName}}
@@ -163,6 +164,8 @@ export default {
     },
     data() {
         return {
+            defaultImg:
+                'this.src="' + require("../assets/img/a-6.png") + '"',
             archivesId: "",
             archivesVisible: false,
             userResource: "",
@@ -1648,6 +1651,8 @@ export default {
             this.getThePatient();
         } else {
             if (this.chatTypeBox.startDoctorTYpe == "会诊") {
+                this.archivesId = this.chatTypeBox.bingUserId;
+            }else if (this.chatTypeBox.startDoctorTYpe == "患者") {
                 this.archivesId = this.chatTypeBox.bingUserId;
             } else {
                 this.archivesId = "不是门诊和协作进入";
