@@ -8,6 +8,7 @@
                     <el-form-item>
                         <el-input class="addFollowTitle" v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
                     </el-form-item>
+                    <!-- {{addFollowData.type}} -->
                     <el-form-item label="">
                         <el-radio-group v-model="addFollowData.type">
                             <el-radio label="INHOSPITAL">住院随访</el-radio>
@@ -2889,7 +2890,7 @@ export default {
             const options = {
                 department: this.addFollowData.department,
                 title: this.addFollowData.title,
-                type: "INHOSPITAL",
+                type: this.addFollowData.type,
                 remindMe: this.addFollowData.remindMe,
                 remindHe: this.addFollowData.remindHe,
                 remindDays: this.addFollowData.remindDays,

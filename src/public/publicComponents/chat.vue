@@ -17,7 +17,10 @@
 
                 <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
-                    <div class="otherImg">
+                    <div v-if='text.from==userSelfInfo.userId' class="otherImg">
+                        <img class='headImgClass' :src="userSocketInfo.headImg+text.from" :onerror="defaultImgDoc" />
+                    </div>
+                    <div v-else class="otherImg">
                         <img class='headImgClass' :src="userSocketInfo.headImg+text.from" :onerror="defaultImg" />
                     </div>
                     <div class="otherCon">
@@ -436,6 +439,10 @@ export default {
             defaultImg:
                 'this.src="' +
                 require("../../assets/img/publicHeadImg.png") +
+                '"',
+                defaultImgDoc:
+                'this.src="' +
+                require("../../assets/img/doctorImg.png") +
                 '"',
             ifSendMessageNum: 0,
             sendMessageBoxType: "",

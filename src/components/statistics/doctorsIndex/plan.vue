@@ -72,7 +72,7 @@
 
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right"  label=" " width="100">
+                        <el-table-column fixed="right" label=" " width="100">
                             <template slot-scope="scope">
                                 <el-button class="solveOver" @click="solveOver(scope.row,0)" type="text" size="small">处理完成</el-button>
                             </template>
@@ -139,7 +139,7 @@
 
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right"  label=" " width="100">
+                        <el-table-column fixed="right" label=" " width="100">
                             <template slot-scope="scope">
                                 <el-button class="solveOver" @click="solveOver(scope.row,1)" type="text" size="small">处理完成</el-button>
                             </template>
@@ -252,7 +252,7 @@
                         <el-table-column label=" " width="70">
                             <template slot-scope="scope">
                                 <div class='indexHeadImgClass'>
-                                    <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImg" />
+                                    <img :src="userSocketInfo.headImg+scope.row.headId" :onerror="defaultImgDoc" />
                                 </div>
                             </template>
                         </el-table-column>
@@ -303,7 +303,7 @@
                         <el-table-column label=" " width="70">
                             <template slot-scope="scope">
                                 <div class='indexHeadImgClass'>
-                                    <img :src="userSocketInfo.headImg+scope.row.applyUserId" :onerror="defaultImg" />
+                                    <img :src="userSocketInfo.headImg+scope.row.applyUserId" :onerror="defaultImgDoc" />
                                 </div>
                             </template>
                         </el-table-column>
@@ -587,7 +587,9 @@ export default {
             warnNum: 0,
             planNum: 0,
             defaultImg:
-                'this.src="' + require("../../../assets/img/a-6.png") + '"'
+                'this.src="' + require("../../../assets/img/a-6.png") + '"',
+            defaultImgDoc:
+                'this.src="' + require("../../../assets/img/doctorImg.png") + '"'
         };
     },
 
