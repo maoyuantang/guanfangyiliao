@@ -182,7 +182,7 @@ const router = new Router({
 			name: 'login',
 			component: login,
 			meta: {
-				title: '冠方医疗-login'
+				title: '冠方医疗-登录'
 			}
 		},
 		{
