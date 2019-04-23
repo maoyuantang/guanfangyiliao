@@ -4,7 +4,7 @@
         <div class="new-content-nav">
             <div class="new-content-userinfo">
                 <div class="new-content-headimg">
-                    <img src="../../../static/assets/img/a-6.png" alt="">
+                    <img :src="patientInfo.sex?'../../../static/assets/img/bingNan.png':'../../../static/assets/img/bingNv.png'" alt="">
                 </div>
                 <p class="new-content-username">{{patientInfo.name}}</p>
                 <div class="new-content-msg">
@@ -42,6 +42,11 @@
                 <div 
                 :is="showChildItem"
                 :inData="showChildItemData"></div>
+                <!-- <div class="new-content-body-content-botton">
+                    <p>记录医生：{{showChildItemData.recordName}}</p>
+                    <p>诊断时间{{showChildItemData.time}}</p>
+                    <p>门诊流水：{{showChildItemData.inSno}}</p>
+                </div> -->
             </div>
         </div>
     </div>
@@ -80,7 +85,7 @@
                 return this.patientListInfo.list[this.nowNav]?this.patientListInfo.list[this.nowNav].childModules[this.patientListInfo.list[this.nowNav].showChildModuleIndex].code:''
             },
             showChildItemData(){
-                return this.patientListInfo.list[this.nowNav]?this.patientListInfo.list[this.nowNav].childModules[this.patientListInfo.list[this.nowNav].showChildModuleIndex].data:null
+                return this.patientListInfo.list[this.nowNav]?this.patientListInfo.list[this.nowNav].childModules[this.patientListInfo.list[this.nowNav].showChildModuleIndex]:null
             },
 		},
 		
@@ -486,7 +491,13 @@
     .new-content-body-content{
         /* background-color: grey; */
         flex: 1;
+        padding-left: 0.78rem;
+        padding-top: .8rem;
     }
+    /* .new-content-body-content-botton{
+        font-size: 0.14rem;
+        color: #4cb0e7;
+    } */
     .new-content-body-nav-item{
         display: flex;
         align-items: center;

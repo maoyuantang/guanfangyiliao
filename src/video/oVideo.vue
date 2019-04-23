@@ -2356,15 +2356,15 @@ video {
                 conferenceNumber: ""
             }, //conferenceId和conferenceNumber就穿空
     2.videoType: "门诊",
-    3.oClinicId: "",这个不能传空
+    3.oClinicId: "",这个不能传空(诊室id)
     4.videoclick这个是退出事件
      videoclick(data) {
             this.centerDialogVisible = false;//视频组件不显示，变量写你自己的
         },
         5.doctorVis:1,//就穿1
         6.userMessage = {
-                clinicId: text.id,
-                departmentId: text.departmentId
+                clinicId: text.id,//诊室id
+                departmentId: text.departmentId//医生的科室id'
             };都不能传空
             7. chatTypeBox: {
                 startDoctorName: "",

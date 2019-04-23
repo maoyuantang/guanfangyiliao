@@ -151,7 +151,6 @@
             @on-ok="departmentOk"
             @on-cancel="departmentCancel">
             <div class="department-out">
-                <h1>555555555555</h1>
                 <div class="department-list">
                     <ul>
                         <li v-for="(item,index) in department.list" :key="index" class="department-li">

@@ -149,8 +149,15 @@
         </el-dialog>
         
         <!-- 进入门诊 弹窗 -->
-        <el-dialog :visible.sync="enterClinic.show">
-            <ovideocomponent :createVideoRoomData="enterClinic.createVideoRoomData" :videoType="enterClinic.videoType" :oClinicId="enterClinic.oClinicId"></ovideocomponent>
+        <el-dialog :visible.sync="enterClinic.show" class='videoClassBox' append-to-body fullscreen>
+            <ovideocomponent 
+            @reback="videoclick"
+            :createVideoRoomData="enterClinic.createVideoRoomData" 
+            :videoType="enterClinic.videoType" 
+            :oClinicId="enterClinic.oClinicId" 
+            :doctorVis='enterClinic.doctorVis'
+            :userMessage="enterClinic.userMessage" 
+            :chatTypeBox="enterClinic.chatTypeBox"></ovideocomponent>
         </el-dialog>
 	</div>
 </template>
@@ -198,14 +205,23 @@
         },
 		data () {
 			return {
-                enterClinic:{//进入 门诊 弹窗 数据 （谭银组件） 
+                enterClinic:{//进入 门诊 弹窗 数据 （谭银组件）   
                     show:false,
                     createVideoRoomData: {
                         conferenceId: "",
                         conferenceNumber: ""
                     },
                     videoType:"门诊",
-                    oClinicId:""
+                    oClinicId:"",//诊室id
+                    doctorVis:1,
+                    userMessage:{
+                        clinicId: '',//诊室id
+                        departmentId: ''//医生的科室id'
+                    },
+                    chatTypeBox:{
+                        startDoctorName: "",
+                        startDoctorTYpe: "门诊"
+                    }
                 },
                 chatData:{//谭颖的组件 数据    
                     sessionId:'',
@@ -284,10 +300,19 @@
 		},
 		methods:{
             /**
+             * 关闭进入诊室弹窗
+             */
+            videoclick(){
+                this.enterClinic.show = false;
+            },
+            /**
              * 进入 门诊
              */
             enterRoom(item){
                 console.log(item);
+                this.enterClinic.oClinicId = item.crId;
+                this.enterClinic.userMessage.clinicId = item.crId;
+                this.enterClinic.userMessage.departmentId = this.userSelfInfo.depts.length>0?this.userSelfInfo.depts[0].deptId:'';
                 this.enterClinic.show = true;
             },
             /**
