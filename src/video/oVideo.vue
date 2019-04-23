@@ -1664,9 +1664,8 @@ export default {
             this.noLineUpNum();
             this.getThePatient();
         } else {
-            if (this.chatTypeBox.startDoctorTYpe == "会诊") {
-                this.archivesId = this.chatTypeBox.bingUserId;
-            } else if (this.chatTypeBox.startDoctorTYpe == "患者") {
+            let otype=this.chatTypeBox.startDoctorTYpe
+            if (otype == "会诊" || otype=="患者" || otype=='随访') {
                 this.archivesId = this.chatTypeBox.bingUserId;
             } else {
                 this.archivesId = "不是门诊和协作进入";
@@ -2340,6 +2339,37 @@ video {
         </ovideo>
       </el-dialog>
     </div>
+
+
+    进入诊室需要传的参数
+      <!-- 视频聊天 -->
+        <div v-if="centerDialogVisible">
+            <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
+                <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick" :doctorVis='doctorVis' :userMessage="userMessage" :chatTypeBox="chatTypeBox">
+                </ovideo>
+            </el-dialog>
+        </div>
+
+
+      1.   createVideoRoomData: {
+                conferenceId: "",
+                conferenceNumber: ""
+            }, //conferenceId和conferenceNumber就穿空
+    2.videoType: "门诊",
+    3.oClinicId: "",这个不能传空
+    4.videoclick这个是退出事件
+     videoclick(data) {
+            this.centerDialogVisible = false;//视频组件不显示，变量写你自己的
+        },
+        5.doctorVis:1,//就穿1
+        6.userMessage = {
+                clinicId: text.id,
+                departmentId: text.departmentId
+            };都不能传空
+            7. chatTypeBox: {
+                startDoctorName: "",
+                startDoctorTYpe: "门诊"
+            },这个就按我放的这个传
 */
 </style>
 

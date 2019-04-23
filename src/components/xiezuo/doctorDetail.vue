@@ -6,7 +6,7 @@
 
                 <div class="headImg">
                     <img v-if="text.userHeadId" :src="userSocketInfo.imgUrl+text.userHeadId" />
-                    <img v-else src="../../assets/img/publicHeadImg.png" />
+                    <img v-else src="../../assets/img/doctorImg.png" />
 
                 </div>
                 <div class="evaluateCont">

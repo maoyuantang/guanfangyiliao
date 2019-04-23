@@ -699,7 +699,7 @@ export default {
                 conferenceId: "",
                 conferenceNumber: ""
             },
-            oClinicId: [], //当前进入门诊id
+            oClinicId: '', //当前进入门诊id
             //谭莹变量
             // testData: {
             //   select: {

@@ -1124,6 +1124,10 @@ height: 55px !important;
 background: none !important;
 margin-top: -4px !important;
 }
+.chatFileClassVideo{
+    margin-top: -7px !important;
+    margin-left: -28px;
+}
 .sendMessageChat {
 }
 .chat {
