@@ -54,7 +54,7 @@ export default {
             moreLoadVisable: false,
             defaultImg:
                 'this.src="' +
-                require("../../assets/img/publicHeadImg.png") +
+                require("../../assets/img/doctorImg.png") +
                 '"'
         };
     },

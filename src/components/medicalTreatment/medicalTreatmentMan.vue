@@ -1396,7 +1396,21 @@
           if (_this.$refs.ceshi1.query == _this.kuangData1.options2.list[index].label) {
             console.log("新增匹配到了下拉，直接加列表数据")
             abc.push("1")
-            _this.addMedicalClassify1();
+            let bcd = []
+            for (var i = 0; i < _this.kuangData1.options3.list; i++) {
+              if (_this.$refs.ceshi2.query == _this.kuangData1.options3.list[i].label) {
+                console.log("新增匹配到了名称，直接提交")
+                bcd.push("1")
+                _this.addMedicalClassify1();
+              }
+            }
+            if (bcd.length == 0) {
+              console.log("新增匹配无名称，传空新增名称")
+              _this.kuangData1.options3.value = "",//疾病ID
+                _this.addMedicalClassify1();
+            } else { }
+            _this.kuangData1.show = false;
+
           } else {
             // alert(2)
           }

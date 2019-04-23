@@ -80,7 +80,8 @@
                 <ul>
                     <li @click="createChat(thePatientMessage,1)">
                         <div>
-                            <img src="../assets/img/sendNew1.png" />
+                            <!-- <img src="../assets/img/sendNew1.png" /> -->
+                            <img :src="userSocketInfo.headImg+thePatientMessage.userId" :onerror="defaultImg" />
                         </div>
                         <div>
                             {{thePatientMessage.userName}}
@@ -94,7 +95,7 @@
                 <ul v-show="noLineVisable">
                     <li v-for="(text,index) in noLineNum" :key="index" @click="createChat(text,0)">
                         <div>
-                            <img src="../assets/img/sendNew1.png" />
+                            <img :src="userSocketInfo.headImg+text.userId" :onerror="defaultImg" />
                         </div>
                         <div>
                             {{text.userName}}
@@ -163,6 +164,7 @@ export default {
     },
     data() {
         return {
+            defaultImg: 'this.src="' + require("../assets/img/a-6.png") + '"',
             archivesId: "",
             archivesVisible: false,
             userResource: "",
@@ -621,7 +623,7 @@ export default {
                 _this.questVisable = false;
                 console.log("关闭视频成功");
                 _this.localVideoVisable = false;
-                _this.closeVideoBtnVieable=true
+                _this.closeVideoBtnVieable = true;
                 _this.videoIng = 0;
                 // _this.$store.commit("socket/IFENTERVIDEO", 0);
             } else {
@@ -698,17 +700,25 @@ export default {
                         if (_this.videoUser < 2) {
                             console.log("离开房间4");
                             _this.deleteVideoRoom();
-                            _this.sendMessageChat("6", "complete&time=", "VIDEO");
+                            _this.sendMessageChat(
+                                "6",
+                                "complete&time=",
+                                "VIDEO"
+                            );
                         } else {
                             console.log("离开房间5");
                             messageBody = "complete&time=";
-                            _this.sendMessageChat("6", "complete&time=", "VIDEO");
+                            _this.sendMessageChat(
+                                "6",
+                                "complete&time=",
+                                "VIDEO"
+                            );
                             _this.$emit("reback", "closeCancle");
                         }
                     }
                     _this.$store.commit("socket/IFVIDEOIMG", 0);
                 } else if (num == 0) {
-                    messageBody='MicroCinic&hangup'
+                    messageBody = "MicroCinic&hangup";
                     console.log("0000000000000000000000000000000000000000");
                     if (_this.videoUser < 2) {
                         _this.deleteVideoRoom();
@@ -1320,7 +1330,11 @@ export default {
                 "",
                 function(connection) {
                     console.log("sign success : ", connection);
-                    _this.anonymousJoinRoomBtn();
+                    if (connection.code == 200) {
+                        _this.anonymousJoinRoomBtn();
+                    } else {
+                        alert(connection.msg);
+                    }
                 },
                 function(error) {
                     console.error("sign error : ", error);
@@ -1412,11 +1426,14 @@ export default {
                 false,
                 function(result) {
                     console.log("join conference success : ", result);
-                    _this.userResource = result.response.info.resource;
-                    // alert(_this.userResource);
-                    $("#localVideos").append(
-                        _this.generateParticipant(result, true)
-                    );
+                    if (result.code == 200) {
+                        _this.userResource = result.response.info.resource;
+                        $("#localVideos").append(
+                            _this.generateParticipant(result, true)
+                        );
+                    }else{
+                        alert(result.msg)
+                    }
                 },
                 function(error) {
                     console.log("join conference failure , error : ", error);
@@ -1647,7 +1664,8 @@ export default {
             this.noLineUpNum();
             this.getThePatient();
         } else {
-            if (this.chatTypeBox.startDoctorTYpe == "会诊") {
+            let otype=this.chatTypeBox.startDoctorTYpe
+            if (otype == "会诊" || otype=="患者" || otype=='随访') {
                 this.archivesId = this.chatTypeBox.bingUserId;
             } else {
                 this.archivesId = "不是门诊和协作进入";
@@ -1700,7 +1718,7 @@ export default {
                 _this.videoIng = 0;
             } else {
                 if (_this.videoUser < 1) {
-                    console.log('有人离开人数少于1')
+                    console.log("有人离开人数少于1");
                     _this.closeVideoRoom(2);
                 }
             }
@@ -2321,6 +2339,37 @@ video {
         </ovideo>
       </el-dialog>
     </div>
+
+
+    进入诊室需要传的参数
+      <!-- 视频聊天 -->
+        <div v-if="centerDialogVisible">
+            <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
+                <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick" :doctorVis='doctorVis' :userMessage="userMessage" :chatTypeBox="chatTypeBox">
+                </ovideo>
+            </el-dialog>
+        </div>
+
+
+      1.   createVideoRoomData: {
+                conferenceId: "",
+                conferenceNumber: ""
+            }, //conferenceId和conferenceNumber就穿空
+    2.videoType: "门诊",
+    3.oClinicId: "",这个不能传空
+    4.videoclick这个是退出事件
+     videoclick(data) {
+            this.centerDialogVisible = false;//视频组件不显示，变量写你自己的
+        },
+        5.doctorVis:1,//就穿1
+        6.userMessage = {
+                clinicId: text.id,
+                departmentId: text.departmentId
+            };都不能传空
+            7. chatTypeBox: {
+                startDoctorName: "",
+                startDoctorTYpe: "门诊"
+            },这个就按我放的这个传
 */
 </style>
 

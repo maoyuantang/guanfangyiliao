@@ -10,14 +10,17 @@
 
         </div>
         <div class="chatMessage">
-            <div class='videoUserNumClass' v-show='videoUserNum!=0' @click="closeVideo('ON',1)">
+            <div class='videoUserNumClass' v-show='videoUserNum!=0' @click="showVideoBtn1()">
                 <img src="../../assets/img/videoUserNum.png" /> 快速进入视频
             </div>
             <ul class="chatRecord" id="scrolldIV">
 
                 <li v-if="loadMoreVisable" class="loadMoreChat" @click="getHisRecord(oMsgId)">加载更多</li>
                 <li v-for="(text,index) in messageList" :key="index" :class="text.from==userSelfInfo.userId?'recordRg':'recordLf'">
-                    <div class="otherImg">
+                    <div v-if='text.from==userSelfInfo.userId' class="otherImg">
+                        <img class='headImgClass' :src="userSocketInfo.headImg+text.from" :onerror="defaultImgDoc" />
+                    </div>
+                    <div v-else class="otherImg">
                         <img class='headImgClass' :src="userSocketInfo.headImg+text.from" :onerror="defaultImg" />
                     </div>
                     <div class="otherCon">
@@ -132,11 +135,6 @@
                 <img src="../../assets/img/sendNew9.png" />
             </span>
             <span v-show="oDoctorVis" title="录入档案" class="enterFile">
-                <!-- <img src="../../assets/img/sendNew10.png" />
-                <ul>
-                    <li @click="openPublicFile()">普通档案</li>
-                    <li @click="openManFile()">孕妇答案</li>
-                </ul> -->
                 <el-dropdown>
                     <el-button class="chatFileClass" type="danger" size="mini" plain><img src="../../assets/img/sendNew10.png" /></el-button>
                     <el-dropdown-menu slot="dropdown">
@@ -437,6 +435,8 @@ export default {
                 'this.src="' +
                 require("../../assets/img/publicHeadImg.png") +
                 '"',
+            defaultImgDoc:
+                'this.src="' + require("../../assets/img/doctorImg.png") + '"',
             ifSendMessageNum: 0,
             sendMessageBoxType: "",
             ifVIdeoIng: ""
@@ -463,7 +463,6 @@ export default {
         this.getHisRecord();
         this.getMemberMess();
 
-        this.updated();
         this.panIfVideo();
         this.ourl =
             "/m/v1/api/hdfs/fs/upload?token=" +
@@ -481,7 +480,6 @@ export default {
                 let div = document.getElementById("scrolldIV");
 
                 div.scrollTop = div.scrollHeight;
-                // div.scrollHeight
                 console.log(div.scrollTop);
             });
         },
@@ -614,6 +612,7 @@ export default {
                     childMessageType: childMessageType
                 });
             }
+            this.updated();
         },
         sendMessage(agentData) {
             if (
@@ -693,7 +692,6 @@ export default {
                         text.conferenceNumber;
                 }
             });
-            // alert(this.conferenceId1);
             if (this.conferenceId1) {
                 let _this = this;
                 let query = {
@@ -714,8 +712,7 @@ export default {
                 }
             }
         },
-        async showVideoBtn() {
-            console.log(this.videoUserNum);
+        showVideoBtn1() {
             if (this.videoUserNum > 0 && this.videoUserNum < 4) {
                 this.closeVideo("ON", 1);
             } else if (this.videoUserNum >= 4) {
@@ -723,9 +720,28 @@ export default {
                     title: "警告",
                     message: "当前视频人数已满，无法进入"
                 });
-            } else if (this.videoUserNum == 0) {
+            }
+        },
+        async showVideoBtn() {
+            if (
+                this.chatTypeBox.startDoctorTYpe == "会诊" ||
+                this.chatTypeBox.startDoctorTYpe == "协作"
+            ) {
+                console.log(this.videoUserNum);
+                if (this.videoUserNum > 0 && this.videoUserNum < 4) {
+                    this.closeVideo("ON", 1);
+                } else if (this.videoUserNum >= 4) {
+                    this.$notify.error({
+                        title: "警告",
+                        message: "当前视频人数已满，无法进入"
+                    });
+                } else if (this.videoUserNum == 0) {
+                    this.setVideo(0);
+                }
+            } else {
                 this.setVideo(0);
             }
+
             // if (this.conferenceId1) {
             //     let _this = this;
             //     let query = {
@@ -1431,6 +1447,7 @@ export default {
                     }
                 }
                 console.log(this.messageList);
+                this.updated();
             } else {
                 //失败
                 this.$notify.error({
@@ -1569,7 +1586,7 @@ export default {
         //视频组件传过来的事件
         videoclick(data) {
             this.videoVisible = false;
-            console.log('关闭弹窗')
+            console.log("关闭弹窗");
             this.alreadyRead();
             this.getHisRecord();
             this.panIfVideo();
@@ -1634,13 +1651,13 @@ export default {
                                 this.panIfVideo();
                                 //对方挂断了视频
                                 // this.closeVideo(messageBody, "other");
-                            } else if (messageBody.indexOf("cancle") > -1 ) {
+                            } else if (messageBody.indexOf("cancle") > -1) {
                                 this.alreadyRead();
                                 this.getHisRecord();
                                 this.panIfVideo();
                                 //对方挂断了视频
                                 // this.closeVideo(messageBody, "other");
-                            }  else if (messageBody.indexOf("accept") > -1 ) {
+                            } else if (messageBody.indexOf("accept") > -1) {
                                 this.$store.commit("socket/IFVIDEOIMG", 1);
                             } else if (messageBody == "videoing") {
                                 this.$store.commit("socket/IFVIDEOIMG", 0);
@@ -1655,7 +1672,7 @@ export default {
                                 messageBody.indexOf("sendroom") > -1 ||
                                 messageBody.indexOf("MicroCinicSendRoom") > -1
                             ) {
-                                console.log('收到视频邀请')
+                                console.log("收到视频邀请");
                                 this.alreadyRead();
                                 this.getHisRecord();
                                 this.panIfVideo();

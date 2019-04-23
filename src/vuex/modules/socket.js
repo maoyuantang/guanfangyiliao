@@ -27,6 +27,7 @@ export default {
             oMsgId: "",
         },
         videoList:[],
+        fromVideoName:'',
         headImg:process.env.IMG_PREFIX+'/m/v1/api/user/user/avatar/',//头像公共前缀
         imgUrl: process.env.IMG_PREFIX + '/m/v1/api/hdfs/fs/download/',//图片下载地址前缀
         imgUrl1:process.env.IMG_PREFIX
@@ -94,6 +95,9 @@ export default {
         VIDEOLIST(state,data){
             state.videoList =data
         },
+        FROMVIDEONAME(state,data){
+            state.fromVideoName =data
+        },
     },
     actions: {
         setSocket(context, data) {
@@ -135,6 +139,9 @@ export default {
         },
         VIDEOLIST(state,data){
             context.commit("VIDEOLIST", data);
+        },
+        FROMVIDEONAME(state,data){
+            context.commit("FROMVIDEONAME", data);
         },
     }
 }
