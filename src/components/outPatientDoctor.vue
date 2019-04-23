@@ -980,15 +980,15 @@ export default {
             this.typeQuan1 = false;
             this.typeQuan2 = false;
             this.typeQuan3 = false;
-            console.table(quanXian);
+            // console.table(quanXian);
             for (let i = 0; i < quanXian.length; i++) {
-                console.log(quanXian[i].authorityId);
+                // console.log(quanXian[i].authorityId);
                 if (quanXian[i].type == 2) {
-                    console.log(quanXian[i].authorityId);
+                    // console.log(quanXian[i].authorityId);
                     this.typeQuan.push(quanXian[i].authorityId);
                 }
             }
-            console.log(this.typeQuan + "-------------");
+            // console.log(this.typeQuan + "-------------");
             this.typeQuan.forEach((element, index) => {
                 // console.log(element, index, element[index])
                 if (element == 10001) {
@@ -1346,7 +1346,7 @@ export default {
 
         //表格样式
         ceshi0(data) {
-            console.log(data);
+            // console.log(data);
             if (data.columnIndex == 0) {
                 return "ceshiLan";
             } else if (data.columnIndex == 1 || data.columnIndex == 2) {
