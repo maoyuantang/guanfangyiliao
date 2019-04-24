@@ -485,10 +485,10 @@ export default {
         },
         //发送
         sendMessageChat(childMessageType, messageBody, childMessageType1) {
-            if (this.chatType1 == "门诊" && this.ifSendMessageNum == 0) {
-                this.bindOrder();
-                this.ifSendMessageNum = 1;
-            }
+            // if (this.chatType1 == "门诊" && this.ifSendMessageNum == 0) {
+            //     this.bindOrder();
+            //     this.ifSendMessageNum = 1;
+            // }
             let odate = new Date();
             let oHour = odate.getHours();
             let oMinite = odate.getMinutes();

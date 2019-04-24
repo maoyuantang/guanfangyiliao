@@ -5,6 +5,9 @@
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
                         <div id="remoteVideos">
+
+
+
                             <!-- <div v-for="(item,index) in resultList" :key="index" v-html="generateParticipant(item,false)">
 
                             </div> -->
@@ -152,7 +155,7 @@ import {
     bindSession
 } from "../api/apiAll.js";
 export default {
-    name: "",
+    name: "video",
     components: {
         videoChat,
         archives
@@ -1677,12 +1680,23 @@ export default {
                     console.error(result);
                 }
             });
-        }
+        },
+        listenClick(){
+            this.$nextTick(e=>{
+                const f = document.getElementById('remoteVideos');
+                console.log(f)
+                f.addEventListener('click',ev=>{
+                    console.error(ev.target.offsetParent)
+                    Array.prototype.slice.call(element.parentNode.children).indexOf(element)
+
+                },false);
+            })
+            
+        },
     },
     created() {
-        // this.getChangeWindoe()
         console.log(this.userMessage);
-
+        this.listenClick();
         if (this.doctorVis == 0) {
             this.screenClickVisable = true;
         } else {
@@ -1735,6 +1749,7 @@ export default {
             //     });
             // }
         });
+
         /**
          * 收到有人离开房间
          */
@@ -2417,15 +2432,15 @@ video {
                 conferenceNumber: ""
             }, //conferenceId和conferenceNumber就穿空
     2.videoType: "门诊",
-    3.oClinicId: "",这个不能传空(诊室id)
+    3.oClinicId: "",这个不能传空
     4.videoclick这个是退出事件
      videoclick(data) {
             this.centerDialogVisible = false;//视频组件不显示，变量写你自己的
         },
         5.doctorVis:1,//就穿1
         6.userMessage = {
-                clinicId: text.id,//诊室id
-                departmentId: text.departmentId//医生的科室id'
+                clinicId: text.id,
+                departmentId: text.departmentId
             };都不能传空
             7. chatTypeBox: {
                 startDoctorName: "",

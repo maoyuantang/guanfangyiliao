@@ -415,6 +415,7 @@
              * 发送消息
              */
             async sendMsg(item){
+                this.enterClinic.chatTypeBox.startDoctorName=item.userName
                 console.log(item)
                 Promise.all([//又修改了流程，原先一个fetchChatSession就ok，现在需要再加一个getBindSession
                     this.getFetchChatSession(item),
