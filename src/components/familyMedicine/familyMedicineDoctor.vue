@@ -220,7 +220,7 @@
                     },
                     chatTypeBox:{
                         startDoctorName: "",
-                        startDoctorTYpe: "门诊"
+                        startDoctorTYpe: "家医"
                     }
                 },
                 chatData:{//谭颖的组件 数据    
@@ -305,33 +305,6 @@
             videoclick(){
                 console.log('enter')
                 this.enterClinic.show = false;
-            },
-            /**
-             * 
-             */
-            async getSendBtnVisable(){
-                sendBtnVisable
-                const res = await bindSession({token:this.userInfo.token},{
-                    orderId:item.orderId,
-                    orderNo:item.orderNo
-                });
-                console.log(res)
-                if(res.data&&res.data.errCode===0){
-                   return {
-                       ok:true,
-                       id:res.data.body
-                   }
-                }else{
-                    this.$notify({
-						title: '失败',
-						message: res.data.errMsg,
-						type: 'error'
-					});
-                    return {
-                       ok:false,
-                       id:''
-                   }
-                }
             },
             /**
              * 进入 门诊
@@ -438,12 +411,17 @@
             /**
              * 
              */
-            async getFetchChatSession(item){
-                const res = await fetchChatSession({token:this.userInfo.token},{to:item.userId});
+            async getSendBtnVisable(item){
+                console.log(item)
+                const res = await sendBtnVisable({
+                    token:this.userInfo.token,
+                    orderId:item.orderId,
+                    userId:item.userId
+                });
                 console.log(res)
                 if(res.data&&res.data.errCode===0){
                    return {
-                       ok:true,
+                       ok:this.isSame(res.data.body.bindSession,res.data.body.bindDoctor),
                        data:res
                    }
                 }else{
@@ -462,32 +440,35 @@
              * 发送消息
              */
             async sendMsg(item){
-                this.enterClinic.chatTypeBox.startDoctorName=item.userName
+                this.enterClinic.chatTypeBox.startDoctorName=item.userName;
                 console.log(item)
-                Promise.all([//又修改了流程，原先一个fetchChatSession就ok，现在需要再加一个getBindSession
-                    this.getFetchChatSession(item),
-                    this.getBindSession(item)
-                ])
-                .then(res => {
-                    if(res[0].ok && res[1].ok){
-                        console.log(res)
-                        this.chatData.sessionId = res[0].data.data.body;
-                        this.chatData.userMessage.clinicId = item.crId;
-                        this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
-                        this.chatData.userMessage.userId = item.userId;
-                        this.chatData.userMessage.clinicOrderId = '';
-                        this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
-                        this.chatData.show = true;
-                        console.log(this.chatData)
-                    }
-                })
-                .catch(err => {
-                    this.$notify({
-						title: '失败',
-						message: err,
-						type: 'error'
-					});
-                });
+                const res1 = await this.getSendBtnVisable(item);
+                if(!res1.ok)return;
+                const res2 = await this.getBindSession(item);
+                if(!res2.ok)return;
+                console.log(res2)
+                this.chatData.sessionId = res2.id;
+                this.chatData.userMessage.clinicId = item.crId;
+                this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
+                this.chatData.userMessage.userId = item.userId;
+                this.chatData.userMessage.clinicOrderId = '';
+                this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
+                this.chatData.show = true;
+                console.log(this.chatData)
+                
+                // .then(res => {
+                //     if(res[0].ok && res[1].ok){
+                //         console.log(res)
+                //         this.chatData.sessionId = res[0].data.data.body;
+                //         this.chatData.userMessage.clinicId = item.crId;
+                //         this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
+                //         this.chatData.userMessage.userId = item.userId;
+                //         this.chatData.userMessage.clinicOrderId = '';
+                //         this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
+                //         this.chatData.show = true;
+                //         console.log(this.chatData)
+                //     }
+                // })
                 // const res = await fetchChatSession({token:this.userInfo.token},{
                 //     to:item.userId
                 // });
@@ -507,13 +488,14 @@
 
 
             },
-
-            // /**
-            //  * 获取 Sessionid
-            //  */
-            // async fetchChatSession(){
-
-            // },
+            /**
+             * 判断是否相异
+             */
+            isSame(a,b){
+                const x = a?true:false;
+                const y = b?true:false;
+                return x===y;
+            },
             /**
              * 分页
              */
