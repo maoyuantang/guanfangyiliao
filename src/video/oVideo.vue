@@ -1681,52 +1681,9 @@ export default {
                 }
             });
         },
-        findEle(ele){
-            let classMap;
-            ele.className?classMap = ele.className.split(' '):classMap = [];
-            // const classMap = ele.className.split(' ');
-            const isFind = classMap.find(item=>{item === 'participant'});
-            if(isFind){
-                return {
-                    ok:true,
-                    index:Array.prototype.slice.call(ele.parentNode.children).indexOf(ele)
-                }
-            }else{
-                if(ele.parentNode){
-                    this.findEle(ele.parentNode)
-                }
-            }
-            return {
-                ok:false,
-                index:null
-            }
-        },
-        // listenClick(){
-        //     this.$nextTick(e=>{
-        //         const f = document.getElementById('remoteVideos');
-        //         console.log(f)
-        //         f.addEventListener('click',ev=>{
-        //             // console.log(ev.target.parentNode.className)
-        //             const result = this.findEle(ev.target)
-        //             if(result.ok){
-        //                 console.log(result.index)
-        //             }
-        //             participant
-        //             participant 
-        //             console.error(ev.target.offsetParent)
-        //             Array.prototype.slice.call(ev.parentNode.children).indexOf(element)
-
-        //         },false);
-        //         $("#remoteVideos>div").click(()=>{
-        //             console.log($(this).index())
-        //         })
-        //     })
-            
-        // },
     },
     created() {
         console.log(this.userMessage);
-        // this.listenClick();
         if (this.doctorVis == 0) {
             this.screenClickVisable = true;
         } else {
@@ -1765,7 +1722,18 @@ export default {
          * 收到有人进入房间
          */
         Manis.onJoinConference(function(result) {
-            $("#remoteVideos").append(_this.generateParticipant(result, false));
+            const ele = _this.generateParticipant(result, false);
+            ele.onclick = ()=> {
+                const parent = ele.parentNode;
+                const list = parent.children;
+                let index;
+                for(let i = 0; i<list.length; i++){
+                    console.log(list[i])
+                    if(list[i].id == ele.id){index = i}
+                }
+                console.log(index)
+            }
+            $("#remoteVideos").append(ele);
             // _this.resultList.push(result);
             // _this.$store.commit("socket/VIDEOUSER", 1);
             _this.videoUser += 1;

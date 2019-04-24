@@ -167,7 +167,7 @@
     import selftag from './../../public/publicComponents/selftag.vue'
     import tag from './../../public/publicComponents/tag.vue'
     import publicTime from './../../public/publicComponents/publicTime.vue'
-    import { stencilName, fetchOrderInfo, updateOrderServices, fetchChatSession, fetchHistoryMessage, bindSession } from '../../api/apiAll.js'
+    import { stencilName, fetchOrderInfo, updateOrderServices, fetchChatSession, fetchHistoryMessage, bindSession, sendBtnVisable } from '../../api/apiAll.js'
     import chat from '../../public/publicComponents/chat.vue'
     import viewRecord from './../xiezuo/viewRecord.vue'
     import ovideocomponent from '../../video/oVideo.vue'
@@ -305,6 +305,33 @@
             videoclick(){
                 console.log('enter')
                 this.enterClinic.show = false;
+            },
+            /**
+             * 
+             */
+            async getSendBtnVisable(){
+                sendBtnVisable
+                const res = await bindSession({token:this.userInfo.token},{
+                    orderId:item.orderId,
+                    orderNo:item.orderNo
+                });
+                console.log(res)
+                if(res.data&&res.data.errCode===0){
+                   return {
+                       ok:true,
+                       id:res.data.body
+                   }
+                }else{
+                    this.$notify({
+						title: '失败',
+						message: res.data.errMsg,
+						type: 'error'
+					});
+                    return {
+                       ok:false,
+                       id:''
+                   }
+                }
             },
             /**
              * 进入 门诊
