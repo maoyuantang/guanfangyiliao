@@ -422,7 +422,8 @@
                 ])
                 .then(res => {
                     if(res[0].ok && res[1].ok){
-                        this.chatData.sessionId = res[0].data.body;
+                        console.log(res)
+                        this.chatData.sessionId = res[0].data.data.body;
                         this.chatData.userMessage.clinicId = item.crId;
                         this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
                         this.chatData.userMessage.userId = item.userId;

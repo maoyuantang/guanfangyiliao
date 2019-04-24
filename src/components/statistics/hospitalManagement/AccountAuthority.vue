@@ -856,7 +856,7 @@ export default {
         //   item => item.deptId
         // )[0])
         // console.log(res.data.systemBusList)
-        const resultList = [];
+        let resultList = [];
         const getValue = data =>{
           for(const i of data){
             if(i.checkbox){
@@ -868,11 +868,30 @@ export default {
           }
         };
         getValue(res.data.systemBusList);
-        this.ourStafAlert.data.docBus.select = resultList.map(item=>{
+        resultList = resultList.map(item=>{
           item.id = item.subCode;
           item.label = item.subName;
           return item;
         });
+        if(resultList.find(item => item.id === '10000')){//这个位置有重大隐患，如果添加子模块这里要出bug，但是关我什么事，都特么要做完了在给我说这些
+          const hasAllChildren = resultList.find(item=>item.id === '10001') && resultList.find(item => item.id === '10002') && resultList.find(item => item.id === '10003');//是否拥有远程门诊下所有子模块
+          hasAllChildren ? null : resultList = resultList.filter(ele => ele.id !== '10000');//如果未拥有远程门诊下所有子模块，删除掉远程门诊，因为element-ui这玩意有了父节点，底下节点全部选中
+        }
+        if(resultList.find((item,index) => item.id === '80001')){//这个位置情况和上面一样
+          const hasAllChildren = resultList.find(item => item.id === '80004') && resultList.find(item => item.id === '80002') && resultList.find(item => item.id === '80003');//是否拥有我的转诊下所有子模块
+          hasAllChildren ? null : resultList = resultList.filter(ele=>ele.id !== '80001');//如果未拥有我的转诊下所有子模块，删除掉我的转诊，因为element-ui这玩意有了父节点，底下节点全部选中
+          hasAllChildren ? null : resultList = resultList.filter(ele=>ele.id !== '80000');//如果未拥有我的转诊下所有子模块，删除掉双向转诊，因为element-ui这玩意有了父节点，底下节点全部选中
+        }
+        // console.log(resultList)
+        // resultList = resultList.filter(ele=>ele.id == '80002');
+        this.ourStafAlert.data.docBus.select = resultList;
+        // resultList.map(item=>{
+        //   item.id = item.subCode;
+        //   item.label = item.subName;
+        //   return item;
+        // });
+        console.log(this.ourStafAlert.data.docBus.select);
+        // return;
         // const mid = res.data.systemBusList.filter(item=>item.checkbox);
         // this.ourStafAlert.data.docBus.select = mid.map(item=>{
         //   item.id = item.subCode;
