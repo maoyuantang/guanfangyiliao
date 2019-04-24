@@ -1701,32 +1701,32 @@ export default {
                 index:null
             }
         },
-        listenClick(){
-            this.$nextTick(e=>{
-                const f = document.getElementById('remoteVideos');
-                console.log(f)
-                f.addEventListener('click',ev=>{
-                    // console.log(ev.target.parentNode.className)
-                    const result = this.findEle(ev.target)
-                    if(result.ok){
-                        console.log(result.index)
-                    }
-                    //participant
-                    // participant 
-                    // console.error(ev.target.offsetParent)
-                    // Array.prototype.slice.call(ev.parentNode.children).indexOf(element)
+        // listenClick(){
+        //     this.$nextTick(e=>{
+        //         const f = document.getElementById('remoteVideos');
+        //         console.log(f)
+        //         f.addEventListener('click',ev=>{
+        //             // console.log(ev.target.parentNode.className)
+        //             const result = this.findEle(ev.target)
+        //             if(result.ok){
+        //                 console.log(result.index)
+        //             }
+        //             participant
+        //             participant 
+        //             console.error(ev.target.offsetParent)
+        //             Array.prototype.slice.call(ev.parentNode.children).indexOf(element)
 
-                },false);
-                // $("#remoteVideos>div").click(()=>{
-                //     console.log($(this).index())
-                // })
-            })
+        //         },false);
+        //         $("#remoteVideos>div").click(()=>{
+        //             console.log($(this).index())
+        //         })
+        //     })
             
-        },
+        // },
     },
     created() {
         console.log(this.userMessage);
-        this.listenClick();
+        // this.listenClick();
         if (this.doctorVis == 0) {
             this.screenClickVisable = true;
         } else {
