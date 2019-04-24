@@ -1,7 +1,7 @@
 <!-- 综合影像 -->
 <template>
 	<div>
-		<Timeline>
+		<!-- <Timeline>
             <TimelineItem>
                 <p class="visiting-hospital">重庆市医科大学第三附属医院</p>
                 <p class="visiting-department">
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </TimelineItem>
-        </Timeline>
+        </Timeline> -->
         <div class="btn-div">
             <el-button type="primary" size="mini">查看影像</el-button>
         </div>
