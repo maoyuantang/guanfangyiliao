@@ -1681,15 +1681,45 @@ export default {
                 }
             });
         },
+        findEle(ele){
+            let classMap;
+            ele.className?classMap = ele.className.split(' '):classMap = [];
+            // const classMap = ele.className.split(' ');
+            const isFind = classMap.find(item=>{item === 'participant'});
+            if(isFind){
+                return {
+                    ok:true,
+                    index:Array.prototype.slice.call(ele.parentNode.children).indexOf(ele)
+                }
+            }else{
+                if(ele.parentNode){
+                    this.findEle(ele.parentNode)
+                }
+            }
+            return {
+                ok:false,
+                index:null
+            }
+        },
         listenClick(){
             this.$nextTick(e=>{
                 const f = document.getElementById('remoteVideos');
                 console.log(f)
                 f.addEventListener('click',ev=>{
-                    console.error(ev.target.offsetParent)
-                    Array.prototype.slice.call(element.parentNode.children).indexOf(element)
+                    // console.log(ev.target.parentNode.className)
+                    const result = this.findEle(ev.target)
+                    if(result.ok){
+                        console.log(result.index)
+                    }
+                    //participant
+                    // participant 
+                    // console.error(ev.target.offsetParent)
+                    // Array.prototype.slice.call(ev.parentNode.children).indexOf(element)
 
                 },false);
+                // $("#remoteVideos>div").click(()=>{
+                //     console.log($(this).index())
+                // })
             })
             
         },
