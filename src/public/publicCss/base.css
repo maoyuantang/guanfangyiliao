@@ -359,6 +359,9 @@ body{
 .questTableName {
     color: red;
 }
+.addFollowMain1{
+    margin-left: 31px;
+}
 .addFollowMain input {
     height: 27px;
 }
@@ -1126,7 +1129,9 @@ margin-top: -4px !important;
 }
 .chatFileClassVideo{
     margin-top: -7px !important;
-    margin-left: -28px;
+    margin-left: -15px;
+    background: none !important;
+    border: none;
 }
 .sendMessageChat {
 }
@@ -2047,9 +2052,7 @@ color: #8C8C8C;
     margin-left: 0px !important;
 }
 
-.evaluateBox .el-dialog__body {
-    padding: 25px 60px;
-}
+
 
 .evaluateCont {
     width: 90%;

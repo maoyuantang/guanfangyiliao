@@ -10,7 +10,7 @@
 
         </div>
         <div class="chatMessage">
-            <div class='videoUserNumClass' v-show='videoUserNum!=0' @click="showVideoBtn1()">
+            <div class='videoUserNumClass' v-show="(chatTypeBox.startDoctorTYpe=='会诊' || chatTypeBox.startDoctorTYpe=='协作') && videoUserNum!=0" @click="showVideoBtn1()">
                 <img src="../../assets/img/videoUserNum.png" /> 快速进入视频
             </div>
             <ul class="chatRecord" id="scrolldIV">
@@ -128,8 +128,11 @@
             <span v-show="oDoctorVis" @click="addRemarks()" title="添加备注">
                 <img src="../../assets/img/sendNew6.png" />
             </span>
-            <span v-show="oDoctorVis && chatTypeBox.startDoctorTYpe=='门诊'" title="药品处方" @click="addDrugs()">
-                <img src="../../assets/img/sendNew8.png" />
+            <span v-show="oDoctorVis && (chatTypeBox.startDoctorTYpe=='门诊' || chatTypeBox.startDoctorTYpe=='患者') " title="药品处方" @click="addDrugs()">
+                <!-- <span v-show=''>
+                     <img src="../../assets/img/sendNew8.png" />
+                </span> -->
+                    <img src="../../assets/img/sendNew8.png" />            
             </span>
             <span v-show="oDoctorVis" @click="addPlan()" title="计划">
                 <img src="../../assets/img/sendNew9.png" />
@@ -485,10 +488,10 @@ export default {
         },
         //发送
         sendMessageChat(childMessageType, messageBody, childMessageType1) {
-            if (this.chatType1 == "门诊" && this.ifSendMessageNum == 0) {
-                this.bindOrder();
-                this.ifSendMessageNum = 1;
-            }
+            // if (this.chatType1 == "门诊" && this.ifSendMessageNum == 0) {
+            //     this.bindOrder();
+            //     this.ifSendMessageNum = 1;
+            // }
             let odate = new Date();
             let oHour = odate.getHours();
             let oMinite = odate.getMinutes();

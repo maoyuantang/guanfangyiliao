@@ -149,8 +149,15 @@
         </el-dialog>
         
         <!-- 进入门诊 弹窗 -->
-        <el-dialog :visible.sync="enterClinic.show">
-            <ovideocomponent :createVideoRoomData="enterClinic.createVideoRoomData" :videoType="enterClinic.videoType" :oClinicId="enterClinic.oClinicId"></ovideocomponent>
+        <el-dialog :visible.sync="enterClinic.show" class='videoClassBox' append-to-body fullscreen>
+            <ovideocomponent 
+            @reback="videoclick"
+            :createVideoRoomData="enterClinic.createVideoRoomData" 
+            :videoType="enterClinic.videoType" 
+            :oClinicId="enterClinic.oClinicId" 
+            :doctorVis='enterClinic.doctorVis'
+            :userMessage="enterClinic.userMessage" 
+            :chatTypeBox="enterClinic.chatTypeBox"></ovideocomponent>
         </el-dialog>
 	</div>
 </template>
@@ -160,7 +167,7 @@
     import selftag from './../../public/publicComponents/selftag.vue'
     import tag from './../../public/publicComponents/tag.vue'
     import publicTime from './../../public/publicComponents/publicTime.vue'
-    import { stencilName, fetchOrderInfo, updateOrderServices, fetchChatSession, fetchHistoryMessage, bindSession } from '../../api/apiAll.js'
+    import { stencilName, fetchOrderInfo, updateOrderServices, fetchChatSession, fetchHistoryMessage, bindSession, sendBtnVisable } from '../../api/apiAll.js'
     import chat from '../../public/publicComponents/chat.vue'
     import viewRecord from './../xiezuo/viewRecord.vue'
     import ovideocomponent from '../../video/oVideo.vue'
@@ -198,14 +205,23 @@
         },
 		data () {
 			return {
-                enterClinic:{//进入 门诊 弹窗 数据 （谭银组件） 
+                enterClinic:{//进入 门诊 弹窗 数据 （谭银组件）   
                     show:false,
                     createVideoRoomData: {
                         conferenceId: "",
                         conferenceNumber: ""
                     },
                     videoType:"门诊",
-                    oClinicId:""
+                    oClinicId:"",//诊室id
+                    doctorVis:1,
+                    userMessage:{
+                        clinicId: '',//诊室id
+                        departmentId: ''//医生的科室id'
+                    },
+                    chatTypeBox:{
+                        startDoctorName: "",
+                        startDoctorTYpe: "家医"
+                    }
                 },
                 chatData:{//谭颖的组件 数据    
                     sessionId:'',
@@ -284,11 +300,40 @@
 		},
 		methods:{
             /**
+             * 关闭进入诊室弹窗
+             */
+            videoclick(){
+                console.log('enter')
+                this.enterClinic.show = false;
+            },
+            /**
              * 进入 门诊
              */
             enterRoom(item){
+                Promise.all([//又修改了流程，原先一个fetchChatSession就ok，现在需要再加一个getBindSession
+                    this.getFetchChatSession(item),
+                    this.getBindSession(item)
+                ])
+                .then(res=>{
+                    console.log(res);
+                    if(res[0].ok && res[0].ok){
+                        // this.chatData.sessionId = res[0].data.data.body;
+                        // this.chatData.userMessage.clinicId = item.crId;
+                        // this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
+                        // this.chatData.userMessage.userId = item.userId;
+                        // this.chatData.userMessage.clinicOrderId = '';
+                        // this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
+                        // this.chatData.show = true;
+
+
+                        this.enterClinic.oClinicId = item.crId;
+                        this.enterClinic.userMessage.clinicId = item.crId;
+                        this.enterClinic.userMessage.departmentId = this.userSelfInfo.depts.length>0?this.userSelfInfo.depts[0].deptId:'';
+                        this.enterClinic.show = true;
+                    }
+                })
                 console.log(item);
-                this.enterClinic.show = true;
+                
             },
             /**
              * 查看记录
@@ -366,12 +411,17 @@
             /**
              * 
              */
-            async getFetchChatSession(item){
-                const res = await fetchChatSession({token:this.userInfo.token},{to:item.userId});
+            async getSendBtnVisable(item){
+                console.log(item)
+                const res = await sendBtnVisable({
+                    token:this.userInfo.token,
+                    orderId:item.orderId,
+                    userId:item.userId
+                });
                 console.log(res)
                 if(res.data&&res.data.errCode===0){
                    return {
-                       ok:true,
+                       ok:this.isSame(res.data.body.bindSession,res.data.body.bindDoctor),
                        data:res
                    }
                 }else{
@@ -390,30 +440,35 @@
              * 发送消息
              */
             async sendMsg(item){
+                this.enterClinic.chatTypeBox.startDoctorName=item.userName;
                 console.log(item)
-                Promise.all([//又修改了流程，原先一个fetchChatSession就ok，现在需要再加一个getBindSession
-                    this.getFetchChatSession(item),
-                    this.getBindSession(item)
-                ])
-                .then(res => {
-                    if(res[0].ok && res[1].ok){
-                        this.chatData.sessionId = res[0].data.body;
-                        this.chatData.userMessage.clinicId = item.crId;
-                        this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
-                        this.chatData.userMessage.userId = item.userId;
-                        this.chatData.userMessage.clinicOrderId = '';
-                        this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
-                        this.chatData.show = true;
-                        console.log(this.chatData)
-                    }
-                })
-                .catch(err => {
-                    this.$notify({
-						title: '失败',
-						message: err,
-						type: 'error'
-					});
-                });
+                const res1 = await this.getSendBtnVisable(item);
+                if(!res1.ok)return;
+                const res2 = await this.getBindSession(item);
+                if(!res2.ok)return;
+                console.log(res2)
+                this.chatData.sessionId = res2.id;
+                this.chatData.userMessage.clinicId = item.crId;
+                this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
+                this.chatData.userMessage.userId = item.userId;
+                this.chatData.userMessage.clinicOrderId = '';
+                this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
+                this.chatData.show = true;
+                console.log(this.chatData)
+                
+                // .then(res => {
+                //     if(res[0].ok && res[1].ok){
+                //         console.log(res)
+                //         this.chatData.sessionId = res[0].data.data.body;
+                //         this.chatData.userMessage.clinicId = item.crId;
+                //         this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
+                //         this.chatData.userMessage.userId = item.userId;
+                //         this.chatData.userMessage.clinicOrderId = '';
+                //         this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
+                //         this.chatData.show = true;
+                //         console.log(this.chatData)
+                //     }
+                // })
                 // const res = await fetchChatSession({token:this.userInfo.token},{
                 //     to:item.userId
                 // });
@@ -433,13 +488,14 @@
 
 
             },
-
-            // /**
-            //  * 获取 Sessionid
-            //  */
-            // async fetchChatSession(){
-
-            // },
+            /**
+             * 判断是否相异
+             */
+            isSame(a,b){
+                const x = a?true:false;
+                const y = b?true:false;
+                return x===y;
+            },
             /**
              * 分页
              */

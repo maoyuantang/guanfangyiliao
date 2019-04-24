@@ -201,6 +201,7 @@
           <div class="ourStaf-alert-item-select-div">
             <el-select
               v-model="ourStafAlert.data.department.select"
+              clearable
               size="mini"
               placeholder="请选择"
             >
@@ -855,7 +856,7 @@ export default {
         //   item => item.deptId
         // )[0])
         // console.log(res.data.systemBusList)
-        const resultList = [];
+        let resultList = [];
         const getValue = data =>{
           for(const i of data){
             if(i.checkbox){
@@ -867,11 +868,30 @@ export default {
           }
         };
         getValue(res.data.systemBusList);
-        this.ourStafAlert.data.docBus.select = resultList.map(item=>{
+        resultList = resultList.map(item=>{
           item.id = item.subCode;
           item.label = item.subName;
           return item;
         });
+        if(resultList.find(item => item.id === '10000')){//这个位置有重大隐患，如果添加子模块这里要出bug，但是关我什么事，都特么要做完了在给我说这些
+          const hasAllChildren = resultList.find(item=>item.id === '10001') && resultList.find(item => item.id === '10002') && resultList.find(item => item.id === '10003');//是否拥有远程门诊下所有子模块
+          hasAllChildren ? null : resultList = resultList.filter(ele => ele.id !== '10000');//如果未拥有远程门诊下所有子模块，删除掉远程门诊，因为element-ui这玩意有了父节点，底下节点全部选中
+        }
+        if(resultList.find((item,index) => item.id === '80001')){//这个位置情况和上面一样
+          const hasAllChildren = resultList.find(item => item.id === '80004') && resultList.find(item => item.id === '80002') && resultList.find(item => item.id === '80003');//是否拥有我的转诊下所有子模块
+          hasAllChildren ? null : resultList = resultList.filter(ele=>ele.id !== '80001');//如果未拥有我的转诊下所有子模块，删除掉我的转诊，因为element-ui这玩意有了父节点，底下节点全部选中
+          hasAllChildren ? null : resultList = resultList.filter(ele=>ele.id !== '80000');//如果未拥有我的转诊下所有子模块，删除掉双向转诊，因为element-ui这玩意有了父节点，底下节点全部选中
+        }
+        // console.log(resultList)
+        // resultList = resultList.filter(ele=>ele.id == '80002');
+        this.ourStafAlert.data.docBus.select = resultList;
+        // resultList.map(item=>{
+        //   item.id = item.subCode;
+        //   item.label = item.subName;
+        //   return item;
+        // });
+        console.log(this.ourStafAlert.data.docBus.select);
+        // return;
         // const mid = res.data.systemBusList.filter(item=>item.checkbox);
         // this.ourStafAlert.data.docBus.select = mid.map(item=>{
         //   item.id = item.subCode;
@@ -931,42 +951,65 @@ export default {
      * 获取 科室管理权限范围 选中
      */
     getOurStafDocBus(data) {
-      this.ourStafAlert.data.docBus.select = data;
-      return;
+      // let mid = deepCopy(this.ourStafAlert.data.docBus.list);
+      // const setMap = (arr,tag,key) => {//拷贝原数组，找出被选值
+      //     return arr.map(item=>{
+      //         tag.forEach(v=>item[key] === v[key]?item.select = true:null);
+      //         (item.children&&item.children.length>0)?setMap(item.children,tag,key):null;
+      //         return item
+      //     })
+      // }
+      // mid = setMap(mid,data,'id');
       // console.log(data);
-      let mid = deepCopy(this.ourStafAlert.data.docBus.list);
-      const setStatus = (arr, tag) => {
-        for (const i of arr) {
-          for (const j of tag) {
-            if (i.id === j.id) {
-              i.select = true;
-            }
-            if (i.children.length > 0) {
-              setStatus(i.children, tag);
-            }
-          }
-        }
-      };
-      const deleteChild = data => {
-        for (const i in data) {
-          if (!data[i].select) {
-            // console.log("delete");
-            const test = data.splice(i, 1);
-            // console.log(test);
-          }
-          // console.log(data[i]);
-
-          if (data[i] && data[i].children.length > 0) {
-            // console.log("enter");
-            deleteChild[data[i].children];
-          }
-        }
-      };
-      setStatus(mid, data);
-      deleteChild(mid);
-      // console.log(mid);
+      // console.log(mid)
+      this.ourStafAlert.data.docBus.select = data;
+      // let mid = deepCopy(this.ourStafAlert.data.docBus.list);
+      // const setStatus = (arr, tag) => {
+      //   for (const i of arr) {
+      //     for (const j of tag) {
+      //       if (i.id === j.id) {
+      //         i.select = true;
+      //       }
+      //       if (i.children.length > 0) {
+      //         setStatus(i.children, tag);
+      //       }
+      //     }
+      //   }
+      // };
+      // const deleteChild = data => {
+      //   for (const i in data) {
+      //     if (!data[i].select) {
+      //       const test = data.splice(i, 1);
+      //     }
+      //     if (data[i] && data[i].children.length > 0) {
+      //       deleteChild[data[i].children];
+      //     }
+      //   }
+      // };
+      // setStatus(mid, data);
+      // deleteChild(mid);
+      // console.log(this.ourStafAlert.data.docBus.select)
+      // console.log(mid)
     },
+    /**
+     * 设置选中
+     */
+    setStatus(list,selectList,key){
+      selectList.forEach(item=>{
+        for(let i = 0; i<list.length; i++){
+          if(i[key] === item[key]){
+            list[i].select = true;
+          }
+          if(i.children && i.children.length>0){
+            list[i].children = this.setStatus(i.children,selectList,key);
+          }
+        }
+      });
+      return list;
 
+
+      
+    },
     /**
      * 打开 新增 弹窗
      */
@@ -1135,8 +1178,7 @@ export default {
           ]
         }
       ];
-      
-      // console.log(postData[1]);
+      // console.log(postData[1].authorizes);
       // return;
       const res = await updateUser(...postData);
       // console.log(res);
@@ -1168,7 +1210,7 @@ export default {
         userType: "0",
         deptIds: this.ourStafAlert.data.department.select?[this.ourStafAlert.data.department.select]:[],
         manageDeptId: this.ourStafAlert.data.manDepartment.select,
-        authorizes: [],
+        // authorizes: [],
         authorizes: [
           ...this.ourStafAlert.data.manbus.select.map(item => {
             return {
@@ -1184,8 +1226,8 @@ export default {
           })
         ]
       };
-      console.log(postData);
-      return;
+      console.log(postData.authorizes);
+      // return;
       const postQuery = { token: this.userInfo.token };
       const res = await createUser(postQuery, postData);
       // console.log(res);

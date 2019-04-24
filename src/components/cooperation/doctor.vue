@@ -13,28 +13,28 @@
             <div class="public-list">
                 <el-table :data="docTableData" border style="width: 100%" @cell-click="cooperationCellClick">
                     <!-- <el-table-column  prop="synergyNo" label="协作编号"></el-table-column> -->
-                    <el-table-column  prop="applyDeptName" label="发起科室"></el-table-column>
-                    <el-table-column  prop="applyUserName" label="发起医生"></el-table-column>
-                    <el-table-column  prop="createTime" label="发起时间"></el-table-column>
-                    <el-table-column  prop="synergyIntention" label="目的"></el-table-column>
-                    <el-table-column  prop="synergyDeptName" label="协作科室">
+                    <el-table-column prop="applyDeptName" label="发起科室"></el-table-column>
+                    <el-table-column prop="applyUserName" label="发起医生"></el-table-column>
+                    <el-table-column prop="createTime" label="发起时间"></el-table-column>
+                    <el-table-column prop="synergyIntention" label="目的"></el-table-column>
+                    <el-table-column prop="synergyDeptName" label="协作科室">
                         <template slot-scope="scope">
                             <span class='ooRed'>{{scope.row.synergyDeptName}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column  prop="synergyUserName" label="协作医生">
+                    <el-table-column prop="synergyUserName" label="协作医生">
                         <template slot-scope="scope">
                             <span class='ooRed'>{{scope.row.synergyUserName}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column  prop="synergyStatus" label="状态">
+                    <el-table-column prop="synergyStatus" label="状态">
                         <template slot-scope="scope">
                             <span v-if="scope.row.synergyStatus==0">未开始</span>
                             <span v-if="scope.row.synergyStatus==1">进行中</span>
                             <span v-if="scope.row.synergyStatus==2">结束</span>
                         </template>
                     </el-table-column>
-                    <el-table-column  fixed="right"  label="操作" width="300">
+                    <el-table-column fixed="right" label="操作" width="300">
                         <template slot-scope="scope">
                             <el-button class="seeDanganClass" @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
                             <el-button class="inviteUserClass" v-show="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
@@ -55,16 +55,19 @@
         <el-dialog class="invitationClass" title=" 发起协作" :visible.sync="centerDialogVisible" width="240px" hight="356px" center>
             <el-tree :data="invitationData1" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
             <el-form ref="form" :model="startXiezuo" label-width="80px">
-                <el-form-item class='invitationClassInput' label="病历">
-                    <el-select v-model="startXiezuo.recordId" placeholder="请选择活动区域">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                <el-form-item class='invitationClassInput' label="病人:">
+                    <el-select placeholder="" v-model="startXiezuo.patientId" @change="hosChange1(startXiezuo.patientId)">
+                        <el-option v-for="(text,index) in hospitalList1" :label="text.name" :value="text.value" :key="index"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item class='invitationClassInput' label="目的">
+                <el-form-item  class='invitationClassInput' label="病历:">
+
+                    <el-tree style='    margin-left: -14px;
+    margin-top: 10px;' v-model="startXiezuo.medicalHistoryRels" :data="hospitalList2" :props="defaultProps1" @check="handleCheckChange1" show-checkbox></el-tree>
+                </el-form-item>
+                 <el-form-item class='invitationClassInput' label="目的">
                     <el-input v-model="startXiezuo.intention"></el-input>
                 </el-form-item>
-
                 <el-form-item class='invitationClassInputBtn'>
                     <el-button class='btnClass' type="primary" @click="launchXiezuo()">确认</el-button>
                 </el-form-item>
@@ -76,10 +79,10 @@
                 <viewRecord :sessionId="sessionId"></viewRecord>
             </el-dialog>
         </div>
-         <!-- 接收科室 -->
+        <!-- 接收科室 -->
         <div v-if="departVisible">
             <el-dialog class=" consultationDetailClass" title=" 协作科室" :visible.sync="departVisible" width="503px" hight="470px" center>
-                <receiveDepartent :receptionDepartment="receptionDepartment"  v-if="receptionDepartment.length>0"></receiveDepartent>
+                <receiveDepartent :receptionDepartment="receptionDepartment" v-if="receptionDepartment.length>0"></receiveDepartent>
             </el-dialog>
         </div>
         <!-- 医生详情 -->
@@ -138,7 +141,9 @@ import {
     sponsorConsultationInform,
     queryConsultationInformList,
     fetchHistoryMessage,
-    synergyChangeStatus
+    synergyChangeStatus,
+    fetchByMedicalHistory ,
+    fetchByPatientInfoInfo
 } from "../../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../../plugs/echarts.js";
@@ -171,6 +176,8 @@ export default {
     },
     data() {
         return {
+            hospitalList1:[],
+            hospitalList2:[],
             disabledXie: false,
             pageSizeNum: 10,
             docTotal: 0,
@@ -254,6 +261,10 @@ export default {
             defaultProps: {
                 label: "name",
                 children: "children"
+            },
+             defaultProps1: {
+                children: "children",
+                label: "hospitalName"
             },
             count: 1,
             //发起协作弹框  必备参数
@@ -392,7 +403,7 @@ export default {
             chatTypeBox: {
                 startDoctorName: "",
                 startDoctorTYpe: "协作",
-                archivesUrl:'/cooperation'
+                archivesUrl: "/cooperation"
             }
         };
     },
@@ -405,10 +416,10 @@ export default {
     },
 
     methods: {
-        cooperationCellClick(row, column){
-            let data=[row, column]
-            console.log(data)
-            this.cellClickData(data)
+        cooperationCellClick(row, column) {
+            let data = [row, column];
+            console.log(data);
+            this.cellClickData(data);
         },
         //进入协作
         async toConsultation(row) {
@@ -464,6 +475,21 @@ export default {
                     message: "不是本人发起的协作不能结束"
                 });
             }
+        },
+         //改变病人
+        hosChange1(orgCode) {
+            // this.getDepartment2(oindex, orgCode);
+            this.getHospitalment2(orgCode);
+        },
+         // 发起会诊病历
+        handleCheckChange1(data, odata) {
+            console.log(data, odata);
+            this.startXiezuo.medicalHistoryRels = [];
+            $.each(odata.checkedNodes, (index, text) => {
+                if (text.visitNo) {
+                    this.startXiezuo.medicalHistoryRels.push(text);
+                }
+            });
         },
         //病历
         goToDangan(row) {
@@ -528,6 +554,7 @@ export default {
         initiateCollaboration() {
             this.centerDialogVisible = true;
             this.Invitation1();
+            this.getHospitalment1()
         },
         //获取邀请列表
         async Invitation1() {
@@ -577,6 +604,65 @@ export default {
                 });
             }
         },
+        //病人列表
+        async getHospitalment1() {
+            this.hospitalList1 = [];
+            let _this = this;
+            let query = {
+                token: this.userState.token
+            };
+            const res = await fetchByPatientInfoInfo(query);
+            if (res.data && res.data.errCode === 0) {
+                $.each(res.data.body, function(index, text) {
+                    _this.hospitalList1.push({
+                        name: text.name,
+                        value: text.patientId
+                    });
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
+         //病历列表
+        async getHospitalment2(oid) {
+            this.hospitalList2 = [
+                {
+                    hospitalName: "就诊记录",
+                    children: []
+                },
+                {
+                    hospitalName: "电子病历",
+                    children: []
+                }
+            ];
+            let _this = this;
+            let query = {
+                token: this.userState.token,
+                patientId: oid
+            };
+            const res = await fetchByMedicalHistory(query);
+            if (res.data && res.data.errCode === 0) {
+                this.hospitalList2[0].children = res.data.body.visit;
+                this.hospitalList2[1].children =
+                    res.data.body.electronicMedical;
+                $.each(this.hospitalList2[0].children, function(index, text) {
+                    text.type = "VISIT";
+                });
+                $.each(this.hospitalList2[1].children, function(index, text) {
+                    text.type = "HISTORY";
+                });
+            } else {
+                //失败
+                this.$notify.error({
+                    title: "警告",
+                    message: res.data.errMsg
+                });
+            }
+        },
         //确认邀请
         async sureInvitation() {
             let _this = this;
@@ -584,9 +670,7 @@ export default {
                 token: this.userState.token
             };
             let options = {
-                id: this.xiezuoId,
-                intention: "",
-                recordId: "",
+                synergyId: this.xiezuoId,
                 receiverId: this.invitationSelectList
             };
             const res = await sendSynergy(query, options);
@@ -613,6 +697,10 @@ export default {
             let query = {
                 token: this.userState.token
             };
+
+             $.each(this.startXiezuo.medicalHistoryRels, function(index, text) {
+                text.medicalHistoryId = text.visitNo;
+            });
             let options = this.startXiezuo;
             const res = await sendSynergy(query, options);
             if (res.data && res.data.errCode === 0) {

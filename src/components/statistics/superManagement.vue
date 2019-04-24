@@ -15,7 +15,8 @@
                        <th ><span>{{tableData.head.deptManageNum||'0'}}</span></th>
                        <th ><span>{{tableData.head.doctorNum||'0'}}</span></th>
                        <th ><span>{{tableData.head.superOrgNum||'0'}}</span></th>
-                       <th ><span>{{tableData.head.childOrgNum||'0'}}</span></th>
+                       <th ><span>{{tableData.head.superOrgNum||'0'}}</span></th>
+                       <!-- <th ><span>{{tableData.head.childOrgNum||'0'}}</span></th> -->
                        <th ><span>{{tableData.head.teamNum||'0'}}</span></th>
                        <th ><span>{{tableData.head.consNum||'0'}}</span></th>
                        <th ><span>{{tableData.head.deviceNum||'0'}}</span></th>
@@ -31,7 +32,7 @@
                        <th @click="deptManageNum({type:'deptManageNum',value:item})"><span>{{item.deptManageNum||'0'}}</span></th>
                        <th @click="doctorNum({type:'doctorNum',value:item})"><span>{{item.doctorNum||'0'}}</span></th>
                        <th @click="superOrgNum({type:'superOrgNum',value:item})"><span>{{item.superOrgNum||'0'}}</span></th>
-                       <th @click="superOrgNum({type:'childOrgNum',value:item})"><span>{{item.childOrgNum||'0'}}</span></th>
+                       <th @click="superOrgNum({type:'superOrgNum',value:item})"><span>{{item.childOrgNum||'0'}}</span></th>
                        <th @click="teamNum({type:'teamNum',value:item})"><span>{{item.teamNum||'0'}}</span></th>
                        <th @click="consNum({type:'consNum',value:item})"><span>{{item.consNum||'0'}}</span></th>
                        <th ><span>{{item.deviceNum}}</span></th>
@@ -1004,7 +1005,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .super-management {
 }
 .super-management-top{
@@ -1098,6 +1099,13 @@ export default {
 .pagination{
     text-align: center;
     width:100%;
+}
+.super-management .el-tree-node__content .el-checkbox__inner{
+    width:14px !important;
+    height: 14px !important;
+}
+.super-management .el-tree-node__content{
+    margin:0 !important;
 }
 </style>
 <!--

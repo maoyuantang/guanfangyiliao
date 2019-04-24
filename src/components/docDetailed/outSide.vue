@@ -4,7 +4,7 @@
         <div class="new-content-nav">
             <div class="new-content-userinfo">
                 <div class="new-content-headimg">
-                    <img src="../../../static/assets/img/a-6.png" alt="">
+                    <img :src="patientInfo.sex?'../../../static/assets/img/bingNan.png':'../../../static/assets/img/bingNv.png'" alt="">
                 </div>
                 <p class="new-content-username">{{patientInfo.name}}</p>
                 <div class="new-content-msg">
@@ -170,9 +170,9 @@
                     userId:this.inData.userId,
                     memberId:this.inData.id, 
                 });
-                console.error(res);
+                console.log(res);
                 if(res.data&&res.data.errCode===0){
-                    this.showInfo.navList[0].time = res.data.body.lastDate
+                    this.showInfo.navList[0].time = res.data.body.nearDate
                 }else{
                     this.$notify({
                         title: '成员最近随访获取失败',

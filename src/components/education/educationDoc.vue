@@ -327,6 +327,7 @@
     }
     .education-doc-body-container{
         overflow-x: scroll;
+        overflow-y: hidden;
         width: 100%;
     }
     .education-doc-body{

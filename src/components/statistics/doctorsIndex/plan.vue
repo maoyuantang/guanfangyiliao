@@ -780,7 +780,7 @@ export default {
                 userId: row.userId
             };
             this.chatTypeBox.startDoctorTYpe = "随访";
-            this.chatTypeBox.bingUserId='row.userId'
+            this.chatTypeBox.bingUserId=row.userId
             this.createChat(row);
         },
         //查看档案

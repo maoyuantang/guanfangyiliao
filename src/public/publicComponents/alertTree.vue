@@ -6,7 +6,8 @@
         :styles="{width:'323px'}"
         @on-ok="ok"
         @on-cancel="cancel">
-        <el-tree
+        <div class="alert-tree-inner">
+          <el-tree
             :data="inData.data"
             :show-checkbox="inData.canClick"
             :default-checked-keys="selectIdList"
@@ -14,6 +15,7 @@
             ref="alertTree"
             @check="selectItem">
         </el-tree>
+        </div>
     </Modal>
   </div>
 </template>
@@ -96,5 +98,12 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+.alert-tree-inner .el-tree-node__content .el-checkbox__inner{
+  width:14px !important;
+  height: 14px !important;
+}
+.alert-tree-inner .el-tree-node__content{
+  margin:0 !important;
+}
 </style>

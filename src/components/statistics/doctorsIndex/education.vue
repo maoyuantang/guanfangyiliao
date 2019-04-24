@@ -13,7 +13,7 @@
             <div class="education-body-content">
                 <div class="education-body-content-top">
                     <div class="education-body-head">
-                        <img :src="info.imgUrl || '../../../../static/assets/img/a-6.png'" :alt="info.teacherName">
+                        <img :src="info.imgUrl || '../../../../static/assets/img/doctorImg.png'" :alt="info.teacherName">
                     </div>
                     <div class="education-body-userinfo">
                         <p class="education-body-username">{{info.teacherName || ''}}</p>

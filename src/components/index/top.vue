@@ -14,8 +14,8 @@
                 <el-menu-item index="2" :disabled="!canGotoDoctor">医生端</el-menu-item>
             </el-menu>
         </div> -->
-        <div class="top-left" @click="openNotice()">
-            <marquee class="title-marquee">{{noticeList}}</marquee>
+        <div class="top-left">
+            <marquee  @click="openNotice()" class="title-marquee">{{noticeList}}</marquee>
             <div class="msg">
                 <i id="noticeIconClass" v-show="noticeRedVisable" class="iconfont">&#xe8c0;</i>
             </div>
@@ -64,7 +64,7 @@ export default {
              userSocketInfo: state => state.socket
         }),
         imgSrc() {
-            return this.userSelfInfo.headId? `${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${this.userSelfInfo.headId}`: "../../../static/assets/img/a-6.png";
+            return this.userSelfInfo.headId? `${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${this.userSelfInfo.headId}`: "../../../static/assets/img/doctorImg.png";
         }
     },
     data() {

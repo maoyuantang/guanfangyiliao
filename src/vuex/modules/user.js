@@ -63,7 +63,7 @@ export default {
 			specialty:'',//擅长: type => String
 			introduce:'',//简介: type => String
 			orgCode:'',//医院代码: type => String 
-			orgName:'',//医院名称: type => String
+			orgName:'',//医院名称: type => String 
 			depts:[
 				{
 					deptId:'',//科室ID: type => String   

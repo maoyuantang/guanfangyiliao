@@ -2,7 +2,7 @@
     <div class="followUp">
         <!-- 随访表模板 -->
         <div v-if="followTableVisible">
-            <el-dialog class="evaluateBox addFollowBox addFollowBoxFollow" title=" " :visible.sync="followTableVisible" width="602px" hight="356px" center>
+            <el-dialog class=" addFollowBox addFollowBoxFollow" title=" " :visible.sync="followTableVisible" width="602px" hight="356px" center>
                 <el-form ref="form" :model="addFollowData" label-width="80px">
 
                     <el-form-item>
@@ -2480,6 +2480,7 @@ export default {
         },
         //我的随访发送
         async sendMessage(row) {
+             this.chatTypeBox.bingUserId=row.userId
             this.userMessage.userId=row.userId
             let _this = this;
             let query = {
