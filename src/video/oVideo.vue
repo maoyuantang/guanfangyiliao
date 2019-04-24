@@ -1695,7 +1695,6 @@ export default {
         },
     },
     created() {
-        // this.getChangeWindoe()
         console.log(this.userMessage);
         this.listenClick();
         if (this.doctorVis == 0) {
