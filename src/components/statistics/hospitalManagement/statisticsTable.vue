@@ -35,9 +35,12 @@
         <div class="statistics-table-content-inner" v-if="device.total">
             <normalColumnChart v-model="device"></normalColumnChart>
         </div>
-        <div class="statistics-table-content-inner" v-if="followUp.total">
-            <normalColumnChart v-model="followUp"></normalColumnChart>
+        <div class="statistics-table-content-inner" v-if="device.total">
+            <normalColumnChart v-model="registeredUsers"></normalColumnChart>
         </div>
+        <!-- <div class="statistics-table-content-inner" v-if="followUp.total">
+            <normalColumnChart v-model="followUp"></normalColumnChart>
+        </div> -->
         
         <!-- <normalColumnChart  v-for="(item,index) in drawData" :key="index" v-model="item.data"></normalColumnChart> -->
     </div>
@@ -115,7 +118,7 @@
                 outpatient:{//2.4.1远程门诊就诊人次柱状统计图 数据
                     dataAxis:[],//x轴
                     data:[],//y轴
-                    title:'远程门诊就诊人次柱状统计图',
+                    title:'远程门诊人次',
                     total:0,
                 },
                 device:{//10.7.3 设备监测人次
@@ -133,7 +136,7 @@
                 registeredUsers:{//3.11 注册用户
                     dataAxis:[],//x轴
                     data:[],//y轴
-                    title:'设备监测人次',
+                    title:'注册用户',
                     total:0,
                 },
                 drawData:[
@@ -237,7 +240,6 @@
                 const res = await SETFOLLOWCHART(query);
                 console.log(res)
                 if(res.data&&res.data.errCode===0){
-                    // let initialValue=0;
                     this.followUp.total = `总数：${res.data.body.total}`;
                     this.followUp.dataAxis = res.data.body.data.map(item=>item.x);
                     this.followUp.data = res.data.body.data.map(item=>item.y);
