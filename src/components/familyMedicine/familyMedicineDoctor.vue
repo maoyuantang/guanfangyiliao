@@ -303,17 +303,37 @@
              * 关闭进入诊室弹窗
              */
             videoclick(){
+                console.log('enter')
                 this.enterClinic.show = false;
             },
             /**
              * 进入 门诊
              */
             enterRoom(item){
+                Promise.all([//又修改了流程，原先一个fetchChatSession就ok，现在需要再加一个getBindSession
+                    this.getFetchChatSession(item),
+                    this.getBindSession(item)
+                ])
+                .then(res=>{
+                    console.log(res);
+                    if(res[0].ok && res[0].ok){
+                        // this.chatData.sessionId = res[0].data.data.body;
+                        // this.chatData.userMessage.clinicId = item.crId;
+                        // this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
+                        // this.chatData.userMessage.userId = item.userId;
+                        // this.chatData.userMessage.clinicOrderId = '';
+                        // this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
+                        // this.chatData.show = true;
+
+
+                        this.enterClinic.oClinicId = item.crId;
+                        this.enterClinic.userMessage.clinicId = item.crId;
+                        this.enterClinic.userMessage.departmentId = this.userSelfInfo.depts.length>0?this.userSelfInfo.depts[0].deptId:'';
+                        this.enterClinic.show = true;
+                    }
+                })
                 console.log(item);
-                this.enterClinic.oClinicId = item.crId;
-                this.enterClinic.userMessage.clinicId = item.crId;
-                this.enterClinic.userMessage.departmentId = this.userSelfInfo.depts.length>0?this.userSelfInfo.depts[0].deptId:'';
-                this.enterClinic.show = true;
+                
             },
             /**
              * 查看记录
