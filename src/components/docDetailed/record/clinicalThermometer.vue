@@ -1,8 +1,8 @@
 <!-- 体温表 -->
 <template>
 	<div>
-		体温表
-        <p>{{inData}}</p>
+		<!-- 体温表
+        <p>{{inData}}</p> -->
 	</div>
 </template>
 
