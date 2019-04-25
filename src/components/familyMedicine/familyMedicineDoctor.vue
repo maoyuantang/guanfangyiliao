@@ -531,8 +531,8 @@
                     const now = new Date();//今天
                     const tomorrow = new Date(now.getTime() + 24*60*60*1000);//明天
                     this.queryConditions.time = [
-                        `${now.getFullYear()}-${now.getMonth()>9?now.getMonth()+1:'0'+now.getMonth()}-${now.getDate()>10?now.getDate():'0'+now.getDate()}`,
-                        `${tomorrow.getFullYear()}-${tomorrow.getMonth()>9?tomorrow.getMonth()+1:'0'+tomorrow.getMonth()}-${tomorrow.getDate()>10?tomorrow.getDate():'0'+tomorrow.getDate()}`
+                        `${now.getFullYear()}-${now.getMonth()>9?now.getMonth()+1:'0'+(now.getMonth()+1)}-${now.getDate()>10?now.getDate():'0'+now.getDate()}`,
+                        `${tomorrow.getFullYear()}-${tomorrow.getMonth()>9?tomorrow.getMonth()+1:'0'+(tomorrow.getMonth()+1)}-${tomorrow.getDate()>10?tomorrow.getDate():'0'+tomorrow.getDate()}`
                     ];
                 }else{
                     this.queryConditions.time = [];
