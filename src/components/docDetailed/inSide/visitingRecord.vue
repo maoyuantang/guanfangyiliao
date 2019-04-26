@@ -8,34 +8,34 @@
 
 <script>
 	export default {
-        props:[
-            "inData"
-        ],
-		components:{
-			
+		props: [
+			"inData"
+		],
+		components: {
+
 		},
-		watch:{
-			
+		watch: {
+
 		},
-		computed:{
-			
+		computed: {
+
 		},
-		
-		data () {
-			return {	
+
+		data() {
+			return {
 			}
 		},
-		
-		methods:{
-			
-			
+
+		methods: {
+
+
 		},
-		async created(){
-			
+		async created() {
+
 		}
 	}
 </script>
 
-<style >
-	
+<style>
+
 </style>

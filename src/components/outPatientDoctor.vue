@@ -19,6 +19,7 @@
                         <div class="outpatient_name">
                             <p class="p1">{{text.doctor[0].doctorName}}</p>
                             <p class="p2">{{text.doctor[0].doctorStates?'接诊中...':'未接诊'}}</p>
+
                         </div>
                     </div>
                     <i></i>
@@ -869,6 +870,7 @@ export default {
         // 谭莹事件
         videoclick(data) {
             this.centerDialogVisible = false;
+            this.getList1();
         },
         //进入门诊
         async enterRoomBtn(text) {
