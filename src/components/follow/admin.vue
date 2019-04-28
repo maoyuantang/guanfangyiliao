@@ -70,7 +70,7 @@
                                         </div>
                                     </li>
                                 </ul>
-                                <div class="addFollowBtn" v-show="addFollowBtnVis">
+                                <!-- <div class="addFollowBtn" v-show="addFollowBtnVis"> -->
                                     <!-- <div @click="addQuest(index)">
                                     <span class="questDelete"><img src="../assets/img/addFollowJa2.png" /></span> 问诊表/健康知识
                                 </div> -->
@@ -81,7 +81,7 @@
                                         <span class="questDelete"> <img src="../assets/img/addFollowDelete.png" /> </span>
                                         此项</span>
                                 </div> -->
-                                </div>
+                                <!-- </div> -->
 
                             </li>
                         </ul>

@@ -143,7 +143,8 @@ import {
     fetchHistoryMessage,
     synergyChangeStatus,
     fetchByMedicalHistory ,
-    fetchByPatientInfoInfo
+    fetchByPatientInfoInfo,
+    sponsorSynergy
 } from "../../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../../plugs/echarts.js";
@@ -497,7 +498,7 @@ export default {
                 
                 path: "/docDetailed",
                 query: {
-                    id: row.userId
+                    id: row.patientId
                 }
             });
         },
@@ -674,7 +675,7 @@ export default {
                 synergyId: this.xiezuoId,
                 receiverId: this.invitationSelectList
             };
-            const res = await sendSynergy(query, options);
+            const res = await sponsorSynergy(query, options);
             if (res.data && res.data.errCode === 0) {
                 this.$notify.success({
                     title: "成功",
