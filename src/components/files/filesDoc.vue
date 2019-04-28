@@ -11,47 +11,70 @@
         <search @searchValue="searchChange"></search>
       </div>
     </div>
-    <div class="files-doc-body">
-      <table class="files-doc-table">
-        <thead class="files-doc--thead">
-          <tr>
-            <th>姓名</th>
-            <th>来源</th>
-            <th>手机号</th>
-            <th>分组</th>
-            <th>提取档案</th>
-            <th>推送档案</th>
-            <th>院内档案</th>
-            <th>院外档案</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody class="files-doc--tbody">
-          <tr v-for="(item,index) in userList" :key="index">
-            <th>
-              <el-checkbox v-model="item.select">{{item.userName}}</el-checkbox>
-            </th>
-            <th>{{item.relSource===1?'线下扫码':'在线业务'}}</th>
-            <th>{{item.phone}}</th>
-            <th>{{item.groupName}}</th>
-            <th>{{item.queryNumber}}</th>
-            <th>{{item.pushNumber}}</th>
-            <th>{{item.recordNumber}}</th>
-            <th>{{item.lobbyNumber}}</th>
-            <th>
-              <el-button type="primary" size="mini" plain @click="openAlert(item)">查看档案</el-button>
-              <el-dropdown>
-               <el-button type="danger" size="mini" plain>录入档案</el-button>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item @click.native="openPregnantWomanDoc(item)">孕妇信息</el-dropdown-item>
-                  <el-dropdown-item @click.native="openAlertNor(item)">普通档案</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </th>
-          </tr>
-        </tbody>
-      </table>
-      <tableNoMore v-if="userList.length <= 0"></tableNoMore>
+    <div class="files-doc-body-out">
+      <div class="files-doc-body" ref="filesScroll">
+        <table class="files-doc-table">
+          <thead class="files-doc--thead">
+            <tr>
+              <th>姓名</th>
+              <th>来源</th>
+              <th>手机号</th>
+              <th>分组</th>
+              <th>提取档案</th>
+              <th>推送档案</th>
+              <th>院内档案</th>
+              <th>院外档案</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody class="files-doc--tbody">
+            <tr v-for="(item,index) in userList" :key="index">
+              <th>
+                <el-checkbox v-model="item.select">{{item.userName}}</el-checkbox>
+              </th>
+              <th>{{item.relSource===1?'线下扫码':'在线业务'}}</th>
+              <th>{{item.phone}}</th>
+              <th>{{item.groupName}}</th>
+              <th>{{item.queryNumber}}</th>
+              <th>{{item.pushNumber}}</th>
+              <th>{{item.recordNumber}}</th>
+              <th>{{item.lobbyNumber}}</th>
+              <th class="files-doc-spe-th">
+                <el-button type="primary" size="mini" plain @click="openAlert(item)">查看档案</el-button>
+                <el-dropdown>
+                <el-button type="danger" size="mini" plain>录入档案</el-button>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="openPregnantWomanDoc(item)">孕妇信息</el-dropdown-item>
+                    <el-dropdown-item @click.native="openAlertNor(item)">普通档案</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <tableNoMore v-if="userList.length <= 0"></tableNoMore>
+      </div>
+      <table class="files-doc-table files-doc-table-spe" :class="isEnd?null:'has-border'">
+          <thead class="files-doc--thead">
+            <tr>
+              <th><span class="spe-no-show">''</span></th>
+            </tr>
+          </thead>
+          <tbody class="files-doc--tbody">
+            <tr v-for="(item,index) in userList" :key="index">
+              <th class="files-doc-spe-th">
+                <el-button type="primary" size="mini" plain @click="openAlert(item)">查看档案</el-button>
+                <el-dropdown>
+                <el-button type="danger" size="mini" plain>录入档案</el-button>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="openPregnantWomanDoc(item)">孕妇信息</el-dropdown-item>
+                    <el-dropdown-item @click.native="openAlertNor(item)">普通档案</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </th>
+            </tr>
+          </tbody>
+        </table>
     </div>
     <div class="files-doc-footer">
       <div class="files-doc-footer-left">
@@ -225,6 +248,7 @@ export default {
   },
   data() {
     return {
+      isEnd:false,//滚动条是否到底部，新加的功能，固定列
       norDoc:{//新增 普通档案  弹窗数据  
         // id:'1231321',
         show:false,//是否显示
@@ -335,6 +359,20 @@ export default {
     };
   },
   methods: {
+    /**
+     * 
+     */
+    listenEleScroll(){
+        this.$nextTick(ev=>{
+            // this.$refs.familyScroll.scrollLeft = 500;
+            // this.$refs.familyScroll.scrollTop
+            this.$refs.filesScroll.onscroll = ev =>{
+                // console.log(this.$refs.familyScroll.scrollLeft)
+                // console.log(this.$refs.familyScroll.scrollWidth - this.$refs.familyScroll.offsetWidth)
+                this.isEnd = this.$refs.filesScroll.scrollLeft === (this.$refs.filesScroll.scrollWidth - this.$refs.filesScroll.offsetWidth);
+            }
+        })
+    },
     /**
      * 打开 孕妇 档案
      */
@@ -721,6 +759,11 @@ export default {
 			  return item;
       });
       this.findCondition.page.total = res.data.body.data2.total;
+      this.$nextTick(ev=>{//加个新功能 固定表格最后一列 wtf
+          const allSpeCom = document.getElementsByClassName('files-doc-spe-th');
+          // const tableAbs = document.getElementsByClassName('table-abs');
+          allSpeCom[allSpeCom.length-1].style.width = allSpeCom[0].offsetWidth + 'px'
+      });
       } else {
         this.$notify({
           title: "失败",
@@ -738,12 +781,13 @@ export default {
     this.getSource();
     this.getHospitalArchives();
     this.getGroupSelects();
+    this.listenEleScroll();
     // this.getQueryListByUserId();
   }
 };
 </script>
 
-<style>
+<style lang="scss">
 .files-doc {
 }
 .files-doc-top {
@@ -866,5 +910,50 @@ line-height: 0.22rem;
 .files-doc-body{
   padding-top: .2rem;
   overflow-x: scroll;
+}
+.files-doc-body-out{
+  position: relative;
+}
+.files-doc-table-spe{
+  position: absolute;
+  right: 0;
+  top: 0;
+  // border: 1px solid red;
+  min-width: auto;
+  margin-top: 20px;
+  background: white;
+  thead{
+    tr{
+      th{
+            font-family: PingFangSC-Semibold;
+            color: #5E6875;
+            letter-spacing: 0;
+            border-bottom: 1px solid var(--color5);
+            padding-top: 0.12rem;
+            padding-bottom: 0.1rem;
+      }
+    }
+  }
+  tbody{
+    tr{
+      th{
+        font-weight: 100;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #5E6875;
+        letter-spacing: 0;
+        border-bottom: 1px solid var(--color5);
+        padding-top: 0.12rem;
+        padding-bottom: 0.14rem;
+      }
+    }
+  }
+}
+.spe-no-show{
+  visibility: hidden;
+}
+.has-border{
+    border-left: 1px solid #E5EDF3;
+    box-sizing: border-box;
 }
 </style>

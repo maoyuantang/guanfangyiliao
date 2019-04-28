@@ -18,76 +18,95 @@
                 </el-date-picker>
             </div>
         </div>
-        <div class="family-medicine-doctor-body">
-            <table>
-                <thead class="family-medicine-doctor-thead">
-                    <tr>
-                        <th>{{tableInfo.thead.businessName || 'null'}}</th>
-                        <th>{{tableInfo.thead.modelName || 'null'}}</th>
-                        <th>{{tableInfo.thead.orderTime || 'null'}}</th>
-                        <th>{{tableInfo.thead.userName || 'null'}}</th>
-                        <th>{{tableInfo.thead.userPhone || 'null'}}</th>
-                        <th>{{tableInfo.thead.serviceTime || 'null'}}</th>
-                        <th>{{tableInfo.thead.doctorName || 'null'}}</th>
-                        <th>{{tableInfo.thead.status || 'null'}}</th>
-                        <th>{{tableInfo.thead.orderId || 'null'}}</th>
-                        <th class="family-medicine-doctor-body-spe">{{tableInfo.thead.orderNo || 'null'}}</th>
-                    </tr>
-                </thead>
-                <tbody  class="family-medicine-doctor-body">
-                    <tr v-for="(item,index) in tableInfo.tbody" :key="index">
-                        <th>
-                            <el-tooltip class="item" effect="light" :content="item.businessName" placement="top">
-                                <div>{{item.businessName.length>5?`${item.businessName.substring(0,5)}...`:item.businessName}}</div>
-                            </el-tooltip>
-                        </th>
-                        <th>
-                            <el-tooltip class="item" effect="light" :content="item.modelName" placement="top">
-                                <div>{{item.modelName.length>5?`${item.modelName.substring(0,5)}...`:item.modelName}}</div>
-                            </el-tooltip>
-                        </th>
-                        <th>
-                            <el-tooltip class="item" effect="light" :content="item.orderTime" placement="top">
-                                <div>{{item.orderTime.length>5?`${item.orderTime.substring(0,5)}...`:item.orderTime}}</div>
-                            </el-tooltip>
-                        </th>
-                        <th>
-                            <el-tooltip class="item" effect="light" :content="item.userName" placement="top">
-                                <div>{{item.userName.length>5?`${item.userName.substring(0,5)}...`:item.userName}}</div>
-                            </el-tooltip>
-                        </th>
-                        <th>
-                            <el-tooltip class="item" effect="light" :content="item.userPhone" placement="top">
-                                <div>{{item.userPhone.length>5?`${item.userPhone.substring(0,5)}...`:item.userPhone}}</div>
-                            </el-tooltip>
-                        </th>
-                        <th>
-                            <el-tooltip class="item" effect="light" :content="item.serviceTime" placement="top">
-                                <div>{{item.serviceTime.length>5?`${item.serviceTime.substring(0,5)}...`:item.serviceTime}}</div>
-                            </el-tooltip>
-                         </th>
-                        <th>
-                            <el-tooltip class="item" effect="light" :content="item.doctorName" placement="top">
-                                <div>{{item.doctorName.length>5?`${item.doctorName.substring(0,5)}...`:item.doctorName}}</div>
-                            </el-tooltip>
-                        </th>
-                        <th>
-                            <el-tooltip class="item" effect="light" :content="item.status" placement="top">
-                                <div>{{item.status.length>5?`${item.status.substring(0,5)}...`:item.status}}</div>
-                            </el-tooltip>
-                        </th>
-                        <th><el-button type="danger" plain size="mini" @click="changeStatus(item,index)">服务变更</el-button></th>
-                        <th class="family-medicine-doctor-body-spe">
-                            <el-button type="warning" size="mini" plain @click="checkDoc(item,index)">查看档案</el-button>
-                            <el-button type="success" size="mini" v-if="item.status !== '已完成'" plain @click="sendMsg(item)">发送</el-button>
-                            <el-button type="primary" size="mini" v-if="item.status === '已完成'" plain @click="checkRcord(item)">查看记录</el-button>
-                            <el-button type="primary" size="mini" plain v-if="item.model === 'ZXZX' && item.status === '进行中'" @click="enterRoom(item)" class="enter-room">进入诊室</el-button>
-                        </th>
-                    </tr>
-                </tbody>
-            </table>
-            <tableNoMore v-if="tableInfo.tbody.length <= 0"></tableNoMore>
-        </div>
+        <div class="family-medicine-doctor-body-out">
+            <div class="family-medicine-doctor-body" ref="familyScroll">
+                <table>
+                    <thead class="family-medicine-doctor-thead">
+                        <tr>
+                            <th>{{tableInfo.thead.businessName || 'null'}}</th>
+                            <th>{{tableInfo.thead.modelName || 'null'}}</th>
+                            <th>{{tableInfo.thead.orderTime || 'null'}}</th>
+                            <th>{{tableInfo.thead.userName || 'null'}}</th>
+                            <th>{{tableInfo.thead.userPhone || 'null'}}</th>
+                            <th>{{tableInfo.thead.serviceTime || 'null'}}</th>
+                            <th>{{tableInfo.thead.doctorName || 'null'}}</th>
+                            <th>{{tableInfo.thead.status || 'null'}}</th>
+                            <th>{{tableInfo.thead.orderId || 'null'}}</th>
+                            <th class="family-medicine-doctor-body-spe">{{tableInfo.thead.orderNo || 'null'}}</th>
+                        </tr>
+                    </thead>
+                    <tbody  class="family-medicine-doctor-body">
+                        <tr v-for="(item,index) in tableInfo.tbody" :key="index">
+                            <th>
+                                <el-tooltip class="item" effect="light" :content="item.businessName" placement="top">
+                                    <div>{{item.businessName.length>5?`${item.businessName.substring(0,5)}...`:item.businessName}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th>
+                                <el-tooltip class="item" effect="light" :content="item.modelName" placement="top">
+                                    <div>{{item.modelName.length>5?`${item.modelName.substring(0,5)}...`:item.modelName}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th>
+                                <el-tooltip class="item" effect="light" :content="item.orderTime" placement="top">
+                                    <div>{{item.orderTime.length>5?`${item.orderTime.substring(0,5)}...`:item.orderTime}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th>
+                                <el-tooltip class="item" effect="light" :content="item.userName" placement="top">
+                                    <div>{{item.userName.length>5?`${item.userName.substring(0,5)}...`:item.userName}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th>
+                                <el-tooltip class="item" effect="light" :content="item.userPhone" placement="top">
+                                    <div>{{item.userPhone.length>5?`${item.userPhone.substring(0,5)}...`:item.userPhone}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th>
+                                <el-tooltip class="item" effect="light" :content="item.serviceTime" placement="top">
+                                    <div>{{item.serviceTime.length>5?`${item.serviceTime.substring(0,5)}...`:item.serviceTime}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th>
+                                <el-tooltip class="item" effect="light" :content="item.doctorName" placement="top">
+                                    <div>{{item.doctorName.length>5?`${item.doctorName.substring(0,5)}...`:item.doctorName}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th>
+                                <el-tooltip class="item" effect="light" :content="item.status" placement="top">
+                                    <div>{{item.status.length>5?`${item.status.substring(0,5)}...`:item.status}}</div>
+                                </el-tooltip>
+                            </th>
+                            <th><el-button type="danger" plain size="mini" @click="changeStatus(item,index)">服务变更</el-button></th>
+                            <th class="family-medicine-doctor-body-spe">
+                                <el-button type="warning" size="mini" plain @click="checkDoc(item,index)">查看档案</el-button>
+                                <el-button type="success" size="mini" v-if="item.status !== '已完成'" plain @click="sendMsg(item)">发送</el-button>
+                                <el-button type="primary" size="mini" v-if="item.status === '已完成'" plain @click="checkRcord(item)">查看记录</el-button>
+                                <el-button type="primary" size="mini" plain v-if="item.model === 'ZXZX' && item.status === '进行中'" @click="enterRoom(item)" class="enter-room">进入诊室</el-button>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+                <tableNoMore v-if="tableInfo.tbody.length <= 0"></tableNoMore>
+            </div>
+                <table class="table-abs" :class="isEnd?null:'has-border'">
+                    <thead class="family-medicine-doctor-thead">
+                        <tr>
+                            <th class="family-medicine-doctor-body-spe">{{tableInfo.thead.orderNo || 'null'}}</th>
+                        </tr>
+                    </thead>
+                    <tbody  class="family-medicine-doctor-body">
+                        <tr v-for="(item,index) in tableInfo.tbody" :key="index">
+                            <th class="family-medicine-doctor-body-spe">
+                                <el-button type="warning" size="mini" plain @click="checkDoc(item,index)">查看档案</el-button>
+                                <el-button type="success" size="mini" v-if="item.status !== '已完成'" plain @click="sendMsg(item)">发送</el-button>
+                                <el-button type="primary" size="mini" v-if="item.status === '已完成'" plain @click="checkRcord(item)">查看记录</el-button>
+                                <el-button type="primary" size="mini" plain v-if="item.model === 'ZXZX' && item.status === '进行中'" @click="enterRoom(item)" class="enter-room">进入诊室</el-button>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+         </div>   
          <div class="family-medicine-doctor-footer">
             <el-pagination
                 background
@@ -167,7 +186,7 @@
     import selftag from './../../public/publicComponents/selftag.vue'
     import tag from './../../public/publicComponents/tag.vue'
     import publicTime from './../../public/publicComponents/publicTime.vue'
-    import { stencilName, fetchOrderInfo, updateOrderServices, fetchChatSession, fetchHistoryMessage, bindSession, sendBtnVisable } from '../../api/apiAll.js'
+    import { stencilName, fetchOrderInfo, updateOrderServices, fetchChatSession, fetchHistoryMessage, bindSession, sendBtnVisable, doctorInto } from '../../api/apiAll.js'
     import chat from '../../public/publicComponents/chat.vue'
     import viewRecord from './../xiezuo/viewRecord.vue'
     import ovideocomponent from '../../video/oVideo.vue'
@@ -205,6 +224,7 @@
         },
 		data () {
 			return {
+                isEnd:false,//滚动条是否到底部，新加的功能，固定列
                 enterClinic:{//进入 门诊 弹窗 数据 （谭银组件）   
                     show:false,
                     createVideoRoomData: {
@@ -220,7 +240,7 @@
                     },
                     chatTypeBox:{
                         startDoctorName: "",
-                        startDoctorTYpe: "家医"
+                        startDoctorTYpe: "患者"
                     }
                 },
                 chatData:{//谭颖的组件 数据    
@@ -237,7 +257,8 @@
                     videoType: "门诊",
                     chatTypeBox: {
                         startDoctorName: "",
-                        startDoctorTYpe: "家医"
+                        startDoctorTYpe: "患者",
+                        bingUserId: ""   
                     },
                 },
                 record:{//谭颖的组件 数据    
@@ -300,6 +321,20 @@
 		},
 		methods:{
             /**
+             * 
+             */
+            listenEleScroll(){
+                this.$nextTick(ev=>{
+                    // this.$refs.familyScroll.scrollLeft = 500;
+                    // this.$refs.familyScroll.scrollTop
+                    this.$refs.familyScroll.onscroll = ev =>{
+                        console.log(this.$refs.familyScroll.scrollLeft)
+                        console.log(this.$refs.familyScroll.scrollWidth - this.$refs.familyScroll.offsetWidth)
+                        this.isEnd = this.$refs.familyScroll.scrollLeft === (this.$refs.familyScroll.scrollWidth - this.$refs.familyScroll.offsetWidth);
+                    }
+                })
+            },
+            /**
              * 关闭进入诊室弹窗
              */
             videoclick(){
@@ -307,35 +342,60 @@
                 this.enterClinic.show = false;
             },
             /**
+             * 20.1医生进入诊室
+             */
+            async getDoctorInto(item){
+                const res = await doctorInto({token:this.userInfo.token},{clinicId:item.crId});
+                if(res.data&&res.data.errCode===0){
+                   return true
+                }else{
+                    this.$notify({
+						title: '进入诊室失败',
+						message: res.data.errMsg,
+						type: 'error'
+					});
+                    return false
+                }
+            },
+            /**
              * 进入 门诊
              */
             enterRoom(item){
-                // Promise.all([//又修改了流程，原先一个fetchChatSession就ok，现在需要再加一个getBindSession
-                //     this.getFetchChatSession(item),
-                //     this.getBindSession(item)
-                // ])
-                // .then(res=>{
-                //     console.log(res);
-                //     if(res[0].ok && res[0].ok){
-                //         // this.chatData.sessionId = res[0].data.data.body;
-                //         // this.chatData.userMessage.clinicId = item.crId;
-                //         // this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
-                //         // this.chatData.userMessage.userId = item.userId;
-                //         // this.chatData.userMessage.clinicOrderId = '';
-                //         // this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
-                //         // this.chatData.show = true;
+                // const pass = this.getDoctorInto(item);//又加了个需求，在进入诊室前需要调用这个接口
+                // if(!pass)return;
+                this.enterClinic.oClinicId = item.crId;
+                this.enterClinic.userMessage.clinicId = item.crId;
+                this.enterClinic.userMessage.departmentId = this.userSelfInfo.depts.length>0?this.userSelfInfo.depts[0].deptId:'';
+                this.enterClinic.show = true;
+                // console.warn(this.enterClinic)
+                return;
+                Promise.all([//又修改了流程，原先一个fetchChatSession就ok，现在需要再加一个getBindSession
+                    this.getSendBtnVisable(item),
+                    // this.getFetchChatSession(item),
+                    this.getBindSession(item)
+                ])
+                .then(res=>{
+                    console.log(res);
+                    if(res[0].ok && res[0].ok){
+                        // this.chatData.sessionId = res[0].data.data.body;
+                        // this.chatData.userMessage.clinicId = item.crId;
+                        // this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
+                        // this.chatData.userMessage.userId = item.userId;
+                        // this.chatData.userMessage.clinicOrderId = '';
+                        // this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
+                        // this.chatData.show = true;
 
 
                 //         this.enterClinic.oClinicId = item.crId;
                 //         this.enterClinic.userMessage.clinicId = item.crId;
                 //         this.enterClinic.userMessage.departmentId = this.userSelfInfo.depts.length>0?this.userSelfInfo.depts[0].deptId:'';
                 //         this.enterClinic.show = true;
-                //     }
-                // })0
+                    }
+                })
                 this.enterClinic.oClinicId = item.crId;
-                        this.enterClinic.userMessage.clinicId = item.crId;
-                        this.enterClinic.userMessage.departmentId = this.userSelfInfo.depts.length>0?this.userSelfInfo.depts[0].deptId:'';
-                        this.enterClinic.show = true;
+                this.enterClinic.userMessage.clinicId = item.crId;
+                this.enterClinic.userMessage.departmentId = this.userSelfInfo.depts.length>0?this.userSelfInfo.depts[0].deptId:'';
+                this.enterClinic.show = true;
                 console.log(item);
                 
             },
@@ -451,6 +511,7 @@
                 const res2 = await this.getBindSession(item);
                 if(!res2.ok)return;
                 console.log(res2)
+                this.chatData.chatTypeBox.bingUserId = item.userId;
                 this.chatData.sessionId = res2.id;
                 this.chatData.userMessage.clinicId = item.crId;
                 this.chatData.userMessage.departmentId = this.userSelfInfo.depts ? this.userSelfInfo.depts[0].deptId : '';
@@ -458,7 +519,8 @@
                 this.chatData.userMessage.clinicOrderId = '';
                 this.chatData.userMessage.orgCode = this.userInfo.hospitalCode;
                 this.chatData.show = true;
-                console.log(this.chatData)
+                console.log(this.chatData);
+                console.warn(this.chatData.chatTypeBox.bingUserId)
                 
                 // .then(res => {
                 //     if(res[0].ok && res[1].ok){
@@ -585,7 +647,12 @@
                     this.tableInfo.thead = res.data.body.header;
                     this.tableInfo.tbody = res.data.body.data2.list;
                     this.queryConditions.page.total = res.data.body.data2.total
-                    console.log(this.tableInfo)
+                    console.log(this.tableInfo);
+                    this.$nextTick(ev=>{//加个新功能 固定表格最后一列 wtf
+                        const allSpeCom = document.getElementsByClassName('family-medicine-doctor-body-spe');
+                        const tableAbs = document.getElementsByClassName('table-abs');
+                        tableAbs[0].style.width = allSpeCom[0].offsetWidth + 'px'
+                    });
                 }else{
                     this.$notify({
 						title: '失败',
@@ -669,11 +736,12 @@
             // this.initApi();
             this.getBusModules();
             this.getTableList();
+            this.listenEleScroll();
 		}
 	}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 	.family-medicine-doctor{
 
     }
@@ -686,6 +754,7 @@
     }
     .family-medicine-doctor-body{
         overflow-x: scroll;
+        position: relative;
     }
     .family-medicine-doctor-body table{
         /* width: 100%; */
@@ -754,5 +823,31 @@
     }
     .family-medicine-doctor-body th > .el-tooltip{
         width: 100%;
+    }
+    .table-abs{
+        position: absolute;
+        right: 0;
+        top: 0;
+        /* float: right; */
+        z-index: 1;
+        background: white;
+        thead {
+            tr{
+                border-bottom: 1px solid #E5EDF3;
+                th{
+                    padding-top: 0.1rem;
+                    padding-bottom: 0.12rem;
+                    font-size: 12px;
+                }
+            }
+            
+        }
+    }
+    .family-medicine-doctor-body-out{
+        position: relative;
+    }
+    .has-border{
+        border-left: 1px solid #E5EDF3;
+        box-sizing: border-box;
     }
 </style>

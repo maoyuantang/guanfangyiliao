@@ -140,7 +140,7 @@ const router = new Router({
 		      name: 'familyMedicine',
 		      component: familyMedicine,
 		      meta: {
-		        title: '冠方医疗-家医生系统'
+		        title: '冠方医疗-家医服务系统'
 		      }
 				},
 				{

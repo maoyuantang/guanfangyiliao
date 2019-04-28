@@ -627,7 +627,8 @@ export default {
 		min-height: 100%;
 		/* display: flex;
 		flex-direction: column; */
-		overflow: auto;
+		/* overflow: auto; */
+		overflow-y: scroll;
 		
 	}
 	.content-top{
