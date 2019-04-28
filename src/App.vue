@@ -45,6 +45,7 @@ export default {
         })
     },
     created() {
+        console.log(this.$store.state)
         // console.error(process.env.WSS_PATH)
         if (this.userState.token) {
             this.lianjie();

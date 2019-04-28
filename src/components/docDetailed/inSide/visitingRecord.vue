@@ -1,8 +1,8 @@
 <!-- 就诊记录 -->
 <template>
 	<div>
-		就诊记录
-        <p>{{inData}}</p>
+		<!-- 就诊记录
+        <p>{{inData}}</p> -->
 	</div>
 </template>
 

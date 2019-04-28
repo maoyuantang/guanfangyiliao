@@ -1,8 +1,8 @@
 <!-- 手术麻醉 -->
 <template>
 	<div>
-		手术麻醉
-        <p>{{inData}}</p>
+		<!-- 手术麻醉
+        <p>{{inData}}</p> -->
 	</div>
 </template>
 

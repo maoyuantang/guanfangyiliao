@@ -18,7 +18,7 @@
 
         <!-- 随访计划详情 -->
         <div v-if="followPlanVisible">
-            <el-dialog class="evaluateBox addFollowBox" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
+            <el-dialog class="addFollowBox addFollowBoxFollow" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
 
                 <el-form ref="form" :model="followPlanData" label-width="80px">
 
@@ -33,7 +33,7 @@
                     </el-form-item>
                     <div class="addFollowMain">
                         <el-form-item class="addFollowM-bot" label="首次治疗">
-                            <el-date-picker class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
+                            <el-date-picker v-model='followPlanData.firstTreatmentTime' class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
                             </el-date-picker>
                         </el-form-item>
                         <ul>

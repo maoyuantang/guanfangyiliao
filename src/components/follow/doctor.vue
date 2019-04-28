@@ -180,7 +180,7 @@
         </div>
         <!-- 随访计划详情 -->
         <div v-if="followPlanVisible">
-            <el-dialog class="evaluateBox addFollowBox addFollowBoxFollow" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
+            <el-dialog class=" addFollowBox addFollowBoxFollow" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
 
                 <el-form ref="form" :model="followPlanData" label-width="80px">
 
@@ -413,7 +413,7 @@
         </div>
         <div>
             <div v-if="followDetailVisible">
-                <el-dialog class="evaluateBox addFollowBox  addFollowBoxFollow" title=" " :visible.sync="followDetailVisible" width="602px" hight="356px" center>
+                <el-dialog class="addFollowBox  addFollowBoxFollow" title=" " :visible.sync="followDetailVisible" width="602px" hight="356px" center>
                     <followDetail :addFollowData="followDetailData"></followDetail>
                 </el-dialog>
             </div>

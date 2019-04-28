@@ -14,7 +14,7 @@ import postQueryHandle from './../public/publicJs/postQueryHandle.js'
 export const getLoginCode = query => axios({//获取登录验证码
     method: 'get',
     url: apiList.getLoginCode,
-    params: query
+    params: query,
 })
 export const login = data => axios({//登录
     method: 'post',

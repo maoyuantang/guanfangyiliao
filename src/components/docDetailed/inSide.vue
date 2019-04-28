@@ -46,8 +46,10 @@
             <div class="new-content-body-content">
                 <!-- {{navList[nowNav].childModule[navList[nowNav].childModuleIndex].code}} -->
                 <!-- {{showModules.list[showModules.index].code}} -->
-                {{showModules.list}}
-                {{showModules.index}}
+                
+                <!-- 自定义 -->
+                <!-- {{showModules.list}} -->
+                <!-- {{showModules.index}} -->
                 <div 
                 :is="showModules.list[showModules.index]?showModules.list[showModules.index].code:''"
                 :in-data="showModules.list[showModules.index]?showModules.list[showModules.index].data:{}"></div>

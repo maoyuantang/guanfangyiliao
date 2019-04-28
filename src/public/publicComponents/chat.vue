@@ -453,6 +453,7 @@ export default {
         })
     },
     created() {
+        
         if (this.chatTypeBox.startDoctorTYpe) {
             if (this.chatTypeBox.startDoctorTYpe == "协作") {
                 this.sendMessageBoxType = "cooperation";
