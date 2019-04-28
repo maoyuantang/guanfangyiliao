@@ -1,8 +1,8 @@
 <!-- 医嘱 -->
 <template>
 	<div>
-		医嘱
-        <p>{{inData}}</p>
+		<!-- 医嘱
+        <p>{{inData}}</p> -->
 	</div>
 </template>
 

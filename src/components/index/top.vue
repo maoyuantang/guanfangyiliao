@@ -3,11 +3,11 @@
         <!-- {{viewRoot.now}}
         {{userInfo.hasAuth.filter(item=>item.type==='1')}} -->
         <div class="change-root" v-if="!userInfo.rooter">
-			<el-menu :default-active="viewRoot.now.type" class="el-menu-demo" mode="horizontal" @select="handleSelect" v-if="showTopNav">
-				<el-menu-item index="1">管理权限</el-menu-item>
-				<el-menu-item index="2" :disabled="!canGotoDoctor">医生端</el-menu-item>
-			</el-menu>
-		</div>
+            <el-menu :default-active="viewRoot.now.type" class="el-menu-demo" mode="horizontal" @select="handleSelect" v-if="showTopNav">
+                <el-menu-item index="1">管理权限</el-menu-item>
+                <el-menu-item index="2" :disabled="!canGotoDoctor">医生端</el-menu-item>
+            </el-menu>
+        </div>
         <!-- <div class="change-root" v-if="!userInfo.rooter">
             <el-menu :default-active="viewRoot.now.type" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                 <el-menu-item index="1">管理权限</el-menu-item>
@@ -15,7 +15,10 @@
             </el-menu>
         </div> -->
         <div class="top-left">
-            <marquee  @click="openNotice()" class="title-marquee">{{noticeList}}</marquee>
+            <div style='width:215px'  @click="openNotice()">
+                <marquee  class="title-marquee">{{noticeList}}</marquee>
+            </div>
+
             <div class="msg">
                 <i id="noticeIconClass" v-show="noticeRedVisable" class="iconfont">&#xe8c0;</i>
             </div>
@@ -61,10 +64,14 @@ export default {
             userInfo: state => state.user.userInfo,
             userSocketInfo: state => state.socket,
             userState: state => state.user.userInfo,
-             userSocketInfo: state => state.socket
+            userSocketInfo: state => state.socket
         }),
         imgSrc() {
-            return this.userSelfInfo.headId? `${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${this.userSelfInfo.headId}`: "../../../static/assets/img/doctorImg.png";
+            return this.userSelfInfo.headId
+                ? `${apiBaseURL.imgBaseUrl}/m/v1/api/hdfs/fs/download/${
+                      this.userSelfInfo.headId
+                  }`
+                : "../../../static/assets/img/doctorImg.png";
         }
     },
     data() {
@@ -128,7 +135,8 @@ export default {
             this.$store.commit("user/CLEARUSERINFO");
             this.$store.commit("user/CLAERUSERSELFINFO");
             sessionStorage.clear();
-            this.$store.state.socket.socketObj && this.$store.state.socket.socketObj.close()
+            this.$store.state.socket.socketObj &&
+                this.$store.state.socket.socketObj.close();
             this.$router.replace({
                 path: "/login"
             });
@@ -149,21 +157,29 @@ export default {
             // const doc = this.userInfo.hasAuth.filter(item=>item.type==='2');
             // const man = this.userInfo.hasAuth.filter(item=>item.type==='1');
             if (this.userInfo.rooter) return; //超级管理员不要判断,在以前的地方处理过
-            if(this.userInfo.manager){//医院管理员身份
+            if (this.userInfo.manager) {
+                //医院管理员身份
                 this.$store.commit("user/CHANGEVIEWAUTH", {
                     name: "manager",
                     type: "1"
                 });
                 this.showTopNav = false;
                 // this.showTopNav = this.userInfo.hasAuth.filter(item => item.type === "2").length > 0;
-            }else{//医生身份
-                if (this.userInfo.hasAuth.filter(item => item.type === "1").length <= 0) {
+            } else {
+                //医生身份
+                if (
+                    this.userInfo.hasAuth.filter(item => item.type === "1")
+                        .length <= 0
+                ) {
                     this.showTopNav = false;
                     this.$store.commit("user/CHANGEVIEWAUTH", {
                         name: "doctors",
                         type: "2"
                     });
-                } else if (this.userInfo.hasAuth.filter(item => item.type === "2").length <= 0) {
+                } else if (
+                    this.userInfo.hasAuth.filter(item => item.type === "2")
+                        .length <= 0
+                ) {
                     this.showTopNav = false;
                     this.$store.commit("user/CHANGEVIEWAUTH", {
                         name: "manager",
@@ -176,7 +192,10 @@ export default {
                         type: "1"
                     });
                 }
-                sessionStorage.setItem("viewRoot", JSON.stringify(this.viewRoot));
+                sessionStorage.setItem(
+                    "viewRoot",
+                    JSON.stringify(this.viewRoot)
+                );
             }
         }
     },
@@ -190,7 +209,8 @@ export default {
                 let _this = this;
                 $.each(n.syncData, function(index, text) {
                     if (text.command == "SYNC_SESSION") {
-                        _this.msgId = _this.$store.state.socket.messageTicket.oMsgId;
+                        _this.msgId =
+                            _this.$store.state.socket.messageTicket.oMsgId;
                         _this.getNoticeList();
                     }
                 });
@@ -315,7 +335,7 @@ export default {
     font-family: PingFangSC-Regular;
     letter-spacing: 0.005rem;
     line-height: 0.3rem;
-    width: 20%;
+    width: 100%;
 }
 .msg {
     width: 0.73rem;
@@ -343,5 +363,4 @@ export default {
     left: 50%;
     transform: translateX(-50%);
 }
-
 </style>

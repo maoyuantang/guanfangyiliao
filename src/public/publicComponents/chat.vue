@@ -10,7 +10,7 @@
 
         </div>
         <div class="chatMessage">
-            <div class='videoUserNumClass' v-show='videoUserNum!=0' @click="showVideoBtn1()">
+            <div class='videoUserNumClass' v-show="(chatTypeBox.startDoctorTYpe=='会诊' || chatTypeBox.startDoctorTYpe=='协作') && videoUserNum!=0" @click="showVideoBtn1()">
                 <img src="../../assets/img/videoUserNum.png" /> 快速进入视频
             </div>
             <ul class="chatRecord" id="scrolldIV">

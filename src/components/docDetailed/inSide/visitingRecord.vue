@@ -1,41 +1,41 @@
 <!-- 就诊记录 -->
 <template>
 	<div>
-		就诊记录
-        <p>{{inData}}</p>
+		<!-- 就诊记录
+        <p>{{inData}}</p> -->
 	</div>
 </template>
 
 <script>
 	export default {
-        props:[
-            "inData"
-        ],
-		components:{
-			
+		props: [
+			"inData"
+		],
+		components: {
+
 		},
-		watch:{
-			
+		watch: {
+
 		},
-		computed:{
-			
+		computed: {
+
 		},
-		
-		data () {
-			return {	
+
+		data() {
+			return {
 			}
 		},
-		
-		methods:{
-			
-			
+
+		methods: {
+
+
 		},
-		async created(){
-			
+		async created() {
+
 		}
 	}
 </script>
 
-<style >
-	
+<style>
+
 </style>

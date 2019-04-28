@@ -1,8 +1,8 @@
 <!-- 影像检查 -->
 <template>
 	<div>
-		影像检查
-        <p>{{inData}}</p>
+		<!-- 影像检查
+        <p>{{inData}}</p> -->
 	</div>
 </template>
 

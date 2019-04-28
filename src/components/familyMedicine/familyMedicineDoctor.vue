@@ -240,7 +240,7 @@
                     },
                     chatTypeBox:{
                         startDoctorName: "",
-                        startDoctorTYpe: "家医"
+                        startDoctorTYpe: "患者"
                     }
                 },
                 chatData:{//谭颖的组件 数据    
@@ -361,12 +361,13 @@
              * 进入 门诊
              */
             enterRoom(item){
-                const pass = this.getDoctorInto(item);//又加了个需求，在进入诊室前需要调用这个接口
-                if(!pass)return;
+                // const pass = this.getDoctorInto(item);//又加了个需求，在进入诊室前需要调用这个接口
+                // if(!pass)return;
                 this.enterClinic.oClinicId = item.crId;
                 this.enterClinic.userMessage.clinicId = item.crId;
                 this.enterClinic.userMessage.departmentId = this.userSelfInfo.depts.length>0?this.userSelfInfo.depts[0].deptId:'';
                 this.enterClinic.show = true;
+                // console.warn(this.enterClinic)
                 return;
                 Promise.all([//又修改了流程，原先一个fetchChatSession就ok，现在需要再加一个getBindSession
                     this.getSendBtnVisable(item),
@@ -385,12 +386,16 @@
                         // this.chatData.show = true;
 
 
-                        this.enterClinic.oClinicId = item.crId;
-                        this.enterClinic.userMessage.clinicId = item.crId;
-                        this.enterClinic.userMessage.departmentId = this.userSelfInfo.depts.length>0?this.userSelfInfo.depts[0].deptId:'';
-                        this.enterClinic.show = true;
+                //         this.enterClinic.oClinicId = item.crId;
+                //         this.enterClinic.userMessage.clinicId = item.crId;
+                //         this.enterClinic.userMessage.departmentId = this.userSelfInfo.depts.length>0?this.userSelfInfo.depts[0].deptId:'';
+                //         this.enterClinic.show = true;
                     }
                 })
+                this.enterClinic.oClinicId = item.crId;
+                this.enterClinic.userMessage.clinicId = item.crId;
+                this.enterClinic.userMessage.departmentId = this.userSelfInfo.depts.length>0?this.userSelfInfo.depts[0].deptId:'';
+                this.enterClinic.show = true;
                 console.log(item);
                 
             },
@@ -588,8 +593,8 @@
                     const now = new Date();//今天
                     const tomorrow = new Date(now.getTime() + 24*60*60*1000);//明天
                     this.queryConditions.time = [
-                        `${now.getFullYear()}-${now.getMonth()>9?now.getMonth()+1:'0'+now.getMonth()}-${now.getDate()>10?now.getDate():'0'+now.getDate()}`,
-                        `${tomorrow.getFullYear()}-${tomorrow.getMonth()>9?tomorrow.getMonth()+1:'0'+tomorrow.getMonth()}-${tomorrow.getDate()>10?tomorrow.getDate():'0'+tomorrow.getDate()}`
+                        `${now.getFullYear()}-${now.getMonth()>9?now.getMonth()+1:'0'+(now.getMonth()+1)}-${now.getDate()>10?now.getDate():'0'+now.getDate()}`,
+                        `${tomorrow.getFullYear()}-${tomorrow.getMonth()>9?tomorrow.getMonth()+1:'0'+(tomorrow.getMonth()+1)}-${tomorrow.getDate()>10?tomorrow.getDate():'0'+tomorrow.getDate()}`
                     ];
                 }else{
                     this.queryConditions.time = [];

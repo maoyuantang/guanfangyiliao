@@ -6,8 +6,6 @@
                     <div class="col-xs-12 media-box other-media">
                         <div id="remoteVideos">
 
-
-
                             <!-- <div v-for="(item,index) in resultList" :key="index" v-html="generateParticipant(item,false)">
 
                             </div> -->
@@ -174,6 +172,7 @@ export default {
             archivesId: "",
             archivesVisible: false,
             userResource: "",
+            // userResourceVisable: true,
             videoUser: 0,
             videoUser1: 0, //判断有没有人接收了视频
             screenClickVisable: false,
@@ -1466,7 +1465,11 @@ export default {
                 function(result) {
                     console.log("join conference success : ", result);
                     if (result.code == 200) {
-                        _this.userResource = result.response.info.resource;
+                        // if (_this.userResourceVisable) {
+                        //     _this.userResource = result.response.info.resource;
+                        //     _this.userResourceVisable=false
+                        // }
+
                         $("#localVideos").append(
                             _this.generateParticipant(result, true)
                         );
@@ -1680,7 +1683,7 @@ export default {
                     console.error(result);
                 }
             });
-        },
+        }
     },
     created() {
         console.log(this.userMessage);
@@ -1722,17 +1725,38 @@ export default {
          * 收到有人进入房间
          */
         Manis.onJoinConference(function(result) {
+            console.log(result)
             const ele = _this.generateParticipant(result, false);
-            ele.onclick = ()=> {
+            ele.onclick = () => {
                 const parent = ele.parentNode;
                 const list = parent.children;
                 let index;
-                for(let i = 0; i<list.length; i++){
-                    console.log(list[i])
-                    if(list[i].id == ele.id){index = i}
+                for (let i = 0; i < list.length; i++) {
+                    console.log(list[i]);
+                    if (list[i].id == ele.id) {
+                        index = i;
+                    }
                 }
-                console.log(index)
-            }
+                console.log(index);
+                // let oid= $("#localVideos>div").attr('id').slice(12)
+                // $("#localVideos").html("");
+                // $("#localVideos").append(ele);
+                // const eleList = [];
+                // for (let i = 0; i < list.length; i++){
+                //     console.warn(list[i])
+                //     eleList.push(list[i])
+                // }
+                //  console.log(eleList)
+                //  console.log(oid)
+                //  console.log(_this.generateParticipant(oid, false))
+                // eleList[index] = _this.generateParticipant(oid, false);
+               
+                // $("#remoteVideos").html();
+                // eleList.forEach(item=>{
+                //     console.log(item)
+                //     $("#remoteVideos").append(item)
+                // })
+            };
             $("#remoteVideos").append(ele);
             // _this.resultList.push(result);
             // _this.$store.commit("socket/VIDEOUSER", 1);
