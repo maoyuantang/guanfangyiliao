@@ -168,7 +168,7 @@
         </el-dialog>
         
         <!-- 进入门诊 弹窗 -->
-        <el-dialog :visible.sync="enterClinic.show" class='videoClassBox' append-to-body fullscreen>
+        <el-dialog :visible.sync="enterClinic.show" v-if="enterClinic.show" class='videoClassBox' append-to-body fullscreen>
             <ovideocomponent 
             @reback="videoclick"
             :createVideoRoomData="enterClinic.createVideoRoomData" 
@@ -327,10 +327,11 @@
                 this.$nextTick(ev=>{
                     // this.$refs.familyScroll.scrollLeft = 500;
                     // this.$refs.familyScroll.scrollTop
+                    this.isEnd = this.$refs.familyScroll.scrollLeft < (this.$refs.familyScroll.scrollWidth - this.$refs.familyScroll.offsetWidth);
                     this.$refs.familyScroll.onscroll = ev =>{
                         console.log(this.$refs.familyScroll.scrollLeft)
                         console.log(this.$refs.familyScroll.scrollWidth - this.$refs.familyScroll.offsetWidth)
-                        this.isEnd = this.$refs.familyScroll.scrollLeft === (this.$refs.familyScroll.scrollWidth - this.$refs.familyScroll.offsetWidth);
+                        this.isEnd = this.$refs.familyScroll.scrollLeft < (this.$refs.familyScroll.scrollWidth - this.$refs.familyScroll.offsetWidth);
                     }
                 })
             },
@@ -751,12 +752,12 @@
         flex: 1;
     }
     .family-medicine-doctor-body{
-        overflow-x: scroll;
+        overflow-x: auto;
         position: relative;
     }
     .family-medicine-doctor-body table{
         /* width: 100%; */
-        min-width: 17rem;
+        min-width: 16rem;
     }
     .family-medicine-doctor-body tr{
         border-bottom: 1px solid #E5EDF3;
@@ -823,6 +824,8 @@
         width: 100%;
     }
     .table-abs{
+        border-left: 1px solid #E5EDF3;
+        box-sizing: border-box;
         position: absolute;
         right: 0;
         top: 0;
@@ -845,7 +848,8 @@
         position: relative;
     }
     .has-border{
-        border-left: 1px solid #E5EDF3;
-        box-sizing: border-box;
+        // border-left: 1px solid #E5EDF3;
+        // box-sizing: border-box;
+        display: none;
     }
 </style>

@@ -7,7 +7,7 @@
 		</div>
 		<div class="doc-detailed-alert">
 			<div class="doc-detailed-alert-content">
-				<div class="doc-detailed-tag">
+				<div class="doc-detailed-tag" v-if="showPatientList">
 					<span v-for="(item,index) in topTag.list" :key="index" class="doc-detailed-tag-span"
 						:class="topTag.index === index ? 'doc-detailed-tag-span-select' : null " @click="selectTag(index)">
 						{{item.name}}
@@ -57,12 +57,13 @@
 		props: ['inData'],
 		data() {
 			return {
+				showPatientList:true,
 				reLoad: true,
 				topTag: {//顶部tag数据   
 					index: 0,//选中
 					list: []//列表
 				},
-				nav: {//顶部nav数据
+				nav: {//顶部nav数据 
 					index: 0,//选中  
 					list: [
 						{ laber: '电子病历', page: 'record' },
@@ -172,7 +173,7 @@
 		beforeRouteEnter(to, from, next) {
 			// const routerMap = [
 			//     {
-			//         name:'冠方医疗-首页',
+			//         name:'冠方医疗-首页',  
 			//         select:true,
 			//         path:'/',
 			//         code:0
@@ -263,7 +264,23 @@
 				path: '/docDetailed',
 				code: '000001'
 			}));
-			next();
+			next(vm=>{
+				console.log(from.path)
+				const specialRoutePath = ['/consultation', '/cooperation', '/referral', '/files'];
+				const isspecial = specialRoutePath.find(item => item === from.path);
+				if(isspecial){
+					console.log('special')
+					vm.showPatientList = false;
+					vm.nav.list = [
+						{ laber: '电子病历', page: 'record' },
+						{ laber: '院内档案', page: 'inSide' },
+						// { laber: '院外档案', page: 'outSide' },
+					];
+				}else{
+					console.log('not special')
+				}
+				// if(from.path){}
+			});
 		},
 	};
 </script>

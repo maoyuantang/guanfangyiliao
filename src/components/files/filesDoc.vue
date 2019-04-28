@@ -366,10 +366,11 @@ export default {
         this.$nextTick(ev=>{
             // this.$refs.familyScroll.scrollLeft = 500;
             // this.$refs.familyScroll.scrollTop
+            this.isEnd = this.$refs.filesScroll.scrollLeft < (this.$refs.filesScroll.scrollWidth - this.$refs.filesScroll.offsetWidth);
             this.$refs.filesScroll.onscroll = ev =>{
                 // console.log(this.$refs.familyScroll.scrollLeft)
                 // console.log(this.$refs.familyScroll.scrollWidth - this.$refs.familyScroll.offsetWidth)
-                this.isEnd = this.$refs.filesScroll.scrollLeft === (this.$refs.filesScroll.scrollWidth - this.$refs.filesScroll.offsetWidth);
+                this.isEnd = this.$refs.filesScroll.scrollLeft < (this.$refs.filesScroll.scrollWidth - this.$refs.filesScroll.offsetWidth);
             }
         })
     },
@@ -798,7 +799,7 @@ export default {
 }
 .files-doc-table {
   /* width: 100%; */
-  min-width: 17rem;
+  min-width: 13rem;
 }
 .files-doc-table th {
   border-bottom: 1px solid var(--color5);
@@ -909,12 +910,14 @@ line-height: 0.22rem;
 }
 .files-doc-body{
   padding-top: .2rem;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 .files-doc-body-out{
   position: relative;
 }
 .files-doc-table-spe{
+  border-left: 1px solid #E5EDF3;
+  box-sizing: border-box;
   position: absolute;
   right: 0;
   top: 0;
@@ -953,7 +956,8 @@ line-height: 0.22rem;
   visibility: hidden;
 }
 .has-border{
-    border-left: 1px solid #E5EDF3;
-    box-sizing: border-box;
+    // border-left: 1px solid #E5EDF3;
+    // box-sizing: border-box;
+    display: none;
 }
 </style>

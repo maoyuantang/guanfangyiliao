@@ -356,8 +356,9 @@
              */
             listenEleScroll(){
                 this.$nextTick(ev=>{
+                    this.isEnd = this.$refs.schedulingScroll.scrollLeft < (this.$refs.schedulingScroll.scrollWidth - this.$refs.schedulingScroll.offsetWidth);
                     this.$refs.schedulingScroll.onscroll = ev =>{
-                        this.isEnd = this.$refs.schedulingScroll.scrollLeft === (this.$refs.schedulingScroll.scrollWidth - this.$refs.schedulingScroll.offsetWidth);
+                        this.isEnd = this.$refs.schedulingScroll.scrollLeft < (this.$refs.schedulingScroll.scrollWidth - this.$refs.schedulingScroll.offsetWidth);
                     }
                 })
             },
@@ -792,7 +793,7 @@
     }
     .class-scheduling-table{
         /* width: 100%; */
-        min-width: 17rem;
+        min-width: 13rem;
     }
     .class-scheduling-table tr{
         border-bottom: 1px solid #E5EDF3;
@@ -923,12 +924,16 @@
         width:1.96rem;
     }
     .class-scheduling-body-content{
-        overflow-x: scroll;
+        
+        // overflow-x: scroll;
+        overflow-x: auto;
     }
     .class-scheduling-body-content-out{
         position: relative;
     }
     .class-scheduling-table-spe{
+        border-left: 1px solid #E5EDF3;
+        box-sizing: border-box;
         position: absolute;
         right: 0;
         top: 0;
@@ -962,7 +967,8 @@
         visibility: hidden;
     }
     .has-border{
-        border-left: 1px solid #E5EDF3;
-        box-sizing: border-box;
+        // border-left: 1px solid #E5EDF3;
+        // box-sizing: border-box;
+        display: none;
     }
 </style>

@@ -517,11 +517,11 @@ export default {
   flex: 1;
 }
 .files-man-body-list{
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 .files-man-body-list-table {
   /* width: 100%; */
-  min-width: 17rem;
+  min-width: 13rem;
 }
 .files-man-body-list-table tr{
   display: flex;

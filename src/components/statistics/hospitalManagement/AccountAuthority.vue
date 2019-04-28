@@ -166,8 +166,9 @@
         <div class="ourStaf-alert-item-text">
           <div class="ourStaf-alert-item-text-ch">
             <span>姓名:</span>
+            <!-- v-if="ourStafAlert.type===0" -->
             <el-autocomplete
-              v-if="ourStafAlert.type===0"
+              
               class="Account-authority-append-class-new-class"
               v-model="ourStafAlert.data.name"
               size="mini"
@@ -175,7 +176,7 @@
               placeholder="请输入内容"
               @select="handleSelect"
             ></el-autocomplete>
-            <el-input placeholder="请输入内容" v-else v-model="ourStafAlert.data.name" size="mini" clearable></el-input>
+            <!-- <el-input placeholder="请输入内容" v-else v-model="ourStafAlert.data.name" size="mini" clearable></el-input> -->
             <i class="iconfont ourStaf-alert-icon">&#xe7b0;</i>
           </div>
           <div class="ourStaf-alert-item-text-ch">
@@ -368,24 +369,24 @@ export default {
   data() {
     return {
       newAppend:[//新增功能 边输入边筛选 原始数据
-          // { "value": "三全鲜食（北新泾店）", "address": "长宁区新渔路144号" },
-          // { "value": "Hot honey 首尔炸鸡（仙霞路）", "address": "上海市长宁区淞虹路661号" },
-          // { "value": "新旺角茶餐厅", "address": "上海市普陀区真北路988号创邑金沙谷6号楼113" },
-          // { "value": "泷千家(天山西路店)", "address": "天山西路438号" },
-          // { "value": "胖仙女纸杯蛋糕（上海凌空店）", "address": "上海市长宁区金钟路968号1幢18号楼一层商铺18-101" },
-          // { "value": "贡茶", "address": "上海市长宁区金钟路633号" },
-          // { "value": "豪大大香鸡排超级奶爸", "address": "上海市嘉定区曹安公路曹安路1685号" },
-          // { "value": "茶芝兰（奶茶，手抓饼）", "address": "上海市普陀区同普路1435号" },
-          // { "value": "十二泷町", "address": "上海市北翟路1444弄81号B幢-107" },
-          // { "value": "星移浓缩咖啡", "address": "上海市嘉定区新郁路817号" },
-          // { "value": "阿姨奶茶/豪大大", "address": "嘉定区曹安路1611号" },
-          // { "value": "新麦甜四季甜品炸鸡", "address": "嘉定区曹安公路2383弄55号" },
-          // { "value": "Monica摩托主题咖啡店", "address": "嘉定区江桥镇曹安公路2409号1F，2383弄62号1F" },
-          // { "value": "浮生若茶（凌空soho店）", "address": "上海长宁区金钟路968号9号楼地下一层" },
-          // { "value": "NONO JUICE  鲜榨果汁", "address": "上海市长宁区天山西路119号" },
-          // { "value": "CoCo都可(北新泾店）", "address": "上海市长宁区仙霞西路" },
-          // { "value": "快乐柠檬（神州智慧店）", "address": "上海市长宁区天山西路567号1层R117号店铺" },
-          // { "value": "Merci Paul cafe", "address": "上海市普陀区光复西路丹巴路28弄6号楼819" },
+          // { "value": "三全鲜食（北新泾店）", "doctorCode": "长宁区新渔路144号" },
+          // { "value": "Hot honey 首尔炸鸡（仙霞路）", "doctorCode": "上海市长宁区淞虹路661号" },
+          // { "value": "新旺角茶餐厅", "doctorCode": "上海市普陀区真北路988号创邑金沙谷6号楼113" },
+          // { "value": "泷千家(天山西路店)", "doctorCode": "天山西路438号" },
+          // { "value": "胖仙女纸杯蛋糕（上海凌空店）", "doctorCode": "上海市长宁区金钟路968号1幢18号楼一层商铺18-101" },
+          // { "value": "贡茶", "doctorCode": "上海市长宁区金钟路633号" },
+          // { "value": "豪大大香鸡排超级奶爸", "doctorCode": "上海市嘉定区曹安公路曹安路1685号" },
+          // { "value": "茶芝兰（奶茶，手抓饼）", "doctorCode": "上海市普陀区同普路1435号" },
+          // { "value": "十二泷町", "doctorCode": "上海市北翟路1444弄81号B幢-107" },
+          // { "value": "星移浓缩咖啡", "doctorCode": "上海市嘉定区新郁路817号" },
+          // { "value": "阿姨奶茶/豪大大", "doctorCode": "嘉定区曹安路1611号" },
+          // { "value": "新麦甜四季甜品炸鸡", "doctorCode": "嘉定区曹安公路2383弄55号" },
+          // { "value": "Monica摩托主题咖啡店", "doctorCode": "嘉定区江桥镇曹安公路2409号1F，2383弄62号1F" },
+          // { "value": "浮生若茶（凌空soho店）", "doctorCode": "上海长宁区金钟路968号9号楼地下一层" },
+          // { "value": "NONO JUICE  鲜榨果汁", "doctorCode": "上海市长宁区天山西路119号" },
+          // { "value": "CoCo都可(北新泾店）", "doctorCode": "上海市长宁区仙霞西路" },
+          // { "value": "快乐柠檬（神州智慧店）", "doctorCode": "上海市长宁区天山西路567号1层R117号店铺" },
+          // { "value": "Merci Paul cafe", "doctorCode": "上海市普陀区光复西路丹巴路28弄6号楼819" },
       ],
       addData: {
         //新增时，收集信息
@@ -463,6 +464,7 @@ export default {
           phone: "", //电话
           account: "", //账号
           psd: "", //密码
+          doctorNo:"",
           department: {
             //科室
             select: '', //选中 科室
@@ -567,7 +569,7 @@ export default {
         orgCode: this.userSelfInfo.orgCode,
       });
       if (res.data && res.data.errCode === 0){
-        // console.log(res);
+        console.warn(res);
         this.newAppend = res.data.body.map(item=>{
           item.value = item.doctorName;
           return item;
@@ -583,6 +585,7 @@ export default {
      * 新增 需求 边输入边筛选
      */
     querySearch(queryString,cb){
+      console.log(queryString)
         // 调用 callback 返回建议列表的数据
         cb(queryString ? this.newAppend.filter(item=>item.value.indexOf(queryString) !== -1) : this.newAppend);
         // cb(queryString ? this.newAppend.filter(item=>item.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1) : this.newAppend);
@@ -591,7 +594,8 @@ export default {
      * 新增需求  选中
      */
     handleSelect(item){
-      // console.log(item)
+      console.log(item);
+      this.ourStafAlert.data.doctorNo = item.doctorCode
     },
     /**
      * 删除 用户
@@ -1157,6 +1161,7 @@ export default {
         { token: this.userInfo.token },
         {
           userId: this.ourStafAlert.data.userId,
+          doctorNo:this.ourStafAlert.data.doctorNo,
           name: this.ourStafAlert.data.name,
           passwd: this.ourStafAlert.data.psd,
           phone: this.ourStafAlert.data.phone,
@@ -1178,7 +1183,7 @@ export default {
           ]
         }
       ];
-      // console.log(postData[1].authorizes);
+      // console.log(postData[1]);
       // return;
       const res = await updateUser(...postData);
       // console.log(res);
@@ -1203,7 +1208,8 @@ export default {
      */
     async addSub() {
       const postData = {
-        account: this.ourStafAlert.data.account,
+        account: this.ourStafAlert.data.account, 
+        doctorNo:this.ourStafAlert.data.doctorNo,
         name: this.ourStafAlert.data.name,
         passwd: this.ourStafAlert.data.psd,
         phone: this.ourStafAlert.data.phone,
@@ -1226,7 +1232,7 @@ export default {
           })
         ]
       };
-      console.log(postData.authorizes);
+      // console.log(postData);
       // return;
       const postQuery = { token: this.userInfo.token };
       const res = await createUser(postQuery, postData);
@@ -1397,7 +1403,7 @@ export default {
     search,
     tableNoMore
   },
-  async created() {
+  created() {
     this.getDepartmentList();
     this.fetchDoctorSubSystems();
     this.hospitalDepartmentManagementSubsystemList();
@@ -1640,7 +1646,7 @@ export default {
   align-items: center;
 }
 .has-border {
-  border: 2px dashed #d8dfe5;
+  border-left: 2px dashed #d8dfe5;
   border-radius: 5px;
 }
 .check-div-item .el-checkbox {
