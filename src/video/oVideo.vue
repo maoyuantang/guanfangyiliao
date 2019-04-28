@@ -122,7 +122,7 @@
         </div>
         <!--查看档案-->
         <div v-if="archivesVisible">
-            <el-dialog title="查看档案" :visible.sync="archivesVisible" width="380px" center append-to-body fullscreen='true'>
+            <el-dialog title="查看档案" :visible.sync="archivesVisible" width="380px" center append-to-body fullscreen>
                 <archives v-if="archivesVisible" :inData='archivesIdVisable'></archives>
             </el-dialog>
         </div>

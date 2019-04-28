@@ -127,7 +127,7 @@ export default {
                     code: "100000"
                 },
                 {
-                    name: "家医系统",
+                    name: "健康档案系统",
                     select: false,
                     path: "/familyMedicine",
                     code: "110000"

@@ -89,7 +89,7 @@
              */
             see(item){
                 // console.log(item)
-                this.alertData.src = `${apiBaseURL.developmentEnvironment}/v1/peachApp/diseaseAssess.html?id=${item.planId}&token=${this.userInfo.token}`;
+                this.alertData.src = `${apiBaseURL.developmentEnvironment}/v1/peachApp/diseaseAssessAn.html?id=${item.planId}&token=${this.userInfo.token}`;
                 this.alertData.show = true;
             },
             /**
