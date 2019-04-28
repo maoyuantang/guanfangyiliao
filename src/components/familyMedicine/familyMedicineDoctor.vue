@@ -593,9 +593,11 @@
                 if(item.index === 1){
                     const now = new Date();//今天
                     const tomorrow = new Date(now.getTime() + 24*60*60*1000);//明天
+                    let oMonth=now.getMonth()+1
+                    let oMonth1=tomorrow.getMonth()+1
                     this.queryConditions.time = [
-                        `${now.getFullYear()}-${now.getMonth()>9?now.getMonth()+1:'0'+(now.getMonth()+1)}-${now.getDate()>10?now.getDate():'0'+now.getDate()}`,
-                        `${tomorrow.getFullYear()}-${tomorrow.getMonth()>9?tomorrow.getMonth()+1:'0'+(tomorrow.getMonth()+1)}-${tomorrow.getDate()>10?tomorrow.getDate():'0'+tomorrow.getDate()}`
+                        `${now.getFullYear()}-${oMonth>9?now.getMonth():'0'+oMonth}-${now.getDate()>10?now.getDate():'0'+now.getDate()}`,
+                        `${tomorrow.getFullYear()}-${oMonth1>9?oMonth1:'0'+oMonth1}-${tomorrow.getDate()>10?tomorrow.getDate():'0'+tomorrow.getDate()}`
                     ];
                 }else{
                     this.queryConditions.time = [];

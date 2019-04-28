@@ -494,6 +494,7 @@ export default {
         //病历
         goToDangan(row) {
             this.$router.push({
+                
                 path: "/docDetailed",
                 query: {
                     id: row.userId
