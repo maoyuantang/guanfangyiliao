@@ -39,7 +39,7 @@
                         <ul>
                             <li v-for="(text,index) in followPlanData.planItemResults" :key="index">
                                 <div class="addFollowM-bot" style="display:flex">
-                                    <el-form-item class="addFollowM-bot" label="距离首次治疗">
+                                    <el-form-item class="addFollowM-bot firstDoctorTime" label="距离首次治疗">
                                         <div class="DistanceFirst">
                                             <el-form-item label=" ">
                                                 <el-select v-model="text.calcVal" placeholder=" ">
@@ -70,7 +70,7 @@
                                         </div>
                                     </li>
                                 </ul>
-                                <div class="addFollowBtn" v-show="addFollowBtnVis">
+                                <!-- <div class="addFollowBtn" v-show="addFollowBtnVis"> -->
                                     <!-- <div @click="addQuest(index)">
                                     <span class="questDelete"><img src="../assets/img/addFollowJa2.png" /></span> 问诊表/健康知识
                                 </div> -->
@@ -81,7 +81,7 @@
                                         <span class="questDelete"> <img src="../assets/img/addFollowDelete.png" /> </span>
                                         此项</span>
                                 </div> -->
-                                </div>
+                                <!-- </div> -->
 
                             </li>
                         </ul>

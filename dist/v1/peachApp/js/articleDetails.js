@@ -217,8 +217,8 @@ function  appQueryCommentList() {
             },
             data:{
                 "articleId":id,
-                "count":p-1,          //已查询过了多少条
-                "pageSize":max       //默认每页加载10条，可自定义
+                //"count":p-1,         已查询过了多少条
+                // "pageSize":max       默认每页加载10条，可自定义
             },
             success: function (data) {
                 $.hideLoading();
@@ -234,7 +234,7 @@ function  appQueryCommentList() {
                         for (var i=0;i<data.body.length;i++){
 
                             var userId=data.body[i].userId;
-                            var img="/user/api/v2/public/download?downType=Head&secId=" + estxt + "&userId=" + userId + "&layer=00&deType=HD"
+                            var img="/m/v1/api/user/user/avatar/"+userId+"?token="+token+"&width=80&height=80"
                             pahtml+='<div class="weui-row weui-back-fff">'
                                 +'<div class="weui-col-30">'
                                 +'<div class="weui-media-box__hd">'

@@ -213,6 +213,7 @@ export default {
                         _this.msgId =
                             _this.$store.state.socket.messageTicket.oMsgId;
                         _this.getNoticeList();
+                        alert('ddd')
                     }
                 });
             }

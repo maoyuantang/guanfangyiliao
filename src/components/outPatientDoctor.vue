@@ -682,11 +682,13 @@ export default {
             //谭莹变量
             chatTypeBox: {
                 startDoctorName: "",
-                startDoctorTYpe: "门诊"
+                startDoctorTYpe: "门诊",
+                
             },
             chatTypeBox1: {
                 startDoctorName: "",
                 startDoctorTYpe: "患者",
+                startDoctorTYpe1:'处方',
                 bingUserId: ""
             },
             VideoshowClose: false,

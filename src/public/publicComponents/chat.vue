@@ -128,7 +128,7 @@
             <span v-show="oDoctorVis" @click="addRemarks()" title="添加备注">
                 <img src="../../assets/img/sendNew6.png" />
             </span>
-            <span v-show="oDoctorVis && (chatTypeBox.startDoctorTYpe=='门诊' || chatTypeBox.startDoctorTYpe=='患者') " title="药品处方" @click="addDrugs()">
+            <span v-show="oDoctorVis && chatTypeBox.startDoctorTYpe1=='处方' " title="药品处方" @click="addDrugs()">
                 <!-- <span v-show=''>
                      <img src="../../assets/img/sendNew8.png" />
                 </span> -->
