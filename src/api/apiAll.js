@@ -87,6 +87,8 @@ export const fetchDoctorSubSystems = query => {//3.2.1.首页-医院医生业务
         method: 'get',
         url: apiList.fetchDoctorSubSystems,
         params: query,
+        url: apiList.fetchDoctorSubSystems,
+        params: query,
     })
 }
 export const createUser = (query, data) => {//3.3首页-账号及权限-创建用户
@@ -2133,6 +2135,19 @@ export const addBusiness = (query, data) => {//17.4新增业务
         }
     })
 }
+export const addSynergy = (query, data) => {//17.4新增业务
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.addSynergy,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+
 export const stencilModel = query => { //17.2传入模版名获取模版
     const sign = postQueryHandle(query);
     return axios({
