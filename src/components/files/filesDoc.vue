@@ -54,7 +54,7 @@
         </table>
         <tableNoMore v-if="userList.length <= 0"></tableNoMore>
       </div>
-      <table class="files-doc-table files-doc-table-spe" :class="isEnd?null:'has-border'">
+      <table class="files-doc-table files-doc-table-spe files-doc-table" :class="isEnd?null:'has-border'">
           <thead class="files-doc--thead">
             <tr>
               <th><span class="spe-no-show">''</span></th>
@@ -798,7 +798,7 @@ export default {
   flex: 1;
 }
 .files-doc-table {
-  /* width: 100%; */
+  width: 100%; 
   min-width: 13rem;
 }
 .files-doc-table th {
@@ -916,6 +916,7 @@ line-height: 0.22rem;
   position: relative;
 }
 .files-doc-table-spe{
+  width:auto;
   border-left: 1px solid #E5EDF3;
   box-sizing: border-box;
   position: absolute;

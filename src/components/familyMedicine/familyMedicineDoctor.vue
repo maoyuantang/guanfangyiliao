@@ -758,8 +758,8 @@
         position: relative;
     }
     .family-medicine-doctor-body table{
-        /* width: 100%; */
-        min-width: 16rem;
+        width: 100%; 
+        min-width: 10rem;
     }
     .family-medicine-doctor-body tr{
         border-bottom: 1px solid #E5EDF3;

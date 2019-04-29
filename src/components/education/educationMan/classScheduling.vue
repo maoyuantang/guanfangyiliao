@@ -792,8 +792,8 @@
         display: inline-block;
     }
     .class-scheduling-table{
-        /* width: 100%; */
-        min-width: 13rem;
+        width: 100%; 
+        min-width: 10rem;
     }
     .class-scheduling-table tr{
         border-bottom: 1px solid #E5EDF3;
@@ -932,6 +932,7 @@
         position: relative;
     }
     .class-scheduling-table-spe{
+        width:auto;
         border-left: 1px solid #E5EDF3;
         box-sizing: border-box;
         position: absolute;
