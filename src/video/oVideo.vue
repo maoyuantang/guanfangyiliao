@@ -34,9 +34,9 @@
                                 </div>
                                 <div>
 
-                                    <div v-if="screenClickVisable" @click="screenClick()">
+                                    <!-- <div v-if="screenClickVisable" @click="screenClick()">
                                         <a href='../../static/Manis-Meetings-Chrome-Extension_v0.0.9.crx'>屏幕分享</a>
-                                    </div>
+                                    </div> -->
                                     <div @click="openPatientNum()" v-show="listVisable">列表</div>
                                 </div>
                             </div>

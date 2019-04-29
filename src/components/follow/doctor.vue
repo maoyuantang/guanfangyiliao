@@ -268,7 +268,7 @@
                     <el-form-item label="">
                         <el-select v-model="addArticleData.articleType" placeholder="请选择活动区域">
 
-                            <el-option v-for="(text1,index) in oTab144 " :label="text1.text" :value="text1.value" :key="index">
+                            <el-option v-if='index!=0' v-for="(text1,index) in oTab14.list " :label="text1.text" :value="text1.value" :key="index">
 
                             </el-option>
                         </el-select>
@@ -2596,12 +2596,12 @@ export default {
                 this.QuestTableVisible = true;
             } else if (this.oDocThis == 3) {
                 this.articleTableVisible = true;
-            
-                $.each(this.oTab14.list,function(index,text){
-                    if(index!=0){
-                        this.oTab144.push(text)
-                    }
-                })
+            this.screenPublic(this.oTab14, queryTypeList, "文章类型"); //随访类型
+            //     $.each(this.oTab14.list,(index,text)=>{
+            //         if(index!=0){
+            //             this.oTab144.push(text)
+            //         }
+            //     })
             }
         },
 
