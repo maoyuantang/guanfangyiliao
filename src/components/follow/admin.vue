@@ -39,7 +39,7 @@
                         <ul>
                             <li v-for="(text,index) in followPlanData.planItemResults" :key="index">
                                 <div class="addFollowM-bot" style="display:flex">
-                                    <el-form-item class="addFollowM-bot" label="距离首次治疗">
+                                    <el-form-item class="addFollowM-bot firstDoctorTime" label="距离首次治疗">
                                         <div class="DistanceFirst">
                                             <el-form-item label=" ">
                                                 <el-select v-model="text.calcVal" placeholder=" ">
