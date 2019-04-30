@@ -144,7 +144,10 @@
 			 * 获取成员列表
 			 */
 			async getUsersList() {
-				if (sessionStorage.getItem('showPatientList') === 'false') return;//新加功能(判断)
+				//新加功能(判断,当if为真，后面接口需要的家庭成员id路由上去拿，如果为假，则用柯兄给的（函数执行结果给的）)
+				if (sessionStorage.getItem('showPatientList') === 'false') return;
+				// 此处分两种情况，if判断是否是特殊路由进入
+				
 				let showPatientList = sessionStorage.getItem('showPatientList');   
 				console.log(showPatientList)
 				if(showPatientList === 'false'){//新需求，过滤一下
