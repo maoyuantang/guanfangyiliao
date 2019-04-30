@@ -367,6 +367,7 @@
 		justify-content: center;
 		align-items: center;
 		position: relative;
+		padding-bottom: .4rem;
 	}
 
 	.doc-detailed-nav-span {
