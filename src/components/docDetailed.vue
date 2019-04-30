@@ -124,11 +124,15 @@
 			 * 获取成员列表
 			 */
 			async getUsersList() {
+				if(!this.showPatientList){//新需求，过滤一下
+					this.topTag.list = [{id:this.$route.query.id}]
+					return
+				}
 				const res = await queryListByUserId({
 					token: this.userState.token,
 					userId: this.$route.query.id
 				});
-				// console.log(res);
+				console.log(res);
 				if (res.data && res.data.errCode === 0) {
 					this.topTag.list = res.data.body
 				} else {
