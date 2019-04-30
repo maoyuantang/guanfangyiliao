@@ -40,10 +40,17 @@
         <!-- 视频聊天 -->
         <div v-if="centerDialogVisible">
             <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
-                <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick" :doctorVis='doctorVis1' :userMessage="userMessage">
+                <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick" :doctorVis='doctorVis1' :userMessage="userMessage" :chatTypeBox="chatTypeBox">
                 </ovideo>
             </el-dialog>
         </div>
+
+        <!-- <div v-if="centerDialogVisible">
+            <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
+                <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick" :doctorVis='doctorVis' :userMessage="userMessage" :chatTypeBox="chatTypeBox">
+                </ovideo>
+            </el-dialog>
+        </div> -->
     </div>
 </template>
 <script>
@@ -67,6 +74,10 @@ export default {
     },
     data() {
         return {
+             chatTypeBox: {
+                startDoctorName: "",
+                startDoctorTYpe: "门诊"
+            },
             noticeList: [],
             msgId: 1,
             nodataVisable: false,

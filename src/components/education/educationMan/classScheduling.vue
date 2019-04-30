@@ -14,83 +14,101 @@
             </div>
         </div>
         <div class="class-scheduling-body">
-            <div class="class-scheduling-body-content">
-                <table class="class-scheduling-table">
+            <div class="class-scheduling-body-content-out">
+                <div class="class-scheduling-body-content" ref="schedulingScroll">
+                    <table class="class-scheduling-table">
+                        <thead class="class-scheduling-thead"> 
+                            <tr>
+                                <th>排课编号</th>
+                                <th>科室</th>
+                                <th>方式</th>
+                                <th>名称</th>
+                                <th>资源</th>
+                                <th>创建时间</th>
+                                <th>授课人</th>
+                                <th>授课时间</th>
+                                <th>听课</th>
+                                <th>状态</th>
+                                <!-- <th>最近修改</th> -->
+                                <th class="class-scheduling-table-th-spe"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="class-scheduling-tbody">
+                            <tr v-for="(item,index) in timetable" :key="index"> 
+                                <th>
+                                    <el-tooltip effect="light" :content="item.courseNumber" placement="top">
+                                        <div>{{item.courseNumber.length>7?`${item.courseNumber.substring(0,7)}...`:item.courseNumber}}</div>
+                                    </el-tooltip>
+                                </th>
+                                <th>
+                                    <el-tooltip effect="light" :content="item.department" placement="top">
+                                        <div>{{item.department.length>5?`${item.department.substring(0,5)}...`:item.department}}</div>
+                                    </el-tooltip>
+                                </th>
+                                <th>
+                                    <el-tooltip effect="light" :content="item.type" placement="top">
+                                        <div>{{item.type.length>5?`${item.type.substring(0,5)}...`:item.type}}</div>
+                                    </el-tooltip>
+                                </th>
+                                <th>
+                                    <el-tooltip effect="light" :content="item.name" placement="top">
+                                        <div>{{item.name.length>5?`${item.name.substring(0,5)}...`:item.name}}</div>
+                                    </el-tooltip>
+                                </th>
+                                <th>
+                                    <el-tooltip effect="light" :content="item.source" placement="top">
+                                        <div>{{item.source&&item.source.length>5?`${item.source.substring(0,5)}...`:item.source}}</div>
+                                    </el-tooltip>
+                                </th>
+                                <th>
+                                    <el-tooltip effect="light" :content="item.createTime" placement="top">
+                                        <div>{{item.createTime.length>5?`${item.createTime.substring(0,5)}...`:item.createTime}}</div>
+                                    </el-tooltip>
+                                </th>
+                                <th>
+                                    <el-tooltip effect="light" :content="item.teacher" placement="top">
+                                        <div>{{item.teacher.length>5?`${item.teacher.substring(0,5)}...`:item.teacher}}</div>
+                                    </el-tooltip>
+                                </th>
+                                <th>
+                                    <el-tooltip effect="light" :content="item.teachTime" placement="top">
+                                        <div>{{item.teachTime.length>5?`${item.teachTime.substring(0,5)}...`:item.teachTime}}</div>
+                                    </el-tooltip>
+                                </th>
+                                <th class="class-scheduling-tbody-spe">
+                                    <!-- <el-tooltip effect="light" :content="item.number.toString()" placement="top"> -->
+                                        <div>{{item.number}}</div>
+                                    <!-- </el-tooltip> -->
+                                </th>
+                                
+                                <th>{{item.state}}</th>
+                                <!-- <th>最近修改</th> -->
+                                <th>
+                                    <el-button type="success" size="mini" @click="aditPlan(item)" plain>编辑</el-button>
+                                    <el-button type="danger" size="mini" @click="cancelPlan(item)" plain>删除</el-button>
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <tableNoMore v-if="timetable.length<=0"></tableNoMore>
+                </div>
+                <table class="class-scheduling-table class-scheduling-table-spe" :class="isEnd?null:'has-border'">
                     <thead class="class-scheduling-thead"> 
                         <tr>
-                            <th>排课编号</th>
-                            <th>科室</th>
-                            <th>方式</th>
-                            <th>名称</th>
-                            <th>资源</th>
-                            <th>创建时间</th>
-                            <th>授课人</th>
-                            <th>授课时间</th>
-                            <th>听课</th>
-                            <th>状态</th>
-                            <!-- <th>最近修改</th> -->
-                            <th></th>
+                            <th><span class="not-show">''</span></th>
                         </tr>
                     </thead>
                     <tbody class="class-scheduling-tbody">
                         <tr v-for="(item,index) in timetable" :key="index"> 
-                            <th>
-                                <el-tooltip effect="light" :content="item.courseNumber" placement="top">
-                                    <div>{{item.courseNumber.length>7?`${item.courseNumber.substring(0,7)}...`:item.courseNumber}}</div>
-                                </el-tooltip>
-                            </th>
-                            <th>
-                                <el-tooltip effect="light" :content="item.department" placement="top">
-                                    <div>{{item.department.length>5?`${item.department.substring(0,5)}...`:item.department}}</div>
-                                </el-tooltip>
-                            </th>
-                            <th>
-                                <el-tooltip effect="light" :content="item.type" placement="top">
-                                    <div>{{item.type.length>5?`${item.type.substring(0,5)}...`:item.type}}</div>
-                                </el-tooltip>
-                            </th>
-                            <th>
-                                <el-tooltip effect="light" :content="item.name" placement="top">
-                                    <div>{{item.name.length>5?`${item.name.substring(0,5)}...`:item.name}}</div>
-                                </el-tooltip>
-                            </th>
-                            <th>
-                                 <el-tooltip effect="light" :content="item.source" placement="top">
-                                    <div>{{item.source&&item.source.length>5?`${item.source.substring(0,5)}...`:item.source}}</div>
-                                </el-tooltip>
-                            </th>
-                            <th>
-                                <el-tooltip effect="light" :content="item.createTime" placement="top">
-                                    <div>{{item.createTime.length>5?`${item.createTime.substring(0,5)}...`:item.createTime}}</div>
-                                </el-tooltip>
-                            </th>
-                            <th>
-                                <el-tooltip effect="light" :content="item.teacher" placement="top">
-                                    <div>{{item.teacher.length>5?`${item.teacher.substring(0,5)}...`:item.teacher}}</div>
-                                </el-tooltip>
-                            </th>
-                            <th>
-                                <el-tooltip effect="light" :content="item.teachTime" placement="top">
-                                    <div>{{item.teachTime.length>5?`${item.teachTime.substring(0,5)}...`:item.teachTime}}</div>
-                                </el-tooltip>
-                            </th>
-                            <th class="class-scheduling-tbody-spe">
-                                <!-- <el-tooltip effect="light" :content="item.number.toString()" placement="top"> -->
-                                    <div>{{item.number}}</div>
-                                <!-- </el-tooltip> -->
-                            </th>
-                            
-                            <th>{{item.state}}</th>
-                            <!-- <th>最近修改</th> -->
-                            <th>
+                            <th class="class-scheduling-table-th-spe">
                                 <el-button type="success" size="mini" @click="aditPlan(item)" plain>编辑</el-button>
                                 <el-button type="danger" size="mini" @click="cancelPlan(item)" plain>删除</el-button>
                             </th>
                         </tr>
                     </tbody>
                 </table>
-                <tableNoMore v-if="timetable.length<=0"></tableNoMore>
             </div>
+            
             <div class="class-scheduling-body-paging">
                 <el-pagination
                     background
@@ -250,6 +268,7 @@
 		},
 		data () {
 			return {
+                isEnd:false,
 				queryConditions:{//查询条件  
                     department:{//科室
                         title:'科室',//标题
@@ -332,6 +351,17 @@
             }),
 		},
 		methods:{
+            /**
+             * 
+             */
+            listenEleScroll(){
+                this.$nextTick(ev=>{
+                    this.isEnd = this.$refs.schedulingScroll.scrollLeft < (this.$refs.schedulingScroll.scrollWidth - this.$refs.schedulingScroll.offsetWidth);
+                    this.$refs.schedulingScroll.onscroll = ev =>{
+                        this.isEnd = this.$refs.schedulingScroll.scrollLeft < (this.$refs.schedulingScroll.scrollWidth - this.$refs.schedulingScroll.offsetWidth);
+                    }
+                })
+            },
             /**
              * 4.取消排课计划
              */
@@ -604,6 +634,10 @@
                 if(res.data && res.data.errCode === 0){
                     this.timetable = res.data.body.data2.list;
                     this.queryConditions.paging.total = res.data.body.data2.total;
+                    this.$nextTick(ev=>{//加个新功能 固定表格最后一列 wtf
+                        const allSpeCom = document.getElementsByClassName('class-scheduling-table-th-spe');
+                        allSpeCom[allSpeCom.length-1].style.width = allSpeCom[0].offsetWidth + 'px'
+                    });
                 }else{
                     this.$notify({
                         title: '失败',
@@ -732,11 +766,12 @@
             this.getArrangeList();
             this.getDoctorsByOrgCodeAndDeptId();
             this.getNewAddedDepartment();
+            this.listenEleScroll();
 		}
 	}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 	.class-scheduling{
 		
 	}
@@ -757,8 +792,8 @@
         display: inline-block;
     }
     .class-scheduling-table{
-        /* width: 100%; */
-        min-width: 17rem;
+        width: 100%; 
+        min-width: 10rem;
     }
     .class-scheduling-table tr{
         border-bottom: 1px solid #E5EDF3;
@@ -803,7 +838,7 @@
         margin-bottom: 0.18rem;
     }
     .class-scheduling-alert-item-inner-spe{
-        margin-left: 0.3rem-;
+        margin-left: 0.3rem;
     }
     .upload{
         position: relative;
@@ -889,6 +924,52 @@
         width:1.96rem;
     }
     .class-scheduling-body-content{
-        overflow-x: scroll;
+        
+        // overflow-x: scroll;
+        overflow-x: auto;
+    }
+    .class-scheduling-body-content-out{
+        position: relative;
+    }
+    .class-scheduling-table-spe{
+        width:auto;
+        border-left: 1px solid #E5EDF3;
+        box-sizing: border-box;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 1;
+        background: white;
+        min-width: auto;
+        thead {
+            tr{
+                // border-bottom: 1px solid #E5EDF3;
+                th{
+                    // padding-top: 0.1rem;
+                    // padding-bottom: 0.12rem;
+                    // font-size: 12px;
+                }
+            }
+            
+        }
+        tbody {
+            tr{
+                // border-bottom: 1px solid #E5EDF3;
+                th{
+                    // padding-top: 0.1rem;
+                    // padding-bottom: 0.12rem;
+                    // font-size: 12px;
+                }
+            }
+            
+        }
+    }
+    .not-show{
+        visibility: hidden;
+    }
+    .has-border{
+        // border-left: 1px solid #E5EDF3;
+        // box-sizing: border-box;
+        display: none;
     }
 </style>

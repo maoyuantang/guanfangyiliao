@@ -180,7 +180,7 @@
         </div>
         <!-- 随访计划详情 -->
         <div v-if="followPlanVisible">
-            <el-dialog class="evaluateBox addFollowBox addFollowBoxFollow" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
+            <el-dialog class=" addFollowBox addFollowBoxFollow" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
 
                 <el-form ref="form" :model="followPlanData" label-width="80px">
 
@@ -268,7 +268,7 @@
                     <el-form-item label="">
                         <el-select v-model="addArticleData.articleType" placeholder="请选择活动区域">
 
-                            <el-option v-for="(text1,index) in oTab144 " :label="text1.text" :value="text1.value" :key="index">
+                            <el-option v-if='index!=0' v-for="(text1,index) in oTab14.list " :label="text1.text" :value="text1.value" :key="index">
 
                             </el-option>
                         </el-select>
@@ -413,7 +413,7 @@
         </div>
         <div>
             <div v-if="followDetailVisible">
-                <el-dialog class="evaluateBox addFollowBox  addFollowBoxFollow" title=" " :visible.sync="followDetailVisible" width="602px" hight="356px" center>
+                <el-dialog class="addFollowBox  addFollowBoxFollow" title=" " :visible.sync="followDetailVisible" width="602px" hight="356px" center>
                     <followDetail :addFollowData="followDetailData"></followDetail>
                 </el-dialog>
             </div>
@@ -2596,12 +2596,12 @@ export default {
                 this.QuestTableVisible = true;
             } else if (this.oDocThis == 3) {
                 this.articleTableVisible = true;
-            
-                $.each(this.oTab14.list,function(index,text){
-                    if(index!=0){
-                        this.oTab144.push(text)
-                    }
-                })
+            this.screenPublic(this.oTab14, queryTypeList, "文章类型"); //随访类型
+            //     $.each(this.oTab14.list,(index,text)=>{
+            //         if(index!=0){
+            //             this.oTab144.push(text)
+            //         }
+            //     })
             }
         },
 

@@ -350,6 +350,7 @@ export default {
 
     fetchByPatientInfoInfo: '/m/v1/api/basics/record/fetchByPatientInfoInfo',
     fetchByMedicalHistory: '/m/v1/api/basics/record/fetchByMedicalHistory',//协作病历
-    sponsorSynergy: '/m/v1/api/synergy/sponsorSynergy'
+    sponsorSynergy: '/m/v1/api/synergy/sponsorSynergy',
+    addSynergy:'/m/v1/api/synergy/add'
 }
 

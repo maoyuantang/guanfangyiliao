@@ -193,7 +193,7 @@
         }
         return items;
     };
-    // var id=getParam('id');
+    var memberId=getParam('memberId');
     var token=getParam('token');
     console.log(token)
     //第一个echart图
@@ -209,8 +209,7 @@
             "Content-Type"  :"application/json",
         },
         data:{
-            "count":0,
-            "pageSize":20
+            "memberId":memberId
         },
         success:function (data) {
             if(data.errCode==0) {
@@ -244,7 +243,7 @@
                 }
 
             }else{
-                layer.msg(data.msg)
+                layer.msg(data.errMsg)
             }
 
         },

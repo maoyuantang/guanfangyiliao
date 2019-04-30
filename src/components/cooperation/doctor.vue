@@ -36,7 +36,7 @@
                     </el-table-column>
                     <el-table-column fixed="right" label="操作" width="300">
                         <template slot-scope="scope">
-                            <el-button class="seeDanganClass" @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
+                            <el-button class="seeDanganClass" v-if='scope.row.patientId' @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
                             <el-button class="inviteUserClass" v-show="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
                             <el-button class="seeHistoryMessage" v-show="scope.row.synergyStatus==2" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
                             <el-button class="goTohuizhen" v-show="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="toConsultation(scope.row)" type="text" size="small">进入协作</el-button>
@@ -143,7 +143,9 @@ import {
     fetchHistoryMessage,
     synergyChangeStatus,
     fetchByMedicalHistory ,
-    fetchByPatientInfoInfo
+    fetchByPatientInfoInfo,
+    sponsorSynergy,
+    addSynergy
 } from "../../api/apiAll.js";
 import { mapState } from "vuex";
 import echarts from "../../plugs/echarts.js";
@@ -205,7 +207,9 @@ export default {
                 id: "",
                 intention: "",
                 recordId: "",
-                receiverId: []
+                receiverId: [],
+                medicalHistoryRels:[],
+                patientId:''
             },
             adminLists: [],
             adminPageNum: 1,
@@ -494,9 +498,10 @@ export default {
         //病历
         goToDangan(row) {
             this.$router.push({
+                
                 path: "/docDetailed",
                 query: {
-                    id: row.userId
+                    id: row.patientId
                 }
             });
         },
@@ -552,6 +557,14 @@ export default {
             }, 500);
         },
         initiateCollaboration() {
+             this.startXiezuo= {
+                id: "",
+                intention: "",
+                recordId: "",
+                receiverId: [],
+                medicalHistoryRels:[],
+                patientId:''
+            },
             this.centerDialogVisible = true;
             this.Invitation1();
             this.getHospitalment1()
@@ -673,7 +686,7 @@ export default {
                 synergyId: this.xiezuoId,
                 receiverId: this.invitationSelectList
             };
-            const res = await sendSynergy(query, options);
+            const res = await sponsorSynergy(query, options);
             if (res.data && res.data.errCode === 0) {
                 this.$notify.success({
                     title: "成功",
@@ -702,7 +715,7 @@ export default {
                 text.medicalHistoryId = text.visitNo;
             });
             let options = this.startXiezuo;
-            const res = await sendSynergy(query, options);
+            const res = await addSynergy(query, options);
             if (res.data && res.data.errCode === 0) {
                 this.$notify.success({
                     title: "成功",

@@ -14,7 +14,7 @@ import postQueryHandle from './../public/publicJs/postQueryHandle.js'
 export const getLoginCode = query => axios({//获取登录验证码
     method: 'get',
     url: apiList.getLoginCode,
-    params: query
+    params: query,
 })
 export const login = data => axios({//登录
     method: 'post',
@@ -85,6 +85,8 @@ export const fetchHospitalDepts = query => {//2.2.获取医院科室列表
 export const fetchDoctorSubSystems = query => {//3.2.1.首页-医院医生业务子系统列表（新）
     return axios({
         method: 'get',
+        url: apiList.fetchDoctorSubSystems,
+        params: query,
         url: apiList.fetchDoctorSubSystems,
         params: query,
     })
@@ -2133,6 +2135,19 @@ export const addBusiness = (query, data) => {//17.4新增业务
         }
     })
 }
+export const addSynergy = (query, data) => {//17.4新增业务
+    const sign = postQueryHandle(Object.assign({}, data, query));
+    return axios({
+        method: 'post',
+        url: apiList.addSynergy,
+        params: query,
+        data: data,
+        headers: {
+            sign
+        }
+    })
+}
+
 export const stencilModel = query => { //17.2传入模版名获取模版
     const sign = postQueryHandle(query);
     return axios({

@@ -190,13 +190,14 @@
         }
         return items;
     };
-    var id=getParam('id');
+    var userId=getParam('userId');
     var token=getParam('token');
+    var memberId=getParam('memberId');
     console.log(token)
     //第一个echart图
     $.ajax({
         type:"get",
-        url:"/m/v1/api/device/house/queryDevicesList?token="+token,//获取设备型档案数据
+        url:"/m/v1/api/device/house/appDocGetDeviceList?token="+token,//获取设备型档案数据
         dataType:"json",
         beforeSend: function(xhr) {
             xhr.setRequestHeader("Content-Type", 'application/json;charset=UTF-8');
@@ -206,7 +207,8 @@
             "Content-Type"  :"application/json",
         },
         data:{
-            "id":id,
+            "userId":userId,
+            "memberId":memberId
         },
         success:function (data) {
             if(data.errCode==0) {
@@ -228,7 +230,7 @@
                 }
 
             }else{
-                layer.msg(data.msg)
+                layer.msg(data.errMsg)
             }
 
         },

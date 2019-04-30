@@ -97,13 +97,14 @@ export default {
             _this.noticeList = "";
             const res = await fetchNoticeInfo(query);
             if (res.data && res.data.errCode === 0) {
-                $.each(res.data.body, function(index, text) {
-                    if (res.data.body.length < 1) {
-                        _this.noticeList += text.noticeData.body;
-                    } else {
-                        _this.noticeList += text.noticeData.body + "--";
-                    }
-                });
+                _this.noticeList=res.data.body[0].noticeData.body
+                // $.each(res.data.body, function(index, text) {
+                //     if (res.data.body.length < 1) {
+                //         _this.noticeList += text.noticeData.body;
+                //     } else {
+                //         _this.noticeList += text.noticeData.body + "--";
+                //     }
+                // });
             } else {
                 //失败
                 this.$notify.error({
@@ -212,6 +213,7 @@ export default {
                         _this.msgId =
                             _this.$store.state.socket.messageTicket.oMsgId;
                         _this.getNoticeList();
+                        alert('ddd')
                     }
                 });
             }

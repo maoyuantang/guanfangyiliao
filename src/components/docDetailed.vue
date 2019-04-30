@@ -11,9 +11,18 @@
 		<!-- 内容 -->
 		<div class="doc-detailed-alert">
 			<div class="doc-detailed-alert-content">
+<<<<<<< HEAD
 
 
 				<!-- content -->
+=======
+				<div class="doc-detailed-tag" v-if="showPatientList">
+					<span v-for="(item,index) in topTag.list" :key="index" class="doc-detailed-tag-span"
+						:class="topTag.index === index ? 'doc-detailed-tag-span-select' : null " @click="selectTag(index)">
+						{{item.name}}
+					</span>
+				</div>
+>>>>>>> 1baece4ddcd8b78f64fc879704b1b2b63d8b6afa
 				<div class="doc-detailed-nav">
 					<!-- 病人 -->
 					<div class="doc-detailed-tag">
@@ -73,9 +82,13 @@
 		props: ['inData'],
 		data() {
 			return {
+<<<<<<< HEAD
 
 
 
+=======
+				showPatientList:true,
+>>>>>>> 1baece4ddcd8b78f64fc879704b1b2b63d8b6afa
 				reLoad: true,
 				topTag: {//顶部tag数据
 					index: 0,//选中
@@ -202,6 +215,7 @@
 		 * 但是由于是后加入的  没有code
 		 * 将前一个页面的code当做这个页面的code
 		 */
+<<<<<<< HEAD
 		beforeRouteEnter(to, from, next) {													//等待
 			// const routerMap = [
 			//     {
@@ -290,13 +304,28 @@
 			// }catch(e){
 			//     console.log(e);
 			// }
+=======
+		beforeRouteEnter(to, from, next) {
+>>>>>>> 1baece4ddcd8b78f64fc879704b1b2b63d8b6afa
 			sessionStorage.setItem('page', JSON.stringify({//存缓存
 				name: '冠方医疗-查看档案',//手动添加
 				select: true,
 				path: '/docDetailed',
 				code: '000001'
 			}));
-			next();
+			next(vm=>{
+				if(['/consultation', '/cooperation', '/referral', ].find(item => item === from.path)){
+					// console.log('special') 
+					vm.showPatientList = false;
+					vm.nav.list = [
+						{ laber: '电子病历', page: 'record' },
+						{ laber: '院内档案', page: 'inSide' },
+						// { laber: '院外档案', page: 'outSide' },
+					];
+				}else{
+					 console.log('not special') // '/files'
+				}
+			});
 		},
 	};
 </script>
@@ -490,3 +519,87 @@
 		color: #646464;
 	}
 </style>
+<!-- 
+			//[
+			//     {
+			//         name:'冠方医疗-首页',  
+			//         select:true,
+			//         path:'/',
+			//         code:0
+			//     },
+			//     {
+			//         name:'冠方医疗-远程门诊系统',
+			//         select:false,
+			//         path:'/outpatient',
+			//         code:'10000'
+			//     },
+			//     {
+			//         name:'冠方医疗-远程会诊系统',
+			//         select:false,
+			//         path:'/consultation',
+			//         code:'20000'
+			//     },
+			//     {
+			//         name:'冠方医疗-远程协作系统',
+			//         select:false,
+			//         path:'/cooperation',
+			//         code:'30000'
+			//     },
+			//     {
+			//         name:'冠方医疗-智能随访系统',
+			//         select:false,
+			//         path:'/followUp',
+			//         code:'40000'
+			//     },
+			//     {
+			//         name:'冠方医疗-健康档案系统',
+			//         select:false,
+			//         path:'/files',
+			//         code:'50000'
+			//     },
+			//     {
+			//         name:'冠方医疗-远程教育系统',
+			//         select:false,
+			//         path:'/education',
+			//         code:'60000'
+			//     },
+			//         {
+			//         name:'冠方医疗-分级诊疗系统',
+			//         select:false,
+			//         path:'/medicalTreatment',
+			//         code:'70000'
+			//     },
+			//         {
+			//         name:'冠方医疗-双向转诊系统',
+			//         select:false,
+			//         path:'/referral',
+			//         code:'80000'
+			//     },
+			//         {
+			//         name:'冠方医疗-移动查房系统',
+			//         select:false,
+			//         path:'/rounds',
+			//         code:'90000'
+			//     },
+			//         {
+			//         name:'冠方医疗-终端管理系统',
+			//         select:false,
+			//         path:'/management',
+			//         code:'100000'
+			//     },
+			//     {
+			//         name:'冠方医疗-家医服务',
+			//         select:false,
+			//         path:'/familyMedicine',   
+			//         code:'110000'
+			//     },
+			//     {
+			//         name:'冠方医疗-查看档案',//手动添加
+			//         select:false,
+			//         path:'/docDetailed',   
+			//         code:'000001'
+			//     },
+			// ];
+
+ -->
+

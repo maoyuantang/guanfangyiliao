@@ -18,7 +18,7 @@
 
         <!-- 随访计划详情 -->
         <div v-if="followPlanVisible">
-            <el-dialog class="evaluateBox addFollowBox" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
+            <el-dialog class="addFollowBox addFollowBoxFollow" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
 
                 <el-form ref="form" :model="followPlanData" label-width="80px">
 
@@ -33,13 +33,13 @@
                     </el-form-item>
                     <div class="addFollowMain">
                         <el-form-item class="addFollowM-bot" label="首次治疗">
-                            <el-date-picker class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
+                            <el-date-picker v-model='followPlanData.firstTreatmentTime' class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
                             </el-date-picker>
                         </el-form-item>
                         <ul>
                             <li v-for="(text,index) in followPlanData.planItemResults" :key="index">
                                 <div class="addFollowM-bot" style="display:flex">
-                                    <el-form-item class="addFollowM-bot" label="距离首次治疗">
+                                    <el-form-item class="addFollowM-bot firstDoctorTime" label="距离首次治疗">
                                         <div class="DistanceFirst">
                                             <el-form-item label=" ">
                                                 <el-select v-model="text.calcVal" placeholder=" ">
@@ -70,7 +70,7 @@
                                         </div>
                                     </li>
                                 </ul>
-                                <div class="addFollowBtn" v-show="addFollowBtnVis">
+                                <!-- <div class="addFollowBtn" v-show="addFollowBtnVis"> -->
                                     <!-- <div @click="addQuest(index)">
                                     <span class="questDelete"><img src="../assets/img/addFollowJa2.png" /></span> 问诊表/健康知识
                                 </div> -->
@@ -81,7 +81,7 @@
                                         <span class="questDelete"> <img src="../assets/img/addFollowDelete.png" /> </span>
                                         此项</span>
                                 </div> -->
-                                </div>
+                                <!-- </div> -->
 
                             </li>
                         </ul>

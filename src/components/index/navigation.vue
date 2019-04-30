@@ -46,9 +46,7 @@ import { parse } from 'protobufjs';
 						return;
 					}
 					if(this.viewRoot[this.viewRoot.now.name].find(item=>item.code===rePage.code)){
-						this.navList = this.navList.map(i=>{
-							i.select = i.code===rePage.code
-						});
+						this.navList = this.navList.map(i=>i.select = i.code===rePage.code);
 						this.$router.push({path:rePage.path});
 					}
 				}
@@ -135,7 +133,7 @@ import { parse } from 'protobufjs';
 						code:'100000'
 					},
 					{
-						name:'家医服务',
+						name:'家医服务系统',
 						select:false,
 						path:'/familyMedicine',   
 						code:'110000'

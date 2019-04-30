@@ -8,6 +8,10 @@
                     <el-input class="addFollowTitle"  v-model="addFollowData.title" placeholder="请输入随访标题"></el-input>
                 </el-form-item>
                 <div class="addFollowMain addFollowMain1">
+                     <el-form-item class="addFollowM-bot" label="首次治疗">
+                            <el-date-picker v-model='addFollowData.firstTreatmentTime' class="oTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
+                            </el-date-picker>
+                        </el-form-item>
                     <ul>
                         <li v-for="(text,index) in addFollowData.planItemResults" :key="index">
                             <div class="addFollowM-bot" style="display:flex">

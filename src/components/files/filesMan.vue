@@ -169,11 +169,11 @@ export default {
             zh: "档案查询和推送",
             page:'queryPush'
           },
-          {
-            en: "Health records",
-            zh: "健康档案",
-            page:'doc'
-          },
+          // {
+          //   en: "Health records",
+          //   zh: "健康档案",
+          //   page:'doc'
+          // },
           {
             en: "STATISTICS",
             zh: "统计",
