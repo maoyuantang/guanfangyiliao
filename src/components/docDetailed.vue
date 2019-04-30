@@ -11,18 +11,9 @@
 		<!-- 内容 -->
 		<div class="doc-detailed-alert">
 			<div class="doc-detailed-alert-content">
-<<<<<<< HEAD
 
 
 				<!-- content -->
-=======
-				<div class="doc-detailed-tag" v-if="showPatientList">
-					<span v-for="(item,index) in topTag.list" :key="index" class="doc-detailed-tag-span"
-						:class="topTag.index === index ? 'doc-detailed-tag-span-select' : null " @click="selectTag(index)">
-						{{item.name}}
-					</span>
-				</div>
->>>>>>> 1baece4ddcd8b78f64fc879704b1b2b63d8b6afa
 				<div class="doc-detailed-nav">
 					<!-- 病人 -->
 					<div class="doc-detailed-tag">
@@ -211,7 +202,6 @@
 		 * 但是由于是后加入的  没有code
 		 * 将前一个页面的code当做这个页面的code
 		 */
-<<<<<<< HEAD
 		beforeRouteEnter(to, from, next) {													//等待
 			// const routerMap = [
 			//     {
@@ -300,9 +290,6 @@
 			// }catch(e){
 			//     console.log(e);
 			// }
-=======
-		beforeRouteEnter(to, from, next) {
->>>>>>> 1baece4ddcd8b78f64fc879704b1b2b63d8b6afa
 			sessionStorage.setItem('page', JSON.stringify({//存缓存
 				name: '冠方医疗-查看档案',//手动添加
 				select: true,
