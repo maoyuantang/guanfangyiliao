@@ -1,41 +1,40 @@
 <!-- 所有项目 -->
 <template>
 	<div>
-		<!-- 所有项目
-        <p>{{inData}}</p> -->
+		<p>{{inData}}</p>
 	</div>
 </template>
 
 <script>
 	export default {
-        props:[
-            "inData"
-        ],
-		components:{
-			
+		props: [
+			"inData"
+		],
+		components: {
+
 		},
-		watch:{
-			
+		watch: {
+
 		},
-		computed:{
-			
+		computed: {
+
 		},
-		
-		data () {
-			return {	
+
+		data() {
+			return {
 			}
 		},
-		
-		methods:{
-			
-			
+
+		methods: {
+
+
 		},
-		async created(){
-			
+		async created() {
+
 		}
 	}
 </script>
 
-<style >
-	
+<style>
+
 </style>
