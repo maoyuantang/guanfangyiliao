@@ -643,7 +643,7 @@ export default {
         //挂断当前视频
         async closeTheVideo() {
             console.log("挂断当前视频");
-            this.streamObject.getTracks()[0].stop();
+            // this.streamObject.getTracks()[0].stop();
             let _this = this;
             let query = {
                 token: this.userState.token

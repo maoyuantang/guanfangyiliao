@@ -213,7 +213,7 @@ export default {
                         _this.msgId =
                             _this.$store.state.socket.messageTicket.oMsgId;
                         _this.getNoticeList();
-                        alert('ddd')
+                        // alert('ddd')
                     }
                 });
             }
@@ -249,19 +249,19 @@ export default {
     //             sessionStorage.setItem("viewRoot", JSON.stringify(this.viewRoot));
     //     });
     // },
-    watch: {
-        "userSocketInfo.synchroMessage": {
-            handler(n, o) {
-                $("#noticeIconClass").removeClass("msg-icon");
-                let _this = this;
-                $.each(n.syncData, function(index, text) {
-                    if (text.command == "NOTICE") {
-                        $("#noticeIconClass").addClass("msg-icon");
-                    }
-                });
-            }
-        }
-    }
+    // watch: {
+    //     "userSocketInfo.synchroMessage": {
+    //         handler(n, o) {
+    //             $("#noticeIconClass").removeClass("msg-icon");
+    //             let _this = this;
+    //             $.each(n.syncData, function(index, text) {
+    //                 if (text.command == "NOTICE") {
+    //                     $("#noticeIconClass").addClass("msg-icon");
+    //                 }
+    //             });
+    //         }
+    //     }
+    // }
 };
 </script>
 
