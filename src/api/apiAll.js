@@ -3482,6 +3482,140 @@ export const eMRInRecord = query => { //3.根据电子病历ID获取首次入院
         }
     })
 }
+export const eMRInRecord4 = query => { //4
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRInRecord4,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMRInRecord6 = query => { //6
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRInRecord6,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMRInRecord7 = query => { //7
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRInRecord7,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMRInRecord8 = query => { //8
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRInRecord8,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMRInRecord9 = query => { //9
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRInRecord9,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMRInRecord10 = query => { //10
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRInRecord10,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMRInRecord11 = query => { //11
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRInRecord11,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMRInRecord12 = query => { //12
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRInRecord12,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMRInRecord13 = query => { //13
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRInRecord13,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMRInRecord14 = query => { //14
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRInRecord14,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMRInRecord15 = query => { //15
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRInRecord15,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const eMRInRecord16 = query => { //16
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.eMRInRecord16,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
+
 export const eMRFirstCourse = query => { //12.根据电子病历ID获取首次病程记录
     const sign = postQueryHandle(query);
     return axios({
