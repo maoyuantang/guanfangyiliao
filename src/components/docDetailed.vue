@@ -124,8 +124,13 @@
 			 * 获取成员列表
 			 */
 			async getUsersList() {
-				if(!this.showPatientList){//新需求，过滤一下
-					this.topTag.list = [{id:this.$route.query.id}]
+				let showPatientList = sessionStorage.getItem('showPatientList');
+				console.log(showPatientList === 'false')
+				if(showPatientList === 'false'){//新需求，过滤一下
+					console.warn('enter')
+					this.topTag.list = [{id:this.$route.query.id}];
+					this.topTag = Object.assign({},this.topTag)
+					console.log(this.topTag)
 					return
 				}
 				const res = await queryListByUserId({
@@ -160,8 +165,19 @@
 				this.nav.index = index;
 				// console.log(index)
 			},
+			/**
+			 * 坑爹的玩意
+			 */
+			getIfAjax(){
+				let showPatientList = sessionStorage.getItem('showPatientList')
+				if(showPatientList !== null){
+					this.showPatientList = Boolean(showPatientList);
+					console.log(showPatientList)
+				}
+			},
 		},
 		created() {
+			// this.getIfAjax();
 			this.getUsersList();
 			// this.getLastAssessPlan();
 		},
@@ -181,9 +197,10 @@
 				path: '/docDetailed',
 				code: '000001'
 			}));
+			sessionStorage.setItem('showPatientList',['/consultation', '/cooperation', '/referral', ].find(item => item === from.path)?'false':'true');
 			next(vm=>{
 				if(['/consultation', '/cooperation', '/referral', ].find(item => item === from.path)){
-					// console.log('special') 
+					console.log('special') 
 					vm.showPatientList = false;
 					vm.nav.list = [
 						{ laber: '电子病历', page: 'record' },
