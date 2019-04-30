@@ -212,6 +212,7 @@
              */
             async getPatientInfo(){
                 // console.log('enter')
+                if(sessionStorage.getItem('showPatientList') === 'false')return;//新加功能
                 const res = await getDoctorMessage1({
                     token:this.userInfo.token,
                     // orgCode:this.userSelfInfo.orgCode,

@@ -55,6 +55,7 @@
             </tbody>
           </table>
           <tableNoMore v-if="listData.length<=0"></tableNoMore>
+          </div>
           <div class="files-man-page">
             <el-pagination
               background
@@ -65,7 +66,6 @@
               v-if="listCondition.page.total!=0"
               :total="listCondition.page.total"
             ></el-pagination>
-          </div>
         </div>
     </div>
 </template>
