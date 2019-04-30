@@ -1,7 +1,5 @@
 <template>
 	<div class="doc-detailed">
-
-
 		<!-- 返回 -->
 		<div class="doc-detailed-button">
 			<el-button type="text" icon="el-icon-arrow-left" @click="reBack" class="doc-detailed-back" v-if="!inData">
@@ -43,7 +41,7 @@
 
 
 					<!-- 下面左中右 -->
-					<div :is="viewCurrent" :inData="topTag.list[topTag.index]" v-if="reLoad" :current="testData.select"></div>
+					<div :is="viewCurrent" :inData="topTag.list[topTag.index] || null" v-if="reLoad" :current="testData.select"></div>
 				</div>
 
 			</div>

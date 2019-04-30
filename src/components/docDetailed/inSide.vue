@@ -43,11 +43,9 @@
 			</div>
 			<!-- 右侧 -->
 			<div class="new-content-body-content" v-if='relode'>
-				<!-- {{showModules.list[showModules.index].code}} -->
-				<!-- {{showModules.list[showModules.index].data}} -->
-				<div :is="showModules.list[showModules.index]?showModules.list[showModules.index].code:''"
+				<!-- <div :is="showModules.list[showModules.index]?showModules.list[showModules.index].code:''"
 					:in-data="showModules.list[showModules.index]?showModules.list[showModules.index].data:{}">
-				</div>
+				</div> -->
 			</div>
 		</div>
 
@@ -55,7 +53,6 @@
 </template>
 
 <script>
-	import { mapState } from 'vuex'
 
 	import visitingRecord from './inSide/visitingRecord.vue'//就诊记录
 	import prescription from './inSide/prescription.vue'//处方
@@ -77,7 +74,8 @@
 	import men_zhenchufang5 from './inSide/men_zhenchufang5.vue'//综合影像
 	import men_zhenchufang6 from './inSide/men_zhenchufang6.vue'//综合影像
 
-	import { patientInfo } from '../../api/apiAll.js'
+	import { mapState } from 'vuex'
+	import { patientInfo, eMRInRecord4 } from '../../api/apiAll.js'
 	export default {
 		props: ['inData', 'current'],
 		components: {
@@ -355,8 +353,9 @@
 			},
 			// 开始请求
 
-			async getPatientInfo() {																		//1.获取患者信息	id
-				console.log(this.inData)
+			async getPatientInfo() {	
+				if(!this.inData)return																	//1.获取患者信息	id
+				console.log(this.inData + '-------------------------');
 				const res = await patientInfo({
 					token: this.userInfo.token,
 					orgCode: this.userSelfInfo.orgCode,
@@ -366,8 +365,9 @@
 				this.patients = res.data.body
 			},
 
-			async eMRInRecord4() {																			//4.就诊记录列表
-				console.log(this.inData)
+			async getEMRInRecord4() {	
+				if (!this.inData) return																			//4.就诊记录列表
+				console.log(this.inData + '-------------------------');
 				const res = await eMRInRecord4({
 					token: this.userInfo.token,
 					orgCode: this.userSelfInfo.orgCode,
@@ -460,23 +460,26 @@
 
 
 		},
+		mounted() {
+			console.log(this.inData + '-------------------------');
+			this.getPatientInfo();
+			this.getEMRInRecord4();//等待
+
+		},
 		async created() {
-			console.log('11111111');
+			console.log(this.getEMRInRecord4)
+			console.log(this.inData + '-------------------------');
 			if (this.current === '1') {
 				this.showModules.list = this.navList[0].childModule;
 			} else {
 				this.showModules.list = this.noLeftBottom;
 			}
-			this.eMRInRecord4();//等待
 			// console.log(this.inData);
 			// this.getPatientInfo();
 			// this.setView();
 		},
 		beforeMounted() {
-			console.log(this.inData);
-			this.getPatientInfo();
 			this.setView();
-
 		},
 	}
 </script>
