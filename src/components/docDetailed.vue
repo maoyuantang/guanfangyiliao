@@ -146,7 +146,7 @@
 					userId: this.$route.query.id
 				});
 				console.log(res);
-				console.log(res.data.body);
+				console.log(res.data.body);//null
 				if (res.data && res.data.errCode === 0) {
 					this.topTag.list = res.data.body
 				} else {

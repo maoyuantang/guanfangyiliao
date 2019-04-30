@@ -43,9 +43,9 @@
 			</div>
 			<!-- 右侧 -->
 			<div class="new-content-body-content" v-if='relode'>
-				<!-- <div :is="showModules.list[showModules.index]?showModules.list[showModules.index].code:''"
+				<div :is="showModules.list[showModules.index]?showModules.list[showModules.index].code:''"
 					:in-data="showModules.list[showModules.index]?showModules.list[showModules.index].data:{}">
-				</div> -->
+				</div>
 			</div>
 		</div>
 
@@ -354,7 +354,7 @@
 			// 开始请求
 
 			async getPatientInfo() {																		//1.获取患者信息	id
-				if(!this.inData)return
+				if (!this.inData) return
 				console.log(this.inData + '-------------------------');
 				const res = await patientInfo({
 					token: this.userInfo.token,
@@ -366,8 +366,8 @@
 			},
 
 			async getEMRInRecord4() {																				//4.就诊记录列表
-				if (!this.inData) return
 				console.log(this.inData + '-------------------------');
+				if (!this.inData) return
 				const res = await eMRInRecord4({
 					token: this.userInfo.token,
 					orgCode: this.userSelfInfo.orgCode,
