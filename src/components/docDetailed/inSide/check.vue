@@ -1,7 +1,7 @@
 <!-- 检验 -->
 <template>
     <div>
-        <!-- <div class="examination">
+        <div class="examination">
             <Timeline>
                 <TimelineItem v-for="(item,index) in 3" :key="index">
                     <p class="visiting-hospital">重庆市医科大学第三附属医院</p>
@@ -38,7 +38,7 @@
                     </div>
                 </TimelineItem>
             </Timeline>
-        </div> -->
+        </div>
 
         <el-dialog title=" " append-to-body :visible.sync="examinationDetails.show" :fullscreen="true"
             :before-close="examinationDetailsClose">

@@ -302,6 +302,19 @@ export default {
     patientInfo: '/m/v1/api/record/nosocomialRecord/patientInfo',//1.获取患者信息
     eMRList: '/m/v1/api/record/nosocomialRecord/eMRList',//2.电子病历列表
     eMRInRecord: '/m/v1/api/record/nosocomialRecord/eMRInRecord',//3.根据电子病历ID获取首次入院记录
+    
+    eMRInRecord4: '/m/v1/api/record/nosocomialRecord/visitList',//4.就诊记录列表
+    eMRInRecord6: '/m/v1/api/record/nosocomialRecord/recipeInfoById',//6.获取处方记录
+    eMRInRecord7: '/m/v1/api/record/nosocomialRecord/checkoutInfoById',//7.获取检验记录
+    eMRInRecord8: '/m/v1/api/record/nosocomialRecord/orderInfoById',//8.获取医嘱记录
+    eMRInRecord9: '/m/v1/api/record/nosocomialRecord/userAppRecord',//9.患者APP查看档案
+    eMRInRecord10: '/m/v1/api/record/nosocomialRecord/docAppRecord',//10.医生APP查看患者档案
+    eMRInRecord11: '/m/v1/api/record/nosocomialRecord/recordInfo',//11.获取处方单图片
+    eMRInRecord12: '/m/v1/api/record/nosocomialRecord/eMRFirstCourse',//12.根据电子病历ID获取首次病程记录
+    eMRInRecord13: '/m/v1/api/record/nosocomialRecord/eMREverydayCourse',//13.根据电子病历ID获取日常病程记录
+    eMRInRecord14: '/m/v1/api/record/nosocomialRecord/eMRLeaveHospital',//14.根据电子病历ID获取出院记录
+    eMRInRecord15: '/m/v1/api/record/nosocomialRecord/hospitalizedInfoById',//15.根据就诊ID获取入院记录
+    eMRInRecord16: '/m/v1/api/record/nosocomialRecord/screenageInfoById',//16.获取影像记录
     // 等待
 
 
