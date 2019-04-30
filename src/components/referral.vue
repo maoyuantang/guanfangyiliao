@@ -240,7 +240,7 @@
             <el-table-column fixed=right label="操作" min-width="460">
               <template slot-scope="scope">
                 <!-- <button class="huangSe" @click="seeHistory(scope.row.patientId)">查看档案</button> -->
-                <button class="huangSe" @click="dualReferralRecord3(scope.row)">查看档案</button>
+                <button class="huangSe" v-if='scope.row.patientId' @click="dualReferralRecord3(scope.row)">查看档案</button>
                 <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
                 <button
                   :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
@@ -1446,7 +1446,7 @@
         if (res.data && res.data.errCode === 0) {
           console.log('医生端-取消 (按钮)+成功')
           console.log(res)
-          this.getList1()
+          // this.getList1()
           this.DoctorList()
         } else {
           //失败
@@ -1469,7 +1469,7 @@
         if (res.data && res.data.errCode === 0) {
           console.log('医生端-接诊 (按钮)+成功')
           console.log(res)
-          this.getList1()
+          // this.getList1()
           this.DoctorList()
         } else {
           //失败
@@ -1493,7 +1493,7 @@
         if (res.data && res.data.errCode === 0) {
           console.log('医生端-接诊 (按钮)+成功')
           console.log(res)
-          this.getList1()
+          // this.getList1()
           this.DoctorList()
         } else {
           //失败
@@ -1517,7 +1517,7 @@
         if (res.data && res.data.errCode === 0) {
           console.log('医生端-出院 (按钮)+成功')
           console.log(res)
-          this.getList1()
+          // this.getList1()
           this.DoctorList()
         } else {
           //失败
@@ -1567,7 +1567,7 @@
           this.upOrDown().then(val => {
             this.diseaseNameId();
           });
-          this.getList1()
+          // this.getList1()
           this.DoctorList()
         } else {
           //失败

@@ -1,41 +1,45 @@
 <!-- 入院记录 -->
 <template>
 	<div>
-		入院记录
-        <p>{{inData}}</p>
+<<<<<<< HEAD
+		<!-- 入院记录
+        <p>{{inData}}</p> -->
+=======
+		<p>{{inData}}</p>
+>>>>>>> ce9e5a441d41cdf8aa350ec9ce8354dccb187cf6
 	</div>
 </template>
 
 <script>
 	export default {
-        props:[
-            "inData"
-        ],
-		components:{
-			
+		props: [
+			"inData"
+		],
+		components: {
+
 		},
-		watch:{
-			
+		watch: {
+
 		},
-		computed:{
-			
+		computed: {
+
 		},
-		
-		data () {
-			return {	
+
+		data() {
+			return {
 			}
 		},
-		
-		methods:{
-			
-			
+
+		methods: {
+
+
 		},
-		async created(){
-			
+		async created() {
+
 		}
 	}
 </script>
 
-<style >
-	
+<style>
+
 </style>

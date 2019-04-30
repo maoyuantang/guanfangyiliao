@@ -326,7 +326,7 @@
         color: #646464;
     }
     .education-doc-body-container{
-        overflow-x: scroll;
+        overflow-x: auto;
         overflow-y: hidden;
         width: 100%;
     }
@@ -338,7 +338,8 @@
         align-items:center;
         grid-row-gap:0.2rem;
         padding-top: 0.2rem;
-        min-width: 16rem;;
+        min-width: 13rem;
+        padding-bottom: .1rem;
     }
     .education-doc-page{
         text-align: center;

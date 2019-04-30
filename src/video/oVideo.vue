@@ -34,9 +34,9 @@
                                 </div>
                                 <div>
 
-                                    <div v-if="screenClickVisable" @click="screenClick()">
+                                    <!-- <div v-if="screenClickVisable" @click="screenClick()">
                                         <a href='../../static/Manis-Meetings-Chrome-Extension_v0.0.9.crx'>屏幕分享</a>
-                                    </div>
+                                    </div> -->
                                     <div @click="openPatientNum()" v-show="listVisable">列表</div>
                                 </div>
                             </div>
@@ -643,7 +643,7 @@ export default {
         //挂断当前视频
         async closeTheVideo() {
             console.log("挂断当前视频");
-            // this.streamObject.getTracks()[0].stop();
+            this.streamObject.getTracks()[0].stop();
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -675,7 +675,7 @@ export default {
         closeTheVideo1() {},
         //关闭视频退出诊室
         async closeVideo() {
-            // this.streamObject.getTracks()[0].stop();
+            this.streamObject.getTracks()[0].stop();
             let _this = this;
             let query = {
                 token: this.userState.token

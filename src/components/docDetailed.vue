@@ -1,35 +1,49 @@
 <template>
 	<div class="doc-detailed">
-		<div class="doc-detailed-">
-			<!-- <el-button  @click="reBack" icon="el-icon-arrow-left"></el-button> -->
+		<!-- 返回 -->
+		<div class="doc-detailed-button">
 			<el-button type="text" icon="el-icon-arrow-left" @click="reBack" class="doc-detailed-back" v-if="!inData">
 			</el-button>
 		</div>
+
+		<!-- 内容 -->
 		<div class="doc-detailed-alert">
 			<div class="doc-detailed-alert-content">
-				<div class="doc-detailed-tag" v-if="showPatientList">
-					<span v-for="(item,index) in topTag.list" :key="index" class="doc-detailed-tag-span"
-						:class="topTag.index === index ? 'doc-detailed-tag-span-select' : null " @click="selectTag(index)">
-						{{item.name}}
-					</span>
-				</div>
+
+
+				<!-- content -->
 				<div class="doc-detailed-nav">
+					<!-- 病人 -->
+					<div class="doc-detailed-tag">
+						<span v-for="(item,index) in topTag.list" :key="index" class="doc-detailed-tag-span"
+							:class="topTag.index === index ? 'doc-detailed-tag-span-select' : null " @click="selectTag(index)">
+																																																											<!-- 事件传id下去 -->
+							{{item.name}}
+						</span>
+					</div>
+
+
 					<div class="doc-detailed-nav-content">
+						<!-- nav中间 -->
 						<span v-for="(item,index) in nav.list" :key="index" class="doc-detailed-nav-span"
 							:class="nav.index === index ? 'doc-detailed-nav-span-select' : null " @click="selectNav(index)">
 							{{item.laber}}
 						</span>
+						<!-- 选择器 -->
 						<div class="doc-detailed-nav-select">
-							<el-select v-model="testData.select"  clearable placeholder="请选择"
+							<el-select v-model="testData.select" clearable placeholder="请选择"
 								v-if="nav.list[nav.index].page === 'inSide'">
 								<el-option v-for="(item,index) in testData.list" :key="index" :label="item.label" :value="item.value">
 								</el-option>
 							</el-select>
 						</div>
-
 					</div>
+
+
+					<!-- 下面左中右 -->
+					<div :is="viewCurrent" :inData="topTag.list[topTag.index] || null" v-if="reLoad" :current="testData.select"></div>
 				</div>
-				<div :is="viewCurrent" :inData="topTag.list[topTag.index]" v-if="reLoad"></div>
+
 			</div>
 		</div>
 	</div>
@@ -57,26 +71,32 @@
 		props: ['inData'],
 		data() {
 			return {
-				showPatientList:true,
+
+
+
 				reLoad: true,
-				topTag: {//顶部tag数据   
+				topTag: {//顶部tag数据
 					index: 0,//选中
-					list: []//列表
+					list: []//列表																					病人数组
 				},
-				nav: {//顶部nav数据 
-					index: 0,//选中  
-					list: [
+
+
+				nav: {//顶部nav数据
+					index: 0,//选中
+					list: [																										//左中右
 						{ laber: '电子病历', page: 'record' },
 						{ laber: '院内档案', page: 'inSide' },
 						{ laber: '院外档案', page: 'outSide' },
 					]//列表
 				},
-				//////////////////////////////////
+				
+
+
 				testData: {
-					select: "",
+					select: "1",
 					list: [
-						{ label: 'test1', value: '1' },
-						{ label: 'test2', value: '2' },
+						{ label: '按次序', value: '1' },
+						{ label: '按类型', value: '2' },
 					]
 				}
 			};
@@ -96,24 +116,24 @@
 			/**
 			 * 11.获取成员最后一次评估相关
 			 */
-			async getLastAssessPlan() {
-				const res = await lastAssessPlan({
-					token: this.userState.token,
-					userId: this.$route.query.id,
-					familyMemberId: this.topTag.list[this.topTag.index] ? this.topTag.list[this.topTag.index].id : '',
-				});
-				// console.log(res);
-				if (res.data && res.data.errCode === 0) {
+			// async getLastAssessPlan() {
+			// 	const res = await lastAssessPlan({
+			// 		token: this.userState.token,
+			// 		userId: this.$route.query.id,
+			// 		familyMemberId: this.topTag.list[this.topTag.index] ? this.topTag.list[this.topTag.index].id : '',
+			// 	});
+			// 	// console.log(res);
+			// 	if (res.data && res.data.errCode === 0) {
 
-				} else {
-					this.$notify({
-						title: '获取成员最后一次评估相关失败',
-						message: res.data.errMsg,
-						type: 'error'
-					});
-				}
+			// 	} else {
+			// 		this.$notify({
+			// 			title: '获取成员最后一次评估相关失败',
+			// 			message: res.data.errMsg,
+			// 			type: 'error'
+			// 		});
+			// 	}
 
-			},
+			// },
 			/**
 			 * 返回
 			 */
@@ -124,8 +144,8 @@
 			 * 获取成员列表
 			 */
 			async getUsersList() {
-				let showPatientList = sessionStorage.getItem('showPatientList');
-				console.log(showPatientList === 'false')
+				let showPatientList = sessionStorage.getItem('showPatientList');   
+				console.log(showPatientList)
 				if(showPatientList === 'false'){//新需求，过滤一下
 					console.warn('enter')
 					this.topTag.list = [{id:this.$route.query.id}];
@@ -138,6 +158,7 @@
 					userId: this.$route.query.id
 				});
 				console.log(res);
+				console.log(res.data.body);
 				if (res.data && res.data.errCode === 0) {
 					this.topTag.list = res.data.body
 				} else {
@@ -148,22 +169,19 @@
 					});
 				}
 			},
-			/**
-			 * tag被点击
-			 */
-			selectTag(index) {
+
+
+			selectTag(index = this.topTag.index) {															// 点击病人 重载底部
 				this.topTag.index = index;
 				this.reLoad = false;
 				this.$nextTick(() => {
 					this.reLoad = true;
 				});
 			},
-			/**
-			 * nav被点击
-			 */
-			selectNav(index) {
+
+
+			selectNav(index) {																//进入院内档案
 				this.nav.index = index;
-				// console.log(index)
 			},
 			/**
 			 * 坑爹的玩意
@@ -181,7 +199,22 @@
 			this.getUsersList();
 			// this.getLastAssessPlan();
 		},
-		watch: {},
+		
+		watch: {
+			'testData.select':{
+				handler(n){
+					console.log(n);
+					this.reLoad = false;
+					this.$nextTick(() => {
+						console.log(this.reLoad)
+						// debugger
+						this.reLoad = true;
+						console.log(this.topTag.list[this.topTag.index])
+					});
+
+				}
+			}
+		},
 		/**
 		 * 由于 这个页面 后来修改一些逻辑 
 		 * 把这个页面单独提出来，加在路由上
@@ -190,7 +223,94 @@
 		 * 但是由于是后加入的  没有code
 		 * 将前一个页面的code当做这个页面的code
 		 */
-		beforeRouteEnter(to, from, next) {
+		beforeRouteEnter(to, from, next) {													//等待
+			// const routerMap = [
+			//     {
+			//         name:'冠方医疗-首页',
+			//         select:true,
+			//         path:'/',
+			//         code:0
+			//     },
+			//     {
+			//         name:'冠方医疗-远程门诊系统',
+			//         select:false,
+			//         path:'/outpatient',
+			//         code:'10000'
+			//     },
+			//     {
+			//         name:'冠方医疗-远程会诊系统',
+			//         select:false,
+			//         path:'/consultation',
+			//         code:'20000'
+			//     },
+			//     {
+			//         name:'冠方医疗-远程协作系统',
+			//         select:false,
+			//         path:'/cooperation',
+			//         code:'30000'
+			//     },
+			//     {
+			//         name:'冠方医疗-智能随访系统',
+			//         select:false,
+			//         path:'/followUp',
+			//         code:'40000'
+			//     },
+			//     {
+			//         name:'冠方医疗-健康档案系统',
+			//         select:false,
+			//         path:'/files',
+			//         code:'50000'
+			//     },
+			//     {
+			//         name:'冠方医疗-远程教育系统',
+			//         select:false,
+			//         path:'/education',
+			//         code:'60000'
+			//     },
+			//         {
+			//         name:'冠方医疗-分级诊疗系统',
+			//         select:false,
+			//         path:'/medicalTreatment',
+			//         code:'70000'
+			//     },
+			//         {
+			//         name:'冠方医疗-双向转诊系统',
+			//         select:false,
+			//         path:'/referral',
+			//         code:'80000'
+			//     },
+			//         {
+			//         name:'冠方医疗-移动查房系统',
+			//         select:false,
+			//         path:'/rounds',
+			//         code:'90000'
+			//     },
+			//         {
+			//         name:'冠方医疗-终端管理系统',
+			//         select:false,
+			//         path:'/management',
+			//         code:'100000'
+			//     },
+			//     {
+			//         name:'冠方医疗-家医服务',
+			//         select:false,
+			//         path:'/familyMedicine',   
+			//         code:'110000'
+			//     },
+			//     {
+			//         name:'冠方医疗-查看档案',//手动添加
+			//         select:false,
+			//         path:'/docDetailed',   
+			//         code:'000001'
+			//     },
+			// ];
+			// console.log('enter')
+			// let getSession = sessionStorage.getItem('page');
+			// try{
+			//     getSession = JSON.parse(getSession)
+			// }catch(e){
+			//     console.log(e);
+			// }
 			sessionStorage.setItem('page', JSON.stringify({//存缓存
 				name: '冠方医疗-查看档案',//手动添加
 				select: true,

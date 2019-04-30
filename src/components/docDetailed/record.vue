@@ -167,6 +167,7 @@
              */
             async getUserInfo(){
                 if(!this.inData)return;
+                if(sessionStorage.getItem('showPatientList') === 'false')return;//新加功能
                 const res = await getDoctorMessage1({
                     token:this.userInfo.token,
                     familyMemberId:this.inData.id
@@ -198,6 +199,7 @@
              */
             async getEMRList(){
                 if(!this.inData)return;
+                if(sessionStorage.getItem('showPatientList') === 'false')return;//新加功能
                 const res = await eMRList({
                     token:this.userInfo.token,
                     familyMemberId:this.inData.id,
