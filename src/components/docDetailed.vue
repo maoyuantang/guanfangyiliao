@@ -82,13 +82,9 @@
 		props: ['inData'],
 		data() {
 			return {
-<<<<<<< HEAD
 
 
 
-=======
-				showPatientList:true,
->>>>>>> 1baece4ddcd8b78f64fc879704b1b2b63d8b6afa
 				reLoad: true,
 				topTag: {//顶部tag数据
 					index: 0,//选中
