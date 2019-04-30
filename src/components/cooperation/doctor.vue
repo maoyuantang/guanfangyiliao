@@ -37,10 +37,10 @@
                     <el-table-column fixed="right" label="操作" width="300">
                         <template slot-scope="scope">
                             <el-button class="seeDanganClass" v-if='scope.row.patientId' @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
-                            <el-button class="inviteUserClass" v-show="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
-                            <el-button class="seeHistoryMessage" v-show="scope.row.synergyStatus==2" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
-                            <el-button class="goTohuizhen" v-show="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="toConsultation(scope.row)" type="text" size="small">进入协作</el-button>
-                            <el-button class="overClass" v-show="scope.row.synergyStatus==1" @click="xiezOver(scope.row)" type="text" size="small">结束</el-button>
+                            <el-button class="inviteUserClass" v-if="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
+                            <el-button class="seeHistoryMessage" v-if="scope.row.synergyStatus==2" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
+                            <el-button class="goTohuizhen" v-if="scope.row.synergyStatus==0 || scope.row.synergyStatus==1" @click="toConsultation(scope.row)" type="text" size="small">进入协作</el-button>
+                            <el-button class="overClass" v-if="scope.row.synergyStatus==1" @click="xiezOver(scope.row)" type="text" size="small">结束</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
