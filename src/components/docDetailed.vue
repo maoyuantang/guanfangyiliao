@@ -95,8 +95,8 @@
 				testData: {
 					select: "1",
 					list: [
-						{ label: 'test1', value: '1' },
-						{ label: 'test2', value: '2' },
+						{ label: '按次序', value: '1' },
+						{ label: '按类型', value: '2' },
 					]
 				}
 			};

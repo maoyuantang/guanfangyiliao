@@ -353,8 +353,8 @@
 			},
 			// 开始请求
 
-			async getPatientInfo() {	
-				if(!this.inData)return																	//1.获取患者信息	id
+			async getPatientInfo() {																		//1.获取患者信息	id
+				if(!this.inData)return
 				console.log(this.inData + '-------------------------');
 				const res = await patientInfo({
 					token: this.userInfo.token,
@@ -365,8 +365,8 @@
 				this.patients = res.data.body
 			},
 
-			async getEMRInRecord4() {	
-				if (!this.inData) return																			//4.就诊记录列表
+			async getEMRInRecord4() {																				//4.就诊记录列表
+				if (!this.inData) return
 				console.log(this.inData + '-------------------------');
 				const res = await eMRInRecord4({
 					token: this.userInfo.token,
@@ -460,26 +460,20 @@
 
 
 		},
-		mounted() {
-			console.log(this.inData + '-------------------------');
-			this.getPatientInfo();
-			this.getEMRInRecord4();//等待
-
-		},
 		async created() {
-			console.log(this.getEMRInRecord4)
 			console.log(this.inData + '-------------------------');
 			if (this.current === '1') {
 				this.showModules.list = this.navList[0].childModule;
 			} else {
 				this.showModules.list = this.noLeftBottom;
 			}
-			// console.log(this.inData);
-			// this.getPatientInfo();
-			// this.setView();
 		},
 		beforeMounted() {
 			this.setView();
+		},
+		mounted() {
+			this.getPatientInfo();
+			this.getEMRInRecord4();
 		},
 	}
 </script>
