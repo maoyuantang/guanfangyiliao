@@ -43,9 +43,9 @@
 			</div>
 			<!-- 右侧 -->
 			<div class="new-content-body-content" v-if='relode'>
-				<div :is="showModules.list[showModules.index]?showModules.list[showModules.index].code:''"
+				<!-- <div :is="showModules.list[showModules.index]?showModules.list[showModules.index].code:''"
 					:in-data="showModules.list[showModules.index]?showModules.list[showModules.index].data:{}">
-				</div>
+				</div> -->
 			</div>
 		</div>
 

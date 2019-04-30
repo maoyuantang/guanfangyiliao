@@ -144,6 +144,7 @@
 			 * 获取成员列表
 			 */
 			async getUsersList() {
+				if (sessionStorage.getItem('showPatientList') === 'false') return;//新加功能(判断)
 				let showPatientList = sessionStorage.getItem('showPatientList');   
 				console.log(showPatientList)
 				if(showPatientList === 'false'){//新需求，过滤一下
@@ -317,7 +318,7 @@
 				path: '/docDetailed',
 				code: '000001'
 			}));
-			sessionStorage.setItem('showPatientList',['/consultation', '/cooperation', '/referral', ].find(item => item === from.path)?'false':'true');
+			sessionStorage.setItem('showPatientList',['/consultation', '/cooperation', '/referral' ].find(item => item === from.path)?'false':'true');
 			next(vm=>{
 				if(['/consultation', '/cooperation', '/referral', ].find(item => item === from.path)){
 					console.log('special') 
