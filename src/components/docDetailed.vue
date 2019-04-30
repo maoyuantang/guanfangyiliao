@@ -323,7 +323,7 @@
 			}));
 			sessionStorage.setItem('showPatientList',['/consultation', '/cooperation', '/referral' ].find(item => item === from.path)?'false':'true');
 			next(vm=>{
-				if(['/consultation', '/cooperation', '/referral', ].find(item => item === from.path)){
+				if(['/consultation', '/cooperation', '/referral', '/'].find(item => item === from.path)){
 					console.log('special') 
 					vm.showPatientList = false;
 					vm.nav.list = [
@@ -367,6 +367,7 @@
 		justify-content: center;
 		align-items: center;
 		position: relative;
+		padding-bottom: .4rem;
 	}
 
 	.doc-detailed-nav-span {
