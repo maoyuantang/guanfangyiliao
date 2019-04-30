@@ -33,7 +33,7 @@
         <!-- 聊天 -->
         <div v-if="chatVisible">
             <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px" append-to-body>
-                <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
+                <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox1"></chat>
             </el-dialog>
         </div>
 
@@ -60,7 +60,9 @@ import {
     fetchNoticeInfo,
     inviteReply,
     synergyInto,
-    doctorInto
+    doctorInto,
+    userInfo,
+    updateConsultationStatus
 } from "../../api/apiAll.js";
 import nodata from "../../public/publicComponents/noData.vue";
 import chat from "../../public/publicComponents/chat.vue";
@@ -74,7 +76,12 @@ export default {
     },
     data() {
         return {
-             chatTypeBox: {
+            chatTypeBox1: {
+                startDoctorName: "",
+                startDoctorTYpe: "协作",
+                archivesUrl: ""
+            },
+            chatTypeBox: {
                 startDoctorName: "",
                 startDoctorTYpe: "门诊"
             },
@@ -93,7 +100,8 @@ export default {
                 conferenceNumber: ""
             },
             videoType: "门诊",
-            oClinicId: ""
+            oClinicId: "",
+            sendUserName:''
         };
     },
     computed: {
@@ -177,8 +185,33 @@ export default {
                 });
             }
         },
+        // async getUserMessage(row) {
+        //     this.sendUserName=""
+        //     let _this = this;
+        //     let query = {
+        //         token: this.userState.token,
+        //         userId: row.senderUserId,
+        //         oneself: true
+        //     };
+        //     const res = await userInfo(query);
+        //     if (res.data && res.data.errCode === 0) {
+        //         _this.sendUserName=res.data.body.name
+        //         _this.chatTypeBox1.startDoctorName=res.data.body.name
+        //     } else {
+        //         //失败
+        //         this.$notify.error({
+        //             title: "警告",
+        //             message: res.data.errMsg
+        //         });
+        //     }
+        // },
         //进入协作
         async toConsultation(row) {
+            // this.getUserMessage(row);
+            console.log(row.body.indexOf('邀请您'))
+            let oindex=row.body.indexOf('邀请您')
+            this.chatTypeBox1.startDoctorName=row.body.substring(0,oindex)
+            this.chatTypeBox1.startDoctorTYpe = "协作";
             this.sessionId = row.sessionId;
 
             let _this = this;
@@ -198,7 +231,10 @@ export default {
             }
         },
         //进入会诊
-        async enterHuiz() {
+        async enterHuiz(row) {
+            let oindex=row.body.indexOf('邀请你')
+            this.chatTypeBox1.startDoctorName=row.body.substring(0,oindex)
+              this.chatTypeBox1.startDoctorTYpe = "会诊";
             this.sessionId = row.sessionId;
 
             let _this = this;
@@ -209,7 +245,7 @@ export default {
                 consultationId: row.senderUserId,
                 status: "UNDERWAY"
             };
-            const res = await updateConsultationStatus(query);
+            const res = await updateConsultationStatus(query,options);
             if (res.data && res.data.errCode === 0) {
                 _this.chatVisible = true;
             } else {
@@ -222,6 +258,9 @@ export default {
         },
         //进入门诊
         async enterRoomBtn(text) {
+            this.chatTypeBox1.startDoctorTYpe = "会诊";
+            console.log(this.$route.path);
+
             console.log(text);
             this.userMessage = {
                 clinicId: text.clinicId,
@@ -262,6 +301,7 @@ export default {
         this.msgId = this.$store.state.socket.messageTicket.oMsgId;
         // alert(this.$store.state.socket.messageTicket.oMsgId);
         this.getNoticeList();
+        this.chatTypeBox1.archivesUrl = this.$route.path;
     }
 };
 </script>

@@ -240,7 +240,7 @@
             <el-table-column fixed=right label="操作" min-width="460">
               <template slot-scope="scope">
                 <!-- <button class="huangSe" @click="seeHistory(scope.row.patientId)">查看档案</button> -->
-                <button class="huangSe" @click="dualReferralRecord3(scope.row)">查看档案</button>
+                <button class="huangSe" v-if='scope.row.patientId' @click="dualReferralRecord3(scope.row)">查看档案</button>
                 <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
                 <button
                   :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'

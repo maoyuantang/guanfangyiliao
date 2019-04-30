@@ -132,7 +132,7 @@
                     </el-table-column>
                     <el-table-column fixed="right" label="操作" width="300">
                         <template slot-scope="scope">
-                            <el-button class="seeDanganClass" @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
+                            <el-button class="seeDanganClass" v-if='scope.row.userId' @click="goToDangan(scope.row)" type="text" size="small">病历</el-button>
                             <el-button class="inviteUserClass" v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="Invitation(scope.row)" type="text" size="small">邀请</el-button>
                             <el-button class="seeHistoryMessage" v-show="scope.row.status=='OVER'" @click="historicalRecord(scope.row)" type="text" size="small">查看记录</el-button>
                             <el-button class="goTohuizhen" v-show="scope.row.status=='NEW' || scope.row.status=='UNDERWAY'" @click="toConsultation(scope.row)" type="text" size="small">进入会诊</el-button>
