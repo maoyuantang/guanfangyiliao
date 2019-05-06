@@ -1,12 +1,12 @@
 <template>
     <div>
         <!-- 返回 -->
-		<div class="doc-detailed-button">
-			<el-button type="text" icon="el-icon-arrow-left" @click="reBack" class="doc-detailed-back" v-if="!inData">
-			</el-button>
-		</div>
+        <div class="doc-detailed-button">
+            <el-button type="text" icon="el-icon-arrow-left" @click="reBack" class="doc-detailed-back" v-if="!inData">
+            </el-button>
+        </div>
         <div class="danganTitle">
-            <span :class="{'danganTitleAct':index==titleIndex}" v-for="(text,index) in titleList" :key="index" @click="titleIndex=index">{{text}}</span>
+            <span :class="{'danganTitleAct':index==titleIndex}" v-for="(text,index) in titleList" :key="index" @click="danganTitleClick(index)">{{text}}</span>
         </div>
         <div>
             <!-- 电子病历 -->
@@ -82,7 +82,12 @@
                                     住院记录
                                 </span>
                             </div>
-                            入住医院:{{text.hospitalName}}<br /> 入院时间：{{text.visitDtime}}<br /> 入住科室：{{text.deptName}}
+                            <span v-if="text.visitType==2">入住医院:</span>
+                            <span v-else>就诊医院:</span> {{text.hospitalName}}<br />
+                            <span v-if="text.visitType==2">入住时间：</span>
+                            <span v-else>就诊时间：</span>{{text.visitDtime}}<br />
+                            <span v-if="text.visitType==2">入住科室：</span>
+                            <span v-else>就诊科室：</span>{{text.deptName}}
                             <br /> 床号：{{text.bedNo}}
                             <br />
                         </li>
@@ -266,7 +271,7 @@ export default {
             userSocketInfo: state => state.socket
         })
     },
-    props: ['inData'],
+    props: ["inData"],
     methods: {
         //根据会诊or协作or转诊id获取信息
         async getMessage(getFollowScreen) {
@@ -419,7 +424,7 @@ export default {
                     // }
                 ];
                 this.danganRgValue = "hospitalized";
-                if (this.danganLeftMain.visits.length > 0) {
+                if (this.danganLeftMain.visits.length > 0 && this.danganLeftMain.visits) {
                     this.danganRgMainText1 = this.inHospitalList1 = this.danganLeftMain.visits[
                         this.danganLeftIndex1
                     ].info.hospitalized;
@@ -485,11 +490,96 @@ export default {
                         ].info.screenage;
                     }
                 }
+
+                
             }
         },
         reBack() {
-				this.$router.go(-1)
-			},
+            this.$router.go(-1);
+        },
+        danganTitleClick(index) {
+            this.danganLeftIndex1 = 0;
+            this.danganRgIndex1 = 0;
+            this.danganLeftIndex = 0;
+            this.danganRgIndex = 0;
+            this.titleIndex = index;
+            if (index == 1) {
+                if (
+                    this.danganLeftMain.visits[this.danganLeftIndex1]
+                        .visitType == 2
+                ) {
+                    this.danganRgList1 = [
+                        {
+                            name: "入院记录",
+                            value: "hospitalized"
+                        },
+                        {
+                            name: "医嘱",
+                            value: "orde"
+                        },
+                        {
+                            name: "检验",
+                            value: "checkout"
+                        },
+                        {
+                            name: "影响检查",
+                            value: "screenage"
+                        },
+                        {
+                            name: "手术麻醉",
+                            value: "operation"
+                        }
+                    ];
+                    this.danganRgValue = "hospitalized";
+                    this.danganRgMainText1 = this.danganLeftMain.visits[
+                        this.danganLeftIndex1
+                    ].info.hospitalized;
+                } else if (
+                    this.danganLeftMain.visits[this.danganLeftIndex1]
+                        .visitType == 1
+                ) {
+                    this.danganRgList1 = [
+                        {
+                            name: "处方",
+                            value: "recipe"
+                        },
+                        {
+                            name: "检验",
+                            value: "checkout"
+                        },
+                        {
+                            name: "影响检查",
+                            value: "screenage"
+                        }
+                    ];
+                    this.danganRgValue = "recipe";
+                    this.orecipe = [];
+                    let orecipe1 = this.danganLeftMain.visits[
+                        this.danganLeftIndex1
+                    ].info.recipe;
+                    orecipe1.forEach((text, index) => {
+                        this.orecipe.push({
+                            src: `${
+                                this.userSocketInfo.imgUrl1
+                            }/m/v1/api/basics/record/recordInfo?token=${
+                                this.userState.token
+                            }&type=${this.$route.query.type}&id=${
+                                this.$route.query.id
+                            }&prescNo==${text}`
+                        });
+                    });
+                }
+            } else if (index == 0) {
+                console.log(
+                    this.danganLeftMain.historys[this.danganLeftIndex].info
+                        .inRecord
+                );
+                this.danganRgMainText.push(
+                    this.danganLeftMain.historys[this.danganLeftIndex].info
+                        .inRecord
+                );
+            }
+        }
     },
     created() {
         if (this.$route.query.type == "CONSULTATION") {
@@ -511,7 +601,6 @@ export default {
 </script>
 <style>
 .danganTitle {
-    padding-top: 60px;
     text-align: center;
     margin-bottom: 42px;
 }
@@ -742,10 +831,13 @@ export default {
     padding: 30px 30px;
     color: #646464;
 }
+.danganRgMainTextClass > ul > li {
+    margin-bottom: 10px;
+}
 .danganRgMainTextClass > ul > li > div:nth-child(1) {
-    font-size: 30px;
+    font-size: 14px;
 }
 .danganRgMainTextClass > ul > li > div:nth-child(2) {
-    font-size: 18px;
+    font-size: 12px;
 }
 </style>
