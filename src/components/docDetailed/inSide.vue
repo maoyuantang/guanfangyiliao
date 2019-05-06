@@ -339,6 +339,7 @@
 
 			async getEMRInRecord4() {																				//4.就诊记录列表
 				if (!this.inData) return
+				console.log(this.inData)
 				const res = await eMRInRecord4({
 					token: this.userInfo.token,
 					orgCode: this.userSelfInfo.orgCode,
