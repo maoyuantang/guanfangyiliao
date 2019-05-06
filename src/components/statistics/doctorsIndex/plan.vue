@@ -54,7 +54,7 @@
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </div>
-                                <el-button class="btnClass" @click="sendArchives(scope.row)" type="text" size="small">看档案</el-button>
+                                <el-button class="btnClass" @click="sendArchives(scope.row,'随访')" type="text" size="small">看档案</el-button>
                                 <div class="entryFile">
                                     <!-- <el-button class="btnClass" type="text" size="small">录入档案</el-button>
                                     <ul>
@@ -126,7 +126,7 @@
                                         </el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
-                                <el-button class="btnClass" @click="sendArchives(scope.row)" type="text" size="small">看档案</el-button>
+                                <el-button class="btnClass" @click="sendArchives(scope.row,'随访')" type="text" size="small">看档案</el-button>
                                 <div class="entryFile">
                                     <el-dropdown>
                                         <el-button class="btnClass" type="danger" size="mini" plain>录入档案</el-button>
@@ -209,7 +209,7 @@
                                         </el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
-                                <el-button class="btnClass" @click="sendArchives(scope.row)" type="text" size="small">看档案</el-button>
+                                <el-button class="btnClass" @click="sendArchives(scope.row,'随访')" type="text" size="small">看档案</el-button>
                                 <div class="entryFile">
                                     <!-- <el-button class="btnClass" type="text" size="small">录入档案</el-button>
                                     <ul>
@@ -277,7 +277,7 @@
                         </el-table-column>
                         <el-table-column label=" " width="220">
                             <template slot-scope="scope">
-                                <el-button class="seeDanganClass" @click="sendArchives(scope.row)" type="text" size="small">查看档案</el-button>
+                                <el-button class="seeDanganClass" @click="sendArchives(scope.row,'会诊')" type="text" size="small">查看档案</el-button>
                                 <el-button class="enterHuizClass" @click="enterHuiz(scope.row,'会诊')" type="text" size="small">进入会诊</el-button>
                                 <el-button class="invitedClass" @click="invitedUser(scope.row)" type="text" size="small">邀请</el-button>
 
@@ -329,7 +329,7 @@
                         </el-table-column>
                         <el-table-column label=" " width="220">
                             <template slot-scope="scope">
-                                <el-button class="seeDanganClass" @click="sendArchives(scope.row)" type="text" size="small">查看档案</el-button>
+                                <el-button class="seeDanganClass" @click="sendArchives(scope.row,'协作')" type="text" size="small">查看档案</el-button>
                                 <el-button class="enterHuizClass" @click="enterHuiz(scope.row,'协作')" type="text" size="small">进入协作</el-button>
                                 <el-button class="invitedClass" @click="invitedUserXie(scope.row)" type="text" size="small">邀请</el-button>
 
@@ -516,7 +516,7 @@ export default {
                 startDoctorName: "",
                 startDoctorTYpe: "随访",
                 archivesUrl: "/",
-                bingUserId:''
+                bingUserId: ""
             },
             // seeRemarksListVisable1: false,
             // seeRemarksListVisable2: false,
@@ -590,7 +590,9 @@ export default {
             defaultImg:
                 'this.src="' + require("../../../assets/img/a-6.png") + '"',
             defaultImgDoc:
-                'this.src="' + require("../../../assets/img/doctorImg.png") + '"'
+                'this.src="' +
+                require("../../../assets/img/doctorImg.png") +
+                '"'
         };
     },
 
@@ -774,23 +776,41 @@ export default {
         },
         //发送消息
         sendMessage(row) {
-
             this.doctorVis = 1;
             this.userMessage = {
                 userId: row.userId
             };
             this.chatTypeBox.startDoctorTYpe = "随访";
-            this.chatTypeBox.bingUserId=row.userId
+            this.chatTypeBox.bingUserId = row.userId;
             this.createChat(row);
         },
         //查看档案
-        sendArchives(row) {
-            this.$router.push({
-                path: "/docDetailed",
-                query: {
-                    id: row.userId
-                }
-            });
+        sendArchives(row, type) {
+            if (type == "随访") {
+                this.$router.push({
+                    path: "/docDetailed",
+                    query: {
+                        id: row.userId
+                    }
+                });
+            } else if (type == "会诊") {
+                this.$router.push({
+                    path: "/consultationFiles",
+                    query: {
+                        id: row.id,
+                        type: "CONSULTATION"
+                    }
+                });
+            }
+            else if (type == "协作") {
+                this.$router.push({
+                    path: "/consultationFiles",
+                    query: {
+                        id: row.id,
+                        type: "SYNERG"
+                    }
+                });
+            }
         },
         //查看随访计划详情
         async seeFollowPlan(row) {

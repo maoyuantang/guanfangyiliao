@@ -19,6 +19,7 @@ import rounds from '@/components/rounds'//移动查房系统
 import cloudManagement from '@/components/cloudManagement'//移动查房系统
 import familyMedicine from '@/components/familyMedicine'//移动查房系统
 import docDetailed from '@/components/docDetailed'//健康档案系统 - 患者详情（由于多个地方用得着，提出来放在路由里）
+import consultationFiles from '@/components/consultationFiles'//健康档案系统 - 患者详情（由于多个地方用得着，提出来放在路由里）
 
 import notFound from '@/components/notFound'//404页面
 
@@ -151,6 +152,15 @@ const router = new Router({
 		        title: '冠方医疗-健康档案系统-患者详情'
 		      }
 				},
+				{
+      		path: '/consultationFiles',
+		      name: 'consultationFiles',
+		      component: consultationFiles,
+		      meta: {
+		        title: '冠方医疗-健康档案系统-患者详情'
+		      }
+				},
+				
       ]
     },
     {

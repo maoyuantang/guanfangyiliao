@@ -499,9 +499,10 @@ export default {
         goToDangan(row) {
             this.$router.push({
                 
-                path: "/docDetailed",
+                path: "/consultationFiles",
                 query: {
-                    id: row.patientId
+                    id: row.id,
+                    type:'SYNERGY'
                 }
             });
         },

@@ -341,7 +341,7 @@ export default {
     queryByMedicalHistory: '/m/v1/api/consultation/queryByMedicalHistory',
     referredPatientList: '/m/v1/api/referral/dualReferral/referredPatientList',//14.15.转诊-获取病人列表
     patientMedicalHistory: '/m/v1/api/referral/dualReferral/patientMedicalHistory',//14.16.转诊-获取病历列表
-    patientMedicalDetail: '/m/v1/api/referral/dualReferral/patientMedicalDetail',//14.17.转诊-获取病历详情
+   
     toUpdate: '/m/v1/api/referral/dualReferral/toUpdate',//14.18.双向转诊-WEB医生端-获取修改记录
     registeredStatistics: '/m/v1/api/user/user/registeredStatistics',//3.11 注册用户
     eMRFirstCourse: '/m/v1/api/record/nosocomialRecord/eMRFirstCourse',//12.根据电子病历ID获取首次病程记录
@@ -351,6 +351,11 @@ export default {
     fetchByPatientInfoInfo: '/m/v1/api/basics/record/fetchByPatientInfoInfo',
     fetchByMedicalHistory: '/m/v1/api/basics/record/fetchByMedicalHistory',//协作病历
     sponsorSynergy: '/m/v1/api/synergy/sponsorSynergy',
-    addSynergy:'/m/v1/api/synergy/add'
+    addSynergy:'/m/v1/api/synergy/add',
+
+    queryByMedicalHistoryInfo:'/m/v1/api/consultation/queryByMedicalHistoryInfo',//会诊病历详情
+    chufanImg:'/m/v1/api/basics/record/recordInfo',
+    patientMedicalDetail: '/m/v1/api/referral/dualReferral/patientMedicalDetail',//14.17.转诊-获取病历详情
+    recordByMedicalHistoryInfo:'/m/v1/api/basics/record/queryByMedicalHistoryInfo'
 }
 

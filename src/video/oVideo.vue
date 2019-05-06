@@ -118,10 +118,16 @@
                 </div>
             </el-dialog>
         </div>
-        <!--查看档案-->
+        <!--查看档案会诊，协作，转诊-->
         <div v-if="archivesVisible">
             <el-dialog title="查看档案" :visible.sync="archivesVisible" width="380px" center append-to-body fullscreen>
-                <archives v-if="archivesVisible" :inData='archivesIdVisable'></archives>
+                <archives1 v-if="archivesVisible" :inData='archivesIdVisable'></archives1>
+            </el-dialog>
+        </div>
+        <!-- 随访，门诊 -->
+         <div v-if="archivesVisible1">
+            <el-dialog title="查看档案" :visible.sync="archivesVisible1" width="380px" center append-to-body fullscreen>
+                <archives v-if="archivesVisible1" :inData='archivesIdVisable1'></archives>
             </el-dialog>
         </div>
         <!--屏幕安装指南-->
@@ -138,7 +144,8 @@
 <script>
 import "../../static/assets/css/jquery-impromptu.css";
 import videoChat from "../public/publicComponents/videoChat.vue";
-import archives from "@/components/docDetailed.vue";
+import archives from "@/components/consultationFiles.vue";
+import archives1 from "@/components/docDetailed.vue";
 import apiBaseURL from "../enums/apiBaseURL.js";
 import { mapState } from "vuex";
 import {
@@ -156,7 +163,8 @@ export default {
     name: "video",
     components: {
         videoChat,
-        archives
+        archives,
+        archives1
     },
     computed: {
         ...mapState({
@@ -171,6 +179,7 @@ export default {
             defaultImg: 'this.src="' + require("../assets/img/a-6.png") + '"',
             archivesId: "",
             archivesVisible: false,
+            archivesVisible1:false,
             userResource: "",
             // userResourceVisable: true,
             videoUser: 0,
@@ -202,7 +211,8 @@ export default {
             loadingUs: true,
             loadingOther: false,
             streamObject: {},
-            archivesIdVisable: true
+            archivesIdVisable: true,
+            archivesIdVisable1:true,
             //    archivesUrl :'/outpatient',
         };
     },
@@ -244,13 +254,27 @@ export default {
         sendArchives() {
             console.log(this.archivesId);
             if (this.archivesId) {
-                this.$router.replace({
-                    path: this.chatTypeBox.archivesUrl,
-                    query: {
-                        id: this.archivesId
-                    }
-                });
-                this.archivesVisible = true;
+                let otype = this.chatTypeBox.startDoctorTYpe;
+                if (otype == "随访" || otype == "门诊" || otype == "家医" || otype =='患者') {
+                    this.$router.replace({
+                        path: this.chatTypeBox.archivesUrl,
+                        query: {
+                            id: this.archivesId
+                        }
+                    });
+                    this.archivesVisible = true;
+                } else if (otype == "会诊") {
+                    this.$router.replace({
+                        path: this.chatTypeBox.archivesUrl,
+                        query: {
+                            id: this.chatTypeBox.typeId,
+                            type: "CONSULTATION"
+                        }
+                    });
+                    this.archivesVisible1 = true;
+                }
+
+                
             } else {
                 this.$notify.error({
                     title: "警告",
@@ -1725,7 +1749,7 @@ export default {
          * 收到有人进入房间
          */
         Manis.onJoinConference(function(result) {
-            console.log(result)
+            console.log(result);
             const ele = _this.generateParticipant(result, false);
             ele.onclick = () => {
                 const parent = ele.parentNode;
@@ -1750,7 +1774,7 @@ export default {
                 //  console.log(oid)
                 //  console.log(_this.generateParticipant(oid, false))
                 // eleList[index] = _this.generateParticipant(oid, false);
-               
+
                 // $("#remoteVideos").html();
                 // eleList.forEach(item=>{
                 //     console.log(item)
@@ -1924,7 +1948,7 @@ export default {
         Manis.onEject(function(result) {
             console.log(result);
             if (_this.videoType == "门诊") {
-                console.log('门诊被挂断')
+                console.log("门诊被挂断");
                 _this.closeTheVideo();
             } else {
                 // _this.closePublicVideo();

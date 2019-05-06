@@ -100,30 +100,30 @@
                 <el-table class='' :data="docTableData" border style="width: 100%" @cell-click="cooperationCellClick">
                     <!-- <el-table-column prop="consultationId" label="会诊编号" width="150">
                     </el-table-column> -->
-                    <el-table-column prop="hospital" label="发起医院" width="120">
+                    <el-table-column prop="hospital" label="发起医院" width="">
                     </el-table-column>
-                    <el-table-column prop="department" label="发起科室" width="120">
+                    <el-table-column prop="department" label="发起科室" width="">
                     </el-table-column>
-                    <el-table-column prop="doctor" label="发起医生" width="120">
+                    <el-table-column prop="doctor" label="发起医生" width="">
                     </el-table-column>
-                    <el-table-column prop="applicationTime" label="申请时间" width="150">
+                    <el-table-column prop="applicationTime" label="申请时间" width="">
                     </el-table-column>
-                    <el-table-column prop="type" label="会诊类型" width="120">
+                    <el-table-column prop="type" label="会诊类型" width="">
                         <template slot-scope="scope">
                             <span v-if="scope.row.type=='SPECIALIST'">专科会诊</span>
                             <span v-else>专家会诊</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="userName" label="会诊病人" width="120">
+                    <el-table-column prop="userName" label="会诊病人" width="">
                     </el-table-column>
-                    <el-table-column prop="consultationPurpose" label="目的" width="120">
+                    <el-table-column prop="consultationPurpose" label="目的" width="">
                     </el-table-column>
-                    <el-table-column prop="doctorNumber" label="参与专家" width="120">
+                    <el-table-column prop="doctorNumber" label="参与专家" width="">
                         <template slot-scope="scope">
                             <span class='ooRed'>{{scope.row.doctorNumber}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="status" label="状态" width="120">
+                    <el-table-column prop="status" label="状态" width="">
                         <template slot-scope="scope">
                             <span v-if="scope.row.status=='NEW'">未开始</span>
                             <span v-else-if="scope.row.status=='UNDERWAY'">进行中</span>
@@ -217,7 +217,8 @@ export default {
                 startDoctorName: "",
                 startDoctorTYpe: "会诊",
                 archivesUrl: "/consultation",
-                bingUserId: ""
+                bingUserId: "",
+                typeId:''
             }, //发起医生
             docTotal: 0,
             adminTotal: 0,
@@ -727,9 +728,10 @@ export default {
         //病历
         goToDangan(row) {
             this.$router.push({
-                path: "/docDetailed",
+                path: "/consultationFiles",
                 query: {
-                    id: row.userId
+                    id: row.id,
+                    type:'CONSULTATION'
                 }
             });
         },
@@ -907,6 +909,7 @@ export default {
             const res = await updateConsultationStatus(query, options);
             if (res.data && res.data.errCode === 0) {
                 if (state == "on") {
+                    _this.chatTypeBox.typeId=row.id
                     _this.chatVisible = true;
                 } else {
                     _this.$notify.success({
