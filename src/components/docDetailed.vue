@@ -41,7 +41,8 @@
 
 
 					<!-- 下面左中右 -->
-					<div :is="viewCurrent" :inData="topTag.list[topTag.index] || null" v-if="reLoad" :current="testData.select" :teshuId='threeId'>
+					<div :is="viewCurrent" :inData="topTag.list[topTag.index] || null" v-if="reLoad" :current="testData.select"
+						:teshuId='threeId'>
 					</div>
 				</div>
 
@@ -72,7 +73,7 @@
 		props: ['inData'],
 		data() {
 			return {
-				threeId:'1',
+				threeId: '1',
 
 
 
@@ -147,7 +148,7 @@
 			 */
 			async getUsersList() {
 				//新加功能(判断,当if为真，是特殊路由进入的，后面接口需要的家庭成员id路由上去拿，如果为假，则用柯兄给的（函数执行结果给的）)
-				if (sessionStorage.getItem('showPatientList') === 'false'){
+				if (sessionStorage.getItem('showPatientList') === 'false') {
 					// this.threeId=
 					return;
 				}
@@ -326,10 +327,10 @@
 				path: '/docDetailed',
 				code: '000001'
 			}));
-			sessionStorage.setItem('showPatientList',['/consultation', '/cooperation', '/referral' ].find(item => item === from.path)?'false':'true');
-			next(vm=>{
-				if(['/consultation', '/cooperation', '/referral', '/'].find(item => item === from.path)){
-					console.log('special') 
+			sessionStorage.setItem('showPatientList', ['/consultation', '/cooperation', '/referral'].find(item => item === from.path) ? 'false' : 'true');
+			next(vm => {
+				if (['/consultation', '/cooperation', '/referral', '/'].find(item => item === from.path)) {
+					console.log('special')
 					vm.showPatientList = false;
 					vm.nav.list = [
 						{ laber: '电子病历', page: 'record' },
