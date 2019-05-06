@@ -72,7 +72,7 @@
 					<publicList :columns="prescriptionAuditDistribution.tableBody.columns"
 						:tableData="prescriptionAuditDistribution.tableBody.tableData"
 						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :cellColor="cellColor" :pageSize="pageSize"
-						:total="totals" @rebackFenye="currentChange2">
+						:total="totals" :widths="widths" @rebackFenye="currentChange2">
 					</publicList>
 				</div>
 			</div>
@@ -278,6 +278,7 @@
 				// 常用参数
 				pageNum: 1,//页数
 				pageSize: 10,//条数
+				widths: 200,
 				totals: 0,
 				srcs: "",//处方id   用于拼接图片src
 
@@ -1428,7 +1429,7 @@
 					console.log(this.addData)
 					// this.addData = Object.assign({},this.addData);
 					//选择科室
-					this.getList1()
+					// this.getList1()
 				} else {
 					//失败
 					console.log('查看详情表格内容+失败')

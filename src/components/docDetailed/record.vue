@@ -202,7 +202,7 @@
                 // if(!this.inData)return;
                 const ajaxOption = {
                     token:this.userInfo.token,
-                    // familyMemberId:this.inData.id,
+                    familyMemberId:this.inData.id,
                     orgCode:this.userSelfInfo.orgCode,
                 };
                 sessionStorage.getItem('showPatientList') === 'false'?ajaxOption.familyMemberId=this.$route.query.id:ajaxOption.familyMemberId=this.inData.id;

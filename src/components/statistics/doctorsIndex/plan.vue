@@ -277,7 +277,7 @@
                         </el-table-column>
                         <el-table-column label=" " width="220">
                             <template slot-scope="scope">
-                                <el-button class="seeDanganClass" @click="sendArchives(scope.row,'会诊')" type="text" size="small">查看档案</el-button>
+                                <el-button class="seeDanganClass" @click="sendArchives(scope.row,'会诊')" type="text" size="small">病历</el-button>
                                 <el-button class="enterHuizClass" @click="enterHuiz(scope.row,'会诊')" type="text" size="small">进入会诊</el-button>
                                 <el-button class="invitedClass" @click="invitedUser(scope.row)" type="text" size="small">邀请</el-button>
 
@@ -329,7 +329,7 @@
                         </el-table-column>
                         <el-table-column label=" " width="220">
                             <template slot-scope="scope">
-                                <el-button class="seeDanganClass" @click="sendArchives(scope.row,'协作')" type="text" size="small">查看档案</el-button>
+                                <el-button class="seeDanganClass" @click="sendArchives(scope.row,'协作')" type="text" size="small">病历</el-button>
                                 <el-button class="enterHuizClass" @click="enterHuiz(scope.row,'协作')" type="text" size="small">进入协作</el-button>
                                 <el-button class="invitedClass" @click="invitedUserXie(scope.row)" type="text" size="small">邀请</el-button>
 
