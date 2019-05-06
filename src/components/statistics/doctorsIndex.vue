@@ -109,6 +109,9 @@
 	.doctors-index-top-fg{
 		width: 0.13rem;
 	}
+	.doctors-index-suifang{
+		padding-top: .4rem;
+	}
 </style>
 <!--
     医生界面

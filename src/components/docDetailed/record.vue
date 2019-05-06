@@ -198,13 +198,16 @@
              * 2.电子病历列表 获取
              */
             async getEMRList(){
-                if(!this.inData)return;
-                if(sessionStorage.getItem('showPatientList') === 'false')return;//新加功能
-                const res = await eMRList({
+                // console.error(this.inData)
+                // if(!this.inData)return;
+                const ajaxOption = {
                     token:this.userInfo.token,
-                    familyMemberId:this.inData.id,
+                    // familyMemberId:this.inData.id,
                     orgCode:this.userSelfInfo.orgCode,
-                });
+                };
+                sessionStorage.getItem('showPatientList') === 'false'?ajaxOption.familyMemberId=this.$route.query.id:ajaxOption.familyMemberId=this.inData.id;
+                // if(sessionStorage.getItem('showPatientList') === 'false')return;//新加功能   
+                const res = await eMRList(ajaxOption);
                 if(res.data && res.data.errCode === 0){
                     this.patientListInfo.list = [];
                     res.data.body.forEach((item,index)=>{

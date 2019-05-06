@@ -2159,6 +2159,40 @@ export const stencilModel = query => { //17.2传入模版名获取模版
         }
     })
 }
+export const queryByMedicalHistoryInfo = query => { //17.2传入模版名获取模版
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.queryByMedicalHistoryInfo,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const chufanImg = query => { //17.2传入模版名获取模版
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.chufanImg,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+export const recordByMedicalHistoryInfo = query => { //17.2传入模版名获取模版
+    const sign = postQueryHandle(query);
+    return axios({
+        method: 'get',
+        url: apiList.recordByMedicalHistoryInfo,
+        params: query,
+        headers: {
+            sign
+        }
+    })
+}
+
 export const updateHospitalRel = (query, data) => {//8.12.更新医院上下级医院关系
     const sign = postQueryHandle(Object.assign({}, data, query));
     return axios({

@@ -326,10 +326,10 @@
 				path: '/docDetailed',
 				code: '000001'
 			}));
-			sessionStorage.setItem('showPatientList', ['/consultation', '/cooperation', '/referral'].find(item => item === from.path) ? 'false' : 'true');
-			next(vm => {
-				if (['/consultation', '/cooperation', '/referral',].find(item => item === from.path)) {
-					console.log('special')
+			sessionStorage.setItem('showPatientList',['/consultation', '/cooperation', '/referral' ].find(item => item === from.path)?'false':'true');
+			next(vm=>{
+				if(['/consultation', '/cooperation', '/referral', '/'].find(item => item === from.path)){
+					console.log('special') 
 					vm.showPatientList = false;
 					vm.nav.list = [
 						{ laber: '电子病历', page: 'record' },
@@ -372,6 +372,7 @@
 		justify-content: center;
 		align-items: center;
 		position: relative;
+		padding-bottom: .4rem;
 	}
 
 	.doc-detailed-nav-span {
