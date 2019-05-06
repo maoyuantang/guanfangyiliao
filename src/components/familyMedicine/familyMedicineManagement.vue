@@ -576,7 +576,7 @@
 							// 	]
 							// },
 							{
-								worth:0,//价格数值   
+								worth:'',//价格数值   
 								unitEnum:'MONTH',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
 								valueUnit:1,//价格单位值
 								childList:[//该价格下的子业务
@@ -599,7 +599,7 @@
 								]
 							},
 							{
-								worth:0,//价格数值
+								worth:'',//价格数值
 								unitEnum:'QUARTER',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
 								valueUnit:1,//价格单位值
 								childList:[//该价格下的子业务
@@ -614,7 +614,7 @@
 								]
 							},
 							{
-								worth:0,//价格数值
+								worth:'',//价格数值
 								unitEnum:'YEAR',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
 								valueUnit:1,//价格单位值
 								childList:[//该价格下的子业务
@@ -1260,20 +1260,22 @@
 			 */
 			async byStencilModel(data){
 				const modelMap = {
-					YCJH:'HOUR',
-					ZXZX:'TIMES',
-					SMFW:'TIMES',
-					JYSB:'DAY',
-					ZNPJ:'TIMES',
-					PHFW:'DAY',
+					YCJH: 'HOUR',
+					ZXZX: 'TIMES',
+					SMFW: 'TIMES',
+					JYSB: 'DAY',
+					ZNPJ: 'TIMES',
+					PHFW: 'DAY',
+					JTYS: 'MONTH',
 				};
+
 				this.testData.businessPrice.data[0].unitEnum = modelMap[data];
-				console.log(data)
+
 				const res = await stencilModel({
 					token:this.userInfo.token,
 					stencilName:data
 				});
-				console.log(res);
+
 				if(res.data&&res.data.errCode===0){
 					const resMap = {
 						typeExist:'businessTypeList',//模版业务类型 (true 表示有；false表示无)
@@ -1285,7 +1287,7 @@
 						phoneExist:'servicePhone',//模版业务电话 (true 表示有；false表示无)
 						priceExist:'businessPrice',//模版业务价格 (true 表示有；false表示无)
 					};
-					console.log(this.testData.type)
+
 					for(const i in res.data.body){
 						// resMap[i] && res.data.body[i]===true ? this.testData[resMap[i]].show = true : null
 						if(resMap[i]){
@@ -1295,10 +1297,7 @@
 								this.testData[resMap[i]].show = false
 							}
 						}
-						console.log(this.testData.type)
-					}
-					console.log(this.testData)
-					
+					}				
 				}else{
 
 				}
@@ -1331,14 +1330,19 @@
 				];
 				if(this.testData.businessTemplate.default.value==='JTYS'){//家庭医生 这个模板和其他模板的价格是不一样的，判断下
 					// testData.businessPrice.data[0].childList
-					let i = 0; 
-					for(i;i<this.testData.businessPrice.data.length;i++){
+
+					for(let i = 0; i < this.testData.businessPrice.data.length; i++) {
+						const item = this.testData.businessPrice.data[i];
+
+						// worth 转换数字如果是 NaN 跳过本条数据
+						if (item.worth.length < 1 || Number.isNaN(Number(item.worth))) continue;
+
 						postData[1].businessPrice.push({ 
-							worth:this.testData.businessPrice.data[i].worth,//价格数值
-							unitEnum:i===0 ? 'MONTH' : this.testData.businessPrice.data[i].unitEnum,//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
-							valueUnit:1,//价格单位值
-							childList:[//该价格下的子业务
-								...this.testData.businessPrice.data[i].childList.map(v=>{
+							worth: item.worth,//价格数值
+							unitEnum: item.unitEnum,//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
+							valueUnit: 1,//价格单位值
+							childList: [//该价格下的子业务
+								...item.childList.map(v=>{
 									return {
 										childId:v.childId,
 										childName:v.childName,
@@ -1403,19 +1407,19 @@
 								// 	childList:[]//该价格下的子业务 
 								// },
 								{
-									worth:0,//价格数值   
+									worth:'',//价格数值   
 									unitEnum:'MONTH',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
 									valueUnit:1,//价格单位值
 									childList:[]//该价格下的子业务
 								},
 								{
-									worth:0,//价格数值
+									worth:'',//价格数值
 									unitEnum:'QUARTER',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
 									valueUnit:1,//价格单位值
 									childList:[]//该价格下的子业务
 								},
 								{
-									worth:0,//价格数值
+									worth:'',//价格数值
 									unitEnum:'YEAR',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
 									valueUnit:1,//价格单位值
 									childList:[]//该价格下的子业务
@@ -1768,23 +1772,23 @@
 					businessPrice:{//业务定价  为何如此坑  
 						show:false, 
 						data:[ 
+							// {
+							// 	worth:0,//价格数值    
+							// 	unitEnum:'',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
+							// 	valueUnit:1,//价格单位值
+							// 	childList:[//该价格下的子业务 
+							// 		// {
+							// 		// 	childId:'',//子业务id
+							// 		// 	childName:'',//子业务名称
+							// 		// 	childDepName:'',//子业务科室名
+							// 		// 	childDoctors:'',//子业务人员
+							// 		// 	stencilEnum:'',//子业务模版（"JTYS", //家庭医生；"SMFW", //上门服务；"ZNPJ", //智能陪检；"YCJH", //远程监护；"ZXZX", //在线咨询；"JYSB", //家用设备； "PHFW" //陪护服务；）
+							// 		// 	times:0//子业务次数
+							// 		// }
+							// 	]
+							// },
 							{
-								worth:0,//价格数值    
-								unitEnum:'',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
-								valueUnit:1,//价格单位值
-								childList:[//该价格下的子业务 
-									// {
-									// 	childId:'',//子业务id
-									// 	childName:'',//子业务名称
-									// 	childDepName:'',//子业务科室名
-									// 	childDoctors:'',//子业务人员
-									// 	stencilEnum:'',//子业务模版（"JTYS", //家庭医生；"SMFW", //上门服务；"ZNPJ", //智能陪检；"YCJH", //远程监护；"ZXZX", //在线咨询；"JYSB", //家用设备； "PHFW" //陪护服务；）
-									// 	times:0//子业务次数
-									// }
-								]
-							},
-							{
-								worth:0,//价格数值   
+								worth:'',//价格数值   
 								unitEnum:'MONTH',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
 								valueUnit:1,//价格单位值
 								childList:[//该价格下的子业务
@@ -1799,7 +1803,7 @@
 								]
 							},
 							{
-								worth:0,//价格数值
+								worth:'',//价格数值
 								unitEnum:'QUARTER',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
 								valueUnit:1,//价格单位值
 								childList:[//该价格下的子业务
@@ -1814,7 +1818,7 @@
 								]
 							},
 							{
-								worth:0,//价格数值
+								worth:'',//价格数值
 								unitEnum:'YEAR',//价格单位  （HOUR//小时；TIMES//次；DAY//天；MONTH//月；QUARTER//季；YEAR//年；）
 								valueUnit:1,//价格单位值
 								childList:[//该价格下的子业务
