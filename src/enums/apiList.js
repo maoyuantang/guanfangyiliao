@@ -304,6 +304,7 @@ export default {
     eMRInRecord: '/m/v1/api/record/nosocomialRecord/eMRInRecord',//3.根据电子病历ID获取首次入院记录
     
     eMRInRecord4: '/m/v1/api/record/nosocomialRecord/visitList',//4.就诊记录列表
+    // eMRInRecord5: '',//5.根据就诊ID获取就诊记录详情
     eMRInRecord6: '/m/v1/api/record/nosocomialRecord/recipeInfoById',//6.获取处方记录
     eMRInRecord7: '/m/v1/api/record/nosocomialRecord/checkoutInfoById',//7.获取检验记录
     eMRInRecord8: '/m/v1/api/record/nosocomialRecord/orderInfoById',//8.获取医嘱记录

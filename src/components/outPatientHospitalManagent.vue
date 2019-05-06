@@ -1428,7 +1428,7 @@
 					console.log(this.addData)
 					// this.addData = Object.assign({},this.addData);
 					//选择科室
-					this.getList1()
+					// this.getList1()
 				} else {
 					//失败
 					console.log('查看详情表格内容+失败')

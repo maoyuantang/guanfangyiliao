@@ -1,7 +1,10 @@
 <!-- 体检记录 -->
 <template>
     <div>
-        <Timeline>
+        <!-- <p>文本</p> -->
+        
+        
+        <!-- <Timeline>
             <TimelineItem v-for="(item,index) in 5" :key="index">
                 <p class="visiting-hospital">
                     <span>重庆市医科大学第三附属医院</span>
@@ -42,7 +45,7 @@
                     </div>
                 </div>
             </TimelineItem>
-        </Timeline>
+        </Timeline> -->
     </div>
 </template>
 

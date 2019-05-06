@@ -240,7 +240,7 @@
             <el-table-column fixed=right label="操作" min-width="460">
               <template slot-scope="scope">
                 <!-- <button class="huangSe" @click="seeHistory(scope.row.patientId)">查看档案</button> -->
-                <button class="huangSe" v-if='scope.row.patientId' @click="dualReferralRecord3(scope.row)">查看档案</button>
+                <button class="huangSe" v-if='scope.row.patientId' @click="dualReferralRecord3(scope.row)">病历</button>
                 <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
                 <button
                   :class='text.btnCommand == "UPDATE"?"lvSe":"CANCEL"?"fenSe":"AUDIT"?"huangSe":"RECEPTION"?"lanSe":"LEAVE_HOSPITAL"?"huangSe":"REFERRAL"?"fenSe":"lanSe"'
@@ -1272,10 +1272,17 @@
       //病历详情
       async dualReferralRecord3(data) {
         console.log(data)
+        // this.$router.push({
+        //   path: "/docDetailed",
+        //   query: {
+        //     id: data.referralId
+        //   }
+        // })
         this.$router.push({
-          path: "/docDetailed",
+          path: "/consultationFiles",
           query: {
-            id: data.referralId
+            id: data.referralId,
+            type: 'REFERRAL'
           }
         })
       },
@@ -1401,7 +1408,7 @@
           receiveOrgName: this.$refs.ceshi3.currentLabels[0],//接收医生名称 
           receiveDeptId: this.addForm.intoHospital.value[1],//接收科室ID
           receiveDeptName: this.$refs.ceshi3.currentLabels[1],//接收科室名称
-          
+
           applyTime: this.addForm.moveTime.value,
           intention: this.addForm.movePurpose,//转诊目的
           diagnose: this.addForm.beginIdea,//初步诊断

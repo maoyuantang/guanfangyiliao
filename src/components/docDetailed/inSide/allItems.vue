@@ -1,7 +1,8 @@
 <!-- 所有项目 -->
 <template>
 	<div>
-		<p>{{inData}}</p>
+		<!-- <p>文本</p>
+		<p>{{inData}}</p> -->
 	</div>
 </template>
 
