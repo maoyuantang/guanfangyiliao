@@ -1,35 +1,37 @@
 <!-- 综合影像 -->
 <template>
     <div>
-        <Timeline>
-            <TimelineItem>
-                <p class="visiting-hospital">重庆市医科大学第三附属医院</p>
-                <p class="visiting-department">
-                    <span class="visiting-department-on">on</span>
-                    <span class="visiting-department-name">科室名称 | 门诊</span>
-                </p>
-                <div class="visiting-content">
-                    <div class="visiting-content-item">
-                        <p class="visiting-content-item-title">影像所见</p>
-                        <div class="visiting-content-item-body">
-                            <p class="visiting-content-item-body-content">
-                                胸部CT平扫示，胸廓对称，胸壁软组织结构清晰。气管纵隔局中，纵隔内未见明显肿大淋巴结。气管支气管开口通常。两肺内见斑片状、多发粟粒结节影，密度不均，部分病变内见点状钙化影。双侧胸腔内未见液性密度影。心影大小形态未见异常。
-                            </p>
+        <div v-for="(o,i) in inData">
+            <Timeline>
+                <TimelineItem>
+                    <p class="visiting-hospital">{{o.hospitalName}}</p>
+                    <p class="visiting-department">
+                        <span class="visiting-department-on">on</span>
+                        <span class="visiting-department-name">检查ID：{{o.studyId}}</span>
+                    </p>
+                    <div class="visiting-content">
+                        <div class="visiting-content-item">
+                            <p class="visiting-content-item-title">影像所见</p>
+                            <div class="visiting-content-item-body">
+                                <p class="visiting-content-item-body-content">
+                                    {{o.examDesc}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="visiting-content-item">
+                            <p class="visiting-content-item-title">诊断结论</p>
+                            <div class="visiting-content-item-body">
+                                <p class="visiting-content-item-body-content">
+                                    {{o.examResultDesc}}
+                                </p>
+                            </div>
                         </div>
                     </div>
-                    <div class="visiting-content-item">
-                        <p class="visiting-content-item-title">诊断结论</p>
-                        <div class="visiting-content-item-body">
-                            <p class="visiting-content-item-body-content">
-                                两肺病变，考虑结核伴钙化。
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </TimelineItem>
-        </Timeline>
-        <div class="btn-div">
-            <el-button type="primary" size="mini">查看影像</el-button>
+                </TimelineItem>
+            </Timeline>
+            <div class="btn-div">
+                <el-button type="primary" size="mini">查看影像</el-button>
+            </div>
         </div>
     </div>
 </template>

@@ -4,32 +4,30 @@
         <div class="medicalOrder">
             <div class="medicalOrder-top">
                 <p class="medicalOrder-top-item">医嘱名称</p>
-                <p class="medicalOrder-top-item">用法</p>
+                <p class="medicalOrder-top-item">规格</p>
+                <p class="medicalOrder-top-item">途径</p>
                 <p class="medicalOrder-top-item">开始时间</p>
                 <p class="medicalOrder-top-item">结束时间</p>
                 <p class="medicalOrder-top-item">频次</p>
-                <p class="medicalOrder-top-item">数量</p>
-                <p class="medicalOrder-top-item">执行情况</p>
+                <p class="medicalOrder-top-item">剂量</p>
+                <p class="medicalOrder-top-item">类别</p>
+                <p class="medicalOrder-top-item">医嘱科室</p>
+                <p class="medicalOrder-top-item">医嘱医生</p>
             </div>
             <div class="medicalOrder-body">
-                <div class="medicalOrder-body-list" v-for="(item,index) in 5" :key="index">
+                <div class="medicalOrder-body-list" v-for="(item,index) in inData" :key="index">
                     <div class="medicalOrder-body-list-item">
-                        <p class="medicalOrder-body-list-item-item">头孢硫脒[乙]</p>
-                        <p class="medicalOrder-body-list-item-item">静脉滴入</p>
-                        <p class="medicalOrder-body-list-item-item">2018-05-22 08:22:21</p>
-                        <p class="medicalOrder-body-list-item-item">2018-05-22 08:22:21</p>
-                        <p class="medicalOrder-body-list-item-item">每天一次</p>
-                        <p class="medicalOrder-body-list-item-item">0.2g</p>
-                        <p class="medicalOrder-body-list-item-item medicalOrder-body-list-item-item-status">执行中</p>
-                    </div>
-                    <div class="medicalOrder-body-list-item">
-                        <p class="medicalOrder-body-list-item-item">头孢硫脒[乙]</p>
-                        <p class="medicalOrder-body-list-item-item">静脉滴入</p>
-                        <p class="medicalOrder-body-list-item-item">2018-05-22 08:22:21</p>
-                        <p class="medicalOrder-body-list-item-item">2018-05-22 08:22:21</p>
-                        <p class="medicalOrder-body-list-item-item">每天一次</p>
-                        <p class="medicalOrder-body-list-item-item">0.2g</p>
-                        <p class="medicalOrder-body-list-item-item medicalOrder-body-list-item-item-status">执行中</p>
+                        <p class="medicalOrder-body-list-item-item">{{item.name}}</p>
+                        <p class="medicalOrder-body-list-item-item">{{item.std}}</p>
+                        <p class="medicalOrder-body-list-item-item">{{item.usage}}</p>
+                        <p class="medicalOrder-body-list-item-item">{{item.startDtime}}</p>
+                        <p class="medicalOrder-body-list-item-item">{{item.endDtime}}</p>
+                        <p class="medicalOrder-body-list-item-item">{{item.freq}}</p>
+                        <p class="medicalOrder-body-list-item-item">{{item.unit}}</p>
+                        <p class="medicalOrder-body-list-item-item">{{item.orderType}}</p>
+                        <p class="medicalOrder-body-list-item-item">{{item.deptName}}</p>
+                        <p class="medicalOrder-body-list-item-item medicalOrder-body-list-item-item-status">
+                            {{item.docName}}</p>
                     </div>
                 </div>
             </div>
@@ -68,6 +66,10 @@
 </script>
 
 <style scoped>
+    .medicalOrder {
+        padding: 25px 40px;
+    }
+
     .medicalOrder-top {
         display: flex;
         background-color: #E9C457;
@@ -75,13 +77,14 @@
     }
 
     .medicalOrder-top-item {
+        font-family: MicrosoftYaHei;
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.87);
+        text-align: left;
         flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: MicrosoftYaHei;
-        font-size: var(--fontSize4);
-        color: rgba(0, 0, 0, 0.87);
     }
 
     .medicalOrder-body-list-item {
@@ -95,7 +98,7 @@
         align-items: center;
         justify-content: center;
         font-family: MicrosoftYaHei;
-        font-size: var(--fontSize4);
+        font-size: 12px;
         color: var(--color20);
     }
 
