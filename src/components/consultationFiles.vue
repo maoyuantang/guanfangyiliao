@@ -140,7 +140,7 @@
                                         <span>{{ohospitalName}}</span>
                                     </div>
                                     <div>
-                                        <span>on</span> 检查ID{{text.studyId}}</div>
+                                        <span>on</span> 检查ID：{{text.studyId}}</div>
                                     <dl>
                                         <dt>影像所见</dt>
                                         <dd>
@@ -187,6 +187,16 @@
                         </div>
                         <!-- 入院记录 -->
                         <div v-for="(text,index) in danganRgMainText1" :key="index" class="danganRgMainTextClass" v-show="danganRgValue=='hospitalized'">
+                            <ul>
+                                <li v-for="(text1,index1) in text.contents" :key="index1">
+                                    <div>{{text1.title}}</div>
+                                    <div>{{text1.content}}</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- 就诊记录 -->
+                        <div v-for="(text,index) in danganRgMainText1" :key="index" class="danganRgMainTextClass" v-show="danganRgValue=='visitInfo'">
                             <ul>
                                 <li v-for="(text1,index1) in text.contents" :key="index1">
                                     <div>{{text1.title}}</div>
@@ -371,7 +381,7 @@ export default {
             if (text.visitType == 1) {
                 //门诊记录
                 this.danganRgList1 = [
-                     {
+                    {
                         name: "就诊记录",
                         value: "recipe"
                     },
@@ -388,21 +398,22 @@ export default {
                         value: "screenage"
                     }
                 ];
-                this.danganRgValue = "recipe";
-                this.orecipe = [];
-                let orecipe1 = this.danganLeftMain.visits[this.danganLeftIndex1]
-                    .info.recipe;
-                orecipe1.forEach((text, index) => {
-                    this.orecipe.push({
-                        src: `${
-                            this.userSocketInfo.imgUrl1
-                        }/m/v1/api/basics/record/recordInfo?token=${
-                            this.userState.token
-                        }&type=${this.$route.query.type}&id=${
-                            this.$route.query.id
-                        }&prescNo==${text}`
-                    });
-                });
+                this.danganRgValue = "visitInfo";
+                this.danganRgMainText1 = [];
+                // this.orecipe = [];
+                // let orecipe1 = this.danganLeftMain.visits[this.danganLeftIndex1]
+                //     .info.recipe;
+                // orecipe1.forEach((text, index) => {
+                //     this.orecipe.push({
+                //         src: `${
+                //             this.userSocketInfo.imgUrl1
+                //         }/m/v1/api/basics/record/recordInfo?token=${
+                //             this.userState.token
+                //         }&type=${this.$route.query.type}&id=${
+                //             this.$route.query.id
+                //         }&prescNo==${text}`
+                //     });
+                // });
             } else if (text.visitType == 2) {
                 //住院记录
                 this.danganRgList1 = [
@@ -421,14 +432,21 @@ export default {
                     {
                         name: "影像检查",
                         value: "screenage"
+                    },
+                    {
+                        name: "手术麻醉",
+                        value: "operation"
+                    },
+                    {
+                        name: "护理记录",
+                        value: "nurse"
                     }
-                    // {
-                    //     name: "手术麻醉",
-                    //     value: "operation"
-                    // }
                 ];
                 this.danganRgValue = "hospitalized";
-                if (this.danganLeftMain.visits.length > 0 && this.danganLeftMain.visits) {
+                if (
+                    this.danganLeftMain.visits.length > 0 &&
+                    this.danganLeftMain.visits
+                ) {
                     this.danganRgMainText1 = this.inHospitalList1 = this.danganLeftMain.visits[
                         this.danganLeftIndex1
                     ].info.hospitalized;
@@ -443,6 +461,9 @@ export default {
                 if (this.danganLeftIndex1 == 1) {
                     //门诊
                     if (index == 0) {
+                        this.danganRgValue = "visitInfo";
+                        this.danganRgMainText1 = [];
+                    } else if (index == 1) {
                         //处方
                         this.orecipe = [];
                         let orecipe1 = this.danganLeftMain.visits[
@@ -460,12 +481,12 @@ export default {
                                 }&prescNo==${text}`
                             });
                         });
-                    } else if (index == 1) {
+                    } else if (index == 2) {
                         //检验
                         this.inHospitalList1 = this.danganLeftMain.visits[
                             this.danganLeftIndex1
                         ].info.checkout;
-                    } else if (index == 2) {
+                    } else if (index == 3) {
                         //影响
                         this.inHospitalList1 = this.danganLeftMain.visits[
                             this.danganLeftIndex1
@@ -494,8 +515,6 @@ export default {
                         ].info.screenage;
                     }
                 }
-
-                
             }
         },
         reBack() {
@@ -529,10 +548,14 @@ export default {
                             name: "影像检查",
                             value: "screenage"
                         },
-                        {
-                            name: "手术麻醉",
-                            value: "operation"
-                        }
+                    {
+                        name: "手术麻醉",
+                        value: "operation"
+                    },
+                    {
+                        name: "护理记录",
+                        value: "nurse"
+                    }
                     ];
                     this.danganRgValue = "hospitalized";
                     this.danganRgMainText1 = this.danganLeftMain.visits[
@@ -543,6 +566,10 @@ export default {
                         .visitType == 1
                 ) {
                     this.danganRgList1 = [
+                        {
+                            name: "就诊记录",
+                            value: "recipe"
+                        },
                         {
                             name: "处方",
                             value: "recipe"
@@ -556,22 +583,24 @@ export default {
                             value: "screenage"
                         }
                     ];
-                    this.danganRgValue = "recipe";
-                    this.orecipe = [];
-                    let orecipe1 = this.danganLeftMain.visits[
-                        this.danganLeftIndex1
-                    ].info.recipe;
-                    orecipe1.forEach((text, index) => {
-                        this.orecipe.push({
-                            src: `${
-                                this.userSocketInfo.imgUrl1
-                            }/m/v1/api/basics/record/recordInfo?token=${
-                                this.userState.token
-                            }&type=${this.$route.query.type}&id=${
-                                this.$route.query.id
-                            }&prescNo==${text}`
-                        });
-                    });
+                    this.danganRgValue = "visitInfo";
+                    this.danganRgMainText1 = [];
+                    // this.danganRgValue = "recipe";
+                    // this.orecipe = [];
+                    // let orecipe1 = this.danganLeftMain.visits[
+                    //     this.danganLeftIndex1
+                    // ].info.recipe;
+                    // orecipe1.forEach((text, index) => {
+                    //     this.orecipe.push({
+                    //         src: `${
+                    //             this.userSocketInfo.imgUrl1
+                    //         }/m/v1/api/basics/record/recordInfo?token=${
+                    //             this.userState.token
+                    //         }&type=${this.$route.query.type}&id=${
+                    //             this.$route.query.id
+                    //         }&prescNo==${text}`
+                    //     });
+                    // });
                 }
             } else if (index == 0) {
                 console.log(
@@ -839,15 +868,15 @@ export default {
     margin-bottom: 10px;
 }
 .danganRgMainTextClass > ul > li > div:nth-child(1) {
-     color: #1474A9;
+    color: #1474a9;
     font-family: PingFangSC-Light;
     font-size: 13px;
     letter-spacing: -0.13px;
     line-height: 33px;
 }
 .danganRgMainTextClass > ul > li > div:nth-child(2) {
-        color: #282828;
-         font-family: PingFangSC-Light;
+    color: #282828;
+    font-family: PingFangSC-Light;
     font-size: 13px;
     letter-spacing: -0.13px;
     line-height: 33px;
