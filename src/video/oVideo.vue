@@ -5,7 +5,7 @@
                 <div class="col-xs-12 mani-media-box">
                     <div class="col-xs-12 media-box other-media">
                         <div id="remoteVideos">
-
+                            <!-- 他方视频 -->
                             <!-- <div v-for="(item,index) in resultList" :key="index" v-html="generateParticipant(item,false)">
 
                             </div> -->
@@ -17,6 +17,7 @@
                         </div>
                     </div>
                     <div class="col-xs-12 media-box us-media">
+                        <!-- 本人视频 -->
                         <!-- 网络视频 -->
                         <div v-if="localVideoVisable" id="localVideos" v-loading="loadingUs" element-loading-text="加载视频中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
 
@@ -125,7 +126,7 @@
             </el-dialog>
         </div>
         <!-- 随访，门诊 -->
-         <div v-if="archivesVisible1">
+        <div v-if="archivesVisible1">
             <el-dialog title="查看档案" :visible.sync="archivesVisible1" width="380px" center append-to-body fullscreen>
                 <archives v-if="archivesVisible1" :inData='archivesIdVisable1'></archives>
             </el-dialog>
@@ -179,7 +180,7 @@ export default {
             defaultImg: 'this.src="' + require("../assets/img/a-6.png") + '"',
             archivesId: "",
             archivesVisible: false,
-            archivesVisible1:false,
+            archivesVisible1: false,
             userResource: "",
             // userResourceVisable: true,
             videoUser: 0,
@@ -212,27 +213,30 @@ export default {
             loadingOther: false,
             streamObject: {},
             archivesIdVisable: true,
-            archivesIdVisable1:true,
+            archivesIdVisable1: true,
             //    archivesUrl :'/outpatient',
+            videoListResult:[]
         };
     },
     mounted() {
         // let oindex = 0;
         // let oid = $("#localVideos>div").attr("id");
-        // $("#remoteVideos>div").click(function() {
-        //     alert('ddd')
-        //     // $(this).attr('id')
-        //     oindex = $(this).index();
-        //     $("#localVideos").html("");
-        //     $("#localVideos").append(
-        //         this.anonymousJoinRoomBtn($(this).attr("id"), true)
-        //     );
-        //     $("#remoteVideos").splice(
-        //         oindex + 1,
-        //         0,
-        //         this.generateParticipant(result, false)
-        //     );
-        // });
+        this.$nextTick(() => {
+            $("#remoteVideos>div").click(function() {
+                alert("ddd");
+                // $(this).attr('id')
+                // oindex = $(this).index();
+                // $("#localVideos").html("");
+                // $("#localVideos").append(
+                //     this.anonymousJoinRoomBtn($(this).attr("id"), true)
+                // );
+                // $("#remoteVideos").splice(
+                //     oindex + 1,
+                //     0,
+                //     this.generateParticipant(result, false)
+                // );
+            });
+        });
     },
     methods: {
         //切换大小窗口
@@ -255,7 +259,12 @@ export default {
             console.log(this.archivesId);
             if (this.archivesId) {
                 let otype = this.chatTypeBox.startDoctorTYpe;
-                if (otype == "随访" || otype == "门诊" || otype == "家医" || otype =='患者') {
+                if (
+                    otype == "随访" ||
+                    otype == "门诊" ||
+                    otype == "家医" ||
+                    otype == "患者"
+                ) {
                     this.$router.replace({
                         path: this.chatTypeBox.archivesUrl,
                         query: {
@@ -273,8 +282,6 @@ export default {
                     });
                     this.archivesVisible1 = true;
                 }
-
-                
             } else {
                 this.$notify.error({
                     title: "警告",
@@ -1750,6 +1757,8 @@ export default {
          */
         Manis.onJoinConference(function(result) {
             console.log(result);
+            _this.videoListResult.push(result)
+            console.log(_this.videoListResult)
             const ele = _this.generateParticipant(result, false);
             ele.onclick = () => {
                 const parent = ele.parentNode;
@@ -1762,24 +1771,26 @@ export default {
                     }
                 }
                 console.log(index);
-                // let oid= $("#localVideos>div").attr('id').slice(12)
-                // $("#localVideos").html("");
-                // $("#localVideos").append(ele);
-                // const eleList = [];
-                // for (let i = 0; i < list.length; i++){
-                //     console.warn(list[i])
-                //     eleList.push(list[i])
-                // }
-                //  console.log(eleList)
-                //  console.log(oid)
-                //  console.log(_this.generateParticipant(oid, false))
-                // eleList[index] = _this.generateParticipant(oid, false);
-
+                let oid = $("#localVideos>div")
+                    .attr("id")
+                    .slice(12);
+                $("#localVideos").html("");
+                $("#localVideos").append(ele);
+                const eleList = [];
+                for (let i = 0; i < list.length; i++) {
+                    console.warn(list[i]);
+                    eleList.push(list[i]);
+                }
+                
+                console.log(oid);
+                console.log(_this.generateParticipant(oid, false));
+                eleList[index] = _this.generateParticipant(oid, false);
+console.log(eleList);
                 // $("#remoteVideos").html();
-                // eleList.forEach(item=>{
-                //     console.log(item)
-                //     $("#remoteVideos").append(item)
-                // })
+                // eleList.forEach(item => {
+                //     console.log(item);
+                //     $("#remoteVideos").append(item);
+                // });
             };
             $("#remoteVideos").append(ele);
             // _this.resultList.push(result);
@@ -1801,6 +1812,12 @@ export default {
          */
         Manis.onLeaveConference(function(result) {
             if (result.code == 200) {
+                _this.videoListResult=_this.videoListResult.map((index,text)=>{
+                    if(text.response.info.resource != result.info.resource) {
+                        return text
+                    }
+                })
+                console.log(_this.videoListResult)
                 $(
                     ".participant_container_" + result.response.resource
                 ).remove();

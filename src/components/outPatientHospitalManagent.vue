@@ -1706,8 +1706,8 @@
 			this.getFilter4();//发药医生
 			this.getList1();//管理列表1
 			// this.newClinic0();//新增门诊弹框内容渲染
-			this.getList2();//管理列表2
-			this.getList3();//管理图表3（统计图表数据获取）
+			// this.getList2();//管理列表2
+			// this.getList3();//管理图表3（统计图表数据获取）
 		}
 	}
 </script>
