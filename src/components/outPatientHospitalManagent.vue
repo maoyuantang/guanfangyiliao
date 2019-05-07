@@ -72,7 +72,7 @@
 					<publicList :columns="prescriptionAuditDistribution.tableBody.columns"
 						:tableData="prescriptionAuditDistribution.tableBody.tableData"
 						:tableBtn="prescriptionAuditDistribution.tableBody.tableBtn" :cellColor="cellColor" :pageSize="pageSize"
-						:total="totals" @rebackFenye="currentChange2">
+						:total="totals" :widths="widths" @rebackFenye="currentChange2">
 					</publicList>
 				</div>
 			</div>
@@ -278,6 +278,7 @@
 				// 常用参数
 				pageNum: 1,//页数
 				pageSize: 10,//条数
+				widths: 200,
 				totals: 0,
 				srcs: "",//处方id   用于拼接图片src
 
@@ -610,7 +611,7 @@
 			//自调用组件函数
 			//在线、处方审核、统计、切换插件返回值
 			getNav(data) {
-				console.log(data.i)
+				// console.log(data.i)
 				this.getFilter0();//获取科室列表
 				this.getFilter1();//审核状态
 				this.getFilter2();//配送状态
@@ -639,22 +640,22 @@
 			},
 			//筛选返回值
 			getSelect0(data) {//科室筛选
-				console.log(data)
+				// console.log(data)
 				this.departmentId = data.index.value;
-				console.log(this.departmentId)
+				// console.log(this.departmentId)
 				this.getList1();
 				this.getList2();
 				this.getList3();
 			},
 			getSelect1(data) {//审核状态
-				console.log(data)
+				// console.log(data)
 				this.reviewEnum = data.index.value;
-				console.log(this.reviewEnum)
+				// console.log(this.reviewEnum)
 				// this.getList1();
 				this.getList2();
 			},
 			getSelect2(data) {//配送状态
-				console.log(data)
+				// console.log(data)
 				this.sendEnum = data.index.value;
 				// this.getList1();
 				this.getList2();
@@ -675,7 +676,7 @@
 				this.getList2();
 			},
 			getFilterTime(data) {//统计		//时间选择器返回函数
-				console.log(this.time)
+				// console.log(this.time)
 				if (data.time == null) {
 					this.type = data.select.value
 					this.getList3();
@@ -692,8 +693,8 @@
 			//筛选列表  管理端
 			//1.21.1.科室工具栏 (管理)
 			async getFilter0(data) {
-				// console.log(this.userInfo.rooter)
-				// console.log(this.userInfo.manager)
+				// // console.log(this.userInfo.rooter)
+				// // console.log(this.userInfo.manager)
 				// if (this.userInfo.manager) {
 				// 	this.types = 'MANAGE'
 				// } else {
@@ -704,11 +705,11 @@
 					token: this.userInfo.token,
 					type: 'MANAGE'
 				};
-				console.log(this.userInfo.manager)
-				console.log(query)
+				// console.log(this.userInfo.manager)
+				// console.log(query)
 				const res = await toolDept(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('1.21.1.科室工具栏 +成功')
+					// console.log('1.21.1.科室工具栏 +成功')
 					if (res.data.body.length > 6) {
 						this.prescriptionAuditDistribution.topFlag[0].more = true;
 						this.onLineList.topFlag[0].more = true;
@@ -739,7 +740,7 @@
 						});
 					});
 				} else {
-					console.log('1.21.1.科室工具栏 +失败')
+					// console.log('1.21.1.科室工具栏 +失败')
 					//失败
 					this.$notify.error({
 						title: "警告",
@@ -755,8 +756,8 @@
 				};
 				const res = await toolRxReviewStatus(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('1.21.2.处方审核状态 +成功')
-					console.log(res)
+					// console.log('1.21.2.处方审核状态 +成功')
+					// console.log(res)
 					if (res.data.body.length > 6) {
 						this.prescriptionAuditDistribution.topFlag[1].more = true;
 					} else {
@@ -771,7 +772,7 @@
 						});
 					});
 				} else {
-					console.log('1.21.2.处方审核状态+失败')
+					// console.log('1.21.2.处方审核状态+失败')
 					//失败
 					this.$notify.error({
 						title: "警告",
@@ -787,7 +788,7 @@
 				};
 				const res = await toolRxSendStatus(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('1.21.3.处方配送状态+成功')
+					// console.log('1.21.3.处方配送状态+成功')
 					if (res.data.body.length > 6) {
 						this.prescriptionAuditDistribution.topFlag[2].more = true;
 					} else {
@@ -802,7 +803,7 @@
 						});
 					});
 				} else {
-					console.log('1.21.3.处方配送状态+失败')
+					// console.log('1.21.3.处方配送状态+失败')
 					//失败
 					this.$notify.error({
 						title: "警告",
@@ -818,7 +819,7 @@
 				};
 				const res = await toolRxReviewDoctors(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('1.21.4.处方审核医生+成功')
+					// console.log('1.21.4.处方审核医生+成功')
 					if (res.data.body.length > 6) {
 						this.prescriptionAuditDistribution.topFlag[3].more = true;
 					} else {
@@ -833,7 +834,7 @@
 						});
 					});
 				} else {
-					console.log('1.21.4.处方审核医生+失败')
+					// console.log('1.21.4.处方审核医生+失败')
 					//失败
 					this.$notify.error({
 						title: "警告",
@@ -849,7 +850,7 @@
 				};
 				const res = await toolRxSendDoctors(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('1.21.5.处方发药医生+成功')
+					// console.log('1.21.5.处方发药医生+成功')
 					if (res.data.body.length > 6) {
 						this.prescriptionAuditDistribution.topFlag[4].more = true;
 					} else {
@@ -864,7 +865,7 @@
 						});
 					});
 				} else {
-					console.log('1.21.5.处方发药医生+失败')
+					// console.log('1.21.5.处方发药医生+失败')
 					//失败
 					this.$notify.error({
 						title: "警告",
@@ -905,17 +906,17 @@
 				};
 				const res = await searchClinic(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('列表1+成功')
-					console.log("time0:", this.time0)
-					console.log("time1:", this.time1)
-					console.log("res:", res)
-					console.log("list:", res.data.body.data2.list)
-					console.log("total:", res.data.body.data2.total)
+					// console.log('列表1+成功')
+					// console.log("time0:", this.time0)
+					// console.log("time1:", this.time1)
+					// console.log("res:", res)
+					// console.log("list:", res.data.body.data2.list)
+					// console.log("total:", res.data.body.data2.total)
 					const lists = res.data.body.data2.list
 					this.totals = res.data.body.data2.total
 					for (let j = 0; j < lists.length; j++) {
 						for (let i = 0; i < lists[j].doctors.length; i++) {
-							// console.log(lists[j].doctors[i].doctorStates)
+							// // console.log(lists[j].doctors[i].doctorStates)
 							if (lists[j].doctors[i].doctorStates & lists[j].doctors[i].doctorStates === true) {
 								lists[j].doctors[i].doctorStates = '接诊中...'
 							} else {
@@ -931,7 +932,7 @@
 					this.tableData = lists;
 				} else {
 					//失败
-					console.log('列表1+失败')
+					// console.log('列表1+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -953,7 +954,7 @@
 			async relateDoctors1(row, column, cell, event) {
 				this.state = row.state//保存对应行的  禁用状态
 				this.onLineId = row.id//保存对应行的   业务编号
-				console.log(row, column, '表一点击事件')
+				// console.log(row, column, '表一点击事件')
 				//管理1.1表   关联医生表   cell-click当某个单元格被点击时会触发该事件row, column, cell, event
 				if (column.label === "关联医生") {
 					this.isShowrelationalDoctor = true;
@@ -967,14 +968,14 @@
 					};
 					const res = await searchClinic(query);
 					if (res.data && res.data.errCode === 0) {
-						console.log('二次请求列表1关联医生+成功')
-						console.log(res.data.body.data2.list)
-						console.log(row.doctor1)
+						// console.log('二次请求列表1关联医生+成功')
+						// console.log(res.data.body.data2.list)
+						// console.log(row.doctor1)
 						const lists = res.data.body.data2.list
 						this.relationalDoctor = row.doctor1
 					} else {
 						//失败
-						console.log('列表1+失败')
+						// console.log('列表1+失败')
 						this.$notify.error({
 							title: "警告",
 							message: res.data.errMsg
@@ -992,15 +993,15 @@
 						pageSize: ""
 					};
 					const res = await fetchMzOrderInfo(query);
-					// console.log(query)
+					// // console.log(query)
 					const lists = res.data.body.data2.list
 					if (res.data && res.data.errCode === 0) {
-						console.log('总，今日，获取订单详情+成功')
-						console.log(res)
+						// console.log('总，今日，获取订单详情+成功')
+						// console.log(res)
 						this.tableDataChat = lists;//订单详情没有数据
 					} else {
 						//失败
-						console.log('总，今日，获取订单详情+失败')
+						// console.log('总，今日，获取订单详情+失败')
 						this.$notify.error({
 							title: "警告",
 							message: res.data.errMsg
@@ -1022,11 +1023,11 @@
 			async isShowRecordChatFun(data) {
 				this.sessionIds = ""
 				this.isShowRecordChat = true;
-				console.log(data)
+				// console.log(data)
 				this.sessionIds = data.bindSessionId
 			},
 			async relateDoctors2(row, column, cell, event) {
-				console.log(row, column)
+				// console.log(row, column)
 			},
 
 
@@ -1036,7 +1037,7 @@
 
 			// 管理2表 (管理端处方表)  .
 			async getList2() {
-				console.log(this.searchValue)
+				// console.log(this.searchValue)
 				let query = {// 7.11根据条件获取处方信息 
 					token: this.userInfo.token,
 					departmentId: this.departmentId,
@@ -1050,12 +1051,12 @@
 				};
 				const res = await prescriptionDetailByCondition(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('列表2+成功')
-					console.log("time0:", this.time0)
-					console.log("time1:", this.time1)
-					console.log("res:", res)
-					console.log("list:", res.data.body.data2.list)
-					console.log("total:", res.data.body.data2.total)
+					// console.log('列表2+成功')
+					// console.log("time0:", this.time0)
+					// console.log("time1:", this.time1)
+					// console.log("res:", res)
+					// console.log("list:", res.data.body.data2.list)
+					// console.log("total:", res.data.body.data2.total)
 					this.totals = res.data.body.data2.total;
 					const lists = res.data.body.data2.list
 					$.each(lists, function (index, text) {
@@ -1081,7 +1082,7 @@
 					this.prescriptionAuditDistribution.tableBody.tableData = lists;
 				} else {
 					//失败
-					console.log('列表2+失败')
+					// console.log('列表2+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1112,14 +1113,14 @@
 					// endTime: "", //String false 结束日期，示例：2019-01 - 25 
 					type: this.type //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
 				};
-				// console.log(query)
+				// // console.log(query)
 				const res = await orderYcmzCharts(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('统计图+门诊订单+成功')
-					console.log(res)
+					// console.log('统计图+门诊订单+成功')
+					// console.log(res)
 					const lists = res.data.body.data
-					// console.log(lists)
-					console.log(this.type)
+					// // console.log(lists)
+					// console.log(this.type)
 					this.yTotal1 = 0
 					this.testdata1.dataAxis.length = 0
 					this.testdata1.data.length = 0
@@ -1131,10 +1132,10 @@
 					this.testdata1.title = "门诊订单"
 					this.testdata1.total = "总数：" + this.yTotal1
 					this.testdata1 = Object.assign({}, this.testdata1);
-					console.log(this.yTotal1)
+					// console.log(this.yTotal1)
 				} else {
 					//失败
-					console.log('统计图+门诊订单+失败')
+					// console.log('统计图+门诊订单+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1153,14 +1154,14 @@
 					// endTime: "", //String false 结束日期，示例：2019-01 - 25 
 					type: this.type //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
 				};
-				// console.log(query)
+				// // console.log(query)
 				const res = await orderRxCharts(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('统计图+处方订单+成功')
-					console.log(res)
+					// console.log('统计图+处方订单+成功')
+					// console.log(res)
 					const lists = res.data.body.data
-					console.log(lists)
-					console.log(this.type)
+					// console.log(lists)
+					// console.log(this.type)
 					this.yTotal2 = 0
 					this.testdata2.dataAxis.length = 0
 					this.testdata2.data.length = 0
@@ -1172,11 +1173,11 @@
 					this.testdata2.title = "处方订单"
 					this.testdata2.total = "总数：" + this.yTotal2
 					this.testdata2 = Object.assign({}, this.testdata2);
-					console.log(this.yTotal2)
-					console.log(this.testdata2)
+					// console.log(this.yTotal2)
+					// console.log(this.testdata2)
 				} else {
 					//失败
-					console.log('统计图+处方订单+失败')
+					// console.log('统计图+处方订单+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1195,14 +1196,14 @@
 					// endTime: "", //String false 结束日期，示例：2019-01 - 25 
 					type: this.type //String true 类型，DEPT按科室，YEAR按年，MONTH按月，DAY按天
 				};
-				// console.log(query)
+				// // console.log(query)
 				const res = await statisticsPeople(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('统计图+就诊人次+成功')
-					console.log(res)
+					// console.log('统计图+就诊人次+成功')
+					// console.log(res)
 					const lists = res.data.body
-					// console.log(lists)
-					console.log(this.type)
+					// // console.log(lists)
+					// console.log(this.type)
 					this.yTotal3 = 0
 					this.testdata3.dataAxis.length = 0
 					this.testdata3.data.length = 0
@@ -1214,10 +1215,10 @@
 					this.testdata3.title = "就诊人次"
 					this.testdata3.total = "总数：" + this.yTotal3
 					this.testdata3 = Object.assign({}, this.testdata3);
-					console.log(this.yTotal3)
+					// console.log(this.yTotal3)
 				} else {
 					//失败
-					console.log('统计图+就诊人次+失败')
+					// console.log('统计图+就诊人次+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1257,7 +1258,7 @@
 				this.addData.businessName = {}
 				this.addData.businessPrice = {}
 				this.addData.businessDescription = ''
-				console.log(this.addData)
+				// console.log(this.addData)
 				const _this = this;
 				let query = {
 					orgCode: this.userInfo.hospitalCode,
@@ -1268,8 +1269,8 @@
 
 				const res = await fetchHospitalDeptAuth(query);								//1.2.1.获取医院科室列表（新）主要用于表单选择()
 				if (res.data && res.data.errCode === 0) {
-					console.log('新增弹框渲染+科室+成功')
-					console.log(res)
+					// console.log('新增弹框渲染+科室+成功')
+					// console.log(res)
 					$.each(res.data.body, function (index, text) {
 						_this.addData.departmentList.list.push({
 							label: text.deptName,
@@ -1278,7 +1279,7 @@
 					});
 					this.getDepartment();
 				} else {
-					console.log('新增弹框渲染+新增业务+失败')
+					// console.log('新增弹框渲染+新增业务+失败')
 					//失败
 					this.$notify.error({
 						title: "警告",
@@ -1288,7 +1289,7 @@
 			},
 			//获取新增门诊弹框内所选科室返回的id
 			getDepartment(data) {
-				console.log(data)
+				// console.log(data)
 				if (data) {
 					this.departmentId = data;
 					this.addData.doctorList.list.length = 0
@@ -1303,12 +1304,12 @@
 					orgCode: this.userInfo.hospitalCode,	//String true 医院代码 
 					deptId: this.departmentId,//String false 科室id 
 				};
-				// console.log(query)
+				// // console.log(query)
 				const res = await doctorsByOrgCodeAndDeptId(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('新增弹框渲染+关联医生+成功')
-					console.log(res)
-					// res.data.body.map(item => console.log(item))
+					// console.log('新增弹框渲染+关联医生+成功')
+					// console.log(res)
+					// res.data.body.map(item => // console.log(item))
 					$.each(res.data.body, function (index, text) {
 						_this.addData.doctorList.list.push({
 							label: text.doctorName,
@@ -1318,7 +1319,7 @@
 					this.newClinic2();
 				} else {
 					//失败
-					console.log('新增弹框渲染+关联医生+失败')
+					// console.log('新增弹框渲染+关联医生+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1327,8 +1328,8 @@
 			},
 			//根据科室获取定义协议
 			async newClinic2() {
-				// console.log(this.userInfo.token)
-				// console.log(this.userSelfInfo.userId)
+				// // console.log(this.userInfo.token)
+				// // console.log(this.userSelfInfo.userId)
 				const _this = this;
 				let query = {
 					token: this.userInfo.token,
@@ -1336,18 +1337,18 @@
 				};
 				const res = await protocols(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('新增弹框渲染+协议+成功')
-					console.log(res)
+					// console.log('新增弹框渲染+协议+成功')
+					// console.log(res)
 					$.each(res.data.body, function (index, text) {
 						_this.addData.agreement.list.push({
 							label: text.protocolName,
 							value: text.protocolId,
 						});
 					});
-					// console.log(this.addData.agreement.list)
+					// // console.log(this.addData.agreement.list)
 				} else {
 					//失败
-					console.log('新增弹框渲染+协议+失败')
+					// console.log('新增弹框渲染+协议+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1356,8 +1357,8 @@
 			},
 			// 获取协议选择情况
 			async getSelectInfo(data) {
-				// console.log(`选择内容：${data.item};选择索引：${data.index}`)
-				// console.log(data.item.value)//插件返回值//获取协议选择情况
+				// // console.log(`选择内容：${data.item};选择索引：${data.index}`)
+				// // console.log(data.item.value)//插件返回值//获取协议选择情况
 				//根据协议id获取协议内容
 				let query = {
 					token: this.userInfo.token,
@@ -1365,8 +1366,8 @@
 				};
 				const res = await protocolById(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log('新增弹框渲染+协议内容+成功')
-					// console.log(res)
+					// console.log('新增弹框渲染+协议内容+成功')
+					// // console.log(res)
 					// 保存返回来的协议id和协议表体，提交时要用
 					this.clinicProtocolId = res.data.body.protocolId
 					this.clinicProtocolName = res.data.body.protocolName
@@ -1377,13 +1378,13 @@
 					this.addData.agreement.showContent = res.data.body.protocolContent
 				} else {
 					//失败
-					console.log('新增弹框渲染+协议内容+失败')
+					// console.log('新增弹框渲染+协议内容+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
 					});
 				}
-				console.log(this.addData.agreement)
+				// console.log(this.addData.agreement)
 			},
 
 
@@ -1409,9 +1410,9 @@
 				};
 				const res = await clinicDetail(query);// clinicDetail,//7.3查看远程门诊业务详情
 				if (res.data && res.data.errCode === 0) {
-					console.log('查看详情表格内容+成功')
+					// console.log('查看详情表格内容+成功')
 					const lists = res.data.body
-					console.log(lists)
+					// console.log(lists)
 					this.addData.businessDescription = lists.desc;//业务描述
 					this.addData.agreement.showContent = lists.protocolContent;//协议内容
 					this.addData.servicePhone = lists.phone;//服务电话
@@ -1425,13 +1426,13 @@
 						_this.addData.doctorList.default.push(text.doctorId)//关联医生	
 					})
 					this.addData.agreement.default = { label: lists.protocolName, value: lists.protocolId }//协议id
-					console.log(this.addData)
+					// console.log(this.addData)
 					// this.addData = Object.assign({},this.addData);
 					//选择科室
 					// this.getList1()
 				} else {
 					//失败
-					console.log('查看详情表格内容+失败')
+					// console.log('查看详情表格内容+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1450,9 +1451,9 @@
 				};
 				const res = await clinicDetail(query0);
 				if (res.data && res.data.errCode === 0) {
-					console.log('编辑表格渲染+成功')
+					// console.log('编辑表格渲染+成功')
 					const lists = res.data.body
-					console.log(lists)
+					// console.log(lists)
 					this.addData.businessDescription = lists.desc;//业务描述
 					this.addData.agreement.showContent = lists.protocolContent;//协议内容
 					this.addData.servicePhone = lists.phone;//服务电话
@@ -1464,14 +1465,14 @@
 					this.addData.departmentList.default = departmentLista;//科室
 					$.each(lists.doctors, function (index, text) {
 						_this.addData.doctorList.default.push(text.doctorId)//关联医生
-						console.log(text.doctorId)
+						// console.log(text.doctorId)
 					})
 					this.addData.agreement.default = { label: lists.protocolName, value: lists.protocolId }//协议id
-					console.log(this.addData)
+					// console.log(this.addData)
 				} else {
 					//失败
-					console.log('编辑表格渲染+失败')
-					console.log(lists.protocolName)
+					// console.log('编辑表格渲染+失败')
+					// console.log(lists.protocolName)
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1480,7 +1481,7 @@
 			},
 			//禁用接口的调用
 			async isShowForbidFun(row) {
-				console.log(row)
+				// console.log(row)
 
 				this.status1 = !row.state
 				let query = {
@@ -1494,7 +1495,7 @@
 				if (res.data && res.data.errCode === 0) {
 					this.getList1()
 				} else {
-					console.log('禁用失败')
+					// console.log('禁用失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1512,10 +1513,10 @@
 				// };
 				// const res = await prescriptionDetailById(query);
 				// if (res.data && res.data.errCode === 0) {
-				// 	console.log('处方详情图片+成功')
-				// 	console.log(res)
+				// 	// console.log('处方详情图片+成功')
+				// 	// console.log(res)
 				// } else {
-				// 	console.log('处方详情图片+失败')
+				// 	// console.log('处方详情图片+失败')
 				// 	this.$notify.error({
 				// 		title: "警告",
 				// 		message: res.data.errMsg
@@ -1524,7 +1525,7 @@
 			},
 			//物流状态   管理2表
 			async roadStatusList2Fun(index, row) {
-				console.log(index, row)
+				// console.log(index, row)
 				this.roadStatusList2 = true;
 				let query = {
 					token: this.userInfo.token,
@@ -1532,11 +1533,11 @@
 				};
 				const res = await drugHaulStatus(query);//接口还没写
 				if (res.data && res.data.errCode === 0) {
-					console.log(res)
+					// console.log(res)
 					this.roadStatusList2List = res.data.body
-					console.log("物流状态+成功");
+					// console.log("物流状态+成功");
 				} else {
-					console.log('物流状态+失败')
+					// console.log('物流状态+失败')
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1547,7 +1548,7 @@
 			async viewRecordList2Fun(index, row) {
 				this.sessionIds = ""
 				this.viewRecordList2 = true;
-				console.log(index, row)
+				// console.log(index, row)
 				this.sessionIds = row.prescriptionSessionId
 			},
 
@@ -1562,12 +1563,12 @@
 
 			// 7.1  提交		（复用表单）  数据
 			async getData(data) {
-				console.log(data)
+				// console.log(data)
 				if (this.sureVisiable == 0) {
 					let query = {
 						token: this.userInfo.token
 					};
-					// console.log(this.clinicProtocolName)
+					// // console.log(this.clinicProtocolName)
 					const options = {
 						clinicId: '',//String false 远程门诊id（新增为空，编辑不为空） 
 						clinicType: data.businessTypeList.default.label,//String true 远程门诊类型 
@@ -1584,16 +1585,16 @@
 						clinicPhone: data.servicePhone,//String true 远程门诊电话 
 						status: this.state//boolean false 远程门诊状态（禁用操作时值必传） 
 					};
-					// console.log(query, options)
+					// // console.log(query, options)
 					const res = await addClinic(query, options);
 					if (res.data && res.data.errCode === 0) {
-						console.log('7.1新增业务+成功')
+						// console.log('7.1新增业务+成功')
 						this.departmentId = ""
 						this.getList1()
 						this.addData.show = false
 						this.addData.agreement.default = { label: "", value: "" }
 					} else {
-						console.log('7.1新增业务+失败')
+						// console.log('7.1新增业务+失败')
 						//失败
 						this.$notify.error({
 							title: "警告",
@@ -1602,8 +1603,8 @@
 					}
 				}
 				else if (this.sureVisiable == 2) {
-					console.log(data)
-					console.log(this.addData.agreement)
+					// console.log(data)
+					// console.log(this.addData.agreement)
 					let a = 0;
 					for (let index = 0; index < this.addData.agreement.list.length; index++) {
 						//协议第二步才有内容，所以在只改动协议内容时，做不了匹配判断，除非第一步就把showcontent返回来，才可以判断
@@ -1641,16 +1642,16 @@
 						clinicProtocolName: data.agreement.default.label,//String true 远程门诊协议名 
 						status: this.state//boolean false 远程门诊状态（禁用操作时值必传） 
 					};
-					console.log(data.agreement)
-					console.log(data.agreement.default)
+					// console.log(data.agreement)
+					// console.log(data.agreement.default)
 					const res = await updateClinic(query, options);
 					if (res.data && res.data.errCode === 0) {
-						console.log('7.2编辑业务+成功')
+						// console.log('7.2编辑业务+成功')
 						this.getList1()
 						this.addData.show = false
 						// this.addData.agreement.default = { label: "", value: "" }
 					} else {
-						console.log('7.2编辑业务+失败')
+						// console.log('7.2编辑业务+失败')
 						//失败
 						this.$notify.error({
 							title: "警告",
@@ -1665,12 +1666,12 @@
 			// 分页
 			// 组件返回函数
 			currentChange1(data) {
-				console.log(data)
+				// console.log(data)
 				this.pageNum = data
 				this.getList1()
 			},
 			currentChange2(data) {
-				console.log(data)
+				// console.log(data)
 				this.pageNum = data;
 				this.getList2();
 

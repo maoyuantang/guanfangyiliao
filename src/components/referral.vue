@@ -551,18 +551,18 @@
       //筛选返回值  管理端
       getFilter0(data) {//科室筛选
         this.departmentId = data.index.value;
-        console.log(this.departmentId)
+        // console.log(this.departmentId)
         this.getList1();
         this.getList2();
       },
       getFilter2(data) {//方向筛选
         this.direction = data.index.value;
-        console.log(this.direction)
+        // console.log(this.direction)
         this.getList1();
       },
       adminSearchOne(data) {//搜索（筛选右边）
         this.searchValue = data;
-        console.log(this.searchValue)
+        // console.log(this.searchValue)
         this.getList1();
         this.getList2();
       },
@@ -598,14 +598,14 @@
       },
       //点击筛选日期    医生端
       getOTab4(data) {
-        console.log(data)
+        // console.log(data)
         // this.doctorDate = data.index.value;//这个参数不用了
         // this.getList2();
         this.nowDateF(data)
         this.DoctorList();//医生端列表
       },
       handleChange(value) {
-        console.log(value);
+        // console.log(value);
         this.addForm.intoHospital.value = value
       },
       handleClose1(done) {
@@ -634,8 +634,8 @@
       //筛选列表  管理端
       //1.21.1.科室筛选  工具栏 (管理) (管理)
       async getSelect1(oindex) {
-        // console.log(this.userInfo.rooter)
-        // console.log(this.userInfo.manager)
+        // // console.log(this.userInfo.rooter)
+        // // console.log(this.userInfo.manager)
         // if (this.userInfo.manager) {
         //   this.types = 'MANAGE'
         // } else {
@@ -648,8 +648,8 @@
         };
         const res = await toolDept(query);                     //1.21.1.科室筛选  工具栏 (管理) (管理)
         if (res.data && res.data.errCode === 0) {
-          console.log('1.21.1.科室工具栏 +成功')
-          // console.log(res.data.body);
+          // console.log('1.21.1.科室工具栏 +成功')
+          // // console.log(res.data.body);
           if (res.data.body.length > 6) {
             this.onLineList.topFlag[0].more = true;
             this.statistics.topFlag[0].more = true;
@@ -685,7 +685,7 @@
             });
           });
         } else {
-          console.log('1.21.1.科室工具栏 +失败')
+          // console.log('1.21.1.科室工具栏 +失败')
           //失败
           this.$notify.error({
             title: "警告",
@@ -701,8 +701,8 @@
         // };
         // const res = await toolReferralType(query);                     //1.21.28.方向筛选  工具栏 (管理)
         // if (res.data && res.data.errCode === 0) {
-        //   console.log('1.21.28.方向筛选  工具栏 +成功')
-        //   console.log(res.data.body);
+        //   // console.log('1.21.28.方向筛选  工具栏 +成功')
+        //   // console.log(res.data.body);
         //   if (res.data.body.length > 6) {
         //     this.onLineList.topFlag[2].more = true;
         //   } else {
@@ -716,7 +716,7 @@
         //     });
         //   });
         // } else {
-        //   console.log('1.21.28.方向筛选  工具栏 +失败')
+        //   // console.log('1.21.28.方向筛选  工具栏 +失败')
         //   //失败
         //   this.$notify.error({
         //     title: "警告",
@@ -752,18 +752,18 @@
         };
         const res = await dualReferralManagePage(query);            //14.3.双向转诊-WEB管理端-管理列表
         if (res.data && res.data.errCode === 0) {
-          console.log('管理1表+成功')
-          console.log("time0", this.time0)
-          console.log("time1", this.time1)
-          console.log("res", res)
-          console.log("list", res.data.body.data2.list)
-          console.log("total", res.data.body.data2.total)
+          // console.log('管理1表+成功')
+          // console.log("time0", this.time0)
+          // console.log("time1", this.time1)
+          // console.log("res", res)
+          // console.log("list", res.data.body.data2.list)
+          // console.log("total", res.data.body.data2.total)
           const lists = res.data.body.data2.list
           this.totals = res.data.body.data2.total
           this.manageBodyData = lists
           this.departmentId = ""
         } else {
-          console.log('管理1表+失败')
+          // console.log('管理1表+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -788,8 +788,8 @@
         };
         const res = await statistics(query);            //14.4.双向转诊-WEB管理端-统计 
         if (res.data && res.data.errCode === 0) {
-          console.log('统计+转入人次+成功')
-          console.log(res)
+          // console.log('统计+转入人次+成功')
+          // console.log(res)
           const lists = res.data.body.data
           this.yTotal1 = 0
           this.testdata1.dataAxis.length = 0
@@ -802,11 +802,11 @@
           this.testdata1.title = "转入人次"
           this.testdata1.total = "总数：" + this.yTotal1
           this.testdata1 = Object.assign({}, this.testdata1);
-          console.log(this.yTotal1)
-          console.log(this.testdata1)
+          // console.log(this.yTotal1)
+          // console.log(this.testdata1)
         } else {
           //失败
-          console.log('统计+转入人次+失败')
+          // console.log('统计+转入人次+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -825,8 +825,8 @@
         };
         const res = await statistics(query);            //14.4.双向转诊-WEB管理端-统计 
         if (res.data && res.data.errCode === 0) {
-          console.log('统计+转出人次+成功')
-          console.log(res)
+          // console.log('统计+转出人次+成功')
+          // console.log(res)
           const lists = res.data.body.data
           this.yTotal2 = 0
           this.testdata2.dataAxis.length = 0
@@ -839,11 +839,11 @@
           this.testdata2.title = "转出人次"
           this.testdata2.total = "总数：" + this.yTotal2
           this.testdata2 = Object.assign({}, this.testdata2);
-          console.log(this.yTotal2)
-          console.log(this.testdata2)
+          // console.log(this.yTotal2)
+          // console.log(this.testdata2)
         } else {
           //失败
-          console.log('统计+转出人次+失败')
+          // console.log('统计+转出人次+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -862,21 +862,21 @@
           query: this.doctorDate,//查询数据  (不能用)用的日期筛选返回值
           direction: this.direction,//方向：into转入，转出out
         };
-        console.log(options)
+        // console.log(options)
         const res = await dualReferralPage(options);                  //14.5.双向转诊-WEB医生端-列表
         if (res.data && res.data.errCode === 0) {
-          console.log('医生表+成功')
-          console.log("time0:", this.time0)
-          console.log("time1:", this.time1)
-          console.log("res:", res)
-          console.log("list:", res.data.body.data2.list)
-          console.log("total:", res.data.body.data2.total)
+          // console.log('医生表+成功')
+          // console.log("time0:", this.time0)
+          // console.log("time1:", this.time1)
+          // console.log("res:", res)
+          // console.log("list:", res.data.body.data2.list)
+          // console.log("total:", res.data.body.data2.total)
           const lists = res.data.body.data2.list
           this.totals = res.data.body.data2.total
           this.docTableData = lists
         } else {
           //失败
-          console.log('医生表+失败')
+          // console.log('医生表+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -917,16 +917,16 @@
       },
       //返回所选病症id
       diseaseNameId() {
-        // console.log(this.addForm.diseaseName)
+        // // console.log(this.addForm.diseaseName)
         this.medicalId = this.addForm.diseaseName.value
-        console.log(this.medicalId)
+        // console.log(this.medicalId)
         if (this.medicalId) {
           this.readMedicalsOfHospitalAndDept();
         }
       },
       // 疾病名称下拉框 列表
       async readMedicals() {
-        console.log(this.referralType)
+        // console.log(this.referralType)
         let _this = this;
         const options = {
           token: this.userInfo.token,
@@ -934,8 +934,8 @@
         };
         const res = await readMedicals(options);                  //14.1.双向转诊-WEB医生端-疾病名称下拉框 
         if (res.data && res.data.errCode === 0) {
-          console.log('疾病名称下拉框 +成功')
-          console.log(res)
+          // console.log('疾病名称下拉框 +成功')
+          // console.log(res)
           this.addForm.diseaseName.list.length = 0
           $.each(res.data.body, function (index, text) {
             _this.addForm.diseaseName.list.push(
@@ -947,7 +947,7 @@
           })
         } else {
           //失败
-          console.log('疾病名称下拉框 +失败')
+          // console.log('疾病名称下拉框 +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -957,7 +957,7 @@
       // 14.2.双向转诊-WEB医生端-医院与科室下拉框联动 
       async readMedicalsOfHospitalAndDept() {
         this.referralType = this.addForm.typeList.value
-        console.log(this.referralType)
+        // console.log(this.referralType)
         let _this = this;
         const options = {
           token: this.userInfo.token,
@@ -966,8 +966,8 @@
         };
         const res = await readMedicalsOfHospitalAndDept(options);                  // 14.2.双向转诊-WEB医生端-医院与科室下拉框联动 
         if (res.data && res.data.errCode === 0) {
-          console.log('医生端-医院与科室下拉框联动 +成功')
-          console.log(res)
+          // console.log('医生端-医院与科室下拉框联动 +成功')
+          // console.log(res)
           this.addForm.intoHospital.list.length = 0;
           $.each(res.data.body, function (index1, text) {
             _this.addForm.intoHospital.list.push(
@@ -990,10 +990,10 @@
               })
             }
           })
-          console.log(this.addForm.intoHospital.list)
+          // console.log(this.addForm.intoHospital.list)
         } else {
           //失败
-          console.log('医生端-医院与科室下拉框联动 +失败')
+          // console.log('医生端-医院与科室下拉框联动 +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1007,17 +1007,17 @@
         };
         const res = await referredPatientList(query);
         if (res.data && res.data.errCode === 0) {
-          console.log("获取病人列表成功")
+          // console.log("获取病人列表成功")
           this.addForm.patient.list.length = 0;
           res.data.body.map((item, index) => {
-            console.log(item, index)
+            // console.log(item, index)
             this.addForm.patient.list.push({
               value: item.patientId,
               label: item.name
             })
           })
-          console.log(this.addForm.patient.list);
-          console.log(this.addForm.patient.value);
+          // console.log(this.addForm.patient.list);
+          // console.log(this.addForm.patient.value);
         } else {
           //失败
           this.$notify.error({
@@ -1045,22 +1045,22 @@
           token: this.userInfo.token,
           patientId: this.addForm.patient.value
         };
-        console.log(query)
+        // console.log(query)
         const res = await patientMedicalHistory(query);
         if (res.data && res.data.errCode === 0) {
-          console.log("获取授权列表成功")
-          console.log(res);
+          // console.log("获取授权列表成功")
+          // console.log(res);
           let objList = res.data.body
           this.invitationData1[0].children = objList.visit;
           this.invitationData1[1].children = objList.electronicMedical;
-          console.log(this.invitationData1)
+          // console.log(this.invitationData1)
           $.each(this.invitationData1[0].children, function (index, text) {
             text.type = "VISIT";
           });
           $.each(this.invitationData1[1].children, function (index, text) {
             text.type = "HISTORY";
           });
-          console.log(this.invitationData1)
+          // console.log(this.invitationData1)
         } else {
           //失败
           this.$notify.error({
@@ -1072,10 +1072,10 @@
       // handleCheckChange(data, checked, indeterminate) {
       //   this.addForm.giveRight.value = [];
       //   this.addForm.giveRight.list.length = 0;
-      //   console.log(checked);
+      //   // console.log(checked);
       //   let _this = this;
       //   $.each(checked.checkedNodes, function (index, text) {
-      //     console.log(text);
+      //     // console.log(text);
       //     if (text.type == 3) {
       //       _this.addForm.giveRight.value = _this.addForm.giveRight.value + " " + text.name;
       //       _this.addForm.giveRight.list.push({
@@ -1084,10 +1084,10 @@
       //       })
       //     }
       //   });
-      //   console.log(this.addForm.giveRight.list)
+      //   // console.log(this.addForm.giveRight.list)
       // },
       handleCheckChange(data, odata) {
-        console.log(data, odata);
+        // console.log(data, odata);
         this.addForm.giveRight.value = [];
         this.bingliSelect = "";
         $.each(odata.checkedNodes, (index, text) => {
@@ -1100,12 +1100,12 @@
       //点击确定    新增门诊
       async dualReferralAdd1() {
         const _this = this;
-        console.log(this.addForm)
+        // console.log(this.addForm)
         this.arrayMed.length = 0
         $.each(this.addForm.giveRight.list, function (index, text) {
           _this.arrayMed.push(text.value)
         });
-        console.log(this.arrayMed)
+        // console.log(this.arrayMed)
 
         $.each(_this.addForm.giveRight.value, function (index, text) {
           text.medicalHistoryId = text.visitNo;
@@ -1133,19 +1133,19 @@
           medicalRecordIds: this.addForm.giveRight.value,
           medicalHistorys: this.addForm.giveRight.value//病历授权（与会诊相同）
         };
-        console.log(options)
+        // console.log(options)
         const res = await dualReferralAdd(query, options);                                   //  14.6.双向转诊-WEB医生端-申请转诊 
         if (res.data && res.data.errCode === 0) {
           this.isShowaddMove = false
-          console.log('新增门诊 +成功')
-          console.log(res)
+          // console.log('新增门诊 +成功')
+          // console.log(res)
           // this.referralId = res.data.body
-          // console.log(this.referralId)
+          // // console.log(this.referralId)
           this.DoctorList();
           this.handleClose1()
         } else {
           //失败
-          console.log('新增门诊 +失败')
+          // console.log('新增门诊 +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1180,8 +1180,8 @@
       // 管理1表      操作区  
       //查看记录
       async dualReferralRecord1(data) {
-        console.log(data)
-        console.log(data.referralId)
+        // console.log(data)
+        // console.log(data.referralId)
         this.isShowmoveUser1 = !this.isShowmoveUser1
         let _this = this;
         const options = {
@@ -1190,12 +1190,12 @@
         };
         const res = await dualReferralRecord(options);                  //14.7.双向转诊-WEB医生端-查询记录 
         if (res.data && res.data.errCode === 0) {
-          console.log('管理1表 -查询记录 (按钮)+成功')
-          console.log(res)
+          // console.log('管理1表 -查询记录 (按钮)+成功')
+          // console.log(res)
           this.dualReferralRecordFile = res.data.body
         } else {
           //失败
-          console.log('管理1表 -查询记录 (按钮)+失败')
+          // console.log('管理1表 -查询记录 (按钮)+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1205,21 +1205,21 @@
       //查看反馈
       async viewFile2(data) {
         this.isShowmoveUser2 = !this.isShowmoveUser2
-        console.log(data)
+        // console.log(data)
       },
 
 
       // 医生表     操作区 
       //查看档案     (按钮)
       async doctorListFun1(data) {
-        console.log(data)
+        // console.log(data)
         // this.isShowaddMove = !this.isShowaddMove
         // this.isShowmoveUser1 = !this.isShowmoveUser1
       },
       //表2点击  操作区    (按钮)
       //按钮 UPDATE("修改"), CANCEL("取消"), AUDIT("审核"), RECEPTION("接诊"), LEAVE_HOSPITAL("出院"), REFERRAL("转诊"),
       async list2Done(data1, data2) {
-        console.log(data1, data2)
+        // console.log(data1, data2)
         this.referralId = data2.referralId
         if (data1 == "UPDATE") {//修改
           this.dualReferralUpdate(data2);
@@ -1248,7 +1248,7 @@
       },
       //转诊记录     (按钮)   (管理医生端都有的查看 详情按钮)
       async dualReferralRecord2(data) {
-        console.log(data)
+        // console.log(data)
         this.isShowmoveUser1 = !this.isShowmoveUser1
         let _this = this;
         const options = {
@@ -1257,12 +1257,12 @@
         };
         const res = await dualReferralRecord(options);                  //14.7.双向转诊-WEB医生端-查询记录 
         if (res.data && res.data.errCode === 0) {
-          console.log('医生端-查询记录 (按钮)+成功')
-          console.log(res)
+          // console.log('医生端-查询记录 (按钮)+成功')
+          // console.log(res)
           this.dualReferralRecordFile = res.data.body
         } else {
           //失败
-          console.log('医生端-查询记录 (按钮)+失败')
+          // console.log('医生端-查询记录 (按钮)+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1271,7 +1271,7 @@
       },
       //病历详情
       async dualReferralRecord3(data) {
-        console.log(data)
+        // console.log(data)
         // this.$router.push({
         //   path: "/docDetailed",
         //   query: {
@@ -1295,8 +1295,8 @@
         let _this = this;
         this.isShowaddMove = true
         this.referralId = data2.referralId
-        console.log(data2)
-        console.log(this.userInfo.hasAuth)
+        // console.log(data2)
+        // console.log(this.userInfo.hasAuth)
 
 
         const options = {
@@ -1305,8 +1305,8 @@
         };
         const res = await toUpdate(options);                  //14.18.双向转诊-WEB医生端-获取修改记录
         if (res.data && res.data.errCode === 0) {
-          console.log('医生端-查询记录 (按钮)+成功')
-          console.log(res)
+          // console.log('医生端-查询记录 (按钮)+成功')
+          // console.log(res)
           this.addForm.typeList.value = res.data.body.typeCode
           this.addForm.diseaseName.value = res.data.body.illnessId
           this.addForm.patient.value = res.data.body.patientId
@@ -1318,13 +1318,13 @@
           this.patientMedicalHistoryFun(res.data.body.selectedMedicalHistoryList)
           // this.addForm.giveRight.value = res.data.body.medicalHistoryIds
 
-          console.log(this.addForm)
+          // console.log(this.addForm)
           this.upOrDown().then(val => {
             this.diseaseNameId();
           });
         } else {
           //失败
-          console.log('医生端-查询记录 (按钮)+失败')
+          // console.log('医生端-查询记录 (按钮)+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1339,8 +1339,8 @@
         };
         const res1 = await patientMedicalHistory(query1);                                   //  14.8.双向转诊-WEB医生端-修改
         if (res1.data && res1.data.errCode === 0) {
-          console.log('获取病历列表+成功')
-          console.log(res1)
+          // console.log('获取病历列表+成功')
+          // console.log(res1)
           var resHis = res1.data.body.electronicMedical;
           var resEle = res1.data.body.visit;
           // for (let e in res1.data.body) {//e:key
@@ -1348,9 +1348,9 @@
           //     resLis.push(a)
           //   })
           // }
-          console.log(resHis)//电子授权
-          console.log(resEle)//就诊记录
-          console.log(data)//筛选条件
+          // console.log(resHis)//电子授权
+          // console.log(resEle)//就诊记录
+          // console.log(data)//筛选条件
 
           data.map((o1, e1) => {
             if (o1.type == "HISTORY") {
@@ -1370,7 +1370,7 @@
               })
             } else { }
           })
-          console.log(this.addForm.giveRight.value)
+          // console.log(this.addForm.giveRight.value)
           this.bingliSelect = "";
           this.addForm.giveRight.value.map((o, e) => {
             this.bingliSelect += o.hospitalName + ",";
@@ -1378,7 +1378,7 @@
 
         } else {
           //失败
-          console.log('获取病历列表+失败')
+          // console.log('获取病历列表+失败')
           this.$notify.error({
             title: "警告",
             message: res1.data.errMsg
@@ -1391,7 +1391,7 @@
           text.medicalHistoryId = text.visitNo;
         });
 
-        console.log(this.addForm)
+        // console.log(this.addForm)
         let query = {
           token: this.userInfo.token
         };
@@ -1419,17 +1419,17 @@
           // archivesAuthority: Object.assign({}, this.addForm.giveRight.value),//病历授权
           // medicalHistorys: Object.assign({}, this.addForm.giveRight.value)
         };
-        console.log(options)
+        // console.log(options)
         const res = await dualReferralUpdate(query, options);                                   //  14.8.双向转诊-WEB医生端-修改
         if (res.data && res.data.errCode === 0) {
           this.isShowaddMove = false
-          console.log('WEB医生端编辑 +成功')
-          console.log(res)
+          // console.log('WEB医生端编辑 +成功')
+          // console.log(res)
           this.DoctorList();
           this.handleClose1()
         } else {
           //失败
-          console.log('WEB医生端编辑 +失败')
+          // console.log('WEB医生端编辑 +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1438,7 +1438,7 @@
       },
       // //删除     (按钮)
       // async doctorListFun4(data) {
-      //   console.log(data)
+      //   // console.log(data)
       // },
       //取消     (按钮)
       async applicantCANCEL(data2) {
@@ -1451,13 +1451,13 @@
         };
         const res = await applicantCANCEL(query, options);                  //14.9.双向转诊-WEB医生端-申请人操作
         if (res.data && res.data.errCode === 0) {
-          console.log('医生端-取消 (按钮)+成功')
-          console.log(res)
+          // console.log('医生端-取消 (按钮)+成功')
+          // console.log(res)
           // this.getList1()
           this.DoctorList()
         } else {
           //失败
-          console.log('医生端-取消 (按钮)+失败')
+          // console.log('医生端-取消 (按钮)+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1474,13 +1474,13 @@
         };
         const res = await receptionAudit(query, options);                                   //14.11.双向转诊-WEB医生端-审核
         if (res.data && res.data.errCode === 0) {
-          console.log('医生端-接诊 (按钮)+成功')
-          console.log(res)
+          // console.log('医生端-接诊 (按钮)+成功')
+          // console.log(res)
           // this.getList1()
           this.DoctorList()
         } else {
           //失败
-          console.log('医生端-接诊 (按钮)+失败')
+          // console.log('医生端-接诊 (按钮)+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1498,13 +1498,13 @@
         };
         const res = await dualReferralReception(query, options);                                   //14.10.双向转诊-WEB医生端-接诊人操作
         if (res.data && res.data.errCode === 0) {
-          console.log('医生端-接诊 (按钮)+成功')
-          console.log(res)
+          // console.log('医生端-接诊 (按钮)+成功')
+          // console.log(res)
           // this.getList1()
           this.DoctorList()
         } else {
           //失败
-          console.log('医生端-接诊 (按钮)+失败')
+          // console.log('医生端-接诊 (按钮)+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1522,13 +1522,13 @@
         };
         const res = await dualReferralReception(query, options);                                   //14.10.双向转诊-WEB医生端-接诊人操作
         if (res.data && res.data.errCode === 0) {
-          console.log('医生端-出院 (按钮)+成功')
-          console.log(res)
+          // console.log('医生端-出院 (按钮)+成功')
+          // console.log(res)
           // this.getList1()
           this.DoctorList()
         } else {
           //失败
-          console.log('医生端-出院 (按钮)+失败')
+          // console.log('医生端-出院 (按钮)+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1553,8 +1553,8 @@
         };
         const res = await dualReferralget(query);                                   //14.14.双向转诊-WEB医生端-获取需要再次转诊的记录 
         if (res.data && res.data.errCode === 0) {
-          console.log('医生端-再次转诊渲染信息+成功')
-          console.log(res)
+          // console.log('医生端-再次转诊渲染信息+成功')
+          // console.log(res)
 
 
 
@@ -1570,7 +1570,7 @@
 
           // this.patientMedicalHistoryFun(res.data.body.selectedMedicalHistoryList)
 
-          console.log(this.addForm)
+          // console.log(this.addForm)
           this.upOrDown().then(val => {
             this.diseaseNameId();
           });
@@ -1578,7 +1578,7 @@
           this.DoctorList()
         } else {
           //失败
-          console.log('医生端-再次渲染信息+失败')
+          // console.log('医生端-再次渲染信息+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1587,7 +1587,7 @@
       },
       async dualReferralAdd3(data2) {
         const _this = this
-        console.log(this.addForm)
+        // console.log(this.addForm)
 
         $.each(_this.addForm.giveRight.value, function (index, text) {
           text.medicalHistoryId = text.visitNo;
@@ -1622,17 +1622,17 @@
           // archivesAuthority: ""，
           // medicalRecordIds: ["", ""]
         };
-        console.log(options)
+        // console.log(options)
         const res = await dualReferraltransfer(query, options);                                   //  14.13.双向转诊-WEB医生端-接受医生再次转诊 
         if (res.data && res.data.errCode === 0) {
           this.isShowaddMove = false
-          console.log('WEB医生端再次转诊 +成功')
-          console.log(res)
+          // console.log('WEB医生端再次转诊 +成功')
+          // console.log(res)
           this.DoctorList();
           this.handleClose1()
         } else {
           //失败
-          console.log('WEB医生端再次转诊 +失败')
+          // console.log('WEB医生端再次转诊 +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1647,17 +1647,17 @@
 
       // 、、分页
       currentChange1(data) {
-        console.log(data)
+        // console.log(data)
         this.pageNum = data
         this.getList1()
       },
       currentChange2(data) {
-        console.log(data)
+        // console.log(data)
         this.pageNum = data
         this.DoctorList()
       },
       async seeHistory(data) {
-        console.log(data)
+        // console.log(data)
         this.$router.push({
           path: "/docDetailed",
           query: {

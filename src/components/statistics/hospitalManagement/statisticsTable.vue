@@ -205,14 +205,14 @@
                     query.endTime = '';
                 }
                 const res = await registeredStatistics(query);
-                console.log(res)
+             // console.log(res)
                 if(res.data&&res.data.errCode===0){
                     // let initialValue=0;
                     this.registeredUsers.total = `总数：${res.data.body.total}`;
                     this.registeredUsers.dataAxis = res.data.body.data.map(item=>item.x);
                     this.registeredUsers.data = res.data.body.data.map(item=>item.y);
                     this.registeredUsers = Object.assign({},this.registeredUsers)
-                    console.log(this.registeredUsers)
+                 // console.log(this.registeredUsers)
                 }else{
                     this.$notify({
 						title: '注册用户获取失败',
@@ -238,13 +238,13 @@
                     query.endTime = '';
                 }
                 const res = await SETFOLLOWCHART(query);
-                console.log(res)
+             // console.log(res)
                 if(res.data&&res.data.errCode===0){
                     this.followUp.total = `总数：${res.data.body.total}`;
                     this.followUp.dataAxis = res.data.body.data.map(item=>item.x);
                     this.followUp.data = res.data.body.data.map(item=>item.y);
                     this.followUp = Object.assign({},this.followUp)
-                    console.log(this.followUp)
+                 // console.log(this.followUp)
                 }else{
                     this.$notify({
 						title: '设备监测人次获取失败',
@@ -270,14 +270,14 @@
                     query.endTime = '';
                 }
                 const res = await SETEQUIPMENT(query);
-                console.log(res)
+             // console.log(res)
                 if(res.data&&res.data.errCode===0){
                     // let initialValue=0;
                     this.device.total = `总数：${res.data.body.total}`;
                     this.device.dataAxis = res.data.body.data.map(item=>item.x);
                     this.device.data = res.data.body.data.map(item=>item.y);
                     this.device = Object.assign({},this.device)
-                    console.log(this.device)
+                 // console.log(this.device)
                 }else{
                     this.$notify({
 						title: '设备监测人次获取失败',
@@ -303,14 +303,14 @@
                     query.endTime = '';
                 }
                 const res = await statisticsPeople(query);
-                console.log(res)
+             // console.log(res)
                 if(res.data&&res.data.errCode===0){
                     let initialValue=0;
                     this.outpatient.dataAxis = res.data.body.map(item=>item.x);
                     this.outpatient.data = res.data.body.map(item=>item.y);
                     this.outpatient.total = `总数：${res.data.body.reduce((a,b)=>a+b.y,initialValue)}`;
                     this.outpatient = Object.assign({},this.outpatient)
-                    console.log(this.outpatient)
+                 // console.log(this.outpatient)
                 }else{
                     this.$notify({
 						title: '远程门诊就诊人次柱状统计图获取失败',

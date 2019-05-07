@@ -111,6 +111,7 @@
 				relode: true,
 				patients: {},
 				patientJiuZen: [],
+				patientLieBiao: [],
 				jiuZhenId: '',
 
 				chuFangArray: [],
@@ -286,9 +287,9 @@
 
 		methods: {
 			selectChildItem(item, index) {
-				console.log(item)
-				console.log(index)
-				console.log(this.nowNav)
+				// console.log(item)
+				// console.log(index)
+				// console.log(this.nowNav)
 				// item.index = index;
 				// this.navList[this.nowNav].childModuleIndex = index;
 				// 重载右边
@@ -311,7 +312,7 @@
 					this.showModules.list = this.noLeftBottom;
 					this.showModules = Object({}, this.showModules)
 
-					console.log('---------------------')
+					// console.log('---------------------')
 					this.eMRInRecord7(this.noLeftBottom[3], 3)//检验记录
 					this.eMRInRecord8(this.noLeftBottom[1], 1)//医嘱
 					this.eMRInRecord11(this.noLeftBottom[0], 0)//处方
@@ -323,9 +324,9 @@
 			// 开始请求
 
 			async getPatientInfo() {																		//1.获取患者信息	通过id
-				// console.log(this.inData);
-				// console.log(this.current);
-				// console.log(this.teshuId);
+				// // console.log(this.inData);
+				// // console.log(this.current);
+				// // console.log(this.teshuId);
 
 				if (!this.inData) return
 				const res = await patientInfo({
@@ -333,20 +334,153 @@
 					orgCode: this.userSelfInfo.orgCode,
 					familyMemberId: this.inData.id
 				});
-				console.log(res)
+				// console.log(res)
 				this.patients = res.data.body
 			},
 
 			async getEMRInRecord4() {																				//4.就诊记录列表
 				if (!this.inData) return
+				// console.log(this.inData)
 				const res = await eMRInRecord4({
 					token: this.userInfo.token,
 					orgCode: this.userSelfInfo.orgCode,
 					familyMemberId: this.inData.id
 				});
-				console.log(res)
+				// console.log(res)
 				if (res.data.body) {
 					this.patientJiuZen = res.data.body
+					this.patientLieBiao = res.data.body
+					this.navList = []
+					this.patientLieBiao.forEach((o, i) => {
+						// // console.log(o,i)
+						// o.visitType = o.visitType == "1" ? "门诊记录" : "2" ? "住院记录" : "体检记录"
+						o.visitType == "1" ?
+							this.navList.push({
+								name: '门诊记录',//模块名称  navList[nowNav]?        
+								infoList: [//名称下边 信息
+									"就诊医院:" + o.hospitalName,
+									"就诊时间:" + o.visitDtime,
+									"就诊科室:" + o.deptName,
+									"接诊医生:" + o.codeName
+								],
+								childModuleIndex: 0,//显示子模块索引
+								childModule: [//子模块
+									{
+										name: '就诊记录',
+										code: 'visitingRecord',
+										time: '2018-12-25',
+										data: []
+									},
+									{
+										name: '门诊处方',
+										code: 'prescription',
+										time: '2018-12-25',
+										data: []
+									},
+									{
+										name: '检验检查',
+										code: 'check',
+										time: '2018-12-25',
+										data: []
+									},
+									{
+										name: '综合影像',
+										code: 'comprehensive',
+										time: '2018-12-25',
+										data: []
+									},
+								]
+							})
+							: "2" ?
+								this.navList.push({
+									name: '住院记录',//模块名称
+									infoList: [//名称下边 信息
+										"入住医院:" + o.hospitalName,
+										"入院时间:" + o.visitDtime,
+										"入住科室:" + o.deptName,
+										"床 号:" + o.codeName
+									],
+									childModuleIndex: 0,//显示子模块索引
+									childModule: [//子模块
+										{
+											name: '入院记录',
+											code: 'admissionRecord',
+											time: '2018-12-25',
+											data: []
+										},
+										{
+											name: '住院医嘱',
+											code: 'hospitalizationOrder',
+											time: '2018-12-25',
+											data: []
+										},
+										{
+											name: '检验检查',
+											code: 'check',
+											time: '2018-12-25',
+											data: []
+										},
+										{
+											name: '影像检查',
+											code: 'comprehensive',
+											time: '2018-12-25',
+											data: []
+										},
+										{
+											name: '手术麻醉',
+											code: 'anaesthesia',
+											time: '2018-12-25',
+											data: []
+										},
+										{
+											name: '护理记录',
+											code: 'nursing',
+											time: '2018-12-25',
+											data: []
+										},
+									]
+								})
+								:
+								this.navList.push({
+									name: '体检记录',//模块名称
+									infoList: [//名称下边 信息
+										"体检医院:" + o.hospitalName,
+										"体检时间:" + o.visitDtime,
+										// "入住科室:" + o.deptName,
+										// "床 号:" + o.codeName
+									],
+									childModuleIndex: 0,//显示子模块索引
+									childModule: [//子模块
+										{
+											name: '体检报告',
+											code: 'examinationRecord',
+											time: '2018-12-25',
+											data: []
+										},
+										{
+											name: '所有项目',
+											code: 'allItems',
+											time: '2018-12-25',
+											data: []
+										},
+										{
+											name: '检验',
+											code: 'check',
+											time: '2018-12-25',
+											data: []
+										},
+										{
+											name: '影像检查',
+											code: 'comprehensive',
+											time: '2018-12-25',
+											data: []
+										}
+									]
+								})
+
+
+					})
+					// console.log(this.patientLieBiao)
 				}
 			},
 
@@ -388,8 +522,8 @@
 					familyMemberId: this.inData.id,
 					visitNo: this.jiuZhenId
 				});
-				console.log(res)
-				console.log(res.data.body)//处方ID数组
+				// console.log(res)
+				// console.log(res.data.body)//处方ID数组
 				if (res.data.body) {
 					this.chuFangArray = res.data.body
 				}
@@ -405,7 +539,7 @@
 							`${this.userSocketInfo.imgUrl1}/m/v1/api/record/nosocomialRecord/recordInfo?token=${this.userInfo.token}&orgCode=${this.userSelfInfo.orgCode}&familyMemberId=${this.inData.id}&id=${e}`
 						)
 					});
-					console.log(item.data)
+					// console.log(item.data)
 				}
 			},
 
@@ -420,7 +554,7 @@
 						familyMemberId: this.inData.id,
 						visitNo: this.jiuZhenId
 					})
-					console.log(res.data.body)
+					// console.log(res.data.body)
 					if (res.data.body) {
 						item.data = [];
 						item.data = res.data.body;
@@ -437,7 +571,7 @@
 						familyMemberId: this.inData.id,
 						visitNo: this.jiuZhenId
 					});
-					console.log(res.data.body)
+					// console.log(res.data.body)
 					if (res.data.body) {
 						item.data = [];
 						item.data = res.data.body;
@@ -453,7 +587,7 @@
 						familyMemberId: this.inData.id,
 						visitNo: this.jiuZhenId
 					});
-					console.log(res.data.body)
+					// console.log(res.data.body)
 					if (res.data.body) {
 						item.data = [];
 						item.data = res.data.body;
@@ -472,7 +606,7 @@
 						familyMemberId: this.inData.id,
 						visitNo: this.jiuZhenId
 					});
-					console.log(res.data.body)
+					// console.log(res.data.body)
 					if (res.data.body) {
 						item.data = [];
 						item.data = res.data.body;
@@ -486,7 +620,7 @@
 
 		},
 		async created() {
-			console.log('created,this.inData: ' + this.inData); 
+			// console.log('created,this.inData: ' + this.inData);
 			this.setView();
 			if (this.current === '1') {
 				this.showModules.list = this.navList[0].childModule;
