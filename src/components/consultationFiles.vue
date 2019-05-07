@@ -266,6 +266,7 @@ export default {
             danganLeftMain: {},
             danganLeftIndex: 0,
             danganLeftIndex1: 0,
+            danganLeftIndex11: 1,
             danganRgMainText: [],
             danganRgMainText1: [],
             inHospitalList: {},
@@ -297,7 +298,15 @@ export default {
                 // res.data.body.historys.info
                 // _this.danganLeftMainList= res.data.body.historys
                 _this.danganLeftMain = res.data.body;
-                if (this.danganLeftMain.historys.length > 0) {
+                if (_this.danganLeftMain.visits.length > 0) {
+                    if (_this.danganLeftMain.visits[0].visitType == 1) {
+                        _this.danganLeftIndex11 = 1;
+                    } else if (_this.danganLeftMain.visits[0].visitType == 1) {
+                        _this.danganLeftIndex11 = 2;
+                    }
+                }
+                
+                if (_this.danganLeftMain.historys.length > 0) {
                     if (_this.danganLeftMain) {
                         _this.danganRgMainText.push(
                             _this.danganLeftMain.historys[_this.danganLeftIndex]
@@ -379,6 +388,7 @@ export default {
                 this.danganLeftIndex1
             ].hospitalName;
             if (text.visitType == 1) {
+                 this.danganLeftIndex11 = 1;
                 //门诊记录
                 this.danganRgList1 = [
                     {
@@ -400,21 +410,8 @@ export default {
                 ];
                 this.danganRgValue = "visitInfo";
                 this.danganRgMainText1 = [];
-                // this.orecipe = [];
-                // let orecipe1 = this.danganLeftMain.visits[this.danganLeftIndex1]
-                //     .info.recipe;
-                // orecipe1.forEach((text, index) => {
-                //     this.orecipe.push({
-                //         src: `${
-                //             this.userSocketInfo.imgUrl1
-                //         }/m/v1/api/basics/record/recordInfo?token=${
-                //             this.userState.token
-                //         }&type=${this.$route.query.type}&id=${
-                //             this.$route.query.id
-                //         }&prescNo==${text}`
-                //     });
-                // });
             } else if (text.visitType == 2) {
+                this.danganLeftIndex11 = 2;
                 //住院记录
                 this.danganRgList1 = [
                     {
@@ -458,7 +455,7 @@ export default {
             this.danganRgIndex1 = index;
             this.danganRgValue = text.value;
             if (this.danganLeftMain.visits.length > 0) {
-                if (this.danganLeftIndex1 == 1) {
+                if (this.danganLeftIndex11 == 1) {
                     //门诊
                     if (index == 0) {
                         this.danganRgValue = "visitInfo";
@@ -492,8 +489,9 @@ export default {
                             this.danganLeftIndex1
                         ].info.screenage;
                     }
-                } else if (this.danganLeftIndex1 == 0) {
+                } else if (this.danganLeftIndex11 == 2) {
                     //住院记录
+                    console.log(index)
                     if (index == 0) {
                         //入院记录
                         this.danganRgMainText1 = this.inHospitalList1 = this.danganLeftMain.visits[
@@ -548,14 +546,14 @@ export default {
                             name: "影像检查",
                             value: "screenage"
                         },
-                    {
-                        name: "手术麻醉",
-                        value: "operation"
-                    },
-                    {
-                        name: "护理记录",
-                        value: "nurse"
-                    }
+                        {
+                            name: "手术麻醉",
+                            value: "operation"
+                        },
+                        {
+                            name: "护理记录",
+                            value: "nurse"
+                        }
                     ];
                     this.danganRgValue = "hospitalized";
                     this.danganRgMainText1 = this.danganLeftMain.visits[
@@ -602,7 +600,8 @@ export default {
                     //     });
                     // });
                 }
-            } else if (index == 0) {
+            } 
+            else if (index == 0) {
                 console.log(
                     this.danganLeftMain.historys[this.danganLeftIndex].info
                         .inRecord
@@ -625,10 +624,8 @@ export default {
             // 转诊
             this.getMessage(patientMedicalDetail);
         }
-
-        // if(this.danganLeftMain){
-
-        // }
+        // console.log(this.danganLeftMain.visits)
+        // alert(this.danganLeftMain.visits.length)
     }
 };
 </script>
