@@ -63,7 +63,7 @@
                 <el-form-item  class='invitationClassInput' label="病历:">
 
                     <el-tree style='    margin-left: -14px;
-    margin-top: 10px;' v-model="startXiezuo.medicalHistoryRels" :data="hospitalList2" :props="defaultProps1" @check="handleCheckChange1" show-checkbox></el-tree>
+    margin-top: 10px;' v-model="startXiezuo.medicalHistorys" :data="hospitalList2" :props="defaultProps1" @check="handleCheckChange1" show-checkbox></el-tree>
                 </el-form-item>
                  <el-form-item class='invitationClassInput' label="目的">
                     <el-input v-model="startXiezuo.intention"></el-input>
@@ -208,7 +208,7 @@ export default {
                 intention: "",
                 recordId: "",
                 receiverId: [],
-                medicalHistoryRels:[],
+                medicalHistorys:[],
                 patientId:''
             },
             adminLists: [],
@@ -488,10 +488,10 @@ export default {
          // 发起会诊病历
         handleCheckChange1(data, odata) {
             
-            this.startXiezuo.medicalHistoryRels = [];
+            this.startXiezuo.medicalHistorys = [];
             $.each(odata.checkedNodes, (index, text) => {
                 if (text.visitNo) {
-                    this.startXiezuo.medicalHistoryRels.push(text);
+                    this.startXiezuo.medicalHistorys.push(text);
                 }
             });
         },
@@ -558,7 +558,7 @@ export default {
                 intention: "",
                 recordId: "",
                 receiverId: [],
-                medicalHistoryRels:[],
+                medicalHistorys:[],
                 patientId:''
             },
             this.centerDialogVisible = true;
@@ -707,7 +707,7 @@ export default {
                 token: this.userState.token
             };
 
-             $.each(this.startXiezuo.medicalHistoryRels, function(index, text) {
+             $.each(this.startXiezuo.medicalHistorys, function(index, text) {
                 text.medicalHistoryId = text.visitNo;
             });
             let options = this.startXiezuo;

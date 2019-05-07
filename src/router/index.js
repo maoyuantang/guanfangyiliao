@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../vuex/index.js'
-import countRoot from '../public/publicJs/countRoot.js'
+// import countRoot from '../public/publicJs/countRoot.js'
 import index from '@/components/index'//主页
 import statistics from '@/components/statistics'//首页统计
 import login from '@/components/login'//主页
@@ -33,21 +33,16 @@ const router = new Router({
 		
     {
       path: '/',
-      name: 'index',
       component: index,
-      meta: {
-        title: '首页'
-      },
       children:[
       	{
-      		path: '/',
+      		path: '',
 		      name: 'statistics',
 		      component: statistics,
 		      meta: {
 		        title: '冠方医疗-首页统计'
 		      }
         },
-				/**************************** */
 				{
       		path: '/cloudManagement',
 		      name: 'cloudManagement',
@@ -163,30 +158,6 @@ const router = new Router({
 				
       ]
     },
-    {
-      path: '/index',
-      name: 'index',
-      component: index,
-      meta: {
-        title: '冠方医疗-首页'
-      },
-    },
-//  {
-//    path: '/test',
-//    name: 'test',
-//    component: test,
-//     meta: {
-//      title: '测试'
-//    }
-//  },
-//  {
-//    path: '/testb',
-//    name: 'testb',
-//    component: testb,
-//     meta: {
-//      title: '测试'
-//    }
-//  },
 		{
 			path: '/login',
 			name: 'login',
