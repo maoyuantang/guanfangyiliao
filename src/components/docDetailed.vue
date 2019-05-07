@@ -155,7 +155,7 @@
 				// 此处分两种情况，if判断是否是特殊路由进入
 
 				let showPatientList = sessionStorage.getItem('showPatientList');
-				console.log(showPatientList)
+				// console.log(showPatientList)
 				if (showPatientList === 'false') {//新需求，过滤一下
 					console.warn('enter')
 					this.topTag.list = [{ id: this.$route.query.id }];
@@ -167,8 +167,8 @@
 					token: this.userState.token,
 					userId: this.$route.query.id
 				});
-				console.log(res);
-				console.log(res.data.body);//null
+				// console.log(res);
+				// console.log(res.data.body);//null
 				if (res.data && res.data.errCode === 0) {
 					this.topTag.list = res.data.body
 				} else {
@@ -338,7 +338,7 @@
 						// { laber: '院外档案', page: 'outSide' },
 					];
 				} else {
-					console.log('not special') // '/files'
+					// console.log('not special') // '/files'
 				}
 			});
 		},

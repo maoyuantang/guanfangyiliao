@@ -116,6 +116,8 @@
 
 				chuFangArray: [],
 
+				list4s:null,
+
 				nowNav: 0,//当前模块索引
 				showModules: {//显示子模块索列表，，，心烦    
 					index: 0,
@@ -162,124 +164,124 @@
 				],
 				// 左下有的时候中间的内容
 				navList: [
-					{
-						name: '门诊记录',//模块名称  navList[nowNav]?        
-						infoList: [//名称下边 信息
-							'就诊医院：XXXX医院',
-							'就诊时间：2018-12-25',
-							'就诊医院： XXXX科室',
-							'接诊医生：XXX'
-						],
-						childModuleIndex: 0,//显示子模块索引
-						childModule: [//子模块
-							{
-								name: '就诊记录',
-								code: 'visitingRecord',
-								time: '2018-12-25',
-								data: []
-							},
-							{
-								name: '门诊处方',
-								code: 'prescription',
-								time: '2018-12-25',
-								data: []
-							},
-							{
-								name: '检验检查',
-								code: 'check',
-								time: '2018-12-25',
-								data: []
-							},
-							{
-								name: '综合影像',
-								code: 'comprehensive',
-								time: '2018-12-25',
-								data: []
-							},
-						]
-					},
-					{
-						name: '住院记录',//模块名称
-						infoList: [//名称下边 信息
-							'入住医院: 住院记录',
-							'入院时间: 2018-12-25',
-							'入住科室: XXXX科室',
-							'床 号:外科大楼5楼504'
-						],
-						childModuleIndex: 0,//显示子模块索引
-						childModule: [//子模块
-							{
-								name: '入院记录',
-								code: 'admissionRecord',
-								time: '2018-12-25',
-								data: []
-							},
-							{
-								name: '住院医嘱',
-								code: 'hospitalizationOrder',
-								time: '2018-12-25',
-								data: []
-							},
-							{
-								name: '检验检查',
-								code: 'check',
-								time: '2018-12-25',
-								data: []
-							},
-							{
-								name: '影像检查',
-								code: 'comprehensive',
-								time: '2018-12-25',
-								data: []
-							},
-							{
-								name: '手术麻醉',
-								code: 'anaesthesia',
-								time: '2018-12-25',
-								data: []
-							},
-							{
-								name: '护理记录',
-								code: 'nursing',
-								time: '2018-12-25',
-								data: []
-							},
-						]
-					},
-					{
-						name: '体检记录',//模块名称
-						infoList: [//名称下边 信息
-							'体检医院: XXXX医院',
-							'体检时间: 2018-12-25',
-						],
-						childModuleIndex: 0,//显示子模块索引
-						childModule: [//子模块
-							{
-								name: '体检报告',
-								code: 'examinationRecord',
-								time: '2018-12-25',
-								data: []
-							},
-							{
-								name: '所有项目',
-								code: 'allItems',
-								time: '2018-12-25',
-								data: []
-							},
-							{
-								name: '检验',
-								code: 'check',
-								time: '2018-12-25',
-								data: []
-							},
-							{
-								name: '影像检查',
-								code: 'comprehensive',
-								time: '2018-12-25',
-								data: []
-							}
-						]
-					},
+					// {
+					// 	name: '门诊记录',//模块名称  navList[nowNav]?        
+					// 	infoList: [//名称下边 信息
+					// 		'就诊医院：XXXX医院',
+					// 		'就诊时间：2018-12-25',
+					// 		'就诊医院： XXXX科室',
+					// 		'接诊医生：XXX'
+					// 	],
+					// 	childModuleIndex: 0,//显示子模块索引
+					// 	childModule: [//子模块
+					// 		{
+					// 			name: '就诊记录',
+					// 			code: 'visitingRecord',
+					// 			time: '2018-12-25',
+					// 			data: []
+					// 		},
+					// 		{
+					// 			name: '门诊处方',
+					// 			code: 'prescription',
+					// 			time: '2018-12-25',
+					// 			data: []
+					// 		},
+					// 		{
+					// 			name: '检验检查',
+					// 			code: 'check',
+					// 			time: '2018-12-25',
+					// 			data: []
+					// 		},
+					// 		{
+					// 			name: '综合影像',
+					// 			code: 'comprehensive',
+					// 			time: '2018-12-25',
+					// 			data: []
+					// 		},
+					// 	]
+					// },
+					// {
+					// 	name: '住院记录',//模块名称
+					// 	infoList: [//名称下边 信息
+					// 		'入住医院: 住院记录',
+					// 		'入院时间: 2018-12-25',
+					// 		'入住科室: XXXX科室',
+					// 		'床 号:外科大楼5楼504'
+					// 	],
+					// 	childModuleIndex: 0,//显示子模块索引
+					// 	childModule: [//子模块
+					// 		{
+					// 			name: '入院记录',
+					// 			code: 'admissionRecord',
+					// 			time: '2018-12-25',
+					// 			data: []
+					// 		},
+					// 		{
+					// 			name: '住院医嘱',
+					// 			code: 'hospitalizationOrder',
+					// 			time: '2018-12-25',
+					// 			data: []
+					// 		},
+					// 		{
+					// 			name: '检验检查',
+					// 			code: 'check',
+					// 			time: '2018-12-25',
+					// 			data: []
+					// 		},
+					// 		{
+					// 			name: '影像检查',
+					// 			code: 'comprehensive',
+					// 			time: '2018-12-25',
+					// 			data: []
+					// 		},
+					// 		{
+					// 			name: '手术麻醉',
+					// 			code: 'anaesthesia',
+					// 			time: '2018-12-25',
+					// 			data: []
+					// 		},
+					// 		{
+					// 			name: '护理记录',
+					// 			code: 'nursing',
+					// 			time: '2018-12-25',
+					// 			data: []
+					// 		},
+					// 	]
+					// },
+					// {
+					// 	name: '体检记录',//模块名称
+					// 	infoList: [//名称下边 信息
+					// 		'体检医院: XXXX医院',
+					// 		'体检时间: 2018-12-25',
+					// 	],
+					// 	childModuleIndex: 0,//显示子模块索引
+					// 	childModule: [//子模块
+					// 		{
+					// 			name: '体检报告',
+					// 			code: 'examinationRecord',
+					// 			time: '2018-12-25',
+					// 			data: []
+					// 		},
+					// 		{
+					// 			name: '所有项目',
+					// 			code: 'allItems',
+					// 			time: '2018-12-25',
+					// 			data: []
+					// 		},
+					// 		{
+					// 			name: '检验',
+					// 			code: 'check',
+					// 			time: '2018-12-25',
+					// 			data: []
+					// 		},
+					// 		{
+					// 			name: '影像检查',
+					// 			code: 'comprehensive',
+					// 			time: '2018-12-25',
+					// 			data: []
+					// 		}
+					// 	]
+					// },
 				],
 
 			}
@@ -348,7 +350,8 @@
 					orgCode: this.userSelfInfo.orgCode,
 					familyMemberId: this.inData.id
 				});
-				// console.log(res)
+				// console.log(res.data.body)
+				this.list4s = res.data.body == null? false:true
 				if (res.data.body) {
 					this.patientJiuZen = res.data.body
 					this.patientLieBiao = res.data.body
@@ -482,6 +485,11 @@
 
 
 					})
+					if (this.list4s && this.current === '1') {
+						this.showModules.list = this.navList[0].childModule;
+					} else {
+						this.showModules.list = this.noLeftBottom;
+					}
 					// console.log(this.patientLieBiao)
 				}
 			},
@@ -625,7 +633,8 @@
 		async created() {
 			// console.log('created,this.inData: ' + this.inData);
 			this.setView();
-			if (this.current === '1') {
+			// alert(this.list4s)
+			if (this.list4s && this.current === '1') {
 				this.showModules.list = this.navList[0].childModule;
 			} else {
 				this.showModules.list = this.noLeftBottom;
