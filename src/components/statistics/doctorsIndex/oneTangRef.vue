@@ -77,8 +77,8 @@
         <div class="moved">
           <!-- 头像姓名 -->
           <div class="moved_top">
-            <!-- <img src="../../../assets/img/a-6.png" /> -->
-            <img v-if="docTableData.applyDoctorHead == null" src="../../../assets/img/a-6.png" alt="医生头像">
+            <!-- <img src="../../../assets/img/doctorImg.png" /> -->
+            <img v-if="docTableData.applyDoctorHead == null" src="../../../assets/img/doctorImg.png" alt="医生头像">
             <img v-if="docTableData.applyDoctorHead"
               :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+docTableData.applyDoctorHead' alt="医生头像">
             <p>{{dualReferralRecordFile.patientName}}</p>
@@ -113,8 +113,8 @@
       <el-table :data="docTableData" style="width: 100%" :show-header="false">
         <el-table-column label="操作" width="70">
           <template slot-scope="scope">
-            <!-- <img src="../../../assets/img/a-6.png" style="width:42px;" /> -->
-            <img v-if="docTableData.applyDoctorHead == null" src="../../../assets/img/a-6.png" alt="医生头像"
+            <!-- <img src="../../../assets/img/doctorImg.png" style="width:42px;" /> -->
+            <img v-if="docTableData.applyDoctorHead == null" src="../../../assets/img/doctorImg.png" alt="医生头像"
               style="width:42px;">
             <img v-if="docTableData.applyDoctorHead"
               :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+docTableData.applyDoctorHead'
