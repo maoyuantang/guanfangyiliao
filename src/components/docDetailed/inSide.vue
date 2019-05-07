@@ -128,37 +128,37 @@
 					{
 						name: '门诊处方',
 						code: 'prescription',
-						time: '2018-12-25',
+						// time: '2018-12-25',
 						data: []
 					},
 					{
 						name: '住院医嘱',
 						code: 'hospitalizationOrder',
-						time: '2018-12-25',
+						// time: '2018-12-25',
 						data: []
 					},
 					{
 						name: '体检报告',
 						code: 'examinationRecord',
-						time: '2018-12-25',
+						// time: '2018-12-25',
 						data: []
 					},
 					{
 						name: '检验检查',
 						code: 'check',
-						time: '2018-12-25',
+						// time: '2018-12-25',
 						data: []
 					},
 					{
 						name: '手术麻醉',
 						code: 'anaesthesia',
-						time: '2018-12-25',
+						// time: '2018-12-25',
 						data: []
 					},
 					{
 						name: '综合影像',
 						code: 'comprehensive',
-						time: '2018-12-25',
+						// time: '2018-12-25',
 						data: []
 					},
 				],
@@ -373,25 +373,25 @@
 									{
 										name: '就诊记录',
 										code: 'visitingRecord',
-										time: '2018-12-25',
+										// time: '2018-12-25',
 										data: []
 									},
 									{
 										name: '门诊处方',
 										code: 'prescription',
-										time: '2018-12-25',
+										// time: '2018-12-25',
 										data: []
 									},
 									{
 										name: '检验检查',
 										code: 'check',
-										time: '2018-12-25',
+										// time: '2018-12-25',
 										data: []
 									},
 									{
 										name: '综合影像',
 										code: 'comprehensive',
-										time: '2018-12-25',
+										// time: '2018-12-25',
 										data: []
 									},
 								]
@@ -410,37 +410,37 @@
 										{
 											name: '入院记录',
 											code: 'admissionRecord',
-											time: '2018-12-25',
+											// time: '2018-12-25',
 											data: []
 										},
 										{
 											name: '住院医嘱',
 											code: 'hospitalizationOrder',
-											time: '2018-12-25',
+											// time: '2018-12-25',
 											data: []
 										},
 										{
 											name: '检验检查',
 											code: 'check',
-											time: '2018-12-25',
+											// time: '2018-12-25',
 											data: []
 										},
 										{
 											name: '影像检查',
 											code: 'comprehensive',
-											time: '2018-12-25',
+											// time: '2018-12-25',
 											data: []
 										},
 										{
 											name: '手术麻醉',
 											code: 'anaesthesia',
-											time: '2018-12-25',
+											// time: '2018-12-25',
 											data: []
 										},
 										{
 											name: '护理记录',
 											code: 'nursing',
-											time: '2018-12-25',
+											// time: '2018-12-25',
 											data: []
 										},
 									]
@@ -459,25 +459,25 @@
 										{
 											name: '体检报告',
 											code: 'examinationRecord',
-											time: '2018-12-25',
+											// time: '2018-12-25',
 											data: []
 										},
 										{
 											name: '所有项目',
 											code: 'allItems',
-											time: '2018-12-25',
+											// time: '2018-12-25',
 											data: []
 										},
 										{
 											name: '检验',
 											code: 'check',
-											time: '2018-12-25',
+											// time: '2018-12-25',
 											data: []
 										},
 										{
 											name: '影像检查',
 											code: 'comprehensive',
-											time: '2018-12-25',
+											// time: '2018-12-25',
 											data: []
 										}
 									]
