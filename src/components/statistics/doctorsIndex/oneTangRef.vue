@@ -80,7 +80,8 @@
             <!-- <img src="../../../assets/img/doctorImg.png" /> -->
             <img v-if="docTableData.applyDoctorHead == null" src="../../../assets/img/doctorImg.png" alt="医生头像">
             <img v-if="docTableData.applyDoctorHead"
-              :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+docTableData.applyDoctorHead' alt="医生头像">
+              :src='"https://demo.chuntaoyisheng.com:10002/m/v1/api/hdfs/fs/download/"+docTableData.applyDoctorHead'
+              alt="医生头像">
             <p>{{dualReferralRecordFile.patientName}}</p>
           </div>
           <!-- 转院路程 -->
@@ -137,7 +138,7 @@
         <!-- <el-table-column prop="intention" label="目的" :show-overflow-tooltip="true"></el-table-column> -->
         <!-- <el-table-column prop="typeName" label="转诊类型" :show-overflow-tooltip="true"></el-table-column> -->
         <el-table-column prop="stateName" label="转诊状态" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column fixed = right label="操作" width="400">
+        <el-table-column fixed=right label="操作" width="400">
           <template slot-scope="scope">
             <button class="huangSe" @click="seeHistory(scope.row.patientId)">病历</button>
             <button class="lanSe" @click="dualReferralRecord2(scope.row)">转诊记录</button>
@@ -715,9 +716,14 @@
       async seeHistory(data) {
         // console.log(data)
         this.$router.push({
-          path: "/docDetailed",
+          // path: "/docDetailed",
+          // query: {
+          //   id: data
+          // }
+          path: "/consultationFiles",
           query: {
-            id: data
+            id: data.referralId,
+            type: 'REFERRAL'
           }
         })
       },
@@ -932,6 +938,7 @@
     color: #5E6875;
     letter-spacing: 0;
   }
+
   .el-icon-refresh {
     margin: 0 20px;
     font-size: 30px;

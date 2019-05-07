@@ -335,7 +335,9 @@
 					familyMemberId: this.inData.id
 				});
 				// console.log(res)
-				this.patients = res.data.body
+				if (res.data.body) {
+					this.patients = res.data.body
+				}
 			},
 
 			async getEMRInRecord4() {																				//4.就诊记录列表
@@ -485,6 +487,7 @@
 			},
 
 			setNowNav(item, index) {
+				if (!this.patientJiuZen) return;
 				this.nowNav = index;
 				this.showModules.list = item.childModule;
 				// this.showModules.list = this.navList[this.nowNav].childModule
