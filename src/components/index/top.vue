@@ -15,8 +15,8 @@
             </el-menu>
         </div> -->
         <div class="top-left">
-            <div style='width:215px'  @click="openNotice()">
-                <marquee  class="title-marquee">{{noticeList}}</marquee>
+            <div style='width:215px' @click="openNotice()">
+                <marquee class="title-marquee">{{noticeList}}</marquee>
             </div>
 
             <div class="msg">
@@ -97,7 +97,10 @@ export default {
             _this.noticeList = "";
             const res = await fetchNoticeInfo(query);
             if (res.data && res.data.errCode === 0) {
-                _this.noticeList=res.data.body[0].noticeData.body
+                if (res.data.body.length > 0) {
+                    _this.noticeList = res.data.body[0].noticeData.body;
+                }
+
                 // $.each(res.data.body, function(index, text) {
                 //     if (res.data.body.length < 1) {
                 //         _this.noticeList += text.noticeData.body;
@@ -218,7 +221,7 @@ export default {
                 });
             }
         }
-    },
+    }
     // beforeRouteEnter(to,from,next){
     //     next(vm=>{
     //         console.log(vm);

@@ -215,7 +215,8 @@ export default {
             archivesIdVisable: true,
             archivesIdVisable1: true,
             //    archivesUrl :'/outpatient',
-            videoListResult:[]
+            videoListResult: [],
+            oResult:{}
         };
     },
     mounted() {
@@ -1500,7 +1501,7 @@ export default {
                         //     _this.userResource = result.response.info.resource;
                         //     _this.userResourceVisable=false
                         // }
-
+                        _this.oResult=result
                         $("#localVideos").append(
                             _this.generateParticipant(result, true)
                         );
@@ -1757,45 +1758,47 @@ export default {
          */
         Manis.onJoinConference(function(result) {
             console.log(result);
-            _this.videoListResult.push(result)
-            console.log(_this.videoListResult)
+            _this.videoListResult.push(result);
+            console.log(_this.videoListResult);
+
             const ele = _this.generateParticipant(result, false);
-            ele.onclick = () => {
-                const parent = ele.parentNode;
-                const list = parent.children;
-                let index;
-                for (let i = 0; i < list.length; i++) {
-                    console.log(list[i]);
-                    if (list[i].id == ele.id) {
-                        index = i;
-                    }
-                }
-                console.log(index);
-                let oid = $("#localVideos>div")
-                    .attr("id")
-                    .slice(12);
-                $("#localVideos").html("");
-                $("#localVideos").append(ele);
-                const eleList = [];
-                for (let i = 0; i < list.length; i++) {
-                    console.warn(list[i]);
-                    eleList.push(list[i]);
-                }
-                
-                console.log(oid);
-                // console.log(_this.generateParticipant(oid, false));
-                // eleList[index] = _this.generateParticipant(oid, false);
-                eleList[index]=_this.videoListResult[index]
-console.log(eleList);
-                // $("#remoteVideos").html();
-                eleList.forEach(item => {
-                    console.log(item);
-                    let oItem=_this.generateParticipant(item, false)
-                    console.log(oItem)
-                    $("#remoteVideos").append(oItem);
-                    console.log($("#remoteVideos"))
-                });
-            };
+            // ele.onclick = () => {
+            //     const parent = ele.parentNode;
+            //     const list = parent.children;
+            //     let index;
+            //     for (let i = 0; i < list.length; i++) {
+            //         console.log(list[i]);
+            //         if (list[i].id == ele.id) {
+            //             index = i;
+            //         }
+            //     }
+            //     console.log(index);
+            //     let oid = $("#localVideos>div")
+            //         .attr("id")
+            //         .slice(12);
+            //     $("#localVideos").html("");
+            //     $("#localVideos").append(
+            //         _this.generateParticipant(
+            //             _this.videoListResult[index],
+            //             false
+            //         )
+            //     );
+            //     const eleList = [];
+            //     for (let i = 0; i < list.length; i++) {
+            //         console.warn(list[i]);
+            //         eleList.push(list[i]);
+            //     }
+            //     eleList[index] = _this.videoListResult[index];
+            //     console.log(eleList);
+            //     $("#remoteVideos").html();
+            //     eleList.forEach(item => {
+            //         console.log(item);
+            //         let oItem = _this.generateParticipant(item, false);
+            //         console.log(oItem);
+            //         $("#remoteVideos").append(oItem);
+            //         console.log($("#remoteVideos"));
+            //     });
+            // };
             $("#remoteVideos").append(ele);
             // _this.resultList.push(result);
             // _this.$store.commit("socket/VIDEOUSER", 1);
@@ -1817,12 +1820,17 @@ console.log(eleList);
         Manis.onLeaveConference(function(result) {
             console.log(result);
             if (result.code == 200) {
-                _this.videoListResult=_this.videoListResult.map((index,text)=>{
-                    if(text.response.info.resource != result.response.resource) {
-                        return text
+                _this.videoListResult = _this.videoListResult.map(
+                    (index, text) => {
+                        if (
+                            text.response.info.resource !=
+                            result.response.resource
+                        ) {
+                            return text;
+                        }
                     }
-                })
-                console.log(_this.videoListResult)
+                );
+                console.log(_this.videoListResult);
                 $(
                     ".participant_container_" + result.response.resource
                 ).remove();

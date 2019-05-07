@@ -101,7 +101,7 @@ export default {
             },
             videoType: "门诊",
             oClinicId: "",
-            sendUserName:''
+            sendUserName: ""
         };
     },
     computed: {
@@ -138,20 +138,22 @@ export default {
             };
             const res = await fetchNoticeInfo(query);
             if (res.data && res.data.errCode === 0) {
-                if (num == 0) {
-                    $.each(res.data.body, function(index, text) {
-                        _this.noticeList.push(text);
-                    });
-                } else {
-                    _this.noticeList = res.data.body;
-                }
-
-                let oLength = res.data.body.length;
-                _this.msgId = res.data.body[oLength - 1].msgId;
                 if (res.data.body.length > 0) {
-                    this.nodataVisable = false;
-                } else {
-                    this.nodataVisable = true;
+                    if (num == 0) {
+                        $.each(res.data.body, function(index, text) {
+                            _this.noticeList.push(text);
+                        });
+                    } else {
+                        _this.noticeList = res.data.body;
+                    }
+
+                    let oLength = res.data.body.length;
+                    _this.msgId = res.data.body[oLength - 1].msgId;
+                    if (res.data.body.length > 0) {
+                        this.nodataVisable = false;
+                    } else {
+                        this.nodataVisable = true;
+                    }
                 }
             } else {
                 //失败
@@ -208,9 +210,9 @@ export default {
         //进入协作
         async toConsultation(row) {
             // this.getUserMessage(row);
-            console.log(row.body.indexOf('邀请您'))
-            let oindex=row.body.indexOf('邀请您')
-            this.chatTypeBox1.startDoctorName=row.body.substring(0,oindex)
+            console.log(row.body.indexOf("邀请您"));
+            let oindex = row.body.indexOf("邀请您");
+            this.chatTypeBox1.startDoctorName = row.body.substring(0, oindex);
             this.chatTypeBox1.startDoctorTYpe = "协作";
             this.sessionId = row.sessionId;
 
@@ -232,9 +234,9 @@ export default {
         },
         //进入会诊
         async enterHuiz(row) {
-            let oindex=row.body.indexOf('邀请你')
-            this.chatTypeBox1.startDoctorName=row.body.substring(0,oindex)
-              this.chatTypeBox1.startDoctorTYpe = "会诊";
+            let oindex = row.body.indexOf("邀请你");
+            this.chatTypeBox1.startDoctorName = row.body.substring(0, oindex);
+            this.chatTypeBox1.startDoctorTYpe = "会诊";
             this.sessionId = row.sessionId;
 
             let _this = this;
@@ -245,7 +247,7 @@ export default {
                 consultationId: row.senderUserId,
                 status: "UNDERWAY"
             };
-            const res = await updateConsultationStatus(query,options);
+            const res = await updateConsultationStatus(query, options);
             if (res.data && res.data.errCode === 0) {
                 _this.chatVisible = true;
             } else {
