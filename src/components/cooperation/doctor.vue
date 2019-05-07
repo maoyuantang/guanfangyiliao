@@ -422,7 +422,7 @@ export default {
     methods: {
         cooperationCellClick(row, column) {
             let data = [row, column];
-            console.log(data);
+            
             this.cellClickData(data);
         },
         //进入协作
@@ -487,7 +487,7 @@ export default {
         },
          // 发起会诊病历
         handleCheckChange1(data, odata) {
-            console.log(data, odata);
+            
             this.startXiezuo.medicalHistoryRels = [];
             $.each(odata.checkedNodes, (index, text) => {
                 if (text.visitNo) {
@@ -507,22 +507,17 @@ export default {
             });
         },
         handleCheckChange(data, checked, indeterminate) {
-            console.log(checked);
             let _this = this;
             $.each(checked.checkedNodes, function(index, text) {
-                console.log(text);
                 if (text.type == 3) {
-                    console.log(_this.startXiezuo);
                     _this.startXiezuo.receiverId.push(text.id);
                 }
             });
         },
         handleCheckChangeInvita(data, checked, indeterminate) {
-            console.log(checked);
             let _this = this;
             $.each(checked.checkedNodes, function(index, text) {
                 if (text.type == 3) {
-                    console.log(_this.requestXiezuo);
                     _this.invitationSelectList.push(text.id);
                 }
             });
@@ -581,7 +576,7 @@ export default {
             };
             const res = await enableSynergyDoctor(query);
             if (res.data && res.data.errCode === 0) {
-                console.log(res.data.body);
+                
                 this.invitationData1 = res.data.body;
             } else {
                 //失败
@@ -592,7 +587,7 @@ export default {
             }
         },
         getTjData(data) {
-            console.log(data);
+            
             this.docTime0 = data.time[0];
             this.docTime1 = data.time[1];
             this.DoctorList();
@@ -749,10 +744,10 @@ export default {
 
         //协作科室和协作医生
         async cellClickData(data) {
-            console.log(data);
+            
             if (data[1].label == "协作科室") {
                 this.departVisible = true;
-                console.log(this.receptionDepartment);
+                
                 let _this = this;
                 let query = {
                     token: this.userState.token,
@@ -811,13 +806,13 @@ export default {
         },
         getOTab3(data) {
             //协作状态筛选
-            console.log(data);
+            
             this.adminStatus = data.index.value;
             this.getList1();
         },
         getOTab4(data) {
             //点击筛选日期    医生端
-            console.log(data);
+            
 
             if (data.index.value == "TODAY") {
                 var date = new Date();
@@ -849,7 +844,7 @@ export default {
             this.getList1();
         },
         getFilterTime(data) {
-            console.log(data);
+            
             //统计页面  时间选择器返回值
             if (data.time) {
                 this.time0 = data.time[0]; //统计筛选开始时间
@@ -953,7 +948,6 @@ export default {
                 endTime: this.time0
             };
             const res = await managePage(options);
-            console.log(options);
             if (res.data && res.data.errCode === 0) {
                 _this.adminLists = res.data.body.data2.list;
                 _this.adminTotal = res.data.body.data2.total;
@@ -1024,9 +1018,9 @@ export default {
                 this.drawData.dataAxis = res.data.body.data.map(item => item.x);
                 this.drawData.data = res.data.body.data.map(item => item.y);
                 this.drawData = Object.assign({}, this.drawData);
-                console.log("统计表+成功");
+                
             } else {
-                console.log("统计表+失败");
+                
                 //失败
                 this.$notify.error({
                     title: "警告",
@@ -1091,9 +1085,9 @@ export default {
                         value: text.orgCode
                     });
                 });
-                console.log(res);
+                
             } else {
-                console.log(res);
+                
                 //失败
                 this.$notify.error({
                     title: "警告",

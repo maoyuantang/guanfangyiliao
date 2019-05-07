@@ -1205,7 +1205,6 @@ VideoshowClose:false,
             };
             const res = await toolDept(query);
             if (res.data && res.data.errCode === 0) {
-                console.log(res.data.body);
                 if (res.data.body.length > 6) {
                     this.oTab1.more = true;
                 } else {
@@ -1229,7 +1228,6 @@ VideoshowClose:false,
             otab.more = false;
             otab.title = otitle;
             otab.list = [];
-            console.log(this.oTab2);
 
             let _this = this;
             let query = {
@@ -1334,7 +1332,6 @@ VideoshowClose:false,
         },
         //有无随访时间
         getOTab10(data) {
-            console.log(data);
             var date = new Date();
             var year = date.getFullYear();
             var month = date.getMonth() + 1;
@@ -1349,7 +1346,6 @@ VideoshowClose:false,
             if (data.index.text == "今天") {
                 this.docStartTime = year + "-" + month + "-" + day;
                 this.docEndTime = year + "-" + month + "-" + day;
-                console.log(this.docStartTime);
             } else if (data.index.text == "未来3天") {
                 oday = day + 2;
                 this.docStartTime = year + "-" + month + "-" + day;
@@ -1381,7 +1377,6 @@ VideoshowClose:false,
             if (res.data && res.data.errCode === 0) {
                 this.adminTotal1 = res.data.body.data2.total;
                 this.tableDataList = res.data.body.data2.list;
-                console.log(this.tableDataList);
             } else {
                 //失败
                 this.$notify.error({
@@ -1595,7 +1590,7 @@ VideoshowClose:false,
             const res = await getResultList(options);
             if (res.data && res.data.errCode === 0) {
                 _this.satisfiedList = res.data.body.data2.list;
-                console.log(_this.satisfiedList);
+                
             } else {
                 //失败
                 this.$notify.error({
@@ -1678,7 +1673,7 @@ VideoshowClose:false,
             this.mydAddData.associations[index].title = '';
             this.mydAddData.associations[index].associationId = '';
             this.mydTemlateName.nameList=[]
-            console.log(value);
+            
             let _this = this;
             let query = {
                 token: this.userState.token,
@@ -1688,10 +1683,10 @@ VideoshowClose:false,
             if (res.data && res.data.errCode === 0) {
                 this.mydTemlateName.nameList = res.data.body;
                 this.mydTemlateName.context=""
-                console.log(value);
+                
                 if (value == "OUTPATIENT") {
                     _this.mydAddoptions[0].cities = [];
-                    console.log(value);
+                    
                     $.each(res.data.body, function(index, text) {
                         _this.mydAddoptions[0].cities.push({
                             value: text.associationId,
@@ -1810,7 +1805,7 @@ VideoshowClose:false,
             this.mydAddData.associations[index].associationId = oid;
         },
         addMydAddoptions(oBody, num) {
-            console.log(num);
+            
             $.each(oBody, function(index, text) {
                 this.mydAddoptions[0].cities.push({
                     value: text.associationId,
@@ -1829,7 +1824,7 @@ VideoshowClose:false,
             this.mydTemplateTitle.splice(index, 1);
             this.sendTemplateId.push(text.associationId);
             this.sendTemplate1.push(text);
-            console.log(this.sendTemplateId);
+            
         },
         //删除满意度模板
         deleteMydTemplate(index, text) {
@@ -1837,10 +1832,10 @@ VideoshowClose:false,
             let oindex = this.sendTemplateId.indexOf(text.associationId);
             this.sendTemplateId.splice(oindex, 1);
             this.mydTemplateTitle.push(text);
-            console.log(this.sendTemplateId);
+            
         },
         getUserId(row) {
-            console.log(row);
+            
             let _this = this;
             $.each(row, (index, text) => {
                 _this.userList.push(text.userId);
@@ -2055,7 +2050,7 @@ VideoshowClose:false,
         },
         //统计时间
         tjTimeValueFun(data) {
-            console.log(data);
+            
             this.tjType = data.select.value;
             if (data.time) {
                 this.tjStartTime = data.time[0];
@@ -2399,7 +2394,7 @@ VideoshowClose:false,
             this.groupVisible = true;
         },
         followCheckChange(data) {
-            console.log(data);
+            
             let _this = this;
             _this.groupUserId = [];
             $.each(data, function(index, text) {
@@ -2516,7 +2511,7 @@ VideoshowClose:false,
         addQueatOrArticle() {},
         //切换
         docDeperment(data) {
-            console.log(data.index.value);
+            
             this.groupId = data.index.value;
             this.getUsFollow();
         },
@@ -2545,7 +2540,7 @@ VideoshowClose:false,
             }
         },
         getDocTime(data) {
-            console.log(data);
+            
             this.docStartTime = data[0];
             this.docEndTime = data[1];
             this.getUsFollow();
@@ -2648,7 +2643,7 @@ VideoshowClose:false,
             this.articleCheckList = data.articleCheckList;
             this.questList = data.questList;
             this.articleList = data.articleList;
-            console.log(this.articleCheckList);
+            
             let _this = this;
             _this.addFollowData.itemModels[
                 _this.questOindex
@@ -2916,7 +2911,7 @@ VideoshowClose:false,
         articleImgSuccess(res, file) {
             this.imageUrl = URL.createObjectURL(file.raw);
             this.addArticleData.pictureId = res.body;
-            console.log(this.addArticleData.pictureId);
+            
         },
         //满意度新增模板跳出
         ificationBoxClick(index) {
@@ -2948,7 +2943,7 @@ VideoshowClose:false,
             };
             const res = await getResultGraph(query);
             if (res.data && res.data.errCode === 0) {
-                console.log(res.data.body);
+                
                 $.each(res.data.body.reply, function(index, text) {
                     _this.pieData1.dataAxis.push(text.x);
                     _this.pieData1.data.push(text.y);
@@ -3249,7 +3244,7 @@ VideoshowClose:false,
         async cellClickData(data) {
             this.userNumData = data;
             this.userNumVisible = true;
-            console.log(data);
+            
             if (data[1].label == "使用量") {
                 this.userNumTitle = "使用详情";
                 this.departVisible = true;

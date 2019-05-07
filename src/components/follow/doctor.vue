@@ -1302,9 +1302,9 @@ export default {
             this.getAdminList();
         },
         oTab66Remove() {
-            console.log(this.oTab66.list);
+            
             this.oTab66.list = this.oTab6.list.slice(0);
-            console.log(this.oTab66.list);
+            
         },
         // 赛选条件接口
         //获取科室列表
@@ -1316,7 +1316,7 @@ export default {
             };
             const res = await toolDept(query);
             if (res.data && res.data.errCode === 0) {
-                console.log(res.data.body);
+                
                 if (res.data.body.length > 6) {
                     this.oTab1.more = true;
                 } else {
@@ -1340,7 +1340,7 @@ export default {
             otab.more = false;
             otab.title = otitle;
             otab.list = [];
-            console.log(this.oTab2);
+            
 
             let _this = this;
             let query = {
@@ -1465,7 +1465,7 @@ export default {
         },
         //有无随访时间
         getOTab10(data) {
-            console.log(data);
+            
             var date = new Date();
             var year = date.getFullYear();
             var month = date.getMonth() + 1;
@@ -1480,7 +1480,7 @@ export default {
             if (data.index.text == "今天") {
                 this.docStartTime = year + "-" + month + "-" + day;
                 this.docEndTime = year + "-" + month + "-" + day;
-                console.log(this.docStartTime);
+                
             } else if (data.index.text == "未来3天") {
                 oday = day + 2;
                 this.docStartTime = year + "-" + month + "-" + day;
@@ -1517,7 +1517,7 @@ export default {
             if (res.data && res.data.errCode === 0) {
                 this.adminTotal1 = res.data.body.data2.total;
                 this.tableDataList = res.data.body.data2.list;
-                console.log(this.tableDataList);
+                
             } else {
                 //失败
                 this.$notify.error({
@@ -1728,7 +1728,7 @@ export default {
             const res = await getResultList(options);
             if (res.data && res.data.errCode === 0) {
                 _this.satisfiedList = res.data.body.data2.list;
-                console.log(_this.satisfiedList);
+                
             } else {
                 //失败
                 this.$notify.error({
@@ -1805,7 +1805,7 @@ export default {
             }
         },
         async sendTemplateList1(value) {
-            console.log(value);
+            
             let _this = this;
             let query = {
                 token: this.userState.token,
@@ -1814,10 +1814,10 @@ export default {
             const res = await getTitleList(query);
             if (res.data && res.data.errCode === 0) {
                 this.mydTemlateName.nameList = res.data.body;
-                console.log(value);
+                
                 if (value == "OUTPATIENT") {
                     _this.mydAddoptions[0].cities = [];
-                    console.log(value);
+                    
                     $.each(res.data.body, function(index, text) {
                         _this.mydAddoptions[0].cities.push({
                             value: text.associationId,
@@ -1933,7 +1933,7 @@ export default {
             this.mydAddData.associations[index].associationId = oid;
         },
         addMydAddoptions(oBody, num) {
-            console.log(num);
+            
             $.each(oBody, function(index, text) {
                 this.mydAddoptions[0].cities.push({
                     value: text.associationId,
@@ -1952,7 +1952,6 @@ export default {
             this.mydTemplateTitle.splice(index, 1);
             this.sendTemplateId.push(text.associationId);
             this.sendTemplate1.push(text);
-            console.log(this.sendTemplateId);
         },
         //删除满意度模板
         deleteMydTemplate(index, text) {
@@ -1960,10 +1959,10 @@ export default {
             let oindex = this.sendTemplateId.indexOf(text.associationId);
             this.sendTemplateId.splice(oindex, 1);
             this.mydTemplateTitle.push(text);
-            console.log(this.sendTemplateId);
+            
         },
         getUserId(row) {
-            console.log(row);
+            
             let _this = this;
             $.each(row, (index, text) => {
                 _this.userList.push(text.userId);
@@ -2178,7 +2177,7 @@ export default {
         },
         //统计时间
         tjTimeValueFun(data) {
-            console.log(data);
+            
             this.tjType = data.select.value;
             if (data.time) {
                 this.tjStartTime = data.time[0];
@@ -2524,7 +2523,7 @@ export default {
             this.groupVisible = true;
         },
         followCheckChange(data) {
-            console.log(data);
+            
             let _this = this;
             _this.groupUserId = [];
             $.each(data, function(index, text) {
@@ -2648,7 +2647,6 @@ export default {
         addQueatOrArticle() {},
         //切换
         docDeperment(data) {
-            console.log(data.index.value);
             this.groupId = data.index.value;
             this.getUsFollow();
             // if (this.oDocThis == 0) {
@@ -2688,7 +2686,7 @@ export default {
             }
         },
         getDocTime(data) {
-            console.log(data);
+            
             this.docStartTime = data[0];
             this.docEndTime = data[1];
             this.getUsFollow();
@@ -2792,7 +2790,7 @@ export default {
             this.articleCheckList = data.articleCheckList;
             this.questList = data.questList;
             this.articleList = data.articleList;
-            console.log(this.articleCheckList);
+            
             let _this = this;
             _this.addFollowData.itemModels[
                 _this.questOindex
@@ -3085,7 +3083,7 @@ export default {
         articleImgSuccess(res, file) {
             this.imageUrl = URL.createObjectURL(file.raw);
             this.addArticleData.pictureId = res.body;
-            console.log(this.addArticleData.pictureId);
+            
         },
         //满意度新增模板跳出
         ificationBoxClick() {
@@ -3107,10 +3105,7 @@ export default {
             };
             const res = await getResultGraph(query);
             if (res.data && res.data.errCode === 0) {
-                console.log(res.data.body);
-                // _this.pieChart1.data = red.data.body.reply;
-                // _this.pieChart2.data = red.data.body.age;
-                // _this.pieChart3.data = red.data.body.department;
+                
             } else {
                 //失败
                 this.$notify.error({
