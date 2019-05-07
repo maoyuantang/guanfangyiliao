@@ -485,6 +485,11 @@
 
 
 					})
+					if (this.list4s && this.current === '1') {
+						this.showModules.list = this.navList[0].childModule;
+					} else {
+						this.showModules.list = this.noLeftBottom;
+					}
 					// console.log(this.patientLieBiao)
 				}
 			},
