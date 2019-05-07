@@ -213,14 +213,15 @@ export default {
             loadingOther: false,
             streamObject: {},
             archivesIdVisable: true,
-            archivesIdVisable1: true
+            archivesIdVisable1: true,
             //    archivesUrl :'/outpatient',
+            videoListResult:[]
         };
     },
     mounted() {
         // let oindex = 0;
         // let oid = $("#localVideos>div").attr("id");
-        $.nextTick(() => {
+        this.$nextTick(() => {
             $("#remoteVideos>div").click(function() {
                 alert("ddd");
                 // $(this).attr('id')
@@ -1756,6 +1757,8 @@ export default {
          */
         Manis.onJoinConference(function(result) {
             console.log(result);
+            _this.videoListResult.push(result)
+            console.log(_this.videoListResult)
             const ele = _this.generateParticipant(result, false);
             ele.onclick = () => {
                 const parent = ele.parentNode;
@@ -1768,24 +1771,26 @@ export default {
                     }
                 }
                 console.log(index);
-                // let oid= $("#localVideos>div").attr('id').slice(12)
+                let oid = $("#localVideos>div")
+                    .attr("id")
+                    .slice(12);
                 $("#localVideos").html("");
                 $("#localVideos").append(ele);
-                // const eleList = [];
-                // for (let i = 0; i < list.length; i++){
-                //     console.warn(list[i])
-                //     eleList.push(list[i])
-                // }
-                //  console.log(eleList)
-                //  console.log(oid)
-                //  console.log(_this.generateParticipant(oid, false))
-                // eleList[index] = _this.generateParticipant(oid, false);
-
+                const eleList = [];
+                for (let i = 0; i < list.length; i++) {
+                    console.warn(list[i]);
+                    eleList.push(list[i]);
+                }
+                
+                console.log(oid);
+                console.log(_this.generateParticipant(oid, false));
+                eleList[index] = _this.generateParticipant(oid, false);
+console.log(eleList);
                 // $("#remoteVideos").html();
-                // eleList.forEach(item=>{
-                //     console.log(item)
-                //     $("#remoteVideos").append(item)
-                // })
+                // eleList.forEach(item => {
+                //     console.log(item);
+                //     $("#remoteVideos").append(item);
+                // });
             };
             $("#remoteVideos").append(ele);
             // _this.resultList.push(result);
@@ -1807,6 +1812,12 @@ export default {
          */
         Manis.onLeaveConference(function(result) {
             if (result.code == 200) {
+                _this.videoListResult=_this.videoListResult.map((index,text)=>{
+                    if(text.response.info.resource != result.info.resource) {
+                        return text
+                    }
+                })
+                console.log(_this.videoListResult)
                 $(
                     ".participant_container_" + result.response.resource
                 ).remove();
