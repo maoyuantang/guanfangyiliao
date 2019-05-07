@@ -1403,7 +1403,9 @@
 				let _this = this
 				this.addData.show = true
 				this.sureVisiable = 1;
+				this.addData.doctorList.list.length = 0;
 				this.newClinic0();//新增门诊弹框内容渲染
+				// if (this.addData.doctorList.list.length !== 0) {
 				let query = {
 					token: this.userInfo.token,
 					clinicId: row.id,//String true 远程门诊业务id 
@@ -1438,6 +1440,7 @@
 						message: res.data.errMsg
 					});
 				}
+				// }
 			},
 			//编辑   管理1表
 			async isShowEditFun(row) {
