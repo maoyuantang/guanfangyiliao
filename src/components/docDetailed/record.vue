@@ -198,6 +198,7 @@
              * 2.电子病历列表 获取
              */
             async getEMRList(){
+                if(this.inData == null) return;
                 // console.error(this.inData)
                 // if(!this.inData)return;
                 const ajaxOption = {
@@ -283,7 +284,7 @@
                     this.getEMRLeaveHospital(id,index),
                 ])
                 .then(resList => {
-                    console.log(this.patientListInfo)
+                //console.log(this.patientListInfo)
                 })
                 .catch(err => {
                     this.$notify({
@@ -401,7 +402,7 @@
             },
 		},
 		async created(){
-            console.log(78979878979)
+        //console.log(78979878979)
             this.getUserInfo();
             this.getEMRList();
 		}

@@ -244,7 +244,7 @@ export default {
                     value: "checkout"
                 },
                 {
-                    name: "影响检查",
+                    name: "影像检查",
                     value: "screenage"
                 }
             ],
@@ -371,6 +371,10 @@ export default {
             if (text.visitType == 1) {
                 //门诊记录
                 this.danganRgList1 = [
+                     {
+                        name: "就诊记录",
+                        value: "recipe"
+                    },
                     {
                         name: "处方",
                         value: "recipe"
@@ -380,7 +384,7 @@ export default {
                         value: "checkout"
                     },
                     {
-                        name: "影响检查",
+                        name: "影像检查",
                         value: "screenage"
                     }
                 ];
@@ -415,7 +419,7 @@ export default {
                         value: "checkout"
                     },
                     {
-                        name: "影响检查",
+                        name: "影像检查",
                         value: "screenage"
                     }
                     // {
@@ -522,7 +526,7 @@ export default {
                             value: "checkout"
                         },
                         {
-                            name: "影响检查",
+                            name: "影像检查",
                             value: "screenage"
                         },
                         {
@@ -548,7 +552,7 @@ export default {
                             value: "checkout"
                         },
                         {
-                            name: "影响检查",
+                            name: "影像检查",
                             value: "screenage"
                         }
                     ];
@@ -835,9 +839,17 @@ export default {
     margin-bottom: 10px;
 }
 .danganRgMainTextClass > ul > li > div:nth-child(1) {
-    font-size: 14px;
+     color: #1474A9;
+    font-family: PingFangSC-Light;
+    font-size: 13px;
+    letter-spacing: -0.13px;
+    line-height: 33px;
 }
 .danganRgMainTextClass > ul > li > div:nth-child(2) {
-    font-size: 12px;
+        color: #282828;
+         font-family: PingFangSC-Light;
+    font-size: 13px;
+    letter-spacing: -0.13px;
+    line-height: 33px;
 }
 </style>

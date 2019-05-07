@@ -8,17 +8,18 @@
                     <span class="input-item-name">业务类型:</span>
                     <div class="input-item-value-div">
                         <div class="particular-handle">
-                            <el-select v-model="inData.businessTypeList.default.value" clearable placeholder="请选择" size="mini"
-                                v-if="inData.businessTypeList.default.value!=='-1'">
-                                <el-option v-for="item in inData.businessTypeList.list||[]" :key="item.value" :label="item.label"
-                                    :value="item.value">
+                            <el-select v-model="inData.businessTypeList.default.value" clearable placeholder="请选择"
+                                size="mini" v-if="inData.businessTypeList.default.value!=='-1'">
+                                <el-option v-for="item in inData.businessTypeList.list||[]" :key="item.value"
+                                    :label="item.label" :value="item.value">
                                 </el-option>
                             </el-select>
                             <el-input placeholder="请输入内容" size="mini" v-else @mouseover.native="showClose=true"
                                 @mouseout.native="showClose=false" v-model="inData.businessTypeList.default.label">
                             </el-input>
-                            <i class="iconfont particular-handle-icon" @mouseover="showClose=true" :style="{display:showClose?'inline-block':'none'}"
-                                @click="changeStatus" v-if="inData.businessTypeList.default.value==='-1'">&#xe7b7;</i>
+                            <i class="iconfont particular-handle-icon" @mouseover="showClose=true"
+                                :style="{display:showClose?'inline-block':'none'}" @click="changeStatus"
+                                v-if="inData.businessTypeList.default.value==='-1'">&#xe7b7;</i>
                         </div>
                     </div>
                 </div>
@@ -35,9 +36,10 @@
                 <div class="input-item-div" v-if="inData.type==='2'">
                     <span class="input-item-name">业务模板:</span>
                     <div class="input-item-value-div">
-                        <el-select v-model="inData.businessTemplate.default.value" clearable placeholder="请选择" size="mini">
-                            <el-option v-for="item in inData.businessTemplate.list||[]" :key="item.value" :label="item.label"
-                                :value="item.value">
+                        <el-select v-model="inData.businessTemplate.default.value" clearable placeholder="请选择"
+                            size="mini">
+                            <el-option v-for="item in inData.businessTemplate.list||[]" :key="item.value"
+                                :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
@@ -63,12 +65,16 @@
                     </div>
                 </div>
                 <!-- 选择科室 -->
+                <!-- {{inData.departmentList.default.value}} -->
+                <!-- <hr> -->
+                <!-- {{inData.departmentList.list}} -->
                 <div class="input-item-div">
                     <span class="input-item-name">选择科室:</span>
                     <div class="input-item-value-div">
-                        <el-select v-model="inData.departmentList.default.value" clearable placeholder="请选择" size="mini">
-                            <el-option v-for="item in inData.departmentList.list||[]" :key="item.value" :label="item.label"
-                                :value="item.value" :disabled="sureVisiable===1">
+                        <el-select v-model="inData.departmentList.default.value" clearable placeholder="请选择"
+                            size="mini">
+                            <el-option v-for="item in inData.departmentList.list||[]" :key="item.value"
+                                :label="item.label" :value="item.value" :disabled="sureVisiable===1">
                             </el-option>
                         </el-select>
                         <i class="iconfont required-icon" v-if="inData.type==='1'">&#xe7b0;</i>
@@ -79,8 +85,8 @@
                     <span class="input-item-name">关联医生:</span>
                     <div class="input-item-value-div">
                         <el-select v-model="inData.doctorList.default" multiple placeholder="请选择" size="mini">
-                            <el-option v-for="(item,index) in inData.doctorList.list||[]" :key="index" :label="item.label"
-                                :value="item.value" :disabled="sureVisiable===1">
+                            <el-option v-for="(item,index) in inData.doctorList.list||[]" :key="index"
+                                :label="item.label" :value="item.value" :disabled="sureVisiable===1">
                             </el-option>
                         </el-select>
                         <i class="iconfont required-icon" v-if="inData.type==='1'">&#xe7b0;</i>
@@ -127,7 +133,8 @@
                         <div class="make-agreement">
                             <div class="agreement-list">
                                 <!-- <span class="select-agreement-name">{{inData.agreement.default.label||''}}</span> -->
-                                <input type="text" class="select-agreement-name1" v-model="inData.agreement.default.label" autocomplete="off"
+                                <input type="text" class="select-agreement-name1"
+                                    v-model="inData.agreement.default.label" autocomplete="off"
                                     :readonly="sureVisiable===1?'readonly':false"></input>
                                 <Dropdown>
                                     <p>
@@ -135,14 +142,16 @@
                                     </p>
                                     <DropdownMenu slot="list">
                                         <DropdownItem v-for="(item,index) in inData.agreement.list" :key="index"
-                                            @click.native="chooseAgreement(item,index)" :disabled="sureVisiable===1">{{item.label}}</DropdownItem>
+                                            @click.native="chooseAgreement(item,index)" :disabled="sureVisiable===1">
+                                            {{item.label}}</DropdownItem>
                                     </DropdownMenu>
                                 </Dropdown>
                             </div>
                             <!-- <div class="show-agreement">
                                 {{inData.agreement.showContent||''}}
                             </div> -->
-                            <textarea class="show-agreement1" v-model="inData.agreement.showContent" :readonly="sureVisiable===1?'readonly':false" @change="contentChange"></textarea>
+                            <textarea class="show-agreement1" v-model="inData.agreement.showContent"
+                                :readonly="sureVisiable===1?'readonly':false" @change="contentChange"></textarea>
                         </div>
                     </div>
 
@@ -151,7 +160,8 @@
                 <div class="input-item-div">
                     <span class="input-item-name">服务电话:</span>
                     <div class="input-item-value-div">
-                        <el-input placeholder="请输入内容" v-model="inData.servicePhone" size="mini" clearable :readonly="sureVisiable===1?'readonly':false">
+                        <el-input placeholder="请输入内容" v-model="inData.servicePhone" size="mini" clearable
+                            :readonly="sureVisiable===1?'readonly':false">
                         </el-input>
                     </div>
                 </div>
@@ -255,7 +265,7 @@
             };
         },
         methods: {
-            contentChange(){
+            contentChange() {
                 // this.inData.agreement.default.value = ""
                 this.inData.agreement.default = { label: "", value: "" }
             },
@@ -304,7 +314,7 @@
                 value: "-1"
             });
             // alert('enter')
-           
+
         },
         beforeDestroy() { }
     };

@@ -18,12 +18,12 @@
     created() {
       // console.log(this.inData)
       // for (let i = 0; i < this.inData.list; i++) {
-      //   console.log(this.inData)
+      //// console.log(this.inData)
       //   if (this.inData.list[i].ad == false) {
       //     this.inData.list[i].removed();
       //   }
       // }
-      console.log(this.inData)
+   // console.log(this.inData)
       let i = 0;
       const length = this.inData.list.length;
       for(; i < length; i++){
@@ -40,7 +40,7 @@
     methods: {
       reBackFn(index) {
         this.inData.i = index
-        console.log(this.inData)
+     // console.log(this.inData)
         this.$emit('reBack', this.inData)
       },
     },
@@ -172,7 +172,7 @@
           },
           methods:{
             getData(res){//接收返回值
-              console.log(`当前点击的是第${res.i}个选项`);
+           // console.log(`当前点击的是第${res.i}个选项`);
             }
           }
         }

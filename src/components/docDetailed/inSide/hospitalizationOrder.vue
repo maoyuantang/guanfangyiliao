@@ -1,7 +1,7 @@
 <!-- 住院医嘱 -->
 <template>
     <div>
-        <div class="medicalOrder">
+        <div class="medicalOrder" v-if="inData.length == 0?false:true">
             <div class="medicalOrder-top">
                 <p class="medicalOrder-top-item">医嘱名称</p>
                 <p class="medicalOrder-top-item">规格</p>

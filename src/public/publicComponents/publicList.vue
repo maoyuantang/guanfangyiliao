@@ -68,7 +68,7 @@
             },
             //如果不传按钮则操作隐藏
             hideHandle() {
-                if (this.tableBtn || this.tableBtn.length < 1) {
+                if (this.tableBtn) {
                     this.handleVisiable = true;
                 } else {
                     this.handleVisiable = false;

@@ -473,10 +473,7 @@ export default {
             this.userState.token +
             "&ooo=" +
             Math.random(10);
-        console.log(this.sessionId);
         this.messageTicket = this.$store.state.socket.messageTicket;
-        console.log(this.$store.state.socket.messageTicket);
-        // this.oMsgId = this.$store.state.socket.messageTicket.oMsgId;
     },
     methods: {
         updated() {
@@ -484,7 +481,6 @@ export default {
                 let div = document.getElementById("scrolldIV");
 
                 div.scrollTop = div.scrollHeight;
-                console.log(div.scrollTop);
             });
         },
         //发送
@@ -504,7 +500,6 @@ export default {
             }
 
             let timestamp = Date.parse(new Date());
-            console.log(this.userSelfInfo);
             let Iessage = {
                 RequestType: 4,
                 ticket: this.messageTicket.ticket,
@@ -523,7 +518,6 @@ export default {
                     location: this.sendMessageBoxType
                 }
             };
-            console.log(Iessage);
             // websocket.default.sendMessage(Iessage);
             if (messageBody) {
                 // this.$refs.mychild.sendMessage(Iessage);
@@ -584,7 +578,6 @@ export default {
                 } else if (oMessage.indexOf("complete") > -1) {
                     oMessage = "视频通话已结束";
                 } else if (oMessage.indexOf("sendroom") > -1) {
-                    console.log("发起了视频聊天！！！！");
                     oMessage = "发起了视频聊天";
                 }
             } else if (
@@ -649,7 +642,7 @@ export default {
         },
         // 随访
         getSendMessageChat(oMessage) {
-            console.log("发送的随访" + oMessage);
+            
             let messageBody = JSON.stringify(oMessage);
             this.sendMessageChat(20, messageBody, "FOLLOWUP");
 
@@ -659,7 +652,7 @@ export default {
         // 问诊
         getSendMessageChat1(oMessage) {
             let messageBody = JSON.stringify(oMessage);
-            console.log(messageBody);
+            
             // this.childMessageType = 20;
             this.sendMessageChat(18, messageBody, "INTERROGATION");
             this.questDetailVisible = false;
@@ -668,7 +661,7 @@ export default {
         onSubmit() {},
         //图片上传成功
         imgUpload(res) {
-            console.log(res);
+            
             if (res.body && res.errCode === 0) {
                 this.imgId = res.body;
                 // this.messageBody = res.body;
@@ -687,7 +680,7 @@ export default {
         //判断是否有在视频
         async panIfVideo() {
             this.videoUserNum = 0;
-            console.log(this.userSocketInfo.videoList);
+            
             $.each(this.userSocketInfo.videoList, (index, text) => {
                 if (text.sessionId == this.sessionId) {
                     this.conferenceId1 = text.conferenceId;
@@ -705,7 +698,7 @@ export default {
                 const res = await queryStorageUsers(query);
                 if (res.data && res.data.errCode === 0) {
                     _this.videoUserNum = res.data.body.length;
-                    console.log(_this.videoUserNum);
+                    
                 } else {
                     _this.videoUserNum = 0;
                     //失败
@@ -731,7 +724,7 @@ export default {
                 this.chatTypeBox.startDoctorTYpe == "会诊" ||
                 this.chatTypeBox.startDoctorTYpe == "协作"
             ) {
-                console.log(this.videoUserNum);
+                
                 if (this.videoUserNum > 0 && this.videoUserNum < 4) {
                     this.closeVideo("ON", 1);
                 } else if (this.videoUserNum >= 4) {
@@ -820,7 +813,7 @@ export default {
                 }
 
                 _this.$store.commit("socket/VIDEOLIST", videoList);
-                console.log(_this.userSocketInfo.videoList);
+                
             } else {
                 //失败
                 this.$notify.error({
@@ -841,7 +834,7 @@ export default {
                 state: type
             };
             const res = await storageUsers(query, options);
-            console.log(res);
+            
             if (res.data && res.data.errCode === 0) {
                 if (type == "OFF") {
                     _this.deleteVideoRoom();
@@ -918,7 +911,7 @@ export default {
                     location: this.sendMessageBoxType
                 }
             };
-            console.log(Iessage);
+            
             // this.$refs.mychild.sendMessage(Iessage);
             this.sendMessage(Iessage);
 
@@ -941,7 +934,7 @@ export default {
         //普通档案
         openPublicFile() {
             this.puBlicFileData.show = true;
-            console.log(this.puBlicFileData);
+            
             this.getFamily();
         },
         //添加备注
@@ -981,7 +974,7 @@ export default {
             this.drugsVisible = false;
         },
         async addPublicFile(data) {
-            console.log(data);
+            
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -995,7 +988,7 @@ export default {
                 opinion: data.deal
             };
             const res = await addOrdinaryArchives(query, options);
-            console.log(res);
+            
             if (res.data && res.data.errCode === 0) {
                 this.$notify.success({
                     title: "成功",
@@ -1028,7 +1021,7 @@ export default {
                 ultimate: data.LastMenstrualPeriod
             };
             const res = await addWomanMessage(query, options);
-            console.log(res);
+            
             if (res.data && res.data.errCode === 0) {
                 this.$notify.success({
                     title: "成功",
@@ -1055,10 +1048,10 @@ export default {
                 userId: this.userMessage.userId
             };
             const res = await queryListByUserId(query);
-            console.log(res);
+            
             if (res.data && res.data.errCode === 0) {
                 $.each(res.data.body, function(index, text) {
-                    console.log(_this.puBlicFileData);
+                    
                     _this.puBlicFileData.nameList.push({
                         name: text.name,
                         id: text.id
@@ -1085,9 +1078,9 @@ export default {
                 pageSize: 10
             };
             const res = await webGetTitleList(query);
-            console.log(res);
+            
             if (res.data && res.data.errCode === 0) {
-                console.log(res.data);
+                
                 this.followList = res.data.body.list;
             } else {
                 //失败
@@ -1130,9 +1123,9 @@ export default {
             odata.setMinutes(0);
             odata.setSeconds(0);
             odata.setMilliseconds(0);
-            console.log(odata);
+            
             let oldTime = Math.floor(odata.getTime() / 1000);
-            console.log(this.userSelfInfo.userId);
+            
             let query = {
                 token: this.userState.token,
                 followupId: oid
@@ -1143,7 +1136,7 @@ export default {
                 let oldDay = 0;
                 let oldSecond = 0;
                 $.each(this.followDetailData.itemModels, (index, text) => {
-                    console.log(text.calcUnit);
+                    
                     if (text.calcUnit == "天") {
                         oldDay = text.calcVal * 1;
                     } else if (text.calcUnit == "周") {
@@ -1169,7 +1162,7 @@ export default {
         },
         //随访计划详情
         async getFollowDetail(oid) {
-            console.log(this.userSelfInfo.userId);
+            
             let query = {
                 token: this.userState.token,
                 planId: oid
@@ -1188,7 +1181,7 @@ export default {
         },
         //已读未读
         async alreadyRead() {
-            console.log(this.userSelfInfo.userId);
+            
             let query = {
                 token: this.userState.token
             };
@@ -1196,7 +1189,7 @@ export default {
                 sessionId: this.sessionId
             };
             const res = await fetchReadMessageId(query, options);
-            console.log(res);
+            
             if (res.data && res.data.errCode === 0) {
                 this.areadyReadNum = res.data.body;
             } else {
@@ -1210,7 +1203,7 @@ export default {
         //拉取会话好友列表
         async getMemberMess() {
             let _this = this;
-            console.log(this.sessionId);
+            
             let query = {
                 token: this.userState.token
             };
@@ -1220,10 +1213,10 @@ export default {
                 pageNums: 50
             };
             const res = await fetchSessionMembers(query, options);
-            console.log(res);
+            
             if (res.data && res.data.errCode === 0) {
                 $.each(res.data.body, function(index, text) {
-                    console.log(text);
+                    
                     if (text.userId == _this.userSelfInfo.userId) {
                         res.data.body.splice(index, 1);
                     }
@@ -1258,10 +1251,9 @@ export default {
                 this.messageList1 = [];
                 this.messageList1.length = 0;
                 // this.messageList1 = Object.assign({},this.messageList1)
-                console.log(this.messageList1);
+                
             }
-            console.log("历史消息");
-            console.log(this.sessionId);
+            
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -1272,9 +1264,9 @@ export default {
                 msgId: this.oMsgId,
                 pageNums: 15
             };
-            console.log(Object.prototype.toString.call([this.sessionId]));
+            
             const res = await fetchHistoryMessage(query, options);
-            console.log(res);
+            
             if (res.data && res.data.errCode === 0) {
                 if (res.data.body.length > 0) {
                     let oLengthMsgId = res.data.body.length;
@@ -1285,7 +1277,7 @@ export default {
                     this.loadMoreVisable = false;
                 }
 
-                console.log(this.messageList1);
+
                 $.each(res.data.body, function(index, text) {
                     let timestamp4 = new Date(text.serverTime);
                     let y = timestamp4.getHours();
@@ -1296,14 +1288,14 @@ export default {
                     if (d <= 9) {
                         d = "0" + d;
                     }
-                    console.log(y + "-" + d);
+                    
                     text.serverTime = y + ":" + d;
                     _this.messageList1.push(text);
                 });
                 _this.messageList = deepCopy(_this.messageList1);
                 _this.messageList = _this.messageList.reverse();
                 let odata = this.messageList;
-                console.log(this.messageList);
+                
                 for (let i = 0; i < odata.length; i++) {
                     if (this.areadyReadNum >= odata[i].msgId) {
                         this.messageList[i].oRead = true; //已读
@@ -1411,7 +1403,7 @@ export default {
                         } else if (odata[i].childMessageType == "FOLLOWUP") {
                             //随访
                             // this.messageList[i].content = "随访";
-                            console.log(odata[i].body);
+                            
                             this.messageList[i].content = JSON.parse(
                                 odata[i].body
                             );
@@ -1450,7 +1442,7 @@ export default {
                         }
                     }
                 }
-                console.log(this.messageList);
+                
                 this.updated();
             } else {
                 //失败
@@ -1569,7 +1561,7 @@ export default {
                 executeTime: this.planData.planTime
             };
             const res = await savePlan(query, options);
-            console.log(res);
+            
             if (res.data && res.data.errCode === 0) {
                 this.$notify.success({
                     title: "成功",
@@ -1590,7 +1582,8 @@ export default {
         //视频组件传过来的事件
         videoclick(data) {
             this.videoVisible = false;
-            console.log("关闭弹窗");
+            
+
             this.alreadyRead();
             this.getHisRecord();
             this.panIfVideo();
@@ -1603,7 +1596,7 @@ export default {
                 cID: this.createVideoRoomData.conferenceId
             };
             const res = await closeVideoRoom(query, options);
-            console.log(res);
+            
             if (res.data && res.data.errCode === 0) {
                 alert("删除成功");
             } else {
@@ -1621,7 +1614,7 @@ export default {
             handler(data, o) {
                 let olength = data.length;
                 let oData = data[olength - 1];
-                console.log(oData);
+                
                 if (oData.RequestType == 6) {
                     if (this.sessionId == oData.info.to) {
                         let oTime = oData.info.serverTime;
@@ -1634,7 +1627,7 @@ export default {
                         if (d <= 9) {
                             d = "0" + d;
                         }
-                        console.log(y + "-" + d);
+                        
                         let oMessageTime = y + ":" + d;
 
                         let messageBody = oData.info.body;
@@ -1676,7 +1669,7 @@ export default {
                                 messageBody.indexOf("sendroom") > -1 ||
                                 messageBody.indexOf("MicroCinicSendRoom") > -1
                             ) {
-                                console.log("收到视频邀请");
+                                
                                 this.alreadyRead();
                                 this.getHisRecord();
                                 this.panIfVideo();
@@ -1693,7 +1686,7 @@ export default {
                         } else if (oData.info.childMessageType == 20) {
                             childMessageType = "FOLLOWUP";
                         }
-                        console.log(messageBody);
+                        
                         this.addMessageK(
                             oUserId,
                             messageBody,
