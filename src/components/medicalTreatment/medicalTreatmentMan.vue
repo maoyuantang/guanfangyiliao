@@ -515,7 +515,7 @@
       //自调用组件函数
       //  管理  切换数据
       getBar(data) {
-        console.log(data)
+        // console.log(data)
         if (data.i == 0) {
           this.goNo();
           this.getList1()
@@ -541,30 +541,30 @@
       //筛选返回值  管理端
       getFilter0(data) {//科室筛选
         this.departmentId = data.index.value;
-        console.log(this.departmentId)
+        // console.log(this.departmentId)
         this.getList1()
         this.getList2()
         this.getList3()
       },
       getFilter1(data) {//类型筛选
         this.typeId = data.index.value;
-        console.log(this.typeId)
+        // console.log(this.typeId)
         this.getList1()
       },
       getFilter2(data) {//分级筛选
-        console.log(data)
+        // console.log(data)
         this.gradeId = data.index.value;
-        console.log(this.gradeId)
+        // console.log(this.gradeId)
         this.getList1()
       },
       adminSearchOne(data) {//搜索（筛选右边）
         this.searchValue = data;
-        console.log(this.searchValue)
+        // console.log(this.searchValue)
         this.getList1()
         this.getList2()
       },
       getFilterTime(data) {//统计		//时间选择器返回函数
-        console.log(data)
+        // console.log(data)
         this.time0 = data.time[0];//统计筛选开始时间
         this.time1 = data.time[1];//统计筛选结束时间
         this.type = data.select.value
@@ -584,16 +584,16 @@
         done();
       },
       inputReturn11(value) {
-        console.log(value);
+        // console.log(value);
       },
       inputReturn12(value) {
-        console.log(value);
+        // console.log(value);
       },
       inputReturn21(value) {
-        console.log(value);
+        // console.log(value);
       },
       inputReturn22(value) {
-        console.log(value)
+        // console.log(value)
         let list = this.kuangData2.options3.list
         for (var i = 0; i < list.length; i++) {
           if (value[0] == list[i].value) {
@@ -614,9 +614,9 @@
         })
         // this.hospts = this.uniq(this.hospts)
         this.hospts = this.deduplication(this.hospts, "test");
-        // console.log(this.hospts)
+        // // console.log(this.hospts)
         this.threeInput(list, value);
-        console.log(this.hospts)
+        // console.log(this.hospts)
       },
       threeInput(list, value) {
         if (this.hosptDpart.length != 0) {
@@ -624,7 +624,7 @@
           //医院是否相同
           let diyic = true;
           for (var a = 0; a < this.hosptDpart.length; a++) {
-            console.log(value[0], this.hosptDpart[a].hospitalId)
+            // console.log(value[0], this.hosptDpart[a].hospitalId)
             if (this.hosptDpart[a].hospitalId == value[0]) {
               diyic = false;
               break;
@@ -645,7 +645,7 @@
             let gg = true;
             for (var a = 0; a < this.hosptDpart.length; a++) {
               for (var b = 0; b < this.hosptDpart[a].deptIds.length; b++) {
-                console.log(this.hosptDpart[a].deptIds[b], value[1])
+                // console.log(this.hosptDpart[a].deptIds[b], value[1])
                 if (this.hosptDpart[a].deptIds[b] == value[1]) {
                   gg = false
                   break;
@@ -676,7 +676,7 @@
               }
             )
           }
-          console.log(this.hosptDpart);
+          // console.log(this.hosptDpart);
         } else if (this.hosptDpart.length == 0) {   //新增时
           // alert(0)
           for (var a = 0; a < list.length; a++) {
@@ -699,23 +699,23 @@
               }
             }
           }
-          console.log(this.hosptDpart);
+          // console.log(this.hosptDpart);
         }
       },
       go_delete(index, item) {
-        // console.log(item)
+        // // console.log(item)
         this.hosptDpart.forEach((v, k) => {
           // console.log(0)
-          // console.log('____________________________')
-          // console.log(v.hospitalId)
-          // console.log(item.hospitalId)
-          // console.log('____________________________')
+          // // console.log('____________________________')
+          // // console.log(v.hospitalId)
+          // // console.log(item.hospitalId)
+          // // console.log('____________________________')
           if (v.hospitalId === item.hospitalId) {
-            // console.log(1)
-            // console.log(this.hosptDpart[k].deptIds)
+            // // console.log(1)
+            // // console.log(this.hosptDpart[k].deptIds)
             this.hosptDpart[k].deptIds.forEach((value, key) => {
               if (value === item.deptId) {
-                console.log(2)
+                // console.log(2)
                 this.hosptDpart[k].deptIds.splice(key, 1);
                 if (this.hosptDpart[k].deptIds.length <= 0) {
                   this.hosptDpart.splice(k, 1);
@@ -728,8 +728,8 @@
 
         this.hospts.splice(index, 1);
         // this.hosptDpart.splice(index, 1);
-        console.log(this.hospts)
-        console.log(this.hosptDpart);
+        // console.log(this.hospts)
+        // console.log(this.hosptDpart);
       },
       uniq(array) {
         var temp = []; //一个新的临时数组
@@ -781,8 +781,8 @@
         };
         const res = await toolDept(query);                                       //1.21.1.科室筛选  工具栏 (管理) (管理)
         if (res.data && res.data.errCode === 0) {
-          console.log('1.21.1.科室工具栏 +成功')
-          // console.log(res.data.body);
+          // console.log('1.21.1.科室工具栏 +成功')
+          // // console.log(res.data.body);
           if (res.data.body.length > 6) {
             this.onLineList.topFlag[0].more = true;
           } else {
@@ -799,7 +799,7 @@
           });
           // this.kuangData1.options1.list = this.onLineList.topFlag[0].list
         } else {
-          console.log('1.21.1.科室工具栏 +失败')
+          // console.log('1.21.1.科室工具栏 +失败')
           //失败
           this.$notify.error({
             title: "警告",
@@ -815,8 +815,8 @@
         };
         const res = await toolMedicalType(query);                                     //1.21.26.类型筛选  工具栏 (管理)
         if (res.data && res.data.errCode === 0) {
-          console.log('1.21.26.类型筛选  工具栏 +成功')
-          console.log(res.data.body);
+          // console.log('1.21.26.类型筛选  工具栏 +成功')
+          // console.log(res.data.body);
           if (res.data.body.length > 6) {
             this.onLineList.topFlag[1].more = true;
           } else {
@@ -831,7 +831,7 @@
             });
           });
         } else {
-          console.log('1.21.26.类型筛选  工具栏 +失败')
+          // console.log('1.21.26.类型筛选  工具栏 +失败')
           //失败
           this.$notify.error({
             title: "警告",
@@ -847,8 +847,8 @@
         };
         const res = await toolMedicalGrading(query);                                        //1.21.27.分级诊疗-分级
         if (res.data && res.data.errCode === 0) {
-          console.log('1.21.27.分级诊疗-分级  工具栏 +成功')
-          // console.log(res.data.body);
+          // console.log('1.21.27.分级诊疗-分级  工具栏 +成功')
+          // // console.log(res.data.body);
           if (res.data.body.length > 6) {
             this.onLineList.topFlag[2].more = true;
           } else {
@@ -862,7 +862,7 @@
             });
           });
         } else {
-          console.log('1.21.27.分级诊疗-分级 工具栏 +失败')
+          // console.log('1.21.27.分级诊疗-分级 工具栏 +失败')
           //失败
           this.$notify.error({
             title: "警告",
@@ -901,17 +901,17 @@
         };
         const res = await fetchMedicalClassify(query);                               // 13.1.分类管理-列表 
         if (res.data && res.data.errCode === 0) {
-          console.log('管理1.1表+成功')
-          console.log("time0:", this.time0)
-          console.log("time1:", this.time1)
-          console.log("res:", res)
-          console.log("list:", res.data.body.data2.list)
-          console.log("total:", res.data.body.data2.total)
+          // console.log('管理1.1表+成功')
+          // console.log("time0:", this.time0)
+          // console.log("time1:", this.time1)
+          // console.log("res:", res)
+          // console.log("list:", res.data.body.data2.list)
+          // console.log("total:", res.data.body.data2.total)
           this.totals = res.data.body.data2.total
-          console.log(this.totals)
+          // console.log(this.totals)
           this.medical_body0_Data = res.data.body.data2.list
         } else {
-          console.log('管理1.1表+失败')
+          // console.log('管理1.1表+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -929,17 +929,17 @@
         };
         const res = await fetchMedicalControl(query);                               //13.11.权限控制-列表 
         if (res.data && res.data.errCode === 0) {
-          console.log('管理1.2表+成功')
-          console.log("time0:", this.time0)
-          console.log("time1:", this.time1)
-          console.log("res:", res)
-          console.log("list:", res.data.body.data2.list)
-          console.log("total", res.data.body.data2.total)
+          // console.log('管理1.2表+成功')
+          // console.log("time0:", this.time0)
+          // console.log("time1:", this.time1)
+          // console.log("res:", res)
+          // console.log("list:", res.data.body.data2.list)
+          // console.log("total", res.data.body.data2.total)
           this.totals = res.data.body.data2.total
-          console.log(this.totals)
+          // console.log(this.totals)
           this.medical_body1_Data = res.data.body.data2.list
         } else {
-          console.log('管理1.2表+失败')
+          // console.log('管理1.2表+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -956,8 +956,8 @@
         };
         const res = await medicalControlCharts(query);                                            //13.12.统计-统计图 
         if (res.data && res.data.errCode === 0) {
-          console.log('统计+疾病库+成功')
-          console.log(res)
+          // console.log('统计+疾病库+成功')
+          // console.log(res)
           const lists = res.data.body.data
           this.yTotal1 = 0
           this.testdata1.dataAxis.length = 0
@@ -970,11 +970,11 @@
           this.testdata1.title = "疾病库"
           this.testdata1.total = "总数：" + this.yTotal1
           this.testdata1 = Object.assign({}, this.testdata1);
-          console.log(this.yTotal1)
-          console.log(this.testdata1)
+          // console.log(this.yTotal1)
+          // console.log(this.testdata1)
         } else {
           //失败
-          console.log('统计+疾病库+失败')
+          // console.log('统计+疾病库+失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1011,9 +1011,9 @@
       },
       // 管理     1.2表  表体  
       cellClick2(row, column, cell, event) {
-        // console.log(row, column)
+        // // console.log(row, column)
         if (column.label == "范围") {//当范围被点击
-          console.log(row)//找到对应行的科室id
+          // console.log(row)//找到对应行的科室id
           this.doctorVisible = true;
           this.doctorDetailData = row.deptRels
         }
@@ -1031,7 +1031,7 @@
           return this.isHaveDepartment11();
         })
           .then(res => this.kuangData1.show = true);
-        console.log(data)
+        // console.log(data)
         const _this = this
         this.adds = data.id
         this.kuangData1.options1.value = data.deptId
@@ -1044,28 +1044,28 @@
           }
         })
 
-        // console.log()
+        // // console.log()
       },
       // 表一编辑   提交
       async kuangData1Fun12() {
         let abc = []
         const _this = this
-        console.log(this.kuangData1.options2.list)
+        // console.log(this.kuangData1.options2.list)
         $.each(this.kuangData1.options2.list, function (index, text) {
           if (_this.$refs.ceshi1.query == _this.kuangData1.options2.list[index].label) {
-            console.log("编辑匹配到了类型，直接提交")
+            // console.log("编辑匹配到了类型，直接提交")
             abc.push("1")
             // this.kuangData1.options2.value
             let bcd = []
             for (var i = 0; i < _this.kuangData1.options3.list; i++) {
               if (_this.$refs.ceshi2.query == _this.kuangData1.options3.list[i].label) {
-                console.log("编辑匹配到了名称，直接提交")
+                // console.log("编辑匹配到了名称，直接提交")
                 bcd.push("1")
                 _this.editMedicalClassify();
               }
             }
             if (bcd.length == 0) {
-              console.log("编辑匹配无名称，传空新增名称")
+              // console.log("编辑匹配无名称，传空新增名称")
               _this.kuangData1.options3.value = "",//疾病ID
                 _this.editMedicalClassify();
             } else { }
@@ -1074,9 +1074,9 @@
             // _this.editMedicalClassify();
           } else { }
         })
-        console.log(this.abc)
+        // console.log(this.abc)
         if (abc.length == 0) {
-          console.log("编辑无匹配，传空新增类型")
+          // console.log("编辑无匹配，传空新增类型")
           this.addMedicalClassify2();
         } else { }
         this.kuangData1.show = false;
@@ -1097,14 +1097,14 @@
         };
         const res = await editMedicalClassify(query, options);//表1新增   提交                   //13.3.分级管理-修改
         if (res.data && res.data.errCode === 0) {
-          console.log('表1-编辑  +成功')
-          console.log(res)
+          // console.log('表1-编辑  +成功')
+          // console.log(res)
           this.getList1()
           this.getSelect2()
           this.handleClose1();
         } else {
           //失败
-          console.log('表1-编辑  +失败')
+          // console.log('表1-编辑  +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1114,7 +1114,7 @@
 
       // 表一删除
       async delectList1(data) {
-        console.log(data)
+        // console.log(data)
         const _this = this
         let query = {
           token: this.userInfo.token,
@@ -1124,13 +1124,13 @@
         }
         const res = await delMedicalClassify(query, options);                                 //13.4.分级管理-删除
         if (res.data && res.data.errCode === 0) {
-          console.log('表1-删除 +成功')
-          console.log(res)
+          // console.log('表1-删除 +成功')
+          // console.log(res)
           this.getList1()
           this.getSelect2()
         } else {
           //失败
-          console.log('表1-删除 +失败')
+          // console.log('表1-删除 +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1141,11 +1141,11 @@
       //1.2表   操作区   编辑
       editList2(data) {
         console.error(data.deptRels)
-        console.log(this.hospts)
-        console.log(this.hosptDpart);
+        // console.log(this.hospts)
+        // console.log(this.hosptDpart);
         this.hospts = [];
         const _this = this
-        console.log(data)
+        // console.log(data)
         this.YesList2 = 2;
         this.kuangData2.show = true;
         this.adds2 = data.id
@@ -1166,14 +1166,14 @@
           })
         })
 
-        console.log(this.kuangData2.options2.value)
+        // console.log(this.kuangData2.options2.value)
         data.levels.forEach(element => {
           this.kuangData2.options2.value.push(element.level)
         });
 
 
-        console.log(this.kuangData2.options2.value)
-        console.log(this.kuangData2.options2.list)
+        // console.log(this.kuangData2.options2.value)
+        // console.log(this.kuangData2.options2.list)
 
 
 
@@ -1199,9 +1199,9 @@
           let index = null;
           result.forEach((v, k) => v.hospitalId === item.hospitalId ? index = k : null);
           if (index !== null) {//找到 存在 该医院
-            console.log(result[index])
-            console.log(index)
-            console.log(result.length)
+            // console.log(result[index])
+            // console.log(index)
+            // console.log(result.length)
             result[index].deptIds.push(item.deptId);
           } else {//否则
             result.push({
@@ -1212,8 +1212,8 @@
 
         });
         this.hosptDpart = result;
-        console.log(this.hospts)
-        console.log(this.hosptDpart)//等待渲染
+        // console.log(this.hospts)
+        // console.log(this.hosptDpart)//等待渲染
 
 
       },
@@ -1224,9 +1224,9 @@
       },
       //表2编辑提交函数 
       async editMedicalControl() {
-        console.log(this.kuangData2.options1.value)
-        console.log(this.kuangData2.options2.value)
-        console.log(this.kuangData2.options3.value)
+        // console.log(this.kuangData2.options1.value)
+        // console.log(this.kuangData2.options2.value)
+        // console.log(this.kuangData2.options3.value)
         let query = {
           token: this.userInfo.token,
         };
@@ -1238,13 +1238,13 @@
         }
         const res = await editMedicalControl(query, options);//               //13.9.权限控制-编辑 
         if (res.data && res.data.errCode === 0) {
-          console.log('表1.2-编辑  +成功')
-          console.log(res)
+          // console.log('表1.2-编辑  +成功')
+          // console.log(res)
           this.getList2()
           // this.handleClose2();
         } else {
           //失败
-          console.log('表1.2-编辑  +失败')
+          // console.log('表1.2-编辑  +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1253,7 +1253,7 @@
       },
       // 表2  删除
       async delectList2(data) {
-        console.log(data)
+        // console.log(data)
         const _this = this
         let query = {
           token: this.userInfo.token,
@@ -1263,13 +1263,13 @@
         }
         const res = await delMedicalControl(query, options);                                 //13.10.权限控制-删除 
         if (res.data && res.data.errCode === 0) {
-          console.log('表1.2-删除 +成功')
-          console.log(res)
+          // console.log('表1.2-删除 +成功')
+          // console.log(res)
           this.getList2()
           this.getSelect2()
         } else {
           //失败
-          console.log('表1.2-删除 +失败')
+          // console.log('表1.2-删除 +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1311,9 +1311,9 @@
         };
         const res1 = await fetchHospitalDeptAuth(query);                                 //1.2.1.获取医院科室列表（新）主要用于表单选择()
         if (res1.data && res1.data.errCode === 0) {
-          console.log('表1-新增2.2.获取医院科室列表 +成功')
-          console.log(res1)
-          console.log(this.kuangData1.options1.list)
+          // console.log('表1-新增2.2.获取医院科室列表 +成功')
+          // console.log(res1)
+          // console.log(this.kuangData1.options1.list)
           _this.kuangData1.options1.list = res1.data.body.map(item => {
             return {
               label: item.deptName,
@@ -1322,7 +1322,7 @@
           })
         } else {
           //失败
-          console.log('表1-新增2.2.获取医院科室列表 +失败')
+          // console.log('表1-新增2.2.获取医院科室列表 +失败')
           this.$notify.error({
             title: "警告",
             message: res1.data.errMsg
@@ -1334,8 +1334,8 @@
         };
         const res2 = await fetchMedicalType(query2);                                //13.13.分级管理-类型下拉数据
         if (res2.data && res2.data.errCode === 0) {
-          console.log('表1-新增13.13.分级管理-类型下拉数据 +成功')
-          console.log(res2)
+          // console.log('表1-新增13.13.分级管理-类型下拉数据 +成功')
+          // console.log(res2)
           this.kuangData1.options2.list.length = 0;
           $.each(res2.data.body, function (index, text) {
             _this.kuangData1.options2.list.push({
@@ -1343,10 +1343,10 @@
               value: text.id
             });
           });
-          console.log(this.kuangData1.options2)
+          // console.log(this.kuangData1.options2)
         } else {
           //失败
-          console.log('表1-新增13.13.分级管理-类型下拉数据 +失败')
+          // console.log('表1-新增13.13.分级管理-类型下拉数据 +失败')
           this.$notify.error({
             title: "警告",
             message: res2.data.errMsg
@@ -1365,8 +1365,8 @@
           };
           const res = await fetchMedicalDict(query3);                                 //13.14.分级管理-名称与类型联动的名称下拉列表
           if (res.data && res.data.errCode === 0) {
-            console.log('表1-新增13.14.分级管理-名称与类型联动的名称下拉列表 +成功')
-            console.log(res)
+            // console.log('表1-新增13.14.分级管理-名称与类型联动的名称下拉列表 +成功')
+            // console.log(res)
             $.each(res.data.body, function (index, text) {
               _this.kuangData1.options3.list.push({
                 label: text.name,
@@ -1375,7 +1375,7 @@
             });
           } else {
             //失败
-            console.log('表1-新增13.14.分级管理-名称与类型联动的名称下拉列表 +失败')
+            // console.log('表1-新增13.14.分级管理-名称与类型联动的名称下拉列表 +失败')
             this.$notify.error({
               title: "警告",
               message: res.data.errMsg
@@ -1386,26 +1386,26 @@
       //弹出  新增业务1   提交 
       async kuangData1Fun11() {
         let abc = []
-        // console.log(abc)
+        // // console.log(abc)
         const _this = this
-        console.log(this.kuangData1.options2.list)
-        // console.log(Object.prototype.toString.call(this.kuangData1.options3.list))
+        // console.log(this.kuangData1.options2.list)
+        // // console.log(Object.prototype.toString.call(this.kuangData1.options3.list))
         $.each(this.kuangData1.options2.list, function (index, text) {
-          // console.log(`_this.$refs.ceshi2.query => ${_this.$refs.ceshi2.query}`);
-          // console.log(`_this.kuangData1.options3.list[index].label => ${_this.kuangData1.options3.list[index].label}`);
+          // // console.log(`_this.$refs.ceshi2.query => ${_this.$refs.ceshi2.query}`);
+          // // console.log(`_this.kuangData1.options3.list[index].label => ${_this.kuangData1.options3.list[index].label}`);
           if (_this.$refs.ceshi1.query == _this.kuangData1.options2.list[index].label) {
-            console.log("新增匹配到了下拉，直接加列表数据")
+            // console.log("新增匹配到了下拉，直接加列表数据")
             abc.push("1")
             let bcd = []
             for (var i = 0; i < _this.kuangData1.options3.list; i++) {
               if (_this.$refs.ceshi2.query == _this.kuangData1.options3.list[i].label) {
-                console.log("新增匹配到了名称，直接提交")
+                // console.log("新增匹配到了名称，直接提交")
                 bcd.push("1")
                 _this.addMedicalClassify1();
               }
             }
             if (bcd.length == 0) {
-              console.log("新增匹配无名称，传空新增名称")
+              // console.log("新增匹配无名称，传空新增名称")
               _this.kuangData1.options3.value = "",//疾病ID
                 _this.addMedicalClassify1();
             } else { }
@@ -1415,9 +1415,9 @@
             // alert(2)
           }
         })
-        console.log(this.abc)
+        // console.log(this.abc)
         if (abc.length == 0) {
-          console.log("新增无匹配，新增类型")
+          // console.log("新增无匹配，新增类型")
           this.addMedicalClassify2();
         } else {
           // alert(5)
@@ -1439,14 +1439,14 @@
         };
         const res = await addMedicalClassify(query, options);//表1新增   提交                   //13.2.分类管理-新增 
         if (res.data && res.data.errCode === 0) {
-          console.log('表1-新增  +成功')
-          console.log(res)
+          // console.log('表1-新增  +成功')
+          // console.log(res)
           this.getList1()
           this.getSelect2()
           this.handleClose1();
         } else {
           //失败
-          console.log('表1-新增  +失败')
+          // console.log('表1-新增  +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1467,14 +1467,14 @@
         };
         const res = await addMedicalClassify(query, options);//表1新增   提交                   //13.2.分类管理-新增 
         if (res.data && res.data.errCode === 0) {
-          console.log('表1-新增  +成功')
-          console.log(res)
+          // console.log('表1-新增  +成功')
+          // console.log(res)
           this.getList1()
           this.getSelect2()
           this.handleClose1();
         } else {
           //失败
-          console.log('表1-新增  +失败')
+          // console.log('表1-新增  +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1505,10 +1505,10 @@
 
         const res1 = await fetchHospitalDeptAuth(query1);                                            //1.2.1.获取医院科室列表（新）主要用于表单选择()
         if (res1.data && res1.data.errCode === 0) {
-          console.log('权限控制-科室列表下拉框 +成功')
-          console.log(res1)
+          // console.log('权限控制-科室列表下拉框 +成功')
+          // console.log(res1)
           // const testJson = this.setJson(res1.data.body);
-          // console.log(testJson)
+          // // console.log(testJson)
           // this.kuangData2.options1.list = testJson.data
           this.kuangData2.options1.list.length = 0;
           $.each(res1.data.body, function (index, text) {
@@ -1519,10 +1519,10 @@
               }
             )
           })
-          console.log(this.kuangData2.options1.list)
+          // console.log(this.kuangData2.options1.list)
         } else {
           //失败
-          console.log('权限控制-科室列表下拉框 +失败')
+          // console.log('权限控制-科室列表下拉框 +失败')
           this.$notify.error({
             title: "警告",
             message: res1.data.errMsg
@@ -1535,8 +1535,8 @@
         };
         const res2 = await chooseApplyDept(query2);                                 //13.7.权限控制-申请医院和科室下拉框 
         if (res2.data && res2.data.errCode === 0) {
-          console.log('权限控制-申请医院和科室下拉框 +成功')
-          console.log(res2)
+          // console.log('权限控制-申请医院和科室下拉框 +成功')
+          // console.log(res2)
           this.kuangData2.options3.list.length = 0;
           this.kuangData2.options3.value.length = 0;
           $.each(res2.data.body, function (index1, text) {
@@ -1560,10 +1560,10 @@
               })
             }
           })
-          console.log(this.kuangData2.options3.list)
+          // console.log(this.kuangData2.options3.list)
         } else {
           //失败
-          console.log('权限控制-申请医院和科室下拉框 +失败')
+          // console.log('权限控制-申请医院和科室下拉框 +失败')
           this.$notify.error({
             title: "警告",
             message: res2.data.errMsg
@@ -1576,8 +1576,8 @@
         this.kuangData2.options2.value = [];
         // this.kuangData2.options3.value = [];
         // this.kuangData2.options3.list = [];
-        // console.log(this.kuangData2.options3.value);
-        // console.log(this.kuangData2.options3.list);
+        // // console.log(this.kuangData2.options3.value);
+        // // console.log(this.kuangData2.options3.list);
 
         if (this.kuangData2.options1.value != "") {
           let query = {
@@ -1586,14 +1586,14 @@
           };
           const res = await chooseAcceptsLevel(query);                                 //13.6.权限控制-接诊疾病等级下拉框
           if (res.data && res.data.errCode === 0) {
-            console.log('权限控制-接诊疾病等级下拉框 +成功')
-            console.log(res)
+            // console.log('权限控制-接诊疾病等级下拉框 +成功')
+            // console.log(res)
             const testJson = this.setJson(res.data.body);
             this.kuangData2.options2.list = testJson.data
-            console.log(this.kuangData2.options2.list)
+            // console.log(this.kuangData2.options2.list)
           } else {
             //失败
-            console.log('权限控制-接诊疾病等级下拉框 +失败')
+            // console.log('权限控制-接诊疾病等级下拉框 +失败')
             this.$notify.error({
               title: "警告",
               message: res.data.errMsg
@@ -1614,15 +1614,15 @@
         }
         const res = await addMedicalControl(query, options);                                 //13.8.权限控制-新增  
         if (res.data && res.data.errCode === 0) {
-          console.log('权限控制-新增  +成功')
-          console.log(res)
+          // console.log('权限控制-新增  +成功')
+          // console.log(res)
           this.getList2();
           this.handleClose2();
           this.hospts = [];
           this.beiY1 = [];
         } else {
           //失败
-          console.log('权限控制-新增  +失败')
+          // console.log('权限控制-新增  +失败')
           this.$notify.error({
             title: "警告",
             message: res.data.errMsg
@@ -1657,12 +1657,12 @@
 
       // 、、分页
       currentChange1(data) {
-        console.log(data)
+        // console.log(data)
         this.pageNum = data
         this.getList1()
       },
       currentChange2(data) {
-        console.log(data)
+        // console.log(data)
         this.pageNum = data
         this.getList2()
       },

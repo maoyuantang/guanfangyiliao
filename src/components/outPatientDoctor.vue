@@ -893,7 +893,7 @@
 			},
 			//进入门诊
 			async enterRoomBtn(text) {
-				console.log(text);
+				// console.log(text);
 				this.userMessage = {
 					clinicId: text.id,
 					departmentId: text.departmentId
@@ -913,7 +913,7 @@
 					state: "OFF"
 				};
 				const res = await storageUsers(query, options);
-				console.log(res);
+				// console.log(res);
 				if (res.data && res.data.errCode === 0) {
 					this.$notify.success({
 						title: "成功",
@@ -931,8 +931,8 @@
 			},
 			// 我的诊室发送消息
 			async sendMessage(text, text1) {
-				console.log(text);
-				console.log(text1);
+				// console.log(text);
+				// console.log(text1);
 				this.chatTypeBox1.bingUserId = text1.userId;
 				this.userMessage = {
 					clinicId: text.id,
@@ -941,7 +941,7 @@
 					orgCode: text.orgCode,
 					clinicOrderId: text1.clinicOrderId //订单id
 				};
-				console.log(this.userMessage);
+				// console.log(this.userMessage);
 				let _this = this;
 				let query = {
 					token: this.userInfo.token,
@@ -1003,15 +1003,15 @@
 				this.typeQuan3 = false;
 				// console.table(quanXian);
 				for (let i = 0; i < quanXian.length; i++) {
-					// console.log(quanXian[i].authorityId);
+					// // console.log(quanXian[i].authorityId);
 					if (quanXian[i].type == 2) {
-						// console.log(quanXian[i].authorityId);
+						// // console.log(quanXian[i].authorityId);
 						this.typeQuan.push(quanXian[i].authorityId);
 					}
 				}
-				// console.log(this.typeQuan + "-------------");
+				// // console.log(this.typeQuan + "-------------");
 				this.typeQuan.forEach((element, index) => {
-					// console.log(element, index, element[index])
+					// // console.log(element, index, element[index])
 					if (element == 10001) {
 						this.typeQuan1 = true;
 					} else if (element == 10002) {
@@ -1024,15 +1024,15 @@
 				this.oAdminTab.list[2].ad = this.typeQuan1;
 				this.oAdminTab.list[1].ad = this.typeQuan2;
 				this.oAdminTab.list[0].ad = this.typeQuan3;
-				console.log(this.typeQuan1, this.oAdminTab.list[0].ad);
-				console.log(this.typeQuan2, this.oAdminTab.list[1].ad);
-				console.log(this.typeQuan3, this.oAdminTab.list[2].ad);
+				// console.log(this.typeQuan1, this.oAdminTab.list[0].ad);
+				// console.log(this.typeQuan2, this.oAdminTab.list[1].ad);
+				// console.log(this.typeQuan3, this.oAdminTab.list[2].ad);
 			},
 			//返回赋值函数
 			getConsulTabData(res) {
 				//顶部切换返回函数
 				this.oconsulVisable = res.i;
-				console.log(res.i);
+				// console.log(res.i);
 				if (res.i == 0) {
 					this.getList1();
 				} else if (res.i == 1) {
@@ -1045,39 +1045,39 @@
 			},
 			demonstration1(res) {
 				//时间插件返回函数
-				// console.log(res)
+				// // console.log(res)
 			},
 			demonstration2(res) {
 				//时间插件返回函数
-				// console.log(res)
+				// // console.log(res)
 			},
 			adminSearchChange(data) {
 				//审核列表
 				this.searchValue = data;
-				// console.log(data)
+				// // console.log(data)
 			},
 			whichUserFun(index, data) {
-				console.log(index, data);
+				// console.log(index, data);
 				this.whichUser = index;
 				if (data) {
-					console.log(data);
+					// console.log(data);
 					this.prescriptionId = data.pb.id;
 					this.secondDoctorId = data.reviewDoctor;
-					console.log(this.whichUser);
-					console.log(this.prescriptionId);
-					console.log(this.secondDoctorId);
+					// console.log(this.whichUser);
+					// console.log(this.prescriptionId);
+					// console.log(this.secondDoctorId);
 				}
 			},
 			// 预览
 			dialogTableVisibleFun(row) {
-				console.log(row);
+				// console.log(row);
 				this.dialogTableVisible = true;
 				this.srcs = row;
 				this.preLook();
 			},
 			// 发货
 			goMy() {
-				alert("没有接口");
+				// alert("没有接口");
 			},
 			// getData(item, index) {
 			//   this.testData.select = item
@@ -1111,17 +1111,17 @@
 				};
 				const res = await onlineRoomsByDoctor(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log("医生端列表1+成功");
-					console.log(res);
-					console.log(this.time0);
-					console.log(this.time1);
+					// console.log("医生端列表1+成功");
+					// console.log(res);
+					// console.log(this.time0);
+					// console.log(this.time1);
 					this.myHomes = res.data.body.data2.list;
 					$.each(this.myHomes, function (index, text) {
 						$.each(text.clinicOrders, function (index1, text1) {
 							text1.disabledStatus = false;
 						});
 					});
-					console.log(this.myHomes);
+					// console.log(this.myHomes);
 					this.myHomesBiao.length = 0;
 					$.each(res.data.body.data2.list, function (index, text) {
 						_this.myHomesBiao.push(index);
@@ -1133,16 +1133,16 @@
 							}
 						]);
 					});
-					console.log(this.tableDataList1);
+					// console.log(this.tableDataList1);
 				} else {
 					//失败
-					console.log("医生端列表1+失败");
+					// console.log("医生端列表1+失败");
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
 					});
 				}
-				console.log(this.myHomes);
+				// console.log(this.myHomes);
 				this.myHomesBiao.length = 0;
 				$.each(res.data.body.data2.list, function (index, text) {
 					_this.myHomesBiao.push(index);
@@ -1154,10 +1154,10 @@
 						}
 					]);
 				});
-				console.log(this.tableDataList1);
+				// console.log(this.tableDataList1);
 				// } else {
 				//     //失败
-				//     console.log("医生端列表1+失败");
+				//     // console.log("医生端列表1+失败");
 				//     this.$notify.error({
 				//         title: "警告",
 				//         message: res.data.errMsg
@@ -1165,7 +1165,7 @@
 				// }
 			},
 			async lookList(data) {
-				console.log(data);
+				// console.log(data);
 				const _this = this;
 				this.isShowPatient = true;
 				// this.huanzheList = data.clinicOrders
@@ -1177,9 +1177,9 @@
 				};
 				const res = await clinicOrder(query); //7.4.2(WEB医生)获取所有该诊室的订单信息
 				if (res.data && res.data.errCode === 0) {
-					console.log("7.4.2(WEB医生)获取所有该诊室的订单信息 +成功");
-					console.log(res);
-					console.log(res.data.body);
+					// console.log("7.4.2(WEB医生)获取所有该诊室的订单信息 +成功");
+					// console.log(res);
+					// console.log(res.data.body);
 					this.huanzheList = res.data.body;
 
 					this.huanzheList4.length = 0;
@@ -1188,10 +1188,10 @@
 							_this.huanzheList4.push([text]);
 						});
 					}
-					console.log(this.huanzheList4);
+					// console.log(this.huanzheList4);
 				} else {
 					//失败
-					console.log("7.4.2(WEB医生)获取所有该诊室的订单信息 +失败");
+					// console.log("7.4.2(WEB医生)获取所有该诊室的订单信息 +失败");
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1199,7 +1199,7 @@
 				}
 			},
 			async seeHistory(data) {
-				console.log(data);
+				// console.log(data);
 				this.$router.push({
 					path: "/docDetailed",
 					query: {
@@ -1219,10 +1219,10 @@
 				};
 				const res = await reviewList(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log("医生端列表2(审核)+成功");
-					console.log(res);
+					// console.log("医生端列表2(审核)+成功");
+					// console.log(res);
 					this.bcd = res.data.body;
-					console.log(this.bcd);
+					// console.log(this.bcd);
 					if (this.bcd[0]) {
 						this.prescriptionId = this.bcd[0].pb.id;
 						$.each(this.bcd, function (index, text) {
@@ -1231,7 +1231,7 @@
 					}
 				} else {
 					//失败
-					console.log("医生端列表2(审核)+失败");
+					// console.log("医生端列表2(审核)+失败");
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1250,18 +1250,18 @@
 				};
 				const res = await sendList(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log("医生端列表3(发药sendList)+成功");
-					console.log(res);
+					// console.log("医生端列表3(发药sendList)+成功");
+					// console.log(res);
 					this.bcd = res.data.body;
-					console.log(this.bcd);
+					// console.log(this.bcd);
 					$.each(this.bcd, function (index, text) {
 						_this.ARR.length = 0;
 						_this.ARR.push(text.pb.prescriptionDrugs);
 					});
-					console.log(this.tableDataList3);
+					// console.log(this.tableDataList3);
 				} else {
 					//失败
-					console.log("医生端列表3(发药sendList)+失败");
+					// console.log("医生端列表3(发药sendList)+失败");
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1270,19 +1270,19 @@
 			},
 			// 7.12根据处方id获取处方电子版  (预览)
 			async preLook() {
-				// console.log(this.prescriptionId);
+				// // console.log(this.prescriptionId);
 				// let query = {
 				//   token: this.userInfo.token,
 				//   prescriptionId: this.prescriptionId
 				// };
 				// const res = await prescriptionDetailById(query);
-				// console.log(res.data);
+				// // console.log(res.data);
 				// if (res.data && res.data.errCode === 0) {
-				//   console.log("预览+成功");
-				//   console.log(res);
+				//   // console.log("预览+成功");
+				//   // console.log(res);
 				// } else {
 				//   //失败
-				//   console.log("预览+失败");
+				//   // console.log("预览+失败");
 				//   this.$notify.error({
 				//     title: "警告",
 				//     message: res.data.errMsg
@@ -1300,11 +1300,11 @@
 				};
 				const res = await fsDownload(query);
 				if (res.data && res.data.errCode === 0) {
-					console.log("1.9.文件下载 +成功");
-					console.log(res);
+					// console.log("1.9.文件下载 +成功");
+					// console.log(res);
 				} else {
 					//失败
-					console.log("1.9.文件下载 +失败");
+					// console.log("1.9.文件下载 +失败");
 					this.$notify.error({
 						title: "警告",
 						message: res.data.errMsg
@@ -1327,11 +1327,11 @@
 				};
 				const res = await updatePrescription(query, options);
 				if (res.data && res.data.errCode === 0) {
-					console.log("点击生成处方+成功");
-					console.log(res);
+					// console.log("点击生成处方+成功");
+					// console.log(res);
 					this.getList2();
 				} else {
-					console.log("点击生成处方+失败");
+					// console.log("点击生成处方+失败");
 					this.getList2();
 					this.$notify.error({
 						title: "警告",
@@ -1352,11 +1352,11 @@
 				};
 				const res = await updatePrescription(query, options);
 				if (res.data && res.data.errCode === 0) {
-					console.log("不通过+成功");
-					console.log(res);
+					// console.log("不通过+成功");
+					// console.log(res);
 					this.getList2();
 				} else {
-					console.log("不通过+失败");
+					// console.log("不通过+失败");
 					this.getList2();
 					this.$notify.error({
 						title: "警告",
@@ -1367,7 +1367,7 @@
 
 			//表格样式
 			ceshi0(data) {
-				// console.log(data);
+				// // console.log(data);
 				if (data.columnIndex == 0) {
 					return "ceshiLan";
 				} else if (data.columnIndex == 1 || data.columnIndex == 2) {
@@ -1375,7 +1375,7 @@
 				}
 			},
 			rowClass({ row, rowIndex }) {
-				// console.log({ row, rowIndex }) //表头行标号为0
+				// // console.log({ row, rowIndex }) //表头行标号为0
 				// if(row.label == "未处理"){
 				//   return 'background:red'
 				// }
@@ -1387,14 +1387,14 @@
 
 			this.getList1(); //7.6医生列表1
 			// this.addPrescription();//7.8开处方
-			console.log(process.env.IMG_PREFIX);
+			// console.log(process.env.IMG_PREFIX);
 		},
 		watch: {
 			"userSocketInfo.synchroMessage": {
 				handler(n, o) {
 					let _this = this;
 					$.each(n.syncData, function (index, text) {
-						console.log(`text.command=>${text.command}`);
+						// console.log(`text.command=>${text.command}`);
 						if (text.command == "SYNC_SESSION") {
 							///   SYNC_SESSION
 							_this.getList1();
