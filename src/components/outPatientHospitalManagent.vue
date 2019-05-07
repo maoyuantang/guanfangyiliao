@@ -281,6 +281,7 @@
 				widths: 200,
 				totals: 0,
 				srcs: "",//处方id   用于拼接图片src
+				keShiList: [],
 
 
 
@@ -722,8 +723,12 @@
 					this.onLineList.topFlag[0].list.length = 0
 					this.prescriptionAuditDistribution.topFlag[0].list.length = 0
 					this.statistics.topFlag[0].list.length = 0
+					this.keShiList = []																//下个版本改
 					$.each(res.data.body, function (index, text) {
 						//在线诊室筛选列表渲染
+						// if (text.id != '') {
+						// 	_this.keShiList.push(text.id)
+						// }
 						_this.onLineList.topFlag[0].list.push({
 							text: text.name,
 							value: text.id
@@ -739,6 +744,14 @@
 							value: text.id
 						});
 					});
+					// if (this.keShiList.length >= 2) {										//下个版本改
+					// 	this.onLineList.topFlag[0].list.map((o, i) => {
+					// 		if (o.value == '') {
+					// 			o.value = this.keShiList
+					// 		}
+					// 	})
+					// }
+					// console.log(this.onLineList.topFlag[0].list)
 				} else {
 					// console.log('1.21.1.科室工具栏 +失败')
 					//失败
@@ -895,7 +908,6 @@
 				// var nowDate = year + "-" + month + "-" + day;
 				// this.time0 = nowDate;
 				// this.time1 = nowDate;
-
 				let query = {
 					token: this.userInfo.token,
 					string: this.searchValue,
@@ -904,6 +916,7 @@
 					departmentId: this.departmentId,
 					businessType: this.businessType
 				};
+				// console.log(query)
 				const res = await searchClinic(query);
 				if (res.data && res.data.errCode === 0) {
 					// console.log('列表1+成功')
