@@ -1783,14 +1783,18 @@ export default {
                 }
                 
                 console.log(oid);
-                console.log(_this.generateParticipant(oid, false));
-                eleList[index] = _this.generateParticipant(oid, false);
+                // console.log(_this.generateParticipant(oid, false));
+                // eleList[index] = _this.generateParticipant(oid, false);
+                eleList[index]=_this.videoListResult[index]
 console.log(eleList);
                 // $("#remoteVideos").html();
-                // eleList.forEach(item => {
-                //     console.log(item);
-                //     $("#remoteVideos").append(item);
-                // });
+                eleList.forEach(item => {
+                    console.log(item);
+                    let oItem=_this.generateParticipant(item, false)
+                    console.log(oItem)
+                    $("#remoteVideos").append(oItem);
+                    console.log($("#remoteVideos"))
+                });
             };
             $("#remoteVideos").append(ele);
             // _this.resultList.push(result);
@@ -1811,9 +1815,10 @@ console.log(eleList);
          * 收到有人离开房间
          */
         Manis.onLeaveConference(function(result) {
+            console.log(result);
             if (result.code == 200) {
                 _this.videoListResult=_this.videoListResult.map((index,text)=>{
-                    if(text.response.info.resource != result.info.resource) {
+                    if(text.response.info.resource != result.response.resource) {
                         return text
                     }
                 })
