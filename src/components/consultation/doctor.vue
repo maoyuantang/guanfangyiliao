@@ -533,7 +533,6 @@ export default {
         //医生端参与专家
         cooperationCellClick(row, column) {
             let data = [row, column];
-            console.log(data);
             this.cellClickData(data);
         },
         //关闭协作会话
@@ -561,7 +560,6 @@ export default {
             otab.more = false;
             otab.title = otitle;
             otab.list = [];
-            console.log(this.oTab2);
 
             let _this = this;
             let query = {
@@ -599,7 +597,6 @@ export default {
             this.getDocList();
         },
         async cellClickData(data) {
-            console.log(data);
             if (data[1].label == "接收科室") {
                 this.departVisible = true;
                 let _this = this;
@@ -678,12 +675,9 @@ export default {
                     }
                 }
             });
-            console.log(this.invitationSelectList);
-            console.log(odata);
         },
         // 发起会诊病历
         handleCheckChange1(data, odata) {
-            console.log(data, odata);
             this.startHz.medicalHistorys = [];
             $.each(odata.checkedNodes, (index, text) => {
                 if (text.visitNo) {
@@ -741,14 +735,12 @@ export default {
             this.recordVisible = true;
         },
         getOTab4(data) {
-            console.log(data);
             this.oDocTime = data.index.value;
             this.startDate = "";
             this.endDate = "";
             this.getDocList();
         },
         getOTab5(data) {
-            console.log(data);
             this.applicationDeptId2 = data.index.value;
             this.statisticsStart = "";
             this.statisticsEnd = "";
@@ -768,8 +760,6 @@ export default {
         },
         //获取起始时间
         getDocTime(data) {
-            console.log(data);
-            // this.oDocTime = "";
             this.startDate = data[0];
             this.endDate = data[1];
             this.getDocList();
@@ -1147,8 +1137,6 @@ export default {
                     }
                 });
                 this.adminTotal = res.data.body.data2.total;
-
-                console.log(res);
             } else {
                 //失败
                 this.$notify.error({
@@ -1179,7 +1167,6 @@ export default {
                 );
                 this.drawData1.data = res.data.body.data.map(item => item.y);
                 this.drawData1 = Object.assign({}, this.drawData1);
-                console.log(this.drawData1);
             } else {
                 //失败
                 this.$notify.error({
@@ -1215,7 +1202,6 @@ export default {
                     item => item.y
                 );
                 this.drawDataStart = Object.assign({}, this.drawDataStart);
-                console.log(this.drawDataStart);
             } else {
                 //失败
                 this.$notify.error({
@@ -1226,7 +1212,6 @@ export default {
         },
         //获取统计类型
         getTjData(data) {
-            console.log(data);
             this.statisticsType = data.select.value;
             if (data.time) {
                 this.statisticsStart = data.time[0];

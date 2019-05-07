@@ -835,9 +835,17 @@ export default {
     margin-bottom: 10px;
 }
 .danganRgMainTextClass > ul > li > div:nth-child(1) {
-    font-size: 14px;
+     color: #1474A9;
+    font-family: PingFangSC-Light;
+    font-size: 13px;
+    letter-spacing: -0.13px;
+    line-height: 33px;
 }
 .danganRgMainTextClass > ul > li > div:nth-child(2) {
-    font-size: 12px;
+        color: #282828;
+         font-family: PingFangSC-Light;
+    font-size: 13px;
+    letter-spacing: -0.13px;
+    line-height: 33px;
 }
 </style>
