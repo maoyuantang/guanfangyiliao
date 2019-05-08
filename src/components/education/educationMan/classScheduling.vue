@@ -759,7 +759,7 @@
             search,
             tableNoMore
 		},
-		async created(){
+		created(){
             this.getTypeList();
             this.setDepartmentData();
             this.setStatusData();

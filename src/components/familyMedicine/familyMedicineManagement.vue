@@ -298,110 +298,56 @@
           class="family-new-alert-spe-price"
           v-if="testData.businessTemplate.default.value==='JTYS'"
         >
-          <div class="family-new-alert-spe-price-item">
-            <div class="family-new-alert-spe-price-item-head">
-              <div class="family-new-alert-spe-price-item-head-input-div">
-                <i class="iconfont family-new-alert-spe-price-item-head-icon">&#xe76d;</i>
-                <input
-                  type="text"
-                  v-model="testData.businessPrice.data[0].worth"
-                  class="family-new-alert-spe-price-item-head-content-input"
-                  autocomplete="off"
-                >
-                <p class="family-new-alert-spe-price-item-head-unit">/月</p>
+          <template v-for="(item, index) in testData.businessPrice.data">
+            <div :key="`${item.priceId}-segmentation`"
+              class="family-new-alert-spe-price-item-segmentation"
+              v-if="index !== 0"
+            ></div>
+            <div class="family-new-alert-spe-price-item" :key="`${item.priceId}-item`">
+              <div class="family-new-alert-spe-price-item-head">
+                <div class="family-new-alert-spe-price-item-head-input-div">
+                  <i class="iconfont family-new-alert-spe-price-item-head-icon"
+                    >&#xe76d;</i
+                  >
+                  <input
+                    type="text"
+                    v-model="item.worth"
+                    class="family-new-alert-spe-price-item-head-content-input"
+                    autocomplete="off"
+                  />
+                  <p class="family-new-alert-spe-price-item-head-unit">/
+                      {{
+                          item.unitEnum === 'MONTH' ? '月' :
+                          item.unitEnum === 'QUARTER' ? '季' :
+                          item.unitEnum === 'YEAR' ? '年' : ''
+                      }}
+                  </p>
+                </div>
+              </div>
+              <div class="family-new-alert-spe-price-item-body">
+                <ul>
+                  <li>
+                      <template v-if="(item.childList instanceof Array)">
+                          <div
+                            class="family-new-alert-spe-price-item-body-item"
+                            v-for="child in item.childList"
+                            :key="child.childId"
+                          >
+                            <span class="family-new-alert-spe-price-item-body-item-name">{{ child.childName }}</span>
+                            <input
+                              type="number"
+                              min="0"
+                              class="family-new-alert-spe-price-item-body-item-count"
+                              v-model="child.times"
+                              autocomplete="off"
+                            />
+                          </div>
+                      </template>
+                  </li>
+                </ul>
               </div>
             </div>
-            <div class="family-new-alert-spe-price-item-body">
-              <ul>
-                <li>
-                  <div
-                    class="family-new-alert-spe-price-item-body-item"
-                    v-for="(item,index) in testData.businessPrice.data[0].childList "
-                    :key="index"
-                  >
-                    <span class="family-new-alert-spe-price-item-body-item-name">{{item.childName}}</span>
-                    <input
-                      type="number"
-                      min="0"
-                      class="family-new-alert-spe-price-item-body-item-count"
-                      v-model="item.times"
-                      autocomplete="off"
-                    >
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="family-new-alert-spe-price-item-segmentation"></div>
-          <div class="family-new-alert-spe-price-item">
-            <div class="family-new-alert-spe-price-item-head">
-              <div class="family-new-alert-spe-price-item-head-input-div">
-                <i class="iconfont family-new-alert-spe-price-item-head-icon">&#xe76d;</i>
-                <input
-                  type="text"
-                  v-model="testData.businessPrice.data[1].worth"
-                  class="family-new-alert-spe-price-item-head-content-input"
-                  autocomplete="off"
-                >
-                <p class="family-new-alert-spe-price-item-head-unit">/季</p>
-              </div>
-            </div>
-            <div class="family-new-alert-spe-price-item-body">
-              <ul>
-                <li>
-                  <div
-                    class="family-new-alert-spe-price-item-body-item"
-                    v-for="(item,index) in testData.businessPrice.data[1].childList "
-                    :key="index"
-                  >
-                    <span class="family-new-alert-spe-price-item-body-item-name">{{item.childName}}</span>
-                    <input
-                      type="number"
-                      min="0"
-                      class="family-new-alert-spe-price-item-body-item-count"
-                      v-model="item.times"
-                      autocomplete="off"
-                    >
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="family-new-alert-spe-price-item-segmentation"></div>
-          <div class="family-new-alert-spe-price-item">
-            <div class="family-new-alert-spe-price-item-head">
-              <div class="family-new-alert-spe-price-item-head-input-div">
-                <i class="iconfont family-new-alert-spe-price-item-head-icon">&#xe76d;</i>
-                <input
-                  type="text"
-                  v-model="testData.businessPrice.data[2].worth"
-                  class="family-new-alert-spe-price-item-head-content-input"
-                  autocomplete="off"
-                >
-                <p class="family-new-alert-spe-price-item-head-unit">/年</p>
-              </div>
-            </div>
-            <div class="family-new-alert-spe-price-item-body">
-              <ul>
-                <li>
-                  <div
-                    class="family-new-alert-spe-price-item-body-item"
-                    v-for="(item,index) in testData.businessPrice.data[2].childList "
-                    :key="index"
-                  >
-                    <span class="family-new-alert-spe-price-item-body-item-name">{{item.childName}}</span>
-                    <input
-                      type="number"
-                      min="0"
-                      class="family-new-alert-spe-price-item-body-item-count"
-                      v-model="item.times"
-                      autocomplete="off"
-                    >
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
+          </template>
         </div>
 
         <!-- 业务描述: -->
