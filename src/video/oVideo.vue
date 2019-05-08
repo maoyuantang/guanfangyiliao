@@ -1817,7 +1817,7 @@ export default {
 	 Manis.participantAudioConnected(function (result) {
       window.remoteParticipant = result;
       console.log('+++++++++++++++++++', result);
-      $('#remoteAudios').append(generateParticipant(result, false));
+      $('#remoteAudios').append(_this.generateParticipant(result, false));
     });
         /**
          * 收到有人离开房间
