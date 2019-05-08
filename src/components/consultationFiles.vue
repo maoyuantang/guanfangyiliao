@@ -19,11 +19,11 @@
                         </div>
 
                         <div>
-                            dfdsfdf
+                            李勇
                         </div>
                         <div>
                             性别：男<br /> 年龄：32岁
-                            <br /> 身份证：地方第三方第三方多分点
+                            <br /> 身份证：500223199612275564
                             <br />
                         </div>
                     </div>
@@ -475,7 +475,7 @@ export default {
                                     this.userState.token
                                 }&type=${this.$route.query.type}&id=${
                                     this.$route.query.id
-                                }&prescNo==${text}`
+                                }&prescNo=${text}`
                             });
                         });
                     } else if (index == 2) {
