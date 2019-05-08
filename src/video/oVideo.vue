@@ -2277,7 +2277,7 @@ video {
 }
 .patientClass0 h3 {
     padding: 20px;
-    font-family: .PingFangSC-Regular;
+    font-family: PingFangSC-Regular;
     font-size: 22px;
     color: #ffffff;
     letter-spacing: -0.52px;
@@ -2288,7 +2288,7 @@ video {
     display: -webkit-flex;
     padding: 14px;
     background: white;
-    font-family: .PingFangSC-Regular;
+    font-family: PingFangSC-Regular;
     font-size: 22px;
     color: #030303;
     letter-spacing: -0.46px;
@@ -2310,7 +2310,7 @@ video {
 .patientClass0 > div:nth-child(3) {
     padding: 26px 0;
     text-align: center;
-    font-family: .PingFangSC-Regular;
+    font-family: PingFangSC-Regular;
     font-size: 22px;
     color: #ffffff;
     letter-spacing: -0.46px;
