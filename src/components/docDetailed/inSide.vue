@@ -495,6 +495,7 @@
 			},
 
 			setNowNav(item, index) {
+				alert(index)
 				if (!this.patientJiuZen) return;
 				this.nowNav = index;
 				this.showModules.list = item.childModule;
