@@ -10,6 +10,7 @@
 
                             </div> -->
                         </div>
+                        <div id="remoteAudios" class="hidden"></div>
                         <div class="videoChatBtn" @click="videoChatBtn()">
                             <img style='width: 23px;
     height: 25px;' src='../assets/img/jianpan.png' /> 问诊工具
@@ -1813,7 +1814,11 @@ export default {
             //     });
             // }
         });
-
+	 Manis.participantAudioConnected(function (result) {
+      window.remoteParticipant = result;
+      console.log('+++++++++++++++++++', result);
+      $('#remoteAudios').append(generateParticipant(result, false));
+    });
         /**
          * 收到有人离开房间
          */
