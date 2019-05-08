@@ -52,7 +52,7 @@
         </div>
 
         <!-- 发起协作弹框 -->
-        <el-dialog class="invitationClass" title=" 发起协作" :visible.sync="centerDialogVisible" width="240px" hight="356px" center>
+        <el-dialog :close-on-click-modal="false" class="invitationClass" title=" 发起协作" :visible.sync="centerDialogVisible" width="240px" hight="356px" center>
             <el-tree :data="invitationData1" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
             <el-form ref="form" :model="startXiezuo" label-width="80px">
                 <el-form-item class='invitationClassInput' label="病人:">
@@ -75,32 +75,32 @@
         </el-dialog>
         <!-- 查看记录 -->
         <div v-if="recordVisible">
-            <el-dialog class="evaluateBox evaluateBox2 consultationDetailClass" title=" 查看记录" :visible.sync="recordVisible" width="602px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="evaluateBox evaluateBox2 consultationDetailClass" title=" 查看记录" :visible.sync="recordVisible" width="602px" hight="356px" center>
                 <viewRecord :sessionId="sessionId"></viewRecord>
             </el-dialog>
         </div>
         <!-- 接收科室 -->
         <div v-if="departVisible">
-            <el-dialog class=" consultationDetailClass" title=" 协作科室" :visible.sync="departVisible" width="503px" hight="470px" center>
+            <el-dialog :close-on-click-modal="false" class=" consultationDetailClass" title=" 协作科室" :visible.sync="departVisible" width="503px" hight="470px" center>
                 <receiveDepartent :receptionDepartment="receptionDepartment" v-if="receptionDepartment.length>0"></receiveDepartent>
             </el-dialog>
         </div>
         <!-- 医生详情 -->
         <div v-if="doctorVisible">
-            <el-dialog class=" consultationDetailClass" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="470px" center>
+            <el-dialog :close-on-click-modal="false" class=" consultationDetailClass" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="470px" center>
                 <doctorDetail :doctorDetailData="doctorDetailData" v-if="doctorDetailData.length>0"></doctorDetail>
 
             </el-dialog>
         </div>
         <!-- 接收科室 -->
         <!-- <div v-if="departVisible">
-            <el-dialog class="evaluateBox consultationDetailClass" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
+            <el-dialog :close-on-click-modal="false" class="evaluateBox consultationDetailClass" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
                 <receiveDepartent :receptionDepartment="receptionDepartment"></receiveDepartent>
             </el-dialog>
         </div> -->
         <!-- 医生详情 -->
         <!-- <div v-if="doctorVisible">
-            <el-dialog class="evaluateBox evaluateBox2 consultationDetailClass" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="evaluateBox evaluateBox2 consultationDetailClass" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
                 <doctorDetail :doctorDetailData="doctorDetailData"></doctorDetail>
 
             </el-dialog>
@@ -108,7 +108,7 @@
 
         <!-- 邀请弹框 -->
         <div v-if="invitationVisible">
-            <el-dialog class="invitationClass" title=" 邀请医生" :visible.sync="invitationVisible" width="240px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="invitationClass" title=" 邀请医生" :visible.sync="invitationVisible" width="240px" hight="356px" center>
                 <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChangeInvita" show-checkbox></el-tree>
                 <el-button class="btnClass" type="primary" @click="sureInvitation()">确认邀请</el-button>
             </el-dialog>
@@ -116,7 +116,7 @@
 
         <!-- 聊天 -->
         <div v-if="chatVisible">
-            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px" @close='closeChat()'>
+            <el-dialog :close-on-click-modal="false" class="chatDialog" title="" :visible.sync="chatVisible" width="680px" @close='closeChat()'>
                 <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox"></chat>
             </el-dialog>
         </div>

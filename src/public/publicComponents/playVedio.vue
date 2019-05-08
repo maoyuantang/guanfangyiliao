@@ -1,5 +1,5 @@
 <template>
-    <el-dialog
+    <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         :visible.sync="inData.show"

@@ -56,7 +56,7 @@
             </el-form>
         </div>
         <!-- 添加问诊或文章 -->
-        <!-- <el-dialog title="添加问诊或文章" :visible.sync="questVisible" center append-to-body>
+        <!-- <el-dialog :close-on-click-modal="false" title="添加问诊或文章" :visible.sync="questVisible" center append-to-body>
             <el-tabs v-model="activeName" @tab-click="addQueatOrArticle">
                 <el-tab-pane label="问诊" name="first">
                     <el-checkbox-group v-model="questCheckList">

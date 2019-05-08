@@ -37,12 +37,15 @@
 					</div>
 				</div>
 			</div>
-		<Modal
-        :styles="{width: '850px'}"
-        v-model="testData.show"
-        title=" "
-		@on-cancel="cancelSet"
-        footer-hide>
+
+		<el-dialog
+			:visible.sync="testData.show"
+			:append-to-body="true"
+			:close-on-click-modal="false"
+			width="850px"
+			center
+			@closed="cancelSet"
+		>
 			<div class="family-new-alert">
 				<!-- 业务类型 -->
 				<div class="family-new-alert-normal-item" v-if="testData.businessTypeList.show">
@@ -304,7 +307,7 @@
 					<el-button type="primary" size="mini" @click="saveInfo">保存</el-button>
 				</div>
 			</div>
-		</Modal>
+		</el-dialog>
 	</div>
 </template>
 

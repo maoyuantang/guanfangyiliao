@@ -102,7 +102,7 @@
 			:sureVisiable="sureVisiable"></addNewFrame>
 		<!-- 表一查看关联医生弹框 -->
 		<div v-if="isShowrelationalDoctor">
-			<el-dialog class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="500px"
+			<el-dialog :close-on-click-modal="false" class="evaluateBox1" title=" 医生详情" :visible.sync="isShowrelationalDoctor" width="500px"
 				max-hight="450px" center>
 				<el-scrollbar style="height:100%;">
 					<ul style="max-height: 450px;">
@@ -126,7 +126,7 @@
 
 		<!-- 总+今日+订单详情+弹框 -->
 		<div v-if="isShowRecord">
-			<el-dialog class="offerDetial" title="订单详情" :visible.sync="isShowRecord" center width=70%>
+			<el-dialog :close-on-click-modal="false" class="offerDetial" title="订单详情" :visible.sync="isShowRecord" center width=70%>
 				<el-table :data="tableDataChat" style="width: 100%;" @cell-click="relateDoctors2">
 					<el-table-column prop="orderNo" label="订单号" :show-overflow-tooltip="true"></el-table-column>
 					<el-table-column prop="doctorName" label="接诊医生" :show-overflow-tooltip="true"></el-table-column>
@@ -148,7 +148,7 @@
 
 		<!-- 查看详情弹框中的聊天弹框 -->
 		<div v-if="isShowRecordChat">
-			<el-dialog class="" title="聊天记录" :visible.sync="isShowRecordChat" center>
+			<el-dialog :close-on-click-modal="false" class="" title="聊天记录" :visible.sync="isShowRecordChat" center>
 				<viewRecord :sessionId="sessionIds" v-if="sessionIds"></viewRecord>
 			</el-dialog>
 		</div>
@@ -158,7 +158,7 @@
 
 		<!-- 处方详情 -->
 		<div v-if="chuFangDetailList2">
-			<el-dialog title="处方详情" :visible.sync="chuFangDetailList2" center>
+			<el-dialog :close-on-click-modal="false" title="处方详情" :visible.sync="chuFangDetailList2" center>
 				<img style="width:100%"
 					:src='userSocketInfo.imgUrl1+"/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
 			</el-dialog>
@@ -168,7 +168,7 @@
 
 		<!-- 物流状态 -->
 		<div v-if="roadStatusList2">
-			<el-dialog title="物流状态" :visible.sync="roadStatusList2" center>
+			<el-dialog :close-on-click-modal="false" title="物流状态" :visible.sync="roadStatusList2" center>
 				<div class="visiting">
 					<Timeline>
 						<TimelineItem v-for="(text,index) in roadStatusList2List" :key="index">
@@ -187,7 +187,7 @@
 
 		<!-- 查看处方配送记录 -->
 		<div v-if="viewRecordList2">
-			<el-dialog class="  " title="处方配送聊天记录" :visible.sync="viewRecordList2" width="602px" hight="356px" center>
+			<el-dialog :close-on-click-modal="false" class="  " title="处方配送聊天记录" :visible.sync="viewRecordList2" width="602px" hight="356px" center>
 				<viewRecord :sessionId="sessionIds" v-if="sessionIds"></viewRecord>
 			</el-dialog>
 		</div>

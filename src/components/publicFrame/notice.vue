@@ -32,21 +32,21 @@
         </div>
         <!-- 聊天 -->
         <div v-if="chatVisible">
-            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px" append-to-body>
+            <el-dialog :close-on-click-modal="false" class="chatDialog" title="" :visible.sync="chatVisible" width="680px" append-to-body>
                 <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox1"></chat>
             </el-dialog>
         </div>
 
         <!-- 视频聊天 -->
         <div v-if="centerDialogVisible">
-            <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
+            <el-dialog :close-on-click-modal="false" class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
                 <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick" :doctorVis='doctorVis1' :userMessage="userMessage" :chatTypeBox="chatTypeBox">
                 </ovideo>
             </el-dialog>
         </div>
 
         <!-- <div v-if="centerDialogVisible">
-            <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
+            <el-dialog :close-on-click-modal="false" class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
                 <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick" :doctorVis='doctorVis' :userMessage="userMessage" :chatTypeBox="chatTypeBox">
                 </ovideo>
             </el-dialog>

@@ -121,7 +121,7 @@
                 ></el-pagination>
             </div>
         </div>
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         width="7rem"
         :title="alertData.type==0?'新增':'编辑'"
         :visible.sync="alertData.show"

@@ -5,7 +5,7 @@
         <!-- 发起会诊弹窗 -->
 
         <div v-if="centerDialogVisible">
-            <el-dialog class="startGroup" title="发起会诊" :visible.sync="centerDialogVisible" width="602px" hight="607px" center>
+            <el-dialog :close-on-click-modal="false" class="startGroup" title="发起会诊" :visible.sync="centerDialogVisible" width="602px" hight="607px" center>
                 <el-form ref="form" :model="startHz" label-width="80px">
                     <el-form-item label="类型:">
                         <el-radio-group v-model="startHz.type">
@@ -57,27 +57,27 @@
 
         <!-- 接收科室 -->
         <div v-if="departVisible">
-            <el-dialog class="consultationDetailClass" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
+            <el-dialog :close-on-click-modal="false" class="consultationDetailClass" title=" 接收科室" :visible.sync="departVisible" width="503px" hight="470px" center>
                 <receiveDepartent :receptionDepartment="receptionDepartment"  v-if="receptionDepartment.length>0"></receiveDepartent>
             </el-dialog>
         </div>
         <!-- 医生详情 -->
         <div v-if="doctorVisible">
-            <el-dialog class="consultationDetailClass" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="consultationDetailClass" title=" 医生详情" :visible.sync="doctorVisible" width="602px" hight="356px" center>
                 <doctorDetail :doctorDetailData="doctorDetailData"   v-if="doctorDetailData.length>0"></doctorDetail>
 
             </el-dialog>
         </div>
         <!-- 邀请弹框 -->
         <div v-if="invitationVisible">
-            <el-dialog class="invitationClass" title="" :visible.sync="invitationVisible" width="240px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="invitationClass" title="" :visible.sync="invitationVisible" width="240px" hight="356px" center>
                 <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
                 <el-button class='btnClass' type="primary" @click="sureInvitation()">确认邀请</el-button>
             </el-dialog>
         </div>
         <!-- 查看记录 -->
         <div v-if="recordVisible">
-            <el-dialog class=" consultationDetailClass " title="  " :visible.sync="recordVisible" width="602px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class=" consultationDetailClass " title="  " :visible.sync="recordVisible" width="602px" hight="356px" center>
                 <viewRecord :sessionId="sessionId"></viewRecord>
             </el-dialog>
         </div>
@@ -121,7 +121,7 @@
         </div>
        
         <div v-if="chatVisible">
-            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+            <el-dialog :close-on-click-modal="false" class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
                 <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
             </el-dialog>
         </div>

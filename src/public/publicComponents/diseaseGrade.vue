@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>
-    <el-dialog v-model="datas.show" title="收货地址" :visible.sync="dialogFormVisible">
+    <el-dialog :close-on-click-modal="false" v-model="datas.show" title="收货地址" :visible.sync="dialogFormVisible">
       <el-form :model="form">
         <el-form-item label="活动名称" :label-width="formLabelWidth">
           <el-input v-model="form.name" autocomplete="off"></el-input>

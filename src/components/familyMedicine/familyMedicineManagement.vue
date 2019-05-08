@@ -4,10 +4,7 @@
     ref="familymedicinemanagement"
   >
     <div class="family-medicine-management-top">
-      <normalTab
-        v-model="barInfo"
-        @reBack="getBar"
-      ></normalTab>
+      <normalTab v-model="barInfo"></normalTab>
     </div>
     <div class="family-medicine-management-body">
       <div
@@ -102,12 +99,14 @@
         </div>
       </div>
     </div>
-    <Modal
-      :styles="{width: '850px'}"
-      v-model="testData.show"
-      title=" "
-      @on-cancel="cancelSet"
-      footer-hide
+
+    <el-dialog
+      :visible.sync="testData.show"
+      :append-to-body="true"
+      :close-on-click-modal="false"
+      width="850px"
+      center
+      @closed="cancelSet"
     >
       <div class="family-new-alert">
         <!-- 业务类型 -->
@@ -299,50 +298,55 @@
           v-if="testData.businessTemplate.default.value==='JTYS'"
         >
           <template v-for="(item, index) in testData.businessPrice.data">
-            <div :key="`${item.priceId}-segmentation`"
+            <div
+              :key="`${index}-segmentation`"
               class="family-new-alert-spe-price-item-segmentation"
               v-if="index !== 0"
             ></div>
-            <div class="family-new-alert-spe-price-item" :key="`${item.priceId}-item`">
+            <div
+              class="family-new-alert-spe-price-item"
+              :key="`${index}-item`"
+            >
               <div class="family-new-alert-spe-price-item-head">
                 <div class="family-new-alert-spe-price-item-head-input-div">
-                  <i class="iconfont family-new-alert-spe-price-item-head-icon"
-                    >&#xe76d;</i
-                  >
+                  <i class="iconfont family-new-alert-spe-price-item-head-icon">&#xe76d;</i>
                   <input
                     type="text"
                     v-model="item.worth"
                     class="family-new-alert-spe-price-item-head-content-input"
                     autocomplete="off"
-                  />
-                  <p class="family-new-alert-spe-price-item-head-unit">/
-                      {{
-                          item.unitEnum === 'MONTH' ? '月' :
-                          item.unitEnum === 'QUARTER' ? '季' :
-                          item.unitEnum === 'YEAR' ? '年' : ''
-                      }}
+                  >
+                  <p class="family-new-alert-spe-price-item-head-unit">
+                    /
+                    {{
+                    item.unitEnum === 'MONTH' ? '月' :
+                    item.unitEnum === 'QUARTER' ? '季' :
+                    item.unitEnum === 'YEAR' ? '年' : ''
+                    }}
                   </p>
                 </div>
               </div>
               <div class="family-new-alert-spe-price-item-body">
                 <ul>
                   <li>
-                      <template v-if="(item.childList instanceof Array)">
-                          <div
-                            class="family-new-alert-spe-price-item-body-item"
-                            v-for="child in item.childList"
-                            :key="child.childId"
-                          >
-                            <span class="family-new-alert-spe-price-item-body-item-name">{{ child.childName }}</span>
-                            <input
-                              type="number"
-                              min="0"
-                              class="family-new-alert-spe-price-item-body-item-count"
-                              v-model="child.times"
-                              autocomplete="off"
-                            />
-                          </div>
-                      </template>
+                    <template v-if="(item.childList instanceof Array)">
+                      <div
+                        class="family-new-alert-spe-price-item-body-item"
+                        v-for="child in item.childList"
+                        :key="child.childId"
+                      >
+                        <span
+                          class="family-new-alert-spe-price-item-body-item-name"
+                        >{{ child.childName }}</span>
+                        <input
+                          type="number"
+                          min="0"
+                          class="family-new-alert-spe-price-item-body-item-count"
+                          v-model="child.times"
+                          autocomplete="off"
+                        >
+                      </div>
+                    </template>
                   </li>
                 </ul>
               </div>
@@ -451,7 +455,7 @@
           >保存</el-button>
         </div>
       </div>
-    </Modal>
+    </el-dialog>
   </div>
 </template>
 
@@ -1079,12 +1083,6 @@ export default {
       }
     },
     /**
-     * bar 切换数据
-     */
-    getBar(data) {
-      console.log(data)
-    },
-    /**
      * 科室标签 被点击(统计)
      */
     getStatisticsDepartmentSelect(item) {
@@ -1642,9 +1640,13 @@ export default {
     async getChildrenBuss(id) {
       if (this.testData.businessTemplate.default.value !== 'JTYS') return //只有家庭医生才会有,不是家庭医生直接返回
 
-      if (this.testData.businessPrice.data.some(({childList}) => childList.length > 0)) {
-        console.warn(this.testData.businessPrice.data);
-        return;
+      if (
+        this.testData.businessPrice.data.some(({ childList }) =>
+          childList instanceof Array ? childList.length > 0 : false,
+        )
+      ) {
+        console.warn(this.testData.businessPrice.data)
+        return
       }
 
       const res = await getChildrenByDepartmentId({
@@ -1889,7 +1891,7 @@ export default {
         this.byStencilModel(item.stencilEnum),
         this.getFetchHospitalDepts(),
       ]).then(res => {
-        this.testData.show = true;
+        this.testData.show = true
       })
     },
 

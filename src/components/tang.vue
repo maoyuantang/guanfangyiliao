@@ -136,7 +136,7 @@
 
 		<!-- 查看历史计划 -->
 		<div class="history-alert">
-			<el-dialog :title="planHistory.title" :visible.sync="planHistory.show">
+			<el-dialog :close-on-click-modal="false" :title="planHistory.title" :visible.sync="planHistory.show">
 				<div class="history-alert-div">
 					<div class="history-alert-findby-condition">
 						<div class="history-alert-findby-condition-item">
@@ -298,7 +298,7 @@
 				</newModuleTable>
 			</div>
 		</div> -->
-		<el-dialog title="" :visible.sync="oVideoData.show" center append-to-body fullscreen>
+		<el-dialog :close-on-click-modal="false" title="" :visible.sync="oVideoData.show" center append-to-body fullscreen>
 			<oVideo :createVideoRoomData="oVideoData.createVideoRoomData" :videoType="oVideoData.videoType"
 				:oClinicId="oVideoData.oClinicId"></oVideo>
 		</el-dialog>

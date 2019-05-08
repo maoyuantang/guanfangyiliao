@@ -29,7 +29,7 @@
             </div>
         </div>
         <!-- 弹窗 -->
-        <el-dialog title=" " append-to-body :visible.sync="alertData.show" width="40vw" :before-close="closeAlert">
+        <el-dialog :close-on-click-modal="false" title=" " append-to-body :visible.sync="alertData.show" width="40vw" :before-close="closeAlert">
             <div class="plan-alert">
                 <iframe :src="alertData.src" class="plan-alert-iframe"></iframe>
                 <!-- <div class="plan-alert-top plan-alert-has-border-bttom">

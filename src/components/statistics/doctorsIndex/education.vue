@@ -51,7 +51,7 @@
         </div>
       </div>
       <!-- 进入学习 弹窗 -->
-      <el-dialog
+      <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         width="50vw"

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if='userSocketInfo.receiveVideoVisable'>
-            <el-dialog class='receiveVideoClass' title="" :visible.sync="userSocketInfo.receiveVideoVisable" width='602px' height='376px' :before-close="handleClose" :showClose="VideoshowClose" append-to-body>
+            <el-dialog :close-on-click-modal="false" class='receiveVideoClass' title="" :visible.sync="userSocketInfo.receiveVideoVisable" width='602px' height='376px' :before-close="handleClose" :showClose="VideoshowClose" append-to-body>
 
                 <div class='receiveVideoHead'>
                     <div>
@@ -29,7 +29,7 @@
 
         <!-- 视频聊天 -->
         <div v-if="VideoVisable">
-            <el-dialog class='videoClassBox' title="" :visible.sync="VideoVisable" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
+            <el-dialog :close-on-click-modal="false" class='videoClassBox' title="" :visible.sync="VideoVisable" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
                 <ovideo :createVideoRoomData="userSocketInfo.createVideoRoomData" @reback="videoclick" :sessionId1="userSocketInfo.osessionId" :doctorVis="doctorVis" :chatTypeBox="userSocketInfo.chatTypeBox"></ovideo>
             </el-dialog>
         </div>

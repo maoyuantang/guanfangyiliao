@@ -343,14 +343,14 @@
         <!-- 谭莹聊天弹窗 -->
 
         <div v-if="chatVisible">
-            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+            <el-dialog :close-on-click-modal="false" class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
                 <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox" :userMessage="userMessage"></chat>
             </el-dialog>
         </div>
         <!-- 谭莹备注 -->
 
         <div v-if="remarksVisible">
-            <el-dialog class="chatDialog" title="备注" :visible.sync="remarksVisible" width="680px">
+            <el-dialog :close-on-click-modal="false" class="chatDialog" title="备注" :visible.sync="remarksVisible" width="680px">
                 <div>
                     {{remarks}}
                 </div>
@@ -362,7 +362,7 @@
         <WomanDoc :inData="puBlicManData" @reback="addPublicMan"></WomanDoc>
         <!-- 会诊邀请弹框 -->
         <div v-if="invitationVisibleHui">
-            <el-dialog class="invitationClass" title="" :visible.sync="invitationVisibleHui" width="240px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="invitationClass" title="" :visible.sync="invitationVisibleHui" width="240px" hight="356px" center>
                 <el-tree :data="invitationData" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
                 <el-button class='btnClass' type="primary" @click="sureInvitation()">确认邀请</el-button>
             </el-dialog>
@@ -370,14 +370,14 @@
 
         <!-- 协作邀请弹框 -->
         <div v-if="invitationVisible">
-            <el-dialog class="invitationClass" title="" :visible.sync="invitationVisible" width="240px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="invitationClass" title="" :visible.sync="invitationVisible" width="240px" hight="356px" center>
                 <el-tree :data="invitationDataXiez" :props="defaultProps" @check="handleCheckChangeXiez" show-checkbox></el-tree>
                 <el-button class='btnClass' type="primary" @click="sureInvitationXiez()">确认邀请</el-button>
             </el-dialog>
         </div>
         <!-- 更多计划 -->
         <div v-if="planVisible">
-            <el-dialog class="evaluateBox evaluateBox2" title="历史计划" :visible.sync="planVisible" width="782px" hight="356px" center :show-header="showHeadViable">
+            <el-dialog :close-on-click-modal="false" class="evaluateBox evaluateBox2" title="历史计划" :visible.sync="planVisible" width="782px" hight="356px" center :show-header="showHeadViable">
                 <el-table :data="morePlanList" style="width: 100%">
                     <el-table-column label="" width="60">
                         <template slot-scope="scope">
@@ -414,7 +414,7 @@
         </div>
         <!-- 更多告警 -->
         <div v-if="warnVisible">
-            <el-dialog class="planWarnClass" title="历史告警" :visible.sync="warnVisible" width="782px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="planWarnClass" title="历史告警" :visible.sync="warnVisible" width="782px" hight="356px" center>
                 <el-table :data="moreWarnList" style="width: 100%">
                     <el-table-column label="" width="60">
                         <template slot-scope="scope">
@@ -450,7 +450,7 @@
         </div>
         <!-- 查看随访计划详情 -->
         <div v-if="followPlanVisible">
-            <el-dialog class="planWarnClass evaluateBox addFollowBoxFollow" title="随访计划详情" :visible.sync="followPlanVisible" width="602px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="planWarnClass evaluateBox addFollowBoxFollow" title="随访计划详情" :visible.sync="followPlanVisible" width="602px" hight="356px" center>
                 <followDetail :addFollowData="addFollowData"></followDetail>
             </el-dialog>
         </div>

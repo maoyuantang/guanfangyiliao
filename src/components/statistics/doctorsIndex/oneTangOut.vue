@@ -2,7 +2,7 @@
   <div class="oneTangOut" v-show="myHomes.length != 0">
     <!-- 视频聊天 -->
     <div v-if="centerDialogVisible">
-      <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen
+      <el-dialog :close-on-click-modal="false" class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen
         @close="closeVideo()" :showClose="VideoshowClose">
         <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"
           @reback="videoclick" :doctorVis='doctorVis' :userMessage="userMessage" :chatTypeBox="chatTypeBox">
@@ -12,7 +12,7 @@
 
 
     <!-- <div v-if="centerDialogVisible">
-      <el-dialog title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
+      <el-dialog :close-on-click-modal="false" title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
         <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"
           @reback="videoclick">
         </ovideo>

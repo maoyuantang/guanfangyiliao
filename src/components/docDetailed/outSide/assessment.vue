@@ -27,7 +27,7 @@
             </div>
         </div>
         <!-- 弹窗 -->
-        <el-dialog title=" " append-to-body :visible.sync="alertData.show" width="40vw" :before-close="closeAlert">
+        <el-dialog :close-on-click-modal="false" title=" " append-to-body :visible.sync="alertData.show" width="40vw" :before-close="closeAlert">
             <div class="assessment-alert">
                 <iframe :src="alertData.src" class="assessment-alert-iframe"></iframe>
             </div>

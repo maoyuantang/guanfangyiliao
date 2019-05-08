@@ -183,7 +183,7 @@
             </div>
         </Modal>
         <!-- 编辑按钮弹窗 -->
-        <el-dialog title="编辑医院" :visible.sync="editHospital.dialogFormVisible">
+        <el-dialog :close-on-click-modal="false" title="编辑医院" :visible.sync="editHospital.dialogFormVisible">
             <el-form>
                 <el-form-item label="医院名">
                     <el-input v-model="editHospital.name" autocomplete="off"></el-input>

@@ -41,7 +41,7 @@
 			</Timeline>
 		</div>
 
-		<!-- <el-dialog title=" " append-to-body :visible.sync="examinationDetails.show" :fullscreen="true"
+		<!-- <el-dialog :close-on-click-modal="false" title=" " append-to-body :visible.sync="examinationDetails.show" :fullscreen="true"
 			:before-close="examinationDetailsClose">
 			<div class="examination-details">
 				<div class="examination-details-content">
