@@ -56,7 +56,7 @@
         </div>
 
         <!-- 住院处方 弹窗 -->
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         :visible.sync="prescription.show"
@@ -103,7 +103,7 @@
         </el-dialog>
 
         <!-- 住院医嘱 弹窗 -->
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         :visible.sync="medicalOrder.show"
@@ -146,7 +146,7 @@
         </el-dialog>
 
         <!-- 检验检查 弹窗 -->
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         :visible.sync="examination.show"
@@ -195,7 +195,7 @@
         </el-dialog>
 
         <!-- 体检报告 弹窗 -->
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         :visible.sync="report.show"
@@ -246,7 +246,7 @@
         </el-dialog>
 
         <!-- 体检报告详情 弹窗 -->
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         :visible.sync="reportDetails.show"
@@ -344,7 +344,7 @@
         </el-dialog>
 
         <!-- 综合影像 弹窗 -->
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         :visible.sync="image.show"
@@ -394,7 +394,7 @@
         </el-dialog>
 
         <!-- 综合影像 弹窗 -->
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         :visible.sync="seeImage.show"
@@ -407,7 +407,7 @@
         </el-dialog>
 
         <!-- 检验检查列表（详细） 弹窗 -->
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         :visible.sync="examinationDetails.show"
@@ -454,7 +454,7 @@
         </el-dialog>
 
         <!-- 处方详情 弹窗 -->
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         :visible.sync="prescriptionDetails.show"

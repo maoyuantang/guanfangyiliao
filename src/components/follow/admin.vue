@@ -3,14 +3,14 @@
 
         <!-- 添加问诊或文章 -->
         <!-- <div v-if="questVisible">
-            <el-dialog title="添加问诊或文章" :visible.sync="questVisible" center append-to-body width="400px">
+            <el-dialog :close-on-click-modal="false" title="添加问诊或文章" :visible.sync="questVisible" center append-to-body width="400px">
                 <addQuestOrAritle @reback="sureQuestArticle"></addQuestOrAritle>
 
             </el-dialog>
         </div> -->
         <!-- 设备告警 -->
         <div v-if="warnVisible">
-            <el-dialog title="添加问诊或文章" :visible.sync="warnVisible" center append-to-body>
+            <el-dialog :close-on-click-modal="false" title="添加问诊或文章" :visible.sync="warnVisible" center append-to-body>
                 <warnSet :warnList="warnList" @reback="sureSetWarn"></warnSet>
 
             </el-dialog>
@@ -18,7 +18,7 @@
 
         <!-- 随访计划详情 -->
         <div v-if="followPlanVisible">
-            <el-dialog class="addFollowBox addFollowBoxFollow" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="addFollowBox addFollowBoxFollow" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
 
                 <el-form ref="form" :model="followPlanData" label-width="80px">
 
@@ -94,7 +94,7 @@
 
         <!-- 满意度新增模板 -->
         <div v-if="mydAddTemplate">
-            <el-dialog class="evaluateBox mydAddTemplateClass" title="新增模板 " :visible.sync="mydAddTemplate" width="894px" hight="550px" center >
+            <el-dialog :close-on-click-modal="false" class="evaluateBox mydAddTemplateClass" title="新增模板 " :visible.sync="mydAddTemplate" width="894px" hight="550px" center >
                 <!-- <div class="mydAddTemplate-title">
                     新增模板
                 </div> -->
@@ -169,7 +169,7 @@
         </div>
         <!-- 满意度发送的模板列表 -->
         <div v-if="templateVisible">
-            <el-dialog class="evaluateBox" title=" " :visible.sync="templateVisible" width="240px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="evaluateBox" title=" " :visible.sync="templateVisible" width="240px" hight="356px" center>
                 <ul>
                     <li v-for="(text,index) in mydTemplateTitle" :key="index" @click="selectTemplate(index,text)">
                         {{text.title}}
@@ -179,7 +179,7 @@
         </div>
         <!-- 使用量 -->
         <div v-if="userNumVisible">
-            <el-dialog class="evaluateBox evaluateBox2" :title="userNumTitle" :visible.sync="userNumVisible" width="782px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="evaluateBox evaluateBox2" :title="userNumTitle" :visible.sync="userNumVisible" width="782px" hight="356px" center>
 
                 <tableList :tableData="userNumTable" :columns="userNumColum" :total="userNumTotal" @rebackFenye="changeCurrent5"></tableList>
 
@@ -305,18 +305,18 @@
         </div>
         <div>
             <div v-if="followDetailVisible">
-                <el-dialog class="evaluateBox addFollowBox" title=" " :visible.sync="followDetailVisible" width="602px" hight="356px" center>
+                <el-dialog :close-on-click-modal="false" class="evaluateBox addFollowBox" title=" " :visible.sync="followDetailVisible" width="602px" hight="356px" center>
                     <followDetail :addFollowData="followDetailData"></followDetail>
                 </el-dialog>
             </div>
         </div>
         <div v-if="chatVisible">
-            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+            <el-dialog :close-on-click-modal="false" class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
                 <chat :sessionId="sessionId" :doctorVis="doctorVis"></chat>
             </el-dialog>
         </div>
         <div v-if="groupVisible">
-            <el-dialog title="创建分组" :visible.sync="groupVisible" width="680px">
+            <el-dialog :close-on-click-modal="false" title="创建分组" :visible.sync="groupVisible" width="680px">
                 <el-input v-model="groupName" placeholder="请输入内容"></el-input>
                 <el-button type="primary" @click="sureAddGroup()">确认</el-button>
             </el-dialog>

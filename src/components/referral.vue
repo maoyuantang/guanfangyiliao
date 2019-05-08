@@ -12,7 +12,7 @@
 
     <!--弹框1.1  管理查看记录 -->
     <div v-if="isShowmoveUser1">
-      <el-dialog title="" :visible.sync="isShowmoveUser1" width="40%" center>
+      <el-dialog :close-on-click-modal="false" title="" :visible.sync="isShowmoveUser1" width="40%" center>
         <div class="moved">
           <!-- 头像姓名 -->
           <div class="moved_top">
@@ -43,7 +43,7 @@
     <!--弹框1.2  管理查看反馈-->
 
     <div v-if="isShowmoveUser2">
-      <el-dialog title="查看反馈" :visible.sync="isShowmoveUser2" width="40%" center>
+      <el-dialog :close-on-click-modal="false" title="查看反馈" :visible.sync="isShowmoveUser2" width="40%" center>
         <el-table :data="rebackInformation">
           <el-table-column property="1" label="医院"></el-table-column>
           <el-table-column property="2" label="科室"></el-table-column>
@@ -57,8 +57,8 @@
     <!-- 弹框2 新增转诊 -->
 
     <div v-if="isShowaddMove">
-      <el-dialog class="eldialog" title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
-        <el-dialog class="eldialogs" :visible.sync="isShowaddMoveNei" append-to-body>
+      <el-dialog :close-on-click-modal="false" class="eldialog" title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
+        <el-dialog :close-on-click-modal="false" class="eldialogs" :visible.sync="isShowaddMoveNei" append-to-body>
           <el-tree v-model="addForm.giveRight.value" :data="invitationData1" :props="defaultProps"
             @check="handleCheckChange" show-checkbox></el-tree>
         </el-dialog>

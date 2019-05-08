@@ -1,5 +1,5 @@
 <template>
-<el-dialog
+<el-dialog :close-on-click-modal="false"
     title=" "
     :visible.sync="inData.show"
     :fullscreen="false"

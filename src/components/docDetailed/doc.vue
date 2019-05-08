@@ -44,7 +44,7 @@
             </div>
         </div>
         <!-- 随访 弹窗 -->
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         :visible.sync="followUp.alertData.show"
@@ -80,7 +80,7 @@
         </el-dialog>
 
         <!-- 设备自测 弹窗 -->
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         :visible.sync="selfTest.alertData.show"
@@ -93,7 +93,7 @@
         </el-dialog>
 
         <!-- 上传档案 弹窗 -->
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         :visible.sync="upDoc.alertData.show"

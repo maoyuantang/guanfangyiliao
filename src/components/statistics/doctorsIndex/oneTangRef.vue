@@ -1,7 +1,7 @@
 <template>
   <div class="oneTangRef" v-show="docTableData.length != 0">
     <div v-if="isShowaddMove">
-      <el-dialog title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
+      <el-dialog :close-on-click-modal="false" title="新增转诊" :visible.sync="isShowaddMove" :before-close="handleClose1">
         <el-form :model="addForm">
           <div style="display:flex;margin:10px 0;">
             <el-form-item label="转诊类型:" :label-width="formLabelWidth">
@@ -73,7 +73,7 @@
 
     <!--弹框1.1  管理查看记录 -->
     <div v-if="isShowmoveUser1">
-      <el-dialog title="" :visible.sync="isShowmoveUser1" width="40%" center>
+      <el-dialog :close-on-click-modal="false" title="" :visible.sync="isShowmoveUser1" width="40%" center>
         <div class="moved">
           <!-- 头像姓名 -->
           <div class="moved_top">

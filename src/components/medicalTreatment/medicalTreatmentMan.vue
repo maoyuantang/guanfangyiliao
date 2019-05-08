@@ -7,14 +7,14 @@
     <!--    弹框子组件  引入 -->
 
     <div v-if="doctorVisible">
-      <el-dialog title=" 医院及科室范围" :visible.sync="doctorVisible" width="602px" hight="356px" center>
+      <el-dialog :close-on-click-modal="false" title=" 医院及科室范围" :visible.sync="doctorVisible" width="602px" hight="356px" center>
         <hosptialAndDepartmentArea :doctorDetailData="doctorDetailData"></hosptialAndDepartmentArea>
       </el-dialog>
     </div>
     <!-- 新增业务   弹框    1 -->
 
     <div v-if="kuangData1.show">
-      <el-dialog title="疾病分级分类" :visible.sync="kuangData1.show" :before-close="handleClose1" center>
+      <el-dialog :close-on-click-modal="false" title="疾病分级分类" :visible.sync="kuangData1.show" :before-close="handleClose1" center>
         <el-form :model="kuangData1.form">
           <el-form-item label="科室" :label-width="kuangData1.formLabelWidth">
             <el-select v-model="kuangData1.options1.value" placeholder="选择科室（单选）" style="width:80%">
@@ -62,7 +62,7 @@
 
     <!-- 新增业务   弹框  2  -->
     <div v-if="kuangData2.show">
-      <el-dialog title="转入控制" :visible.sync="kuangData2.show" :before-close="handleClose2" center>
+      <el-dialog :close-on-click-modal="false" title="转入控制" :visible.sync="kuangData2.show" :before-close="handleClose2" center>
         <el-form>
           <!-- :model="kuangData2.options" -->
           <el-form-item label="科         室:" :label-width="kuangData2.formLabelWidth">

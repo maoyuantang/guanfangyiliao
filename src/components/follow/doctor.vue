@@ -2,7 +2,7 @@
     <div class="followUp">
         <!-- 随访表模板 -->
         <div v-if="followTableVisible">
-            <el-dialog class=" addFollowBox addFollowBoxFollow" title=" " :visible.sync="followTableVisible" width="602px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class=" addFollowBox addFollowBoxFollow" title=" " :visible.sync="followTableVisible" width="602px" hight="356px" center>
                 <el-form ref="form" :model="addFollowData" label-width="80px">
 
                     <el-form-item>
@@ -97,21 +97,21 @@
         </div>
         <!-- 添加问诊或文章 -->
         <div v-if="questVisible">
-            <el-dialog title="添加问诊或文章" :visible.sync="questVisible" center append-to-body width="400px">
+            <el-dialog :close-on-click-modal="false" title="添加问诊或文章" :visible.sync="questVisible" center append-to-body width="400px">
                 <addQuestOrAritle @reback="sureQuestArticle"></addQuestOrAritle>
 
             </el-dialog>
         </div>
         <!-- 设备告警 -->
         <div v-if="warnVisible">
-            <el-dialog title="添加问诊或文章" :visible.sync="warnVisible" center append-to-body>
+            <el-dialog :close-on-click-modal="false" title="添加问诊或文章" :visible.sync="warnVisible" center append-to-body>
                 <warnSet :warnList="warnList" @reback="sureSetWarn"></warnSet>
 
             </el-dialog>
         </div>
         <!--新增问诊模板 -->
         <div v-if="QuestTableVisible">
-            <el-dialog class="addQuestBox " title=" " :visible.sync="QuestTableVisible" width="717px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="addQuestBox " title=" " :visible.sync="QuestTableVisible" width="717px" hight="356px" center>
                 <el-form ref="form" :model="addQuestData" label-width="80px" style="height: 600px; overflow: auto;">
                     <el-form-item style="margin-bottom:30px">
                         <el-input class="addFollowTitle" v-model="addQuestData.title" placeholder="请输入问诊标题(40字内)" onfocus="this.placeholder=''" onblur="this.placeholder='请输入问诊标题(40字内)'"></el-input>
@@ -180,7 +180,7 @@
         </div>
         <!-- 随访计划详情 -->
         <div v-if="followPlanVisible">
-            <el-dialog class=" addFollowBox addFollowBoxFollow" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class=" addFollowBox addFollowBoxFollow" title=" " :visible.sync="followPlanVisible" width="602px" hight="356px" center>
 
                 <el-form ref="form" :model="followPlanData" label-width="80px">
 
@@ -259,7 +259,7 @@
         </div>
         <!-- 新增文章 -->
         <div v-if="articleTableVisible">
-            <el-dialog class="evaluateBox ArcticClass" title=" " :visible.sync="articleTableVisible" width="770px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="evaluateBox ArcticClass" title=" " :visible.sync="articleTableVisible" width="770px" hight="356px" center>
                 <el-form ref="form" :model="addArticleData" label-width="80px">
                     <el-form-item>
                         <el-input class="addFollowTitle" v-model="addArticleData.title" placeholder="请输入文章标题">
@@ -305,7 +305,7 @@
         </div>
         <!-- 满意度发送的模板列表 -->
         <!-- <div v-if="templateVisible">
-            <el-dialog class="evaluateBox" title=" " :visible.sync="templateVisible" width="240px" hight="356px" center>
+            <el-dialog :close-on-click-modal="false" class="evaluateBox" title=" " :visible.sync="templateVisible" width="240px" hight="356px" center>
                 <ul>
                     <li v-for="(text,index) in mydTemplateTitle" :key="index" @click="selectTemplate(index,text)">
                         {{text.title}}
@@ -413,18 +413,18 @@
         </div>
         <div>
             <div v-if="followDetailVisible">
-                <el-dialog class="addFollowBox  addFollowBoxFollow" title=" " :visible.sync="followDetailVisible" width="602px" hight="356px" center>
+                <el-dialog :close-on-click-modal="false" class="addFollowBox  addFollowBoxFollow" title=" " :visible.sync="followDetailVisible" width="602px" hight="356px" center>
                     <followDetail :addFollowData="followDetailData"></followDetail>
                 </el-dialog>
             </div>
         </div>
         <div v-if="chatVisible">
-            <el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+            <el-dialog :close-on-click-modal="false" class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
                 <chat :sessionId="sessionId" :doctorVis="doctorVis" :chatTypeBox="chatTypeBox" :userMessage="userMessage"></chat>
             </el-dialog>
         </div>
         <div v-if="groupVisible">
-            <el-dialog title="创建分组" :visible.sync="groupVisible" width="680px">
+            <el-dialog :close-on-click-modal="false" title="创建分组" :visible.sync="groupVisible" width="680px">
                 <el-input v-model="groupName" placeholder="请输入内容"></el-input>
                 <el-button type="primary" @click="sureAddGroup()">确认</el-button>
             </el-dialog>

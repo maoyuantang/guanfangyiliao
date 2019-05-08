@@ -547,7 +547,7 @@
 
 		<!-- //某诊室的所有病人列表 -->
 		<div v-if="isShowPatient">
-			<el-dialog title="就诊列表" :visible.sync="isShowPatient" width="60%" center>
+			<el-dialog :close-on-click-modal="false" title="就诊列表" :visible.sync="isShowPatient" width="60%" center>
 				<ul v-for="(text5,index) in huanzheList" :key="index" class=""
 					style="margin: 0 0 30px 0;border: 1px solid #d8d8d8;padding: 10px 15px;">
 					<li class="name"
@@ -615,7 +615,7 @@
 
 		<!-- 预览弹窗 -->
 		<div v-if="dialogTableVisible">
-			<el-dialog title="预览" :visible.sync="dialogTableVisible" center>
+			<el-dialog :close-on-click-modal="false" title="预览" :visible.sync="dialogTableVisible" center>
 				<img style="width:100%"
 					:src='userSocketInfo.imgUrl1+"/m/v1/api/prescription/prescription/prescriptionDetailById?token="+userInfo.token+"&prescriptionId="+srcs'>
 			</el-dialog>
@@ -624,7 +624,7 @@
 		<!-- 谭莹聊天弹窗 -->
 
 		<div v-if="chatVisible">
-			<el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+			<el-dialog :close-on-click-modal="false" class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
 				<chat :sessionId="sessionId" :doctorVis="doctorVis" :userMessage="userMessage" :chatType1="videoType"
 					:chatTypeBox="chatTypeBox1"></chat>
 			</el-dialog>
@@ -632,7 +632,7 @@
 
 		<!-- 视频聊天 -->
 		<div v-if="centerDialogVisible">
-			<el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen
+			<el-dialog :close-on-click-modal="false" class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen
 				@close="closeVideo()" :showClose="VideoshowClose">
 				<ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId"
 					@reback="videoclick" :doctorVis='doctorVis' :userMessage="userMessage" :chatTypeBox="chatTypeBox">

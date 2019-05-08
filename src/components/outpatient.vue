@@ -2,7 +2,7 @@
     <div class="outpatient">
         <!-- 远程门诊系统
 		<button @click="openChat()">聊天</button>
-		<el-dialog class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
+		<el-dialog :close-on-click-modal="false" class="chatDialog" title="" :visible.sync="chatVisible" width="680px">
 			<chat :sessionId="sessionId"></chat>
 		</el-dialog> -->
 

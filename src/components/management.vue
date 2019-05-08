@@ -2,7 +2,7 @@
 <template>
 	<div class="management">
 		<!--弹框1  查看 -->
-		<el-dialog title="" :visible.sync="isShowmoveUser" width="40%" center>
+		<el-dialog :close-on-click-modal="false" title="" :visible.sync="isShowmoveUser" width="40%" center>
 		</el-dialog>
 
 

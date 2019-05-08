@@ -38,7 +38,7 @@
             </div>
         </div>
         <div v-if="noticeVisible">
-            <el-dialog class="noticeClass" title="通知" :visible.sync="noticeVisible" width="602px" center>
+            <el-dialog :close-on-click-modal="false" class="noticeClass" title="通知" :visible.sync="noticeVisible" width="602px" center>
                 <notice></notice>
             </el-dialog>
         </div>

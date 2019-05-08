@@ -74,7 +74,7 @@
         </div>
         <playVedio :inData="vedio"></playVedio>
         <!-- 查看记录 弹窗 -->
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         title=" "
         append-to-body
         width="393px"

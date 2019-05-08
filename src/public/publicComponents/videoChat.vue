@@ -161,7 +161,7 @@
         </div>
         <!-- 备注 -->
         <div v-if="remarkVisible">
-            <el-dialog class='remarkClass' title="备注" :visible.sync="remarkVisible" center append-to-body>
+            <el-dialog :close-on-click-modal="false" class='remarkClass' title="备注" :visible.sync="remarkVisible" center append-to-body>
                 <el-form ref="form" :model="remarkData" label-width="80px">
                     <el-form-item label="">
                         <el-input type="textarea" v-model="remarkData.remarkCon"></el-input>
@@ -174,7 +174,7 @@
         </div>
         <!-- 计划 -->
         <div v-if="planVisible">
-            <el-dialog title="计划" :visible.sync="planVisible" center append-to-body>
+            <el-dialog :close-on-click-modal="false" title="计划" :visible.sync="planVisible" center append-to-body>
                 <el-form ref="form" :model="planData" label-width="80px">
                     <el-form-item label="计划时间">
                         <el-date-picker v-model="planData.planTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
@@ -192,7 +192,7 @@
         </div>
         <!-- 随访 -->
         <div v-if="followVisible">
-            <el-dialog title="发送随访" :visible.sync="followVisible" center append-to-body width='500px'>
+            <el-dialog :close-on-click-modal="false" title="发送随访" :visible.sync="followVisible" center append-to-body width='500px'>
                 <ul>
                     <li class="followBox" v-for="(text,index) in followList" :key="index" @click="followDetail(text.id)">
                         <span>{{text.title}}</span>
@@ -203,19 +203,19 @@
         </div>
         <!-- 随访计划详情 -->
         <div v-if="followListVisible">
-            <el-dialog title="随访" class='evaluateBox addFollowBox addFollowBoxFollow' :visible.sync="followListVisible" center append-to-body>
+            <el-dialog :close-on-click-modal="false" title="随访" class='evaluateBox addFollowBox addFollowBoxFollow' :visible.sync="followListVisible" center append-to-body>
                 <follow :addFollowData="followDetailData" @osendmessagechat="getSendMessageChat" :sendToUserId="sendToUserId"></follow>
             </el-dialog>
         </div>
         <!-- 随访消息点击详情 -->
         <div v-if="followDetailVisible">
-            <el-dialog title="随访" class='evaluateBox addFollowBox addFollowBoxFollow' :visible.sync="followDetailVisible" center append-to-body>
+            <el-dialog :close-on-click-modal="false" title="随访" class='evaluateBox addFollowBox addFollowBoxFollow' :visible.sync="followDetailVisible" center append-to-body>
                 <followDetailChat :addFollowData="followDetailData"></followDetailChat>
             </el-dialog>
         </div>
         <!-- 问诊 -->
         <div v-if="questVisible">
-            <el-dialog title="发送问诊" :visible.sync="questVisible" center append-to-body width='500px'>
+            <el-dialog :close-on-click-modal="false" title="发送问诊" :visible.sync="questVisible" center append-to-body width='500px'>
                 <ul>
                     <li class="followBox" v-for="(text,index) in questList" :key="index" @click="QuestDetail(text.id)">
                         <span>{{text.title}}</span>
@@ -226,19 +226,19 @@
         </div>
         <!-- 问诊详情 -->
         <div v-if="questDetailVisible">
-            <el-dialog title="问诊详情" :visible.sync="questDetailVisible" center append-to-body>
+            <el-dialog :close-on-click-modal="false" title="问诊详情" :visible.sync="questDetailVisible" center append-to-body>
                 <quest :addQuestId="addQuestId" @osendmessagechat="getSendMessageChat1" :sendToUserId="sendToUserId"></quest>
             </el-dialog>
         </div>
         <!-- 问诊详情 -->
         <div v-if="questPlanVisible">
-            <el-dialog title="问诊计划详情" :visible.sync="questPlanVisible" center append-to-body>
+            <el-dialog :close-on-click-modal="false" title="问诊计划详情" :visible.sync="questPlanVisible" center append-to-body>
                 <questPlan :addQuestId="addQuestPlanId"></questPlan>
             </el-dialog>
         </div>
         <!-- 文章 -->
         <div v-if="articleVisible">
-            <el-dialog title="发送文章" :visible.sync="articleVisible" center append-to-body>
+            <el-dialog :close-on-click-modal="false" title="发送文章" :visible.sync="articleVisible" center append-to-body>
                 <ul>
                     <li class="followBox" v-for="(text,index) in articleList" :key="index">
                         <span>{{text.title}}</span>
@@ -250,19 +250,19 @@
         </div>
         <!-- 文章详情 -->
         <div v-if="articleDetailVisible">
-            <el-dialog title="文章详情" :visible.sync="articleDetailVisible" center append-to-body>
+            <el-dialog :close-on-click-modal="false" title="文章详情" :visible.sync="articleDetailVisible" center append-to-body>
                 <articleDetail :articleClickId="articleClickId"></articleDetail>
             </el-dialog>
         </div>
         <!-- 药品处方 -->
         <div v-if="drugsVisible">
-            <el-dialog class='drugsDialogClass' title="药品处方" :visible.sync="drugsVisible" width="100%" center append-to-body>
+            <el-dialog :close-on-click-modal="false" class='drugsDialogClass' title="药品处方" :visible.sync="drugsVisible" width="100%" center append-to-body>
                 <drugs :sendToUserId="sendToUserId" :userMessage="userMessage" @reback='drugsFunc'></drugs>
             </el-dialog>
         </div>
         <!-- 视频聊天 -->
         <div v-if="videoVisible">
-            <el-dialog class='videoClassBox' title="" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo('cancle','us')" :showClose="VideoshowClose">
+            <el-dialog :close-on-click-modal="false" class='videoClassBox' title="" :visible.sync="videoVisible" center append-to-body fullscreen @close="closeVideo('cancle','us')" :showClose="VideoshowClose">
                 <ovideo :createVideoRoomData="createVideoRoomData" @reback="videoclick" :sessionId1="sessionId" :doctorVis="doctorVis"></ovideo>
             </el-dialog>
         </div>

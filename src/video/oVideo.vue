@@ -110,7 +110,7 @@
         </div>
         <!--屏幕分享-->
         <div v-if="screenVisible">
-            <el-dialog title="屏幕分享" :visible.sync="screenVisible" width="380px" center append-to-body>
+            <el-dialog :close-on-click-modal="false" title="屏幕分享" :visible.sync="screenVisible" width="380px" center append-to-body>
                 <div class="screenBtn">
 
                     <el-button type="primary" @click="sureScreen()">确认</el-button>
@@ -121,19 +121,19 @@
         </div>
         <!--查看档案会诊，协作，转诊-->
         <div v-if="archivesVisible">
-            <el-dialog title="查看档案" :visible.sync="archivesVisible" width="380px" center append-to-body fullscreen>
+            <el-dialog :close-on-click-modal="false" title="查看档案" :visible.sync="archivesVisible" width="380px" center append-to-body fullscreen>
                 <archives1 v-if="archivesVisible" :inData='archivesIdVisable'></archives1>
             </el-dialog>
         </div>
         <!-- 随访，门诊 -->
         <div v-if="archivesVisible1">
-            <el-dialog title="查看档案" :visible.sync="archivesVisible1" width="380px" center append-to-body fullscreen>
+            <el-dialog :close-on-click-modal="false" title="查看档案" :visible.sync="archivesVisible1" width="380px" center append-to-body fullscreen>
                 <archives v-if="archivesVisible1" :inData='archivesIdVisable1'></archives>
             </el-dialog>
         </div>
         <!--屏幕安装指南-->
         <div v-if="installScreenVisible">
-            <el-dialog title="共享屏幕安装插件指南" :visible.sync="installScreenVisible" width="520px" center append-to-body>
+            <el-dialog :close-on-click-modal="false" title="共享屏幕安装插件指南" :visible.sync="installScreenVisible" width="520px" center append-to-body>
                 <div class="screenClass">
                     <img src="../assets/img/screenImg.png" />
                 </div>
@@ -2487,7 +2487,7 @@ video {
 
  <!-- 视频聊天 -->
     <div v-if="centerDialogVisible">
-      <el-dialog title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
+      <el-dialog :close-on-click-modal="false" title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()">
         <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId">
         </ovideo>
       </el-dialog>
@@ -2497,7 +2497,7 @@ video {
     进入诊室需要传的参数
       <!-- 视频聊天 -->
         <div v-if="centerDialogVisible">
-            <el-dialog class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
+            <el-dialog :close-on-click-modal="false" class='videoClassBox' title="" :visible.sync="centerDialogVisible" center append-to-body fullscreen @close="closeVideo()" :showClose="VideoshowClose">
                 <ovideo :createVideoRoomData="createVideoRoomData" :videoType="videoType" :oClinicId="oClinicId" @reback="videoclick" :doctorVis='doctorVis' :userMessage="userMessage" :chatTypeBox="chatTypeBox">
                 </ovideo>
             </el-dialog>

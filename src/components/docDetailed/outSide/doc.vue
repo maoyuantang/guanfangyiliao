@@ -23,7 +23,7 @@
                 :total="page.total" v-if="page.total!=0" @current-change="ChangePage"></el-pagination>
         </div>
         <!-- 查看大图 弹窗 -->
-        <el-dialog title=" " append-to-body :visible.sync="alertData.show" :before-close="closeAlert">
+        <el-dialog :close-on-click-modal="false" title=" " append-to-body :visible.sync="alertData.show" :before-close="closeAlert">
             <div class="doc-alert-div">
                 <img :src="alertData.imgSrc" alt="" srcset="">
             </div>

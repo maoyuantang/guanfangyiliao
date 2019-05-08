@@ -102,7 +102,7 @@
         ></el-pagination>
       </div>
     </div>
-    <el-dialog
+    <el-dialog :close-on-click-modal="false"
       title=" "
       :visible.sync="alertData.show"
       :fullscreen="true"

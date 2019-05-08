@@ -1,6 +1,6 @@
 <template>
     <div class="history-alert">
-        <el-dialog
+        <el-dialog :close-on-click-modal="false"
         :title="testData.title"
         :visible.sync="testData.show"
         :before-close="handleClose">

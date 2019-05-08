@@ -101,7 +101,7 @@
         </div>
         <!-- 添加问诊或文章 -->
         <div v-if="questVisible">
-            <el-dialog title="添加问诊或文章" :visible.sync="questVisible" center append-to-body>
+            <el-dialog :close-on-click-modal="false" title="添加问诊或文章" :visible.sync="questVisible" center append-to-body>
                 <addQuestOrAritle @reback="sureQuestArticle"></addQuestOrAritle>
 
             </el-dialog>
