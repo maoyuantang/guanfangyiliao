@@ -19,13 +19,13 @@
                         </div>
 
                         <div>
-                           
+                            {{danganLeftMain.patientName}}
                         </div>
-                        <div>
+                        <!-- <div>
                             性别：<br /> 年龄：
                             <br /> 身份证：
                             <br />
-                        </div>
+                        </div> -->
                     </div>
                     <ul class="danganLeft-main">
                         <li :class="{'danganLeftAct':index==danganLeftIndex}" v-for="(text,index) in danganLeftMain.historys" :key="index" @click="danganLeftClick(text,index)">
@@ -64,13 +64,13 @@
                         </div>
 
                         <div>
-                            dfdsfdf
+                            {{danganLeftMain.patientName}}
                         </div>
-                        <div>
-                            性别：男<br /> 年龄：32岁
-                            <br /> 身份证：地方第三方第三方多分点
+                        <!-- <div>
+                            性别：<br /> 年龄：
+                            <br /> 身份证：
                             <br />
-                        </div>
+                        </div> -->
                     </div>
                     <ul class="danganLeft-main">
                         <li :class="{'danganLeftAct':index==danganLeftIndex1}" v-for="(text,index) in danganLeftMain.visits" :key="index" @click="inHospitalClick(text,index)">
@@ -305,7 +305,7 @@ export default {
                         _this.danganLeftIndex11 = 2;
                     }
                 }
-                
+
                 if (_this.danganLeftMain.historys.length > 0) {
                     if (_this.danganLeftMain) {
                         _this.danganRgMainText.push(
@@ -388,7 +388,7 @@ export default {
                 this.danganLeftIndex1
             ].hospitalName;
             if (text.visitType == 1) {
-                 this.danganLeftIndex11 = 1;
+                this.danganLeftIndex11 = 1;
                 //门诊记录
                 this.danganRgList1 = [
                     {
@@ -466,18 +466,20 @@ export default {
                         let orecipe1 = this.danganLeftMain.visits[
                             this.danganLeftIndex1
                         ].info.recipe;
-                        orecipe1.forEach((text, index) => {
-                            //  this.getPrescription(text)
-                            this.orecipe.push({
-                                src: `${
-                                    this.userSocketInfo.imgUrl1
-                                }/m/v1/api/basics/record/recordInfo?token=${
-                                    this.userState.token
-                                }&type=${this.$route.query.type}&id=${
-                                    this.$route.query.id
-                                }&prescNo=${text}`
+                        if (orecipe1) {
+                            orecipe1.forEach((text, index) => {
+                                //  this.getPrescription(text)
+                                this.orecipe.push({
+                                    src: `${
+                                        this.userSocketInfo.imgUrl1
+                                    }/m/v1/api/basics/record/recordInfo?token=${
+                                        this.userState.token
+                                    }&type=${this.$route.query.type}&id=${
+                                        this.$route.query.id
+                                    }&prescNo=${text}`
+                                });
                             });
-                        });
+                        }
                     } else if (index == 2) {
                         //检验
                         this.inHospitalList1 = this.danganLeftMain.visits[
@@ -491,7 +493,7 @@ export default {
                     }
                 } else if (this.danganLeftIndex11 == 2) {
                     //住院记录
-                    console.log(index)
+                    console.log(index);
                     if (index == 0) {
                         //入院记录
                         this.danganRgMainText1 = this.inHospitalList1 = this.danganLeftMain.visits[
@@ -600,8 +602,7 @@ export default {
                     //     });
                     // });
                 }
-            } 
-            else if (index == 0) {
+            } else if (index == 0) {
                 console.log(
                     this.danganLeftMain.historys[this.danganLeftIndex].info
                         .inRecord
