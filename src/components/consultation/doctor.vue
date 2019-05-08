@@ -218,7 +218,7 @@ export default {
                 startDoctorTYpe: "会诊",
                 archivesUrl: "/consultation",
                 bingUserId: "",
-                typeId:''
+                typeId: ""
             }, //发起医生
             docTotal: 0,
             adminTotal: 0,
@@ -244,7 +244,7 @@ export default {
             },
             defaultProps1: {
                 children: "children",
-                label: "hospitalName"
+                label: "showName"
             },
             invitationVisible: false,
             receptionDepartment: [], //接收科室数据
@@ -725,7 +725,7 @@ export default {
                 path: "/consultationFiles",
                 query: {
                     id: row.id,
-                    type:'CONSULTATION'
+                    type: "CONSULTATION"
                 }
             });
         },
@@ -899,7 +899,7 @@ export default {
             const res = await updateConsultationStatus(query, options);
             if (res.data && res.data.errCode === 0) {
                 if (state == "on") {
-                    _this.chatTypeBox.typeId=row.id
+                    _this.chatTypeBox.typeId = row.id;
                     _this.chatVisible = true;
                 } else {
                     _this.$notify.success({
@@ -974,11 +974,11 @@ export default {
         async getHospitalment2(oid) {
             this.hospitalList2 = [
                 {
-                    hospitalName: "就诊记录",
+                    showName: "就诊记录",
                     children: []
                 },
                 {
-                    hospitalName: "电子病历",
+                    showName: "电子病历",
                     children: []
                 }
             ];
@@ -994,9 +994,23 @@ export default {
                     res.data.body.electronicMedical;
                 $.each(this.hospitalList2[0].children, function(index, text) {
                     text.type = "VISIT";
+                    if (text.visitType == 1) {
+                        text.showName = `门诊 ${text.visitDtime}`;
+                    } else if (text.visitType == 2) {
+                        text.showName = `住院 ${text.visitDtime}`;
+                    } else if (text.visitType == 3) {
+                        text.showName = `体检 ${text.visitDtime}`;
+                    }
                 });
                 $.each(this.hospitalList2[1].children, function(index, text) {
                     text.type = "HISTORY";
+                    if (text.visitType == 1) {
+                        text.showName = `门诊 ${text.visitDtime}`;
+                    } else if (text.visitType == 2) {
+                        text.showName = `住院 ${text.visitDtime}`;
+                    } else if (text.visitType == 3) {
+                        text.showName = `体检 ${text.visitDtime}`;
+                    }
                 });
             } else {
                 //失败

@@ -52,7 +52,7 @@
         </div>
 
         <!-- 发起协作弹框 -->
-        <el-dialog :close-on-click-modal="false" class="invitationClass" title=" 发起协作" :visible.sync="centerDialogVisible" width="240px" hight="356px" center>
+        <el-dialog :close-on-click-modal="false" class="invitationClass" title=" 发起协作" :visible.sync="centerDialogVisible" width="287px" hight="356px" center>
             <el-tree :data="invitationData1" :props="defaultProps" @check="handleCheckChange" show-checkbox></el-tree>
             <el-form ref="form" :model="startXiezuo" label-width="80px">
                 <el-form-item class='invitationClassInput' label="病人:">
@@ -268,7 +268,7 @@ export default {
             },
              defaultProps1: {
                 children: "children",
-                label: "hospitalName"
+                label: "showName"
             },
             count: 1,
             //发起协作弹框  必备参数
@@ -640,11 +640,11 @@ export default {
         async getHospitalment2(oid) {
             this.hospitalList2 = [
                 {
-                    hospitalName: "就诊记录",
+                    showName: "就诊记录",
                     children: []
                 },
                 {
-                    hospitalName: "电子病历",
+                    showName: "电子病历",
                     children: []
                 }
             ];
@@ -660,9 +660,23 @@ export default {
                     res.data.body.electronicMedical;
                 $.each(this.hospitalList2[0].children, function(index, text) {
                     text.type = "VISIT";
+                    if (text.visitType == 1) {
+                        text.showName = `门诊 ${text.visitDtime}`;
+                    } else if (text.visitType == 2) {
+                        text.showName = `住院 ${text.visitDtime}`;
+                    } else if (text.visitType == 3) {
+                        text.showName = `体检 ${text.visitDtime}`;
+                    }
                 });
                 $.each(this.hospitalList2[1].children, function(index, text) {
                     text.type = "HISTORY";
+                    if (text.visitType == 1) {
+                        text.showName = `门诊 ${text.visitDtime}`;
+                    } else if (text.visitType == 2) {
+                        text.showName = `住院 ${text.visitDtime}`;
+                    } else if (text.visitType == 3) {
+                        text.showName = `体检 ${text.visitDtime}`;
+                    }
                 });
             } else {
                 //失败

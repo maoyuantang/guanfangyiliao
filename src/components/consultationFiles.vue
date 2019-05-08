@@ -19,7 +19,7 @@
                         </div>
 
                         <div>
-                           
+                           {{danganLeftMain.patientName}}
                         </div>
                         <div>
                             性别：<br /> 年龄：
