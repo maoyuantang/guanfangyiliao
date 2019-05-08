@@ -304,17 +304,12 @@ export default {
   },
   methods: {
     getBar(data) {
-      console.log(data);
       this.setQueryInURL();
-    },
-    getDepartmentSelect(data) {
-      console.log(data);
     },
     /**
      * 获取 搜索关键字
      */
     searchChange(data){
-      console.log(data);
       this.listCondition.searchKey = data;
       this.getListData();
     },
@@ -347,17 +342,16 @@ export default {
         pageSize: this.listCondition.page.pageSize || 10,
         searchKey:this.listCondition.searchKey
       };
+
       for (const i in ajaxQuery) {
-        console.log(`${i} ==> ${ajaxQuery[i]}`);
         if (!ajaxQuery[i]) {
-          console.log("enter");
           delete ajaxQuery[i];
         }
       }
-      console.log(ajaxQuery);
+
       // return;
       const res = await queryPageByPushAndQuery(ajaxQuery);
-      console.log(res);
+
       if (res.data && res.data.errCode === 0) {
         this.listData = res.data.body.data2.list;
         this.listCondition.page.total = res.data.body.data2.total;
@@ -385,9 +379,9 @@ export default {
 					query.endDate = this.chartCondition.period[1];
 					// query.deptId = this.statisticsInfo.department.id || ''
         }
-        console.log(query)
+
 				const res = await queryStatisticalData(query);
-				console.log(res);
+
 				if(res.data&&res.data.errCode===0){
           this.chartData.queryData.dataAxis = res.data.body.data.map(item=>item.x);
           this.chartData.queryData.data = res.data.body.data.map(item=>item.y);
@@ -442,9 +436,9 @@ export default {
 					query.endDate = this.chartCondition.period[1];
 					// query.deptId = this.statisticsInfo.department.id || ''
         }
-        console.log(query)
+
 				const res = await pushStatisticalData(query);
-				console.log(res);
+
 				if(res.data&&res.data.errCode===0){
           this.chartData.pushData.dataAxis = res.data.body.data.map(item=>item.x);
           this.chartData.pushData.data = res.data.body.data.map(item=>item.y);
@@ -463,9 +457,7 @@ export default {
      * 档案列表查询条件   科室被选择
      */
     DepartmentListSelect(data) {
-      console.log(data);
       this.listCondition.departmentList.select = data.index;
-      console.log(this.listCondition.departmentList.select);
       this.getListData();
     },
 
@@ -473,7 +465,6 @@ export default {
      * 档案列表查询条件    类型被选择
      */
     getTypeSelect(data) {
-      console.log(data);
       this.listCondition.types.select = data.index;
       this.getListData();
     },
@@ -482,7 +473,6 @@ export default {
      * 列表分页被选择
      */
     listSelectPage(data) {
-      console.log(data);
       this.listCondition.page.pageNum = data;
       this.setQueryInURL();
       this.getDataFromURL();
@@ -503,13 +493,6 @@ export default {
           pageSize: this.listCondition.page.pageSize
         }
       });
-      console.log({
-        i: this.barInfo.i,
-        deptId: this.listCondition.departmentList.select.deptId || "",
-        type: this.listCondition.types.select.value || "",
-        pageNum: this.listCondition.page.pageNum,
-        pageSize: this.listCondition.page.pageSize
-      });
     },
 
     /**
@@ -517,14 +500,12 @@ export default {
      * 这个没有存缓存，主要用来拉取数据，直接放到url
      */
     getDataFromURL() {
-      console.log(this.$route.query);
       this.barInfo.i = parseInt(this.$route.query.i || "0");
       this.listCondition.departmentList.select.deptId =
         this.$route.query.deptId || "";
       this.listCondition.types.select.value = this.$route.query.type || "";
       this.listCondition.page.pageNum = this.$route.query.pageNum || 1;
       this.listCondition.page.pageSize = this.$route.query.pageSize || 10;
-      console.log(this.listCondition.page.pageNum);
       
       this.getListData();
     },
@@ -533,7 +514,6 @@ export default {
      * 获取时间段
      */
     timeValueFun(data){
-        console.log(data);
         this.chartCondition.period = data;
         this.getQueryStatisticalData();
         this.getPushStatisticalData();
@@ -544,7 +524,6 @@ export default {
      * 统计图  科室被选中
      */
     chartDepartmentListSelect(data){
-        console.log(data);
         this.chartCondition.departmentList.select = data.index;
         this.getQueryStatisticalData();
         this.getPushStatisticalData();
