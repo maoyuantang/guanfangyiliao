@@ -11,7 +11,7 @@
       @click.native.prevent="reBackFn(item,index)"
     >{{ item.text || item.label || '' }}</el-tag>
 
-    <el-button type="text" size="medium" @click="more = !more">{{ more ? '更多' : '收起' }}</el-button>
+    <el-button type="text" size="medium" @click="more = !more" v-if="inData.list.length > 4">{{ more ? '更多' : '收起' }}</el-button>
   </div>
 </template>
 
