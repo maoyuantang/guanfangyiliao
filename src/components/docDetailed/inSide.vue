@@ -350,7 +350,7 @@
 					orgCode: this.userSelfInfo.orgCode,
 					familyMemberId: this.inData.id
 				});
-				// console.log(res.data.body)
+				console.log(res.data.body)
 				this.list4s = res.data.body == null ? false : true
 				if (res.data.body) {
 					this.patientJiuZen = res.data.body
@@ -498,21 +498,18 @@
 				console.log(item, index)
 				if (!this.patientJiuZen) return;
 				this.nowNav = index;
-				this.showModules.list = item.childModule;
-				// this.showModules.list = this.navList[this.nowNav].childModule
+				this.jiuZhenId = this.patientJiuZen[index].visitNo;
+				console.log(this.jiuZhenId)
+				// this.showModules.list = item.childModule;
+				// // this.showModules.list = this.navList[this.nowNav].childModule
 
-				// this.patientJiuZen.map((obj, e) => {
-				for (let i = 0; i < this.patientJiuZen.length; i++) {
-					let obj = this.patientJiuZen[i];
-					// this.jiuZhenId = "";
-					if (obj.visitType == index + 1) {
-						this.jiuZhenId = obj.visitNo
-						// alert(this.jiuZhenId);
-						break;
-					}
-					// if (this.jiuZhenId) {
-					// }
-				}
+				// for (let i = 0; i < this.patientJiuZen.length; i++) {
+				// 	let obj = this.patientJiuZen[i];
+				// 	if (obj.visitType == index + 1) {
+				// 		this.jiuZhenId = obj.visitNo
+				// 		break;
+				// 	}
+				// }
 				// })
 				if (index == 0) {
 					// this.eMRInRecord5()//就诊记录详情
