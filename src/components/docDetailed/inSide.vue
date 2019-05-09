@@ -504,7 +504,7 @@
 				// this.patientJiuZen.map((obj, e) => {
 				for (let i = 0; i < this.patientJiuZen.length; i++) {
 					let obj = this.patientJiuZen[i];
-					this.jiuZhenId = "";
+					// this.jiuZhenId = "";
 					if (obj.visitType == index + 1) {
 						this.jiuZhenId = obj.visitNo
 						// alert(this.jiuZhenId);
