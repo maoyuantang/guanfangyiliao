@@ -121,7 +121,7 @@
 	}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 	.examination-details-table {
 		width: 100%;
 	}
@@ -205,10 +205,11 @@
 		font-size: 13px;
 		color: #0064FF;
 	}
+
 	.visiting-department-float-right {
 		float: right;
 	}
-	
+
 
 	.visiting-content-info-right-change-table {
 		width: 100%;
@@ -235,5 +236,9 @@
 		font-size: 14px;
 		color: #646464;
 		text-align: left;
+	}
+
+	th {
+		height: auto;
 	}
 </style>
