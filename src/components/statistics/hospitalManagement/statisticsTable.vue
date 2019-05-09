@@ -2,7 +2,7 @@
 <div class="statistics-table">
     <div class="statistics-table-option">
         <div class="statistics-table-option-left">
-            <tag :inData="queryConditions.department" @reback="getDepartmentSelect"></tag>
+            <selftag :inData="queryConditions.department" @reback="getDepartmentSelect"></selftag>
         </div>
         <div class="statistics-table-option-right">
             <div class="statistics-time select-time-css">
@@ -51,7 +51,7 @@
     import { mapState } from 'vuex'
     import normalColumnChart from '../../../public/publicComponents/normalColumnChart.vue'
     import {statisticsPeople, SETEQUIPMENT, SETFOLLOWCHART, registeredStatistics} from '../../../api/apiAll.js'
-    import tag from '../../../public/publicComponents/tag.vue'
+    import selftag from '../../../public/publicComponents/selftag.vue'
     import { Progress } from 'element-ui';
 	export default {
         computed:{
@@ -92,7 +92,7 @@
                 queryConditions:{//查询条件  
                     department:{//科室
                         title:'科室',
-                        select:0,
+                        selectId: '',
                         list:[
                             // {
                             //     label:'全部',
@@ -194,7 +194,7 @@
             async getRegisteredStatistics(){
                 const query = {
                     token:this.userInfo.token,
-                    departmentId:this.queryConditions.department.list[this.queryConditions.department.select] ? this.queryConditions.department.list[this.queryConditions.department.select].id : '',
+                    departmentId:this.queryConditions.department.selectId,
                     type:this.queryConditions.way.select,
                 };
                 if(this.queryConditions.time){
@@ -227,7 +227,7 @@
             async getSETFOLLOWCHART(){
                 const query = {
                     token:this.userInfo.token,
-                    departmentId:this.queryConditions.department.list[this.queryConditions.department.select] ? this.queryConditions.department.list[this.queryConditions.department.select].id : '',
+                    departmentId:this.queryConditions.department.selectId,
                     type:this.queryConditions.way.select,
                 };
                 if(this.queryConditions.time){
@@ -259,7 +259,7 @@
             async getSETEQUIPMENT(){
                 const query = {
                     token:this.userInfo.token,
-                    departmentId:this.queryConditions.department.list[this.queryConditions.department.select] ? this.queryConditions.department.list[this.queryConditions.department.select].id : '',
+                    departmentId:this.queryConditions.department.selectId,
                     type:this.queryConditions.way.select,
                 };
                 if(this.queryConditions.time){
@@ -292,7 +292,7 @@
             async getStatisticsPeople(){
                 const query = {
                     token:this.userInfo.token,
-                    departmentId:this.queryConditions.department.list[this.queryConditions.department.select] ? this.queryConditions.department.list[this.queryConditions.department.select].id : '',
+                    departmentId:this.queryConditions.department.selectId,
                     type:this.queryConditions.way.select,
                 };
                 if(this.queryConditions.time){
@@ -323,8 +323,7 @@
              * 科室 被选中
              */
             getDepartmentSelect(data){
-                // console.log(data);
-                this.queryConditions.department.select = data.index;
+                this.queryConditions.department.selectId = data.select.value;
                 this.fetchAllApi()
             },
             /**
@@ -344,7 +343,7 @@
         },
         components:{
             normalColumnChart,
-            tag
+            selftag
         }
 	}
 </script>
@@ -361,6 +360,7 @@
     .statistics-table-option{
         display: flex;
         justify-content: space-between;
+        align-items: flex-start;
         margin-top: 0.33rem;
         padding-left: 0.38rem;
         padding-right: 0.28rem;

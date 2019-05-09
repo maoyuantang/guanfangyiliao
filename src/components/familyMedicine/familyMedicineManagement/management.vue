@@ -858,7 +858,7 @@
 			// getDepartmentSelect(item){
 			// 	console.log(item)
 			// 	// return;
-			// 	this.searchCondition.department.id = item.index.id || '';
+			// 	this.searchCondition.department.id = item.select.id || '';
 			// 	this.searchCondition.pageNum = 1;
 			// 	this.getBussByCondition();
 			// 	// this.getPushStatisticalData();
@@ -870,7 +870,7 @@
 			 */
 			bussModuleSelect(item){
 				console.log(item)   
-				this.searchCondition.bussModule.id = item.index.authorityId || '';
+				this.searchCondition.bussModule.id = item.select.authorityId || '';
 				this.searchCondition.pageNum = 1;
 				this.getBussByCondition();
 			},
@@ -880,7 +880,7 @@
 			 */
 			bussTypeSelect(item){
 				console.log(item)
-				this.searchCondition.bussType.id = item.index.text === '全部'?'':item.index.text;
+				this.searchCondition.bussType.id = item.select.text === '全部'?'':item.select.text;
 				this.searchCondition.pageNum = 1;
 				this.getBussByCondition();
 			},

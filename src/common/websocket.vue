@@ -621,7 +621,8 @@ export default {
                                 startDoctorName: "",
                                 startDoctorTYpe: "",
                                 archivesUrl: "",
-                                bingUserId: ""
+                                bingUserId: "",
+                                typeId:''
                             };
                             if (odata.info.location == "cooperation") {
                                 chatTypeBox.startDoctorTYpe = "协作";
@@ -629,7 +630,10 @@ export default {
                             } else if (odata.info.location == "consultation") {
                                 chatTypeBox.startDoctorTYpe = "会诊";
                                 chatTypeBox.archivesUrl = "/consultation";
-                                chatTypeBox.bingUserId = odata.info.body.split(
+                                // chatTypeBox.bingUserId = odata.info.body.split(
+                                //     "&"
+                                // )[3];
+                                 chatTypeBox.typeId = odata.info.body.split(
                                     "&"
                                 )[3];
                             }

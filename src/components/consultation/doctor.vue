@@ -218,7 +218,8 @@ export default {
                 startDoctorTYpe: "会诊",
                 archivesUrl: "/consultation",
                 bingUserId: "",
-                typeId: ""
+                typeId: "",
+                consultationId:'',
             }, //发起医生
             docTotal: 0,
             adminTotal: 0,
@@ -735,13 +736,13 @@ export default {
             this.recordVisible = true;
         },
         getOTab4(data) {
-            this.oDocTime = data.index.value;
+            this.oDocTime = data.select.value;
             this.startDate = "";
             this.endDate = "";
             this.getDocList();
         },
         getOTab5(data) {
-            this.applicationDeptId2 = data.index.value;
+            this.applicationDeptId2 = data.select.value;
             this.statisticsStart = "";
             this.statisticsEnd = "";
             this.getAdminTjList();
@@ -813,10 +814,12 @@ export default {
         },
         //进入会诊
         async toConsultation(oObject) {
+            console.log(oObject)
             this.sessionId = oObject.sessionId;
             this.userMessage.userId = oObject.userId;
             this.chatTypeBox.startDoctorName = oObject.doctor;
             this.chatTypeBox.bingUserId = oObject.userId;
+            this.chatTypeBox.consultationId=oObject.id
             this.startDoctor = oObject.doctor;
             // if (oObject.state == "NEW") {
             //     oObject.state = "UNDERWAY";

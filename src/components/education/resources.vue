@@ -2,9 +2,9 @@
 	<div class="resources">
         <!-- <div class="resources-top">
             <div class="resources-top-left">
-                <tag :inData="queryConditions.department" @reback="getDepartmentSelect"></tag>
-                <tag :inData="queryConditions.department" @reback="getDepartmentSelect"></tag>
-                <tag :inData="queryConditions.department" @reback="getDepartmentSelect"></tag>
+                <selftag :inData="queryConditions.department" @reback="getDepartmentSelect"></selftag>
+                <selftag :inData="queryConditions.department" @reback="getDepartmentSelect"></selftag>
+                <selftag :inData="queryConditions.department" @reback="getDepartmentSelect"></selftag>
             </div>
             <div class="resources-top-right">
                 {{global.documentsClassification}}
@@ -16,7 +16,7 @@
 
 <script>
     import { mapState } from "vuex"
-    import tag from '../../public/publicComponents/tag.vue'
+    import selftag from '../../public/publicComponents/selftag.vue'
 	export default {
 		watch:{
             'global.departmentList':{
@@ -68,7 +68,7 @@
                 // this.department.select = data.index;
                 // this.department = Object.assign({},this.department)
                 // console.log(this.department)
-                this.queryConditions.department.select = data.index;
+                this.queryConditions.department.select = data.select;
             },
             /**
              * 获取科室列表
@@ -83,7 +83,7 @@
             },
 		},
 		components:{
-            tag
+            selftag
 		},
 		async created(){
             this.setDepartmentData();

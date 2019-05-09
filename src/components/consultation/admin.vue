@@ -487,19 +487,19 @@ export default {
     methods: {
         // 管理端事件
         getOTab1(data) {
-            this.applicationDeptId = data.index.value;
+            this.applicationDeptId = data.select.value;
             this.getAdminList();
         },
         getOTab11(data) {
-            this.receiveDeptId = data.index.value;
+            this.receiveDeptId = data.select.value;
             this.getAdminList();
         },
         getOTab2(data) {
-            this.adminType = data.index.value;
+            this.adminType = data.select.value;
             this.getAdminList();
         },
         getOTab3(data) {
-            this.adminStatus = data.index.value;
+            this.adminStatus = data.select.value;
             this.getAdminList();
         },
         async screenPublic(otab, getFollowScreen, otitle) {

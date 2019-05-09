@@ -110,7 +110,7 @@
         </div>
         <div class="sendIcon">
             <span title="发送图片">
-                <el-upload class="upload-demo upload-demo-chat" :action="ourl" :on-success="imgUpload" :multiple='oImgVisable'>
+                <el-upload class="upload-demo upload-demo-chat" :action="ourl" :on-success="imgUpload" :multiple='oImgVisable' :before-upload="beforeAvatarUpload">>
                     <el-button size="small" type="primary">点击上传</el-button>
 
                 </el-upload>
@@ -132,7 +132,7 @@
                 <!-- <span v-show=''>
                      <img src="../../assets/img/sendNew8.png" />
                 </span> -->
-                    <img src="../../assets/img/sendNew8.png" />            
+                <img src="../../assets/img/sendNew8.png" />
             </span>
             <span v-show="oDoctorVis" @click="addPlan()" title="计划">
                 <img src="../../assets/img/sendNew9.png" />
@@ -453,7 +453,6 @@ export default {
         })
     },
     created() {
-        
         if (this.chatTypeBox.startDoctorTYpe) {
             if (this.chatTypeBox.startDoctorTYpe == "协作") {
                 this.sendMessageBoxType = "cooperation";
@@ -635,6 +634,17 @@ export default {
                 }, 1000);
             }
         },
+        // 限制只能发送图片
+        beforeAvatarUpload(file) {
+            const isJPG = (file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/png");
+            // const isJPG = ;
+            // const isPNG = file.type === "image/png";
+
+            if (!isJPG) {
+                this.$message.error("图片只能是 JPEG/JPG/PNG 格式!");
+            }
+            return isJPG;
+        },
         // 数据发送
         websocketsend(data) {
             let msg = this.$store.state.socket.IMessage.encode(data).finish();
@@ -642,7 +652,6 @@ export default {
         },
         // 随访
         getSendMessageChat(oMessage) {
-            
             let messageBody = JSON.stringify(oMessage);
             this.sendMessageChat(20, messageBody, "FOLLOWUP");
 
@@ -652,7 +661,7 @@ export default {
         // 问诊
         getSendMessageChat1(oMessage) {
             let messageBody = JSON.stringify(oMessage);
-            
+
             // this.childMessageType = 20;
             this.sendMessageChat(18, messageBody, "INTERROGATION");
             this.questDetailVisible = false;
@@ -661,7 +670,6 @@ export default {
         onSubmit() {},
         //图片上传成功
         imgUpload(res) {
-            
             if (res.body && res.errCode === 0) {
                 this.imgId = res.body;
                 // this.messageBody = res.body;
@@ -680,7 +688,7 @@ export default {
         //判断是否有在视频
         async panIfVideo() {
             this.videoUserNum = 0;
-            
+
             $.each(this.userSocketInfo.videoList, (index, text) => {
                 if (text.sessionId == this.sessionId) {
                     this.conferenceId1 = text.conferenceId;
@@ -698,7 +706,6 @@ export default {
                 const res = await queryStorageUsers(query);
                 if (res.data && res.data.errCode === 0) {
                     _this.videoUserNum = res.data.body.length;
-                    
                 } else {
                     _this.videoUserNum = 0;
                     //失败
@@ -724,7 +731,6 @@ export default {
                 this.chatTypeBox.startDoctorTYpe == "会诊" ||
                 this.chatTypeBox.startDoctorTYpe == "协作"
             ) {
-                
                 if (this.videoUserNum > 0 && this.videoUserNum < 4) {
                     this.closeVideo("ON", 1);
                 } else if (this.videoUserNum >= 4) {
@@ -738,34 +744,6 @@ export default {
             } else {
                 this.setVideo(0);
             }
-
-            // if (this.conferenceId1) {
-            //     let _this = this;
-            //     let query = {
-            //         token: this.userState.token,
-            //         conferenceId: this.conferenceId1
-            //     };
-            //     const res = await queryStorageUsers(query);
-            //     if (res.data && res.data.errCode === 0) {
-            //         if (4 > res.data.body.length > 0) {
-            //             _this.closeVideo("ON", 1);
-            //         } else if (res.data.body.length >= 4) {
-            //             this.$notify.error({
-            //                 title: "警告",
-            //                 message: "当前视频人数已满，无法进入"
-            //             });
-            //         }
-            //     } else {
-            //         _this.setVideo(0);
-            //         //失败
-            //         this.$notify.error({
-            //             title: "警告",
-            //             message: res.data.errMsg
-            //         });
-            //     }
-            // } else {
-            //     this.setVideo(0);
-            // }
         },
 
         //创建视频
@@ -813,7 +791,6 @@ export default {
                 }
 
                 _this.$store.commit("socket/VIDEOLIST", videoList);
-                
             } else {
                 //失败
                 this.$notify.error({
@@ -834,7 +811,7 @@ export default {
                 state: type
             };
             const res = await storageUsers(query, options);
-            
+
             if (res.data && res.data.errCode === 0) {
                 if (type == "OFF") {
                     _this.deleteVideoRoom();
@@ -854,7 +831,8 @@ export default {
                     }
 
                     if (_this.chatTypeBox.startDoctorTYpe == "会诊") {
-                        body += _this.chatTypeBox.bingUserId;
+                        // body += _this.chatTypeBox.bingUserId;
+                        body += _this.chatTypeBox.typeId;
                     }
                     _this.sendVideoMessage(
                         childMessageType,
@@ -911,7 +889,7 @@ export default {
                     location: this.sendMessageBoxType
                 }
             };
-            
+
             // this.$refs.mychild.sendMessage(Iessage);
             this.sendMessage(Iessage);
 
@@ -934,7 +912,7 @@ export default {
         //普通档案
         openPublicFile() {
             this.puBlicFileData.show = true;
-            
+
             this.getFamily();
         },
         //添加备注
@@ -974,7 +952,6 @@ export default {
             this.drugsVisible = false;
         },
         async addPublicFile(data) {
-            
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -988,7 +965,7 @@ export default {
                 opinion: data.deal
             };
             const res = await addOrdinaryArchives(query, options);
-            
+
             if (res.data && res.data.errCode === 0) {
                 this.$notify.success({
                     title: "成功",
@@ -1021,7 +998,7 @@ export default {
                 ultimate: data.LastMenstrualPeriod
             };
             const res = await addWomanMessage(query, options);
-            
+
             if (res.data && res.data.errCode === 0) {
                 this.$notify.success({
                     title: "成功",
@@ -1048,10 +1025,9 @@ export default {
                 userId: this.userMessage.userId
             };
             const res = await queryListByUserId(query);
-            
+
             if (res.data && res.data.errCode === 0) {
                 $.each(res.data.body, function(index, text) {
-                    
                     _this.puBlicFileData.nameList.push({
                         name: text.name,
                         id: text.id
@@ -1078,9 +1054,8 @@ export default {
                 pageSize: 10
             };
             const res = await webGetTitleList(query);
-            
+
             if (res.data && res.data.errCode === 0) {
-                
                 this.followList = res.data.body.list;
             } else {
                 //失败
@@ -1123,9 +1098,9 @@ export default {
             odata.setMinutes(0);
             odata.setSeconds(0);
             odata.setMilliseconds(0);
-            
+
             let oldTime = Math.floor(odata.getTime() / 1000);
-            
+
             let query = {
                 token: this.userState.token,
                 followupId: oid
@@ -1136,7 +1111,6 @@ export default {
                 let oldDay = 0;
                 let oldSecond = 0;
                 $.each(this.followDetailData.itemModels, (index, text) => {
-                    
                     if (text.calcUnit == "天") {
                         oldDay = text.calcVal * 1;
                     } else if (text.calcUnit == "周") {
@@ -1162,7 +1136,6 @@ export default {
         },
         //随访计划详情
         async getFollowDetail(oid) {
-            
             let query = {
                 token: this.userState.token,
                 planId: oid
@@ -1181,7 +1154,6 @@ export default {
         },
         //已读未读
         async alreadyRead() {
-            
             let query = {
                 token: this.userState.token
             };
@@ -1189,7 +1161,7 @@ export default {
                 sessionId: this.sessionId
             };
             const res = await fetchReadMessageId(query, options);
-            
+
             if (res.data && res.data.errCode === 0) {
                 this.areadyReadNum = res.data.body;
             } else {
@@ -1203,7 +1175,7 @@ export default {
         //拉取会话好友列表
         async getMemberMess() {
             let _this = this;
-            
+
             let query = {
                 token: this.userState.token
             };
@@ -1213,10 +1185,9 @@ export default {
                 pageNums: 50
             };
             const res = await fetchSessionMembers(query, options);
-            
+
             if (res.data && res.data.errCode === 0) {
                 $.each(res.data.body, function(index, text) {
-                    
                     if (text.userId == _this.userSelfInfo.userId) {
                         res.data.body.splice(index, 1);
                     }
@@ -1251,9 +1222,8 @@ export default {
                 this.messageList1 = [];
                 this.messageList1.length = 0;
                 // this.messageList1 = Object.assign({},this.messageList1)
-                
             }
-            
+
             let _this = this;
             let query = {
                 token: this.userState.token
@@ -1264,9 +1234,9 @@ export default {
                 msgId: this.oMsgId,
                 pageNums: 15
             };
-            
+
             const res = await fetchHistoryMessage(query, options);
-            
+
             if (res.data && res.data.errCode === 0) {
                 if (res.data.body.length > 0) {
                     let oLengthMsgId = res.data.body.length;
@@ -1276,7 +1246,6 @@ export default {
                 } else {
                     this.loadMoreVisable = false;
                 }
-
 
                 $.each(res.data.body, function(index, text) {
                     let timestamp4 = new Date(text.serverTime);
@@ -1288,14 +1257,14 @@ export default {
                     if (d <= 9) {
                         d = "0" + d;
                     }
-                    
+
                     text.serverTime = y + ":" + d;
                     _this.messageList1.push(text);
                 });
                 _this.messageList = deepCopy(_this.messageList1);
                 _this.messageList = _this.messageList.reverse();
                 let odata = this.messageList;
-                
+
                 for (let i = 0; i < odata.length; i++) {
                     if (this.areadyReadNum >= odata[i].msgId) {
                         this.messageList[i].oRead = true; //已读
@@ -1328,6 +1297,13 @@ export default {
                             this.messageList[i].content = JSON.parse(
                                 odata[i].body
                             );
+                        } else if (odata[i].childMessageType == "IMAGE") {
+                            //图片
+                            this.messageList[i].content =
+                                this.userSocketInfo.imgUrl + odata[i].body;
+                            this.messageList[i].signImages = [
+                                this.userSocketInfo.imgUrl + odata[i].body
+                            ];
                         } else if (odata[i].childMessageType == "CRVIDEO") {
                             //视频
                             this.messageList[i].content = "视频";
@@ -1403,17 +1379,12 @@ export default {
                         } else if (odata[i].childMessageType == "FOLLOWUP") {
                             //随访
                             // this.messageList[i].content = "随访";
-                            
+
                             this.messageList[i].content = JSON.parse(
                                 odata[i].body
                             );
                         } else if (odata[i].childMessageType == "IMAGE") {
                             //图片
-                            // this.messageList[i].imgUrl =
-                            //     apiBaseURL.developmentEnvironment +
-                            //     "/m/v1/api/hdfs/fs/download/" +
-                            //     odata[i].body;
-                            // this.messageList[i].imgUrl="http://pic1.nipic.com/2008-12-30/200812308231244_2.jpg"
                             this.messageList[i].content =
                                 this.userSocketInfo.imgUrl + odata[i].body;
                             this.messageList[i].signImages = [
@@ -1442,7 +1413,7 @@ export default {
                         }
                     }
                 }
-                
+
                 this.updated();
             } else {
                 //失败
@@ -1561,7 +1532,7 @@ export default {
                 executeTime: this.planData.planTime
             };
             const res = await savePlan(query, options);
-            
+
             if (res.data && res.data.errCode === 0) {
                 this.$notify.success({
                     title: "成功",
@@ -1582,7 +1553,6 @@ export default {
         //视频组件传过来的事件
         videoclick(data) {
             this.videoVisible = false;
-            
 
             this.alreadyRead();
             this.getHisRecord();
@@ -1596,7 +1566,7 @@ export default {
                 cID: this.createVideoRoomData.conferenceId
             };
             const res = await closeVideoRoom(query, options);
-            
+
             if (res.data && res.data.errCode === 0) {
                 alert("删除成功");
             } else {
@@ -1614,7 +1584,7 @@ export default {
             handler(data, o) {
                 let olength = data.length;
                 let oData = data[olength - 1];
-                
+
                 if (oData.RequestType == 6) {
                     if (this.sessionId == oData.info.to) {
                         let oTime = oData.info.serverTime;
@@ -1627,7 +1597,7 @@ export default {
                         if (d <= 9) {
                             d = "0" + d;
                         }
-                        
+
                         let oMessageTime = y + ":" + d;
 
                         let messageBody = oData.info.body;
@@ -1669,7 +1639,6 @@ export default {
                                 messageBody.indexOf("sendroom") > -1 ||
                                 messageBody.indexOf("MicroCinicSendRoom") > -1
                             ) {
-                                
                                 this.alreadyRead();
                                 this.getHisRecord();
                                 this.panIfVideo();
@@ -1686,7 +1655,7 @@ export default {
                         } else if (oData.info.childMessageType == 20) {
                             childMessageType = "FOLLOWUP";
                         }
-                        
+
                         this.addMessageK(
                             oUserId,
                             messageBody,

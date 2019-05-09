@@ -642,7 +642,7 @@
 			//筛选返回值
 			getSelect0(data) {//科室筛选
 				// console.log(data)
-				this.departmentId = data.index.value;
+				this.departmentId = data.select.value;
 				// console.log(this.departmentId)
 				this.getList1();
 				this.getList2();
@@ -650,24 +650,24 @@
 			},
 			getSelect1(data) {//审核状态
 				// console.log(data)
-				this.reviewEnum = data.index.value;
+				this.reviewEnum = data.select.value;
 				// console.log(this.reviewEnum)
 				// this.getList1();
 				this.getList2();
 			},
 			getSelect2(data) {//配送状态
 				// console.log(data)
-				this.sendEnum = data.index.value;
+				this.sendEnum = data.select.value;
 				// this.getList1();
 				this.getList2();
 			},
 			getSelect3(data) {//审核医生
-				this.reviewDoctorId = data.index.value;
+				this.reviewDoctorId = data.select.value;
 				// this.getList1();
 				this.getList2();
 			},
 			getSelect4(data) {//发药医生
-				this.sendDoctorId = data.index.value;
+				this.sendDoctorId = data.select.value;
 				// this.getList1();
 				this.getList2();
 			},

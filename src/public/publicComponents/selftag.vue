@@ -1,17 +1,17 @@
 <template>
   <div class="self-tag">
-      <!-- <p>{{inData}}</p> -->
+
     <span class="el-tag tag-title">{{inData.title||''}}:</span>
-      <!-- <span v-for="(item,index) in inData.list" :key="index" @click="reBackFn(index)" style="margin-left:20px">{{item.text}}</span>  -->
-    <el-tag :type="index===0?'warning':''" 
-        :class="[{'warning':item.warning},{'all':selectIndex===index}]"
-        v-for="(item,index) in more?inData.list.slice(0,4):inData.list" 
-        :key="index" 
-        @click.native.prevent="reBackFn(item,index)">
-            {{item.text||''}}
-    </el-tag>
-    <!-- <el-tag @click.native="reBackFn(-1)" v-if="inData.more">更多…</el-tag> -->
-    <el-tag @click.native="showMore" v-if="more">更多…</el-tag>
+
+    <el-tag
+      :type="index===0?'warning':''"
+      :class="[{'warning':item.warning},{'all':selectIndex===index}]"
+      v-for="(item,index) in more?inData.list.slice(0,4):inData.list"
+      :key="index"
+      @click.native.prevent="reBackFn(item,index)"
+    >{{ item.text || item.label || '' }}</el-tag>
+
+    <el-button type="text" size="medium" @click="more = !more">{{ more ? '更多' : '收起' }}</el-button>
   </div>
 </template>
 
@@ -19,52 +19,49 @@
 export default {
   data() {
     return {
-        selectIndex:0,
-        more:false
-    };
+      selectIndex: 0,
+      more: false,
+    }
   },
-  watch:{
-    'inData.list':{
-      handler(n){
-        if(n.length>5){
-          this.more = true;
+  watch: {
+    'inData.list': {
+      handler(n) {
+        if (n.length > 5) {
+          this.more = true
         }
+      },
+    },
+  },
+  methods: {
+    reBackFn(item, index) {
+      this.selectIndex = index
+      // console.log(this.selectIndex)
+      this.inData.index = item
+
+      this.$emit('reback', Object.assign({}, this.inData, { select: item }))
+      // :class="index===0?'all':''"
+      // :class="item.warning?'warning':''"
+    },
+    isMore() {
+      if (this.inData.list.length > 5) {
+        this.more = true
       }
-    }
-  },
-  methods:{
-    reBackFn(item,index) {
-        this.selectIndex = index;
-        // console.log(this.selectIndex)
-        this.inData.index=item;
-        this.$emit("reback",Object.assign({},this.inData));
-        // :class="index===0?'all':''" 
-        // :class="item.warning?'warning':''"
     },
-    showMore(){
-      // console.log('enter')
-      this.more = false;
-    },
-    isMore(){
-      if(this.inData.list.length>5){
-          this.more = true;
-        }
-    }
   },
-//   props:[
-//       "inData"
-//   ],
+  //   props:[
+  //       "inData"
+  //   ],
   props: {
-    inData: Object
+    inData: Object,
   },
   model: {
-    prop: ["inData"],
-    event: "reback"
+    prop: ['inData'],
+    event: 'reback',
   },
-   created() {
-     this.isMore()
-  }
-};
+  created() {
+    this.isMore()
+  },
+}
 </script>
 
 <style scoped>
@@ -80,9 +77,9 @@ export default {
   /* width:.8rem;
   display: inline-block; */
 }
-.self-tag > .tag-title::after{
+.self-tag > .tag-title::after {
   /* content: "";  */
-  display: inline-block; 
+  display: inline-block;
   padding-left: 100%;
 }
 /* .self-tag > .tag-title::after{
@@ -100,10 +97,10 @@ export default {
   font-size: 14px;
   font-family: PingFangSC-Regular;
   color: #0067ff;
-  min-width: .9rem;
+  min-width: 0.9rem;
 }
-.self-tag .warning{
-    color:red;/*!important*/
+.self-tag .warning {
+  color: red; /*!important*/
 }
 /* .tag-title{
   width:.8rem;

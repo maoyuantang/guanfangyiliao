@@ -448,7 +448,7 @@ export default {
      */
     chartDepartmentListSelect(data){
         console.log(data);
-        this.chartCondition.departmentList.select = data.index;
+        this.chartCondition.departmentList.select = data.select;
         this.getQueryStatisticalData();
         this.getPushStatisticalData();
         // this.getChartData();

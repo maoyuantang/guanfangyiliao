@@ -1739,9 +1739,12 @@ export default {
             this.getThePatient();
         } else {
             let otype = this.chatTypeBox.startDoctorTYpe;
-            if (otype == "会诊" || otype == "患者" || otype == "随访") {
+            if ( otype == "患者" || otype == "随访") {
                 this.archivesId = this.chatTypeBox.bingUserId;
-            } else {
+            }else if(otype == "会诊"){
+                this.archivesId = this.chatTypeBox.typeId
+            }
+            else {
                 this.archivesId = "不是门诊和协作进入";
             }
             this.publicVideoVisable = true;

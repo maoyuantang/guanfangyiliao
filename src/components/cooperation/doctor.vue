@@ -828,7 +828,7 @@ export default {
             //点击筛选日期    医生端
             
 
-            if (data.index.value == "TODAY") {
+            if (data.select.value == "TODAY") {
                 var date = new Date();
                 var year = date.getFullYear();
                 var month = date.getMonth() + 1;

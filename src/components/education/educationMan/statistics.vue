@@ -2,7 +2,7 @@
 	<div class="statistics">
 		<div class="statistics-top">
             <div class="statistics-top-left">
-                <tag :inData="queryConditions.department" @reback="getDepartmentSelect"></tag>
+                <selftag :inData="queryConditions.department" @reback="getDepartmentSelect"></selftag>
             </div>
             <div class="statistics-top-right">
                 <publicTime @timeValue="timeValueFun"></publicTime>
@@ -28,7 +28,7 @@
 
 <script>
     import { mapState } from "vuex"
-    import tag from '../../../public/publicComponents/tag.vue'
+    import selftag from '../../../public/publicComponents/selftag.vue'
     import publicTime from '../../../public/publicComponents/publicTime.vue'
     import normalColumnChart from '../../../public/publicComponents/normalColumnChart.vue'
     import { countTeacher, countStudent } from '../../../api/apiAll.js'
@@ -172,13 +172,13 @@
              * 获取科室选取情况
              */
             getDepartmentSelect(data){
-                this.queryConditions.department.select = data.index;
+                this.queryConditions.department.select = data.select;
                 this.getCountStudent();
                 this.getCountTeacher();
             },
 		},
 		components:{
-            tag,
+            selftag,
             publicTime,
             normalColumnChart
 		},

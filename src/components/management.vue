@@ -212,17 +212,17 @@
 			},
 			//筛选返回值  管理端
 			getFilter0(data) {//科室筛选
-				this.departmentId = data.index.value;
+				this.departmentId = data.select.value;
 				console.log(this.departmentId)
 				// this.getList1();
 			},
 			getFilter1(data) {//类型筛选
-				this.typeId = data.index.value;
+				this.typeId = data.select.value;
 				console.log(this.typeId)
 				// this.getList1();
 			},
 			getFilter2(data) {//区域筛选
-				this.area = data.index.value;
+				this.area = data.select.value;
 				console.log(this.area)
 				// this.getList1();
 			},
