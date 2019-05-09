@@ -869,12 +869,12 @@ export default {
                         content =
                             '<div style="color:#F60">该消息为音频消息,请在手机上查看</div>';
                     } else if (childMessageType == 5) {
-                        content =
-                            "img[/user/api/v2/public/download?downType=Chat&secId=" +
-                            encodeBase64 +
-                            "&userId=&layer=00&deType=HD&fileId=" +
-                            bodyVideo +
-                            "]";
+                        // content =
+                        //     "img[/user/api/v2/public/download?downType=Chat&secId=" +
+                        //     encodeBase64 +
+                        //     "&userId=&layer=00&deType=HD&fileId=" +
+                        //     bodyVideo +
+                        //     "]";
                     } else if (childMessageType == 7) {
                         // var bodyPro = this.IMessage.decode(
                         //     new Uint8Array(res.data)

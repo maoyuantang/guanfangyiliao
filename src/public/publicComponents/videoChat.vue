@@ -1197,6 +1197,13 @@ export default {
                         } else if (odata[i].childMessageType == "CRVIDEO") {
                             //视频
                             this.messageList[i].content = "视频";
+                        }else if (odata[i].childMessageType == "IMAGE") {
+                            //图片
+                            this.messageList[i].content =
+                                this.userSocketInfo.imgUrl + odata[i].body;
+                            this.messageList[i].signImages = [
+                                this.userSocketInfo.imgUrl + odata[i].body
+                            ];
                         } else if (odata[i].childMessageType == "FOLLOWUP") {
                             //随访
                             this.messageList[i].content = "随访";

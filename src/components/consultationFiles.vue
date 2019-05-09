@@ -102,7 +102,11 @@
                     <div>
                         <!-- 处方 -->
                         <div class="recipeClass" v-show="danganRgValue=='recipe'">
-                            <img v-for="(text,index) in orecipe" :key="index" :src="text.src" alt="">
+                            <!-- <img v-for="(text,index) in orecipe" :key="index" :src="text.src" alt=""> -->
+
+                             <viewer :images="orecipe" toolbar="false">
+                                         <img v-for="(text,index) in orecipe" :key="index" :src="text.src" alt="">
+                                    </viewer>
                         </div>
                         <!-- 检验 -->
                         <div class="testBox" v-show="danganRgValue=='checkout'">
@@ -854,9 +858,22 @@ export default {
     color: #646464;
     text-align: left;
 }
-.recipeClass > img {
-    width: 500px;
-    height: 500px;
+.recipeClass{
+padding:10px;
+}
+.recipeClass>div{
+    width: 250px;
+    height: 250px;
+        display: flex;
+    display:-webkit-flex;
+
+    
+}
+.recipeClass>div > img {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    margin:10px;
 }
 .danganRgMainTextClass {
     padding: 30px 30px;

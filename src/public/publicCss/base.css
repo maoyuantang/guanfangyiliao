@@ -2118,6 +2118,7 @@ cursor: pointer;
 
 
 
-.viewer-canvas{
-    z-index: 9999999999;
+.viewer-container{
+    z-index: 9999999999 !important;
 }
+
