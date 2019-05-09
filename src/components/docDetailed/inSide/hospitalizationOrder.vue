@@ -3,7 +3,7 @@
     <div>
         <!-- {{inData}} -->
         <div class="medicalOrder" v-if="inData.length == 0?false:true">
-            <div class="medicalOrder-top">
+            <!-- <div class="medicalOrder-top">
                 <p class="medicalOrder-top-item">医嘱名称</p>
                 <p class="medicalOrder-top-item">规格</p>
                 <p class="medicalOrder-top-item">途径</p>
@@ -31,7 +31,22 @@
                             {{item.docName}}</p>
                     </div>
                 </div>
-            </div>
+            </div> -->
+
+
+
+            <el-table :data="inData" style="width: 100%" v-if="inData.length == 0?false:true">
+                <el-table-column prop="name" label="医嘱名称" width=""></el-table-column>
+                <el-table-column prop="std" label="规格" width=""></el-table-column>
+                <el-table-column prop="usage" label="途径" width=""></el-table-column>
+                <el-table-column prop="startDtime" label="开始时间"></el-table-column>
+                <el-table-column prop="endDtime" label="结束时间"></el-table-column>
+                <el-table-column prop="freq" label="频次"></el-table-column>
+                <el-table-column prop="unit" label="剂量"></el-table-column>
+                <el-table-column prop="orderType" label="类别"></el-table-column>
+                <el-table-column prop="deptName" label="医嘱科室"></el-table-column>
+                <el-table-column prop="docName" label="医嘱医生"></el-table-column>
+            </el-table>
         </div>
     </div>
 </template>
@@ -86,6 +101,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        word-wrap: break-word;
+
+
     }
 
     .medicalOrder-body-list-item {
@@ -94,13 +112,21 @@
     }
 
     .medicalOrder-body-list-item-item {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        /* flex: 1; */
+        /* display: flex; */
+        /* flex-wrap: wrap; */
+        /* align-items: center; */
+        /* justify-content: center; */
         font-family: MicrosoftYaHei;
         font-size: 12px;
         color: var(--color20);
+
+        text-align: left;
+        /* word-wrap: break-word; */
+        word-break: break-all;
+        /* height: auto; */
+
+
     }
 
     .medicalOrder-body-list:nth-of-type(odd) {
@@ -109,5 +135,30 @@
 
     .medicalOrder-body-list-item-item-status {
         color: #108E26;
+    }
+
+    /deep/ .el-table__body-wrapper{
+        /* overflow-x: auto; */
+    }
+
+    /deep/ .el-table__body-wrapper td {
+        font-family: MicrosoftYaHei;
+        font-size: 12px;
+        color: #646464;
+        text-align: left;
+        letter-spacing: 0;
+    }
+
+    /deep/ .el-table__header-wrapper th {
+        font-family: MicrosoftYaHei;
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.87);
+        text-align: left;
+    }
+
+    .ceshiLan {
+        color: #108E26 !important;
+        font-weight: bold;
+
     }
 </style>
