@@ -116,7 +116,7 @@
 
 				chuFangArray: [],
 
-				list4s:null,
+				list4s: null,
 
 				nowNav: 0,//当前模块索引
 				showModules: {//显示子模块索列表，，，心烦    
@@ -351,7 +351,7 @@
 					familyMemberId: this.inData.id
 				});
 				// console.log(res.data.body)
-				this.list4s = res.data.body == null? false:true
+				this.list4s = res.data.body == null ? false : true
 				if (res.data.body) {
 					this.patientJiuZen = res.data.body
 					this.patientLieBiao = res.data.body
@@ -403,7 +403,7 @@
 										"入住医院:" + o.hospitalName,
 										"入院时间:" + o.visitDtime,
 										"入住科室:" + o.deptName,
-										"床 号:" + o.codeName
+										o.bedNo ? "床 号:" + o.bedNo : "床 号:" + ''
 									],
 									childModuleIndex: 0,//显示子模块索引
 									childModule: [//子模块
@@ -495,16 +495,25 @@
 			},
 
 			setNowNav(item, index) {
+				console.log(item, index)
 				if (!this.patientJiuZen) return;
 				this.nowNav = index;
 				this.showModules.list = item.childModule;
 				// this.showModules.list = this.navList[this.nowNav].childModule
 
-				this.patientJiuZen.map((obj, e) => {
+				// this.patientJiuZen.map((obj, e) => {
+				for (let i = 0; i < this.patientJiuZen.length; i++) {
+					let obj = this.patientJiuZen[i];
+					this.jiuZhenId = "";
 					if (obj.visitType == index + 1) {
 						this.jiuZhenId = obj.visitNo
+						// alert(this.jiuZhenId);
+						break;
 					}
-				})
+					// if (this.jiuZhenId) {
+					// }
+				}
+				// })
 				if (index == 0) {
 					// this.eMRInRecord5()//就诊记录详情
 					// this.eMRInRecord6()//处方记录
@@ -569,6 +578,7 @@
 					if (res.data.body) {
 						item.data = [];
 						item.data = res.data.body;
+
 					}
 				}
 			},
