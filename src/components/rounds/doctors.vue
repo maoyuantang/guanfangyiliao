@@ -3,7 +3,7 @@
 	<div class="rounds-doctor">
 		<div class="rounds-doctor-top">
             <div class="rounds-doctor-top-left">
-                <tag :inData="queryConditions.date" @reback="getDateSelect"></tag>
+                <selftag :inData="queryConditions.date" @reback="getDateSelect"></selftag>
             </div>
             <div class="rounds-doctor-top-right">
                 <publicTime @timeValue="timeValueFun"></publicTime>
@@ -99,14 +99,14 @@
 
 <script>
     import { mapState } from "vuex"
-    import tag from '../../public/publicComponents/tag.vue'
+    import selftag from '../../public/publicComponents/selftag.vue'
     import publicTime from '../../public/publicComponents/publicTime.vue'
     import playVedio from '../../public/publicComponents/playVedio.vue'
     import {myRounds} from '../../api/apiAll.js' 
     import apiBaseURL from "../../enums/apiBaseURL.js"
 	export default {
 		components: {
-            tag,
+            selftag,
             publicTime,
             playVedio
 		},
@@ -244,7 +244,7 @@
              */
             getDateSelect(data){
                 // console.log(data);
-                this.queryConditions.date.select = data.index;  
+                this.queryConditions.date.select = data.select;  
                 this.getMyRounds(); 
             },
             /**

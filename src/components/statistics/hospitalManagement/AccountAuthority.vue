@@ -858,7 +858,7 @@ export default {
      * 外院 科室 被选中
      */
     outerCourtUserDepartmentSelect(data) {
-      this.outerCourt.departmentSelect = data.index
+      this.outerCourt.departmentSelect = data.select
       this.getSynergyManageList()
     },
     /**
@@ -866,7 +866,7 @@ export default {
      */
     outerCourtUserHospitalSelect(data) {
       // console.log(data)
-      this.outerCourt.hospitalSelect = data.index
+      this.outerCourt.hospitalSelect = data.select
       this.getSynergyManageList()
     },
     /**
@@ -1524,7 +1524,7 @@ export default {
       this.getUserList()
     },
     ourStaffDepartmentSelect(data) {
-      this.ourStaff.departmentSelect = data.index
+      this.ourStaff.departmentSelect = data.select
       this.getUserList()
     },
   },

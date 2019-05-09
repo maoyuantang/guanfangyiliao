@@ -3,8 +3,8 @@
 	<div class="mobile">
 		<div class="mobile-top">
             <div class="mobile-top-left">
-                <tag :inData="queryConditions.department" @reback="getDepartmentSelect"></tag>
-                <tag :inData="queryConditions.date" @reback="getDateSelect"></tag>
+                <selftag :inData="queryConditions.department" @reback="getDepartmentSelect"></selftag>
+                <selftag :inData="queryConditions.date" @reback="getDateSelect"></selftag>
             </div>
             <div class="mobile-top-right">
                 <div class="mobile-time">
@@ -83,14 +83,14 @@
 
 <script>
     import { mapState } from "vuex"
-    import tag from '../../../public/publicComponents/tag.vue'
+    import selftag from '../../../public/publicComponents/selftag.vue'
     import search from '../../../public/publicComponents/search.vue'
     import publicTime from '../../../public/publicComponents/publicTime.vue'
     import playVedio from '../../../public/publicComponents/playVedio.vue'
     import {roundsManager} from '../../../api/apiAll.js' 
 	export default {
 		components: {
-            tag,
+            selftag,
             search,
             publicTime,
             playVedio
@@ -217,7 +217,7 @@
              * 获取科室选取情况
              */
             getDepartmentSelect(data){
-                this.queryConditions.department.select = data.index;
+                this.queryConditions.department.select = data.select;
                 // console.log(this.queryConditions.department.select);
                 this.getRoundsManager();
             },
@@ -225,7 +225,7 @@
              * 获取日期选取情况
              */
             getDateSelect(data){
-                this.queryConditions.date.select = data.index;
+                this.queryConditions.date.select = data.select;
                 // console.log(this.queryConditions.date.select);
                 this.getRoundsManager();
             },

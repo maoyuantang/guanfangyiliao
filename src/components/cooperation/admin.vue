@@ -674,24 +674,24 @@ export default {
         },
         getOTab1(data) {
             //发起科室筛选
-            this.initiateDepartmentId = data.index.value;
+            this.initiateDepartmentId = data.select.value;
             this.getList1();
         },
         //协作科室选择
         getOTab2(data) {
             //协作科室筛选
-            this.acceptDepartmentId = data.index.value;
+            this.acceptDepartmentId = data.select.value;
             this.getList1();
         },
         getOTab3(data) {
             //协作状态筛选
-            this.adminStatus = data.index.value;
+            this.adminStatus = data.select.value;
             this.getList1();
         },
         getOTab4(data) {
             //点击筛选日期    医生端
 
-            if (data.index.value == "TODAY") {
+            if (data.select.value == "TODAY") {
                 var date = new Date();
                 var year = date.getFullYear();
                 var month = date.getMonth() + 1;
@@ -712,7 +712,7 @@ export default {
             this.DoctorList(); //医生端列表
         },
         getOTab5(data) {
-            this.initiateDepartmentId = data.index.value;
+            this.initiateDepartmentId = data.select.value;
             this.getList2();
         },
         adminSearchChange(data) {

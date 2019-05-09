@@ -735,7 +735,7 @@ export default {
             this.recordVisible = true;
         },
         getOTab4(data) {
-            this.oDocTime = data.index.value;
+            this.oDocTime = data.select.value;
             this.startDate = "";
             this.endDate = "";
             this.getDocList();

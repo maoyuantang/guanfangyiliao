@@ -232,6 +232,7 @@ import { parse } from 'protobufjs';
 	}
 	.navigation>.el-menu{
 		background-color: transparent;
+		border-right: none;
 	}
 	.logo{
 		height: 0.73rem;

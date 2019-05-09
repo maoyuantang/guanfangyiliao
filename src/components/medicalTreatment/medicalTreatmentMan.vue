@@ -540,20 +540,20 @@
       },
       //筛选返回值  管理端
       getFilter0(data) {//科室筛选
-        this.departmentId = data.index.value;
+        this.departmentId = data.select.value;
         // console.log(this.departmentId)
         this.getList1()
         this.getList2()
         this.getList3()
       },
       getFilter1(data) {//类型筛选
-        this.typeId = data.index.value;
+        this.typeId = data.select.value;
         // console.log(this.typeId)
         this.getList1()
       },
       getFilter2(data) {//分级筛选
         // console.log(data)
-        this.gradeId = data.index.value;
+        this.gradeId = data.select.value;
         // console.log(this.gradeId)
         this.getList1()
       },

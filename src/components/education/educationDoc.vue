@@ -2,10 +2,10 @@
   <div class="education-doc">
     <div class="education-doc-top">
       <div class="education-doc-top-left">
-        <tag
+        <selftag
           :inData="queryConditions.days"
           @reback="getdaysSelect"
-        ></tag>
+        ></selftag>
       </div>
       <div class="education-doc-top-right select-time-css">
         <!-- <publicTime @timeValue="timeValueFun"></publicTime> -->
@@ -69,7 +69,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import tag from '../../public/publicComponents/tag.vue'
+import selftag from '../../public/publicComponents/selftag.vue'
 import publicTime from '../../public/publicComponents/publicTime.vue'
 import educationDocLabel from '../../public/publicComponents/educationDocLabel.vue'
 import {
@@ -98,7 +98,7 @@ export default {
     },
   },
   components: {
-    tag,
+    selftag,
     publicTime,
     educationDocLabel,
   },
@@ -318,7 +318,7 @@ export default {
      * 获取日期选取情况
      */
     getdaysSelect(data) {
-      this.queryConditions.days.select = data.index
+      this.queryConditions.days.select = data.select
       // console.log(this.queryConditions.days.select)
       this.getWebCourseList()
     },
