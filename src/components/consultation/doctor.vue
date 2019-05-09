@@ -742,7 +742,7 @@ export default {
             this.getDocList();
         },
         getOTab5(data) {
-            this.applicationDeptId2 = data.index.value;
+            this.applicationDeptId2 = data.select.value;
             this.statisticsStart = "";
             this.statisticsEnd = "";
             this.getAdminTjList();
