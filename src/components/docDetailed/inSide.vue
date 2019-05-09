@@ -667,7 +667,8 @@
 	}
 
 	.new-content-nav {
-		width: 3.4rem;
+		/* width: 3.4rem; */
+		width: 20%;
 		min-height: 100%;
 		border: 1px solid #E5E7E9;
 		padding-left: 6px;
@@ -749,18 +750,21 @@
 
 	.new-content-body {
 		border: 1px solid #E5E7E9;
-		flex: 1;
+		/* flex: 1; */
 		display: flex;
+		width: 80%;
 	}
 
 	.new-content-body-nav {
-		width: 1.9rem;
+		/* width: 1.9rem; */
+		width: 18%;
 		border-right: 1px solid #E5E7E9;
 	}
 
 	.new-content-body-content {
 		/* background-color: grey; */
-		flex: 1;
+		/* flex: 1; */
+		width: 82%;
 	}
 
 	.new-content-body-nav-item {

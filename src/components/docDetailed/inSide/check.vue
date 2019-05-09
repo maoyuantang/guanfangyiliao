@@ -238,7 +238,15 @@
 		text-align: left;
 	}
 
-	th {
-		height: auto;
+	.visiting-content-info-right-change-thead {
+		th {
+			height: auto;
+		}
+	}
+
+	.visiting-content-info-right-change-tbody {
+		th {
+			height: auto;
+		}
 	}
 </style>
