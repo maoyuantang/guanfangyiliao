@@ -1526,7 +1526,7 @@
 				}
 
 				h1 {
-					ont-family: PingFangSC-Regular;
+					font-family: PingFangSC-Regular;
 					font-size: 13px;
 					color: #002257;
 					line-height: 22px;

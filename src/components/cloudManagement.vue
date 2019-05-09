@@ -71,12 +71,13 @@
 					@current-change="ChangePage"
 			></el-pagination>
 		</div>
-		<Modal
-			v-model="editingBusiness.show"
+		<el-dialog
+			:append-to-body="true"
+			:close-on-click-modal="false"
+			:visible.sync="editingBusiness.show"
 			title="编辑"
-			footer-hide
-			@on-ok="editOk"
-			@on-cancel="getBusinessInfo">
+			@closed="getBusinessInfo"
+		>
 			<div class="editing-business-alert">
 				<div class="editing-business-alert-item">
 					<span class="editing-business-alert-item-name">业务名称</span>
@@ -141,7 +142,7 @@
 					<el-button type="primary" @click="subHospitalConfig">确定</el-button>
 				</div>
 			</div>
-		</Modal>
+		</el-dialog>
 	</div>
 </template>
 
@@ -398,18 +399,6 @@
 				this.cloudStorageCopy = deepCopy(this.cloudStorage); 
 				this.editingBusiness.show = true;
 			},
-
-			/**
-			 * 确认编辑
-			 */
-			editOk(){
-
-			},
-
-			/**
-			 * 取消编辑
-			 */
-			editCancel(){},
 
 			/**
 			 * 编辑业务 -> 添加'价格'
