@@ -343,7 +343,7 @@
           </div>
         </div>
         <div class="ourStaf-alert-item-select">
-          <span>科室管理权限范围::</span>
+          <span>科室管理权限范围:</span>
           <div class="ourStaf-alert-item-select-div">
             <selectTree
               :inData="ourStafAlert.data.manbus.list"
