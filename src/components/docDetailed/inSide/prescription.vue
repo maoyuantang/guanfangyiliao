@@ -2,7 +2,9 @@
 <template>
     <div class="prescription">
         <div v-for='(o,i) in inData' class="imgP">
-            <img :src = o title="处方单">
+            <viewer>
+                <img :src=o title="处方单">
+            </viewer>
         </div>
         <!-- <Timeline>
             <TimelineItem v-for="(item,index) in 5" :key="index">

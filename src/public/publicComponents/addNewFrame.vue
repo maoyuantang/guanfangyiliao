@@ -1,7 +1,7 @@
 <template>
     <div class="add-new-frame">
 
-        <Modal :styles="{width: '850px'}" v-model="inData.show" title=" " footer-hide @on-ok="ok" @on-cancel="cancel">
+        <Modal :styles="{width: '850px'}" v-model="inData.show" title=" " footer-hide @on-ok="ok" @on-cancel="cancel" :mask-closable="false">
             <div class="alert-body">
                 <!-- 新增家医业务类型 -->
                 <div class="input-item-div" v-if="inData.type==='2'">
