@@ -636,12 +636,12 @@ export default {
         },
         // 限制只能发送图片
         beforeAvatarUpload(file) {
-            const isJPG = (file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/png");
+            const isJPG = (file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/png" || file.type === "image/gif");
             // const isJPG = ;
             // const isPNG = file.type === "image/png";
 
             if (!isJPG) {
-                this.$message.error("图片只能是 JPEG/JPG/PNG 格式!");
+                this.$message.error("图片只能是 JPEG/JPG/PNG/gif 格式!");
             }
             return isJPG;
         },
