@@ -694,7 +694,7 @@ export default {
      */
     groupingSelect(data) {
       console.log(data);
-      this.findCondition.grouping.select = data.index;
+      this.findCondition.grouping.select = data.select;
       this.getQueryByPage();
     },
 
@@ -703,7 +703,7 @@ export default {
      */
     fileClassificationSelect(data) {
       console.log(data);
-      this.findCondition.fileClassification.select = data.index;
+      this.findCondition.fileClassification.select = data.select;
       this.getQueryByPage();
     },
 
@@ -712,7 +712,7 @@ export default {
      */
     sourceSelect(data) {
       console.log(data);
-      this.findCondition.source.select = data.index;
+      this.findCondition.source.select = data.select;
       this.getQueryByPage();
     },
 
@@ -721,7 +721,7 @@ export default {
      */
     inHospitalFileSelect(data) {
       console.log(data);
-      this.findCondition.inHospitalFile.select = data.index;
+      this.findCondition.inHospitalFile.select = data.select;
       this.getQueryByPage();
     },
 

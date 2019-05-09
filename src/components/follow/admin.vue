@@ -1259,7 +1259,7 @@ VideoshowClose:false,
         //筛选
         // 管理端科室
         getOTab1(data) {
-            this.odepartment = data.index.value;
+            this.odepartment = data.select.value;
             // 随访管理
             if (this.switchNum == 0) {
                 this.getFoList();
@@ -1287,26 +1287,26 @@ VideoshowClose:false,
         },
         // 管理端类型
         getOTab2(data) {
-            this.otype = data.index.value;
+            this.otype = data.select.value;
             this.getFoList();
         },
         // 管理端方式
         getOTab3(data) {
-            this.oTheWay = data.index.value;
+            this.oTheWay = data.select.value;
             this.getFoList();
         },
         // 管理端内容
         getOTab4(data) {
-            this.oContent = data.index.value;
+            this.oContent = data.select.value;
             this.getFoList();
         },
         //家用设备类型筛选
         getOTab5(data) {
-            this.houseDeviceType = data.index.value;
+            this.houseDeviceType = data.select.value;
             this.oManagerGetDeviceList();
         },
         getOTab6(data) {
-            this.mydType = data.index.value;
+            this.mydType = data.select.value;
             if (this.indexTab2 == 0) {
                 this.oGetResultList();
             } else if (this.indexTab2 == 1) {
@@ -1314,11 +1314,11 @@ VideoshowClose:false,
             }
         },
         getOTab7(data) {
-            this.userType = data.index.value;
+            this.userType = data.select.value;
             this.oGetMissileList();
         },
         getOTab8(data) {
-            this.mydMode = data.index.value;
+            this.mydMode = data.select.value;
             if (this.indexTab2 == 0) {
                 this.oGetResultList();
             } else if (this.indexTab2 == 1) {
@@ -1327,7 +1327,7 @@ VideoshowClose:false,
         },
         //有无随访计划
         getOTab9(data) {
-            this.hadFollowup = data.index.value;
+            this.hadFollowup = data.select.value;
             this.getUsFollow();
         },
         //有无随访时间

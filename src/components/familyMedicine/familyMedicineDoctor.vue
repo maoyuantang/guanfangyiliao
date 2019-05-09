@@ -2,14 +2,14 @@
   <div class="family-medicine-doctor">
     <div class="family-medicine-doctor-head">
       <div class="family-medicine-doctor-head-left">
-        <tag
+        <selftag
           :inData="queryConditions.date"
           @reback="getDateSelect"
-        ></tag>
-        <tag
+        ></selftag>
+        <selftag
           :inData="queryConditions.busModules"
           @reback="getModuleSelect"
-        ></tag>
+        ></selftag>
       </div>
       <div class="family-medicine-doctor-head-right select-time-css">
         <!-- <publicTime @timeValue="getSelectTime"></publicTime> -->
@@ -322,7 +322,6 @@
 <script>
 import { mapState } from 'vuex'
 import selftag from './../../public/publicComponents/selftag.vue'
-import tag from './../../public/publicComponents/tag.vue'
 import publicTime from './../../public/publicComponents/publicTime.vue'
 import {
   stencilName,
@@ -343,7 +342,6 @@ export default {
   components: {
     selftag,
     publicTime,
-    tag,
     chat,
     viewRecord,
     ovideocomponent,
@@ -702,7 +700,7 @@ export default {
      * 获取用户选择模块
      */
     getModuleSelect(data) {
-      this.queryConditions.busModules.select = data.index
+      this.queryConditions.busModules.select = data.select
       this.getTableList()
     },
     // /**
@@ -716,8 +714,8 @@ export default {
      * 获取日期选项
      */
     getDateSelect(item) {
-      this.queryConditions.date.select = item.index
-      if (item.index === 1) {
+      this.queryConditions.date.select = item.select
+      if (item.select === 1) {
         const now = new Date() //今天
         const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000) //明天
         let oMonth = now.getMonth() + 1

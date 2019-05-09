@@ -457,7 +457,7 @@ export default {
      * 档案列表查询条件   科室被选择
      */
     DepartmentListSelect(data) {
-      this.listCondition.departmentList.select = data.index;
+      this.listCondition.departmentList.select = data.select;
       this.getListData();
     },
 
@@ -465,7 +465,7 @@ export default {
      * 档案列表查询条件    类型被选择
      */
     getTypeSelect(data) {
-      this.listCondition.types.select = data.index;
+      this.listCondition.types.select = data.select;
       this.getListData();
     },
 
@@ -524,7 +524,7 @@ export default {
      * 统计图  科室被选中
      */
     chartDepartmentListSelect(data){
-        this.chartCondition.departmentList.select = data.index;
+        this.chartCondition.departmentList.select = data.select;
         this.getQueryStatisticalData();
         this.getPushStatisticalData();
         // this.getChartData();

@@ -416,7 +416,7 @@ export default {
      */
     DepartmentListSelect(data) {
       console.log(data);
-      this.listCondition.departmentList.select = data.index;
+      this.listCondition.departmentList.select = data.select;
       console.log(this.listCondition.departmentList.select);
       this.getListData();
     },
@@ -426,7 +426,7 @@ export default {
      */
     getTypeSelect(data) {
       console.log(data);
-      this.listCondition.types.select = data.index;
+      this.listCondition.types.select = data.select;
       this.getListData();
     },
 

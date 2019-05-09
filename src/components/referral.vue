@@ -550,13 +550,13 @@
       },
       //筛选返回值  管理端
       getFilter0(data) {//科室筛选
-        this.departmentId = data.index.value;
+        this.departmentId = data.select.value;
         // console.log(this.departmentId)
         this.getList1();
         this.getList2();
       },
       getFilter2(data) {//方向筛选
-        this.direction = data.index.value;
+        this.direction = data.select.value;
         // console.log(this.direction)
         this.getList1();
       },
@@ -599,7 +599,7 @@
       //点击筛选日期    医生端
       getOTab4(data) {
         // console.log(data)
-        // this.doctorDate = data.index.value;//这个参数不用了
+        // this.doctorDate = data.select.value;//这个参数不用了
         // this.getList2();
         this.nowDateF(data)
         this.DoctorList();//医生端列表

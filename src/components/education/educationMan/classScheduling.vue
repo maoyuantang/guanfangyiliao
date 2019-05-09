@@ -2,9 +2,9 @@
 	<div class="class-scheduling">
 		<div class="class-scheduling-top">
             <div class="class-scheduling-top-left">
-                <tag :inData="queryConditions.department" @reback="getDepartmentSelect"></tag>
-                <tag :inData="queryConditions.mode" @reback="getModeSelect"></tag>
-                <tag :inData="queryConditions.status" @reback="getStatusSelect"></tag>
+                <selftag :inData="queryConditions.department" @reback="getDepartmentSelect"></selftag>
+                <selftag :inData="queryConditions.mode" @reback="getModeSelect"></selftag>
+                <selftag :inData="queryConditions.status" @reback="getStatusSelect"></selftag>
             </div>
             <div class="class-scheduling-top-right">
                 <div class="class-scheduling-top-right-searchChange-outclass">
@@ -249,7 +249,7 @@
     import { mapState } from "vuex"
     import { typeList, arrangeList, eduCourseArrange, doctorsByOrgCodeAndDeptId, getArrange, eduCourseEdit, eduCourseCancel, fetchHospitalDeptAuth } from '../../../api/apiAll.js'
     import Check from '../../../public/publicJs/check.js'
-    import tag from '../../../public/publicComponents/tag.vue'
+    import selftag from '../../../public/publicComponents/selftag.vue'
     import search from '../../../public/publicComponents/search.vue'
     import tableNoMore from '../../../public/publicComponents/tableNoMore.vue'
     
@@ -686,21 +686,21 @@
              * 获取科室选取情况
              */
             getDepartmentSelect(data){
-                this.queryConditions.department.select = data.index;
+                this.queryConditions.department.select = data.select;
                 this.getArrangeList();
             },
             /**
              * 获取状态选取情况
              */
             getStatusSelect(data){
-                this.queryConditions.status.select = data.index;
+                this.queryConditions.status.select = data.select;
                 this.getArrangeList();
             },
             /**
              * 获取方式选取情况
              */
             getModeSelect(data){
-                this.queryConditions.mode.select = data.index;
+                this.queryConditions.mode.select = data.select;
                 this.getArrangeList();
             },
             
@@ -755,7 +755,7 @@
             },
 		},
 		components:{
-            tag,
+            selftag,
             search,
             tableNoMore
 		},

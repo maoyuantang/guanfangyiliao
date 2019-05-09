@@ -2,7 +2,7 @@
     <div class="doc">
         <div class="doc-top">
             <div class="doc-top-left">
-                <tag :inData="queryConditions.department" @reback="getDepartmentSelect"></tag>
+                <selftag :inData="queryConditions.department" @reback="getDepartmentSelect"></selftag>
             </div>
             <div class="doc-top-right">
                 <search @searchValue="searchChange"></search>
@@ -56,12 +56,12 @@
 </template>
 <script>
 import { mapState } from "vuex"
-import tag from "../../../public/publicComponents/tag.vue"
+import selftag from "../../../public/publicComponents/selftag.vue"
 import search from "../../../public/publicComponents/search.vue"
 import tableNoMore from "../../../public/publicComponents/tableNoMore.vue"
 export default {
     components:{
-        tag,
+        selftag,
         search,
         tableNoMore
     },
@@ -117,7 +117,7 @@ export default {
          * 科室 被选中
          */
         getDepartmentSelect(data){
-            this.queryConditions.department.select = data.index;
+            this.queryConditions.department.select = data.select;
         },
         /**
          * 获取科室列表

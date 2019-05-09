@@ -1413,7 +1413,7 @@ export default {
         },
         // 管理端类型
         getOTab2(data) {
-            this.followMobanType = data.index.value;
+            this.followMobanType = data.select.value;
             this.oGetTemplate();
             // this.getUsFollow();
             // this.oQueryList();
@@ -1460,7 +1460,7 @@ export default {
         },
         //有无随访计划
         getOTab9(data) {
-            this.hadFollowup = data.index.value;
+            this.hadFollowup = data.select.value;
             this.getUsFollow();
         },
         //有无随访时间
@@ -1477,11 +1477,11 @@ export default {
                 day = "0" + day;
             }
 
-            if (data.index.text == "今天") {
+            if (data.select.text == "今天") {
                 this.docStartTime = year + "-" + month + "-" + day;
                 this.docEndTime = year + "-" + month + "-" + day;
                 
-            } else if (data.index.text == "未来3天") {
+            } else if (data.select.text == "未来3天") {
                 oday = day + 2;
                 this.docStartTime = year + "-" + month + "-" + day;
                 this.docEndTime = year + "-" + month + "-" + oday;
@@ -1491,12 +1491,12 @@ export default {
         },
         //文章筛选条件
         getOTab14(data) {
-            this.articleType = data.index.value;
+            this.articleType = data.select.value;
             this.oQueryArticleList();
         },
         //有无随访类型
         getOTab11(data) {
-            this.houseDeviceType = data.index.value;
+            this.houseDeviceType = data.select.value;
             this.getUsFollow();
         },
         //随访计划接口
@@ -2647,7 +2647,7 @@ export default {
         addQueatOrArticle() {},
         //切换
         docDeperment(data) {
-            this.groupId = data.index.value;
+            this.groupId = data.select.value;
             this.getUsFollow();
             // if (this.oDocThis == 0) {
             //     this.getUsFollow();

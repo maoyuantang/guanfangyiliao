@@ -205,6 +205,7 @@
               :disabled="!testData.state"
               size="mini"
               clearable
+              type="number"
             ></el-input>
             <span
               class="family-new-alert-normal-item-new-span"
@@ -1086,9 +1087,9 @@ export default {
      * 科室标签 被点击(统计)
      */
     getStatisticsDepartmentSelect(item) {
-      this.statisticsInfo.department.id = item.index.deptId || ''
-      // this.statisticsInfo.countMethod.select.value = item.index.deptId || '';
-      // this.searchCondition.department.id = item.index.deptId || '';
+      this.statisticsInfo.department.id = item.select.deptId || ''
+      // this.statisticsInfo.countMethod.select.value = item.select.deptId || '';
+      // this.searchCondition.department.id = item.select.deptId || '';
       // this.searchCondition.pageNum = 1;
       // this.getBussByCondition();
       // this.getPushStatisticalData();
@@ -1100,7 +1101,7 @@ export default {
      * 科室标签 被点击(家医服务管理)
      */
     getDepartmentSelect(item) {
-      this.searchCondition.department.id = item.index.deptId || ''
+      this.searchCondition.department.id = item.select.deptId || ''
       this.searchCondition.pageNum = 1
       this.getBussByCondition()
       this.getOrderFmsCharts()
@@ -1112,7 +1113,7 @@ export default {
      * 业务模块 被点击
      */
     bussModuleSelect(item) {
-      this.searchCondition.bussModule.id = item.index.authorityId || ''
+      this.searchCondition.bussModule.id = item.select.authorityId || ''
       this.searchCondition.pageNum = 1
       this.getBussByCondition()
     },
@@ -1122,7 +1123,7 @@ export default {
      */
     bussTypeSelect(item) {
       this.searchCondition.bussType.id =
-        item.index.text === '全部' ? '' : item.index.text
+        item.select.text === '全部' ? '' : item.select.text
       this.searchCondition.pageNum = 1
       this.getBussByCondition()
     },
@@ -1628,7 +1629,7 @@ export default {
       } else {
         this.$notify({
           title: '失败',
-          message: '设置失败',
+          message: `${res.data.errMsg}`,
           type: 'error',
         })
       }
