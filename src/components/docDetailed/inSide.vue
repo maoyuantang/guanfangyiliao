@@ -309,7 +309,7 @@
 				});
 
 			},
-			setView() {
+			setView() {//如果进入  左下没有  的情况
 				if (this.current === '2') {
 					this.showModules.list = this.noLeftBottom;
 					this.showModules = Object({}, this.showModules)
@@ -511,20 +511,23 @@
 				// 	}
 				// }
 				// })
-				if (index == 0) {
+				if (item.name == "门诊记录") {
+					alert('门诊记录')
 					// this.eMRInRecord5()//就诊记录详情
 					// this.eMRInRecord6()//处方记录
 					this.eMRInRecord7(this.navList[0].childModule[2], 2)//检验记录
 					this.eMRInRecord11(this.navList[0].childModule[1], 1)//处方
 					this.eMRInRecord16(this.navList[0].childModule[3], 3)//影像
-				} else if (index == 1) {
+				} else if (item.name == "住院记录") {
+					alert('住院记录')
 					this.eMRInRecord15(this.navList[1].childModule[0], 0)//入院记录
 					this.eMRInRecord8(this.navList[1].childModule[1], 1)//医嘱
 					this.eMRInRecord7(this.navList[1].childModule[2], 2)//检验记录
 					this.eMRInRecord16(this.navList[1].childModule[3], 3)//影像
 					//手术麻醉
 					//护理记录
-				} else if (index == 2) {
+				} else if (item.name == "体检记录") {
+					alert('体检记录')
 					//体检报告
 					//所有项目
 					this.eMRInRecord7(this.navList[2].childModule[2], 2)//检验记录
